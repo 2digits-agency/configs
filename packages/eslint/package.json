@@ -1,0 +1,52 @@
+{
+  "name": "@2digits/eslint-config",
+  "version": "0.0.0",
+  "license": "MIT",
+  "public": true,
+  "sideEffects": false,
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint --ignore-path ../../.gitignore .",
+    "types": "tsc --noEmit"
+  },
+  "keywords": [
+    "eslint-config"
+  ],
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "@types/eslint": "^8.21.2",
+    "eslint": ">=8.36.0",
+    "typescript": ">=4.9"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-config-turbo": "^0.0.9",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-unicorn": "^46.0.0"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.21.2",
+    "eslint": ">=8.36.0",
+    "eslint-define-config": "^1.16.0",
+    "tsup": "^6.6.3",
+    "turbo": "^1.8.3",
+    "typescript": "^4.9.5"
+  }
+}

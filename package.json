@@ -1,0 +1,33 @@
+{
+  "name": "@2digits/config-monorepo",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "build": "turbo run build",
+    "clean": "find . -name node_modules -o -name .turbo -o -name .next -o -name dist -type d -prune | xargs rm -rf",
+    "dev": "turbo run dev",
+    "format": "prettier \"**/*\" --ignore-unknown --check",
+    "format:fix": "prettier \"**/*\" --ignore-unknown --write",
+    "lint": "turbo lint && eslint . && manypkg check",
+    "lint:fix": "turbo lint -- --fix && eslint . --fix && manypkg fix",
+    "types": "turbo types && tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@2digits/eslint-config": "workspace:*",
+    "@2digits/tsconfig": "workspace:*",
+    "@manypkg/cli": "^0.20.0",
+    "@types/node": "^18.15.2",
+    "eslint": ">=8.36.0",
+    "prettier": "^2.8.4",
+    "turbo": "^1.8.3",
+    "typescript": "^4.9.5"
+  },
+  "manypkg": {
+    "ignoredRules": [
+      "INTERNAL_MISMATCH"
+    ]
+  }
+}
