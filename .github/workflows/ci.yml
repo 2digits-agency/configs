@@ -1,4 +1,5 @@
-name: CI
+name: 🛂 CI/CD
+
 on:
   push:
     branches:
@@ -6,19 +7,34 @@ on:
 
 jobs:
   build:
+    name: ⚗️ Lint, typecheck and format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
+      - name: 🗃️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🛸 Setup PNPM
+        uses: pnpm/action-setup@v2
         with:
           version: 7
-      - uses: actions/setup-node@v3
+
+      - name: 🏭 Setup Node
+        uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: 'pnpm'
 
-      - run: pnpm install
-      - run: pnpm run build
-      - run: pnpm run types
-      - run: pnpm run lint
-      - run: pnpm run format
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🏗️ Build packages
+        run: pnpm run build
+
+      - name: 🩻 Check types
+        run: pnpm run types
+
+      - name: 🔬 Lint files
+        run: pnpm run lint
+
+      - name: 🧬 Format files
+        run: pnpm run format
