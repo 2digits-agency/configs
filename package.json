@@ -7,7 +7,7 @@
     "clean": "find . -name node_modules -o -name .turbo -o -name dist -type d -prune | xargs rm -rf",
     "dev": "turbo run dev",
     "format": "prettier \"**/*\" --ignore-unknown --debug-check",
-    "format:fix": "prettier \"**/*\" --ignore-unknown --write",
+    "format:fix": "ignore-sync . && prettier \"**/*\" --ignore-unknown --write",
     "lint": "turbo lint && eslint . && manypkg check",
     "lint:fix": "turbo lint -- --fix && eslint . --fix && manypkg fix",
     "types": "turbo types && tsc --noEmit",
