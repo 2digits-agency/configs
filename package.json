@@ -10,7 +10,9 @@
     "format:fix": "bash -c 'prettier \"**/*\" --ignore-unknown --ignore-path <(cat .gitignore .prettierignore) --write'",
     "lint": "turbo lint && eslint . && manypkg check",
     "lint:fix": "turbo lint -- --fix && eslint . --fix && manypkg fix",
-    "types": "turbo types && tsc --noEmit"
+    "types": "turbo types && tsc --noEmit",
+    "publish": "changeset publish",
+    "release": "turbo run build && changeset publish"
   },
   "keywords": [],
   "author": "",
