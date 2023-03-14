@@ -1,0 +1,43 @@
+{
+  "name": "@2digits/prettier-config",
+  "version": "0.0.0",
+  "license": "MIT",
+  "public": true,
+  "sideEffects": false,
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint --ignore-path ../../.gitignore .",
+    "types": "tsc --noEmit"
+  },
+  "keywords": [
+    "prettier-config"
+  ],
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "prettier": ">=2.8.4"
+  },
+  "dependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1"
+  },
+  "devDependencies": {
+    "@types/prettier": "^2.7.2",
+    "eslint": ">=8.36.0",
+    "prettier": "^2.8.4",
+    "tsup": "^6.6.3",
+    "typescript": "^4.9.5"
+  }
+}
