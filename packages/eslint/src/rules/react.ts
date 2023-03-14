@@ -1,6 +1,6 @@
-import type { Rules } from "eslint-define-config";
+import type { Rules } from 'eslint-define-config';
 
 export const react = {
-  "react/prop-types": ["off"],
-  "react/react-in-jsx-scope": ["off"],
+  'react/prop-types': ['off'],
+  'react/react-in-jsx-scope': ['off'],
 } satisfies Rules;

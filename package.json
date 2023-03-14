@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@2digits/eslint-config": "workspace:*",
+    "@2digits/prettier-config": "workspace:*",
     "@2digits/tsconfig": "workspace:*",
     "@manypkg/cli": "^0.20.0",
     "@types/node": "^18.15.2",
@@ -29,5 +30,6 @@
     "ignoredRules": [
       "INTERNAL_MISMATCH"
     ]
-  }
+  },
+  "packageManager": "pnpm@7.29.1"
 }

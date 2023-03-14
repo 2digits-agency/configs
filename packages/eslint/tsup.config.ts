@@ -1,16 +1,15 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from 'tsup';
 
-import { name } from "./package.json";
+import { name } from './package.json';
 
 export default defineConfig({
   minify: true,
-  target: "esnext",
+  target: 'esnext',
   sourcemap: true,
   treeshake: true,
-  format: ["esm", "cjs"],
-  entry: ["src/index.ts"],
+  format: ['esm', 'cjs'],
+  entry: ['./src/index.ts'],
   clean: true,
   dts: true,
-  noExternal: ["make-synchronous"],
   name,
 });
