@@ -1,7 +1,7 @@
 {
   "name": "@2digits/config-monorepo",
   "version": "0.0.0",
-  "description": "",
+  "description": "Streamline your workflow with a bunch of default configs for things like eslint, tsconfig and prettier!",
   "scripts": {
     "build": "turbo run build",
     "clean": "find . -name node_modules -o -name .turbo -o -name .next -o -name dist -type d -prune | xargs rm -rf",
