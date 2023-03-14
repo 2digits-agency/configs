@@ -28,6 +28,7 @@ importers:
 
   packages/eslint:
     specifiers:
+      '@2digits/tsconfig': workspace:*
       '@types/eslint': ^8.21.2
       '@typescript-eslint/eslint-plugin': ^5.55.0
       '@typescript-eslint/parser': ^5.55.0
@@ -52,6 +53,7 @@ importers:
       eslint-plugin-unicorn: 46.0.0_eslint@8.36.0
       find-up: 6.3.0
     devDependencies:
+      '@2digits/tsconfig': link:../tsconfig
       '@types/eslint': 8.21.2
       eslint: 8.36.0
       eslint-define-config: 1.16.0
@@ -61,6 +63,7 @@ importers:
 
   packages/prettier:
     specifiers:
+      '@2digits/tsconfig': workspace:*
       '@trivago/prettier-plugin-sort-imports': ^4.1.1
       '@types/prettier': ^2.7.2
       eslint: '>=8.36.0'
@@ -70,6 +73,7 @@ importers:
     dependencies:
       '@trivago/prettier-plugin-sort-imports': 4.1.1_prettier@2.8.4
     devDependencies:
+      '@2digits/tsconfig': link:../tsconfig
       '@types/prettier': 2.7.2
       eslint: 8.36.0
       prettier: 2.8.4
