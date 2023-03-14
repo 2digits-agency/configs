@@ -7,7 +7,7 @@ export default defineConfig({
   root: true,
   parserOptions: {
     sourceType: 'module',
-    project: ['./packages/*/tsconfig.json', './apps/*/tsconfig.json'],
+    project: ['./tsconfig.json', './packages/*/tsconfig.json', './apps/*/tsconfig.json'],
     tsconfigRootDir,
     cacheLifetime: {
       glob: 'Infinity',

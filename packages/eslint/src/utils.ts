@@ -6,6 +6,6 @@ export function defineConfig<TConfig extends ESLintConfig>(config: TConfig): TCo
   return config;
 }
 
-const workspaceRoot = findUpSync('pnpm-workspace.yaml');
+const workspaceRoot = findUpSync(['pnpm-workspace.yaml', 'pnpm-lock.yaml']);
 
 export const tsconfigRootDir = workspaceRoot ? dirname(workspaceRoot) : undefined;
