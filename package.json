@@ -6,7 +6,7 @@
     "build": "turbo run build",
     "clean": "find . -name node_modules -o -name .turbo -o -name dist -type d -prune | xargs rm -rf",
     "dev": "turbo run dev",
-    "format": "bash -c 'prettier \"**/*\" --ignore-unknown --ignore-path <(cat .gitignore .prettierignore) --debug-check'",
+    "format": "bash -c 'prettier \"**/*\" --ignore-unknown --ignore-path <(cat .gitignore .prettierignore) --check'",
     "format:fix": "bash -c 'prettier \"**/*\" --ignore-unknown --ignore-path <(cat .gitignore .prettierignore) --write'",
     "lint": "turbo lint && eslint . && manypkg check",
     "lint:fix": "turbo lint -- --fix && eslint . --fix && manypkg fix",
@@ -31,5 +31,9 @@
       "INTERNAL_MISMATCH"
     ]
   },
-  "packageManager": "pnpm@7.29.1"
+  "packageManager": "pnpm@7.29.1",
+  "eslintConfig": {
+    "extends": "@2digits"
+  },
+  "prettier": "@2digits/prettier-config"
 }

@@ -1,13 +1,14 @@
 import { react } from './rules/react';
 import { typescript } from './rules/typescript';
 import { unicorn } from './rules/unicorn';
-import { defineConfig } from './utils';
+import { defineConfig, tsconfigRootDir } from './utils';
 
 export default defineConfig({
   root: true,
   parserOptions: {
     sourceType: 'module',
     project: ['./tsconfig.json', './packages/*/tsconfig.json', './apps/*/tsconfig.json'],
+    tsconfigRootDir,
     cacheLifetime: {
       glob: 'Infinity',
     },

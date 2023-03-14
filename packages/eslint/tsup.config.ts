@@ -11,5 +11,7 @@ export default defineConfig({
   entry: ['./src/index.ts'],
   clean: true,
   dts: true,
+  shims: true,
+  noExternal: ['find-up'],
   name,
 });
