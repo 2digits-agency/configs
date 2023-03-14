@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 0.1.1
+
+### Patch Changes
+
+- 2318b77: Fixed peerdependency to normal dependency
+- 3b0003c: Added better automatic repo root detection
+
 ## 0.1.0
 
 ### Minor Changes
