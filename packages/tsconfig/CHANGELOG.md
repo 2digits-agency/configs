@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.1.1
+
+### Patch Changes
+
+- fe6c2e8: Changed moduleResolution to bundler
+
 ## 0.1.0
 
 ### Minor Changes
