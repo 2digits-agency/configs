@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 0.2.1
+
+### Patch Changes
+
+- 194fc72: Updated react/jsx-newline to force spacing between jsx elements
+- bc50a26: Switched node:path for pathe
+
 ## 0.2.0
 
 ### Minor Changes
