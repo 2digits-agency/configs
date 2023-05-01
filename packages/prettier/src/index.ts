@@ -1,4 +1,4 @@
-import SortImports from '@trivago/prettier-plugin-sort-imports';
+import SortImports from '@ianvs/prettier-plugin-sort-imports';
 
 import { defineConfig } from './utils';
 
@@ -7,9 +7,32 @@ export default defineConfig({
   trailingComma: 'all',
   bracketSameLine: true,
   singleQuote: true,
-  importOrder: ['<THIRD_PARTY_MODULES>', '^@2digits/', '^@mod/', '^[./]'],
-  importOrderGroupNamespaceSpecifiers: true,
+  importOrder: [
+    '^(react/(.*)$)|^(react$)',
+    '^(next/(.*)$)|^(next$)',
+    '<THIRD_PARTY_MODULES>',
+    '',
+    '^@2digits/',
+    '',
+    '^@mod/',
+    '',
+    '^types$',
+    '^@/types/(.*)$',
+    '^@/config/(.*)$',
+    '^@/lib/(.*)$',
+    '^@/hooks/(.*)$',
+    '^@/components/ui/(.*)$',
+    '^@/components/(.*)$',
+    '^@/styles/(.*)$',
+    '^@/app/(.*)$',
+    '',
+    '^[./]',
+  ],
+  importOrderSeparation: false,
   importOrderSortSpecifiers: true,
-  importOrderSeparation: true,
-  plugins: [SortImports],
+  importOrderBuiltinModulesToTop: true,
+  importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
+  importOrderMergeDuplicateImports: true,
+  importOrderCombineTypeAndValueImports: false,
+  plugins: [SortImports, require('prettier-plugin-tailwindcss')],
 });
