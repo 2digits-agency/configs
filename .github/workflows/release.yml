@@ -1,36 +1,42 @@
 name: 💠 Publish
 
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 on:
   push:
     branches:
       - 'main'
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
 jobs:
   publish:
     name: 🦋 Changesets
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FORCE_COLORS: 1
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
     steps:
       - name: 🗃️ Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       - name: 🛸 Setup PNPM
         uses: pnpm/action-setup@v2
-        with:
-          version: 7
 
       - name: 🏭 Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 'lts/*'
           cache: 'pnpm'
 
       - name: 📦 Install dependencies
         run: pnpm install
 
       - name: 🏗️ Build packages
-        run: pnpm run build
+        run: pnpm build
 
       - name: 🪄 Create Release Pull Request or Publish
         id: changesets
