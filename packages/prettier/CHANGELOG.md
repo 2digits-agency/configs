@@ -1,5 +1,17 @@
 # @2digits/prettier-config
 
+## 0.3.0
+
+### Minor Changes
+
+- 5281e1e: Added tailwindcss auto sorting for classnames
+
+### Patch Changes
+
+- 9c450e3: Changed import sorting plugin
+- 1704a2c: Added new import sorting rules
+- 0ee62f8: Updated deps
+
 ## 0.2.0
 
 ### Minor Changes
