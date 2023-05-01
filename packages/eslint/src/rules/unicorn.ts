@@ -4,4 +4,5 @@ export const unicorn = {
   'unicorn/filename-case': ['off'],
   'unicorn/prefer-module': ['off'],
   'unicorn/prevent-abbreviations': ['off'],
+  'unicorn/prefer-ternary': ['error', 'only-single-line'],
 } satisfies Rules;
