@@ -7,7 +7,7 @@ export default defineConfig({
   trailingComma: 'all',
   bracketSameLine: true,
   singleQuote: true,
-  importOrder: ['<THIRD_PARTY_MODULES>', '^@2digits/', '^[./]'],
+  importOrder: ['<THIRD_PARTY_MODULES>', '^@2digits/', '^@mod/', '^[./]'],
   importOrderGroupNamespaceSpecifiers: true,
   importOrderSortSpecifiers: true,
   importOrderSeparation: true,
