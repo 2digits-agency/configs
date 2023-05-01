@@ -1,6 +1,5 @@
-import type { PluginConfig } from '@trivago/prettier-plugin-sort-imports';
-import type { Config } from 'prettier';
+import type { PrettierConfig } from '@ianvs/prettier-plugin-sort-imports';
 
-export function defineConfig<TConfig extends PluginConfig & Config>(config: TConfig): TConfig {
+export function defineConfig<TConfig extends PrettierConfig>(config: TConfig): TConfig {
   return config;
 }

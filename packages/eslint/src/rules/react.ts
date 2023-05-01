@@ -1,12 +1,33 @@
-import type { Rules } from 'eslint-define-config';
+import type { Rules, Extends, Settings } from 'eslint-define-config';
+import { isPackageExists } from 'local-pkg';
 
-export const react = {
-  'react/prop-types': ['off'],
-  'react/react-in-jsx-scope': ['off'],
-  'react/jsx-newline': [
-    'error',
-    {
-      prevent: false,
-    },
-  ],
-} satisfies Rules;
+const reactInProject = isPackageExists('react');
+
+export const rules = (
+  reactInProject
+    ? {
+        'react/prop-types': ['off'],
+        'react/react-in-jsx-scope': ['off'],
+        'react/jsx-newline': [
+          'error',
+          {
+            prevent: false,
+          },
+        ],
+      }
+    : {}
+) satisfies Rules;
+
+export const extendsConfig = (
+  reactInProject ? ['plugin:react/recommended', 'plugin:react-hooks/recommended'] : []
+) satisfies Extends;
+
+export const settings = (
+  reactInProject
+    ? {
+        react: {
+          version: 'detect',
+        },
+      }
+    : {}
+) satisfies Settings;

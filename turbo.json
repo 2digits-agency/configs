@@ -1,9 +1,6 @@
 {
   "pipeline": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist"]
-    },
+    "build": { "dependsOn": ["^build"], "outputs": ["dist"] },
     "lint": { "cache": false },
     "types": { "dependsOn": ["^types"], "cache": false }
   }
