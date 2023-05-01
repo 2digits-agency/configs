@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 0.3.0
+
+### Minor Changes
+
+- 45398b2: Added eslint-config-next
+
+### Patch Changes
+
+- fec0ce1: Changed react eslint rules to only apply when react is used in a project
+- 0ee62f8: Updated deps
+
 ## 0.2.1
 
 ### Patch Changes
