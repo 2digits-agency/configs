@@ -1,5 +1,16 @@
 # @2digits/prettier-config
 
+## 0.4.0
+
+### Minor Changes
+
+- f7d5362: Modified the import sorting rules
+
+### Patch Changes
+
+- d0e7586: Updated types for the defineConfig helper util
+- 7d1cb85: Updated deps
+
 ## 0.3.0
 
 ### Minor Changes
