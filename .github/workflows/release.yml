@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      FORCE_COLORS: 1
+      FORCE_COLOR: 1
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
     steps:
       - name: 🗃️ Checkout repository
@@ -36,7 +36,7 @@ jobs:
         run: pnpm install
 
       - name: 🏗️ Build packages
-        run: pnpm build
+        run: pnpm build --force
 
       - name: 🪄 Create Release Pull Request or Publish
         id: changesets

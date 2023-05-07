@@ -3,38 +3,38 @@ name: 🛂 CI/CD
 on:
   push:
     branches:
+      - 'main'
+  pull_request:
+    branches:
       - '**'
 
 jobs:
   build:
     name: ⚗️ Lint, typecheck and format
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FORCE_COLOR: 1
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
     steps:
       - name: 🗃️ Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       - name: 🛸 Setup PNPM
         uses: pnpm/action-setup@v2
-        with:
-          version: 7
 
       - name: 🏭 Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 'lts/*'
           cache: 'pnpm'
 
       - name: 📦 Install dependencies
         run: pnpm install
 
-      - name: 🏗️ Build packages
-        run: pnpm run build
-
-      - name: 🩻 Check types
-        run: pnpm run types
-
-      - name: 🔬 Lint files
-        run: pnpm run lint
-
-      - name: 🧬 Format files
-        run: pnpm run format
+      - name: 🧪 Test, lint, format, build, bench, build and type-check
+        run: pnpm turbo run build lint format types
