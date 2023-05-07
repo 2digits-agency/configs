@@ -1,5 +1,13 @@
 # @2digits/tsconfig
 
+## 0.1.2
+
+### Patch Changes
+
+- d0e7586: Updated types for the defineConfig helper util
+- 7d1cb85: Updated deps
+- c0293b9: Updated tsconfig to show full errors by default
+
 ## 0.1.1
 
 ### Patch Changes

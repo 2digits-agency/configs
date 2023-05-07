@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 0.3.1
+
+### Patch Changes
+
+- 7d1cb85: Updated deps
+
 ## 0.3.0
 
 ### Minor Changes
