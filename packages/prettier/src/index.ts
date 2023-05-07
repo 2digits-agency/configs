@@ -1,4 +1,4 @@
-import SortImports from '@ianvs/prettier-plugin-sort-imports';
+import SortImports from '@trivago/prettier-plugin-sort-imports';
 
 import { defineConfig } from './utils';
 
@@ -11,28 +11,13 @@ export default defineConfig({
     '^(react/(.*)$)|^(react$)',
     '^(next/(.*)$)|^(next$)',
     '<THIRD_PARTY_MODULES>',
-    '',
     '^@2digits/',
-    '',
     '^@mod/',
-    '',
-    '^types$',
-    '^@/types/(.*)$',
-    '^@/config/(.*)$',
-    '^@/lib/(.*)$',
-    '^@/hooks/(.*)$',
-    '^@/components/ui/(.*)$',
-    '^@/components/(.*)$',
-    '^@/styles/(.*)$',
-    '^@/app/(.*)$',
-    '',
+    '^@/',
     '^[./]',
   ],
-  importOrderSeparation: false,
+  importOrderSeparation: true,
   importOrderSortSpecifiers: true,
-  importOrderBuiltinModulesToTop: true,
-  importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
-  importOrderMergeDuplicateImports: true,
-  importOrderCombineTypeAndValueImports: false,
+  importOrderGroupNamespaceSpecifiers: true,
   plugins: [SortImports, require('prettier-plugin-tailwindcss')],
 });
