@@ -3,11 +3,11 @@
     "build": { "dependsOn": ["^build"], "outputs": ["dist"] },
     "types": { "dependsOn": ["^types"], "cache": false },
 
-    "lint": { "dependsOn": ["^build"] },
+    "lint": { "dependsOn": ["@2digits/eslint-config#build"] },
     "//#lint:pkg": { "inputs": ["**/package.json"] },
     "//#lint:pkg:fix": { "cache": false },
 
-    "//#format": { "dependsOn": ["^build"] },
-    "//#format:fix": { "cache": false }
+    "//#format": { "dependsOn": ["@2digits/prettier-config#build"] },
+    "//#format:fix": { "cache": false, "dependsOn": ["@2digits/prettier-config#build"] }
   }
 }
