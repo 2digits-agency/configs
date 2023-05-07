@@ -1,7 +1,13 @@
 {
   "pipeline": {
     "build": { "dependsOn": ["^build"], "outputs": ["dist"] },
-    "lint": { "cache": false },
-    "types": { "dependsOn": ["^types"], "cache": false }
+    "types": { "dependsOn": ["^types"], "cache": false },
+
+    "lint": { "dependsOn": ["@2digits/eslint-config#build"] },
+    "//#lint:pkg": { "inputs": ["**/package.json"] },
+    "//#lint:pkg:fix": { "cache": false },
+
+    "//#format": { "dependsOn": ["@2digits/prettier-config#build"] },
+    "//#format:fix": { "cache": false, "dependsOn": ["@2digits/prettier-config#build"] }
   }
 }
