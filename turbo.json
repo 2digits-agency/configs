@@ -3,11 +3,11 @@
     "build": { "dependsOn": ["^build"], "outputs": ["dist"] },
     "types": { "dependsOn": ["^types"], "cache": false },
 
-    "lint": {},
+    "lint": { "dependsOn": ["^build"] },
     "//#lint:pkg": { "inputs": ["**/package.json"] },
     "//#lint:pkg:fix": { "cache": false },
 
-    "//#format": {},
+    "//#format": { "dependsOn": ["^build"] },
     "//#format:fix": { "cache": false }
   }
 }
