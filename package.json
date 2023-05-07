@@ -8,8 +8,10 @@
     "dev": "turbo run dev",
     "format": "bash -c 'prettier \"**/*\" --ignore-unknown --ignore-path <(cat .gitignore .prettierignore) --check'",
     "format:fix": "bash -c 'prettier \"**/*\" --ignore-unknown --ignore-path <(cat .gitignore .prettierignore) --write'",
-    "lint": "turbo lint && manypkg check",
-    "lint:fix": "turbo lint -- --fix && manypkg fix",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:pkg:fix lint -- --fix",
+    "lint:pkg": "manypkg check",
+    "lint:pkg:fix": "manypkg fix",
     "types": "turbo types",
     "publish": "changeset publish",
     "release": "turbo run build && changeset publish"

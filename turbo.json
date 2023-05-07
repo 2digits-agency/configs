@@ -1,7 +1,13 @@
 {
   "pipeline": {
     "build": { "dependsOn": ["^build"], "outputs": ["dist"] },
-    "lint": { "cache": false },
-    "types": { "dependsOn": ["^types"], "cache": false }
+    "types": { "dependsOn": ["^types"], "cache": false },
+
+    "lint": {},
+    "//#lint:pkg": { "inputs": ["**/package.json"] },
+    "//#lint:pkg:fix": { "cache": false },
+
+    "//#format": {},
+    "//#format:fix": { "cache": false }
   }
 }
