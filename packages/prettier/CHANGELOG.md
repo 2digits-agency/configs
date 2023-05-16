@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 0.5.0
+
+### Minor Changes
+
+- 3c00d38: Added new tailwind auto formatting in functions
+
 ## 0.4.0
 
 ### Minor Changes
