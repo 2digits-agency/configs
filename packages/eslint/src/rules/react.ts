@@ -1,4 +1,4 @@
-import type { Rules, Extends, Settings } from 'eslint-define-config';
+import type { Extends, Rules, Settings } from 'eslint-define-config';
 import { isPackageExists } from 'local-pkg';
 
 const reactInProject = isPackageExists('react');
