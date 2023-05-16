@@ -1,9 +1,10 @@
+import type { KnownExtensions } from 'eslint-define-config';
 import { isPackageExists } from 'local-pkg';
+
 import * as React from './rules/react';
 import { typescript } from './rules/typescript';
 import { unicorn } from './rules/unicorn';
 import { defineConfig, tsconfigRootDir } from './utils';
-import type { KnownExtensions } from 'eslint-define-config';
 
 const isNextInProject = isPackageExists('next');
 
@@ -20,7 +21,9 @@ export default defineConfig({
   extends: [
     'eslint:recommended',
     'turbo',
+
     isNextInProject && 'next',
+
     'plugin:unicorn/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',

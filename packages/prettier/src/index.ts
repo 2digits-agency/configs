@@ -7,6 +7,7 @@ export default defineConfig({
   trailingComma: 'all',
   bracketSameLine: true,
   singleQuote: true,
+
   importOrder: [
     '^(react/(.*)$)|^(react$)',
     '^(next/(.*)$)|^(next$)',
@@ -19,5 +20,8 @@ export default defineConfig({
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   importOrderGroupNamespaceSpecifiers: true,
+
+  tailwindFunctions: ['tv', 'cn', 'cnBase', 'classNames', 'clsx', 'cx'],
+
   plugins: [SortImports, require('prettier-plugin-tailwindcss')],
 });
