@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 0.3.2
+
+### Patch Changes
+
+- 76bac0d: Formatting + updates
+
 ## 0.3.1
 
 ### Patch Changes
