@@ -1,4 +1,4 @@
-import SortImports from '@trivago/prettier-plugin-sort-imports';
+import SortImports from '@ianvs/prettier-plugin-sort-imports';
 
 import { defineConfig } from './utils';
 
@@ -11,15 +11,20 @@ export default defineConfig({
   importOrder: [
     '^(react/(.*)$)|^(react$)',
     '^(next/(.*)$)|^(next$)',
+    '',
     '<THIRD_PARTY_MODULES>',
+    '',
     '^@2digits/',
     '^@mod/',
+    '',
     '^@/',
+    '',
     '^[./]',
   ],
-  importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   importOrderGroupNamespaceSpecifiers: true,
+  importOrderMergeDuplicateImports: true,
+  importOrderCombineTypeAndValueImports: true,
 
   tailwindFunctions: ['tv', 'cn', 'cnBase', 'classNames', 'clsx', 'cx'],
 

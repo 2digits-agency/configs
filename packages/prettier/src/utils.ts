@@ -1,4 +1,4 @@
-import type { PrettierConfig } from '@trivago/prettier-plugin-sort-imports';
+import type { PrettierConfig } from '@ianvs/prettier-plugin-sort-imports';
 
 export interface TailwindPluginOptions {
   tailwindConfig?: string;
