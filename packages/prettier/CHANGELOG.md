@@ -1,5 +1,15 @@
 # @2digits/prettier-config
 
+## 0.6.0
+
+### Minor Changes
+
+- 97d809c: Updated prettier config to use new import sorting plugin
+
+### Patch Changes
+
+- 9acc74f: Updated dependencies
+
 ## 0.5.0
 
 ### Minor Changes
