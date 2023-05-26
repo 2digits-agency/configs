@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 0.6.1
+
+### Patch Changes
+
+- 78922ff: Reworked pnpm install stuff
+
 ## 0.6.0
 
 ### Minor Changes

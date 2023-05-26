@@ -1,5 +1,13 @@
 # @2digits/tsconfig
 
+## 0.1.3
+
+### Patch Changes
+
+- 4541687: Enabled resolvePackageJsonExports
+- 30fc28d: Updated target to ESNext
+- 78922ff: Reworked pnpm install stuff
+
 ## 0.1.2
 
 ### Patch Changes
