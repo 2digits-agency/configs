@@ -1,17 +1,22 @@
 lockfileVersion: '6.0'
 
+overrides:
+  '@2digits/eslint-config': link:./packages/eslint
+  '@2digits/prettier-config': link:./packages/prettier
+  '@2digits/tsconfig': link:./packages/tsconfig
+
 importers:
 
   .:
     dependencies:
       '@2digits/eslint-config':
-        specifier: workspace:*
+        specifier: link:packages/eslint
         version: link:packages/eslint
       '@2digits/prettier-config':
-        specifier: workspace:*
+        specifier: link:packages/prettier
         version: link:packages/prettier
       '@2digits/tsconfig':
-        specifier: workspace:*
+        specifier: link:packages/tsconfig
         version: link:packages/tsconfig
       '@changesets/cli':
         specifier: ^2.26.1
@@ -75,7 +80,7 @@ importers:
         version: 1.1.0
     devDependencies:
       '@2digits/tsconfig':
-        specifier: workspace:*
+        specifier: link:../tsconfig
         version: link:../tsconfig
       eslint:
         specifier: '>=8.41.0'
@@ -103,7 +108,7 @@ importers:
         version: 0.3.0(@ianvs/prettier-plugin-sort-imports@3.7.2)(prettier@2.8.8)
     devDependencies:
       '@2digits/tsconfig':
-        specifier: workspace:*
+        specifier: link:../tsconfig
         version: link:../tsconfig
       '@types/prettier':
         specifier: ^2.7.2
