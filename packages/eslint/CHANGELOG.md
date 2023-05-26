@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 0.3.4
+
+### Patch Changes
+
+- eb84f61: Make sure type imports dont get converted to side effect imports
+- 78922ff: Reworked pnpm install stuff
+- 85e800a: Enabled max-params warning
+
 ## 0.3.3
 
 ### Patch Changes
