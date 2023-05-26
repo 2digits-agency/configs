@@ -12,8 +12,6 @@ updates:
 
   - package-ecosystem: 'npm'
     directory: '/'
-    ignore:
-      - dependency-name: '@2digits/*'
     schedule:
       interval: 'daily'
     reviewers:
@@ -21,8 +19,6 @@ updates:
 
   - package-ecosystem: 'npm'
     directory: '/packages/tsconfig'
-    ignore:
-      - dependency-name: '@2digits/*'
     schedule:
       interval: 'daily'
     reviewers:
@@ -30,8 +26,6 @@ updates:
 
   - package-ecosystem: 'npm'
     directory: '/packages/eslint'
-    ignore:
-      - dependency-name: '@2digits/*'
     schedule:
       interval: 'daily'
     reviewers:
@@ -39,8 +33,6 @@ updates:
 
   - package-ecosystem: 'npm'
     directory: '/packages/prettier'
-    ignore:
-      - dependency-name: '@2digits/*'
     schedule:
       interval: 'daily'
     reviewers:
