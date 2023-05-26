@@ -2,6 +2,7 @@
   "pipeline": {
     "build": { "dependsOn": ["^build"], "outputs": ["dist"] },
     "types": { "dependsOn": ["^types"], "cache": false },
+    "dev": { "persistent": true },
 
     "lint": { "dependsOn": ["@2digits/eslint-config#build"] },
     "//#lint:pkg": { "inputs": ["**/package.json"] },
