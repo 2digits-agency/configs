@@ -8,7 +8,7 @@
     "dev": "turbo run dev",
     "format": "bash -c 'prettier \"**/*\" --ignore-unknown --ignore-path <(cat .gitignore .prettierignore) --check'",
     "format:fix": "bash -c 'prettier \"**/*\" --ignore-unknown --ignore-path <(cat .gitignore .prettierignore) --write'",
-    "lint": "turbo run lint",
+    "lint": "turbo run lint lint:pkg",
     "lint:fix": "turbo run lint:pkg:fix lint -- --fix",
     "lint:pkg": "manypkg check",
     "lint:pkg:fix": "manypkg fix",
@@ -20,25 +20,27 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@2digits/eslint-config": "workspace:*",
-    "@2digits/prettier-config": "workspace:*",
-    "@2digits/tsconfig": "workspace:*",
+    "@2digits/eslint-config": "0.3.3",
+    "@2digits/prettier-config": "0.6.0",
+    "@2digits/tsconfig": "0.1.2",
     "@changesets/cli": "^2.26.1",
     "@manypkg/cli": "^0.20.0",
-    "@types/node": "^20.2.3",
+    "@types/node": "^20.2.4",
     "eslint": ">=8.41.0",
     "prettier": "^2.8.8",
     "turbo": "^1.9.9",
     "typescript": "^5.0.4"
   },
-  "manypkg": {
-    "ignoredRules": [
-      "INTERNAL_MISMATCH"
-    ]
-  },
   "packageManager": "pnpm@8.5.1",
   "eslintConfig": {
     "extends": "@2digits"
   },
-  "prettier": "@2digits/prettier-config"
+  "prettier": "@2digits/prettier-config",
+  "pnpm": {
+    "overrides": {
+      "@2digits/eslint-config": "link:./packages/eslint",
+      "@2digits/prettier-config": "link:./packages/prettier",
+      "@2digits/tsconfig": "link:./packages/tsconfig"
+    }
+  }
 }
