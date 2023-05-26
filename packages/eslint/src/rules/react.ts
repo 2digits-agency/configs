@@ -22,12 +22,8 @@ export const extendsConfig = (
   reactInProject ? ['plugin:react/recommended', 'plugin:react-hooks/recommended'] : []
 ) satisfies Extends;
 
-export const settings = (
-  reactInProject
-    ? {
-        react: {
-          version: 'detect',
-        },
-      }
-    : {}
-) satisfies Settings;
+export const settings = {
+  react: {
+    version: 'detect',
+  },
+} satisfies Settings;

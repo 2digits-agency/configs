@@ -60,5 +60,6 @@ export default defineConfig({
     ...unicorn,
 
     'sort-imports': ['off'],
+    'max-params': ['warn'],
   },
 });
