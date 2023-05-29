@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.1.4
+
+### Patch Changes
+
+- 2cf70bf: Removed resolvePackageJsonExports since it screwed up base node resolves
+
 ## 0.1.3
 
 ### Patch Changes
