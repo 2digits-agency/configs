@@ -1,6 +1,4 @@
-import SortImports from '@ianvs/prettier-plugin-sort-imports';
-
-import { defineConfig } from './utils';
+import { defineConfig, getTypescriptVersion } from './utils';
 
 export default defineConfig({
   printWidth: 100,
@@ -9,7 +7,11 @@ export default defineConfig({
   singleQuote: true,
 
   importOrder: [
+    '<BUILTIN_MODULES>',
+    '',
     '^(react/(.*)$)|^(react$)',
+    '^(react-native/(.*)$)|^(react-native$)',
+    '',
     '^(next/(.*)$)|^(next$)',
     '',
     '<THIRD_PARTY_MODULES>',
@@ -18,15 +20,21 @@ export default defineConfig({
     '^@mod/',
     '',
     '^@/',
+    '^(@[A-Z](.*))',
+    '',
+    '.json$',
     '',
     '^[./]',
   ],
-  importOrderSortSpecifiers: true,
-  importOrderGroupNamespaceSpecifiers: true,
-  importOrderMergeDuplicateImports: true,
-  importOrderCombineTypeAndValueImports: true,
+  importOrderTypeScriptVersion: getTypescriptVersion(),
 
   tailwindFunctions: ['tv', 'cn', 'cnBase', 'classNames', 'clsx', 'cx'],
 
-  plugins: [SortImports, require('prettier-plugin-tailwindcss')],
+  pluginSearchDirs: false,
+
+  plugins: [
+    require('prettier-plugin-toml'),
+    require('@ianvs/prettier-plugin-sort-imports'),
+    require('prettier-plugin-tailwindcss'),
+  ],
 });
