@@ -1,10 +1,10 @@
 import type { Extends, Rules, Settings } from 'eslint-define-config';
-import { isPackageExists } from 'local-pkg';
+import { getPackageInfoSync } from 'local-pkg';
 
-const reactInProject = isPackageExists('react');
+const reactVersion = getPackageInfoSync('react')?.version;
 
 export const rules = (
-  reactInProject
+  reactVersion
     ? {
         'react/prop-types': ['off'],
         'react/react-in-jsx-scope': ['off'],
@@ -19,11 +19,15 @@ export const rules = (
 ) satisfies Rules;
 
 export const extendsConfig = (
-  reactInProject ? ['plugin:react/recommended', 'plugin:react-hooks/recommended'] : []
+  reactVersion ? ['plugin:react/recommended', 'plugin:react-hooks/recommended'] : []
 ) satisfies Extends;
 
-export const settings = {
-  react: {
-    version: 'detect',
-  },
-} satisfies Settings;
+export const settings = (
+  reactVersion
+    ? {
+        react: {
+          version: reactVersion,
+        },
+      }
+    : {}
+) satisfies Settings;
