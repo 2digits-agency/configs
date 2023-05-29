@@ -1,5 +1,16 @@
 # @2digits/prettier-config
 
+## 0.7.0
+
+### Minor Changes
+
+- 53ada67: Upgraded prettier-plugin-sort-imports to 4.0.0
+- 2f87ff0: Updated importOrder
+
+### Patch Changes
+
+- 6535261: Automatically detect typescript version
+
 ## 0.6.1
 
 ### Patch Changes

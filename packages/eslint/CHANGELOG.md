@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 0.4.0
+
+### Minor Changes
+
+- 6922293: Better auto resolve react version
+- ec472fd: Added filename casing linting
+
 ## 0.3.4
 
 ### Patch Changes
