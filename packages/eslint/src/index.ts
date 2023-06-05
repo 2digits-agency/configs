@@ -24,6 +24,8 @@ export default defineConfig({
 
     isNextInProject && 'next',
 
+    'plugin:tailwindcss/recommended',
+
     'plugin:unicorn/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
@@ -58,6 +60,8 @@ export default defineConfig({
     ...React.rules,
 
     ...unicorn,
+
+    'tailwindcss/classnames-order': ['off'],
 
     'sort-imports': ['off'],
     'max-params': ['warn'],
