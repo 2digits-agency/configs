@@ -8,6 +8,7 @@ export const rules = (
     ? {
         'react/prop-types': ['off'],
         'react/react-in-jsx-scope': ['off'],
+        'react/jsx-curly-newline': ['off'],
         'react/jsx-newline': [
           'error',
           {
