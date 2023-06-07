@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 0.5.0
+
+### Minor Changes
+
+- 16c6614: Updated to typescript 5.1
+- 46a54ba: Added tailwindcss plugin to check for valid classnames
+
+### Patch Changes
+
+- 6b78046: Fixed undefined being reported as a useless argument (thanks @SocialMaurits)
+
 ## 0.4.0
 
 ### Minor Changes

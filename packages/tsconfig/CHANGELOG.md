@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.2.0
+
+### Minor Changes
+
+- 16c6614: Updated to typescript 5.1
+
 ## 0.1.4
 
 ### Patch Changes

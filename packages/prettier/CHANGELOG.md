@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 0.8.0
+
+### Minor Changes
+
+- 16c6614: Updated to typescript 5.1
+
 ## 0.7.0
 
 ### Minor Changes
