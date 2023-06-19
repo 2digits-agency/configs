@@ -1,6 +1,9 @@
-import type { Extends } from 'eslint-define-config';
 import { getPackageInfoSync } from 'local-pkg';
+
+import { defineConfig } from '../utils';
 
 const nextVersion = getPackageInfoSync('next')?.version;
 
-export const next = (nextVersion ? ['next'] : []) satisfies Extends;
+export const next = defineConfig({
+  extends: nextVersion ? ['next'] : [],
+});
