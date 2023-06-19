@@ -1,37 +1,37 @@
 import { next } from './rules/next';
-import * as React from './rules/react';
+import { react } from './rules/react';
+import { tailwind } from './rules/tailwind';
 import { typescript } from './rules/typescript';
 import { unicorn } from './rules/unicorn';
-import { defineConfig, tsconfigRootDir } from './utils';
+import { defineConfig } from './utils';
 
 export default defineConfig({
   root: true,
   parserOptions: {
     sourceType: 'module',
-    project: ['./tsconfig.json', './packages/*/tsconfig.json', './apps/*/tsconfig.json'],
-    tsconfigRootDir,
     cacheLifetime: {
       glob: 'Infinity',
     },
+
+    ...typescript.parserOptions,
   },
   extends: [
     'eslint:recommended',
     'turbo',
 
-    ...next,
+    ...next.extends,
 
-    'plugin:tailwindcss/recommended',
+    ...tailwind.extends,
 
-    'plugin:unicorn/recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:@typescript-eslint/strict',
+    ...unicorn.extends,
 
-    ...React.extendsConfig,
+    ...typescript.extends,
+
+    ...react.extends,
 
     'prettier',
   ],
-  parser: '@typescript-eslint/parser',
+  parser: typescript.parser,
   env: {
     es6: true,
     node: true,
@@ -48,20 +48,18 @@ export default defineConfig({
     'templates',
   ],
   settings: {
-    ...React.settings,
+    ...react.settings,
 
-    tailwindcss: {
-      callees: ['tv', 'classnames', 'clsx', 'cn', 'cnBase'],
-    },
+    ...tailwind.settings,
   },
   rules: {
-    ...typescript,
+    ...typescript.rules,
 
-    ...React.rules,
+    ...react.rules,
 
-    ...unicorn,
+    ...unicorn.rules,
 
-    'tailwindcss/classnames-order': ['off'],
+    ...tailwind.rules,
 
     'sort-imports': ['off'],
     'max-params': ['warn'],

@@ -5,6 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  '@2digits/constants': link:./packages/constants
   '@2digits/eslint-config': link:./packages/eslint
   '@2digits/prettier-config': link:./packages/prettier
   '@2digits/tsconfig': link:./packages/tsconfig
@@ -44,8 +45,26 @@ importers:
         specifier: ^5.1.3
         version: 5.1.3
 
+  packages/constants:
+    devDependencies:
+      '@2digits/tsconfig':
+        specifier: link:../tsconfig
+        version: link:../tsconfig
+      eslint:
+        specifier: '>=8.43.0'
+        version: 8.43.0
+      tsup:
+        specifier: ^7.0.0
+        version: 7.0.0(postcss@8.4.24)(typescript@5.1.3)
+      typescript:
+        specifier: ^5.1.3
+        version: 5.1.3
+
   packages/eslint:
     dependencies:
+      '@2digits/constants':
+        specifier: link:../constants
+        version: link:../constants
       '@types/eslint':
         specifier: ^8.40.2
         version: 8.40.2
@@ -107,6 +126,9 @@ importers:
 
   packages/prettier:
     dependencies:
+      '@2digits/constants':
+        specifier: link:../constants
+        version: link:../constants
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.0.2
         version: 4.0.2(prettier@2.8.8)
