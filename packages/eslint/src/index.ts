@@ -1,12 +1,8 @@
-import type { KnownExtensions } from 'eslint-define-config';
-import { isPackageExists } from 'local-pkg';
-
+import { next } from './rules/next';
 import * as React from './rules/react';
 import { typescript } from './rules/typescript';
 import { unicorn } from './rules/unicorn';
 import { defineConfig, tsconfigRootDir } from './utils';
-
-const isNextInProject = isPackageExists('next');
 
 export default defineConfig({
   root: true,
@@ -22,7 +18,7 @@ export default defineConfig({
     'eslint:recommended',
     'turbo',
 
-    isNextInProject && 'next',
+    ...next,
 
     'plugin:tailwindcss/recommended',
 
@@ -34,7 +30,7 @@ export default defineConfig({
     ...React.extendsConfig,
 
     'prettier',
-  ].filter((a): a is KnownExtensions => !!a),
+  ],
   parser: '@typescript-eslint/parser',
   env: {
     es6: true,
