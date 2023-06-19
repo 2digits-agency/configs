@@ -53,6 +53,10 @@ export default defineConfig({
   ],
   settings: {
     ...React.settings,
+
+    tailwindcss: {
+      callees: ['tv', 'classnames', 'clsx', 'cn', 'cnBase'],
+    },
   },
   rules: {
     ...typescript,

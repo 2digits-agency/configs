@@ -23,4 +23,5 @@ export const typescript = {
   '@typescript-eslint/no-empty-interface': ['error', { allowSingleExtends: true }],
   '@typescript-eslint/no-explicit-any': ['warn'],
   '@typescript-eslint/no-import-type-side-effects': ['error'],
+  '@typescript-eslint/no-misused-promises': 'off',
 } satisfies Rules;
