@@ -39,6 +39,7 @@
   "prettier": "@2digits/prettier-config",
   "pnpm": {
     "overrides": {
+      "@2digits/constants": "link:./packages/constants",
       "@2digits/eslint-config": "link:./packages/eslint",
       "@2digits/prettier-config": "link:./packages/prettier",
       "@2digits/tsconfig": "link:./packages/tsconfig"
