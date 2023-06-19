@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 0.5.1
+
+### Patch Changes
+
+- eaf5c26: Updated dependencies
+- d0a5d95: Added eslint settings to better detect valid classnames
+- 10639e4: Disable checking for misused promises
+
 ## 0.5.0
 
 ### Minor Changes
