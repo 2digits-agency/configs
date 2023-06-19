@@ -14,9 +14,7 @@ export interface TailwindPluginOptions {
 
 export type PrettierConfigWithPlugins = PrettierConfig & TailwindPluginOptions;
 
-export function defineConfig<const TConfig extends PrettierConfigWithPlugins>(
-  config: TConfig,
-): TConfig {
+export function defineConfig<TConfig extends PrettierConfigWithPlugins>(config: TConfig): TConfig {
   return config;
 }
 

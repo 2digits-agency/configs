@@ -1,3 +1,5 @@
+import { tailwindFunctions } from '@2digits/constants';
+
 import { defineConfig, getTypescriptVersion } from './utils';
 
 export default defineConfig({
@@ -28,7 +30,7 @@ export default defineConfig({
   ],
   importOrderTypeScriptVersion: getTypescriptVersion(),
 
-  tailwindFunctions: ['tv', 'cn', 'cnBase', 'classNames', 'clsx', 'cx'],
+  tailwindFunctions,
 
   pluginSearchDirs: false,
 
