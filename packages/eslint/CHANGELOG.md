@@ -1,5 +1,20 @@
 # @2digits/eslint-config
 
+## 0.6.0
+
+### Minor Changes
+
+- 42782c2: Refactored tailwindFunctions to an external constants package
+
+### Patch Changes
+
+- 2bb82c1: Added next.ts config
+- 5163bba: Improved defineConfig types
+- 4aed6d6: Made eslint search for tailwind config, closes #37
+- d99ea1e: Refactored and unified the way the eslint config gets built
+- Updated dependencies [42782c2]
+  - @2digits/constants@0.0.1
+
 ## 0.5.1
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @2digits/prettier-config
 
+## 0.9.0
+
+### Minor Changes
+
+- 42782c2: Refactored tailwindFunctions to an external constants package
+
+### Patch Changes
+
+- 5163bba: Improved defineConfig types
+- Updated dependencies [42782c2]
+  - @2digits/constants@0.0.1
+
 ## 0.8.1
 
 ### Patch Changes
