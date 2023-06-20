@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 0.6.1
+
+### Patch Changes
+
+- d3a98e3: Added eslint-plugin-storybook
+
 ## 0.6.0
 
 ### Minor Changes
