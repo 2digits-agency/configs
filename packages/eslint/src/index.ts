@@ -1,5 +1,6 @@
 import { next } from './rules/next';
 import { react } from './rules/react';
+import { storybook } from './rules/storybook';
 import { tailwind } from './rules/tailwind';
 import { typescript } from './rules/typescript';
 import { unicorn } from './rules/unicorn';
@@ -15,6 +16,7 @@ export default defineConfig({
 
     ...typescript.parserOptions,
   },
+  plugins: [...storybook.plugins],
   extends: [
     'eslint:recommended',
     'turbo',
@@ -64,4 +66,5 @@ export default defineConfig({
     'sort-imports': ['off'],
     'max-params': ['warn'],
   },
+  overrides: [...storybook.overrides],
 });
