@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 0.6.2
+
+### Patch Changes
+
+- 1d90de8: Updated deps
+
 ## 0.6.1
 
 ### Patch Changes
