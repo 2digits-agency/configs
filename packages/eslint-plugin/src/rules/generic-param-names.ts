@@ -50,9 +50,9 @@ export default createRule<[], MessageId>({
 
           const messageId = match(name)
             .with(P.string.regex(TypeParamRegex), () => false as const)
-            .with(P.string.regex(RemainderRegex), () => MessageId.remainder)
             .with(P.not(P.string.regex(PrefixRegex)), () => MessageId.prefix)
             .with(P.not(P.string.regex(InitialRegex)), () => MessageId.initial)
+            .with(P.not(P.string.regex(RemainderRegex)), () => MessageId.remainder)
             .otherwise(() => false as const);
 
           messageId &&
