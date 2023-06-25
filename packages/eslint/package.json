@@ -8,14 +8,19 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": {
+        "default": "./dist/index.mjs",
+        "types": "./dist/index.d.mts"
+      },
+      "require": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
     }
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -34,6 +39,7 @@
   },
   "dependencies": {
     "@2digits/constants": "*",
+    "@2digits/eslint-plugin": "*",
     "@types/eslint": "^8.40.2",
     "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.60.0",
@@ -53,7 +59,7 @@
     "@2digits/tsconfig": "*",
     "eslint": ">=8.43.0",
     "eslint-define-config": "^1.21.0",
-    "tsup": "^7.0.0",
+    "tsup": "^7.1.0",
     "turbo": "^1.10.6",
     "typescript": "^5.1.3"
   },

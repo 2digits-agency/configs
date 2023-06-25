@@ -29,6 +29,8 @@ export default defineConfig({
 
     ...typescript.extends,
 
+    'plugin:@2digits/recommended',
+
     ...react.extends,
 
     'prettier',
