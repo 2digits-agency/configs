@@ -13,6 +13,7 @@
     "lint:pkg": "manypkg check",
     "lint:pkg:fix": "manypkg fix",
     "types": "turbo types",
+    "test": "turbo test",
     "publish": "changeset publish",
     "release": "turbo run build && changeset publish",
     "check": "turbo run format lint lint:pkg types --color"
