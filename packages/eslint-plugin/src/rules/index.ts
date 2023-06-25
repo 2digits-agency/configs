@@ -1,5 +1,5 @@
-import genericParamNames from './generic-param-names';
+import typeParamNames from './type-param-names';
 
 export default {
-  'generic-param-names': genericParamNames,
+  'type-param-names': typeParamNames,
 };

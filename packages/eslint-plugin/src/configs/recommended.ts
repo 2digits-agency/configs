@@ -6,6 +6,6 @@ import { defineConfig } from '../utils';
 export default defineConfig({
   plugins: ['@2digits'],
   rules: {
-    '@2digits/generic-param-names': 'error',
+    '@2digits/type-param-names': 'error',
   } satisfies Record<`@2digits/${keyof typeof Rule}`, Rules[string]>,
 });

@@ -26,15 +26,15 @@ export default createRule<[], MessageId>({
   meta: {
     type: 'suggestion',
     docs: {
-      description: 'Enforce giving proper names to generic parameters when there are two or more',
+      description: 'Enforce giving proper names to type parameters when there are two or more',
       recommended: 'error',
     },
     schema: [],
     messages: {
-      prefix: 'Generic parameter {{name}} should have a prefix of "T" or "$"',
-      initial: "Generic parameter {{name}}'s name should start with an uppercase letter",
-      remainder: "Generic parameter {{name}}'s name should contain at least one lowercase letter",
-      regex: 'Generic parameter {{name}} should match the regex {{regex}}',
+      prefix: 'Type parameter {{name}} should have a prefix of "T" or "$"',
+      initial: "Type parameter {{name}}'s name should start with an uppercase letter",
+      remainder: "Type parameter {{name}}'s name should contain at least one lowercase letter",
+      regex: 'Type parameter {{name}} should match the regex {{regex}}',
     },
   },
   defaultOptions: [],
