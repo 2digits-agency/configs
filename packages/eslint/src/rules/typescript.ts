@@ -26,16 +26,7 @@ export const typescript = defineConfig({
       {
         prefer: 'type-imports',
         disallowTypeAnnotations: false,
-        fixStyle: 'separate-type-imports',
-      },
-    ],
-    '@typescript-eslint/naming-convention': [
-      'warn',
-      {
-        selector: 'typeParameter',
-        format: ['PascalCase'],
-        leadingUnderscore: 'allow',
-        custom: { regex: '^(T|\\$)[A-Z][a-zA-Z]+[0-9]*$', match: true },
+        fixStyle: 'inline-type-imports',
       },
     ],
     '@typescript-eslint/no-empty-interface': ['error', { allowSingleExtends: true }],
