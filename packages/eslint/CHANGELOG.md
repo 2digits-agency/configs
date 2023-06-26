@@ -1,5 +1,22 @@
 # @2digits/eslint-config
 
+## 0.7.0
+
+### Minor Changes
+
+- e8d86a1: Extend 'plugin:@2digits/recommended' config
+- 08a5587: Changed eslint rule to prefer inline type imports
+- 6a01f22: Removed '@typescript-eslint/naming-convention'
+- 1190a3f: Added '@2digits/type-param-names' rule
+
+### Patch Changes
+
+- 71234fd: Updated exports fields to match new tsup output
+- Updated dependencies [71234fd]
+- Updated dependencies [1190a3f]
+  - @2digits/constants@0.0.2
+  - @2digits/eslint-plugin@0.0.1
+
 ## 0.6.2
 
 ### Patch Changes

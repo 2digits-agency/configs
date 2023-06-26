@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.0.2
+
+### Patch Changes
+
+- 71234fd: Updated exports fields to match new tsup output
+
 ## 0.0.1
 
 ### Patch Changes

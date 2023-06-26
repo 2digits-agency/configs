@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 0.9.1
+
+### Patch Changes
+
+- 71234fd: Updated exports fields to match new tsup output
+- Updated dependencies [71234fd]
+  - @2digits/constants@0.0.2
+
 ## 0.9.0
 
 ### Minor Changes
