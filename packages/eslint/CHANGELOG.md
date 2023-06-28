@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 0.7.1
+
+### Patch Changes
+
+- 4c04296: Updated typescript version
+- Updated dependencies [4c04296]
+  - @2digits/constants@0.0.3
+  - @2digits/eslint-plugin@0.0.2
+
 ## 0.7.0
 
 ### Minor Changes

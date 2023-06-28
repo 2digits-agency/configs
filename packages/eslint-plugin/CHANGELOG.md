@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 0.0.2
+
+### Patch Changes
+
+- 4c04296: Updated typescript version
+
 ## 0.0.1
 
 ### Patch Changes

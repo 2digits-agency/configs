@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 0.9.2
+
+### Patch Changes
+
+- 4c04296: Updated typescript version
+- Updated dependencies [4c04296]
+  - @2digits/constants@0.0.3
+
 ## 0.9.1
 
 ### Patch Changes
