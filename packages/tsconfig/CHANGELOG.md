@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.2.1
+
+### Patch Changes
+
+- b11c8a6: Bumped typescript version
+
 ## 0.2.0
 
 ### Minor Changes

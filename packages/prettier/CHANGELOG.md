@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 0.9.3
+
+### Patch Changes
+
+- b11c8a6: Bumped typescript version
+- Updated dependencies [b11c8a6]
+  - @2digits/constants@0.0.4
+
 ## 0.9.2
 
 ### Patch Changes
