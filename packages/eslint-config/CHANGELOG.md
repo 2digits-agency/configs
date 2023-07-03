@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 0.7.2
+
+### Patch Changes
+
+- 4ac361d: Moved eslint to eslint-config inside repo
+- 9d6ba66: Disabled default warning for html link on pages in next
+- b11c8a6: Bumped typescript version
+- Updated dependencies [b11c8a6]
+  - @2digits/eslint-plugin@0.0.3
+  - @2digits/constants@0.0.4
+
 ## 0.7.1
 
 ### Patch Changes
