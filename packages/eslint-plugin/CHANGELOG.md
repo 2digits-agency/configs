@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 0.0.3
+
+### Patch Changes
+
+- b11c8a6: Bumped typescript version
+
 ## 0.0.2
 
 ### Patch Changes
