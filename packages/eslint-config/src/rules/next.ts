@@ -4,9 +4,14 @@ import { defineConfig } from '../utils';
 
 const nextVersion = getPackageInfoSync('next')?.version;
 
-export const next = defineConfig({
-  extends: nextVersion ? ['next'] : [],
-  rules: {
-    '@next/next/no-html-link-for-pages': 'off',
-  },
-});
+export const next = nextVersion
+  ? defineConfig({
+      extends: ['next'],
+      rules: {
+        '@next/next/no-html-link-for-pages': 'off',
+      },
+    })
+  : defineConfig({
+      extends: [],
+      rules: undefined,
+    });
