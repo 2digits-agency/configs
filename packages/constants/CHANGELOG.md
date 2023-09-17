@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.0.5
+
+### Patch Changes
+
+- f4017b4: Updated deps
+
 ## 0.0.4
 
 ### Patch Changes

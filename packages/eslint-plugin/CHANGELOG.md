@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 0.0.4
+
+### Patch Changes
+
+- f4017b4: Updated deps
+
 ## 0.0.3
 
 ### Patch Changes
