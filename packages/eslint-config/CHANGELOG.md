@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 0.8.0
+
+### Minor Changes
+
+- ae50376: Removed next related rules when not using next in a project
+- 104b2dc: Fixed tailwind plugin being loaded when not using tailwind in a project
+
+### Patch Changes
+
+- f4017b4: Updated deps
+- Updated dependencies [f4017b4]
+  - @2digits/eslint-plugin@0.0.4
+  - @2digits/constants@0.0.5
+
 ## 0.7.2
 
 ### Patch Changes

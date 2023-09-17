@@ -1,5 +1,15 @@
 # @2digits/tsconfig
 
+## 0.3.0
+
+### Minor Changes
+
+- 202d0a3: Disabled generating declarations and declaration maps
+
+### Patch Changes
+
+- f4017b4: Updated deps
+
 ## 0.2.1
 
 ### Patch Changes

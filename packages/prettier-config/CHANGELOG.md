@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 0.9.4
+
+### Patch Changes
+
+- f4017b4: Updated deps
+- Updated dependencies [f4017b4]
+  - @2digits/constants@0.0.5
+
 ## 0.9.3
 
 ### Patch Changes
