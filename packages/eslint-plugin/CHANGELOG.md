@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 0.0.5
+
+### Patch Changes
+
+- 310849d: Bumped deps to latest version
+
 ## 0.0.4
 
 ### Patch Changes

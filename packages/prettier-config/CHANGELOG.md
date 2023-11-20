@@ -1,5 +1,17 @@
 # @2digits/prettier-config
 
+## 1.0.0
+
+### Major Changes
+
+- 0145de4: Upgraded to prettier version 3
+
+### Patch Changes
+
+- 310849d: Bumped deps to latest version
+- Updated dependencies [310849d]
+  - @2digits/constants@0.0.6
+
 ## 0.9.4
 
 ### Patch Changes
