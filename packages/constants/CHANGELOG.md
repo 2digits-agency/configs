@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.0.6
+
+### Patch Changes
+
+- 310849d: Bumped deps to latest version
+
 ## 0.0.5
 
 ### Patch Changes

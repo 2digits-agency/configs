@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 0.8.1
+
+### Patch Changes
+
+- 310849d: Bumped deps to latest version
+- Updated dependencies [310849d]
+  - @2digits/eslint-plugin@0.0.5
+  - @2digits/constants@0.0.6
+
 ## 0.8.0
 
 ### Minor Changes
