@@ -1,5 +1,17 @@
 # @2digits/prettier-config
 
+## 1.1.0
+
+### Minor Changes
+
+- 48306be: Bumped typescript version
+
+### Patch Changes
+
+- 7d35918: Properly declared types for toml plugin
+- Updated dependencies [48306be]
+  - @2digits/constants@0.1.0
+
 ## 1.0.0
 
 ### Major Changes

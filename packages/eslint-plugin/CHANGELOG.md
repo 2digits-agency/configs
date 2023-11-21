@@ -1,5 +1,15 @@
 # @2digits/eslint-plugin
 
+## 1.0.0
+
+### Major Changes
+
+- 2899a2e: Updated typescript-eslint deps to version 6
+
+### Minor Changes
+
+- 48306be: Bumped typescript version
+
 ## 0.0.5
 
 ### Patch Changes
