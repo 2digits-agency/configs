@@ -1,5 +1,23 @@
 # @2digits/eslint-config
 
+## 1.0.0
+
+### Major Changes
+
+- 2899a2e: Updated typescript-eslint deps to version 6
+
+### Minor Changes
+
+- d40e5b4: Use new EXPERIMENTAL_useProjectService
+- 48306be: Bumped typescript version
+
+### Patch Changes
+
+- Updated dependencies [2899a2e]
+- Updated dependencies [48306be]
+  - @2digits/eslint-plugin@1.0.0
+  - @2digits/constants@0.1.0
+
 ## 0.8.1
 
 ### Patch Changes
