@@ -1,5 +1,7 @@
-import typeParamNames from './type-param-names';
+import * as typeParamNames from './type-param-names';
 
-export default {
-  'type-param-names': typeParamNames,
+export type * from './type-param-names';
+
+export const rules = {
+  'type-param-names': typeParamNames.typeParamNames,
 };

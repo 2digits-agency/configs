@@ -16,7 +16,7 @@ export default defineConfig({
 
     ...typescript.parserOptions,
   },
-  plugins: [...storybook.plugins],
+  plugins: [...typescript.plugins, ...storybook.plugins],
   extends: [
     'eslint:recommended',
     'turbo',
