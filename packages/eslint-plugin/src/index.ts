@@ -1,9 +1,11 @@
-import recommended from './configs/recommended';
-import rules from './rules';
+import { recommended } from './configs/recommended';
+import * as rules from './rules';
 
-export default {
-  rules,
+const plugin = {
+  rules: rules.rules,
   configs: {
     recommended,
   },
 };
+
+export default plugin;

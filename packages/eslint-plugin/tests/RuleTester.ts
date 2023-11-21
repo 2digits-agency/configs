@@ -1,14 +1,13 @@
 import path from 'node:path';
 
-import { ESLintUtils } from '@typescript-eslint/utils';
+import { RuleTester as _RuleTester } from '@typescript-eslint/rule-tester';
 import { afterAll, describe, it } from 'vitest';
 
 export function getFixturesRootDir() {
   return path.join(__dirname, 'fixtures');
 }
 
-const { RuleTester } = ESLintUtils;
-
+const RuleTester = _RuleTester;
 RuleTester.afterAll = afterAll;
 RuleTester.it = it;
 RuleTester.itOnly = it.only;

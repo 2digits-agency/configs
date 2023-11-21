@@ -1,4 +1,4 @@
-import typeParamNames from '../../src/rules/type-param-names';
+import { typeParamNames } from '../../src/rules/type-param-names';
 import { getFixturesRootDir, RuleTester } from '../RuleTester';
 
 /** Gives nice syntax highlighting */

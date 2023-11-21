@@ -9,14 +9,11 @@ const tsconfigRootDir = workspaceRoot && dirname(workspaceRoot);
 
 export const typescript = defineConfig({
   parserOptions: {
-    project: ['./tsconfig.json', './packages/*/tsconfig.json', './apps/*/tsconfig.json'],
+    EXPERIMENTAL_useProjectService: true,
     tsconfigRootDir,
   },
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:@typescript-eslint/strict',
-  ],
+  plugins: ['@typescript-eslint'],
+  extends: ['plugin:@typescript-eslint/strict-type-checked'],
   parser: '@typescript-eslint/parser',
   rules: {
     '@typescript-eslint/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
