@@ -20,6 +20,7 @@ export default defineConfig({
   extends: [
     'eslint:recommended',
     'turbo',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
 
     ...next.extends,
 

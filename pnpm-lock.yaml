@@ -72,6 +72,9 @@ importers:
       '@2digits/eslint-plugin':
         specifier: link:../eslint-plugin
         version: link:../eslint-plugin
+      '@tanstack/eslint-plugin-query':
+        specifier: ^5.14.6
+        version: 5.14.6(eslint@8.56.0)(typescript@5.3.3)
       '@types/eslint':
         specifier: ^8.56.0
         version: 8.56.0
@@ -1174,6 +1177,18 @@ packages:
     engines: {node: '>=14.16'}
     dependencies:
       defer-to-connect: 2.0.1
+    dev: false
+
+  /@tanstack/eslint-plugin-query@5.14.6(eslint@8.56.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-vpowwoGoB9JgZy8fljf53ZTW2yYLRQ3Tjx4WQFKxiKugQOctxaTjQk7wlYzuqA/gjzfPL9qHfKW5DTT9CmIpkA==}
+    peerDependencies:
+      eslint: ^8.0.0
+    dependencies:
+      '@typescript-eslint/utils': 5.62.0(eslint@8.56.0)(typescript@5.3.3)
+      eslint: 8.56.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
     dev: false
 
   /@taplo/core@0.1.1:
