@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.1.1
+
+### Patch Changes
+
+- ff6a7bc: Updated dependencies
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 1.1.0
+
+### Minor Changes
+
+- dfd3348: Removed prefer-toplevel-await
+
+### Patch Changes
+
+- ff6a7bc: Updated dependencies
+- 9a577bc: Added typechecking to eslint rule configs
+- Updated dependencies [ff6a7bc]
+  - @2digits/eslint-plugin@1.0.1
+  - @2digits/constants@0.1.1
+
 ## 1.0.0
 
 ### Major Changes
