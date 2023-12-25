@@ -1,5 +1,14 @@
 # @2digits/prettier-config
 
+## 1.1.1
+
+### Patch Changes
+
+- 368e2f0: Removed toml plugin typedefs
+- ff6a7bc: Updated dependencies
+- Updated dependencies [ff6a7bc]
+  - @2digits/constants@0.1.1
+
 ## 1.1.0
 
 ### Minor Changes

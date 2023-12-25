@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.3.2
+
+### Patch Changes
+
+- ff6a7bc: Updated dependencies
+
 ## 0.3.1
 
 ### Patch Changes

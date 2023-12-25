@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 1.0.1
+
+### Patch Changes
+
+- ff6a7bc: Updated dependencies
+
 ## 1.0.0
 
 ### Major Changes
