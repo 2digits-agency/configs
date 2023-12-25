@@ -8,5 +8,6 @@ export const unicorn = defineConfig({
     'unicorn/prevent-abbreviations': ['off'],
     'unicorn/prefer-ternary': ['error', 'only-single-line'],
     'unicorn/no-useless-undefined': ['error', { checkArguments: false }],
+    'unicorn/prefer-top-level-await': ['off'],
   },
 });
