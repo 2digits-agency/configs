@@ -1,6 +1,6 @@
 {
   "pipeline": {
-    "build": { "dependsOn": ["^build"], "outputs": ["dist"], "inputs": ["**/tsup.config.ts"] },
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"], "inputs": ["**/tsup.config.ts"] },
     "types": { "dependsOn": ["^types"], "cache": false },
     "test": { "dependsOn": ["^test"], "inputs": ["**/*.test.ts"] },
     "dev": { "persistent": true },
