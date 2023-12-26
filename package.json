@@ -16,7 +16,8 @@
     "test": "turbo test",
     "publish": "changeset publish",
     "release": "turbo run build && changeset publish",
-    "check": "turbo run test lint types format lint:pkg --color"
+    "check": "turbo run test lint types format lint:pkg",
+    "fix": "pnpm '/(lint|format):fix$/'"
   },
   "keywords": [],
   "author": "",
