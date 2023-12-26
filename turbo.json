@@ -1,8 +1,8 @@
 {
   "pipeline": {
-    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"], "inputs": ["**/tsup.config.ts"] },
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
     "types": { "dependsOn": ["^types"], "cache": false },
-    "test": { "dependsOn": ["^test"], "inputs": ["**/*.test.ts"] },
+    "test": { "dependsOn": ["^test"] },
     "dev": { "persistent": true },
 
     "lint": { "dependsOn": ["@2digits/eslint-config#build"] },
