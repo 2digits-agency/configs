@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 1.2.0
+
+### Minor Changes
+
+- 65a7dae: Added tanstack-query eslint rules
+
+### Patch Changes
+
+- 9e34d00: Update deps
+- Updated dependencies [9e34d00]
+  - @2digits/eslint-plugin@1.0.2
+
 ## 1.1.0
 
 ### Minor Changes
