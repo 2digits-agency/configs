@@ -1,5 +1,12 @@
 # @2digits/constants
 
+## 0.1.2
+
+### Patch Changes
+
+- b0990d6: Reformatted tsconfigs
+- cb3d9ca: Updated dependencies
+
 ## 0.1.1
 
 ### Patch Changes

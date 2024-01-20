@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 1.2.1
+
+### Patch Changes
+
+- b0990d6: Reformatted tsconfigs
+- cb3d9ca: Updated dependencies
+- Updated dependencies [b0990d6]
+- Updated dependencies [cb3d9ca]
+  - @2digits/eslint-plugin@1.0.3
+  - @2digits/constants@0.1.2
+
 ## 1.2.0
 
 ### Minor Changes
