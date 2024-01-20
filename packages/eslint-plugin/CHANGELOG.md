@@ -1,5 +1,12 @@
 # @2digits/eslint-plugin
 
+## 1.0.3
+
+### Patch Changes
+
+- b0990d6: Reformatted tsconfigs
+- cb3d9ca: Updated dependencies
+
 ## 1.0.2
 
 ### Patch Changes
