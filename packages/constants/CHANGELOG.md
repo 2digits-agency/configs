@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.1.3
+
+### Patch Changes
+
+- 3e16131: Updated deps
+
 ## 0.1.2
 
 ### Patch Changes
