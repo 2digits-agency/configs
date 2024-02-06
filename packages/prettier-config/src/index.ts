@@ -35,6 +35,7 @@ export default defineConfig({
   plugins: [
     require.resolve('prettier-plugin-toml'),
     require.resolve('@ianvs/prettier-plugin-sort-imports'),
+    require.resolve('prettier-plugin-jsdoc'),
     require.resolve('prettier-plugin-tailwindcss'),
   ],
 });
