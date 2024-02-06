@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 1.3.0
+
+### Minor Changes
+
+- 8623879: Added JSDoc linting
+- 711e391: Disabled conflicting jsdoc/tag-lines rule
+
+### Patch Changes
+
+- 3e16131: Updated deps
+- Updated dependencies [3e16131]
+  - @2digits/eslint-plugin@1.0.4
+  - @2digits/constants@0.1.3
+
 ## 1.2.1
 
 ### Patch Changes

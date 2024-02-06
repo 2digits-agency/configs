@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 1.0.4
+
+### Patch Changes
+
+- 3e16131: Updated deps
+
 ## 1.0.3
 
 ### Patch Changes

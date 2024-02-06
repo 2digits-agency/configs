@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.3.4
+
+### Patch Changes
+
+- 3e16131: Updated deps
+
 ## 0.3.3
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @2digits/prettier-config
 
+## 2.0.0
+
+### Major Changes
+
+- f2c0754: Fixed prettier v3 to support vscode
+
+### Minor Changes
+
+- 0fc34f4: Added JSDoc formatting
+
+### Patch Changes
+
+- 3e16131: Updated deps
+- Updated dependencies [3e16131]
+  - @2digits/constants@0.1.3
+
 ## 1.1.2
 
 ### Patch Changes
