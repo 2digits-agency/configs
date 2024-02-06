@@ -1,3 +1,4 @@
+import { jsdoc } from './rules/jsdoc';
 import { next } from './rules/next';
 import { react } from './rules/react';
 import { storybook } from './rules/storybook';
@@ -21,6 +22,8 @@ export default defineConfig({
     'eslint:recommended',
     'turbo',
     'plugin:@tanstack/eslint-plugin-query/recommended',
+
+    ...jsdoc.extends,
 
     ...next.extends,
 
@@ -58,6 +61,8 @@ export default defineConfig({
     ...tailwind.settings,
   },
   rules: {
+    ...jsdoc.rules,
+
     ...typescript.rules,
 
     ...react.rules,
