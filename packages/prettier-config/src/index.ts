@@ -1,7 +1,3 @@
-import sortImports from '@ianvs/prettier-plugin-sort-imports';
-import * as tailwind from 'prettier-plugin-tailwindcss';
-import * as toml from 'prettier-plugin-toml';
-
 import { tailwindFunctions } from '@2digits/constants';
 
 import { defineConfig, getTypescriptVersion } from './utils';
@@ -36,5 +32,9 @@ export default defineConfig({
 
   tailwindFunctions,
 
-  plugins: [toml, sortImports, tailwind],
+  plugins: [
+    require.resolve('prettier-plugin-toml'),
+    require.resolve('@ianvs/prettier-plugin-sort-imports'),
+    require.resolve('prettier-plugin-tailwindcss'),
+  ],
 });
