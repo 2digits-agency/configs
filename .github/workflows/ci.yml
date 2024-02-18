@@ -1,10 +1,18 @@
 name: 🛂 CI/CD
 
+concurrency:
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}-${{ github.ref == 'refs/heads/main' && github.sha || ''}}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
       - 'main'
   pull_request:
+    types:
+      - synchronize
+      - opened
+      - reopened
     branches:
       - '**'
 
@@ -21,17 +29,26 @@ jobs:
     steps:
       - name: 🗃️ Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: 🛸 Setup PNPM
-        uses: pnpm/action-setup@v3
 
       - name: 🏭 Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
-          cache: 'pnpm'
+          node-version: 20
+
+      - name: 🛸 Setup PNPM
+        uses: pnpm/action-setup@v3
+
+      - name: 📂 Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> "$GITHUB_ENV"
+
+      - name: 🧩 Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: 📦 Install dependencies
         run: pnpm install
