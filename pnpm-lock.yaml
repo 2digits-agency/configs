@@ -158,8 +158,8 @@ importers:
         specifier: ^8.56.2
         version: 8.56.2
       '@typescript-eslint/utils':
-        specifier: 7.0.1
-        version: 7.0.1(eslint@8.56.0)(typescript@5.3.3)
+        specifier: 7.0.2
+        version: 7.0.2(eslint@8.56.0)(typescript@5.3.3)
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -174,8 +174,8 @@ importers:
         specifier: link:../tsconfig
         version: link:../tsconfig
       '@typescript-eslint/rule-tester':
-        specifier: 7.0.1
-        version: 7.0.1(@eslint/eslintrc@3.0.1)(eslint@8.56.0)(typescript@5.3.3)
+        specifier: 7.0.2
+        version: 7.0.2(@eslint/eslintrc@3.0.1)(eslint@8.56.0)(typescript@5.3.3)
       eslint-define-config:
         specifier: ^2.1.0
         version: 2.1.0
@@ -480,7 +480,7 @@ packages:
       outdent: 0.5.0
       prettier: 2.8.8
       resolve-from: 5.0.0
-      semver: 7.5.4
+      semver: 7.6.0
     dev: false
 
   /@changesets/assemble-release-plan@6.0.0:
@@ -491,7 +491,7 @@ packages:
       '@changesets/get-dependents-graph': 2.0.0
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
-      semver: 7.5.4
+      semver: 7.6.0
     dev: false
 
   /@changesets/changelog-git@0.2.0:
@@ -563,7 +563,7 @@ packages:
       '@manypkg/get-packages': 1.1.3
       chalk: 2.4.2
       fs-extra: 7.0.1
-      semver: 7.5.4
+      semver: 7.6.0
     dev: false
 
   /@changesets/get-release-plan@4.0.0:
@@ -1524,16 +1524,16 @@ packages:
       - supports-color
     dev: false
 
-  /@typescript-eslint/rule-tester@7.0.1(@eslint/eslintrc@3.0.1)(eslint@8.56.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-s+SC5xKDfDIuUytjdaoe/AsotpqnNEc+oaUvtHKupLRXoWw8yJHfbgtNmsqKZJvMeGwGAEHuFoNpminl56nSGA==}
+  /@typescript-eslint/rule-tester@7.0.2(@eslint/eslintrc@3.0.1)(eslint@8.56.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-QMn8gpxM1pXIBgsVQIv8/S6YzIjn5L+H9Yfiqx12gRTibuUNXOl8Aro36aMPbLlCppdacbzfFQwOYMHaQWZ+dw==}
     engines: {node: ^16.0.0 || >=18.0.0}
     peerDependencies:
       '@eslint/eslintrc': '>=2'
       eslint: ^8.56.0
     dependencies:
       '@eslint/eslintrc': 3.0.1
-      '@typescript-eslint/typescript-estree': 7.0.1(typescript@5.3.3)
-      '@typescript-eslint/utils': 7.0.1(eslint@8.56.0)(typescript@5.3.3)
+      '@typescript-eslint/typescript-estree': 7.0.2(typescript@5.3.3)
+      '@typescript-eslint/utils': 7.0.2(eslint@8.56.0)(typescript@5.3.3)
       ajv: 6.12.6
       eslint: 8.56.0
       lodash.merge: 4.6.2
@@ -1565,6 +1565,14 @@ packages:
     dependencies:
       '@typescript-eslint/types': 7.0.1
       '@typescript-eslint/visitor-keys': 7.0.1
+    dev: false
+
+  /@typescript-eslint/scope-manager@7.0.2:
+    resolution: {integrity: sha512-l6sa2jF3h+qgN2qUMjVR3uCNGjWw4ahGfzIYsCtFrQJCjhbrDPdiihYT8FnnqFwsWX+20hK592yX9I2rxKTP4g==}
+    engines: {node: ^16.0.0 || >=18.0.0}
+    dependencies:
+      '@typescript-eslint/types': 7.0.2
+      '@typescript-eslint/visitor-keys': 7.0.2
 
   /@typescript-eslint/type-utils@7.0.1(eslint@8.56.0)(typescript@5.3.3):
     resolution: {integrity: sha512-YtT9UcstTG5Yqy4xtLiClm1ZpM/pWVGFnkAa90UfdkkZsR1eP2mR/1jbHeYp8Ay1l1JHPyGvoUYR6o3On5Nhmw==}
@@ -1598,6 +1606,11 @@ packages:
 
   /@typescript-eslint/types@7.0.1:
     resolution: {integrity: sha512-uJDfmirz4FHib6ENju/7cz9SdMSkeVvJDK3VcMFvf/hAShg8C74FW+06MaQPODHfDJp/z/zHfgawIJRjlu0RLg==}
+    engines: {node: ^16.0.0 || >=18.0.0}
+    dev: false
+
+  /@typescript-eslint/types@7.0.2:
+    resolution: {integrity: sha512-ZzcCQHj4JaXFjdOql6adYV4B/oFOFjPOC9XYwCaZFRvqN8Llfvv4gSxrkQkd2u4Ci62i2c6W6gkDwQJDaRc4nA==}
     engines: {node: ^16.0.0 || >=18.0.0}
 
   /@typescript-eslint/typescript-estree@5.62.0(typescript@5.3.3):
@@ -1654,6 +1667,28 @@ packages:
     dependencies:
       '@typescript-eslint/types': 7.0.1
       '@typescript-eslint/visitor-keys': 7.0.1
+      debug: 4.3.4
+      globby: 11.1.0
+      is-glob: 4.0.3
+      minimatch: 9.0.3
+      semver: 7.6.0
+      ts-api-utils: 1.2.1(typescript@5.3.3)
+      typescript: 5.3.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@typescript-eslint/typescript-estree@7.0.2(typescript@5.3.3):
+    resolution: {integrity: sha512-3AMc8khTcELFWcKcPc0xiLviEvvfzATpdPj/DXuOGIdQIIFybf4DMT1vKRbuAEOFMwhWt7NFLXRkbjsvKZQyvw==}
+    engines: {node: ^16.0.0 || >=18.0.0}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/types': 7.0.2
+      '@typescript-eslint/visitor-keys': 7.0.2
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
@@ -1720,6 +1755,25 @@ packages:
     transitivePeerDependencies:
       - supports-color
       - typescript
+    dev: false
+
+  /@typescript-eslint/utils@7.0.2(eslint@8.56.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-PZPIONBIB/X684bhT1XlrkjNZJIEevwkKDsdwfiu1WeqBxYEEdIgVDgm8/bbKHVu+6YOpeRqcfImTdImx/4Bsw==}
+    engines: {node: ^16.0.0 || >=18.0.0}
+    peerDependencies:
+      eslint: ^8.56.0
+    dependencies:
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.56.0)
+      '@types/json-schema': 7.0.15
+      '@types/semver': 7.5.7
+      '@typescript-eslint/scope-manager': 7.0.2
+      '@typescript-eslint/types': 7.0.2
+      '@typescript-eslint/typescript-estree': 7.0.2(typescript@5.3.3)
+      eslint: 8.56.0
+      semver: 7.6.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   /@typescript-eslint/visitor-keys@5.62.0:
     resolution: {integrity: sha512-07ny+LHRzQXepkGg6w0mFY41fVUNBrL2Roj/++7V1txKugfjm/Ci/qSND03r2RhlJhJYMcTn9AhhSSqQp0Ysyw==}
@@ -1742,6 +1796,14 @@ packages:
     engines: {node: ^16.0.0 || >=18.0.0}
     dependencies:
       '@typescript-eslint/types': 7.0.1
+      eslint-visitor-keys: 3.4.3
+    dev: false
+
+  /@typescript-eslint/visitor-keys@7.0.2:
+    resolution: {integrity: sha512-8Y+YiBmqPighbm5xA2k4wKTxRzx9EkBu7Rlw+WHqMvRJ3RPz/BMBO9b2ru0LUNmXg120PHUXD5+SWFy2R8DqlQ==}
+    engines: {node: ^16.0.0 || >=18.0.0}
+    dependencies:
+      '@typescript-eslint/types': 7.0.2
       eslint-visitor-keys: 3.4.3
 
   /@ungap/structured-clone@1.2.0:
@@ -4631,7 +4693,7 @@ packages:
       got: 12.6.1
       registry-auth-token: 5.0.2
       registry-url: 6.0.1
-      semver: 7.5.4
+      semver: 7.6.0
     dev: false
 
   /parent-module@1.0.1:
