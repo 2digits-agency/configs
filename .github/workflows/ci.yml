@@ -53,5 +53,5 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
-      - name: 🧪 Test, lint, format, build, bench, build and type-check
+      - name: 🧪 Test, lint, format, build, build and type-check
         run: pnpm turbo run build test lint format types
