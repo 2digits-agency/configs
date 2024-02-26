@@ -5,8 +5,6 @@ import { match, P } from 'ts-pattern';
 
 import { createRule } from '../utils';
 
-export type { RuleListener, RuleModule } from '@typescript-eslint/utils/ts-eslint';
-
 const prefix = anyOf('T', '$').at.lineStart();
 const initial = letter.uppercase;
 const remainder = oneOrMore(letter);
