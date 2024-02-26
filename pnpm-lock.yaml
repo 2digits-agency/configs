@@ -36,9 +36,6 @@ importers:
       '@types/node':
         specifier: ^20.11.20
         version: 20.11.20
-      eslint:
-        specifier: ^8.57.0
-        version: 8.57.0
       prettier:
         specifier: ^3.2.5
         version: 3.2.5
@@ -75,9 +72,6 @@ importers:
       '@tanstack/eslint-plugin-query':
         specifier: ^5.20.1
         version: 5.20.1(eslint@8.57.0)(typescript@5.3.3)
-      '@types/eslint':
-        specifier: ^8.56.3
-        version: 8.56.3
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.1.0
         version: 7.1.0(@typescript-eslint/parser@7.1.0)(eslint@8.57.0)(typescript@5.3.3)
@@ -145,18 +139,12 @@ importers:
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(postcss@8.4.35)(typescript@5.3.3)
-      turbo:
-        specifier: ^1.12.4
-        version: 1.12.4
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
 
   packages/eslint-plugin:
     dependencies:
-      '@types/eslint':
-        specifier: ^8.56.3
-        version: 8.56.3
       '@typescript-eslint/utils':
         specifier: 7.1.0
         version: 7.1.0(eslint@8.57.0)(typescript@5.3.3)
@@ -182,9 +170,6 @@ importers:
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(postcss@8.4.35)(typescript@5.3.3)
-      turbo:
-        specifier: ^1.12.4
-        version: 1.12.4
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -212,13 +197,7 @@ importers:
       prettier-plugin-toml:
         specifier: ^2.0.1
         version: 2.0.1(prettier@3.2.5)
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
     devDependencies:
-      '@2digits/eslint-config':
-        specifier: link:../eslint-config
-        version: link:../eslint-config
       '@2digits/tsconfig':
         specifier: link:../tsconfig
         version: link:../tsconfig
@@ -1388,13 +1367,6 @@ packages:
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
     dependencies:
       '@types/ms': 0.7.34
-    dev: false
-
-  /@types/eslint@8.56.3:
-    resolution: {integrity: sha512-PvSf1wfv2wJpVIFUMSb+i4PvqNYkB9Rkp9ZDO3oaWzq4SKhsQk4mrMBr3ZH06I0hKrVGLBacmgl8JM4WVjb9dg==}
-    dependencies:
-      '@types/estree': 1.0.5
-      '@types/json-schema': 7.0.15
     dev: false
 
   /@types/estree@1.0.5:
@@ -4951,13 +4923,6 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: true
 
-  /react@18.2.0:
-    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      loose-envify: 1.4.0
-    dev: false
-
   /read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
     dependencies:
@@ -5717,6 +5682,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: false
     optional: true
 
   /turbo-darwin-arm64@1.12.4:
@@ -5724,6 +5690,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: false
     optional: true
 
   /turbo-linux-64@1.12.4:
@@ -5731,6 +5698,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /turbo-linux-arm64@1.12.4:
@@ -5738,6 +5706,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /turbo-windows-64@1.12.4:
@@ -5745,6 +5714,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
+    dev: false
     optional: true
 
   /turbo-windows-arm64@1.12.4:
@@ -5752,6 +5722,7 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
+    dev: false
     optional: true
 
   /turbo@1.12.4:
@@ -5764,6 +5735,7 @@ packages:
       turbo-linux-arm64: 1.12.4
       turbo-windows-64: 1.12.4
       turbo-windows-arm64: 1.12.4
+    dev: false
 
   /type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
