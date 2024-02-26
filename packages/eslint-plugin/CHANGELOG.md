@@ -1,5 +1,14 @@
 # @2digits/eslint-plugin
 
+## 1.0.5
+
+### Patch Changes
+
+- 6724345: Removed unused dependencies
+- 7dfe32d: Updated dependencies
+- 1e82db7: Updated dependencies
+- e4026ca: Removed unused type exports
+
 ## 1.0.4
 
 ### Patch Changes

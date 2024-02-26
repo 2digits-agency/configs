@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 1.3.1
+
+### Patch Changes
+
+- 6724345: Removed unused dependencies
+- 7dfe32d: Updated dependencies
+- 1e82db7: Updated dependencies
+- Updated dependencies [6724345]
+- Updated dependencies [7dfe32d]
+- Updated dependencies [1e82db7]
+- Updated dependencies [e4026ca]
+  - @2digits/eslint-plugin@1.0.5
+  - @2digits/constants@0.1.4
+
 ## 1.3.0
 
 ### Minor Changes
