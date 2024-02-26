@@ -1,5 +1,15 @@
 # @2digits/prettier-config
 
+## 2.0.1
+
+### Patch Changes
+
+- 6724345: Removed unused dependencies
+- 1e82db7: Updated dependencies
+- e4026ca: Removed unused type exports
+- Updated dependencies [1e82db7]
+  - @2digits/constants@0.1.4
+
 ## 2.0.0
 
 ### Major Changes

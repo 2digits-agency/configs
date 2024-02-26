@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.1.4
+
+### Patch Changes
+
+- 1e82db7: Updated dependencies
+
 ## 0.1.3
 
 ### Patch Changes
