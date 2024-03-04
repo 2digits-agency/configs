@@ -30,5 +30,9 @@ export const typescript = defineConfig({
     '@typescript-eslint/no-explicit-any': ['warn'],
     '@typescript-eslint/no-import-type-side-effects': ['error'],
     '@typescript-eslint/no-misused-promises': 'off',
+    '@typescript-eslint/no-confusing-void-expression': [
+      'error',
+      { ignoreArrowShorthand: true, ignoreVoidOperator: true },
+    ],
   },
 });
