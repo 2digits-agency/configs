@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 1.4.0
+
+### Minor Changes
+
+- 201427c: Allow returning void for arrow-functions
+
 ## 1.3.1
 
 ### Patch Changes
