@@ -1,5 +1,16 @@
 # @2digits/prettier-config
 
+## 2.1.0
+
+### Minor Changes
+
+- 4964761: Updated to typescript 5.4
+
+### Patch Changes
+
+- Updated dependencies [4964761]
+  - @2digits/constants@0.1.5
+
 ## 2.0.1
 
 ### Patch Changes
