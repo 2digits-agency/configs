@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 1.1.0
+
+### Minor Changes
+
+- 4964761: Updated to typescript 5.4
+
 ## 1.0.5
 
 ### Patch Changes
