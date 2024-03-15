@@ -31,8 +31,8 @@ importers:
         specifier: ^2.27.1
         version: 2.27.1
       '@manypkg/cli':
-        specifier: ^0.21.2
-        version: 0.21.2
+        specifier: ^0.21.3
+        version: 0.21.3
       '@types/node':
         specifier: ^20.11.27
         version: 20.11.27
@@ -1006,12 +1006,12 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /@manypkg/cli@0.21.2:
-    resolution: {integrity: sha512-Q9apaGBmzSqtzoYgQnY8onKmUOpigsUtAcbB/M0rQDsc6rXZlkDhDUkpwNQlt1Y1XQD0cVUgElbUsiLgtTi9jQ==}
+  /@manypkg/cli@0.21.3:
+    resolution: {integrity: sha512-ro6j5b+44dN2AfId23voWxdlOqUCSbCwUHrUwq0LpoN/oZy6zQFAHDwYHbw50j2nL9EgpwIA03ZjaBceuUcMrw==}
     engines: {node: '>=14.18.0'}
     hasBin: true
     dependencies:
-      '@manypkg/get-packages': 2.2.0
+      '@manypkg/get-packages': 2.2.1
       chalk: 2.4.2
       detect-indent: 6.1.0
       find-up: 4.1.0
@@ -1055,8 +1055,8 @@ packages:
       read-yaml-file: 1.1.0
     dev: false
 
-  /@manypkg/get-packages@2.2.0:
-    resolution: {integrity: sha512-B5p5BXMwhGZKi/syEEAP1eVg5DZ/9LP+MZr0HqfrHLgu9fq0w4ZwH8yVen4JmjrxI2dWS31dcoswYzuphLaRxg==}
+  /@manypkg/get-packages@2.2.1:
+    resolution: {integrity: sha512-TrJd86paBkKEx6InhObcUhuoJNcATlbO6+s1dQdLd4+Y1SLDKJUAMhU46kTZ1SOFbegTuhDbIF3j+Jy564BERA==}
     engines: {node: '>=14.18.0'}
     dependencies:
       '@manypkg/find-root': 2.2.1
