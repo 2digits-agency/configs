@@ -1,7 +1,7 @@
 {
   "pipeline": {
     "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
-    "types": { "dependsOn": ["^types", "^build"], "cache": false },
+    "types": { "dependsOn": ["^types", "build"], "cache": false },
     "test": { "dependsOn": ["^test"] },
     "dev": { "persistent": true },
 
@@ -10,6 +10,9 @@
     "//#lint:pkg:fix": { "cache": false },
 
     "//#format": { "dependsOn": ["@2digits/prettier-config#build"] },
-    "//#format:fix": { "cache": false, "dependsOn": ["@2digits/prettier-config#build"] }
+    "//#format:fix": {
+      "cache": false,
+      "dependsOn": ["@2digits/prettier-config#build"]
+    }
   }
 }
