@@ -2,6 +2,7 @@
   "name": "@2digits/eslint-plugin",
   "description": "An eslint plugin that provides a set of rules to enforce best practices for 2digits projects",
   "version": "1.1.0",
+  "type": "module",
   "repository": {
     "url": "https://github.com/2digits-agency/configs",
     "directory": "packages/eslint-plugin"
@@ -28,7 +29,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint --ignore-path ../../.gitignore .",
+    "lint": "eslint .",
     "types": "tsc --noEmit",
     "test": "vitest --run"
   },
@@ -42,7 +43,7 @@
   ],
   "dependencies": {
     "@typescript-eslint/utils": "7.10.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.3.0",
     "magic-regexp": "^0.8.0",
     "ts-pattern": "^5.1.2"
   },
@@ -50,6 +51,8 @@
     "@2digits/tsconfig": "0.3.4",
     "@typescript-eslint/rule-tester": "7.10.0",
     "eslint-define-config": "^2.1.0",
+    "@typescript-eslint/parser": "^7.9.0",
+    "eslint-vitest-rule-tester": "^0.3.2",
     "tsup": "^8.0.2",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
