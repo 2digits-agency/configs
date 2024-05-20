@@ -2,6 +2,7 @@
   "name": "@2digits/config-monorepo",
   "version": "0.0.0",
   "description": "Streamline your workflow with a bunch of default configs for things like eslint, tsconfig and prettier!",
+  "type": "module",
   "scripts": {
     "build": "turbo run build",
     "clean": "find . -name node_modules -o -name .turbo -o -name dist -type d -prune | xargs rm -rf",
@@ -34,7 +35,7 @@
     "turbo": "^1.13.3",
     "typescript": "^5.4.5"
   },
-  "packageManager": "pnpm@9.1.1",
+  "packageManager": "pnpm@9.1.2",
   "eslintConfig": {
     "extends": "@2digits"
   },

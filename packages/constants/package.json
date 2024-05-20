@@ -4,26 +4,26 @@
   "license": "MIT",
   "public": true,
   "sideEffects": false,
+  "type": "module",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "import": {
-        "default": "./dist/index.mjs",
-        "types": "./dist/index.d.mts"
-      },
-      "require": {
         "default": "./dist/index.js",
         "types": "./dist/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/index.cjs",
+        "types": "./dist/index.d.cts"
       }
     }
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint --ignore-path ../../.gitignore .",
+    "lint": "eslint .",
     "types": "tsc --noEmit"
   },
   "files": [
@@ -31,11 +31,8 @@
   ],
   "devDependencies": {
     "@2digits/tsconfig": "0.3.4",
-    "eslint": "^8.57.0",
+    "eslint": "^9.3.0",
     "tsup": "^8.0.2",
     "typescript": "^5.4.5"
-  },
-  "eslintConfig": {
-    "extends": "@2digits"
   }
 }

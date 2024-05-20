@@ -2,6 +2,7 @@
   "name": "@2digits/eslint-config",
   "description": "Effortlessly enforce best practices and catch errors with this comprehensive ESLint configuration for TypeScript, featuring popular plugins like @typescript-eslint, eslint-plugin-react, and eslint-plugin-unicorn.",
   "version": "1.5.0",
+  "type": "module",
   "license": "MIT",
   "public": true,
   "sideEffects": false,
@@ -9,22 +10,21 @@
     "./package.json": "./package.json",
     ".": {
       "import": {
-        "default": "./dist/index.mjs",
-        "types": "./dist/index.d.mts"
+        "default": "./dist/eslint.config.js",
+        "types": "./dist/eslint.config.d.ts"
       },
       "require": {
-        "default": "./dist/index.js",
-        "types": "./dist/index.d.ts"
+        "default": "./dist/eslint.config.cjs",
+        "types": "./dist/eslint.config.d.cts"
       }
     }
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/eslint.config.js",
+  "types": "./dist/eslint.config.d.ts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint --ignore-path ../../.gitignore .",
+    "lint": "eslint .",
     "types": "tsc --noEmit"
   },
   "keywords": [
@@ -36,6 +36,10 @@
   "dependencies": {
     "@2digits/constants": "0.1.5",
     "@2digits/eslint-plugin": "1.1.0",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.3.0",
+    "@next/eslint-plugin-next": "^14.2.3",
+    "@pnpm/find-workspace-dir": "^7.0.1",
     "@tanstack/eslint-plugin-query": "^5.35.6",
     "@typescript-eslint/eslint-plugin": "^7.10.0",
     "@typescript-eslint/parser": "^7.10.0",
@@ -50,7 +54,8 @@
     "eslint-plugin-unicorn": "^53.0.0",
     "find-up": "^7.0.0",
     "local-pkg": "^0.5.0",
-    "pathe": "^1.1.2"
+    "pathe": "^1.1.2",
+    "typescript-eslint": "^7.10.0"
   },
   "devDependencies": {
     "@2digits/tsconfig": "0.3.4",
@@ -58,8 +63,15 @@
     "@eslint-types/prettier": "5.1.3",
     "@eslint-types/typescript-eslint": "^7.5.0",
     "@eslint-types/unicorn": "^52.0.0",
-    "eslint": "^8.57.0",
+    "@eslint/compat": "^1.0.1",
+    "@eslint/config-inspector": "^0.4.8",
+    "@types/eslint": "^8.56.10",
+    "@types/eslint__eslintrc": "^2.1.1",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.3.0",
     "eslint-define-config": "^2.1.0",
+    "eslint-typegen": "^0.2.4",
+    "jiti": "^1.21.0",
     "tsup": "^8.0.2",
     "typescript": "^5.4.5"
   }

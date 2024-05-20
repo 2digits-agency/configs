@@ -14,18 +14,17 @@
     "./package.json": "./package.json",
     ".": {
       "import": {
-        "default": "./dist/index.mjs",
-        "types": "./dist/index.d.mts"
-      },
-      "require": {
         "default": "./dist/index.js",
         "types": "./dist/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/index.cjs",
+        "types": "./dist/index.d.cts"
       }
     }
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -49,9 +48,9 @@
   },
   "devDependencies": {
     "@2digits/tsconfig": "0.3.4",
+    "@typescript-eslint/parser": "^7.10.0",
     "@typescript-eslint/rule-tester": "7.10.0",
     "eslint-define-config": "^2.1.0",
-    "@typescript-eslint/parser": "^7.9.0",
     "eslint-vitest-rule-tester": "^0.3.2",
     "tsup": "^8.0.2",
     "typescript": "^5.4.5",
