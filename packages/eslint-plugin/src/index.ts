@@ -13,13 +13,13 @@ const plugin = {
   },
   rules,
   configs: {
-    get recommended(): FlatConfig.Config {
-      return {
-        plugins: {
-          '@2digits': plugin as ESLint.Plugin,
+    recommended: {
+      plugins: {
+        get ['@2digits'](): ESLint.Plugin {
+          return plugin;
         },
-        rules: recommended.rules,
-      } as FlatConfig.Config;
+      },
+      rules: recommended.rules,
     },
   },
 } satisfies FlatConfig.Plugin;
