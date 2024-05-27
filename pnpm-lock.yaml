@@ -100,8 +100,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(eslint@8.57.0)(typescript@5.4.5)
       eslint-plugin-tailwindcss:
-        specifier: ^3.16.0
-        version: 3.16.0(tailwindcss@3.4.1)
+        specifier: ^3.17.0
+        version: 3.17.0(tailwindcss@3.4.1)
       eslint-plugin-unicorn:
         specifier: ^53.0.0
         version: 53.0.0(eslint@8.57.0)
@@ -1596,9 +1596,9 @@ packages:
     peerDependencies:
       eslint: '>=6'
 
-  eslint-plugin-tailwindcss@3.16.0:
-    resolution: {integrity: sha512-OVMNBDvSc7eqZTfLVoEo900bxZUu74W5Cp/VPa2hYqKIGbfTq/UfKIX6df+xkPmD3jVW21n4VblLBLd8dHTjeQ==}
-    engines: {node: '>=12.13.0'}
+  eslint-plugin-tailwindcss@3.17.0:
+    resolution: {integrity: sha512-Ofl7tNh57a3W8BKHstKZSkD2gSCEkw54ycwZ958IK9zUR8TiNYdp8b0WGoLWLeyOAbeF1VPVJFBnlkJeIM2kVg==}
+    engines: {node: '>=14.0.0'}
     peerDependencies:
       tailwindcss: ^3.4.0
 
@@ -1813,6 +1813,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   globals@11.12.0:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
@@ -2885,6 +2886,7 @@ packages:
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   rollup@4.10.0:
@@ -5152,7 +5154,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-tailwindcss@3.16.0(tailwindcss@3.4.1):
+  eslint-plugin-tailwindcss@3.17.0(tailwindcss@3.4.1):
     dependencies:
       fast-glob: 3.3.2
       postcss: 8.4.35
