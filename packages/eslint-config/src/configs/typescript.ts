@@ -2,15 +2,23 @@ import type { ParserOptions } from '@typescript-eslint/parser';
 import { renamePluginsInConfigs } from 'eslint-flat-config-utils';
 
 import { GLOB_SRC } from '../globs';
-import type { OptionsOverrides, OptionsTypeScriptWithTypes, TypedFlatConfigItem } from '../types';
+import type { OptionsTypeScriptWithTypes, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
 export async function typescript(
-  options: OptionsOverrides & OptionsTypeScriptWithTypes = {},
+  options: OptionsTypeScriptWithTypes = {},
 ): Promise<TypedFlatConfigItem[]> {
   const { overrides = {}, parserOptions = {}, tsconfigPath } = options;
 
   const { plugin, configs, parser } = await interopDefault(import('typescript-eslint'));
+
+  const strictConfig = renamePluginsInConfigs(configs.strictTypeChecked as never, {
+    '@typescript-eslint': 'ts',
+  });
+
+  const rules = Object.fromEntries(
+    strictConfig.flatMap(({ rules }) => Object.entries(rules ?? {})),
+  );
 
   return [
     {
@@ -29,14 +37,11 @@ export async function typescript(
       },
     },
 
-    ...renamePluginsInConfigs(configs.strictTypeChecked as never, {
-      '@typescript-eslint': 'ts',
-    }),
-
     {
       name: '2digits:typescript/rules',
       files: [GLOB_SRC],
       rules: {
+        ...rules,
         'ts/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
         'ts/consistent-type-exports': ['error'],
         'ts/consistent-type-imports': [

@@ -24,7 +24,7 @@ export interface OptionsOverrides {
   overrides?: TypedFlatConfigItem['rules'];
 }
 
-export interface OptionsTypeScriptWithTypes {
+export interface OptionsTypeScriptWithTypes extends OptionsOverrides {
   /**
    * When this options is provided, type aware rules will be enabled.
    *
@@ -34,4 +34,9 @@ export interface OptionsTypeScriptWithTypes {
 
   /** Additional parser options for TypeScript. */
   parserOptions?: Partial<ParserOptions>;
+}
+
+export interface OptionsWithFiles extends OptionsOverrides {
+  /** An array of glob patterns to match the files to which this configuration applies. */
+  files?: string[];
 }

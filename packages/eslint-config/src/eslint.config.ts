@@ -1,15 +1,11 @@
 import { cwd } from 'node:process';
 
-import react from '@eslint-react/eslint-plugin';
-import { fixupConfigRules } from '@eslint/compat';
 import { FlatCompat } from '@eslint/eslintrc';
 import eslint from '@eslint/js';
 import { findWorkspaceDir } from '@pnpm/find-workspace-dir';
 import type { ESLint, Linter } from 'eslint';
 // import query from "@tanstack/eslint-plugin-query";
 import jsdoc from 'eslint-plugin-jsdoc';
-// @ts-expect-error Doesn't provide types
-import eslintReact from 'eslint-plugin-react/configs/recommended.js';
 // @ts-expect-error Doesn't provide types
 import storybook from 'eslint-plugin-storybook';
 // import next from "eslint-config-next";
@@ -18,7 +14,6 @@ import tailwind from 'eslint-plugin-tailwindcss/lib/config/flat-recommended.js';
 // @ts-expect-error Doesn't provide types
 import unicorn from 'eslint-plugin-unicorn';
 import { findUp } from 'find-up';
-import { getPackageInfo } from 'local-pkg';
 import tseslint from 'typescript-eslint';
 
 import { tailwindFunctions } from '@2digits/constants';
@@ -33,15 +28,10 @@ const compat = new FlatCompat({
 });
 
 const tanstack = compat.extends('plugin:@tanstack/eslint-plugin-query/recommended');
-const next = compat.extends('plugin:@next/next/recommended');
-const reactHooks = compat.extends('plugin:react-hooks/recommended');
 const prettier = compat.extends('prettier');
 
 const tailwindConfig = findUp(['tailwind.config.ts', 'tailwind.config.js']);
 const workspaceRoot = findWorkspaceDir(cwd());
-const reactVersion = getPackageInfo('react')
-  .then((info) => info?.version)
-  .catch(undefined);
 
 export interface MainConfig {
   rules?: RuleOptions;
@@ -67,10 +57,6 @@ export async function twoDigitsConfig(
 
     'tailwindcss/classnames-order': ['off'],
 
-    'react/prop-types': ['off'],
-    'react/react-in-jsx-scope': ['off'],
-    'react/jsx-curly-newline': ['off'],
-    'react/jsx-newline': ['error', { prevent: false }],
 
     ...config.rules,
   };
@@ -98,13 +84,9 @@ export async function twoDigitsConfig(
 
     jsdoc.configs['flat/recommended-typescript-error'],
 
-    react.configs['recommended-type-checked'],
 
-    ...reactHooks,
 
-    ...(fixupConfigRules(eslintReact as never) as never[]),
 
-    ...(fixupConfigRules(next as never) as never[]),
 
     ...(tailwind as Linter.FlatConfig[]),
 
@@ -126,9 +108,6 @@ export async function twoDigitsConfig(
         tailwindcss: {
           callees: tailwindFunctions,
           config: await tailwindConfig,
-        },
-        react: {
-          version: (await reactVersion) ?? 'detect',
         },
       },
     },

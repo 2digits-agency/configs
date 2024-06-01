@@ -1,6 +1,6 @@
 import { FlatConfigComposer } from 'eslint-flat-config-utils';
 
-import { ignores, javascript, turbo, typescript } from './configs';
+import { ignores, javascript, turbo, typescript,react } from './configs';
 import { twoDigitsConfig } from './eslint.config';
 import type { ConfigNames, TypedFlatConfigItem } from './types';
 
@@ -11,6 +11,7 @@ export function twoDigits(): FlatConfigComposer<TypedFlatConfigItem, ConfigNames
     turbo(),
     javascript(),
     typescript(),
+    react(),
     twoDigitsConfig(),
   );
 

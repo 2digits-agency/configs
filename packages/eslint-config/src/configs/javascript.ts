@@ -1,16 +1,24 @@
+import eslint from '@eslint/js';
+import globals from 'globals';
+
 import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
-import { interopDefault } from '../utils';
 
-export async function javascript(options: OptionsOverrides = {}): Promise<TypedFlatConfigItem[]> {
+export function javascript(options: OptionsOverrides = {}): TypedFlatConfigItem[] {
   const { overrides = {} } = options;
-
-  const eslint = await interopDefault(import('@eslint/js'));
 
   return [
     {
       name: '2digits:javascript/rules',
       languageOptions: {
         ecmaVersion: 2022,
+        globals: {
+          ...globals.browser,
+          ...globals.es2021,
+          ...globals.node,
+          document: 'readonly',
+          navigator: 'readonly',
+          window: 'readonly',
+        },
         parserOptions: {
           ecmaFeatures: {
             jsx: true,
