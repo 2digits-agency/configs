@@ -8,7 +8,7 @@ export function javascript(options: OptionsOverrides = {}): TypedFlatConfigItem[
 
   return [
     {
-      name: '2digits:javascript/rules',
+      name: '2digits:javascript',
       languageOptions: {
         ecmaVersion: 2022,
         globals: {

@@ -16,12 +16,7 @@ const pluginNameMap = {
 export async function react(
   options: OptionsWithFiles & OptionsTypeScriptWithTypes = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const {
-    files = [GLOB_TS, GLOB_TSX],
-    // overrides = {},
-    tsconfigPath,
-    parserOptions,
-  } = options;
+  const { files = [GLOB_TS, GLOB_TSX], overrides = {}, tsconfigPath, parserOptions } = options;
 
   const [pluginReact, pluginReactHooks, react, parser] = await Promise.all([
     interopDefault(import('@eslint-react/eslint-plugin')),
@@ -78,6 +73,8 @@ export async function react(
 
         'react/jsx-curly-newline': 'off',
         'react/jsx-newline': ['error', { prevent: false }],
+
+        ...overrides,
       },
     },
   ];

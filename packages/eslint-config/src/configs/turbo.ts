@@ -8,14 +8,10 @@ export async function turbo(options: OptionsOverrides = {}): Promise<TypedFlatCo
 
   return [
     {
-      name: '2digits:turbo/setup',
+      name: '2digits:turbo',
       plugins: {
         turbo,
       },
-    },
-
-    {
-      name: '2digits:turbo/rules',
       rules: {
         'turbo/no-undeclared-env-vars': 'error',
 

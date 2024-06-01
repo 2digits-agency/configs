@@ -53,10 +53,7 @@ export async function twoDigitsConfig(
     'unicorn/no-useless-undefined': ['error', { checkArguments: false }],
     'unicorn/prefer-top-level-await': ['off'],
 
-    '@next/next/no-html-link-for-pages': ['off'],
-
     'tailwindcss/classnames-order': ['off'],
-
 
     ...config.rules,
   };
@@ -83,10 +80,6 @@ export async function twoDigitsConfig(
     },
 
     jsdoc.configs['flat/recommended-typescript-error'],
-
-
-
-
 
     ...(tailwind as Linter.FlatConfig[]),
 
