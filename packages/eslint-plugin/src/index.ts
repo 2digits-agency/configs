@@ -15,9 +15,10 @@ const plugin = {
   configs: {
     recommended: {
       plugins: {
-        get ['@2digits'](): ESLint.Plugin {
+        get '@2digits'(): ESLint.Plugin {
           return plugin;
         },
+        set '@2digits'(_) {},
       },
       rules: recommended.rules,
     },

@@ -1,22 +1,10 @@
-import { cwd } from 'node:process';
-
 import { FlatCompat } from '@eslint/eslintrc';
 import eslint from '@eslint/js';
 import { findWorkspaceDir } from '@pnpm/find-workspace-dir';
-import type { ESLint, Linter } from 'eslint';
 // import query from "@tanstack/eslint-plugin-query";
-import jsdoc from 'eslint-plugin-jsdoc';
-// @ts-expect-error Doesn't provide types
-import storybook from 'eslint-plugin-storybook';
 // import next from "eslint-config-next";
-// @ts-expect-error Doesn't provide types
-import tailwind from 'eslint-plugin-tailwindcss/lib/config/flat-recommended.js';
-// @ts-expect-error Doesn't provide types
-import unicorn from 'eslint-plugin-unicorn';
-import { findUp } from 'find-up';
 import tseslint from 'typescript-eslint';
 
-import { tailwindFunctions } from '@2digits/constants';
 import twoDigits from '@2digits/eslint-plugin';
 
 import type { Rules, TypedFlatConfigItem } from './types';
@@ -30,8 +18,7 @@ const compat = new FlatCompat({
 const tanstack = compat.extends('plugin:@tanstack/eslint-plugin-query/recommended');
 const prettier = compat.extends('prettier');
 
-const tailwindConfig = findUp(['tailwind.config.ts', 'tailwind.config.js']);
-const workspaceRoot = findWorkspaceDir(cwd());
+const workspaceRoot = findWorkspaceDir(process.cwd());
 
 export interface MainConfig {
   rules?: RuleOptions;
@@ -61,32 +48,6 @@ export async function twoDigitsConfig(
   const configs = tseslint.config(
     ...tanstack,
 
-    {
-      plugins: {
-        storybook: storybook as ESLint.Plugin,
-      },
-      files: ['**/*.stories.tsx'],
-      rules: {
-        'storybook/await-interactions': 'error',
-        'storybook/context-in-play-function': 'error',
-        'storybook/default-exports': 'error',
-        'storybook/hierarchy-separator': 'warn',
-        'storybook/no-redundant-story-name': 'warn',
-        'storybook/prefer-pascal-case': 'warn',
-        'storybook/story-exports': 'error',
-        'storybook/use-storybook-expect': 'error',
-        'storybook/use-storybook-testing-library': 'error',
-      } satisfies RuleOptions,
-    },
-
-    jsdoc.configs['flat/recommended-typescript-error'],
-
-    ...(tailwind as Linter.FlatConfig[]),
-
-    ((unicorn as ESLint.Plugin).configs as Exclude<ESLint.Plugin['configs'], undefined>)[
-      'flat/recommended'
-    ] as Linter.FlatConfig,
-
     twoDigits.configs.recommended,
 
     {
@@ -97,17 +58,11 @@ export async function twoDigitsConfig(
           project: true,
         },
       },
-      settings: {
-        tailwindcss: {
-          callees: tailwindFunctions,
-          config: await tailwindConfig,
-        },
-      },
     },
 
     { rules } as never,
 
-    ...userConfigs,
+    ...(userConfigs as []),
 
     ...prettier,
   );

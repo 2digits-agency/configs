@@ -65,6 +65,34 @@ declare module 'eslint-plugin-eslint-comments' {
   export = exprt;
 }
 
+declare module 'eslint-plugin-tailwindcss' {
+  import type { ClassicConfig, Linter, FlatConfig } from '@typescript-eslint/utils/ts-eslint';
+
+  declare const exprt: {
+    configs: {
+      recommended: ClassicConfig.Config;
+      'flat/recommended': FlatConfig.ConfigArray;
+    };
+    rules: NonNullable<Linter.Plugin['rules']>;
+  };
+  export = exprt;
+}
+
+declare module 'eslint-plugin-storybook' {
+  import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
+
+  declare const exprt: {
+    configs: {
+      recommended: ClassicConfig.Config;
+      csf: ClassicConfig.Config;
+      'csf-strict': ClassicConfig.Config;
+      'addon-interactions': ClassicConfig.Config;
+    };
+    rules: NonNullable<Linter.Plugin['rules']>;
+  };
+  export = exprt;
+}
+
 declare module 'eslint-plugin-unicorn' {
   import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
 

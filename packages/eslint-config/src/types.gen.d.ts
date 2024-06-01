@@ -4,26 +4,6 @@ import type { Linter } from 'eslint'
 
 export interface RuleOptions {
   /**
-   * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@1.1.0/packages/eslint/src/rules/type-param-names.ts
-   */
-  '@2digits/type-param-names'?: Linter.RuleEntry<[]>
-  /**
-   * Exhaustive deps rule for useQuery
-   * @see https://tanstack.com/query/latest/docs/eslint/exhaustive-deps
-   */
-  '@tanstack/query/exhaustive-deps'?: Linter.RuleEntry<[]>
-  /**
-   * Disallows rest destructuring in queries
-   * @see https://tanstack.com/query/latest/docs/eslint/no-rest-destructuring
-   */
-  '@tanstack/query/no-rest-destructuring'?: Linter.RuleEntry<[]>
-  /**
-   * Makes sure that QueryClient is stable
-   * @see https://tanstack.com/query/latest/docs/eslint/stable-query-client
-   */
-  '@tanstack/query/stable-query-client'?: Linter.RuleEntry<[]>
-  /**
    * Enforce getter and setter pairs in objects and classes
    * @see https://eslint.org/docs/latest/rules/accessor-pairs
    */
@@ -192,6 +172,51 @@ export interface RuleOptions {
    * @see https://eslint.org/docs/latest/rules/eqeqeq
    */
   'eqeqeq'?: Linter.RuleEntry<Eqeqeq>
+  /**
+   * require a `eslint-enable` comment for every `eslint-disable` comment
+   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/disable-enable-pair.html
+   */
+  'eslint-comments/disable-enable-pair'?: Linter.RuleEntry<EslintCommentsDisableEnablePair>
+  /**
+   * disallow a `eslint-enable` comment for multiple `eslint-disable` comments
+   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-aggregating-enable.html
+   */
+  'eslint-comments/no-aggregating-enable'?: Linter.RuleEntry<[]>
+  /**
+   * disallow duplicate `eslint-disable` comments
+   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-duplicate-disable.html
+   */
+  'eslint-comments/no-duplicate-disable'?: Linter.RuleEntry<[]>
+  /**
+   * disallow `eslint-disable` comments about specific rules
+   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-restricted-disable.html
+   */
+  'eslint-comments/no-restricted-disable'?: Linter.RuleEntry<EslintCommentsNoRestrictedDisable>
+  /**
+   * disallow `eslint-disable` comments without rule names
+   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-unlimited-disable.html
+   */
+  'eslint-comments/no-unlimited-disable'?: Linter.RuleEntry<[]>
+  /**
+   * disallow unused `eslint-disable` comments
+   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-unused-disable.html
+   */
+  'eslint-comments/no-unused-disable'?: Linter.RuleEntry<[]>
+  /**
+   * disallow unused `eslint-enable` comments
+   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-unused-enable.html
+   */
+  'eslint-comments/no-unused-enable'?: Linter.RuleEntry<[]>
+  /**
+   * disallow ESLint directive-comments
+   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-use.html
+   */
+  'eslint-comments/no-use'?: Linter.RuleEntry<EslintCommentsNoUse>
+  /**
+   * require include descriptions in ESLint directive-comments
+   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/require-description.html
+   */
+  'eslint-comments/require-description'?: Linter.RuleEntry<EslintCommentsRequireDescription>
   /**
    * Enforce "for" loop update clause moving the counter in the right direction
    * @see https://eslint.org/docs/latest/rules/for-direction
@@ -4630,6 +4655,20 @@ type EolLast = []|[("always" | "never" | "unix" | "windows")]
 type Eqeqeq = ([]|["always"]|["always", {
   null?: ("always" | "never" | "ignore")
 }] | []|[("smart" | "allow-null")])
+// ----- eslint-comments/disable-enable-pair -----
+type EslintCommentsDisableEnablePair = []|[{
+  allowWholeFile?: boolean
+}]
+// ----- eslint-comments/no-restricted-disable -----
+type EslintCommentsNoRestrictedDisable = string[]
+// ----- eslint-comments/no-use -----
+type EslintCommentsNoUse = []|[{
+  allow?: ("eslint" | "eslint-disable" | "eslint-disable-line" | "eslint-disable-next-line" | "eslint-enable" | "eslint-env" | "exported" | "global" | "globals")[]
+}]
+// ----- eslint-comments/require-description -----
+type EslintCommentsRequireDescription = []|[{
+  ignore?: ("eslint" | "eslint-disable" | "eslint-disable-line" | "eslint-disable-next-line" | "eslint-enable" | "eslint-env" | "exported" | "global" | "globals")[]
+}]
 // ----- func-call-spacing -----
 type FuncCallSpacing = ([]|["never"] | []|["always"]|["always", {
   allowNewlines?: boolean
@@ -8840,4 +8879,4 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   onlyEquality?: boolean
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:react/setup' | '2digits:react/rules' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | 'tailwindcss:base' | 'tailwindcss:rules'
+export type ConfigNames = '2digits:comments' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:react/setup' | '2digits:react/rules' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'

@@ -154,7 +154,6 @@ export function javascript(options: OptionsOverrides = {}): TypedFlatConfigItem[
             vars: 'all',
           },
         ],
-        'no-use-before-define': ['error', { classes: false, functions: false, variables: true }],
         'no-useless-backreference': 'error',
         'no-useless-call': 'error',
         'no-useless-catch': 'error',

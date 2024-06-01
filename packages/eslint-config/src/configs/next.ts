@@ -1,12 +1,10 @@
+import { fixupPluginRules } from '@eslint/compat';
 import { renamePluginsInRules } from 'eslint-flat-config-utils';
 
+import { PluginNameMap } from '../constants';
 import { GLOB_TS, GLOB_TSX } from '../globs';
 import type { OptionsTypeScriptWithTypes, OptionsWithFiles, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
-
-const pluginNameMap = {
-  '@next/next': 'next',
-};
 
 export async function next(
   options: OptionsWithFiles & OptionsTypeScriptWithTypes = {},
@@ -23,14 +21,14 @@ export async function next(
       ...next.configs.recommended.rules,
       ...next.configs['core-web-vitals'].rules,
     },
-    pluginNameMap,
+    PluginNameMap,
   );
 
   return [
     {
       name: '2digits:next/setup',
       plugins: {
-        next,
+        next: fixupPluginRules(next as never),
       },
     },
     {
@@ -49,6 +47,8 @@ export async function next(
       },
       rules: {
         ...recommended,
+
+        'next/no-html-link-for-pages': 'off',
 
         ...overrides,
       },

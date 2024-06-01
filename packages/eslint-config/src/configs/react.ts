@@ -1,17 +1,9 @@
 import { renamePluginsInRules } from 'eslint-flat-config-utils';
 
+import { PluginNameMap } from '../constants';
 import { GLOB_TS, GLOB_TSX } from '../globs';
 import type { OptionsTypeScriptWithTypes, OptionsWithFiles, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
-
-const pluginNameMap = {
-  '@eslint-react/naming-convention': 'react-naming-convention',
-  '@eslint-react/hooks-extra': 'react-hooks-extra',
-  '@eslint-react/dom': 'react-dom',
-  '@eslint-react': 'react-extra',
-  'react-hooks': 'react-hooks',
-  react: 'react',
-};
 
 export async function react(
   options: OptionsWithFiles & OptionsTypeScriptWithTypes = {},
@@ -34,7 +26,7 @@ export async function react(
       ...pluginReactHooks.configs.recommended.rules,
       ...pluginReact.configs['recommended-type-checked'].rules,
     },
-    pluginNameMap,
+    PluginNameMap,
   );
 
   return [
@@ -47,6 +39,11 @@ export async function react(
         'react-hooks': pluginReactHooks,
         'react-hooks-extra': plugins['@eslint-react/hooks-extra'],
         'react-naming-convention': plugins['@eslint-react/naming-convention'],
+      },
+      settings: {
+        react: {
+          version: 'detect',
+        },
       },
     },
     {

@@ -7,8 +7,6 @@ import { defineConfig } from 'tsup';
 
 import { dependencies, devDependencies, name } from './package.json';
 
-import { twoDigitsConfig } from './src/eslint.config';
-
 const external = Object.keys({ ...dependencies, ...devDependencies });
 
 export default defineConfig({
@@ -35,8 +33,7 @@ export default defineConfig({
               },
             },
           },
-          ...Object.values(await import('./src/configs')).map((config) => config()),
-          twoDigitsConfig(),
+          ...(Object.values(await import('./src/configs')).map((config) => config()) as []),
         );
 
         const configNames = configs.map((i) => i.name).filter(Boolean) as string[];
