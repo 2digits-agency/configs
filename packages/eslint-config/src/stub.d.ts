@@ -1,11 +1,3 @@
-declare module 'eslint-plugin-react-refresh' {
-  import type { ESLint } from 'eslint';
-
-  const plugin: ESLint.Plugin;
-
-  export default plugin;
-}
-
 declare module 'eslint-plugin-react-hooks' {
   import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
 
@@ -19,11 +11,15 @@ declare module 'eslint-plugin-react-hooks' {
 }
 
 declare module 'eslint-plugin-turbo' {
-  import type { ESLint } from 'eslint';
+  import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
 
-  const plugin: ESLint.Plugin;
-
-  export default plugin;
+  declare const exprt: {
+    configs: {
+      recommended: ClassicConfig.Config;
+    };
+    rules: NonNullable<Linter.Plugin['rules']>;
+  };
+  export = exprt;
 }
 
 declare module 'eslint-plugin-react' {
