@@ -1,3 +1,4 @@
+import { fixupPluginRules } from '@eslint/compat';
 import { renamePluginsInRules } from 'eslint-flat-config-utils';
 
 import { PluginNameMap } from '../constants';
@@ -42,7 +43,7 @@ export async function react(
         react,
         'react-dom': plugins['@eslint-react/dom'],
         'react-extra': plugins['@eslint-react'],
-        'react-hooks': pluginReactHooks,
+        'react-hooks': fixupPluginRules(pluginReactHooks as never),
         'react-hooks-extra': plugins['@eslint-react/hooks-extra'],
         'react-naming-convention': plugins['@eslint-react/naming-convention'],
       },

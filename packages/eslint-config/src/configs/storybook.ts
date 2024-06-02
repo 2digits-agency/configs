@@ -1,3 +1,5 @@
+import { fixupPluginRules } from '@eslint/compat';
+
 import { GLOB_STORIES } from '../globs';
 import type {
   OptionsTypeScriptWithTypes,
@@ -38,7 +40,7 @@ export async function storybook(
     {
       name: '2digits:storybook/setup',
       plugins: {
-        storybook,
+        storybook: fixupPluginRules(storybook as never),
       },
     },
     {

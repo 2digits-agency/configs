@@ -1,3 +1,5 @@
+import { fixupPluginRules } from '@eslint/compat';
+
 import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
@@ -10,7 +12,7 @@ export async function tanstack(options: OptionsOverrides = {}): Promise<TypedFla
     {
       name: '2digits:tanstack',
       plugins: {
-        tanstack,
+        tanstack: fixupPluginRules(tanstack as never),
       },
       rules: {
         'tanstack/exhaustive-deps': 'error',

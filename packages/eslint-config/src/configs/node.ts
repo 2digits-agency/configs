@@ -6,7 +6,9 @@ export function node(): TypedFlatConfigItem[] {
     {
       name: '2digits:node',
       settings: {
-        version: '>= 20.0.0',
+        node: {
+          version: '>= 20.0.0',
+        },
       },
       plugins: {
         node: pluginNode,
@@ -17,7 +19,7 @@ export function node(): TypedFlatConfigItem[] {
         'node/no-exports-assign': 'error',
         'node/no-new-require': 'error',
         'node/no-path-concat': 'error',
-        'node/no-unsupported-features/node-builtins': 'error',
+        'node/no-unsupported-features/node-builtins': ['error', { allowExperimental: true }],
         'node/prefer-global/buffer': 'error',
         'node/prefer-global/process': 'error',
         'node/prefer-global/text-encoder': 'error',

@@ -63,7 +63,10 @@ export async function typescript(
           'error',
           { ignoreArrowShorthand: true, ignoreVoidOperator: true },
         ],
-        'ts/no-unused-vars': ['error', { ignoreRestSiblings: true }],
+        'ts/no-unused-vars': [
+          'error',
+          { ignoreRestSiblings: true, argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+        ],
 
         ...twoDigits.configs.recommended.rules,
 
