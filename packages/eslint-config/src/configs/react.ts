@@ -8,7 +8,13 @@ import { interopDefault } from '../utils';
 export async function react(
   options: OptionsWithFiles & OptionsTypeScriptWithTypes = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const { files = [GLOB_TS, GLOB_TSX], overrides = {}, tsconfigPath, parserOptions } = options;
+  const {
+    files = [GLOB_TS, GLOB_TSX],
+    overrides = {},
+    tsconfigPath,
+    parserOptions,
+    tsconfigRootDir,
+  } = options;
 
   const [pluginReact, pluginReactHooks, react, parser] = await Promise.all([
     interopDefault(import('@eslint-react/eslint-plugin')),
@@ -55,18 +61,19 @@ export async function react(
           ecmaFeatures: {
             jsx: true,
           },
+          tsconfigRootDir,
           project: tsconfigPath,
-          ...(parserOptions as object),
+          ...parserOptions,
         },
         sourceType: 'module',
       },
       rules: {
         ...recommended,
 
-        'react-hooks-extra/ensure-use-memo-has-non-empty-deps': 'warn',
-        'react-hooks-extra/prefer-use-state-lazy-initialization': 'warn',
+        'react-hooks-extra/ensure-use-memo-has-non-empty-deps': 'error',
+        'react-hooks-extra/prefer-use-state-lazy-initialization': 'error',
         'react-hooks-extra/ensure-custom-hooks-using-other-hooks': 'error',
-        'react-hooks-extra/ensure-use-callback-has-non-empty-deps': 'warn',
+        'react-hooks-extra/ensure-use-callback-has-non-empty-deps': 'error',
 
         'react/jsx-curly-newline': 'off',
         'react/jsx-newline': ['error', { prevent: false }],

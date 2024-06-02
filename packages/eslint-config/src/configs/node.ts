@@ -17,7 +17,7 @@ export function node(): TypedFlatConfigItem[] {
         'node/no-exports-assign': 'error',
         'node/no-new-require': 'error',
         'node/no-path-concat': 'error',
-        'node/no-unsupported-features/node-builtins': 'warn',
+        'node/no-unsupported-features/node-builtins': 'error',
         'node/prefer-global/buffer': 'error',
         'node/prefer-global/process': 'error',
         'node/prefer-global/text-encoder': 'error',

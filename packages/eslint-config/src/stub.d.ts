@@ -93,6 +93,14 @@ declare module 'eslint-plugin-storybook' {
   export = exprt;
 }
 
+declare module 'eslint-config-prettier' {
+  import type { ClassicConfig } from '@typescript-eslint/utils/ts-eslint';
+
+  declare const exprt: ClassicConfig.Config;
+
+  export = exprt;
+}
+
 declare module 'eslint-plugin-unicorn' {
   import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
 

@@ -10,6 +10,7 @@ import { name, repository, version } from '../../package.json';
 
 const blobUrl = `${repository.url}/blob/${name}@${version}/packages/eslint/src/rules/`;
 
+/** @public */
 export interface RuleModule<T extends readonly unknown[]> extends Rule.RuleModule {
   defaultOptions: T;
 }

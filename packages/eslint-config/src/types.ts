@@ -1,14 +1,15 @@
 import type { ParserOptions } from '@typescript-eslint/parser';
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
 import type { Linter } from 'eslint';
 
-import type { PluginNameMap } from './constants';
 import type { RuleOptions } from './types.gen';
 
 export type { ConfigNames } from './types.gen';
 
 export type Rules = RuleOptions;
 
-export interface TypedFlatConfigItem extends Omit<Linter.FlatConfig, 'plugins' | 'rules'> {
+export interface TypedFlatConfigItem
+  extends Omit<Linter.FlatConfig<Linter.RulesRecord & Rules>, 'plugins' | 'languageOptions'> {
   // Relax plugins type limitation, as most of the plugins did not have correct type info yet.
   /**
    * An object containing a name-value mapping of plugin names to plugin objects. When `files` is
@@ -17,9 +18,9 @@ export interface TypedFlatConfigItem extends Omit<Linter.FlatConfig, 'plugins' |
    * @see [Using plugins in your configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#using-plugins-in-your-configuration)
    */
   // eslint-disable-next-line ts/no-explicit-any
-  plugins?: Partial<Record<(typeof PluginNameMap)[keyof typeof PluginNameMap], any>>;
+  plugins?: Record<string, any>;
 
-  rules?: Rules;
+  languageOptions?: FlatConfig.LanguageOptions;
 }
 
 export interface OptionsOverrides {
@@ -30,9 +31,17 @@ export interface OptionsTypeScriptWithTypes extends OptionsOverrides {
   /**
    * When this options is provided, type aware rules will be enabled.
    *
+   * @default true
    * @see https://typescript-eslint.io/linting/typed-linting/
    */
-  tsconfigPath?: string | string[];
+  tsconfigPath?: string | string[] | true;
+
+  /**
+   * Root directory of the project.
+   *
+   * @default process.cwd()
+   */
+  tsconfigRootDir?: string;
 
   /** Additional parser options for TypeScript. */
   parserOptions?: Partial<ParserOptions>;

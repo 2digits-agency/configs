@@ -1,6 +1,6 @@
-import type { ParserOptions } from '@typescript-eslint/parser';
 import { renamePluginsInConfigs } from 'eslint-flat-config-utils';
 
+import { PluginNameMap } from '../constants';
 import { GLOB_SRC } from '../globs';
 import type { OptionsTypeScriptWithTypes, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
@@ -8,13 +8,14 @@ import { interopDefault } from '../utils';
 export async function typescript(
   options: OptionsTypeScriptWithTypes = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const { overrides = {}, parserOptions = {}, tsconfigPath } = options;
+  const { overrides = {}, parserOptions = {}, tsconfigPath = true } = options;
 
-  const { plugin, configs, parser } = await interopDefault(import('typescript-eslint'));
+  const [{ plugin, configs, parser }, twoDigits] = await Promise.all([
+    interopDefault(import('typescript-eslint')),
+    interopDefault(import('@2digits/eslint-plugin')),
+  ]);
 
-  const strictConfig = renamePluginsInConfigs(configs.strictTypeChecked as never, {
-    '@typescript-eslint': 'ts',
-  });
+  const strictConfig = renamePluginsInConfigs(configs.strictTypeChecked as never, PluginNameMap);
 
   const rules = Object.fromEntries(
     strictConfig.flatMap(({ rules }) => Object.entries(rules ?? {})),
@@ -25,15 +26,16 @@ export async function typescript(
       name: '2digits:typescript/setup',
       plugins: {
         ts: plugin,
+        '@2digits': twoDigits,
       },
       languageOptions: {
-        parser: parser as never,
+        parser,
         parserOptions: {
           sourceType: 'module',
           tsconfigRootDir: process.cwd(),
           project: tsconfigPath,
-          ...(parserOptions as object),
-        } satisfies ParserOptions,
+          ...parserOptions,
+        },
       },
     },
 
@@ -54,13 +56,16 @@ export async function typescript(
           },
         ],
         'ts/no-empty-interface': ['error', { allowSingleExtends: true }],
-        'ts/no-explicit-any': ['warn'],
+        'ts/no-explicit-any': ['error'],
         'ts/no-import-type-side-effects': ['error'],
         'ts/no-misused-promises': 'off',
         'ts/no-confusing-void-expression': [
           'error',
           { ignoreArrowShorthand: true, ignoreVoidOperator: true },
         ],
+        'ts/no-unused-vars': ['error', { ignoreRestSiblings: true }],
+
+        ...twoDigits.configs.recommended.rules,
 
         ...overrides,
       },
@@ -83,7 +88,7 @@ export async function typescript(
       },
     },
     {
-      files: ['**/*.js', '**/*.cjs'],
+      files: ['**/*.js', '**/*.cjs', '**/*.cts'],
       name: '2digits:typescript/disables/cjs',
       rules: {
         'ts/no-require-imports': 'off',

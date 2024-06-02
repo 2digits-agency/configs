@@ -1,3 +1,3 @@
-import twoDigitsConfig from '@2digits/eslint-config';
+import twoDigits from '@2digits/eslint-config';
 
-export default twoDigitsConfig();
+export default twoDigits();

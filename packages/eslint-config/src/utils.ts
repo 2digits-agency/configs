@@ -1,5 +1,3 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import eslint from '@eslint/js';
 import type { Awaitable } from 'eslint-flat-config-utils';
 
 export async function interopDefault<T>(
@@ -9,8 +7,3 @@ export async function interopDefault<T>(
 
   return ((resolved as Record<string, unknown>).default || resolved) as never;
 }
-
-export const compat = new FlatCompat({
-  recommendedConfig: eslint.configs.recommended,
-  allConfig: eslint.configs.all,
-});

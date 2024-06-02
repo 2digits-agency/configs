@@ -4,6 +4,11 @@ import type { Linter } from 'eslint'
 
 export interface RuleOptions {
   /**
+   * Enforce giving proper names to type parameters when there are two or more
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@1.1.0/packages/eslint/src/rules/type-param-names.ts
+   */
+  '@2digits/type-param-names'?: Linter.RuleEntry<[]>
+  /**
    * Enforce getter and setter pairs in objects and classes
    * @see https://eslint.org/docs/latest/rules/accessor-pairs
    */
@@ -3039,6 +3044,21 @@ export interface RuleOptions {
    * @see https://github.com/francoismassart/eslint-plugin-tailwindcss/tree/master/docs/rules/no-unnecessary-arbitrary-value.md
    */
   'tailwindcss/no-unnecessary-arbitrary-value'?: Linter.RuleEntry<TailwindcssNoUnnecessaryArbitraryValue>
+  /**
+   * Exhaustive deps rule for useQuery
+   * @see https://tanstack.com/query/latest/docs/eslint/exhaustive-deps
+   */
+  'tanstack/exhaustive-deps'?: Linter.RuleEntry<[]>
+  /**
+   * Disallows rest destructuring in queries
+   * @see https://tanstack.com/query/latest/docs/eslint/no-rest-destructuring
+   */
+  'tanstack/no-rest-destructuring'?: Linter.RuleEntry<[]>
+  /**
+   * Makes sure that QueryClient is stable
+   * @see https://tanstack.com/query/latest/docs/eslint/stable-query-client
+   */
+  'tanstack/stable-query-client'?: Linter.RuleEntry<[]>
   /**
    * Require or disallow spacing around embedded expressions of template strings
    * @see https://eslint.org/docs/latest/rules/template-curly-spacing
@@ -8879,4 +8899,4 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   onlyEquality?: boolean
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:comments' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:react/setup' | '2digits:react/rules' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'
+export type ConfigNames = '2digits:comments' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'
