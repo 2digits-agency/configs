@@ -1,5 +1,12 @@
 # @2digits/constants
 
+## 0.1.6
+
+### Patch Changes
+
+- 33a02c7: Updated dependencies
+- 436aa65: Updated to pnpm 9
+
 ## 0.1.5
 
 ### Patch Changes
