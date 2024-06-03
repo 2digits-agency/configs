@@ -9,7 +9,10 @@
     "//#lint:pkg": { "inputs": ["**/package.json"] },
     "//#lint:pkg:fix": { "cache": false },
 
-    "//#format": { "dependsOn": ["@2digits/prettier-config#build"] },
+    "//#format": {
+      "dependsOn": ["@2digits/prettier-config#build"],
+      "cache": false
+    },
     "//#format:fix": {
       "cache": false,
       "dependsOn": ["@2digits/prettier-config#build"]

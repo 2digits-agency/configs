@@ -20,7 +20,7 @@ const plugin = {
         },
         set '@2digits'(_) {},
       },
-      rules: recommended.rules,
+      rules: recommended.rules as Record<string, Linter.RuleEntry<[]>>,
     },
   },
 } satisfies FlatConfig.Plugin;
