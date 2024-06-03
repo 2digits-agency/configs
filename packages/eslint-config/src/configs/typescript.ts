@@ -68,7 +68,7 @@ export async function typescript(
           { ignoreRestSiblings: true, argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
         ],
 
-        ...twoDigits.configs.recommended.rules,
+        ...(twoDigits.configs.recommended.rules as object),
 
         ...overrides,
       },

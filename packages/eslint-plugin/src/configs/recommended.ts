@@ -5,5 +5,5 @@ import type { rules } from '../rules';
 export const recommended = {
   rules: {
     '@2digits/type-param-names': 'error' as const,
-  } as Record<`@2digits/${keyof typeof rules}`, Linter.RuleEntry<[]>>,
+  } satisfies Record<`@2digits/${keyof typeof rules}`, Linter.RuleEntry<[]>>,
 };
