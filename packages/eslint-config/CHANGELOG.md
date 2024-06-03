@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.0.1
+
+### Patch Changes
+
+- e6b10e2: Fixed required dependencies
+
 ## 2.0.0
 
 ### Major Changes
