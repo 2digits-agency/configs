@@ -4,6 +4,11 @@
   "description": "Simplify your TypeScript configuration with @2digits/tsconfig - the hassle-free solution for seamless TypeScript development!",
   "license": "MIT",
   "private": false,
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./tsconfig.json",
+    "./tsconfig.json": "./tsconfig.json"
+  },
   "keywords": [
     "tsconfig"
   ],

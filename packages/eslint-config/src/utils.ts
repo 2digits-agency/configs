@@ -1,5 +1,9 @@
-import type { ESLintConfig } from 'eslint-define-config';
+import type { Awaitable } from 'eslint-flat-config-utils';
 
-export function defineConfig<const TConfig extends ESLintConfig>(config: TConfig): TConfig {
-  return config;
+export async function interopDefault<T>(
+  m: Awaitable<T>,
+): Promise<T extends { default: infer U } ? U : T> {
+  const resolved = await m;
+
+  return ((resolved as Record<string, unknown>).default || resolved) as never;
 }

@@ -1,9 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type _ from '@typescript-eslint/utils/ts-eslint';
 import { anyOf, createRegExp, digit, letter, oneOrMore } from 'magic-regexp';
 import { match, P } from 'ts-pattern';
 
-import { createRule } from '../utils';
+import { createEslintRule } from '../utils';
 
 const prefix = anyOf('T', '$').at.lineStart();
 const initial = letter.uppercase;
@@ -23,13 +21,15 @@ const MessageId = {
   regex: 'regex',
 } as const;
 
-export const typeParamNames = createRule<[], MessageId>({
-  name: __filename,
+export const RULE_NAME = 'type-param-names';
+
+export const typeParamNames = createEslintRule<[], MessageId>({
+  name: RULE_NAME,
   meta: {
     type: 'suggestion',
     docs: {
       description: 'Enforce giving proper names to type parameters when there are two or more',
-      recommended: 'recommended',
+      recommended: 'stylistic',
     },
     schema: [],
     messages: {
