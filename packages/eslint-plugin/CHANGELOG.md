@@ -1,5 +1,16 @@
 # @2digits/eslint-plugin
 
+## 2.0.0
+
+### Major Changes
+
+- 89206d8: Updated eslint to v9
+
+### Patch Changes
+
+- 33a02c7: Updated dependencies
+- 436aa65: Updated to pnpm 9
+
 ## 1.1.0
 
 ### Minor Changes

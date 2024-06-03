@@ -1,5 +1,27 @@
 # @2digits/eslint-config
 
+## 2.0.0
+
+### Major Changes
+
+- 89206d8: Updated eslint to v9
+
+### Minor Changes
+
+- d0c1d04: Added eslint-plugin-comments
+- 52b6736: Added automatic gitignore detection to eslint
+- 00dd377: Added eslint-plugin-n
+
+### Patch Changes
+
+- 33a02c7: Updated dependencies
+- 436aa65: Updated to pnpm 9
+- Updated dependencies [89206d8]
+- Updated dependencies [33a02c7]
+- Updated dependencies [436aa65]
+  - @2digits/eslint-plugin@2.0.0
+  - @2digits/constants@0.1.6
+
 ## 1.5.0
 
 ### Minor Changes

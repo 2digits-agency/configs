@@ -1,5 +1,12 @@
 # @2digits/tsconfig
 
+## 0.3.5
+
+### Patch Changes
+
+- 33a02c7: Updated dependencies
+- 436aa65: Updated to pnpm 9
+
 ## 0.3.4
 
 ### Patch Changes

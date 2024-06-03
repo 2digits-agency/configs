@@ -1,5 +1,15 @@
 # @2digits/prettier-config
 
+## 2.1.1
+
+### Patch Changes
+
+- 33a02c7: Updated dependencies
+- 436aa65: Updated to pnpm 9
+- Updated dependencies [33a02c7]
+- Updated dependencies [436aa65]
+  - @2digits/constants@0.1.6
+
 ## 2.1.0
 
 ### Minor Changes
