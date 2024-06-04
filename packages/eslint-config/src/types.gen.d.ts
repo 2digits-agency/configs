@@ -2000,6 +2000,10 @@ export interface RuleOptions {
    */
   'radix'?: Linter.RuleEntry<Radix>
   /**
+   * Surfaces diagnostics from React Forget
+   */
+  'react-compiler/react-compiler'?: Linter.RuleEntry<ReactCompilerReactCompiler>
+  /**
    * disallow passing 'children' to void DOM elements
    * @see https://eslint-react.xyz/rules/dom-no-children-in-void-dom-elements
    */
@@ -6563,6 +6567,10 @@ type Quotes = []|[("single" | "double" | "backtick")]|[("single" | "double" | "b
 })]
 // ----- radix -----
 type Radix = []|[("always" | "as-needed")]
+// ----- react-compiler/react-compiler -----
+type ReactCompilerReactCompiler = []|[{
+  [k: string]: unknown | undefined
+}]
 // ----- react-hooks/exhaustive-deps -----
 type ReactHooksExhaustiveDeps = []|[{
   additionalHooks?: string

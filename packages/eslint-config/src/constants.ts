@@ -5,6 +5,7 @@ export const PluginNameMap = {
   '@eslint-react/dom': 'react-dom',
   '@eslint-react': 'react-extra',
   'react-hooks': 'react-hooks',
+  'react-compiler': 'react-compiler',
   react: 'react',
   '@typescript-eslint': 'ts',
   node: 'node',

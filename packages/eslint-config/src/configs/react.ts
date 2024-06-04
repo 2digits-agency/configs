@@ -17,11 +17,12 @@ export async function react(
     tsconfigRootDir,
   } = options;
 
-  const [pluginReact, pluginReactHooks, react, parser] = await Promise.all([
+  const [pluginReact, pluginReactHooks, react, parser, pluginReactCompiler] = await Promise.all([
     interopDefault(import('@eslint-react/eslint-plugin')),
     interopDefault(import('eslint-plugin-react-hooks')),
     interopDefault(import('eslint-plugin-react')),
     interopDefault(import('@typescript-eslint/parser')),
+    interopDefault(import('eslint-plugin-react-compiler')),
   ]);
 
   const plugins = pluginReact.configs.all.plugins;
@@ -46,6 +47,7 @@ export async function react(
         'react-hooks': fixupPluginRules(pluginReactHooks as never),
         'react-hooks-extra': plugins['@eslint-react/hooks-extra'],
         'react-naming-convention': plugins['@eslint-react/naming-convention'],
+        'react-compiler': pluginReactCompiler,
       },
       settings: {
         react: {
@@ -70,6 +72,8 @@ export async function react(
       },
       rules: {
         ...recommended,
+
+        'react-compiler/react-compiler': 'error',
 
         'react-hooks-extra/ensure-use-memo-has-non-empty-deps': 'error',
         'react-hooks-extra/prefer-use-state-lazy-initialization': 'error',
