@@ -3496,6 +3496,11 @@ export interface RuleOptions {
    */
   'ts/no-unnecessary-qualifier'?: Linter.RuleEntry<[]>
   /**
+   * Disallow unnecessary template expressions
+   * @see https://typescript-eslint.io/rules/no-unnecessary-template-expression
+   */
+  'ts/no-unnecessary-template-expression'?: Linter.RuleEntry<[]>
+  /**
    * Disallow type arguments that are equal to the default
    * @see https://typescript-eslint.io/rules/no-unnecessary-type-arguments
    */
@@ -3576,8 +3581,9 @@ export interface RuleOptions {
    */
   'ts/no-useless-empty-export'?: Linter.RuleEntry<[]>
   /**
-   * Disallow unnecessary template literals
+   * Disallow unnecessary template expressions
    * @see https://typescript-eslint.io/rules/no-useless-template-literals
+   * @deprecated
    */
   'ts/no-useless-template-literals'?: Linter.RuleEntry<[]>
   /**
@@ -3725,7 +3731,7 @@ export interface RuleOptions {
    */
   'ts/require-array-sort-compare'?: Linter.RuleEntry<TsRequireArraySortCompare>
   /**
-   * Disallow async functions which have no `await` expression
+   * Disallow async functions which do not return promises and have no `await` expression
    * @see https://typescript-eslint.io/rules/require-await
    */
   'ts/require-await'?: Linter.RuleEntry<[]>
@@ -8220,6 +8226,18 @@ type TsNoFloatingPromises = []|[{
   ignoreVoid?: boolean
   
   ignoreIIFE?: boolean
+  allowForKnownSafePromises?: (string | {
+    from: "file"
+    name: (string | [string, ...(string)[]])
+    path?: string
+  } | {
+    from: "lib"
+    name: (string | [string, ...(string)[]])
+  } | {
+    from: "package"
+    name: (string | [string, ...(string)[]])
+    package: string
+  })[]
 }]
 // ----- ts/no-inferrable-types -----
 type TsNoInferrableTypes = []|[{
