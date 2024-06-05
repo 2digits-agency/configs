@@ -1,4 +1,5 @@
 {
+  "globalPassThroughEnv": ["FORCE_COLOR"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
