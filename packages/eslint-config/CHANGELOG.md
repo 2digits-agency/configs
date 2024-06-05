@@ -1,5 +1,18 @@
 # @2digits/eslint-config
 
+## 2.1.0
+
+### Minor Changes
+
+- 79b14f2: Added react-compiler plugin
+
+### Patch Changes
+
+- 8a4e12a: Updated dependencies
+- 96e16c0: Updated turbo to v2
+- Updated dependencies [8a4e12a]
+  - @2digits/eslint-plugin@2.0.1
+
 ## 2.0.1
 
 ### Patch Changes
