@@ -7,7 +7,11 @@ export async function prettier(): Promise<TypedFlatConfigItem[]> {
   return [
     {
       name: '2digits:prettier',
-      rules: prettier.rules,
+      rules: {
+        ...prettier.rules,
+
+        'tailwindcss/classnames-order': 'off',
+      },
     },
   ];
 }

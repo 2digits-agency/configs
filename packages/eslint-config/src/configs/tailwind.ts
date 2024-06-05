@@ -26,7 +26,6 @@ export async function tailwind(options: OptionsOverrides = {}): Promise<TypedFla
       },
       rules: {
         ...tailwindcss.configs.recommended.rules,
-        'tailwindcss/classnames-order': 'off',
 
         ...overrides,
       },
