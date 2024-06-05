@@ -3,6 +3,7 @@ import { isPackageExists } from 'local-pkg';
 
 import {
   comments,
+  graphql,
   ignores,
   javascript,
   jsdoc,
@@ -38,6 +39,7 @@ interface ESLint2DigitsOptions {
   turbo?: SharedOptions<OptionsOverrides> | boolean;
   js?: OptionsOverrides;
   ts?: SharedOptions<OptionsTypeScriptWithTypes> | boolean;
+  graphql?: SharedOptions<OptionsWithFiles> | boolean;
   react?: SharedOptions<OptionsWithReact> | boolean;
   next?: SharedOptions<OptionsWithFiles> | boolean;
   tailwind?: SharedOptions<OptionsOverrides> | boolean;
@@ -122,6 +124,10 @@ export function twoDigits(
     )
   ) {
     composer = composer.append(tanstack(config(options.tanstack)));
+  }
+
+  if (isPackageExists('graphql')) {
+    composer = composer.append(graphql(config(options.graphql)));
   }
 
   composer = composer.append(...userConfig);
