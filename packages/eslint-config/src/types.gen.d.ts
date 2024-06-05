@@ -3260,6 +3260,166 @@ Backward pagination arguments
    */
   'semi-style'?: Linter.RuleEntry<SemiStyle>
   /**
+   * Cognitive Complexity of functions should not be too high
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/cognitive-complexity.md
+   */
+  'sonar/cognitive-complexity'?: Linter.RuleEntry<SonarCognitiveComplexity>
+  /**
+   * "if ... else if" constructs should end with "else" clauses
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/elseif-without-else.md
+   */
+  'sonar/elseif-without-else'?: Linter.RuleEntry<[]>
+  /**
+   * "switch" statements should not have too many "case" clauses
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/max-switch-cases.md
+   */
+  'sonar/max-switch-cases'?: Linter.RuleEntry<SonarMaxSwitchCases>
+  /**
+   * All branches in a conditional structure should not have exactly the same implementation
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-all-duplicated-branches.md
+   */
+  'sonar/no-all-duplicated-branches'?: Linter.RuleEntry<[]>
+  /**
+   * Collapsible "if" statements should be merged
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-collapsible-if.md
+   */
+  'sonar/no-collapsible-if'?: Linter.RuleEntry<SonarNoCollapsibleIf>
+  /**
+   * Collection sizes and array length comparisons should make sense
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-collection-size-mischeck.md
+   */
+  'sonar/no-collection-size-mischeck'?: Linter.RuleEntry<[]>
+  /**
+   * String literals should not be duplicated
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-duplicate-string.md
+   */
+  'sonar/no-duplicate-string'?: Linter.RuleEntry<SonarNoDuplicateString>
+  /**
+   * Two branches in a conditional structure should not have exactly the same implementation
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-duplicated-branches.md
+   */
+  'sonar/no-duplicated-branches'?: Linter.RuleEntry<SonarNoDuplicatedBranches>
+  /**
+   * Collection elements should not be replaced unconditionally
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-element-overwrite.md
+   */
+  'sonar/no-element-overwrite'?: Linter.RuleEntry<SonarNoElementOverwrite>
+  /**
+   * Empty collections should not be accessed or iterated
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-empty-collection.md
+   */
+  'sonar/no-empty-collection'?: Linter.RuleEntry<[]>
+  /**
+   * Function calls should not pass extra arguments
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-extra-arguments.md
+   */
+  'sonar/no-extra-arguments'?: Linter.RuleEntry<SonarNoExtraArguments>
+  /**
+   * Boolean expressions should not be gratuitous
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-gratuitous-expressions.md
+   */
+  'sonar/no-gratuitous-expressions'?: Linter.RuleEntry<SonarNoGratuitousExpressions>
+  /**
+   * Related "if-else-if" and "switch-case" statements should not have the same condition
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-identical-conditions.md
+   */
+  'sonar/no-identical-conditions'?: Linter.RuleEntry<SonarNoIdenticalConditions>
+  /**
+   * Identical expressions should not be used on both sides of a binary operator
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-identical-expressions.md
+   */
+  'sonar/no-identical-expressions'?: Linter.RuleEntry<SonarNoIdenticalExpressions>
+  /**
+   * Functions should not have identical implementations
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-identical-functions.md
+   */
+  'sonar/no-identical-functions'?: Linter.RuleEntry<SonarNoIdenticalFunctions>
+  /**
+   * Return values from functions without side effects should not be ignored
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-ignored-return.md
+   */
+  'sonar/no-ignored-return'?: Linter.RuleEntry<[]>
+  /**
+   * Boolean checks should not be inverted
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-inverted-boolean-check.md
+   */
+  'sonar/no-inverted-boolean-check'?: Linter.RuleEntry<[]>
+  /**
+   * "switch" statements should not be nested
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-nested-switch.md
+   */
+  'sonar/no-nested-switch'?: Linter.RuleEntry<[]>
+  /**
+   * Template literals should not be nested
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-nested-template-literals.md
+   */
+  'sonar/no-nested-template-literals'?: Linter.RuleEntry<[]>
+  /**
+   * Loops with at most one iteration should be refactored
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-one-iteration-loop.md
+   */
+  'sonar/no-one-iteration-loop'?: Linter.RuleEntry<[]>
+  /**
+   * Boolean literals should not be redundant
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-redundant-boolean.md
+   */
+  'sonar/no-redundant-boolean'?: Linter.RuleEntry<[]>
+  /**
+   * Jump statements should not be redundant
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-redundant-jump.md
+   */
+  'sonar/no-redundant-jump'?: Linter.RuleEntry<[]>
+  /**
+   * Conditionals should start on new lines
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-same-line-conditional.md
+   */
+  'sonar/no-same-line-conditional'?: Linter.RuleEntry<SonarNoSameLineConditional>
+  /**
+   * "switch" statements should have at least 3 "case" clauses
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-small-switch.md
+   */
+  'sonar/no-small-switch'?: Linter.RuleEntry<[]>
+  /**
+   * Collection and array contents should be used
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-unused-collection.md
+   */
+  'sonar/no-unused-collection'?: Linter.RuleEntry<[]>
+  /**
+   * The output of functions that don't return anything should not be used
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-use-of-empty-return-value.md
+   */
+  'sonar/no-use-of-empty-return-value'?: Linter.RuleEntry<[]>
+  /**
+   * "catch" clauses should do more than rethrow
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/no-useless-catch.md
+   */
+  'sonar/no-useless-catch'?: Linter.RuleEntry<[]>
+  /**
+   * Non-existent operators "=+", "=-" and "=!" should not be used
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/non-existent-operator.md
+   */
+  'sonar/non-existent-operator'?: Linter.RuleEntry<[]>
+  /**
+   * Local variables should not be declared and then immediately returned or thrown
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/prefer-immediate-return.md
+   */
+  'sonar/prefer-immediate-return'?: Linter.RuleEntry<[]>
+  /**
+   * Object literal syntax should be used
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/prefer-object-literal.md
+   */
+  'sonar/prefer-object-literal'?: Linter.RuleEntry<[]>
+  /**
+   * Return of boolean expressions should not be wrapped into an "if-then-else" statement
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/prefer-single-boolean-return.md
+   */
+  'sonar/prefer-single-boolean-return'?: Linter.RuleEntry<[]>
+  /**
+   * A "while" loop should be used instead of a "for" loop
+   * @see https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/prefer-while.md
+   */
+  'sonar/prefer-while'?: Linter.RuleEntry<[]>
+  /**
    * Enforce sorted import declarations within modules
    * @see https://eslint.org/docs/latest/rules/sort-imports
    */
@@ -7618,6 +7778,38 @@ type SemiSpacing = []|[{
 }]
 // ----- semi-style -----
 type SemiStyle = []|[("last" | "first")]
+// ----- sonar/cognitive-complexity -----
+type SonarCognitiveComplexity = []|[number]|[number, ("sonar-runtime" | "metric")]
+// ----- sonar/max-switch-cases -----
+type SonarMaxSwitchCases = []|[number]
+// ----- sonar/no-collapsible-if -----
+type SonarNoCollapsibleIf = []|["sonar-runtime"]
+// ----- sonar/no-duplicate-string -----
+type SonarNoDuplicateString = []|[{
+  threshold?: number
+  ignoreStrings?: string
+  [k: string]: unknown | undefined
+}]|[{
+  threshold?: number
+  ignoreStrings?: string
+  [k: string]: unknown | undefined
+}, "sonar-runtime"]
+// ----- sonar/no-duplicated-branches -----
+type SonarNoDuplicatedBranches = []|["sonar-runtime"]
+// ----- sonar/no-element-overwrite -----
+type SonarNoElementOverwrite = []|["sonar-runtime"]
+// ----- sonar/no-extra-arguments -----
+type SonarNoExtraArguments = []|["sonar-runtime"]
+// ----- sonar/no-gratuitous-expressions -----
+type SonarNoGratuitousExpressions = []|["sonar-runtime"]
+// ----- sonar/no-identical-conditions -----
+type SonarNoIdenticalConditions = []|["sonar-runtime"]
+// ----- sonar/no-identical-expressions -----
+type SonarNoIdenticalExpressions = []|["sonar-runtime"]
+// ----- sonar/no-identical-functions -----
+type SonarNoIdenticalFunctions = []|[number]|[number, "sonar-runtime"]
+// ----- sonar/no-same-line-conditional -----
+type SonarNoSameLineConditional = []|["sonar-runtime"]
 // ----- sort-imports -----
 type SortImports = []|[{
   ignoreCase?: boolean
@@ -9498,4 +9690,4 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   onlyEquality?: boolean
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:comments' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'
+export type ConfigNames = '2digits:comments' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'

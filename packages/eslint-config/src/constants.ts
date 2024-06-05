@@ -18,4 +18,5 @@ export const PluginNameMap = {
   '@tanstack/query': 'tanstack',
   '@2digits': '@2digits',
   '@graphql-eslint': 'gql',
+  sonarjs: 'sonar',
 } as const;
