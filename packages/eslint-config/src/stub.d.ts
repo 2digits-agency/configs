@@ -131,3 +131,12 @@ declare module 'eslint-plugin-jsdoc' {
   };
   export = exprt;
 }
+
+declare module 'eslint-plugin-react-compiler' {
+  import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
+
+  declare const exprt: {
+    rules: NonNullable<Linter.Plugin['rules']>;
+  };
+  export = exprt;
+}

@@ -1,6 +1,7 @@
 import type { ParserOptions } from '@typescript-eslint/parser';
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
 import type { Linter } from 'eslint';
+import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore';
 
 import type { RuleOptions } from './types.gen';
 
@@ -59,4 +60,21 @@ export interface OptionsWithStorybook extends OptionsWithFiles {
    * @default '.storybook'
    */
   storybookDirectory?: string;
+}
+
+export interface OptionsWithReact extends OptionsWithFiles {
+  /**
+   * Enable the react-compiler plugin.
+   *
+   * @default true
+   */
+  reactCompiler?: boolean;
+}
+
+export interface OptionsWithIgnores {
+  /** Options to pass to eslint-config-flat-gitignore */
+  gitIgnore?: Omit<FlatGitignoreOptions, 'name' | 'root'>;
+
+  /** An array of glob patterns to ignore in addition to the default ignores. */
+  ignores?: string[];
 }
