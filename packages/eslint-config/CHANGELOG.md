@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 2.1.1
+
+### Patch Changes
+
+- ad91acc: Updated dependencies
+- 7cbda11: Disable tailwind class-sorting in the prettier disables
+
 ## 2.1.0
 
 ### Minor Changes

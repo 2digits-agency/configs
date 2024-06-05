@@ -17,4 +17,5 @@ export const PluginNameMap = {
   tailwindcss: 'tailwindcss',
   '@tanstack/query': 'tanstack',
   '@2digits': '@2digits',
+  '@graphql-eslint': 'gql',
 } as const;

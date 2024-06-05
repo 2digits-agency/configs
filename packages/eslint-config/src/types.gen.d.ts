@@ -278,6 +278,394 @@ export interface RuleOptions {
    */
   'global-require'?: Linter.RuleEntry<[]>
   /**
+   * Enforce arrange in alphabetical order for type fields, enum values, input object fields, operation selections and more.
+   * @see https://the-guild.dev/graphql/eslint/rules/alphabetize
+   */
+  'gql/alphabetize'?: Linter.RuleEntry<GqlAlphabetize>
+  /**
+   * Require all comments to follow the same style (either block or inline).
+   * @see https://the-guild.dev/graphql/eslint/rules/description-style
+   */
+  'gql/description-style'?: Linter.RuleEntry<GqlDescriptionStyle>
+  /**
+   * A GraphQL document is only valid for execution if all definitions are either operation or fragment definitions.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/executable-definitions
+   */
+  'gql/executable-definitions'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document is only valid if all fields selected are defined by the parent type, or are an allowed meta field such as `__typename`.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/fields-on-correct-type
+   */
+  'gql/fields-on-correct-type'?: Linter.RuleEntry<[]>
+  /**
+   * Fragments use a type condition to determine if they apply, since fragments can only be spread into a composite type (object, interface, or union), the type condition must also be a composite type.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/fragments-on-composite-type
+   */
+  'gql/fragments-on-composite-type'?: Linter.RuleEntry<[]>
+  /**
+   * Require mutation argument to be always called "input" and input type to be called Mutation name + "Input".
+Using the same name for all input parameters will make your schemas easier to consume and more predictable. Using the same name as mutation for InputType will make it easier to find mutations that InputType belongs to.
+   * @see https://the-guild.dev/graphql/eslint/rules/input-name
+   */
+  'gql/input-name'?: Linter.RuleEntry<GqlInputName>
+  /**
+   * A GraphQL field is only valid if all supplied arguments are defined by that field.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/known-argument-names
+   */
+  'gql/known-argument-names'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document is only valid if all `@directive`s are known by the schema and legally positioned.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/known-directives
+   */
+  'gql/known-directives'?: Linter.RuleEntry<GqlKnownDirectives>
+  /**
+   * A GraphQL document is only valid if all `...Fragment` fragment spreads refer to fragments defined in the same document.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/known-fragment-names
+   */
+  'gql/known-fragment-names'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document is only valid if referenced types (specifically variable definitions and fragment conditions) are defined by the type schema.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/known-type-names
+   */
+  'gql/known-type-names'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document that contains an anonymous operation (the `query` short-hand) is only valid if it contains only that one operation definition.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/lone-anonymous-operation
+   */
+  'gql/lone-anonymous-operation'?: Linter.RuleEntry<[]>
+  /**
+   * Require queries, mutations, subscriptions or fragments to be located in separate files.
+   * @see https://the-guild.dev/graphql/eslint/rules/lone-executable-definition
+   */
+  'gql/lone-executable-definition'?: Linter.RuleEntry<GqlLoneExecutableDefinition>
+  /**
+   * A GraphQL document is only valid if it contains only one schema definition.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/lone-schema-definition
+   */
+  'gql/lone-schema-definition'?: Linter.RuleEntry<[]>
+  /**
+   * This rule allows you to enforce that the file name should match the operation name.
+   * @see https://the-guild.dev/graphql/eslint/rules/match-document-filename
+   */
+  'gql/match-document-filename'?: Linter.RuleEntry<GqlMatchDocumentFilename>
+  /**
+   * Require names to follow specified conventions.
+   * @see https://the-guild.dev/graphql/eslint/rules/naming-convention
+   */
+  'gql/naming-convention'?: Linter.RuleEntry<GqlNamingConvention>
+  /**
+   * Require name for your GraphQL operations. This is useful since most GraphQL client libraries are using the operation name for caching purposes.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-anonymous-operations
+   */
+  'gql/no-anonymous-operations'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow case-insensitive enum values duplicates.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-case-insensitive-enum-values-duplicates
+   */
+  'gql/no-case-insensitive-enum-values-duplicates'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce that deprecated fields or enum values are not in use by operations.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-deprecated
+   */
+  'gql/no-deprecated'?: Linter.RuleEntry<[]>
+  /**
+   * Checks for duplicate fields in selection set, variables in operation definition, or in arguments set of a field.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-duplicate-fields
+   */
+  'gql/no-duplicate-fields'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL fragment is only valid when it does not have cycles in fragments usage.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-fragment-cycles
+   */
+  'gql/no-fragment-cycles'?: Linter.RuleEntry<[]>
+  /**
+   * Requires to use `"""` or `"` for adding a GraphQL description instead of `#`.
+Allows to use hashtag for comments, as long as it's not attached to an AST definition.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-hashtag-description
+   */
+  'gql/no-hashtag-description'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow fragments that are used only in one place.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-one-place-fragments
+   */
+  'gql/no-one-place-fragments'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow using root types `mutation` and/or `subscription`.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-root-type
+   */
+  'gql/no-root-type'?: Linter.RuleEntry<GqlNoRootType>
+  /**
+   * Avoid scalar result type on mutation type to make sure to return a valid state.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-scalar-result-type-on-mutation
+   */
+  'gql/no-scalar-result-type-on-mutation'?: Linter.RuleEntry<[]>
+  /**
+   * Enforces users to avoid using the type name in a field name while defining your schema.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-typename-prefix
+   */
+  'gql/no-typename-prefix'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL operation is only valid if all variables encountered, both directly and via fragment spreads, are defined by that operation.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-undefined-variables
+   */
+  'gql/no-undefined-variables'?: Linter.RuleEntry<[]>
+  /**
+   * Requires all types to be reachable at some level by root level fields.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-unreachable-types
+   */
+  'gql/no-unreachable-types'?: Linter.RuleEntry<[]>
+  /**
+   * Requires all fields to be used at some level by siblings operations.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-unused-fields
+   */
+  'gql/no-unused-fields'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document is only valid if all fragment definitions are spread within operations, or spread within other fragments spread within operations.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-unused-fragments
+   */
+  'gql/no-unused-fragments'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL operation is only valid if all variables defined by an operation are used, either directly or within a spread fragment.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/no-unused-variables
+   */
+  'gql/no-unused-variables'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL subscription is valid only if it contains a single root field.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/one-field-subscriptions
+   */
+  'gql/one-field-subscriptions'?: Linter.RuleEntry<[]>
+  /**
+   * A selection set is only valid if all fields (including spreading any fragments) either correspond to distinct response names or can be merged without ambiguity.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/overlapping-fields-can-be-merged
+   */
+  'gql/overlapping-fields-can-be-merged'?: Linter.RuleEntry<[]>
+  /**
+   * A fragment spread is only valid if the type condition could ever possibly be true: if there is a non-empty intersection of the possible parent types, and possible types which pass the type condition.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/possible-fragment-spread
+   */
+  'gql/possible-fragment-spread'?: Linter.RuleEntry<[]>
+  /**
+   * A type extension is only valid if the type is defined and has the same kind.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/possible-type-extension
+   */
+  'gql/possible-type-extension'?: Linter.RuleEntry<[]>
+  /**
+   * A field or directive is only valid if all required (non-null without a default value) field arguments have been provided.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/provided-required-arguments
+   */
+  'gql/provided-required-arguments'?: Linter.RuleEntry<[]>
+  /**
+   * Set of rules to follow Relay specification for Arguments.
+
+- A field that returns a Connection type must include forward pagination arguments (`first` and `after`), backward pagination arguments (`last` and `before`), or both
+
+Forward pagination arguments
+
+- `first` takes a non-negative integer
+- `after` takes the Cursor type
+
+Backward pagination arguments
+
+- `last` takes a non-negative integer
+- `before` takes the Cursor type
+   * @see https://the-guild.dev/graphql/eslint/rules/relay-arguments
+   */
+  'gql/relay-arguments'?: Linter.RuleEntry<GqlRelayArguments>
+  /**
+   * Set of rules to follow Relay specification for Connection types.
+
+- Any type whose name ends in "Connection" is considered by spec to be a `Connection type`
+- Connection type must be an Object type
+- Connection type must contain a field `edges` that return a list type that wraps an edge type
+- Connection type must contain a field `pageInfo` that return a non-null `PageInfo` Object type
+   * @see https://the-guild.dev/graphql/eslint/rules/relay-connection-types
+   */
+  'gql/relay-connection-types'?: Linter.RuleEntry<[]>
+  /**
+   * Set of rules to follow Relay specification for Edge types.
+
+- A type that is returned in list form by a connection type's `edges` field is considered by this spec to be an Edge type
+- Edge type must be an Object type
+- Edge type must contain a field `node` that return either Scalar, Enum, Object, Interface, Union, or a non-null wrapper around one of those types. Notably, this field cannot return a list
+- Edge type must contain a field `cursor` that return either String, Scalar, or a non-null wrapper around one of those types
+- Edge type name must end in "Edge" _(optional)_
+- Edge type's field `node` must implement `Node` interface _(optional)_
+- A list type should only wrap an edge type _(optional)_
+   * @see https://the-guild.dev/graphql/eslint/rules/relay-edge-types
+   */
+  'gql/relay-edge-types'?: Linter.RuleEntry<GqlRelayEdgeTypes>
+  /**
+   * Set of rules to follow Relay specification for `PageInfo` object.
+
+- `PageInfo` must be an Object type
+- `PageInfo` must contain fields `hasPreviousPage` and `hasNextPage`, that return non-null Boolean
+- `PageInfo` must contain fields `startCursor` and `endCursor`, that return either String or Scalar, which can be null if there are no results
+   * @see https://the-guild.dev/graphql/eslint/rules/relay-page-info
+   */
+  'gql/relay-page-info'?: Linter.RuleEntry<[]>
+  /**
+   * Require deletion date on `@deprecated` directive. Suggest removing deprecated things after deprecated date.
+   * @see https://the-guild.dev/graphql/eslint/rules/require-deprecation-date
+   */
+  'gql/require-deprecation-date'?: Linter.RuleEntry<GqlRequireDeprecationDate>
+  /**
+   * Require all deprecation directives to specify a reason.
+   * @see https://the-guild.dev/graphql/eslint/rules/require-deprecation-reason
+   */
+  'gql/require-deprecation-reason'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce descriptions in type definitions and operations.
+   * @see https://the-guild.dev/graphql/eslint/rules/require-description
+   */
+  'gql/require-description'?: Linter.RuleEntry<GqlRequireDescription>
+  /**
+   * Allow the client in one round-trip not only to call mutation but also to get a wagon of data to update their application.
+> Currently, no errors are reported for result type `union`, `interface` and `scalar`.
+   * @see https://the-guild.dev/graphql/eslint/rules/require-field-of-type-query-in-mutation-result
+   */
+  'gql/require-field-of-type-query-in-mutation-result'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce selecting specific fields when they are available on the GraphQL type.
+   * @see https://the-guild.dev/graphql/eslint/rules/require-id-when-available
+   */
+  'gql/require-id-when-available'?: Linter.RuleEntry<GqlRequireIdWhenAvailable>
+  /**
+   * Require fragments to be imported via an import expression.
+   * @see https://the-guild.dev/graphql/eslint/rules/require-import-fragment
+   */
+  'gql/require-import-fragment'?: Linter.RuleEntry<[]>
+  /**
+   * Require `input` or `type` fields to be non-nullable with `@oneOf` directive.
+   * @see https://the-guild.dev/graphql/eslint/rules/require-nullable-fields-with-oneof
+   */
+  'gql/require-nullable-fields-with-oneof'?: Linter.RuleEntry<[]>
+  /**
+   * Require nullable fields in root types.
+   * @see https://the-guild.dev/graphql/eslint/rules/require-nullable-result-in-root
+   */
+  'gql/require-nullable-result-in-root'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce types with `@oneOf` directive have `error` and `ok` fields.
+   * @see https://the-guild.dev/graphql/eslint/rules/require-type-pattern-with-oneof
+   */
+  'gql/require-type-pattern-with-oneof'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document is valid only if all leaf fields (fields without sub selections) are of scalar or enum types.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/scalar-leafs
+   */
+  'gql/scalar-leafs'?: Linter.RuleEntry<[]>
+  /**
+   * Limit the complexity of the GraphQL operations solely by their depth. Based on [graphql-depth-limit](https://npmjs.com/package/graphql-depth-limit).
+   * @see https://the-guild.dev/graphql/eslint/rules/selection-set-depth
+   */
+  'gql/selection-set-depth'?: Linter.RuleEntry<GqlSelectionSetDepth>
+  /**
+   * Requires output types to have one unique identifier unless they do not have a logical one. Exceptions can be used to ignore output types that do not have unique identifiers.
+   * @see https://the-guild.dev/graphql/eslint/rules/strict-id-in-types
+   */
+  'gql/strict-id-in-types'?: Linter.RuleEntry<GqlStrictIdInTypes>
+  /**
+   * A GraphQL field or directive is only valid if all supplied arguments are uniquely named.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-argument-names
+   */
+  'gql/unique-argument-names'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document is only valid if all defined directives have unique names.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-directive-names
+   */
+  'gql/unique-directive-names'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document is only valid if all non-repeatable directives at a given location are uniquely named.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-directive-names-per-location
+   */
+  'gql/unique-directive-names-per-location'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL enum type is only valid if all its values are uniquely named.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-enum-value-names
+   */
+  'gql/unique-enum-value-names'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL complex type is only valid if all its fields are uniquely named.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-field-definition-names
+   */
+  'gql/unique-field-definition-names'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce unique fragment names across your project.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-fragment-name
+   */
+  'gql/unique-fragment-name'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL input object value is only valid if all supplied fields are uniquely named.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-input-field-names
+   */
+  'gql/unique-input-field-names'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce unique operation names across your project.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-operation-name
+   */
+  'gql/unique-operation-name'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document is only valid if it has only one type per operation.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-operation-types
+   */
+  'gql/unique-operation-types'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document is only valid if all defined types have unique names.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-type-names
+   */
+  'gql/unique-type-names'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL operation is only valid if all its variables are uniquely named.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/unique-variable-names
+   */
+  'gql/unique-variable-names'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL document is only valid if all value literals are of the type expected at their position.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/value-literals-of-correct-type
+   */
+  'gql/value-literals-of-correct-type'?: Linter.RuleEntry<[]>
+  /**
+   * A GraphQL operation is only valid if all the variables it defines are of input types (scalar, enum, or input object).
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/variables-are-input-types
+   */
+  'gql/variables-are-input-types'?: Linter.RuleEntry<[]>
+  /**
+   * Variables passed to field arguments conform to type.
+> This rule is a wrapper around a `graphql-js` validation function.
+   * @see https://the-guild.dev/graphql/eslint/rules/variables-in-allowed-position
+   */
+  'gql/variables-in-allowed-position'?: Linter.RuleEntry<[]>
+  /**
    * Require grouped accessor pairs in object literals and classes
    * @see https://eslint.org/docs/latest/rules/grouped-accessor-pairs
    */
@@ -4750,6 +5138,191 @@ type GeneratorStarSpacing = []|[(("before" | "after" | "both" | "neither") | {
 type GetterReturn = []|[{
   allowImplicit?: boolean
 }]
+// ----- gql/alphabetize -----
+type GqlAlphabetize = [{
+  
+  fields?: [("ObjectTypeDefinition" | "InterfaceTypeDefinition" | "InputObjectTypeDefinition"), ...(("ObjectTypeDefinition" | "InterfaceTypeDefinition" | "InputObjectTypeDefinition"))[]]
+  
+  values?: ["EnumTypeDefinition", ...("EnumTypeDefinition")[]]
+  
+  selections?: [("OperationDefinition" | "FragmentDefinition"), ...(("OperationDefinition" | "FragmentDefinition"))[]]
+  
+  variables?: ["OperationDefinition", ...("OperationDefinition")[]]
+  
+  arguments?: [("FieldDefinition" | "Field" | "DirectiveDefinition" | "Directive"), ...(("FieldDefinition" | "Field" | "DirectiveDefinition" | "Directive"))[]]
+  
+  definitions?: boolean
+  
+  groups?: [string, string, ...(string)[]]
+}]
+// ----- gql/description-style -----
+type GqlDescriptionStyle = []|[{
+  style?: ("block" | "inline")
+}]
+// ----- gql/input-name -----
+type GqlInputName = []|[{
+  
+  checkInputType?: boolean
+  
+  caseSensitiveInputType?: boolean
+  
+  checkQueries?: boolean
+  
+  checkMutations?: boolean
+}]
+// ----- gql/known-directives -----
+type GqlKnownDirectives = []|[{
+  
+  ignoreClientDirectives: [string, ...(string)[]]
+}]
+// ----- gql/lone-executable-definition -----
+type GqlLoneExecutableDefinition = []|[{
+  
+  ignore?: [("fragment" | "query" | "mutation" | "subscription")]|[("fragment" | "query" | "mutation" | "subscription"), ("fragment" | "query" | "mutation" | "subscription")]|[("fragment" | "query" | "mutation" | "subscription"), ("fragment" | "query" | "mutation" | "subscription"), ("fragment" | "query" | "mutation" | "subscription")]
+}]
+// ----- gql/match-document-filename -----
+type GqlMatchDocumentFilename = [{
+  fileExtension?: (".gql" | ".graphql")
+  query?: (_GqlMatchDocumentFilenameAsString | _GqlMatchDocumentFilename_AsObject)
+  mutation?: (_GqlMatchDocumentFilenameAsString | _GqlMatchDocumentFilename_AsObject)
+  subscription?: (_GqlMatchDocumentFilenameAsString | _GqlMatchDocumentFilename_AsObject)
+  fragment?: (_GqlMatchDocumentFilenameAsString | _GqlMatchDocumentFilename_AsObject)
+}]
+type _GqlMatchDocumentFilenameAsString = ("camelCase" | "PascalCase" | "snake_case" | "UPPER_CASE" | "kebab-case" | "matchDocumentStyle")
+interface _GqlMatchDocumentFilename_AsObject {
+  style?: ("camelCase" | "PascalCase" | "snake_case" | "UPPER_CASE" | "kebab-case" | "matchDocumentStyle")
+  suffix?: string
+  prefix?: string
+}
+// ----- gql/naming-convention -----
+type GqlNamingConvention = []|[{
+  
+  types?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  Argument?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  DirectiveDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  EnumTypeDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  EnumValueDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  FieldDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  FragmentDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  InputObjectTypeDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  InputValueDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  InterfaceTypeDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  ObjectTypeDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  OperationDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  ScalarTypeDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  UnionTypeDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  
+  VariableDefinition?: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+  allowLeadingUnderscore?: boolean
+  allowTrailingUnderscore?: boolean
+  [k: string]: (_GqlNamingConventionAsString | _GqlNamingConvention_AsObject)
+}]
+type _GqlNamingConventionAsString = ("camelCase" | "PascalCase" | "snake_case" | "UPPER_CASE")
+interface _GqlNamingConvention_AsObject {
+  style?: ("camelCase" | "PascalCase" | "snake_case" | "UPPER_CASE")
+  prefix?: string
+  suffix?: string
+  
+  forbiddenPrefixes?: [string, ...(string)[]]
+  
+  forbiddenSuffixes?: [string, ...(string)[]]
+  
+  requiredPrefixes?: [string, ...(string)[]]
+  
+  requiredSuffixes?: [string, ...(string)[]]
+  
+  ignorePattern?: string
+}
+// ----- gql/no-root-type -----
+type GqlNoRootType = [{
+  
+  disallow: [("mutation" | "subscription"), ...(("mutation" | "subscription"))[]]
+}]
+// ----- gql/relay-arguments -----
+type GqlRelayArguments = []|[{
+  
+  includeBoth?: boolean
+}]
+// ----- gql/relay-edge-types -----
+type GqlRelayEdgeTypes = []|[{
+  
+  withEdgeSuffix?: boolean
+  
+  shouldImplementNode?: boolean
+  
+  listTypeCanWrapOnlyEdgeType?: boolean
+}]
+// ----- gql/require-deprecation-date -----
+type GqlRequireDeprecationDate = []|[{
+  argumentName?: string
+}]
+// ----- gql/require-description -----
+type GqlRequireDescription = [{
+  
+  types?: boolean
+  
+  rootField?: boolean
+  
+  DirectiveDefinition?: boolean
+  
+  EnumTypeDefinition?: boolean
+  
+  EnumValueDefinition?: boolean
+  
+  FieldDefinition?: boolean
+  
+  InputObjectTypeDefinition?: boolean
+  
+  InputValueDefinition?: boolean
+  
+  InterfaceTypeDefinition?: boolean
+  
+  ObjectTypeDefinition?: boolean
+  
+  OperationDefinition?: boolean
+  
+  ScalarTypeDefinition?: boolean
+  
+  UnionTypeDefinition?: boolean
+}]
+// ----- gql/require-id-when-available -----
+type GqlRequireIdWhenAvailable = []|[{
+  fieldName?: (_GqlRequireIdWhenAvailableAsString | _GqlRequireIdWhenAvailable_AsArray)
+}]
+type _GqlRequireIdWhenAvailableAsString = string
+type _GqlRequireIdWhenAvailable_AsArray = [string, ...(string)[]]
+// ----- gql/selection-set-depth -----
+type GqlSelectionSetDepth = [{
+  maxDepth: number
+  
+  ignore?: [string, ...(string)[]]
+}]
+// ----- gql/strict-id-in-types -----
+type GqlStrictIdInTypes = []|[{
+  
+  acceptedIdNames?: [string, ...(string)[]]
+  
+  acceptedIdTypes?: [string, ...(string)[]]
+  exceptions?: {
+    
+    types?: [string, ...(string)[]]
+    
+    suffixes?: [string, ...(string)[]]
+  }
+}]
 // ----- grouped-accessor-pairs -----
 type GroupedAccessorPairs = []|[("anyOrder" | "getBeforeSet" | "setBeforeGet")]
 // ----- handle-callback-err -----
@@ -8925,4 +9498,4 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   onlyEquality?: boolean
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:comments' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'
+export type ConfigNames = '2digits:comments' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'

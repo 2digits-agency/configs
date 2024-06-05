@@ -1,4 +1,5 @@
 export * from './comments';
+export * from './graphql';
 export * from './ignores';
 export * from './javascript';
 export * from './jsdoc';

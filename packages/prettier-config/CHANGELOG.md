@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 2.1.2
+
+### Patch Changes
+
+- ad91acc: Updated dependencies
+
 ## 2.1.1
 
 ### Patch Changes
