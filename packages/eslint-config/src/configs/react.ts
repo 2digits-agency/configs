@@ -3,11 +3,11 @@ import { renamePluginsInRules } from 'eslint-flat-config-utils';
 
 import { PluginNameMap } from '../constants';
 import { GLOB_TS, GLOB_TSX } from '../globs';
-import type { OptionsTypeScriptWithTypes, OptionsWithFiles, TypedFlatConfigItem } from '../types';
+import type { OptionsTypeScriptWithTypes, OptionsWithReact, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
 export async function react(
-  options: OptionsWithFiles & OptionsTypeScriptWithTypes = {},
+  options: OptionsWithReact & OptionsTypeScriptWithTypes = {},
 ): Promise<TypedFlatConfigItem[]> {
   const {
     files = [GLOB_TS, GLOB_TSX],
@@ -15,6 +15,7 @@ export async function react(
     tsconfigPath,
     parserOptions,
     tsconfigRootDir,
+    reactCompiler = true,
   } = options;
 
   const [pluginReact, pluginReactHooks, react, parser, pluginReactCompiler] = await Promise.all([
@@ -22,7 +23,7 @@ export async function react(
     interopDefault(import('eslint-plugin-react-hooks')),
     interopDefault(import('eslint-plugin-react')),
     interopDefault(import('@typescript-eslint/parser')),
-    interopDefault(import('eslint-plugin-react-compiler')),
+    reactCompiler ? interopDefault(import('eslint-plugin-react-compiler')) : undefined,
   ]);
 
   const plugins = pluginReact.configs.all.plugins;
@@ -47,7 +48,7 @@ export async function react(
         'react-hooks': fixupPluginRules(pluginReactHooks as never),
         'react-hooks-extra': plugins['@eslint-react/hooks-extra'],
         'react-naming-convention': plugins['@eslint-react/naming-convention'],
-        'react-compiler': pluginReactCompiler,
+        ...(reactCompiler ? { 'react-compiler': pluginReactCompiler } : {}),
       },
       settings: {
         react: {
@@ -73,7 +74,7 @@ export async function react(
       rules: {
         ...recommended,
 
-        'react-compiler/react-compiler': 'error',
+        ...(reactCompiler ? { 'react-compiler/react-compiler': 'error' } : {}),
 
         'react-hooks-extra/ensure-use-memo-has-non-empty-deps': 'error',
         'react-hooks-extra/prefer-use-state-lazy-initialization': 'error',

@@ -1,4 +1,3 @@
-import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore';
 import { FlatConfigComposer } from 'eslint-flat-config-utils';
 import { isPackageExists } from 'local-pkg';
 
@@ -24,6 +23,8 @@ import type {
   OptionsOverrides,
   OptionsTypeScriptWithTypes,
   OptionsWithFiles,
+  OptionsWithIgnores,
+  OptionsWithReact,
   OptionsWithStorybook,
   TypedFlatConfigItem,
 } from './types';
@@ -33,11 +34,11 @@ type SharedOptions<T = unknown> = T & {
 };
 
 interface ESLint2DigitsOptions {
-  ignores?: FlatGitignoreOptions;
+  ignores?: OptionsWithIgnores;
   turbo?: SharedOptions<OptionsOverrides> | boolean;
   js?: OptionsOverrides;
   ts?: SharedOptions<OptionsTypeScriptWithTypes> | boolean;
-  react?: SharedOptions<OptionsWithFiles> | boolean;
+  react?: SharedOptions<OptionsWithReact> | boolean;
   next?: SharedOptions<OptionsWithFiles> | boolean;
   tailwind?: SharedOptions<OptionsOverrides> | boolean;
   storybook?: SharedOptions<OptionsWithStorybook> | boolean;
