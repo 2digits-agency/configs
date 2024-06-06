@@ -1,5 +1,0 @@
----
-'@2digits/eslint-config': patch
----
-
-Updated eslint-plugin-tailwindcss to fix issue

@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.2.1
+
+### Patch Changes
+
+- 85438a0: Updated eslint-plugin-tailwindcss to fix issue
+
 ## 2.2.0
 
 ### Minor Changes
