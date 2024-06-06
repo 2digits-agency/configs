@@ -11,6 +11,7 @@ import {
   node,
   prettier,
   react,
+  sonar,
   storybook,
   tailwind,
   tanstack,
@@ -72,6 +73,7 @@ export function twoDigits(
     comments(),
     jsdoc(),
     unicorn(),
+    sonar(),
   );
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {

@@ -7,6 +7,7 @@ export * from './next';
 export * from './node';
 export * from './prettier';
 export * from './react';
+export * from './sonar';
 export * from './storybook';
 export * from './tailwind';
 export * from './tanstack';
