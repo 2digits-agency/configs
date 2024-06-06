@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 2.2.0
+
+### Minor Changes
+
+- ea9cf9d: Added sonarjs rules
+- fd6e85b: Added graphql linting
+
 ## 2.1.1
 
 ### Patch Changes
