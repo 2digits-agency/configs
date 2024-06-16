@@ -1,5 +1,15 @@
 # @2digits/eslint-config
 
+## 2.2.2
+
+### Patch Changes
+
+- d892f67: Removed some rules which were a bit too strict
+- 7cfdc5f: Updated dependencies
+- Updated dependencies [7cfdc5f]
+  - @2digits/eslint-plugin@2.0.2
+  - @2digits/constants@0.1.7
+
 ## 2.2.1
 
 ### Patch Changes

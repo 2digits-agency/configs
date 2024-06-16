@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.1.7
+
+### Patch Changes
+
+- 7cfdc5f: Updated dependencies
+
 ## 0.1.6
 
 ### Patch Changes
