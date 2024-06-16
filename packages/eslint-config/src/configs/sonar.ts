@@ -13,7 +13,11 @@ export function sonar(): TypedFlatConfigItem[] {
       plugins: {
         sonar: pluginSonar,
       },
-      rules,
+      rules: {
+        ...rules,
+
+        'sonar/no-redundant-jump': 'off',
+      },
     },
   ];
 }
