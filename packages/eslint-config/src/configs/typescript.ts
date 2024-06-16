@@ -59,10 +59,7 @@ export async function typescript(
         'ts/no-explicit-any': ['error'],
         'ts/no-import-type-side-effects': ['error'],
         'ts/no-misused-promises': 'off',
-        'ts/no-confusing-void-expression': [
-          'error',
-          { ignoreArrowShorthand: true, ignoreVoidOperator: true },
-        ],
+        'ts/no-confusing-void-expression': 'off',
         'ts/no-unused-vars': [
           'error',
           { ignoreRestSiblings: true, argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
