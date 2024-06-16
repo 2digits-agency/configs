@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 2.1.4
+
+### Patch Changes
+
+- 7cfdc5f: Updated dependencies
+- Updated dependencies [7cfdc5f]
+  - @2digits/constants@0.1.7
+
 ## 2.1.3
 
 ### Patch Changes
