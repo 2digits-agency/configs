@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 2.1.5
+
+### Patch Changes
+
+- fe1eba1: Updated deps
+
 ## 2.1.4
 
 ### Patch Changes

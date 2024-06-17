@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 2.2.3
+
+### Patch Changes
+
+- a7e43d5: Fixed jsx-newline getting disabled by prettier
+- fe1eba1: Updated deps
+- Updated dependencies [fe1eba1]
+  - @2digits/eslint-plugin@2.0.3
+
 ## 2.2.2
 
 ### Patch Changes
