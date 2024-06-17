@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.0.3
+
+### Patch Changes
+
+- fe1eba1: Updated deps
+
 ## 2.0.2
 
 ### Patch Changes
