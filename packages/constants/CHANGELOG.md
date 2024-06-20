@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.2.0
+
+### Minor Changes
+
+- 23fa9b0: Updated to typescript 5.5
+
 ## 0.1.7
 
 ### Patch Changes
