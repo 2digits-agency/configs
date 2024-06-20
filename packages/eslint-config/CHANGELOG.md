@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 2.3.0
+
+### Minor Changes
+
+- 23fa9b0: Updated to typescript 5.5
+
+### Patch Changes
+
+- Updated dependencies [23fa9b0]
+  - @2digits/eslint-plugin@2.1.0
+  - @2digits/constants@0.2.0
+
 ## 2.2.3
 
 ### Patch Changes
