@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.3.1
+
+### Patch Changes
+
+- 22beecc: Updated deps
+
 ## 2.3.0
 
 ### Minor Changes
