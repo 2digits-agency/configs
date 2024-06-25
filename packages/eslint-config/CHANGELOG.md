@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 2.3.2
+
+### Patch Changes
+
+- 47a867f: Updated typescript-eslint to support 5.5
+- 3ab1797: Updated eslint-plugin-turbo
+- Updated dependencies [47a867f]
+  - @2digits/eslint-plugin@2.1.1
+
 ## 2.3.1
 
 ### Patch Changes
