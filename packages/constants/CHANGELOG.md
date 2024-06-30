@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.2.1
+
+### Patch Changes
+
+- 97f3f82: Updated deps
+
 ## 0.2.0
 
 ### Minor Changes
