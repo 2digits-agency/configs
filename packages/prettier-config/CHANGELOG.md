@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 2.2.1
+
+### Patch Changes
+
+- 97f3f82: Updated deps
+- Updated dependencies [97f3f82]
+  - @2digits/constants@0.2.1
+
 ## 2.2.0
 
 ### Minor Changes
