@@ -101,8 +101,14 @@ export function javascript(options: OptionsOverrides = {}): TypedFlatConfigItem[
             message: 'Use `Object.getPrototypeOf` or `Object.setPrototypeOf` instead.',
             property: '__proto__',
           },
-          { message: 'Use `Object.defineProperty` instead.', property: '__defineGetter__' },
-          { message: 'Use `Object.defineProperty` instead.', property: '__defineSetter__' },
+          {
+            message: 'Use `Object.defineProperty` instead.',
+            property: '__defineGetter__',
+          },
+          {
+            message: 'Use `Object.defineProperty` instead.',
+            property: '__defineSetter__',
+          },
           {
             message: 'Use `Object.getOwnPropertyDescriptor` instead.',
             property: '__lookupGetter__',
