@@ -62,7 +62,11 @@ export async function typescript(
         'ts/no-confusing-void-expression': 'off',
         'ts/no-unused-vars': [
           'error',
-          { ignoreRestSiblings: true, argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+          {
+            ignoreRestSiblings: true,
+            argsIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
+          },
         ],
 
         ...(twoDigits.configs.recommended.rules as object),
