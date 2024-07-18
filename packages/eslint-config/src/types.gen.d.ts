@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.1.2/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.1.3/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -2688,6 +2688,16 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-ensure-use-memo-has-non-empty-deps
    */
   'react-hooks-extra/ensure-use-memo-has-non-empty-deps'?: Linter.RuleEntry<[]>
+  /**
+   * disallow direct calls to the 'set' function of 'useState' in 'useEffect'
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-effect
+   */
+  'react-hooks-extra/no-direct-set-state-in-use-effect'?: Linter.RuleEntry<[]>
+  /**
+   * disallow direct calls to the 'set' function of 'useState' in 'useLayoutEffect'
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-layout-effect
+   */
+  'react-hooks-extra/no-direct-set-state-in-use-layout-effect'?: Linter.RuleEntry<[]>
   /**
    * disallow function calls in 'useState' that aren't wrapped in an initializer function
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-prefer-use-state-lazy-initialization
