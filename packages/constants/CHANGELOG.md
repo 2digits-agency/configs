@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.2.2
+
+### Patch Changes
+
+- 04d999e: Updated dependencies
+
 ## 0.2.1
 
 ### Patch Changes
