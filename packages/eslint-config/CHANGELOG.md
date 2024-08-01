@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 2.3.8
+
+### Patch Changes
+
+- c52a1bf: Updated eslint-plugin-turbo
+- 42f5efe: Fixed option to disable graphql linting
+
 ## 2.3.7
 
 ### Patch Changes
