@@ -128,7 +128,7 @@ export function twoDigits(
     composer = composer.append(tanstack(config(options.tanstack)));
   }
 
-  if (isPackageExists('graphql')) {
+  if (enabled(options.graphql, isPackageExists('graphql'))) {
     composer = composer.append(graphql(config(options.graphql)));
   }
 
