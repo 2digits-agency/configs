@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 2.4.0
+
+### Minor Changes
+
+- 0876d1c: Updated to typescript-eslint v8
+
+### Patch Changes
+
+- Updated dependencies [0876d1c]
+  - @2digits/eslint-plugin@2.2.0
+
 ## 2.3.8
 
 ### Patch Changes
