@@ -29,7 +29,6 @@ export const typeParamNames = createEslintRule<[], MessageId>({
     type: 'suggestion',
     docs: {
       description: 'Enforce giving proper names to type parameters when there are two or more',
-      recommended: 'stylistic',
     },
     schema: [],
     messages: {
@@ -57,12 +56,13 @@ export const typeParamNames = createEslintRule<[], MessageId>({
             .with(P.not(P.string.regex(RemainderRegex)), () => MessageId.remainder)
             .otherwise(() => false as const);
 
-          messageId &&
+          if (messageId) {
             context.report({
               node: param,
               messageId,
               data: { name },
             });
+          }
         }
       },
     };
