@@ -68,6 +68,7 @@ export async function typescript(
             varsIgnorePattern: '^_',
           },
         ],
+        'ts/unbound-method': 'off',
 
         ...(twoDigits.configs.recommended.rules as object),
 
