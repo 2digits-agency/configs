@@ -1,5 +1,6 @@
 {
   "include": ["**/*.ts"],
+  "exclude": ["dist", "node_modules"],
   "extends": "@2digits/tsconfig/tsconfig.json",
   "compilerOptions": {
     "declaration": true
