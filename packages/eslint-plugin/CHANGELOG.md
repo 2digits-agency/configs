@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.2.3
+
+### Patch Changes
+
+- 04fc87d: Changed internal versioning to use pnpm's workspace protocol
+
 ## 2.2.2
 
 ### Patch Changes

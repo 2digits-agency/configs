@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 2.2.5
+
+### Patch Changes
+
+- 04fc87d: Changed internal versioning to use pnpm's workspace protocol
+- Updated dependencies [04fc87d]
+  - @2digits/constants@0.2.4
+
 ## 2.2.4
 
 ### Patch Changes
