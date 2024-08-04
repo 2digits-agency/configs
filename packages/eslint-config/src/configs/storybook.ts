@@ -1,4 +1,5 @@
 import { fixupPluginRules } from '@eslint/compat';
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
 
 import { GLOB_STORIES } from '../globs';
 import type {
@@ -15,7 +16,6 @@ export async function storybook(
     files = [GLOB_STORIES],
     overrides = {},
     parserOptions,
-    tsconfigPath,
     storybookDirectory = '.storybook',
   } = options;
 
@@ -30,11 +30,11 @@ export async function storybook(
       ecmaFeatures: {
         jsx: true,
       },
-      project: tsconfigPath,
-      ...(parserOptions as object),
+      projectService: true,
+      ...parserOptions,
     },
-    sourceType: 'module' as const,
-  };
+    sourceType: 'module',
+  } satisfies FlatConfig.LanguageOptions;
 
   return [
     {
