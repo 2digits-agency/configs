@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.2.3
+
+### Patch Changes
+
+- be605e6: Changed internal versioning to use pnpm's workspace protocol
+
 ## 0.2.2
 
 ### Patch Changes
