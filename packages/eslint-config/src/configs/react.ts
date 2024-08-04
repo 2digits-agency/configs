@@ -12,7 +12,6 @@ export async function react(
   const {
     files = [GLOB_TS, GLOB_TSX],
     overrides = {},
-    tsconfigPath,
     parserOptions,
     tsconfigRootDir,
     reactCompiler = true,
@@ -66,7 +65,7 @@ export async function react(
             jsx: true,
           },
           tsconfigRootDir,
-          project: tsconfigPath,
+          projectService: true,
           ...parserOptions,
         },
         sourceType: 'module',

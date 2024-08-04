@@ -9,7 +9,7 @@ import { interopDefault } from '../utils';
 export async function next(
   options: OptionsWithFiles & OptionsTypeScriptWithTypes = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const { files = [GLOB_TS, GLOB_TSX], overrides = {}, tsconfigPath, parserOptions } = options;
+  const { files = [GLOB_TS, GLOB_TSX], overrides = {}, parserOptions } = options;
 
   const [next, parser] = await Promise.all([
     interopDefault(import('@next/eslint-plugin-next')),
@@ -40,8 +40,8 @@ export async function next(
           ecmaFeatures: {
             jsx: true,
           },
-          project: tsconfigPath,
-          ...(parserOptions as object),
+          projectService: true,
+          ...parserOptions,
         },
         sourceType: 'module',
       },

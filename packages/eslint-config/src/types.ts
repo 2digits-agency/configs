@@ -30,14 +30,6 @@ export interface OptionsOverrides {
 
 export interface OptionsTypeScriptWithTypes extends OptionsOverrides {
   /**
-   * When this options is provided, type aware rules will be enabled.
-   *
-   * @default true
-   * @see https://typescript-eslint.io/linting/typed-linting/
-   */
-  tsconfigPath?: string | string[] | true;
-
-  /**
    * Root directory of the project.
    *
    * @default process.cwd()

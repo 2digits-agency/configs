@@ -8,7 +8,7 @@ import { interopDefault } from '../utils';
 export async function typescript(
   options: OptionsTypeScriptWithTypes = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const { overrides = {}, parserOptions = {}, tsconfigPath = true } = options;
+  const { overrides = {}, parserOptions = {} } = options;
 
   const [{ plugin, configs, parser }, twoDigits] = await Promise.all([
     interopDefault(import('typescript-eslint')),
@@ -31,11 +31,11 @@ export async function typescript(
       languageOptions: {
         parser,
         parserOptions: {
-          sourceType: 'module',
           tsconfigRootDir: process.cwd(),
-          project: tsconfigPath,
+          projectService: true,
           ...parserOptions,
         },
+        sourceType: 'module',
       },
     },
 
@@ -68,6 +68,7 @@ export async function typescript(
             varsIgnorePattern: '^_',
           },
         ],
+        'ts/unbound-method': 'off',
 
         ...(twoDigits.configs.recommended.rules as object),
 

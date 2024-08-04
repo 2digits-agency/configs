@@ -9,7 +9,7 @@ export function unicorn(): TypedFlatConfigItem[] {
         unicorn: pluginUnicorn,
       },
       rules: {
-        ...pluginUnicorn.configs.recommended.rules,
+        ...pluginUnicorn.configs['flat/recommended'].rules,
 
         'unicorn/filename-case': ['off'],
         'unicorn/prefer-module': ['off'],
