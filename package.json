@@ -18,6 +18,7 @@
     "publish": "changeset publish",
     "release": "turbo run build && changeset publish",
     "check": "turbo run --continue test lint types format lint:pkg",
+    "check:watch": "turbo watch test lint types format lint:pkg",
     "fix": "pnpm '/(lint|format):fix$/'"
   },
   "keywords": [],
