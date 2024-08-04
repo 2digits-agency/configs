@@ -25,9 +25,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@2digits/eslint-config": "2.4.2",
-    "@2digits/prettier-config": "2.2.3",
-    "@2digits/tsconfig": "0.5.0",
+    "@2digits/eslint-config": "workspace:*",
+    "@2digits/prettier-config": "workspace:*",
+    "@2digits/tsconfig": "workspace:*",
     "@changesets/cli": "^2.27.7",
     "@manypkg/cli": "^0.21.4",
     "@types/node": "^20.14.14",
@@ -37,14 +37,5 @@
     "typescript": "^5.5.4"
   },
   "packageManager": "pnpm@9.6.0",
-  "prettier": "@2digits/prettier-config",
-  "pnpm": {
-    "overrides": {
-      "@2digits/constants": "link:./packages/constants",
-      "@2digits/eslint-config": "link:./packages/eslint-config",
-      "@2digits/eslint-plugin": "link:./packages/eslint-plugin",
-      "@2digits/prettier-config": "link:./packages/prettier-config",
-      "@2digits/tsconfig": "link:./packages/tsconfig"
-    }
-  }
+  "prettier": "@2digits/prettier-config"
 }
