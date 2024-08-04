@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.2.4
+
+### Patch Changes
+
+- 04fc87d: Changed internal versioning to use pnpm's workspace protocol
+
 ## 0.2.3
 
 ### Patch Changes
