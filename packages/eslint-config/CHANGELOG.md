@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.4.2
+
+### Patch Changes
+
+- b3b2887: Changed typescript-eslint parser settings to use projectService
+
 ## 2.4.1
 
 ### Patch Changes
