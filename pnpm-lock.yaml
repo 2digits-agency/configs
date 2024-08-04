@@ -4,25 +4,18 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@2digits/constants': link:./packages/constants
-  '@2digits/eslint-config': link:./packages/eslint-config
-  '@2digits/eslint-plugin': link:./packages/eslint-plugin
-  '@2digits/prettier-config': link:./packages/prettier-config
-  '@2digits/tsconfig': link:./packages/tsconfig
-
 importers:
 
   .:
     dependencies:
       '@2digits/eslint-config':
-        specifier: link:packages/eslint-config
+        specifier: workspace:*
         version: link:packages/eslint-config
       '@2digits/prettier-config':
-        specifier: link:packages/prettier-config
+        specifier: workspace:*
         version: link:packages/prettier-config
       '@2digits/tsconfig':
-        specifier: link:packages/tsconfig
+        specifier: workspace:*
         version: link:packages/tsconfig
       '@changesets/cli':
         specifier: ^2.27.7
@@ -49,14 +42,14 @@ importers:
   packages/constants:
     devDependencies:
       '@2digits/tsconfig':
-        specifier: link:../tsconfig
+        specifier: workspace:*
         version: link:../tsconfig
       eslint:
         specifier: ^9.8.0
         version: 9.8.0
       tsup:
         specifier: ^8.2.4
-        version: 8.2.4(jiti@1.21.6)(postcss@8.4.38)(typescript@5.5.4)
+        version: 8.2.4(jiti@1.21.6)(postcss@8.4.40)(typescript@5.5.4)(yaml@2.5.0)
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -64,10 +57,10 @@ importers:
   packages/eslint-config:
     dependencies:
       '@2digits/constants':
-        specifier: link:../constants
+        specifier: workspace:*
         version: link:../constants
       '@2digits/eslint-plugin':
-        specifier: link:../eslint-plugin
+        specifier: workspace:*
         version: link:../eslint-plugin
       '@eslint-react/eslint-plugin':
         specifier: ^1.8.2
@@ -146,7 +139,7 @@ importers:
         version: 8.0.0(eslint@9.8.0)(typescript@5.5.4)
     devDependencies:
       '@2digits/tsconfig':
-        specifier: link:../tsconfig
+        specifier: workspace:*
         version: link:../tsconfig
       '@types/eslint':
         specifier: ^9.6.0
@@ -189,7 +182,7 @@ importers:
         version: 5.2.0
     devDependencies:
       '@2digits/tsconfig':
-        specifier: link:../tsconfig
+        specifier: workspace:*
         version: link:../tsconfig
       '@typescript-eslint/parser':
         specifier: ^8.0.0
@@ -199,7 +192,7 @@ importers:
         version: 0.3.3(eslint@9.8.0)(typescript@5.5.4)(vitest@2.0.5(@types/node@22.1.0))
       tsup:
         specifier: ^8.2.4
-        version: 8.2.4(jiti@1.21.6)(postcss@8.4.38)(typescript@5.5.4)
+        version: 8.2.4(jiti@1.21.6)(postcss@8.4.40)(typescript@5.5.4)(yaml@2.5.0)
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -210,7 +203,7 @@ importers:
   packages/prettier-config:
     dependencies:
       '@2digits/constants':
-        specifier: link:../constants
+        specifier: workspace:*
         version: link:../constants
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.3.1
@@ -229,7 +222,7 @@ importers:
         version: 2.0.1(prettier@3.3.3)
     devDependencies:
       '@2digits/tsconfig':
-        specifier: link:../tsconfig
+        specifier: workspace:*
         version: link:../tsconfig
       eslint:
         specifier: ^9.8.0
@@ -239,7 +232,7 @@ importers:
         version: 3.3.3
       tsup:
         specifier: ^8.2.4
-        version: 8.2.4(jiti@1.21.6)(postcss@8.4.38)(typescript@5.5.4)
+        version: 8.2.4(jiti@1.21.6)(postcss@8.4.40)(typescript@5.5.4)(yaml@2.5.0)
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -7378,13 +7371,6 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.40
 
-  postcss-load-config@6.0.1(jiti@1.21.6)(postcss@8.4.38):
-    dependencies:
-      lilconfig: 3.1.2
-    optionalDependencies:
-      jiti: 1.21.6
-      postcss: 8.4.38
-
   postcss-load-config@6.0.1(jiti@1.21.6)(postcss@8.4.40)(yaml@2.5.0):
     dependencies:
       lilconfig: 3.1.2
@@ -7904,33 +7890,6 @@ snapshots:
   tslib@1.14.1: {}
 
   tslib@2.6.3: {}
-
-  tsup@8.2.4(jiti@1.21.6)(postcss@8.4.38)(typescript@5.5.4):
-    dependencies:
-      bundle-require: 5.0.0(esbuild@0.23.0)
-      cac: 6.7.14
-      chokidar: 3.6.0
-      consola: 3.2.3
-      debug: 4.3.5
-      esbuild: 0.23.0
-      execa: 5.1.1
-      globby: 11.1.0
-      joycon: 3.1.1
-      picocolors: 1.0.1
-      postcss-load-config: 6.0.1(jiti@1.21.6)(postcss@8.4.38)
-      resolve-from: 5.0.0
-      rollup: 4.19.0
-      source-map: 0.8.0-beta.0
-      sucrase: 3.35.0
-      tree-kill: 1.2.2
-    optionalDependencies:
-      postcss: 8.4.38
-      typescript: 5.5.4
-    transitivePeerDependencies:
-      - jiti
-      - supports-color
-      - tsx
-      - yaml
 
   tsup@8.2.4(jiti@1.21.6)(postcss@8.4.40)(typescript@5.5.4)(yaml@2.5.0):
     dependencies:
