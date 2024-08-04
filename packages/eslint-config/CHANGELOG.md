@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 2.4.1
+
+### Patch Changes
+
+- 0a1fd78: Updated dependencies
+- 856c8af: Downgraded @types/node to match node 20
+- Updated dependencies [0a1fd78]
+  - @2digits/eslint-plugin@2.2.1
+
 ## 2.4.0
 
 ### Minor Changes

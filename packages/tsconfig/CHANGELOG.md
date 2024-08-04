@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.5.0
+
+### Minor Changes
+
+- 25a4d6d: Updated tsconfig to match totaltypescript recommendations
+
 ## 0.4.0
 
 ### Minor Changes
