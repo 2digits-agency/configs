@@ -1,5 +1,18 @@
 # @2digits/eslint-config
 
+## 2.4.5
+
+### Patch Changes
+
+- 38524f0: Updated eslint to 9.9.0
+- 80dbf0c: Updated eslint-react from 1.8.2 to 1.10.0
+- 043660a: Updated tseslint from 8.0.0 to 8.0.1
+- 01499ba: Updated eslint-plugin-jsdoc from 48.11.0 to 50.0.1
+- 9717730: Updated eslint-plugin-n from 17.10.1 to 17.10.2
+- a0da25a: Updated eslint-plugin-turborepo from 2.0.11 to 2.0.12
+- Updated dependencies [38524f0]
+  - @2digits/eslint-plugin@2.2.4
+
 ## 2.4.4
 
 ### Patch Changes
