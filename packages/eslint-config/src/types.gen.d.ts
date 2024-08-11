@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.2.1/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.2.3/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -772,7 +772,7 @@ Backward pagination arguments
   'jsdoc/check-tag-names'?: Linter.RuleEntry<JsdocCheckTagNames>
   /**
    * Checks that any `@template` names are actually used in the connected `@typedef` or type alias.
-   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-template.md#repos-sticky-header
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/check-template-names.md#repos-sticky-header
    */
   'jsdoc/check-template-names'?: Linter.RuleEntry<[]>
   /**
@@ -810,6 +810,11 @@ Backward pagination arguments
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/informative-docs.md#repos-sticky-header
    */
   'jsdoc/informative-docs'?: Linter.RuleEntry<JsdocInformativeDocs>
+  /**
+   * Enforces minimum number of newlines before JSDoc comment blocks
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/lines-before-block.md#repos-sticky-header
+   */
+  'jsdoc/lines-before-block'?: Linter.RuleEntry<JsdocLinesBeforeBlock>
   /**
    * Enforces a regular expression pattern on descriptions.
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/match-description.md#repos-sticky-header
@@ -2534,13 +2539,11 @@ Backward pagination arguments
   /**
    * disallow complex conditional rendering
    * @see https://eslint-react.xyz/docs/rules/no-complex-conditional-rendering
-   * @deprecated
    */
   'react-extra/no-complex-conditional-rendering'?: Linter.RuleEntry<[]>
   /**
    * disallow complex conditional rendering
    * @see https://eslint-react.xyz/docs/rules/no-complex-conditional-rendering
-   * @deprecated
    */
   'react-extra/no-complicated-conditional-rendering'?: Linter.RuleEntry<[]>
   /**
@@ -2574,7 +2577,7 @@ Backward pagination arguments
    */
   'react-extra/no-direct-mutation-state'?: Linter.RuleEntry<[]>
   /**
-   * disallow duplicate keys in 'key' prop when rendering list
+   * disallow duplicate keys when rendering list
    * @see https://eslint-react.xyz/docs/rules/no-duplicate-key
    */
   'react-extra/no-duplicate-key'?: Linter.RuleEntry<[]>
@@ -2594,7 +2597,7 @@ Backward pagination arguments
    */
   'react-extra/no-missing-component-display-name'?: Linter.RuleEntry<[]>
   /**
-   * require 'key' prop when rendering list
+   * require 'key' when rendering list
    * @see https://eslint-react.xyz/docs/rules/no-missing-key
    */
   'react-extra/no-missing-key'?: Linter.RuleEntry<[]>
@@ -5638,6 +5641,12 @@ type JsdocInformativeDocs = []|[{
   }
   excludedTags?: string[]
   uselessWords?: string[]
+}]
+// ----- jsdoc/lines-before-block -----
+type JsdocLinesBeforeBlock = []|[{
+  excludedTags?: string[]
+  ignoreSameLine?: boolean
+  lines?: number
 }]
 // ----- jsdoc/match-description -----
 type JsdocMatchDescription = []|[{
