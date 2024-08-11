@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.4.6
+
+### Patch Changes
+
+- 729b5ac: Disable react/prop-types because of false-positives
+
 ## 2.4.5
 
 ### Patch Changes
