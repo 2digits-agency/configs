@@ -82,6 +82,7 @@ export async function react(
 
         'react/jsx-curly-newline': 'off',
         'react/jsx-newline': ['error', { prevent: false }],
+        'react/prop-types': 'off',
 
         ...overrides,
       },
