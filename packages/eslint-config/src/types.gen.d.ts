@@ -4045,7 +4045,7 @@ Backward pagination arguments
    */
   'ts/no-unnecessary-type-constraint'?: Linter.RuleEntry<[]>
   /**
-   * Disallow type parameters that only appear once
+   * Disallow type parameters that aren't used multiple times
    * @see https://typescript-eslint.io/rules/no-unnecessary-type-parameters
    */
   'ts/no-unnecessary-type-parameters'?: Linter.RuleEntry<[]>
@@ -4314,7 +4314,7 @@ Backward pagination arguments
   'ts/use-unknown-in-catch-callback-variable'?: Linter.RuleEntry<[]>
   /**
    * Do not allow the use of `process.env` without including the env key in any turbo.json
-   * @see https://github.com/vercel/turbo/tree/main/packages/eslint-plugin-turbo/docs/rules/no-undeclared-env-vars.md
+   * @see https://github.com/vercel/turborepo/tree/main/packages/eslint-plugin-turbo/docs/rules/no-undeclared-env-vars.md
    */
   'turbo/no-undeclared-env-vars'?: Linter.RuleEntry<TurboNoUndeclaredEnvVars>
   /**
@@ -8570,6 +8570,7 @@ type TsNoMisusedPromises = []|[{
   checksVoidReturn?: (boolean | {
     arguments?: boolean
     attributes?: boolean
+    inheritedMethods?: boolean
     properties?: boolean
     returns?: boolean
     variables?: boolean
