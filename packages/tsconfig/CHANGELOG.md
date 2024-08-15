@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.5.1
+
+### Patch Changes
+
+- dda9470: Pinned all dependency versions
+
 ## 0.5.0
 
 ### Minor Changes

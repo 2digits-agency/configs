@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.2.5
+
+### Patch Changes
+
+- dda9470: Pinned all dependency versions
+
 ## 0.2.4
 
 ### Patch Changes
