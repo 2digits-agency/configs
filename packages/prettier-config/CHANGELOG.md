@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 2.2.7
+
+### Patch Changes
+
+- dda9470: Pinned all dependency versions
+- Updated dependencies [dda9470]
+  - @2digits/constants@0.2.5
+
 ## 2.2.6
 
 ### Patch Changes
