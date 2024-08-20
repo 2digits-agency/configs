@@ -3,6 +3,7 @@ export const PluginNameMap = {
   '@eslint-react/naming-convention': 'react-naming-convention',
   '@eslint-react/hooks-extra': 'react-hooks-extra',
   '@eslint-react/dom': 'react-dom',
+  '@eslint-react/web-api': 'react-web-api',
   '@eslint-react': 'react-extra',
   'react-hooks': 'react-hooks',
   'react-compiler': 'react-compiler',

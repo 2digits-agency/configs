@@ -43,6 +43,7 @@ export async function react(
       plugins: {
         react,
         'react-dom': plugins['@eslint-react/dom'],
+        'react-web-api': plugins['@eslint-react/web-api'],
         'react-extra': plugins['@eslint-react'],
         'react-hooks': fixupPluginRules(pluginReactHooks as never),
         'react-hooks-extra': plugins['@eslint-react/hooks-extra'],
