@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.4.8
+
+### Patch Changes
+
+- c86d051: fix(deps): update dependency @eslint-react/eslint-plugin to v1.11.0
+
 ## 2.4.7
 
 ### Patch Changes
