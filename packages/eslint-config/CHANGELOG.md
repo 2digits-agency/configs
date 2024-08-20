@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 2.4.9
+
+### Patch Changes
+
+- 9d60fa0: Fixed issue with @eslint-react/eslint-plugin
+- Updated dependencies [8f8040b]
+  - @2digits/eslint-plugin@2.2.6
+
 ## 2.4.8
 
 ### Patch Changes

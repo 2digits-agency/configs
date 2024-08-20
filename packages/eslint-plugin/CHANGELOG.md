@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.2.6
+
+### Patch Changes
+
+- 8f8040b: Updated Eslint testing
+
 ## 2.2.5
 
 ### Patch Changes
