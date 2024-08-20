@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.2.4/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.2.5/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -2467,12 +2467,12 @@ Backward pagination arguments
    */
   'react-dom/no-unsafe-target-blank'?: Linter.RuleEntry<[]>
   /**
-   * avoid using shorthand boolean attribute
+   * disallow using shorthand boolean attributes
    * @see https://eslint-react.xyz/docs/rules/avoid-shorthand-boolean
    */
   'react-extra/avoid-shorthand-boolean'?: Linter.RuleEntry<[]>
   /**
-   * avoid using shorthand fragment syntax
+   * disallow using shorthand fragment syntax
    * @see https://eslint-react.xyz/docs/rules/avoid-shorthand-fragment
    */
   'react-extra/avoid-shorthand-fragment'?: Linter.RuleEntry<[]>
@@ -2756,6 +2756,21 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/naming-convention-use-state
    */
   'react-naming-convention/use-state'?: Linter.RuleEntry<[]>
+  /**
+   * enforce that every 'addEventListener' in a component or custom hook has a corresponding 'removeEventListener'.
+   * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-event-listener
+   */
+  'react-web-api/no-leaked-event-listener'?: Linter.RuleEntry<[]>
+  /**
+   * enforce that every 'setInterval' in a component or custom hook has a corresponding 'clearInterval'.
+   * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-interval
+   */
+  'react-web-api/no-leaked-interval'?: Linter.RuleEntry<[]>
+  /**
+   * enforce that every 'setTimeout' in a component or custom hook has a corresponding 'clearTimeout'.
+   * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-timeout
+   */
+  'react-web-api/no-leaked-timeout'?: Linter.RuleEntry<[]>
   /**
    * Enforces consistent naming for boolean props
    * @see https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/boolean-prop-naming.md
@@ -4308,7 +4323,7 @@ Backward pagination arguments
    */
   'ts/unified-signatures'?: Linter.RuleEntry<TsUnifiedSignatures>
   /**
-   * Enforce typing arguments in `.catch()` callbacks as `unknown`
+   * Enforce typing arguments in Promise rejection callbacks as `unknown`
    * @see https://typescript-eslint.io/rules/use-unknown-in-catch-callback-variable
    */
   'ts/use-unknown-in-catch-callback-variable'?: Linter.RuleEntry<[]>
