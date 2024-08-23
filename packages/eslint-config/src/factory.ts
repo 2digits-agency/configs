@@ -58,7 +58,7 @@ function enabled<T extends SharedOptions>(
 
 function config<T>(options: SharedOptions<T> | undefined | boolean): T {
   if (typeof options === 'boolean' || options === undefined) return {} as T;
-  const { enable: _, ...rest } = options;
+  const { enable, ...rest } = options;
   return rest as T;
 }
 
@@ -80,7 +80,7 @@ export function twoDigits(
     composer = composer.append(turbo(config(options.turbo)));
   }
 
-  const { overrides: _, ...typescriptOptions } = config(options.ts);
+  const { overrides, ...typescriptOptions } = config(options.ts);
 
   if (enabled(options.ts, isPackageExists('typescript'))) {
     composer = composer.append(typescript(config(options.ts)));

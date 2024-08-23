@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.2.5/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.2.6/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -3675,6 +3675,11 @@ Backward pagination arguments
    */
   'tanstack/no-rest-destructuring'?: Linter.RuleEntry<[]>
   /**
+   * Disallow putting the result of useMutation directly in a React hook dependency array
+   * @see https://tanstack.com/query/latest/docs/eslint/no-unstable-deps
+   */
+  'tanstack/no-unstable-deps'?: Linter.RuleEntry<[]>
+  /**
    * Makes sure that QueryClient is stable
    * @see https://tanstack.com/query/latest/docs/eslint/stable-query-client
    */
@@ -7310,6 +7315,9 @@ type ReactHooksExhaustiveDeps = []|[{
 }]
 // ----- react-naming-convention/component-name -----
 type ReactNamingConventionComponentName = []|[(("PascalCase" | "CONSTANT_CASE") | {
+  allowAllCaps?: boolean
+  allowLeadingUnderscore?: boolean
+  allowNamespace?: boolean
   excepts?: string[]
   rule?: ("PascalCase" | "CONSTANT_CASE")
 })]
