@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.5.0
+
+### Minor Changes
+
+- 6beea00: Updated dependencies
+
 ## 2.4.9
 
 ### Patch Changes
