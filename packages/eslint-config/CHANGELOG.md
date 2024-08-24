@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 2.5.1
+
+### Patch Changes
+
+- 69eb28c: Updated eslint to 9.9.1
+- Updated dependencies [69eb28c]
+  - @2digits/eslint-plugin@2.2.7
+
 ## 2.5.0
 
 ### Minor Changes
