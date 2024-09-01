@@ -12,9 +12,8 @@ export async function ignores(options: OptionsWithIgnores = {}): Promise<TypedFl
       ignores: [GLOB_EXCLUDE, ignores].flat(),
       name: '2digits:ignores',
     },
-    interopDefault(import('eslint-config-flat-gitignore')).then((m) => ({
-      ...m(gitIgnore),
-      name: '2digits:gitignore',
-    })),
+    interopDefault(import('eslint-config-flat-gitignore')).then((m) =>
+      m({ strict: false, ...gitIgnore, name: '2digits:gitignore' }),
+    ),
   );
 }
