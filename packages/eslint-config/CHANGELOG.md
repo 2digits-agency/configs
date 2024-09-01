@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 2.5.2
+
+### Patch Changes
+
+- f291f13: Updated gitignore eslint config
+- a196f53: Updated dependencies
+- Updated dependencies [a196f53]
+  - @2digits/eslint-plugin@2.2.8
+
 ## 2.5.1
 
 ### Patch Changes
