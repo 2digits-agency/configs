@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.2.7/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.2.8/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -2697,18 +2697,13 @@ Backward pagination arguments
    */
   'react-extra/prefer-shorthand-fragment'?: Linter.RuleEntry<[]>
   /**
-   * enforce custom hooks using other hooks
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-ensure-custom-hooks-using-other-hooks
+   * enforce custom hooks to use at least one other hook inside
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-redundant-custom-hook
    */
   'react-hooks-extra/ensure-custom-hooks-using-other-hooks'?: Linter.RuleEntry<[]>
   /**
-   * enforce 'useCallback' has non-empty dependencies array
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-ensure-use-callback-has-non-empty-deps
-   */
-  'react-hooks-extra/ensure-use-callback-has-non-empty-deps'?: Linter.RuleEntry<[]>
-  /**
-   * enforce 'useMemo' has non-empty dependencies array
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-ensure-use-memo-has-non-empty-deps
+   * disallow unnecessary usage of 'useMemo'
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-memo
    */
   'react-hooks-extra/ensure-use-memo-has-non-empty-deps'?: Linter.RuleEntry<[]>
   /**
@@ -2721,6 +2716,21 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-effect
    */
   'react-hooks-extra/no-direct-set-state-in-use-layout-effect'?: Linter.RuleEntry<[]>
+  /**
+   * enforce custom hooks to use at least one other hook inside
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-redundant-custom-hook
+   */
+  'react-hooks-extra/no-redundant-custom-hook'?: Linter.RuleEntry<[]>
+  /**
+   * disallow unnecessary usage of 'useCallback'
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-callback
+   */
+  'react-hooks-extra/no-unnecessary-use-callback'?: Linter.RuleEntry<[]>
+  /**
+   * disallow unnecessary usage of 'useMemo'
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-memo
+   */
+  'react-hooks-extra/no-unnecessary-use-memo'?: Linter.RuleEntry<[]>
   /**
    * disallow function calls in 'useState' that aren't wrapped in an initializer function
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-prefer-use-state-lazy-initialization
@@ -2766,6 +2776,11 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-interval
    */
   'react-web-api/no-leaked-interval'?: Linter.RuleEntry<[]>
+  /**
+   * enforce cleanup of 'ResizeObserver' instances in components and custom hooks.
+   * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-resize-observer
+   */
+  'react-web-api/no-leaked-resize-observer'?: Linter.RuleEntry<[]>
   /**
    * enforce that every 'setTimeout' in a component or custom hook has a corresponding 'clearTimeout'.
    * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-timeout
@@ -3297,7 +3312,7 @@ Backward pagination arguments
    * Enforce the use of `u` or `v` flag on RegExp
    * @see https://eslint.org/docs/latest/rules/require-unicode-regexp
    */
-  'require-unicode-regexp'?: Linter.RuleEntry<[]>
+  'require-unicode-regexp'?: Linter.RuleEntry<RequireUnicodeRegexp>
   /**
    * Require generator functions to contain `yield`
    * @see https://eslint.org/docs/latest/rules/require-yield
@@ -7793,6 +7808,10 @@ type ReactStylePropObject = []|[{
 type RequireAtomicUpdates = []|[{
   allowProperties?: boolean
 }]
+// ----- require-unicode-regexp -----
+type RequireUnicodeRegexp = []|[{
+  requireFlag?: ("u" | "v")
+}]
 // ----- rest-spread-spacing -----
 type RestSpreadSpacing = []|[("always" | "never")]
 // ----- semi -----
@@ -8029,6 +8048,7 @@ type TsBanTsComment = []|[{
   "ts-check"?: (boolean | "allow-with-description" | {
     descriptionFormat?: string
   })
+  
   minimumDescriptionLength?: number
 }]
 // ----- ts/class-literal-property-style -----
@@ -8054,29 +8074,41 @@ type TsConsistentReturn = []|[{
 }]
 // ----- ts/consistent-type-assertions -----
 type TsConsistentTypeAssertions = []|[({
+  
   assertionStyle: "never"
 } | {
+  
   assertionStyle: ("as" | "angle-bracket")
+  
   objectLiteralTypeAssertions?: ("allow" | "allow-as-parameter" | "never")
 })]
 // ----- ts/consistent-type-definitions -----
 type TsConsistentTypeDefinitions = []|[("interface" | "type")]
 // ----- ts/consistent-type-exports -----
 type TsConsistentTypeExports = []|[{
+  
   fixMixedExportsWithInlineTypeSpecifier?: boolean
 }]
 // ----- ts/consistent-type-imports -----
 type TsConsistentTypeImports = []|[{
+  
   disallowTypeAnnotations?: boolean
+  
   fixStyle?: ("separate-type-imports" | "inline-type-imports")
+  
   prefer?: ("type-imports" | "no-type-imports")
 }]
 // ----- ts/dot-notation -----
 type TsDotNotation = []|[{
+  
   allowKeywords?: boolean
+  
   allowPattern?: string
+  
   allowPrivateClassPropertyAccess?: boolean
+  
   allowProtectedClassPropertyAccess?: boolean
+  
   allowIndexSignaturePropertyAccess?: boolean
 }]
 // ----- ts/explicit-function-return-type -----
@@ -8108,6 +8140,7 @@ type TsExplicitMemberAccessibility = []|[{
     properties?: ("explicit" | "no-public" | "off")
     parameterProperties?: ("explicit" | "no-public" | "off")
   }
+  
   ignoredMethodNames?: string[]
 }]
 // ----- ts/explicit-module-boundary-types -----
@@ -8129,8 +8162,11 @@ type TsInitDeclarations = ([]|["always"] | []|["never"]|["never", {
 }])
 // ----- ts/max-params -----
 type TsMaxParams = []|[{
-  maximum?: number
+  
   max?: number
+  
+  maximum?: number
+  
   countVoidThis?: boolean
 }]
 // ----- ts/member-ordering -----
@@ -8484,30 +8520,40 @@ interface _TsNamingConvention_MatchRegexConfig {
 }
 // ----- ts/no-base-to-string -----
 type TsNoBaseToString = []|[{
+  
   ignoredTypeNames?: string[]
 }]
 // ----- ts/no-confusing-void-expression -----
 type TsNoConfusingVoidExpression = []|[{
+  
   ignoreArrowShorthand?: boolean
+  
   ignoreVoidOperator?: boolean
 }]
 // ----- ts/no-duplicate-type-constituents -----
 type TsNoDuplicateTypeConstituents = []|[{
+  
   ignoreIntersections?: boolean
+  
   ignoreUnions?: boolean
 }]
 // ----- ts/no-empty-function -----
 type TsNoEmptyFunction = []|[{
+  
   allow?: ("functions" | "arrowFunctions" | "generatorFunctions" | "methods" | "generatorMethods" | "getters" | "setters" | "constructors" | "private-constructors" | "protected-constructors" | "asyncFunctions" | "asyncMethods" | "decoratedFunctions" | "overrideMethods")[]
 }]
 // ----- ts/no-empty-interface -----
 type TsNoEmptyInterface = []|[{
+  
   allowSingleExtends?: boolean
 }]
 // ----- ts/no-empty-object-type -----
 type TsNoEmptyObjectType = []|[{
+  
   allowInterfaces?: ("always" | "never" | "with-single-extends")
+  
   allowObjectTypes?: ("always" | "never")
+  
   allowWithName?: string
 }]
 // ----- ts/no-explicit-any -----
@@ -8530,6 +8576,7 @@ type TsNoExtraneousClass = []|[{
 }]
 // ----- ts/no-floating-promises -----
 type TsNoFloatingPromises = []|[{
+  
   allowForKnownSafePromises?: (string | {
     from: "file"
     name: (string | [string, ...(string)[]])
@@ -8542,6 +8589,7 @@ type TsNoFloatingPromises = []|[{
     name: (string | [string, ...(string)[]])
     package: string
   })[]
+  
   allowForKnownSafeCalls?: (string | {
     from: "file"
     name: (string | [string, ...(string)[]])
@@ -8563,7 +8611,9 @@ type TsNoFloatingPromises = []|[{
 }]
 // ----- ts/no-inferrable-types -----
 type TsNoInferrableTypes = []|[{
+  
   ignoreParameters?: boolean
+  
   ignoreProperties?: boolean
 }]
 // ----- ts/no-invalid-this -----
@@ -8572,7 +8622,9 @@ type TsNoInvalidThis = []|[{
 }]
 // ----- ts/no-invalid-void-type -----
 type TsNoInvalidVoidType = []|[{
+  
   allowInGenericTypeArguments?: (boolean | [string, ...(string)[]])
+  
   allowAsThisParameter?: boolean
 }]
 // ----- ts/no-magic-numbers -----
@@ -8583,26 +8635,38 @@ type TsNoMagicNumbers = []|[{
   ignoreArrayIndexes?: boolean
   ignoreDefaultValues?: boolean
   ignoreClassFieldInitialValues?: boolean
+  
   ignoreNumericLiteralTypes?: boolean
+  
   ignoreEnums?: boolean
+  
   ignoreReadonlyClassProperties?: boolean
+  
   ignoreTypeIndexes?: boolean
 }]
 // ----- ts/no-meaningless-void-operator -----
 type TsNoMeaninglessVoidOperator = []|[{
+  
   checkNever?: boolean
 }]
 // ----- ts/no-misused-promises -----
 type TsNoMisusedPromises = []|[{
   checksConditionals?: boolean
   checksVoidReturn?: (boolean | {
+    
     arguments?: boolean
+    
     attributes?: boolean
+    
     inheritedMethods?: boolean
+    
     properties?: boolean
+    
     returns?: boolean
+    
     variables?: boolean
   })
+  
   checksSpreads?: boolean
 }]
 // ----- ts/no-namespace -----
@@ -8614,7 +8678,9 @@ type TsNoNamespace = []|[{
 }]
 // ----- ts/no-redeclare -----
 type TsNoRedeclare = []|[{
+  
   builtinGlobals?: boolean
+  
   ignoreDeclarationMerge?: boolean
 }]
 // ----- ts/no-require-imports -----
@@ -8672,11 +8738,17 @@ type TsNoRestrictedTypes = []|[{
 }]
 // ----- ts/no-shadow -----
 type TsNoShadow = []|[{
+  
   builtinGlobals?: boolean
+  
   hoist?: ("all" | "functions" | "never")
+  
   allow?: string[]
+  
   ignoreOnInitialization?: boolean
+  
   ignoreTypeValueShadow?: boolean
+  
   ignoreFunctionTypeParameterNameValueShadow?: boolean
 }]
 // ----- ts/no-this-alias -----
@@ -8733,24 +8805,40 @@ type TsNoUnusedExpressions = []|[{
 }]
 // ----- ts/no-unused-vars -----
 type TsNoUnusedVars = []|[(("all" | "local") | {
+  
   vars?: ("all" | "local")
+  
   varsIgnorePattern?: string
+  
   args?: ("all" | "after-used" | "none")
-  ignoreRestSiblings?: boolean
+  
   argsIgnorePattern?: string
+  
   caughtErrors?: ("all" | "none")
+  
   caughtErrorsIgnorePattern?: string
+  
   destructuredArrayIgnorePattern?: string
+  
   ignoreClassWithStaticInitBlock?: boolean
+  
+  ignoreRestSiblings?: boolean
+  
   reportUsedIgnorePattern?: boolean
 })]
 // ----- ts/no-use-before-define -----
 type TsNoUseBeforeDefine = []|[("nofunc" | {
+  
   functions?: boolean
+  
   classes?: boolean
+  
   enums?: boolean
+  
   variables?: boolean
+  
   typedefs?: boolean
+  
   ignoreTypeReferences?: boolean
   allowNamedExports?: boolean
 })]
@@ -8761,12 +8849,16 @@ type TsNoVarRequires = []|[{
 }]
 // ----- ts/only-throw-error -----
 type TsOnlyThrowError = []|[{
+  
   allowThrowingAny?: boolean
+  
   allowThrowingUnknown?: boolean
 }]
 // ----- ts/parameter-properties -----
 type TsParameterProperties = []|[{
+  
   allow?: ("readonly" | "private" | "protected" | "public" | "private readonly" | "protected readonly" | "public readonly")[]
+  
   prefer?: ("class-property" | "parameter-property")
 }]
 // ----- ts/prefer-destructuring -----
@@ -8801,13 +8893,18 @@ type TsPreferDestructuring = []|[({
 }]
 // ----- ts/prefer-literal-enum-member -----
 type TsPreferLiteralEnumMember = []|[{
+  
   allowBitwiseExpressions?: boolean
 }]
 // ----- ts/prefer-nullish-coalescing -----
 type TsPreferNullishCoalescing = []|[{
+  
   allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing?: boolean
+  
   ignoreConditionalTests?: boolean
+  
   ignoreMixedLogicalExpressions?: boolean
+  
   ignorePrimitives?: ({
     bigint?: boolean
     boolean?: boolean
@@ -8815,6 +8912,7 @@ type TsPreferNullishCoalescing = []|[{
     string?: boolean
     [k: string]: unknown | undefined
   } | true)
+  
   ignoreTernaryTests?: boolean
 }]
 // ----- ts/prefer-optional-chain -----
@@ -8838,14 +8936,17 @@ type TsPreferOptionalChain = []|[{
 }]
 // ----- ts/prefer-promise-reject-errors -----
 type TsPreferPromiseRejectErrors = []|[{
+  
   allowEmptyReject?: boolean
 }]
 // ----- ts/prefer-readonly -----
 type TsPreferReadonly = []|[{
+  
   onlyInlineLambdas?: boolean
 }]
 // ----- ts/prefer-readonly-parameter-types -----
 type TsPreferReadonlyParameterTypes = []|[{
+  
   allow?: (string | {
     from: "file"
     name: (string | [string, ...(string)[]])
@@ -8858,8 +8959,11 @@ type TsPreferReadonlyParameterTypes = []|[{
     name: (string | [string, ...(string)[]])
     package: string
   })[]
+  
   checkParameterProperties?: boolean
+  
   ignoreInferredTypes?: boolean
+  
   treatMethodsAsReadonly?: boolean
 }]
 // ----- ts/prefer-string-starts-ends-with -----
@@ -8873,9 +8977,13 @@ type TsPromiseFunctionAsync = []|[{
   allowAny?: boolean
   
   allowedPromiseNames?: string[]
+  
   checkArrowFunctions?: boolean
+  
   checkFunctionDeclarations?: boolean
+  
   checkFunctionExpressions?: boolean
+  
   checkMethodDeclarations?: boolean
 }]
 // ----- ts/require-array-sort-compare -----
@@ -8916,7 +9024,7 @@ type TsRestrictTemplateExpressions = []|[{
   allowNever?: boolean
 }]
 // ----- ts/return-await -----
-type TsReturnAwait = []|[("in-try-catch" | "always" | "never" | "error-handling-correctness-only")]
+type TsReturnAwait = []|[(("always" | "error-handling-correctness-only" | "in-try-catch" | "never") & string)]
 // ----- ts/sort-type-constituents -----
 type TsSortTypeConstituents = []|[{
   
@@ -8930,13 +9038,21 @@ type TsSortTypeConstituents = []|[{
 }]
 // ----- ts/strict-boolean-expressions -----
 type TsStrictBooleanExpressions = []|[{
+  
   allowString?: boolean
+  
   allowNumber?: boolean
+  
   allowNullableObject?: boolean
+  
   allowNullableBoolean?: boolean
+  
   allowNullableString?: boolean
+  
   allowNullableNumber?: boolean
+  
   allowNullableEnum?: boolean
+  
   allowAny?: boolean
   allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing?: boolean
 }]
@@ -8949,19 +9065,30 @@ type TsSwitchExhaustivenessCheck = []|[{
 }]
 // ----- ts/triple-slash-reference -----
 type TsTripleSlashReference = []|[{
+  
   lib?: ("always" | "never")
+  
   path?: ("always" | "never")
+  
   types?: ("always" | "never" | "prefer-import")
 }]
 // ----- ts/typedef -----
 type TsTypedef = []|[{
+  
   arrayDestructuring?: boolean
+  
   arrowParameter?: boolean
+  
   memberVariableDeclaration?: boolean
+  
   objectDestructuring?: boolean
+  
   parameter?: boolean
+  
   propertyDeclaration?: boolean
+  
   variableDeclaration?: boolean
+  
   variableDeclarationIgnoreFunction?: boolean
 }]
 // ----- ts/unbound-method -----
