@@ -76,10 +76,10 @@ export async function react(
 
         ...(reactCompiler ? { 'react-compiler/react-compiler': 'error' } : {}),
 
-        'react-hooks-extra/ensure-use-memo-has-non-empty-deps': 'error',
+        'react-hooks-extra/no-unnecessary-use-callback': 'error',
         'react-hooks-extra/prefer-use-state-lazy-initialization': 'error',
-        'react-hooks-extra/ensure-custom-hooks-using-other-hooks': 'error',
-        'react-hooks-extra/ensure-use-callback-has-non-empty-deps': 'error',
+        'react-hooks-extra/no-redundant-custom-hook': 'error',
+        'react-hooks-extra/no-unnecessary-use-memo': 'error',
 
         'react/jsx-curly-newline': 'off',
         'react/jsx-newline': ['error', { prevent: false }],
