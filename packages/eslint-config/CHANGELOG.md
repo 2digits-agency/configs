@@ -1,5 +1,22 @@
 # @2digits/eslint-config
 
+## 2.6.0
+
+### Minor Changes
+
+- b4804ec: Updated React eslint rule names
+
+### Patch Changes
+
+- 7b61fd7: Updated eslint-plugin-next
+- 178b174: Updated eslint-plugin-react
+- 3922ea4: Updated @eslint-react
+- c15e934: Updated eslint
+- b4e6b1e: Updated tseslint
+- Updated dependencies [c15e934]
+- Updated dependencies [b4e6b1e]
+  - @2digits/eslint-plugin@2.2.9
+
 ## 2.5.2
 
 ### Patch Changes
