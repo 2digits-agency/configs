@@ -50,7 +50,7 @@ interface ESLint2DigitsOptions {
 
 function enabled<T extends SharedOptions>(
   options: T | boolean | undefined,
-  defaults?: boolean | undefined,
+  defaults?: boolean,
 ): options is T {
   if (typeof options === 'boolean') return options;
   return options?.enable ?? defaults ?? false;
