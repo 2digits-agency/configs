@@ -1,5 +1,16 @@
 # @2digits/prettier-config
 
+## 2.3.0
+
+### Minor Changes
+
+- ec136e3: Updated typescript to 5.6.2
+
+### Patch Changes
+
+- Updated dependencies [ec136e3]
+  - @2digits/constants@0.3.0
+
 ## 2.2.7
 
 ### Patch Changes

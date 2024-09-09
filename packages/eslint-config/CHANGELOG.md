@@ -1,5 +1,24 @@
 # @2digits/eslint-config
 
+## 2.7.0
+
+### Minor Changes
+
+- ec136e3: Updated typescript to 5.6.2
+
+### Patch Changes
+
+- 14b8065: Updated eslint-flat-config-utils
+- a1a2caa: Updated @react-eslint
+- c9bd3b9: Updated @react-eslint
+- 54bc0da: Updated eslint-typegen
+- 2b2e356: Removed warning for unsupported versions of ts
+- b21f222: Removed @types/eslint
+- 2db28b8: Updated eslint-plugin-next
+- Updated dependencies [ec136e3]
+  - @2digits/eslint-plugin@2.3.0
+  - @2digits/constants@0.3.0
+
 ## 2.6.0
 
 ### Minor Changes
