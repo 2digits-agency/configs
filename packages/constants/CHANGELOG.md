@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.3.0
+
+### Minor Changes
+
+- ec136e3: Updated typescript to 5.6.2
+
 ## 0.2.5
 
 ### Patch Changes

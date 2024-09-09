@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.6.0
+
+### Minor Changes
+
+- ec136e3: Updated typescript to 5.6.2
+
 ## 0.5.1
 
 ### Patch Changes

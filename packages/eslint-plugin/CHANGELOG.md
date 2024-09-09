@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.3.0
+
+### Minor Changes
+
+- ec136e3: Updated typescript to 5.6.2
+
 ## 2.2.9
 
 ### Patch Changes
