@@ -33,6 +33,7 @@ export async function typescript(
         parserOptions: {
           tsconfigRootDir: process.cwd(),
           projectService: true,
+          warnOnUnsupportedTypeScriptVersion: false,
           ...parserOptions,
         },
         sourceType: 'module',
