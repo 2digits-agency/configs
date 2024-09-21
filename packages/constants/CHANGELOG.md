@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.3.1
+
+### Patch Changes
+
+- f8af040: Updated tsup
+
 ## 0.3.0
 
 ### Minor Changes

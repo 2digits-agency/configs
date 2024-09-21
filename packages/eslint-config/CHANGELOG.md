@@ -1,5 +1,29 @@
 # @2digits/eslint-config
 
+## 2.7.1
+
+### Patch Changes
+
+- 7c9b9b5: Updated eslint-plugin-turbo
+- 6cbb3eb: Updated typescript-eslint
+- b738e5e: Replaced eslint-plugin-eslint-comments with @eslint-community/eslint-plugin-eslint-comments
+- 66b43c2: Updated eslint-plugin-n
+- e43bdac: Updated graphql eslint config to allow leading underscores by default
+- 1289a06: Updated eslint-plugin-react
+- c0c7a5f: Updated @eslint-react/eslint-plugin
+- 25a5280: Updated eslint-plugin-jsdoc
+- c8f74d2: Updated eslint-plugin-react-compiler
+- 237c6db: Updated @tanstack/eslint-plugin-query
+- f8af040: Updated tsup
+- 0570d4f: Updated eslint-plugin-next
+- 2a83edd: Updated eslint
+- Updated dependencies [35dc34b]
+- Updated dependencies [6cbb3eb]
+- Updated dependencies [f8af040]
+- Updated dependencies [2a83edd]
+  - @2digits/eslint-plugin@2.3.1
+  - @2digits/constants@0.3.1
+
 ## 2.7.0
 
 ### Minor Changes

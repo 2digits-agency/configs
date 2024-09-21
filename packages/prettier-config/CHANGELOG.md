@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 2.3.1
+
+### Patch Changes
+
+- f8af040: Updated tsup
+- Updated dependencies [f8af040]
+  - @2digits/constants@0.3.1
+
 ## 2.3.0
 
 ### Minor Changes
