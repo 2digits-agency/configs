@@ -3690,12 +3690,17 @@ Backward pagination arguments
    */
   'tanstack/exhaustive-deps'?: Linter.RuleEntry<[]>
   /**
+   * Ensure correct order of inference sensitive properties for infinite queries
+   * @see https://tanstack.com/query/latest/docs/eslint/infinite-query-property-order
+   */
+  'tanstack/infinite-query-property-order'?: Linter.RuleEntry<[]>
+  /**
    * Disallows rest destructuring in queries
    * @see https://tanstack.com/query/latest/docs/eslint/no-rest-destructuring
    */
   'tanstack/no-rest-destructuring'?: Linter.RuleEntry<[]>
   /**
-   * Disallow putting the result of useMutation directly in a React hook dependency array
+   * Disallow putting the result of query hooks directly in a React hook dependency array
    * @see https://tanstack.com/query/latest/docs/eslint/no-unstable-deps
    */
   'tanstack/no-unstable-deps'?: Linter.RuleEntry<[]>
