@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.2.9/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.3.0/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -2842,6 +2842,11 @@ Backward pagination arguments
    */
   'react/forbid-prop-types'?: Linter.RuleEntry<ReactForbidPropTypes>
   /**
+   * Require all forwardRef components include a ref parameter
+   * @see https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/forward-ref-uses-ref.md
+   */
+  'react/forward-ref-uses-ref'?: Linter.RuleEntry<[]>
+  /**
    * Enforce a specific function type for function components
    * @see https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/function-component-definition.md
    */
@@ -3685,12 +3690,17 @@ Backward pagination arguments
    */
   'tanstack/exhaustive-deps'?: Linter.RuleEntry<[]>
   /**
+   * Ensure correct order of inference sensitive properties for infinite queries
+   * @see https://tanstack.com/query/latest/docs/eslint/infinite-query-property-order
+   */
+  'tanstack/infinite-query-property-order'?: Linter.RuleEntry<[]>
+  /**
    * Disallows rest destructuring in queries
    * @see https://tanstack.com/query/latest/docs/eslint/no-rest-destructuring
    */
   'tanstack/no-rest-destructuring'?: Linter.RuleEntry<[]>
   /**
-   * Disallow putting the result of useMutation directly in a React hook dependency array
+   * Disallow putting the result of query hooks directly in a React hook dependency array
    * @see https://tanstack.com/query/latest/docs/eslint/no-unstable-deps
    */
   'tanstack/no-unstable-deps'?: Linter.RuleEntry<[]>
@@ -7595,6 +7605,16 @@ type ReactJsxNoLeakedRender = []|[{
 }]
 // ----- react/jsx-no-literals -----
 type ReactJsxNoLiterals = []|[{
+  elementOverrides?: {
+    [k: string]: {
+      applyToNestedElements?: boolean
+      noStrings?: boolean
+      allowedStrings?: string[]
+      ignoreProps?: boolean
+      noAttributeStrings?: boolean
+      [k: string]: unknown | undefined
+    }
+  }
   noStrings?: boolean
   allowedStrings?: string[]
   ignoreProps?: boolean
@@ -7647,6 +7667,7 @@ type ReactJsxPascalCase = []|[{
 type ReactJsxPropsNoSpreading = []|[({
   html?: ("enforce" | "ignore")
   custom?: ("enforce" | "ignore")
+  explicitSpread?: ("enforce" | "ignore")
   exceptions?: string[]
   [k: string]: unknown | undefined
 } & {
@@ -9022,6 +9043,19 @@ type TsRestrictTemplateExpressions = []|[{
   allowRegExp?: boolean
   
   allowNever?: boolean
+  
+  allow?: (string | {
+    from: "file"
+    name: (string | [string, ...(string)[]])
+    path?: string
+  } | {
+    from: "lib"
+    name: (string | [string, ...(string)[]])
+  } | {
+    from: "package"
+    name: (string | [string, ...(string)[]])
+    package: string
+  })[]
 }]
 // ----- ts/return-await -----
 type TsReturnAwait = []|[(("always" | "error-handling-correctness-only" | "in-try-catch" | "never") & string)]
