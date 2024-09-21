@@ -49,6 +49,7 @@ declare module '@next/eslint-plugin-next' {
   export = exprt;
 }
 
+declare module '@eslint-community/eslint-plugin-eslint-comments' {
   import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
 
   declare const exprt: {
