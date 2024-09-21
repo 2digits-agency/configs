@@ -110,6 +110,51 @@ export interface RuleOptions {
    */
   'comma-style'?: Linter.RuleEntry<CommaStyle>
   /**
+   * require a `eslint-enable` comment for every `eslint-disable` comment
+   * @see https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/disable-enable-pair.html
+   */
+  'comments/disable-enable-pair'?: Linter.RuleEntry<CommentsDisableEnablePair>
+  /**
+   * disallow a `eslint-enable` comment for multiple `eslint-disable` comments
+   * @see https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-aggregating-enable.html
+   */
+  'comments/no-aggregating-enable'?: Linter.RuleEntry<[]>
+  /**
+   * disallow duplicate `eslint-disable` comments
+   * @see https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-duplicate-disable.html
+   */
+  'comments/no-duplicate-disable'?: Linter.RuleEntry<[]>
+  /**
+   * disallow `eslint-disable` comments about specific rules
+   * @see https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-restricted-disable.html
+   */
+  'comments/no-restricted-disable'?: Linter.RuleEntry<CommentsNoRestrictedDisable>
+  /**
+   * disallow `eslint-disable` comments without rule names
+   * @see https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-unlimited-disable.html
+   */
+  'comments/no-unlimited-disable'?: Linter.RuleEntry<[]>
+  /**
+   * disallow unused `eslint-disable` comments
+   * @see https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-unused-disable.html
+   */
+  'comments/no-unused-disable'?: Linter.RuleEntry<[]>
+  /**
+   * disallow unused `eslint-enable` comments
+   * @see https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-unused-enable.html
+   */
+  'comments/no-unused-enable'?: Linter.RuleEntry<[]>
+  /**
+   * disallow ESLint directive-comments
+   * @see https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-use.html
+   */
+  'comments/no-use'?: Linter.RuleEntry<CommentsNoUse>
+  /**
+   * require include descriptions in ESLint directive-comments
+   * @see https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/require-description.html
+   */
+  'comments/require-description'?: Linter.RuleEntry<CommentsRequireDescription>
+  /**
    * Enforce a maximum cyclomatic complexity allowed in a program
    * @see https://eslint.org/docs/latest/rules/complexity
    */
@@ -177,51 +222,6 @@ export interface RuleOptions {
    * @see https://eslint.org/docs/latest/rules/eqeqeq
    */
   'eqeqeq'?: Linter.RuleEntry<Eqeqeq>
-  /**
-   * require a `eslint-enable` comment for every `eslint-disable` comment
-   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/disable-enable-pair.html
-   */
-  'eslint-comments/disable-enable-pair'?: Linter.RuleEntry<EslintCommentsDisableEnablePair>
-  /**
-   * disallow a `eslint-enable` comment for multiple `eslint-disable` comments
-   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-aggregating-enable.html
-   */
-  'eslint-comments/no-aggregating-enable'?: Linter.RuleEntry<[]>
-  /**
-   * disallow duplicate `eslint-disable` comments
-   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-duplicate-disable.html
-   */
-  'eslint-comments/no-duplicate-disable'?: Linter.RuleEntry<[]>
-  /**
-   * disallow `eslint-disable` comments about specific rules
-   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-restricted-disable.html
-   */
-  'eslint-comments/no-restricted-disable'?: Linter.RuleEntry<EslintCommentsNoRestrictedDisable>
-  /**
-   * disallow `eslint-disable` comments without rule names
-   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-unlimited-disable.html
-   */
-  'eslint-comments/no-unlimited-disable'?: Linter.RuleEntry<[]>
-  /**
-   * disallow unused `eslint-disable` comments
-   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-unused-disable.html
-   */
-  'eslint-comments/no-unused-disable'?: Linter.RuleEntry<[]>
-  /**
-   * disallow unused `eslint-enable` comments
-   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-unused-enable.html
-   */
-  'eslint-comments/no-unused-enable'?: Linter.RuleEntry<[]>
-  /**
-   * disallow ESLint directive-comments
-   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/no-use.html
-   */
-  'eslint-comments/no-use'?: Linter.RuleEntry<EslintCommentsNoUse>
-  /**
-   * require include descriptions in ESLint directive-comments
-   * @see https://mysticatea.github.io/eslint-plugin-eslint-comments/rules/require-description.html
-   */
-  'eslint-comments/require-description'?: Linter.RuleEntry<EslintCommentsRequireDescription>
   /**
    * Enforce "for" loop update clause moving the counter in the right direction
    * @see https://eslint.org/docs/latest/rules/for-direction
@@ -5203,6 +5203,20 @@ type CommaStyle = []|[("first" | "last")]|[("first" | "last"), {
     [k: string]: boolean | undefined
   }
 }]
+// ----- comments/disable-enable-pair -----
+type CommentsDisableEnablePair = []|[{
+  allowWholeFile?: boolean
+}]
+// ----- comments/no-restricted-disable -----
+type CommentsNoRestrictedDisable = string[]
+// ----- comments/no-use -----
+type CommentsNoUse = []|[{
+  allow?: ("eslint" | "eslint-disable" | "eslint-disable-line" | "eslint-disable-next-line" | "eslint-enable" | "eslint-env" | "exported" | "global" | "globals")[]
+}]
+// ----- comments/require-description -----
+type CommentsRequireDescription = []|[{
+  ignore?: ("eslint" | "eslint-disable" | "eslint-disable-line" | "eslint-disable-next-line" | "eslint-enable" | "eslint-env" | "exported" | "global" | "globals")[]
+}]
 // ----- complexity -----
 type Complexity = []|[(number | {
   maximum?: number
@@ -5237,20 +5251,6 @@ type EolLast = []|[("always" | "never" | "unix" | "windows")]
 type Eqeqeq = ([]|["always"]|["always", {
   null?: ("always" | "never" | "ignore")
 }] | []|[("smart" | "allow-null")])
-// ----- eslint-comments/disable-enable-pair -----
-type EslintCommentsDisableEnablePair = []|[{
-  allowWholeFile?: boolean
-}]
-// ----- eslint-comments/no-restricted-disable -----
-type EslintCommentsNoRestrictedDisable = string[]
-// ----- eslint-comments/no-use -----
-type EslintCommentsNoUse = []|[{
-  allow?: ("eslint" | "eslint-disable" | "eslint-disable-line" | "eslint-disable-next-line" | "eslint-enable" | "eslint-env" | "exported" | "global" | "globals")[]
-}]
-// ----- eslint-comments/require-description -----
-type EslintCommentsRequireDescription = []|[{
-  ignore?: ("eslint" | "eslint-disable" | "eslint-disable-line" | "eslint-disable-next-line" | "eslint-enable" | "eslint-env" | "exported" | "global" | "globals")[]
-}]
 // ----- func-call-spacing -----
 type FuncCallSpacing = ([]|["never"] | []|["always"]|["always", {
   allowNewlines?: boolean

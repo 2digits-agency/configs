@@ -10,7 +10,7 @@ export const PluginNameMap = {
   react: 'react',
   '@typescript-eslint': 'ts',
   node: 'node',
-  'eslint-comments': 'eslint-comments',
+  '@eslint-community/eslint-comments': 'comments',
   storybook: 'storybook',
   turbo: 'turbo',
   jsdoc: 'jsdoc',

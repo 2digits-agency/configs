@@ -49,7 +49,7 @@ declare module '@next/eslint-plugin-next' {
   export = exprt;
 }
 
-declare module 'eslint-plugin-eslint-comments' {
+declare module '@eslint-community/eslint-plugin-eslint-comments' {
   import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
 
   declare const exprt: {
@@ -57,6 +57,15 @@ declare module 'eslint-plugin-eslint-comments' {
       recommended: ClassicConfig.Config;
     };
     rules: NonNullable<Linter.Plugin['rules']>;
+  };
+  export = exprt;
+}
+
+declare module '@eslint-community/eslint-plugin-eslint-comments/configs' {
+  import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
+
+  declare const exprt: {
+    recommended: FlatConfig.Config;
   };
   export = exprt;
 }

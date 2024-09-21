@@ -1,19 +1,23 @@
-import { pluginComments } from '../plugins';
+import pluginComments from '@eslint-community/eslint-plugin-eslint-comments';
+import configs from '@eslint-community/eslint-plugin-eslint-comments/configs';
+import { renamePluginsInRules } from 'eslint-flat-config-utils';
+
+import { PluginNameMap } from '../constants';
 import type { TypedFlatConfigItem } from '../types';
+
+const recommended = renamePluginsInRules(configs.recommended.rules as never, PluginNameMap);
 
 export function comments(): TypedFlatConfigItem[] {
   return [
     {
       name: '2digits:comments',
       plugins: {
-        'eslint-comments': pluginComments,
+        comments: pluginComments,
       },
       rules: {
-        'eslint-comments/no-aggregating-enable': 'error',
-        'eslint-comments/no-duplicate-disable': 'error',
-        'eslint-comments/no-unlimited-disable': 'error',
-        'eslint-comments/no-unused-enable': 'error',
-        'eslint-comments/no-unused-disable': 'error',
+        ...recommended,
+
+        'comments/no-unused-disable': 'error',
       },
     },
   ];
