@@ -61,6 +61,15 @@ declare module '@eslint-community/eslint-plugin-eslint-comments' {
   export = exprt;
 }
 
+declare module '@eslint-community/eslint-plugin-eslint-comments/configs' {
+  import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
+
+  declare const exprt: {
+    recommended: FlatConfig.Config;
+  };
+  export = exprt;
+}
+
 declare module 'eslint-plugin-tailwindcss' {
   import type { ClassicConfig, Linter, FlatConfig } from '@typescript-eslint/utils/ts-eslint';
 
