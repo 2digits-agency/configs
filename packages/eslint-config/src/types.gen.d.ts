@@ -2842,6 +2842,11 @@ Backward pagination arguments
    */
   'react/forbid-prop-types'?: Linter.RuleEntry<ReactForbidPropTypes>
   /**
+   * Require all forwardRef components include a ref parameter
+   * @see https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/forward-ref-uses-ref.md
+   */
+  'react/forward-ref-uses-ref'?: Linter.RuleEntry<[]>
+  /**
    * Enforce a specific function type for function components
    * @see https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules/function-component-definition.md
    */
@@ -7595,6 +7600,16 @@ type ReactJsxNoLeakedRender = []|[{
 }]
 // ----- react/jsx-no-literals -----
 type ReactJsxNoLiterals = []|[{
+  elementOverrides?: {
+    [k: string]: {
+      applyToNestedElements?: boolean
+      noStrings?: boolean
+      allowedStrings?: string[]
+      ignoreProps?: boolean
+      noAttributeStrings?: boolean
+      [k: string]: unknown | undefined
+    }
+  }
   noStrings?: boolean
   allowedStrings?: string[]
   ignoreProps?: boolean
@@ -7647,6 +7662,7 @@ type ReactJsxPascalCase = []|[{
 type ReactJsxPropsNoSpreading = []|[({
   html?: ("enforce" | "ignore")
   custom?: ("enforce" | "ignore")
+  explicitSpread?: ("enforce" | "ignore")
   exceptions?: string[]
   [k: string]: unknown | undefined
 } & {
