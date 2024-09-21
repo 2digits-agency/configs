@@ -28,6 +28,8 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<TypedFlat
       rules: {
         ...recommended,
 
+        'gql/naming-convention': ['error', { allowLeadingUnderscore: true } as never],
+
         ...overrides,
       },
     },
