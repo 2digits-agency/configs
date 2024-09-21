@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.2.9/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.3.0/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -9022,6 +9022,19 @@ type TsRestrictTemplateExpressions = []|[{
   allowRegExp?: boolean
   
   allowNever?: boolean
+  
+  allow?: (string | {
+    from: "file"
+    name: (string | [string, ...(string)[]])
+    path?: string
+  } | {
+    from: "lib"
+    name: (string | [string, ...(string)[]])
+  } | {
+    from: "package"
+    name: (string | [string, ...(string)[]])
+    package: string
+  })[]
 }]
 // ----- ts/return-await -----
 type TsReturnAwait = []|[(("always" | "error-handling-correctness-only" | "in-try-catch" | "never") & string)]
