@@ -26,6 +26,7 @@ export default defineConfig({
           {
             plugins: {
               '': {
+                // eslint-disable-next-line ts/no-deprecated
                 rules: Object.fromEntries(builtinRules.entries()) as Record<never, never>,
               },
             },
