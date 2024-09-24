@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 2.7.2
+
+### Patch Changes
+
+- fe82bf2: Updated @tanstack/eslint-plugin-query
+- 815973f: Updated typescript-eslint
+- 02624b0: Updated eslint-plugin-comments to enable whole file disables
+- a145e8b: Updated eslint-plugin-react-compiler
+- Updated dependencies [815973f]
+  - @2digits/eslint-plugin@2.3.2
+
 ## 2.7.1
 
 ### Patch Changes
