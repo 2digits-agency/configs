@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.3.1/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.3.2/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -3619,7 +3619,7 @@ Backward pagination arguments
    */
   'storybook/story-exports'?: Linter.RuleEntry<[]>
   /**
-   * Use expect from `@storybook/jest`
+   * Use expect from `@storybook/test` or `@storybook/jest`
    * @see https://github.com/storybookjs/eslint-plugin-storybook/blob/main/docs/rules/use-storybook-expect.md
    */
   'storybook/use-storybook-expect'?: Linter.RuleEntry<[]>
@@ -5898,6 +5898,7 @@ type JsdocRequireParam = []|[{
   enableRestElementFixer?: boolean
   enableRootFixer?: boolean
   exemptedBy?: string[]
+  ignoreWhenAllParamsMissing?: boolean
   unnamedRootBase?: string[]
   useDefaultObjectProperties?: boolean
 }]
@@ -7400,22 +7401,22 @@ type ReactForbidComponentProps = []|[{
   forbid?: (string | {
     propName?: string
     allowedFor?: string[]
+    allowedForPatterns?: string[]
     message?: string
+  } | ({
+    [k: string]: unknown | undefined
   } | {
-    propName?: string
-    
-    disallowedFor: [string, ...(string)[]]
-    message?: string
-  } | {
+    [k: string]: unknown | undefined
+  }) | {
     propNamePattern?: string
     allowedFor?: string[]
+    allowedForPatterns?: string[]
     message?: string
+  } | ({
+    [k: string]: unknown | undefined
   } | {
-    propNamePattern?: string
-    
-    disallowedFor: [string, ...(string)[]]
-    message?: string
-  })[]
+    [k: string]: unknown | undefined
+  }))[]
   [k: string]: unknown | undefined
 }]
 // ----- react/forbid-dom-props -----
@@ -7752,6 +7753,7 @@ type ReactNoUnsafe = []|[{
 type ReactNoUnstableNestedComponents = []|[{
   customValidators?: string[]
   allowAsProps?: boolean
+  propNamePattern?: string
 }]
 // ----- react/no-unused-prop-types -----
 type ReactNoUnusedPropTypes = []|[{
