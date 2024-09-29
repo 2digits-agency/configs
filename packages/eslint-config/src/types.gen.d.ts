@@ -3619,7 +3619,7 @@ Backward pagination arguments
    */
   'storybook/story-exports'?: Linter.RuleEntry<[]>
   /**
-   * Use expect from `@storybook/jest`
+   * Use expect from `@storybook/test` or `@storybook/jest`
    * @see https://github.com/storybookjs/eslint-plugin-storybook/blob/main/docs/rules/use-storybook-expect.md
    */
   'storybook/use-storybook-expect'?: Linter.RuleEntry<[]>
