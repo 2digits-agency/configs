@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 2.7.3
+
+### Patch Changes
+
+- b528e92: Updated tanstack query eslint plugin
+- 843fc6a: Updated react eslint plugins
+- 5d64fc3: Updated eslint-plugin-storybook
+- c02849a: Updated eslint-plugin-jsdoc
+- Updated dependencies [d0e677f]
+  - @2digits/eslint-plugin@2.3.3
+
 ## 2.7.2
 
 ### Patch Changes
