@@ -7400,22 +7400,22 @@ type ReactForbidComponentProps = []|[{
   forbid?: (string | {
     propName?: string
     allowedFor?: string[]
+    allowedForPatterns?: string[]
     message?: string
+  } | ({
+    [k: string]: unknown | undefined
   } | {
-    propName?: string
-    
-    disallowedFor: [string, ...(string)[]]
-    message?: string
-  } | {
+    [k: string]: unknown | undefined
+  }) | {
     propNamePattern?: string
     allowedFor?: string[]
+    allowedForPatterns?: string[]
     message?: string
+  } | ({
+    [k: string]: unknown | undefined
   } | {
-    propNamePattern?: string
-    
-    disallowedFor: [string, ...(string)[]]
-    message?: string
-  })[]
+    [k: string]: unknown | undefined
+  }))[]
   [k: string]: unknown | undefined
 }]
 // ----- react/forbid-dom-props -----
@@ -7752,6 +7752,7 @@ type ReactNoUnsafe = []|[{
 type ReactNoUnstableNestedComponents = []|[{
   customValidators?: string[]
   allowAsProps?: boolean
+  propNamePattern?: string
 }]
 // ----- react/no-unused-prop-types -----
 type ReactNoUnusedPropTypes = []|[{
