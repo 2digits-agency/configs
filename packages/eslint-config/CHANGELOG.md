@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 2.7.4
+
+### Patch Changes
+
+- 4c3f468: Updated eslint-plugin-turbo
+- 5134870: Updated eslint-plugin-react and eslint-plugin-next
+- 63d0376: Updated eslint-plugin-unicorn and eslint-plugin-jsdoc
+
 ## 2.7.3
 
 ### Patch Changes
