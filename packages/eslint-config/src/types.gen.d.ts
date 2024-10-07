@@ -5236,6 +5236,7 @@ type CommentsRequireDescription = []|[{
 type Complexity = []|[(number | {
   maximum?: number
   max?: number
+  variant?: ("classic" | "modified")
 })]
 // ----- computed-property-spacing -----
 type ComputedPropertySpacing = []|[("always" | "never")]|[("always" | "never"), {
