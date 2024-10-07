@@ -1,10 +1,5 @@
-import { renamePluginsInRules } from 'eslint-flat-config-utils';
-
-import { PluginNameMap } from '../constants';
 import { pluginSonar } from '../plugins';
 import type { TypedFlatConfigItem } from '../types';
-
-const rules = renamePluginsInRules(pluginSonar.configs.recommended.rules as never, PluginNameMap);
 
 export function sonar(): TypedFlatConfigItem[] {
   return [
@@ -14,9 +9,17 @@ export function sonar(): TypedFlatConfigItem[] {
         sonar: pluginSonar,
       },
       rules: {
-        ...rules,
-
-        'sonar/no-redundant-jump': 'off',
+        'sonar/code-eval': 'error',
+        'sonar/cognitive-complexity': 'error',
+        'sonar/comma-or-logical-or-case': 'error',
+        'sonar/concise-regex': 'error',
+        'sonar/confidential-information-logging': 'error',
+        'sonar/constructor-for-side-effects': 'error',
+        'sonar/content-length': 'error',
+        'sonar/content-security-policy': 'error',
+        'sonar/cookie-no-httponly': 'error',
+        'sonar/cors': 'error',
+        'sonar/csrf': 'error',
       },
     },
   ];
