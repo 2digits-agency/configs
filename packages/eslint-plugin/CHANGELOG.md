@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.3.4
+
+### Patch Changes
+
+- 96f7ae9: Updated eslint
+
 ## 2.3.3
 
 ### Patch Changes

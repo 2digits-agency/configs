@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 2.7.5
+
+### Patch Changes
+
+- 96f7ae9: Updated eslint
+- 707e0ec: Updated @tanstack/eslint-plugin-query
+- Updated dependencies [96f7ae9]
+  - @2digits/eslint-plugin@2.3.4
+
 ## 2.7.4
 
 ### Patch Changes
