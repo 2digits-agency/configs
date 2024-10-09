@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.6.1
+
+### Patch Changes
+
+- 14b8cbc: Updated typescript
+
 ## 0.6.0
 
 ### Minor Changes

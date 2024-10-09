@@ -1,5 +1,21 @@
 # @2digits/eslint-config
 
+## 2.7.6
+
+### Patch Changes
+
+- bab132b: Updated globals
+- a8ad161: Updated @next/eslint-plugin-next
+- 2dcd268: Updated typescript-eslint
+- 7aff9eb: Updated eslint-plugin-tailwindcss
+- 14b8cbc: Updated typescript
+- 2d0ec9a: Updated eslint-plugin-n
+- d056cd6: Updated @tanstack/eslint-plugin-query
+- Updated dependencies [2dcd268]
+- Updated dependencies [14b8cbc]
+  - @2digits/eslint-plugin@2.3.5
+  - @2digits/constants@0.3.2
+
 ## 2.7.5
 
 ### Patch Changes
