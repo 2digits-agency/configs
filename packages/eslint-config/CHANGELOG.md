@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.9.0
+
+### Minor Changes
+
+- e6d1a36: Added eslint-plugin-antfu
+
 ## 2.8.0
 
 ### Minor Changes
