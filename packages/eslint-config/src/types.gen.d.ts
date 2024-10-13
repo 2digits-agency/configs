@@ -14,6 +14,61 @@ export interface RuleOptions {
    */
   'accessor-pairs'?: Linter.RuleEntry<AccessorPairs>
   /**
+   * Having line breaks styles to object, array and named imports
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/consistent-chaining.md
+   */
+  'antfu/consistent-chaining'?: Linter.RuleEntry<AntfuConsistentChaining>
+  /**
+   * Having line breaks styles to object, array and named imports
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/consistent-list-newline.md
+   */
+  'antfu/consistent-list-newline'?: Linter.RuleEntry<AntfuConsistentListNewline>
+  /**
+   * Enforce Anthony's style of curly bracket
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/curly.md
+   */
+  'antfu/curly'?: Linter.RuleEntry<[]>
+  /**
+   * Newline after if
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/if-newline.md
+   */
+  'antfu/if-newline'?: Linter.RuleEntry<[]>
+  /**
+   * Fix duplication in imports
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/import-dedupe.md
+   */
+  'antfu/import-dedupe'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce consistent indentation in `unindent` template tag
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/indent-unindent.md
+   */
+  'antfu/indent-unindent'?: Linter.RuleEntry<AntfuIndentUnindent>
+  /**
+   * Prevent importing modules in `dist` folder
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-import-dist.test.ts
+   */
+  'antfu/no-import-dist'?: Linter.RuleEntry<[]>
+  /**
+   * Prevent importing modules in `node_modules` folder by relative or absolute path
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-import-node-modules-by-path.test.ts
+   */
+  'antfu/no-import-node-modules-by-path'?: Linter.RuleEntry<[]>
+  /**
+   * Prevent using top-level await
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-top-level-await.test.ts
+   */
+  'antfu/no-top-level-await'?: Linter.RuleEntry<[]>
+  /**
+   * Do not use `exports =`
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-ts-export-equal.test.ts
+   */
+  'antfu/no-ts-export-equal'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce top-level functions to be declared with function keyword
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/top-level-function.md
+   */
+  'antfu/top-level-function'?: Linter.RuleEntry<[]>
+  /**
    * Enforce linebreaks after opening and before closing array brackets
    * @see https://eslint.org/docs/latest/rules/array-bracket-newline
    * @deprecated
@@ -5534,6 +5589,39 @@ type AccessorPairs = []|[{
   setWithoutGet?: boolean
   enforceForClassMembers?: boolean
 }]
+// ----- antfu/consistent-chaining -----
+type AntfuConsistentChaining = []|[{
+  
+  allowLeadingPropertyAccess?: boolean
+}]
+// ----- antfu/consistent-list-newline -----
+type AntfuConsistentListNewline = []|[{
+  ArrayExpression?: boolean
+  ArrayPattern?: boolean
+  ArrowFunctionExpression?: boolean
+  CallExpression?: boolean
+  ExportNamedDeclaration?: boolean
+  FunctionDeclaration?: boolean
+  FunctionExpression?: boolean
+  ImportDeclaration?: boolean
+  JSONArrayExpression?: boolean
+  JSONObjectExpression?: boolean
+  JSXOpeningElement?: boolean
+  NewExpression?: boolean
+  ObjectExpression?: boolean
+  ObjectPattern?: boolean
+  TSFunctionType?: boolean
+  TSInterfaceDeclaration?: boolean
+  TSTupleType?: boolean
+  TSTypeLiteral?: boolean
+  TSTypeParameterDeclaration?: boolean
+  TSTypeParameterInstantiation?: boolean
+}]
+// ----- antfu/indent-unindent -----
+type AntfuIndentUnindent = []|[{
+  indent?: number
+  tags?: string[]
+}]
 // ----- array-bracket-newline -----
 type ArrayBracketNewline = []|[(("always" | "never" | "consistent") | {
   multiline?: boolean
@@ -9926,4 +10014,4 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   onlyEquality?: boolean
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:comments' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'
+export type ConfigNames = '2digits:antfu' | '2digits:comments' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'
