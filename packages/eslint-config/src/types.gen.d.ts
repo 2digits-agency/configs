@@ -2675,12 +2675,17 @@ Backward pagination arguments
    * disallow unnecessary fragments
    * @see https://eslint-react.xyz/docs/rules/no-useless-fragment
    */
-  'react-extra/no-useless-fragment'?: Linter.RuleEntry<[]>
+  'react-extra/no-useless-fragment'?: Linter.RuleEntry<ReactExtraNoUselessFragment>
   /**
    * enforce using destructuring assignment in component props and context
    * @see https://eslint-react.xyz/docs/rules/prefer-destructuring-assignment
    */
   'react-extra/prefer-destructuring-assignment'?: Linter.RuleEntry<[]>
+  /**
+   * enforce React is imported via a namespace import
+   * @see https://eslint-react.xyz/docs/rules/prefer-react-namespace-import
+   */
+  'react-extra/prefer-react-namespace-import'?: Linter.RuleEntry<[]>
   /**
    * enforce read-only props in components
    * @see https://eslint-react.xyz/docs/rules/prefer-read-only-props
@@ -2712,8 +2717,8 @@ Backward pagination arguments
    */
   'react-hooks-extra/no-direct-set-state-in-use-effect'?: Linter.RuleEntry<[]>
   /**
-   * disallow direct calls to the 'set' function of 'useState' in 'useEffect'
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-effect
+   * disallow direct calls to the 'set' function of 'useState' in 'useLayoutEffect'
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-layout-effect
    */
   'react-hooks-extra/no-direct-set-state-in-use-layout-effect'?: Linter.RuleEntry<[]>
   /**
@@ -7359,6 +7364,10 @@ type Radix = []|[("always" | "as-needed")]
 // ----- react-compiler/react-compiler -----
 type ReactCompilerReactCompiler = []|[{
   [k: string]: unknown | undefined
+}]
+// ----- react-extra/no-useless-fragment -----
+type ReactExtraNoUselessFragment = []|[{
+  allowExpressions?: boolean
 }]
 // ----- react-hooks/exhaustive-deps -----
 type ReactHooksExhaustiveDeps = []|[{
