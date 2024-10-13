@@ -2,6 +2,7 @@ import { FlatConfigComposer } from 'eslint-flat-config-utils';
 import { isPackageExists } from 'local-pkg';
 
 import {
+  antfu,
   comments,
   graphql,
   ignores,
@@ -53,12 +54,18 @@ function enabled<T extends SharedOptions>(
   options: T | boolean | undefined,
   defaults?: boolean,
 ): options is T {
-  if (typeof options === 'boolean') return options;
+  if (typeof options === 'boolean') {
+    return options;
+  }
+
   return options?.enable ?? defaults ?? false;
 }
 
 function config<T>(options: SharedOptions<T> | undefined | boolean): T {
-  if (typeof options === 'boolean' || options === undefined) return {} as T;
+  if (typeof options === 'boolean' || options === undefined) {
+    return {} as T;
+  }
+
   const { enable, ...rest } = options;
   return rest as T;
 }
@@ -76,6 +83,7 @@ export function twoDigits(
     unicorn(),
     sonar(),
     regexp(),
+    antfu(),
   );
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {

@@ -44,7 +44,9 @@ export const typeParamNames = createEslintRule<[], MessageId>({
       TSTypeParameterDeclaration(node) {
         const { params } = node;
 
-        if (params.length === 1 && params.at(0)?.name.name === 'T') return;
+        if (params.length === 1 && params.at(0)?.name.name === 'T') {
+          return;
+        }
 
         for (const param of params) {
           const { name } = param.name;
