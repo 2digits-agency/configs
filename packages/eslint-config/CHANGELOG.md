@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 2.7.7
+
+### Patch Changes
+
+- d4681e4: Updated @eslint-react/eslint-plugin
+- 8b81df9: Updated eslint-plugin-jsdoc
+- a085b5b: Updated eslint-plugin-react-hooks
+
 ## 2.7.6
 
 ### Patch Changes
