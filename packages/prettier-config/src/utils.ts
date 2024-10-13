@@ -4,7 +4,7 @@ import type { PluginOptions } from 'prettier-plugin-tailwindcss';
 
 import { devDependencies } from '../package.json';
 
-const semverRegex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
+const semverRegex = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/;
 const localTypescriptVersion = devDependencies.typescript.replace(semverRegex, '');
 
 type PrettierConfigWithPlugins = PrettierConfig & PluginOptions;

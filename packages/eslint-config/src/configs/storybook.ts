@@ -53,9 +53,11 @@ export async function storybook(
         'storybook/csf-component': 'error',
         'storybook/default-exports': 'error',
         'storybook/hierarchy-separator': 'error',
+        'storybook/meta-inline-properties': 'error',
         'storybook/no-redundant-story-name': 'error',
         'storybook/no-stories-of': 'error',
         'storybook/no-title-property-in-meta': 'error',
+        'storybook/no-uninstalled-addons': 'error',
         'storybook/prefer-pascal-case': 'error',
         'storybook/story-exports': 'error',
         'storybook/use-storybook-expect': 'error',
@@ -70,6 +72,7 @@ export async function storybook(
       rules: {
         'react-hooks/rules-of-hooks': 'off',
         'react/display-name': 'off',
+        'sonar/no-duplicate-string': 'off',
       },
     },
     {

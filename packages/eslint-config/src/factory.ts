@@ -11,6 +11,7 @@ import {
   node,
   prettier,
   react,
+  regexp,
   sonar,
   storybook,
   tailwind,
@@ -74,6 +75,7 @@ export function twoDigits(
     jsdoc(),
     unicorn(),
     sonar(),
+    regexp(),
   );
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {
