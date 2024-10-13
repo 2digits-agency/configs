@@ -1,5 +1,15 @@
 # @2digits/eslint-config
 
+## 2.8.0
+
+### Minor Changes
+
+- d5506df: Added new regexp linting rules
+
+### Patch Changes
+
+- 32ea4cb: Updated storybook related linting
+
 ## 2.7.7
 
 ### Patch Changes
