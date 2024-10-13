@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 2.3.4
+
+### Patch Changes
+
+- 44d42cc: Fixed semver regex to conform to new linting rules
+
 ## 2.3.3
 
 ### Patch Changes
