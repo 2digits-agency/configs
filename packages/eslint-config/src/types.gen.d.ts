@@ -10380,7 +10380,6 @@ type SonarNoUnsafe = []|[{
 type SonarNoUnstableNestedComponents = []|[{
   customValidators?: string[]
   allowAsProps?: boolean
-  propNamePattern?: string
 }]
 // ----- sonar/no-unused-expressions -----
 type SonarNoUnusedExpressions = []|[{
