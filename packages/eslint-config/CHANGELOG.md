@@ -1,5 +1,18 @@
 # @2digits/eslint-config
 
+## 2.9.2
+
+### Patch Changes
+
+- 1d59c0e: Updated eslint-plugin-jsdoc
+- 20e8d88: Updated typescript-eslint
+- 2e2c97c: Updated eslint-plugin-react-compiler
+- 3d41896: Updated eslint
+- 759eb51: Updated eslint-plugin-turbo
+- Updated dependencies [20e8d88]
+- Updated dependencies [3d41896]
+  - @2digits/eslint-plugin@2.3.7
+
 ## 2.9.1
 
 ### Patch Changes
