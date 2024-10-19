@@ -8801,9 +8801,11 @@ type TsExplicitFunctionReturnType = []|[{
 }]
 // ----- ts/explicit-member-accessibility -----
 type TsExplicitMemberAccessibility = []|[{
+  
   accessibility?: ("explicit" | "no-public" | "off")
   
   ignoredMethodNames?: string[]
+  
   overrides?: {
     accessors?: ("explicit" | "no-public" | "off")
     constructors?: ("explicit" | "no-public" | "off")
@@ -9320,9 +9322,11 @@ type TsNoMeaninglessVoidOperator = []|[{
 }]
 // ----- ts/no-misused-promises -----
 type TsNoMisusedPromises = []|[{
+  
   checksConditionals?: boolean
   
   checksSpreads?: boolean
+  
   checksVoidReturn?: (boolean | {
     
     arguments?: boolean
@@ -9394,6 +9398,7 @@ type TsNoRestrictedImports = ((string | {
 }])
 // ----- ts/no-restricted-types -----
 type TsNoRestrictedTypes = []|[{
+  
   types?: {
     [k: string]: (true | string | {
       
@@ -9499,6 +9504,7 @@ type TsNoUnusedVars = []|[(("all" | "local") | {
 })]
 // ----- ts/no-use-before-define -----
 type TsNoUseBeforeDefine = []|[("nofunc" | {
+  
   allowNamedExports?: boolean
   
   classes?: boolean
@@ -9558,7 +9564,9 @@ type TsPreferDestructuring = []|[({
   array?: boolean
   object?: boolean
 }), {
+  
   enforceForDeclarationWithTypeAnnotation?: boolean
+  
   enforceForRenamedProperties?: boolean
   [k: string]: unknown | undefined
 }]
@@ -9577,9 +9585,13 @@ type TsPreferNullishCoalescing = []|[{
   ignoreMixedLogicalExpressions?: boolean
   
   ignorePrimitives?: ({
+    
     bigint?: boolean
+    
     boolean?: boolean
+    
     number?: boolean
+    
     string?: boolean
     [k: string]: unknown | undefined
   } | true)
@@ -9736,6 +9748,7 @@ type TsStrictBooleanExpressions = []|[{
   allowNullableString?: boolean
   
   allowNumber?: boolean
+  
   allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing?: boolean
   
   allowString?: boolean
