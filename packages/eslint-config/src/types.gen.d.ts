@@ -911,6 +911,7 @@ Backward pagination arguments
    */
   'jsdoc/no-missing-syntax'?: Linter.RuleEntry<JsdocNoMissingSyntax>
   /**
+   * Prevents use of multiple asterisks at the beginning of lines.
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/no-multi-asterisks.md#repos-sticky-header
    */
   'jsdoc/no-multi-asterisks'?: Linter.RuleEntry<JsdocNoMultiAsterisks>
@@ -1055,6 +1056,7 @@ Backward pagination arguments
    */
   'jsdoc/tag-lines'?: Linter.RuleEntry<JsdocTagLines>
   /**
+   * Auto-escape certain characters that are input within block and tag descriptions.
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/text-escaping.md#repos-sticky-header
    */
   'jsdoc/text-escaping'?: Linter.RuleEntry<JsdocTextEscaping>
