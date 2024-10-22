@@ -1,5 +1,15 @@
 # @2digits/prettier-config
 
+## 2.4.0
+
+### Minor Changes
+
+- f187442: Added postgresql formatting via prettier-plugin-sql
+
+### Patch Changes
+
+- bad4447: Added toml formatting options
+
 ## 2.3.4
 
 ### Patch Changes
