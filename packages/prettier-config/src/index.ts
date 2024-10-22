@@ -32,10 +32,14 @@ export default defineConfig({
 
   tailwindFunctions,
 
+  language: 'postgresql',
+  keywordCase: 'upper',
+
   plugins: [
     require.resolve('prettier-plugin-toml'),
     require.resolve('@ianvs/prettier-plugin-sort-imports'),
     require.resolve('prettier-plugin-jsdoc'),
     require.resolve('prettier-plugin-tailwindcss'),
+    require.resolve('prettier-plugin-sql'),
   ],
 });
