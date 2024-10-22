@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.3.6/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.3.7/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -4056,11 +4056,6 @@ Backward pagination arguments
    */
   'storybook/hierarchy-separator'?: Linter.RuleEntry<[]>
   /**
-   * Meta should only have inline properties
-   * @see https://github.com/storybookjs/eslint-plugin-storybook/blob/main/docs/rules/meta-inline-properties.md
-   */
-  'storybook/meta-inline-properties'?: Linter.RuleEntry<StorybookMetaInlineProperties>
-  /**
    * A story should not have a redundant name property
    * @see https://github.com/storybookjs/eslint-plugin-storybook/blob/main/docs/rules/no-redundant-story-name.md
    */
@@ -4324,7 +4319,7 @@ Backward pagination arguments
    */
   'ts/no-array-delete'?: Linter.RuleEntry<[]>
   /**
-   * Require `.toString()` to only be called on objects which provide useful information when stringified
+   * Require `.toString()` and `.toLocaleString()` to only be called on objects which provide useful information when stringified
    * @see https://typescript-eslint.io/rules/no-base-to-string
    */
   'ts/no-base-to-string'?: Linter.RuleEntry<TsNoBaseToString>
@@ -8592,10 +8587,6 @@ type SpacedComment = []|[("always" | "never")]|[("always" | "never"), {
     markers?: string[]
     balanced?: boolean
   }
-}]
-// ----- storybook/meta-inline-properties -----
-type StorybookMetaInlineProperties = []|[{
-  csfVersion?: number
 }]
 // ----- storybook/no-uninstalled-addons -----
 type StorybookNoUninstalledAddons = []|[{
