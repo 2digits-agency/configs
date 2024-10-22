@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 2.9.3
+
+### Patch Changes
+
+- 83fe743: Updated eslint-plugin-react
+- aebf50f: Updated eslint-plugin-storybook
+- fb4aa3b: Updated eslint-plugin-next
+- 77f159d: Updated typescript-eslint
+- 831673a: Updated eslint-plugin-turbo
+- Updated dependencies [77f159d]
+  - @2digits/eslint-plugin@2.3.8
+
 ## 2.9.2
 
 ### Patch Changes
