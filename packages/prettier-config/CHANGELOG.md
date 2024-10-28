@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 2.4.1
+
+### Patch Changes
+
+- ed3ba62: Updated package.json exports to correctly export types
+- Updated dependencies [ed3ba62]
+  - @2digits/constants@0.3.3
+
 ## 2.4.0
 
 ### Minor Changes

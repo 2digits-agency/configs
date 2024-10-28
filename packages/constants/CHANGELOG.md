@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.3.3
+
+### Patch Changes
+
+- ed3ba62: Updated package.json exports to correctly export types
+
 ## 0.3.2
 
 ### Patch Changes

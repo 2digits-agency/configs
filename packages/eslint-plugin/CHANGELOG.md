@@ -1,5 +1,13 @@
 # @2digits/eslint-plugin
 
+## 2.3.9
+
+### Patch Changes
+
+- ed3ba62: Updated package.json exports to correctly export types
+- 8b22149: Updated ts-eslint
+- 0c95b3a: Updated vitest
+
 ## 2.3.8
 
 ### Patch Changes
