@@ -9752,6 +9752,8 @@ type TsSwitchExhaustivenessCheck = []|[{
   
   allowDefaultCaseForExhaustiveSwitch?: boolean
   
+  considerDefaultExhaustiveForUnions?: boolean
+  
   requireDefaultForNonUnion?: boolean
 }]
 // ----- ts/triple-slash-reference -----
