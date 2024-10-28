@@ -1,5 +1,20 @@
 # @2digits/eslint-config
 
+## 2.9.4
+
+### Patch Changes
+
+- ed3ba62: Updated package.json exports to correctly export types
+- 2106afd: Updated eslint-plugin-eslint-comments
+- 8c3106d: Updated @eslint-react/eslint-plugin
+- 3002564: Updated @next/eslint-plugin-next
+- 8b22149: Updated ts-eslint
+- Updated dependencies [ed3ba62]
+- Updated dependencies [8b22149]
+- Updated dependencies [0c95b3a]
+  - @2digits/eslint-plugin@2.3.9
+  - @2digits/constants@0.3.3
+
 ## 2.9.3
 
 ### Patch Changes
