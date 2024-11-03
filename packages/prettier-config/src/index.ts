@@ -32,7 +32,7 @@ export default defineConfig({
 
   tailwindFunctions,
 
-  language: 'postgresql',
+  language: 'sqlite',
   keywordCase: 'upper',
 
   plugins: [
