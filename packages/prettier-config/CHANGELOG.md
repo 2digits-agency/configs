@@ -1,5 +1,15 @@
 # @2digits/prettier-config
 
+## 2.5.0
+
+### Minor Changes
+
+- 9966536: Added prettier-plugin-embed
+
+### Patch Changes
+
+- c6bda78: Changed sql formatting to sqlite
+
 ## 2.4.1
 
 ### Patch Changes
