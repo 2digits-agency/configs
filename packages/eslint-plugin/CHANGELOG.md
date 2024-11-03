@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.3.10
+
+### Patch Changes
+
+- 2f20696: fix(deps): update eslint monorepo to v9.14.0
+
 ## 2.3.9
 
 ### Patch Changes

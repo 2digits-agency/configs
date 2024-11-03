@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 2.9.6
+
+### Patch Changes
+
+- 7c9f1fc: fix(deps): update dependency eslint-plugin-storybook to v0.10.2
+- 2f20696: fix(deps): update eslint monorepo to v9.14.0
+- Updated dependencies [2f20696]
+  - @2digits/eslint-plugin@2.3.10
+
 ## 2.9.5
 
 ### Patch Changes
