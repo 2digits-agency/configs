@@ -41,5 +41,6 @@ export default defineConfig({
     require.resolve('prettier-plugin-jsdoc'),
     require.resolve('prettier-plugin-tailwindcss'),
     require.resolve('prettier-plugin-sql'),
+    require.resolve('prettier-plugin-embed'),
   ],
 });
