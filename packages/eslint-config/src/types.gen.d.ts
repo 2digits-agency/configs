@@ -4056,6 +4056,11 @@ Backward pagination arguments
    */
   'storybook/hierarchy-separator'?: Linter.RuleEntry<[]>
   /**
+   * Meta should only have inline properties
+   * @see https://github.com/storybookjs/eslint-plugin-storybook/blob/main/docs/rules/meta-inline-properties.md
+   */
+  'storybook/meta-inline-properties'?: Linter.RuleEntry<StorybookMetaInlineProperties>
+  /**
    * A story should not have a redundant name property
    * @see https://github.com/storybookjs/eslint-plugin-storybook/blob/main/docs/rules/no-redundant-story-name.md
    */
@@ -8588,6 +8593,10 @@ type SpacedComment = []|[("always" | "never")]|[("always" | "never"), {
     markers?: string[]
     balanced?: boolean
   }
+}]
+// ----- storybook/meta-inline-properties -----
+type StorybookMetaInlineProperties = []|[{
+  csfVersion?: number
 }]
 // ----- storybook/no-uninstalled-addons -----
 type StorybookNoUninstalledAddons = []|[{
