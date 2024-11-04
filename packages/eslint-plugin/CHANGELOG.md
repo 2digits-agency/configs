@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.3.11
+
+### Patch Changes
+
+- ec99e07: Updated typescript-eslint
+
 ## 2.3.10
 
 ### Patch Changes
