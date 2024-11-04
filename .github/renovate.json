@@ -1,9 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
-  "automergeType": "pr",
-  "platformAutomerge": true,
-  "automerge": true,
-  "rangeStrategy": "pin",
-  "reviewers": ["V1RE"]
+  "extends": ["local>2digits-agency/configs//packages/renovate/default"]
 }
