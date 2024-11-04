@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 2.9.7
+
+### Patch Changes
+
+- ec99e07: Updated typescript-eslint
+- 87138fc: Updated eslint-plugin-storybook
+- Updated dependencies [ec99e07]
+  - @2digits/eslint-plugin@2.3.11
+
 ## 2.9.6
 
 ### Patch Changes
