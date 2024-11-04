@@ -1,0 +1,17 @@
+{
+  "name": "@2digits/renovate-config",
+  "version": "0.0.0",
+  "license": "MIT",
+  "public": false,
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "test": "renovate-config-validator ./default.json"
+  },
+  "files": [
+    "default.json"
+  ],
+  "devDependencies": {
+    "renovate": "38.142.5"
+  }
+}

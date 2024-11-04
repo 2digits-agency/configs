@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/renovate/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "automergeType": "pr",
+  "platformAutomerge": true,
+  "automerge": true,
+  "rangeStrategy": "pin",
+  "reviewers": ["V1RE"],
+  "timezone": "Europe/Amsterdam",
+  "schedule": ["after 18:00 every weekday", "before 04:00 every weekday", "every weekend"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["nativewind", "react-native-css-interop"]
+    }
+  ],
+  "pruneStaleBranches": true,
+  "ignorePrAuthor": false,
+  "prHourlyLimit": 0,
+  "prCreation": "not-pending",
+  "dependencyDashboard": true
+}
