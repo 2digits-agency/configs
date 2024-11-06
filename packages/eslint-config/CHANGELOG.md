@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 2.9.8
+
+### Patch Changes
+
+- aed30c5: fix(deps): update dependency eslint-plugin-n to v17.13.0
+- de3813b: fix(deps): update dependency @tanstack/eslint-plugin-query to v5.59.20
+
 ## 2.9.7
 
 ### Patch Changes
