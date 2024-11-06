@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 2.5.1
+
+### Patch Changes
+
+- 4f511c3: fix(deps): update dependency @ianvs/prettier-plugin-sort-imports to v4.4.0
+
 ## 2.5.0
 
 ### Minor Changes
