@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 2.9.9
+
+### Patch Changes
+
+- 9f7a9fa: fix(deps): update dependency eslint-plugin-n to v17.13.1
+- 8ada331: fix(deps): update dependency @next/eslint-plugin-next to v15.0.3
+
 ## 2.9.8
 
 ### Patch Changes

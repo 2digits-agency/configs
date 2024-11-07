@@ -1,5 +1,13 @@
 # @2digits/renovate-config
 
+## 0.1.1
+
+### Patch Changes
+
+- 5b3aaaf: Changed prCreation to immediate
+- baa35fb: Updated renovate version
+- d2f705a: Added renovate groups
+
 ## 0.1.0
 
 ### Minor Changes
