@@ -10,7 +10,24 @@
   "schedule": ["after 18:00 every weekday", "before 04:00 every weekday", "every weekend"],
   "packageRules": [
     {
-      "matchPackageNames": ["nativewind", "react-native-css-interop"]
+      "matchPackageNames": ["nativewind", "react-native-css-interop"],
+      "groupName": "nativewind"
+    },
+    {
+      "matchPackageNames": ["/^@react-native-firebase//"],
+      "groupName": "react-native-firebase"
+    },
+    {
+      "matchPackageNames": ["/^react-native-notificare/"],
+      "groupName": "Notificare"
+    },
+    {
+      "matchPackageNames": ["unified", "/^rehype-/"],
+      "groupName": "Unified & Rehype"
+    },
+    {
+      "matchPackageNames": ["orval", "/^@orval/"],
+      "groupName": "Orval"
     }
   ],
   "pruneStaleBranches": true,
