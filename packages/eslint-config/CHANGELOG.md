@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 2.9.10
+
+### Patch Changes
+
+- c77ea65: Updated @eslint-react/eslint-plugin
+- 558251b: fix(deps): update dependency @tanstack/eslint-plugin-query to v5.60.1
+
 ## 2.9.9
 
 ### Patch Changes
