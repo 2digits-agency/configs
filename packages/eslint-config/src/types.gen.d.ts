@@ -2514,6 +2514,11 @@ Backward pagination arguments
    */
   'react-dom/no-script-url'?: Linter.RuleEntry<[]>
   /**
+   * disallow usage of unknown DOM property
+   * @see https://eslint-react.xyz/docs/rules/dom-no-unknown-property
+   */
+  'react-dom/no-unknown-property'?: Linter.RuleEntry<ReactDomNoUnknownProperty>
+  /**
    * disallow unsafe iframe 'sandbox' attribute combinations
    * @see https://eslint-react.xyz/docs/rules/dom-no-unsafe-iframe-sandbox
    */
@@ -2538,6 +2543,16 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/ensure-forward-ref-using-ref
    */
   'react-extra/ensure-forward-ref-using-ref'?: Linter.RuleEntry<[]>
+  /**
+   * disallow duplicate props
+   * @see https://eslint-react.xyz/docs/rules/jsx-no-duplicate-props
+   */
+  'react-extra/jsx-no-duplicate-props'?: Linter.RuleEntry<[]>
+  /**
+   * a helper rule to mark variables as used
+   * @see https://eslint-react.xyz/docs/rules/jsx-uses-vars
+   */
+  'react-extra/jsx-uses-vars'?: Linter.RuleEntry<[]>
   /**
    * disallow accessing 'this.state' within 'setState'
    * @see https://eslint-react.xyz/docs/rules/no-access-state-in-setstate
@@ -7864,6 +7879,11 @@ type Radix = []|[("always" | "as-needed")]
 // ----- react-compiler/react-compiler -----
 type ReactCompilerReactCompiler = []|[{
   [k: string]: unknown | undefined
+}]
+// ----- react-dom/no-unknown-property -----
+type ReactDomNoUnknownProperty = []|[{
+  ignore?: string[]
+  requireDataLowercase?: boolean
 }]
 // ----- react-extra/no-useless-fragment -----
 type ReactExtraNoUselessFragment = []|[{
