@@ -9223,6 +9223,8 @@ type TsNoConfusingVoidExpression = []|[{
   ignoreArrowShorthand?: boolean
   
   ignoreVoidOperator?: boolean
+  
+  ignoreVoidReturningFunctions?: boolean
 }]
 // ----- ts/no-duplicate-type-constituents -----
 type TsNoDuplicateTypeConstituents = []|[{
