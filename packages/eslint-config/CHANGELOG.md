@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 2.9.11
+
+### Patch Changes
+
+- cd69fdf: Updated eslint-plugin-react-compiler
+- af30667: Updated typescript-eslint
+- Updated dependencies [af30667]
+  - @2digits/eslint-plugin@2.3.12
+
 ## 2.9.10
 
 ### Patch Changes
