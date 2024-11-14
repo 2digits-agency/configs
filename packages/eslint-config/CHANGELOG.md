@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 2.9.12
+
+### Patch Changes
+
+- 64e8068: Updated turborepo
+- daaab81: fix(deps): update dependency eslint-plugin-jsdoc to v50.5.0
+- 43a189b: Updated @eslint/compat
+
 ## 2.9.11
 
 ### Patch Changes
