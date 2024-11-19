@@ -1,5 +1,12 @@
 # @2digits/prettier-config
 
+## 2.5.2
+
+### Patch Changes
+
+- 746ea8c: Updated local-pkg
+- fcb8e54: Updated prettier-plugin-tailwindcss
+
 ## 2.5.1
 
 ### Patch Changes

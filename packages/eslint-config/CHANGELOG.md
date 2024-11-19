@@ -1,5 +1,20 @@
 # @2digits/eslint-config
 
+## 2.9.13
+
+### Patch Changes
+
+- 746ea8c: Updated local-pkg
+- bd76a77: Updated eslint-plugin-unicorn
+- 0310ccf: chore(deps): update typescript-eslint monorepo to v8.15.0
+- 03eb96d: Updated eslint monorepo
+- 4c83bf7: Updated eslint-plugin-regexp
+- a2963e7: Updated eslint-plugin-storybook
+- d76783d: Updated eslint-plugin-n
+- Updated dependencies [0310ccf]
+- Updated dependencies [03eb96d]
+  - @2digits/eslint-plugin@2.3.13
+
 ## 2.9.12
 
 ### Patch Changes
