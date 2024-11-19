@@ -1,5 +1,12 @@
 # @2digits/eslint-plugin
 
+## 2.3.13
+
+### Patch Changes
+
+- 0310ccf: chore(deps): update typescript-eslint monorepo to v8.15.0
+- 03eb96d: Updated eslint monorepo
+
 ## 2.3.12
 
 ### Patch Changes
