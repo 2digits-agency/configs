@@ -21,8 +21,8 @@ importers:
         specifier: 2.27.10
         version: 2.27.10
       '@manypkg/cli':
-        specifier: 0.22.0
-        version: 0.22.0
+        specifier: 0.23.0
+        version: 0.23.0
       '@types/node':
         specifier: 22.9.3
         version: 22.9.3
@@ -1241,8 +1241,8 @@ packages:
   '@kwsites/promise-deferred@1.1.1':
     resolution: {integrity: sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==}
 
-  '@manypkg/cli@0.22.0':
-    resolution: {integrity: sha512-HwONx0Pr9ucehlrMvFMSuztLiKfwPYkjRDc0ymL5RiGYBk1slX8k3RWy+F01f1T+JLbImthSGMwY04Ojt20nTA==}
+  '@manypkg/cli@0.23.0':
+    resolution: {integrity: sha512-9N0GuhUZhrDbOS2rer1/ZWaO8RvPOUI+kKTwlq74iQXomL+725E9Vfvl9U64FYwnLkQCxCmPZ9nBs/u8JwFnSw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -7801,7 +7801,7 @@ snapshots:
 
   '@kwsites/promise-deferred@1.1.1': {}
 
-  '@manypkg/cli@0.22.0':
+  '@manypkg/cli@0.23.0':
     dependencies:
       '@manypkg/get-packages': 2.2.1
       detect-indent: 6.1.0
@@ -7809,7 +7809,7 @@ snapshots:
       p-limit: 2.3.0
       package-json: 10.0.1
       parse-github-url: 1.0.2
-      picocolors: 1.1.0
+      picocolors: 1.1.1
       sembear: 0.7.0
       semver: 7.6.3
       tinyexec: 0.3.1
@@ -12816,7 +12816,7 @@ snapshots:
       is-glob: 4.0.3
       jiti: 1.21.6
       lilconfig: 2.1.0
-      micromatch: 4.0.7
+      micromatch: 4.0.8
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.1.1
