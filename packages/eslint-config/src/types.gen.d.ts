@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.3.12/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.3.13/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -7923,6 +7923,7 @@ type ReactNamingConventionFilename = []|[(("PascalCase" | "camelCase" | "kebab-c
 type ReactNamingConventionFilenameExtension = []|[(("always" | "as-needed") | {
   allow?: ("always" | "as-needed")
   extensions?: string[]
+  ignoreFilesWithoutCode?: boolean
 })]
 // ----- react/boolean-prop-naming -----
 type ReactBooleanPropNaming = []|[{
