@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 0.1.2
+
+### Patch Changes
+
+- f9605c5: Updated typescript
+
 ## 0.1.1
 
 ### Patch Changes

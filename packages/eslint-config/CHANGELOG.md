@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 2.9.14
+
+### Patch Changes
+
+- aa868a8: Updated turborepo
+- 8d82f67: Updated eslint-plugin-react-compiler
+- cba9c4e: Updated eslint-plugin-n
+- 4de5eaa: Updated @tanstack/eslint-plugin
+- a87f2c2: @eslint-react/eslint-plugin
+- f9605c5: Updated typescript
+- Updated dependencies [f9605c5]
+  - @2digits/eslint-plugin@2.3.14
+  - @2digits/constants@0.3.4
+
 ## 2.9.13
 
 ### Patch Changes

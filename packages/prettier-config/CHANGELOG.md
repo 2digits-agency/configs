@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 2.5.3
+
+### Patch Changes
+
+- f9605c5: Updated typescript
+- Updated dependencies [f9605c5]
+  - @2digits/constants@0.3.4
+
 ## 2.5.2
 
 ### Patch Changes

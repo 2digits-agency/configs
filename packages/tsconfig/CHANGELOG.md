@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.6.2
+
+### Patch Changes
+
+- f9605c5: Updated typescript
+
 ## 0.6.1
 
 ### Patch Changes
