@@ -80,6 +80,7 @@ export async function react(
         'react-hooks-extra/prefer-use-state-lazy-initialization': 'error',
         'react-hooks-extra/no-redundant-custom-hook': 'error',
         'react-hooks-extra/no-unnecessary-use-memo': 'error',
+        'react-extra/prefer-read-only-props': 'off',
 
         'react/jsx-curly-newline': 'off',
         'react/jsx-newline': ['error', { prevent: false }],
