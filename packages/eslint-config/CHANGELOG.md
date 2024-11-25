@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.9.15
+
+### Patch Changes
+
+- 16e8878: Fixed read-only-props
+
 ## 2.9.14
 
 ### Patch Changes
