@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.3.4
+
+### Patch Changes
+
+- f9605c5: Updated typescript
+
 ## 0.3.3
 
 ### Patch Changes
