@@ -16,6 +16,8 @@ export default defineConfig({
     '',
     '^(next/(.*)$)|^(next$)',
     '',
+    '^(expo/(.*)$)|^(expo$)|^(expo-(.*)$)|^(@expo/(.*)$)',
+    '',
     '<THIRD_PARTY_MODULES>',
     '',
     '^@2digits/',
@@ -39,8 +41,8 @@ export default defineConfig({
     require.resolve('prettier-plugin-toml'),
     require.resolve('@ianvs/prettier-plugin-sort-imports'),
     require.resolve('prettier-plugin-jsdoc'),
-    require.resolve('prettier-plugin-tailwindcss'),
     require.resolve('prettier-plugin-sql'),
     require.resolve('prettier-plugin-embed'),
+    require.resolve('prettier-plugin-tailwindcss'),
   ],
 });
