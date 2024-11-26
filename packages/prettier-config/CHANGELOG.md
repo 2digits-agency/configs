@@ -1,5 +1,15 @@
 # @2digits/prettier-config
 
+## 2.6.0
+
+### Minor Changes
+
+- 4fd4e1d: Added @prettier/plugin-xml
+
+### Patch Changes
+
+- 4be1710: Updated prettier
+
 ## 2.5.4
 
 ### Patch Changes

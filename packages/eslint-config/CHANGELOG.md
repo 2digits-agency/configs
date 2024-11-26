@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 2.10.0
+
+### Minor Changes
+
+- 022ac60: Updated @graphql-eslint/eslint-plugin
+
+### Patch Changes
+
+- 28e72d7: Updated eslint-plugin-jsdoc
+- e375e6f: Updated @tanstack/eslint-plugin-query
+
 ## 2.9.16
 
 ### Patch Changes
