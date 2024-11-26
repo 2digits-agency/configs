@@ -423,11 +423,6 @@ Using the same name for all input parameters will make your schemas easier to co
    */
   'gql/no-anonymous-operations'?: Linter.RuleEntry<[]>
   /**
-   * Disallow case-insensitive enum values duplicates.
-   * @see https://the-guild.dev/graphql/eslint/rules/no-case-insensitive-enum-values-duplicates
-   */
-  'gql/no-case-insensitive-enum-values-duplicates'?: Linter.RuleEntry<[]>
-  /**
    * Enforce that deprecated fields or enum values are not in use by operations.
    * @see https://the-guild.dev/graphql/eslint/rules/no-deprecated
    */
@@ -484,7 +479,7 @@ Allows to use hashtag for comments, as long as it's not attached to an AST defin
    * Requires all fields to be used at some level by siblings operations.
    * @see https://the-guild.dev/graphql/eslint/rules/no-unused-fields
    */
-  'gql/no-unused-fields'?: Linter.RuleEntry<[]>
+  'gql/no-unused-fields'?: Linter.RuleEntry<GqlNoUnusedFields>
   /**
    * A GraphQL document is only valid if all fragment definitions are spread within operations, or spread within other fragments spread within operations.
 > This rule is a wrapper around a `graphql-js` validation function.
@@ -598,11 +593,6 @@ Backward pagination arguments
    */
   'gql/require-field-of-type-query-in-mutation-result'?: Linter.RuleEntry<[]>
   /**
-   * Enforce selecting specific fields when they are available on the GraphQL type.
-   * @see https://the-guild.dev/graphql/eslint/rules/require-id-when-available
-   */
-  'gql/require-id-when-available'?: Linter.RuleEntry<GqlRequireIdWhenAvailable>
-  /**
    * Require fragments to be imported via an import expression.
    * @see https://the-guild.dev/graphql/eslint/rules/require-import-fragment
    */
@@ -617,6 +607,11 @@ Backward pagination arguments
    * @see https://the-guild.dev/graphql/eslint/rules/require-nullable-result-in-root
    */
   'gql/require-nullable-result-in-root'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce selecting specific fields when they are available on the GraphQL type.
+   * @see https://the-guild.dev/graphql/eslint/rules/require-selections
+   */
+  'gql/require-selections'?: Linter.RuleEntry<GqlRequireSelections>
   /**
    * Enforce types with `@oneOf` directive have `error` and `ok` fields.
    * @see https://the-guild.dev/graphql/eslint/rules/require-type-pattern-with-oneof
@@ -658,7 +653,7 @@ Backward pagination arguments
   'gql/unique-directive-names-per-location'?: Linter.RuleEntry<[]>
   /**
    * A GraphQL enum type is only valid if all its values are uniquely named.
-> This rule is a wrapper around a `graphql-js` validation function.
+> This rule disallows case-insensitive enum values duplicates too.
    * @see https://the-guild.dev/graphql/eslint/rules/unique-enum-value-names
    */
   'gql/unique-enum-value-names'?: Linter.RuleEntry<[]>
@@ -5853,11 +5848,11 @@ type GqlAlphabetize = [{
   
   fields?: [("ObjectTypeDefinition" | "InterfaceTypeDefinition" | "InputObjectTypeDefinition"), ...(("ObjectTypeDefinition" | "InterfaceTypeDefinition" | "InputObjectTypeDefinition"))[]]
   
-  values?: ["EnumTypeDefinition", ...("EnumTypeDefinition")[]]
+  values?: boolean
   
   selections?: [("OperationDefinition" | "FragmentDefinition"), ...(("OperationDefinition" | "FragmentDefinition"))[]]
   
-  variables?: ["OperationDefinition", ...("OperationDefinition")[]]
+  variables?: boolean
   
   arguments?: [("FieldDefinition" | "Field" | "DirectiveDefinition" | "Directive"), ...(("FieldDefinition" | "Field" | "DirectiveDefinition" | "Directive"))[]]
   
@@ -5961,6 +5956,11 @@ type GqlNoRootType = [{
   
   disallow: [("mutation" | "subscription"), ...(("mutation" | "subscription"))[]]
 }]
+// ----- gql/no-unused-fields -----
+type GqlNoUnusedFields = []|[{
+  
+  ignoredFieldSelectors?: [string, ...(string)[]]
+}]
 // ----- gql/relay-arguments -----
 type GqlRelayArguments = []|[{
   
@@ -6008,12 +6008,12 @@ type GqlRequireDescription = [{
   
   UnionTypeDefinition?: boolean
 }]
-// ----- gql/require-id-when-available -----
-type GqlRequireIdWhenAvailable = []|[{
-  fieldName?: (_GqlRequireIdWhenAvailableAsString | _GqlRequireIdWhenAvailable_AsArray)
+// ----- gql/require-selections -----
+type GqlRequireSelections = []|[{
+  fieldName?: (_GqlRequireSelectionsAsString | _GqlRequireSelections_AsArray)
 }]
-type _GqlRequireIdWhenAvailableAsString = string
-type _GqlRequireIdWhenAvailable_AsArray = [string, ...(string)[]]
+type _GqlRequireSelectionsAsString = string
+type _GqlRequireSelections_AsArray = [string, ...(string)[]]
 // ----- gql/selection-set-depth -----
 type GqlSelectionSetDepth = [{
   maxDepth: number
@@ -6240,6 +6240,7 @@ type JsdocInformativeDocs = []|[{
 }]
 // ----- jsdoc/lines-before-block -----
 type JsdocLinesBeforeBlock = []|[{
+  checkBlockStarts?: boolean
   excludedTags?: string[]
   ignoreSameLine?: boolean
   lines?: number
