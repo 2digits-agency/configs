@@ -1,5 +1,12 @@
 # @2digits/prettier-config
 
+## 2.5.4
+
+### Patch Changes
+
+- ac069b8: Updated prettier
+- 697d059: Added expo import grouping
+
 ## 2.5.3
 
 ### Patch Changes

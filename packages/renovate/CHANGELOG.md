@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 0.1.3
+
+### Patch Changes
+
+- 1f01bba: Group @2digits updates
+
 ## 0.1.2
 
 ### Patch Changes
