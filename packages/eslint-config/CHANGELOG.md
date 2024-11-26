@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.9.16
+
+### Patch Changes
+
+- ce18419: Updated turborepo
+
 ## 2.9.15
 
 ### Patch Changes
