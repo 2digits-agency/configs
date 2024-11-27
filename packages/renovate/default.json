@@ -7,7 +7,8 @@
   "rangeStrategy": "pin",
   "reviewers": ["V1RE"],
   "timezone": "Europe/Amsterdam",
-  "schedule": ["after 18:00 every weekday", "before 04:00 every weekday", "every weekend"],
+  "schedule": ["after 18:00 before 07:00 every weekday", "every weekend"],
+  "updateNotScheduled": false,
   "packageRules": [
     {
       "matchPackageNames": ["nativewind", "react-native-css-interop"],
