@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 0.1.4
+
+### Patch Changes
+
+- 47b5a07: Updated renovate schedule and disabled auto updating branches outside of schedule
+
 ## 0.1.3
 
 ### Patch Changes

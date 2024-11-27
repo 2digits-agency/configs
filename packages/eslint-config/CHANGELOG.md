@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.10.1
+
+### Patch Changes
+
+- 03dca75: Updated turborepo
+
 ## 2.10.0
 
 ### Minor Changes
