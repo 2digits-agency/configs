@@ -1,5 +1,15 @@
 # @2digits/eslint-config
 
+## 2.10.3
+
+### Patch Changes
+
+- 7f4be09: Updated @eslint-react/eslint-plugin
+- ad65bd2: Updated @graphql-eslint/eslint-plugin
+- 509e167: Updated eslint
+- Updated dependencies [509e167]
+  - @2digits/eslint-plugin@2.3.15
+
 ## 2.10.2
 
 ### Patch Changes
