@@ -5941,6 +5941,18 @@ interface _GqlNamingConvention_AsObject {
   prefix?: string
   suffix?: string
   
+  forbiddenPatterns?: [{
+    [k: string]: unknown | undefined
+  }, ...({
+    [k: string]: unknown | undefined
+  })[]]
+  
+  requiredPatterns?: [{
+    [k: string]: unknown | undefined
+  }, ...({
+    [k: string]: unknown | undefined
+  })[]]
+  
   forbiddenPrefixes?: [string, ...(string)[]]
   
   forbiddenSuffixes?: [string, ...(string)[]]
@@ -5982,9 +5994,11 @@ type GqlRequireDeprecationDate = []|[{
 // ----- gql/require-description -----
 type GqlRequireDescription = [{
   
-  types?: boolean
+  types?: true
   
-  rootField?: boolean
+  rootField?: true
+  
+  ignoredSelectors?: [string, ...(string)[]]
   
   DirectiveDefinition?: boolean
   
@@ -6011,6 +6025,8 @@ type GqlRequireDescription = [{
 // ----- gql/require-selections -----
 type GqlRequireSelections = []|[{
   fieldName?: (_GqlRequireSelectionsAsString | _GqlRequireSelections_AsArray)
+  
+  requireAllFields?: boolean
 }]
 type _GqlRequireSelectionsAsString = string
 type _GqlRequireSelections_AsArray = [string, ...(string)[]]
