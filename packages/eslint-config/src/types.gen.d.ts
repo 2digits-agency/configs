@@ -9691,6 +9691,10 @@ type TsPreferOptionalChain = []|[{
 type TsPreferPromiseRejectErrors = []|[{
   
   allowEmptyReject?: boolean
+  
+  allowThrowingAny?: boolean
+  
+  allowThrowingUnknown?: boolean
 }]
 // ----- ts/prefer-readonly -----
 type TsPreferReadonly = []|[{
