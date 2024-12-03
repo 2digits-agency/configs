@@ -3830,26 +3830,6 @@ Backward pagination arguments
    */
   'semi-style'?: Linter.RuleEntry<SemiStyle>
   /**
-   * Property getters and setters should come in pairs
-   * @see https://sonarsource.github.io/rspec/#/rspec/S2376/javascript
-   */
-  'sonar/accessor-pairs'?: Linter.RuleEntry<SonarAccessorPairs>
-  /**
-   * Image, area, button with image and object elements should have an alternative text
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1077/javascript
-   */
-  'sonar/alt-text'?: Linter.RuleEntry<SonarAltText>
-  /**
-   * Anchors should contain accessible content
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6827/javascript
-   */
-  'sonar/anchor-has-content'?: Linter.RuleEntry<SonarAnchorHasContent>
-  /**
-   * Anchor tags should not be used as buttons
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6844/javascript
-   */
-  'sonar/anchor-is-valid'?: Linter.RuleEntry<SonarAnchorIsValid>
-  /**
    * Alternatives in regular expressions should be grouped when used with anchors
    * @see https://sonarsource.github.io/rspec/#/rspec/S5850/javascript
    */
@@ -3991,16 +3971,15 @@ Backward pagination arguments
    */
   'sonar/bitwise-operators'?: Linter.RuleEntry<[]>
   /**
+   * Variables should be used in the blocks where they are declared
+   * @see https://sonarsource.github.io/rspec/#/rspec/S2392/javascript
+   */
+  'sonar/block-scoped-var'?: Linter.RuleEntry<SonarBlockScopedVar>
+  /**
    * Optional boolean parameters should have default value
    * @see https://sonarsource.github.io/rspec/#/rspec/S4798/javascript
    */
   'sonar/bool-param-default'?: Linter.RuleEntry<[]>
-  /**
-   * An open curly brace should be located at the end of a line
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1105/javascript
-   * @deprecated
-   */
-  'sonar/brace-style'?: Linter.RuleEntry<SonarBraceStyle>
   /**
    * Function call arguments should not start on new lines
    * @see https://sonarsource.github.io/rspec/#/rspec/S1472/javascript
@@ -4108,11 +4087,6 @@ Backward pagination arguments
    * @see https://sonarsource.github.io/rspec/#/rspec/S3798/javascript
    */
   'sonar/declarations-in-global-scope'?: Linter.RuleEntry<[]>
-  /**
-   * Function parameters with default values should be last
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1788/javascript
-   */
-  'sonar/default-param-last'?: Linter.RuleEntry<[]>
   /**
    * Deprecated APIs should not be used
    * @see https://sonarsource.github.io/rspec/#/rspec/S1874/javascript
@@ -4267,16 +4241,6 @@ Backward pagination arguments
    */
   'sonar/hidden-files'?: Linter.RuleEntry<[]>
   /**
-   * The return value of "useState" should be destructured and named symmetrically
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6754/javascript
-   */
-  'sonar/hook-use-state'?: Linter.RuleEntry<SonarHookUseState>
-  /**
-   * HTML elements should have a valid language attribute
-   * @see https://sonarsource.github.io/rspec/#/rspec/S5254/javascript
-   */
-  'sonar/html-has-lang'?: Linter.RuleEntry<[]>
-  /**
    * "in" should not be used with primitive types
    * @see https://sonarsource.github.io/rspec/#/rspec/S3785/javascript
    */
@@ -4307,25 +4271,10 @@ Backward pagination arguments
    */
   'sonar/inverted-assertion-arguments'?: Linter.RuleEntry<SonarInvertedAssertionArguments>
   /**
-   * JSX list components should have a key property
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6477/javascript
+   * React components should not render non-boolean condition values
+   * @see https://sonarsource.github.io/rspec/#/rspec/S6439/javascript
    */
-  'sonar/jsx-key'?: Linter.RuleEntry<[]>
-  /**
-   * React Context Provider values should have stable identities
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6481/javascript
-   */
-  'sonar/jsx-no-constructed-context-values'?: Linter.RuleEntry<[]>
-  /**
-   * Redundant React fragments should be removed
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6749/javascript
-   */
-  'sonar/jsx-no-useless-fragment'?: Linter.RuleEntry<SonarJsxNoUselessFragment>
-  /**
-   * Label elements should have a text label and an associated control
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6853/javascript
-   */
-  'sonar/label-has-associated-control'?: Linter.RuleEntry<SonarLabelHasAssociatedControl>
+  'sonar/jsx-no-leaked-render'?: Linter.RuleEntry<[]>
   /**
    * Only "while", "do", "for" and "switch" statements should be labelled
    * @see https://sonarsource.github.io/rspec/#/rspec/S1439/javascript
@@ -4337,6 +4286,16 @@ Backward pagination arguments
    */
   'sonar/link-with-target-blank'?: Linter.RuleEntry<[]>
   /**
+   * Files should not have too many lines of code
+   * @see https://sonarsource.github.io/rspec/#/rspec/S104/javascript
+   */
+  'sonar/max-lines'?: Linter.RuleEntry<SonarMaxLines>
+  /**
+   * Functions should not have too many lines of code
+   * @see https://sonarsource.github.io/rspec/#/rspec/S138/javascript
+   */
+  'sonar/max-lines-per-function'?: Linter.RuleEntry<SonarMaxLinesPerFunction>
+  /**
    * "switch" statements should not have too many "case" clauses
    * @see https://sonarsource.github.io/rspec/#/rspec/S1479/javascript
    */
@@ -4347,40 +4306,20 @@ Backward pagination arguments
    */
   'sonar/max-union-size'?: Linter.RuleEntry<SonarMaxUnionSize>
   /**
-   * Media elements should have captions
-   * @see https://sonarsource.github.io/rspec/#/rspec/S4084/javascript
-   */
-  'sonar/media-has-caption'?: Linter.RuleEntry<SonarMediaHasCaption>
-  /**
    * "for" loop increment clauses should modify the loops' counters
    * @see https://sonarsource.github.io/rspec/#/rspec/S1994/javascript
    */
   'sonar/misplaced-loop-counter'?: Linter.RuleEntry<[]>
-  /**
-   * Mouse events should have corresponding keyboard events
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1082/javascript
-   */
-  'sonar/mouse-events-a11y'?: Linter.RuleEntry<[]>
   /**
    * Control flow statements "if", "for", "while", "switch" and "try" should not be nested too deeply
    * @see https://sonarsource.github.io/rspec/#/rspec/S134/javascript
    */
   'sonar/nested-control-flow'?: Linter.RuleEntry<SonarNestedControlFlow>
   /**
-   * Constructor names should start with an upper case letter
-   * @see https://sonarsource.github.io/rspec/#/rspec/S2430/javascript
-   */
-  'sonar/new-cap'?: Linter.RuleEntry<SonarNewCap>
-  /**
    * "new" should only be used with functions and classes
    * @see https://sonarsource.github.io/rspec/#/rspec/S2999/javascript
    */
   'sonar/new-operator-misuse'?: Linter.RuleEntry<SonarNewOperatorMisuse>
-  /**
-   * Getters and setters should access the expected fields
-   * @see https://sonarsource.github.io/rspec/#/rspec/S4275/javascript
-   */
-  'sonar/no-accessor-field-mismatch'?: Linter.RuleEntry<SonarNoAccessorFieldMismatch>
   /**
    * All branches in a conditional structure should not have exactly the same implementation
    * @see https://sonarsource.github.io/rspec/#/rspec/S3923/javascript
@@ -4402,11 +4341,6 @@ Backward pagination arguments
    */
   'sonar/no-array-delete'?: Linter.RuleEntry<[]>
   /**
-   * JSX list components should not use array indexes as key
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6479/javascript
-   */
-  'sonar/no-array-index-key'?: Linter.RuleEntry<[]>
-  /**
    * Array indexes should be numeric
    * @see https://sonarsource.github.io/rspec/#/rspec/S3579/javascript
    */
@@ -4416,11 +4350,6 @@ Backward pagination arguments
    * @see https://sonarsource.github.io/rspec/#/rspec/S7059/javascript
    */
   'sonar/no-async-constructor'?: Linter.RuleEntry<[]>
-  /**
-   * Objects and classes converted or coerced to strings should define a "toString()" method
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6551/javascript
-   */
-  'sonar/no-base-to-string'?: Linter.RuleEntry<SonarNoBaseToString>
   /**
    * Built-in objects should not be overridden
    * @see https://sonarsource.github.io/rspec/#/rspec/S2424/javascript
@@ -4457,6 +4386,11 @@ Backward pagination arguments
    */
   'sonar/no-commented-code'?: Linter.RuleEntry<[]>
   /**
+   * Regular expressions should not contain control characters
+   * @see https://sonarsource.github.io/rspec/#/rspec/S6324/javascript
+   */
+  'sonar/no-control-regex'?: Linter.RuleEntry<[]>
+  /**
    * Unused assignments should be removed
    * @see https://sonarsource.github.io/rspec/#/rspec/S1854/javascript
    */
@@ -4466,11 +4400,6 @@ Backward pagination arguments
    * @see https://sonarsource.github.io/rspec/#/rspec/S3001/javascript
    */
   'sonar/no-delete-var'?: Linter.RuleEntry<[]>
-  /**
-   * Deprecated React APIs should not be used
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6957/javascript
-   */
-  'sonar/no-deprecated-react'?: Linter.RuleEntry<SonarNoDeprecatedReact>
   /**
    * Union and intersection types should not include duplicated constituents
    * @see https://sonarsource.github.io/rspec/#/rspec/S4621/javascript
@@ -4502,25 +4431,20 @@ Backward pagination arguments
    */
   'sonar/no-empty-alternatives'?: Linter.RuleEntry<[]>
   /**
+   * Empty character classes should not be used
+   * @see https://sonarsource.github.io/rspec/#/rspec/S2639/javascript
+   */
+  'sonar/no-empty-character-class'?: Linter.RuleEntry<[]>
+  /**
    * Empty collections should not be accessed or iterated
    * @see https://sonarsource.github.io/rspec/#/rspec/S4158/javascript
    */
   'sonar/no-empty-collection'?: Linter.RuleEntry<[]>
   /**
-   * Functions should not be empty
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1186/javascript
-   */
-  'sonar/no-empty-function'?: Linter.RuleEntry<SonarNoEmptyFunction>
-  /**
    * Regular expressions should not contain empty groups
    * @see https://sonarsource.github.io/rspec/#/rspec/S6331/javascript
    */
   'sonar/no-empty-group'?: Linter.RuleEntry<[]>
-  /**
-   * Interfaces should not be empty
-   * @see https://sonarsource.github.io/rspec/#/rspec/S4023/javascript
-   */
-  'sonar/no-empty-interface'?: Linter.RuleEntry<SonarNoEmptyInterface>
   /**
    * Test files should contain at least one test case
    * @see https://sonarsource.github.io/rspec/#/rspec/S2187/javascript
@@ -4537,26 +4461,15 @@ Backward pagination arguments
    */
   'sonar/no-exclusive-tests'?: Linter.RuleEntry<[]>
   /**
-   * Prototypes of builtin objects should not be modified
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6643/javascript
-   */
-  'sonar/no-extend-native'?: Linter.RuleEntry<SonarNoExtendNative>
-  /**
    * Function calls should not pass extra arguments
    * @see https://sonarsource.github.io/rspec/#/rspec/S930/javascript
    */
   'sonar/no-extra-arguments'?: Linter.RuleEntry<SonarNoExtraArguments>
   /**
-   * Extra semicolons should be removed
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1116/javascript
-   * @deprecated
+   * Switch cases should end with an unconditional "break" statement
+   * @see https://sonarsource.github.io/rspec/#/rspec/S128/javascript
    */
-  'sonar/no-extra-semi'?: Linter.RuleEntry<[]>
-  /**
-   * React's "findDOMNode" should not be used
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6788/javascript
-   */
-  'sonar/no-find-dom-node'?: Linter.RuleEntry<[]>
+  'sonar/no-fallthrough'?: Linter.RuleEntry<[]>
   /**
    * "for in" should not be used with iterables
    * @see https://sonarsource.github.io/rspec/#/rspec/S4139/javascript
@@ -4583,15 +4496,20 @@ Backward pagination arguments
    */
   'sonar/no-gratuitous-expressions'?: Linter.RuleEntry<SonarNoGratuitousExpressions>
   /**
-   * Hard-coded credentials are security-sensitive
-   * @see https://sonarsource.github.io/rspec/#/rspec/S2068/javascript
-   */
-  'sonar/no-hardcoded-credentials'?: Linter.RuleEntry<SonarNoHardcodedCredentials>
-  /**
    * Using hardcoded IP addresses is security-sensitive
    * @see https://sonarsource.github.io/rspec/#/rspec/S1313/javascript
    */
   'sonar/no-hardcoded-ip'?: Linter.RuleEntry<[]>
+  /**
+   * Hard-coded passwords are security-sensitive
+   * @see https://sonarsource.github.io/rspec/#/rspec/S2068/javascript
+   */
+  'sonar/no-hardcoded-passwords'?: Linter.RuleEntry<SonarNoHardcodedPasswords>
+  /**
+   * Hard-coded secrets are security-sensitive
+   * @see https://sonarsource.github.io/rspec/#/rspec/S6418/javascript
+   */
+  'sonar/no-hardcoded-secrets'?: Linter.RuleEntry<SonarNoHardcodedSecrets>
   /**
    * React's useState hook should not be used directly in the render function or body of a component
    * @see https://sonarsource.github.io/rspec/#/rspec/S6442/javascript
@@ -4653,11 +4571,6 @@ Backward pagination arguments
    */
   'sonar/no-incorrect-string-concat'?: Linter.RuleEntry<SonarNoIncorrectStringConcat>
   /**
-   * Loops should not be infinite
-   * @see https://sonarsource.github.io/rspec/#/rspec/S2189/javascript
-   */
-  'sonar/no-infinite-loop'?: Linter.RuleEntry<[]>
-  /**
    * Users should not use internal APIs
    * @see https://sonarsource.github.io/rspec/#/rspec/S6627/javascript
    */
@@ -4672,6 +4585,11 @@ Backward pagination arguments
    * @see https://sonarsource.github.io/rspec/#/rspec/S4123/javascript
    */
   'sonar/no-invalid-await'?: Linter.RuleEntry<[]>
+  /**
+   * Regular expressions should be syntactically valid
+   * @see https://sonarsource.github.io/rspec/#/rspec/S5856/javascript
+   */
+  'sonar/no-invalid-regexp'?: Linter.RuleEntry<[]>
   /**
    * Function returns should not be invariant
    * @see https://sonarsource.github.io/rspec/#/rspec/S3516/javascript
@@ -4698,11 +4616,6 @@ Backward pagination arguments
    */
   'sonar/no-literal-call'?: Linter.RuleEntry<[]>
   /**
-   * If statements should not be the only statement in else blocks
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6660/javascript
-   */
-  'sonar/no-lonely-if'?: Linter.RuleEntry<[]>
-  /**
    * Allowing browsers to sniff MIME types is security-sensitive
    * @see https://sonarsource.github.io/rspec/#/rspec/S5734/javascript
    */
@@ -4713,10 +4626,10 @@ Backward pagination arguments
    */
   'sonar/no-misleading-array-reverse'?: Linter.RuleEntry<[]>
   /**
-   * Promises should not be misused
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6544/javascript
+   * Unicode Grapheme Clusters should be avoided inside regex character classes
+   * @see https://sonarsource.github.io/rspec/#/rspec/S5868/javascript
    */
-  'sonar/no-misused-promises'?: Linter.RuleEntry<SonarNoMisusedPromises>
+  'sonar/no-misleading-character-class'?: Linter.RuleEntry<[]>
   /**
    * Allowing mixed-content is security-sensitive
    * @see https://sonarsource.github.io/rspec/#/rspec/S5730/javascript
@@ -4773,11 +4686,6 @@ Backward pagination arguments
    */
   'sonar/no-primitive-wrappers'?: Linter.RuleEntry<[]>
   /**
-   * Variables and functions should not be redeclared
-   * @see https://sonarsource.github.io/rspec/#/rspec/S2814/javascript
-   */
-  'sonar/no-redeclare'?: Linter.RuleEntry<SonarNoRedeclare>
-  /**
    * Assignments should not be redundant
    * @see https://sonarsource.github.io/rspec/#/rspec/S4165/javascript
    */
@@ -4804,11 +4712,6 @@ Backward pagination arguments
    */
   'sonar/no-redundant-parentheses'?: Linter.RuleEntry<SonarNoRedundantParentheses>
   /**
-   * Type constituents of unions and intersections should not be redundant
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6571/javascript
-   */
-  'sonar/no-redundant-type-constituents'?: Linter.RuleEntry<[]>
-  /**
    * Variables should be defined before being used
    * @see https://sonarsource.github.io/rspec/#/rspec/S3827/javascript
    */
@@ -4818,6 +4721,11 @@ Backward pagination arguments
    * @see https://sonarsource.github.io/rspec/#/rspec/S5736/javascript
    */
   'sonar/no-referrer-policy'?: Linter.RuleEntry<SonarNoReferrerPolicy>
+  /**
+   * Regular expressions should not contain multiple spaces
+   * @see https://sonarsource.github.io/rspec/#/rspec/S6326/javascript
+   */
+  'sonar/no-regex-spaces'?: Linter.RuleEntry<[]>
   /**
    * "import" should be used to include external code
    * @see https://sonarsource.github.io/rspec/#/rspec/S3533/javascript
@@ -4844,25 +4752,20 @@ Backward pagination arguments
    */
   'sonar/no-selector-parameter'?: Linter.RuleEntry<SonarNoSelectorParameter>
   /**
-   * "Number.isNaN()" should be used to check for "NaN" value
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6679/javascript
-   */
-  'sonar/no-self-compare'?: Linter.RuleEntry<[]>
-  /**
-   * Module should not import itself
-   * @see https://sonarsource.github.io/rspec/#/rspec/S7060/javascript
-   */
-  'sonar/no-self-import'?: Linter.RuleEntry<[]>
-  /**
    * Tests should not be skipped without providing a reason
    * @see https://sonarsource.github.io/rspec/#/rspec/S1607/javascript
    */
-  'sonar/no-skipped-test'?: Linter.RuleEntry<[]>
+  'sonar/no-skipped-tests'?: Linter.RuleEntry<[]>
   /**
    * "if" statements should be preferred over "switch" when simpler
    * @see https://sonarsource.github.io/rspec/#/rspec/S1301/javascript
    */
   'sonar/no-small-switch'?: Linter.RuleEntry<[]>
+  /**
+   * Track uses of "NOSONAR" comments
+   * @see https://sonarsource.github.io/rspec/#/rspec/S1291/javascript
+   */
+  'sonar/no-sonar-comments'?: Linter.RuleEntry<[]>
   /**
    * Tabulation characters should not be used
    * @see https://sonarsource.github.io/rspec/#/rspec/S105/javascript
@@ -4874,16 +4777,6 @@ Backward pagination arguments
    * @see https://sonarsource.github.io/rspec/#/rspec/S5257/javascript
    */
   'sonar/no-table-as-layout'?: Linter.RuleEntry<[]>
-  /**
-   * "this" should not be assigned to variables
-   * @see https://sonarsource.github.io/rspec/#/rspec/S4327/javascript
-   */
-  'sonar/no-this-alias'?: Linter.RuleEntry<SonarNoThisAlias>
-  /**
-   * Literals should not be thrown
-   * @see https://sonarsource.github.io/rspec/#/rspec/S3696/javascript
-   */
-  'sonar/no-throw-literal'?: Linter.RuleEntry<[]>
   /**
    * Promise rejections should not be caught by "try" blocks
    * @see https://sonarsource.github.io/rspec/#/rspec/S4822/javascript
@@ -4910,30 +4803,10 @@ Backward pagination arguments
    */
   'sonar/no-uniq-key'?: Linter.RuleEntry<[]>
   /**
-   * JSX elements should not use unknown properties and attributes
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6747/javascript
-   */
-  'sonar/no-unknown-property'?: Linter.RuleEntry<SonarNoUnknownProperty>
-  /**
-   * All code should be reachable
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1763/javascript
-   */
-  'sonar/no-unreachable'?: Linter.RuleEntry<[]>
-  /**
-   * React legacy lifecycle methods should not be used
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6791/javascript
-   */
-  'sonar/no-unsafe'?: Linter.RuleEntry<SonarNoUnsafe>
-  /**
    * Expanding archive files without controlling resource consumption is security-sensitive
    * @see https://sonarsource.github.io/rspec/#/rspec/S5042/javascript
    */
   'sonar/no-unsafe-unzip'?: Linter.RuleEntry<[]>
-  /**
-   * React components should not be nested
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6478/javascript
-   */
-  'sonar/no-unstable-nested-components'?: Linter.RuleEntry<SonarNoUnstableNestedComponents>
   /**
    * Errors should not be created without being thrown
    * @see https://sonarsource.github.io/rspec/#/rspec/S3984/javascript
@@ -4945,40 +4818,25 @@ Backward pagination arguments
    */
   'sonar/no-unused-collection'?: Linter.RuleEntry<[]>
   /**
-   * Non-empty statements should change control flow or have at least one side-effect
-   * @see https://sonarsource.github.io/rspec/#/rspec/S905/javascript
-   */
-  'sonar/no-unused-expressions'?: Linter.RuleEntry<SonarNoUnusedExpressions>
-  /**
    * Unused function parameters should be removed
    * @see https://sonarsource.github.io/rspec/#/rspec/S1172/javascript
    */
   'sonar/no-unused-function-argument'?: Linter.RuleEntry<[]>
   /**
-   * Unused private class members should be removed
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1068/javascript
+   * Unused local variables and functions should be removed
+   * @see https://sonarsource.github.io/rspec/#/rspec/S1481/javascript
    */
-  'sonar/no-unused-private-class-members'?: Linter.RuleEntry<[]>
+  'sonar/no-unused-vars'?: Linter.RuleEntry<[]>
   /**
    * The return value of void functions should not be used
    * @see https://sonarsource.github.io/rspec/#/rspec/S3699/javascript
    */
   'sonar/no-use-of-empty-return-value'?: Linter.RuleEntry<[]>
   /**
-   * Calls to ".call()" and ".apply()" methods should not be redundant
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6676/javascript
-   */
-  'sonar/no-useless-call'?: Linter.RuleEntry<[]>
-  /**
    * "catch" clauses should do more than rethrow
    * @see https://sonarsource.github.io/rspec/#/rspec/S2737/javascript
    */
   'sonar/no-useless-catch'?: Linter.RuleEntry<[]>
-  /**
-   * Unnecessary constructors should be removed
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6647/javascript
-   */
-  'sonar/no-useless-constructor'?: Linter.RuleEntry<[]>
   /**
    * Values should not be uselessly incremented
    * @see https://sonarsource.github.io/rspec/#/rspec/S2123/javascript
@@ -4995,11 +4853,6 @@ Backward pagination arguments
    */
   'sonar/no-useless-react-setstate'?: Linter.RuleEntry<[]>
   /**
-   * Variables should be declared with "let" or "const"
-   * @see https://sonarsource.github.io/rspec/#/rspec/S3504/javascript
-   */
-  'sonar/no-var'?: Linter.RuleEntry<[]>
-  /**
    * Variables declared with "var" should be declared before they are used
    * @see https://sonarsource.github.io/rspec/#/rspec/S1526/javascript
    */
@@ -5007,6 +4860,7 @@ Backward pagination arguments
   /**
    * Disabling Vue.js built-in escaping is security-sensitive
    * @see https://sonarsource.github.io/rspec/#/rspec/S6299/javascript
+   * @deprecated
    */
   'sonar/no-vue-bypass-sanitization'?: Linter.RuleEntry<[]>
   /**
@@ -5045,11 +4899,6 @@ Backward pagination arguments
    */
   'sonar/object-alt-content'?: Linter.RuleEntry<[]>
   /**
-   * Object literal shorthand syntax should be used
-   * @see https://sonarsource.github.io/rspec/#/rspec/S3498/javascript
-   */
-  'sonar/object-shorthand'?: Linter.RuleEntry<SonarObjectShorthand>
-  /**
    * Arithmetic operations should not result in "NaN"
    * @see https://sonarsource.github.io/rspec/#/rspec/S3757/javascript
    */
@@ -5070,70 +4919,35 @@ Backward pagination arguments
    */
   'sonar/prefer-default-last'?: Linter.RuleEntry<[]>
   /**
-   * Enum member values should be either all initialized or none
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6572/javascript
-   */
-  'sonar/prefer-enum-initializers'?: Linter.RuleEntry<[]>
-  /**
-   * "for of" should be used with Iterables
-   * @see https://sonarsource.github.io/rspec/#/rspec/S4138/javascript
-   */
-  'sonar/prefer-for-of'?: Linter.RuleEntry<[]>
-  /**
-   * Function types should be preferred
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6598/javascript
-   */
-  'sonar/prefer-function-type'?: Linter.RuleEntry<[]>
-  /**
    * Local variables should not be declared and then immediately returned or thrown
    * @see https://sonarsource.github.io/rspec/#/rspec/S1488/javascript
    */
   'sonar/prefer-immediate-return'?: Linter.RuleEntry<[]>
-  /**
-   * "module" should not be used
-   * @see https://sonarsource.github.io/rspec/#/rspec/S4156/javascript
-   */
-  'sonar/prefer-namespace-keyword'?: Linter.RuleEntry<[]>
-  /**
-   * Nullish coalescing should be preferred
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6606/javascript
-   */
-  'sonar/prefer-nullish-coalescing'?: Linter.RuleEntry<SonarPreferNullishCoalescing>
   /**
    * Object literal syntax should be used
    * @see https://sonarsource.github.io/rspec/#/rspec/S2428/javascript
    */
   'sonar/prefer-object-literal'?: Linter.RuleEntry<[]>
   /**
-   * Object spread syntax should be used instead of "Object.assign"
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6661/javascript
-   */
-  'sonar/prefer-object-spread'?: Linter.RuleEntry<[]>
-  /**
    * Shorthand promises should be used
    * @see https://sonarsource.github.io/rspec/#/rspec/S4634/javascript
    */
   'sonar/prefer-promise-shorthand'?: Linter.RuleEntry<[]>
   /**
+   * React props should be read-only
+   * @see https://sonarsource.github.io/rspec/#/rspec/S6759/javascript
+   */
+  'sonar/prefer-read-only-props'?: Linter.RuleEntry<[]>
+  /**
+   * "RegExp.exec()" should be preferred over "String.match()"
+   * @see https://sonarsource.github.io/rspec/#/rspec/S6594/javascript
+   */
+  'sonar/prefer-regexp-exec'?: Linter.RuleEntry<[]>
+  /**
    * Return of boolean expressions should not be wrapped into an "if-then-else" statement
    * @see https://sonarsource.github.io/rspec/#/rspec/S1126/javascript
    */
   'sonar/prefer-single-boolean-return'?: Linter.RuleEntry<[]>
-  /**
-   * Spread syntax should be used instead of "apply()"
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6666/javascript
-   */
-  'sonar/prefer-spread'?: Linter.RuleEntry<[]>
-  /**
-   * Ends of strings should be checked with "startsWith()" and "endsWith()"
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6557/javascript
-   */
-  'sonar/prefer-string-starts-ends-with'?: Linter.RuleEntry<SonarPreferStringStartsEndsWith>
-  /**
-   * Template strings should be used instead of concatenation
-   * @see https://sonarsource.github.io/rspec/#/rspec/S3512/javascript
-   */
-  'sonar/prefer-template'?: Linter.RuleEntry<[]>
   /**
    * Type predicates should be used
    * @see https://sonarsource.github.io/rspec/#/rspec/S4322/javascript
@@ -5192,17 +5006,6 @@ Backward pagination arguments
    */
   'sonar/regular-expr'?: Linter.RuleEntry<[]>
   /**
-   * React Hooks should be properly called
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6440/javascript
-   */
-  'sonar/rules-of-hooks'?: Linter.RuleEntry<[]>
-  /**
-   * Statements should end with semicolons
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1438/javascript
-   * @deprecated
-   */
-  'sonar/semi'?: Linter.RuleEntry<SonarSemi>
-  /**
    * A new session should be created during user authentication
    * @see https://sonarsource.github.io/rspec/#/rspec/S5876/javascript
    */
@@ -5233,96 +5036,6 @@ Backward pagination arguments
    * @deprecated
    */
   'sonar/sockets'?: Linter.RuleEntry<[]>
-  /**
-   * Variables should be used in the blocks where they are declared
-   * @see https://sonarsource.github.io/rspec/#/rspec/S2392/javascript
-   */
-  'sonar/sonar-block-scoped-var'?: Linter.RuleEntry<SonarSonarBlockScopedVar>
-  /**
-   * React components should not render non-boolean condition values
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6439/javascript
-   */
-  'sonar/sonar-jsx-no-leaked-render'?: Linter.RuleEntry<[]>
-  /**
-   * Files should not have too many lines of code
-   * @see https://sonarsource.github.io/rspec/#/rspec/S104/javascript
-   */
-  'sonar/sonar-max-lines'?: Linter.RuleEntry<SonarSonarMaxLines>
-  /**
-   * Functions should not have too many lines of code
-   * @see https://sonarsource.github.io/rspec/#/rspec/S138/javascript
-   */
-  'sonar/sonar-max-lines-per-function'?: Linter.RuleEntry<SonarSonarMaxLinesPerFunction>
-  /**
-   * Functions should not have too many parameters
-   * @see https://sonarsource.github.io/rspec/#/rspec/S107/javascript
-   */
-  'sonar/sonar-max-params'?: Linter.RuleEntry<SonarSonarMaxParams>
-  /**
-   * Regular expressions should not contain control characters
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6324/javascript
-   */
-  'sonar/sonar-no-control-regex'?: Linter.RuleEntry<[]>
-  /**
-   * Member names should not be duplicated within a class or object literal
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1534/javascript
-   */
-  'sonar/sonar-no-dupe-keys'?: Linter.RuleEntry<[]>
-  /**
-   * Empty character classes should not be used
-   * @see https://sonarsource.github.io/rspec/#/rspec/S2639/javascript
-   */
-  'sonar/sonar-no-empty-character-class'?: Linter.RuleEntry<[]>
-  /**
-   * Switch cases should end with an unconditional "break" statement
-   * @see https://sonarsource.github.io/rspec/#/rspec/S128/javascript
-   */
-  'sonar/sonar-no-fallthrough'?: Linter.RuleEntry<[]>
-  /**
-   * Regular expressions should be syntactically valid
-   * @see https://sonarsource.github.io/rspec/#/rspec/S5856/javascript
-   */
-  'sonar/sonar-no-invalid-regexp'?: Linter.RuleEntry<[]>
-  /**
-   * Magic numbers should not be used
-   * @see https://sonarsource.github.io/rspec/#/rspec/S109/javascript
-   */
-  'sonar/sonar-no-magic-numbers'?: Linter.RuleEntry<SonarSonarNoMagicNumbers>
-  /**
-   * Unicode Grapheme Clusters should be avoided inside regex character classes
-   * @see https://sonarsource.github.io/rspec/#/rspec/S5868/javascript
-   */
-  'sonar/sonar-no-misleading-character-class'?: Linter.RuleEntry<[]>
-  /**
-   * Regular expressions should not contain multiple spaces
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6326/javascript
-   */
-  'sonar/sonar-no-regex-spaces'?: Linter.RuleEntry<[]>
-  /**
-   * Unused methods of React components should be removed
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6441/javascript
-   */
-  'sonar/sonar-no-unused-class-component-methods'?: Linter.RuleEntry<[]>
-  /**
-   * Unused local variables and functions should be removed
-   * @see https://sonarsource.github.io/rspec/#/rspec/S1481/javascript
-   */
-  'sonar/sonar-no-unused-vars'?: Linter.RuleEntry<[]>
-  /**
-   * Optional chaining should be preferred
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6582/javascript
-   */
-  'sonar/sonar-prefer-optional-chain'?: Linter.RuleEntry<SonarSonarPreferOptionalChain>
-  /**
-   * React props should be read-only
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6759/javascript
-   */
-  'sonar/sonar-prefer-read-only-props'?: Linter.RuleEntry<[]>
-  /**
-   * "RegExp.exec()" should be preferred over "String.match()"
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6594/javascript
-   */
-  'sonar/sonar-prefer-regexp-exec'?: Linter.RuleEntry<[]>
   /**
    * Formatting SQL queries is security-sensitive
    * @see https://sonarsource.github.io/rspec/#/rspec/S2077/javascript
@@ -5360,11 +5073,6 @@ Backward pagination arguments
    */
   'sonar/super-invocation'?: Linter.RuleEntry<[]>
   /**
-   * "switch" statements should have "default" clauses
-   * @see https://sonarsource.github.io/rspec/#/rspec/S131/javascript
-   */
-  'sonar/switch-without-default'?: Linter.RuleEntry<[]>
-  /**
    * Tables should have headers
    * @see https://sonarsource.github.io/rspec/#/rspec/S5256/javascript
    */
@@ -5395,11 +5103,6 @@ Backward pagination arguments
    */
   'sonar/unicode-aware-regex'?: Linter.RuleEntry<SonarUnicodeAwareRegex>
   /**
-   * Unnecessary character escapes should be removed
-   * @see https://sonarsource.github.io/rspec/#/rspec/S6535/javascript
-   */
-  'sonar/unnecessary-character-escapes'?: Linter.RuleEntry<[]>
-  /**
    * Unnecessary imports should be removed
    * @see https://sonarsource.github.io/rspec/#/rspec/S1128/javascript
    */
@@ -5429,11 +5132,6 @@ Backward pagination arguments
    * @see https://sonarsource.github.io/rspec/#/rspec/S2310/javascript
    */
   'sonar/updated-loop-counter'?: Linter.RuleEntry<SonarUpdatedLoopCounter>
-  /**
-   * "NaN" should not be used in comparisons
-   * @see https://sonarsource.github.io/rspec/#/rspec/S2688/javascript
-   */
-  'sonar/use-isnan'?: Linter.RuleEntry<SonarUseIsnan>
   /**
    * Type aliases should be used
    * @see https://sonarsource.github.io/rspec/#/rspec/S4323/javascript
@@ -10047,34 +9745,6 @@ type SemiSpacing = []|[{
 }]
 // ----- semi-style -----
 type SemiStyle = []|[("last" | "first")]
-// ----- sonar/accessor-pairs -----
-type SonarAccessorPairs = []|[{
-  getWithoutSet?: boolean
-  setWithoutGet?: boolean
-  enforceForClassMembers?: boolean
-}]
-// ----- sonar/alt-text -----
-type SonarAltText = []|[{
-  elements?: string[]
-  img?: string[]
-  object?: string[]
-  area?: string[]
-  "input[type=\"image\"]"?: string[]
-  [k: string]: unknown | undefined
-}]
-// ----- sonar/anchor-has-content -----
-type SonarAnchorHasContent = []|[{
-  components?: string[]
-  [k: string]: unknown | undefined
-}]
-// ----- sonar/anchor-is-valid -----
-type SonarAnchorIsValid = []|[{
-  components?: string[]
-  specialLink?: string[]
-  
-  aspects?: [("noHref" | "invalidHref" | "preferButton"), ...(("noHref" | "invalidHref" | "preferButton"))[]]
-  [k: string]: unknown | undefined
-}]
 // ----- sonar/arguments-order -----
 type SonarArgumentsOrder = []|[("sonar-runtime" | "metric")]
 // ----- sonar/arguments-usage -----
@@ -10100,10 +9770,8 @@ type SonarAwsS3BucketPublicAccess = []|[("sonar-runtime" | "metric")]
 type SonarAwsS3BucketServerEncryption = []|[("sonar-runtime" | "metric")]
 // ----- sonar/aws-s3-bucket-versioning -----
 type SonarAwsS3BucketVersioning = []|[("sonar-runtime" | "metric")]
-// ----- sonar/brace-style -----
-type SonarBraceStyle = []|[("1tbs" | "stroustrup" | "allman")]|[("1tbs" | "stroustrup" | "allman"), {
-  allowSingleLine?: boolean
-}]
+// ----- sonar/block-scoped-var -----
+type SonarBlockScopedVar = []|[("sonar-runtime" | "metric")]
 // ----- sonar/certificate-transparency -----
 type SonarCertificateTransparency = []|[("sonar-runtime" | "metric")]
 // ----- sonar/class-name -----
@@ -10186,10 +9854,6 @@ type SonarFunctionName = []|[{
 }]
 // ----- sonar/function-return-type -----
 type SonarFunctionReturnType = []|[("sonar-runtime" | "metric")]
-// ----- sonar/hook-use-state -----
-type SonarHookUseState = []|[{
-  allowDestructuredState?: boolean
-}]
 // ----- sonar/in-operator-type-error -----
 type SonarInOperatorTypeError = []|[("sonar-runtime" | "metric")]
 // ----- sonar/inconsistent-function-call -----
@@ -10200,21 +9864,13 @@ type SonarInsecureCookie = []|[("sonar-runtime" | "metric")]
 type SonarInsecureJwtToken = []|[("sonar-runtime" | "metric")]
 // ----- sonar/inverted-assertion-arguments -----
 type SonarInvertedAssertionArguments = []|[("sonar-runtime" | "metric")]
-// ----- sonar/jsx-no-useless-fragment -----
-type SonarJsxNoUselessFragment = []|[{
-  allowExpressions?: boolean
-  [k: string]: unknown | undefined
+// ----- sonar/max-lines -----
+type SonarMaxLines = []|[{
+  maximum?: number
 }]
-// ----- sonar/label-has-associated-control -----
-type SonarLabelHasAssociatedControl = []|[{
-  labelComponents?: string[]
-  labelAttributes?: string[]
-  controlComponents?: string[]
-  
-  assert?: ("htmlFor" | "nesting" | "both" | "either")
-  
-  depth?: number
-  [k: string]: unknown | undefined
+// ----- sonar/max-lines-per-function -----
+type SonarMaxLinesPerFunction = []|[{
+  maximum?: number
 }]
 // ----- sonar/max-switch-cases -----
 type SonarMaxSwitchCases = []|[number]
@@ -10222,53 +9878,22 @@ type SonarMaxSwitchCases = []|[number]
 type SonarMaxUnionSize = []|[{
   threshold?: number
 }]
-// ----- sonar/media-has-caption -----
-type SonarMediaHasCaption = []|[{
-  audio?: string[]
-  video?: string[]
-  track?: string[]
-  [k: string]: unknown | undefined
-}]
 // ----- sonar/nested-control-flow -----
 type SonarNestedControlFlow = []|[{
   maximumNestingLevel?: number
 }]|[{
   maximumNestingLevel?: number
 }, ("sonar-runtime" | "metric")]
-// ----- sonar/new-cap -----
-type SonarNewCap = []|[{
-  newIsCap?: boolean
-  capIsNew?: boolean
-  newIsCapExceptions?: string[]
-  newIsCapExceptionPattern?: string
-  capIsNewExceptions?: string[]
-  capIsNewExceptionPattern?: string
-  properties?: boolean
-}]
 // ----- sonar/new-operator-misuse -----
 type SonarNewOperatorMisuse = []|[{
   considerJSDoc?: boolean
 }]|[{
   considerJSDoc?: boolean
 }, unknown]
-// ----- sonar/no-accessor-field-mismatch -----
-type SonarNoAccessorFieldMismatch = []|[{
-  allowImplicit?: boolean
-}]|[{
-  allowImplicit?: boolean
-}, ("sonar-runtime" | "metric")]
-// ----- sonar/no-base-to-string -----
-type SonarNoBaseToString = []|[{
-  ignoredTypeNames?: string[]
-}]
 // ----- sonar/no-code-after-done -----
 type SonarNoCodeAfterDone = []|[("sonar-runtime" | "metric")]
 // ----- sonar/no-collapsible-if -----
 type SonarNoCollapsibleIf = []|[("sonar-runtime" | "metric")]
-// ----- sonar/no-deprecated-react -----
-type SonarNoDeprecatedReact = []|[{
-  "react-version"?: string
-}]
 // ----- sonar/no-duplicate-in-composite -----
 type SonarNoDuplicateInComposite = []|[("sonar-runtime" | "metric")]
 // ----- sonar/no-duplicate-string -----
@@ -10283,25 +9908,18 @@ type SonarNoDuplicateString = []|[{
 type SonarNoDuplicatedBranches = []|[("sonar-runtime" | "metric")]
 // ----- sonar/no-element-overwrite -----
 type SonarNoElementOverwrite = []|[("sonar-runtime" | "metric")]
-// ----- sonar/no-empty-function -----
-type SonarNoEmptyFunction = []|[{
-  allow?: ("functions" | "arrowFunctions" | "generatorFunctions" | "methods" | "generatorMethods" | "getters" | "setters" | "constructors" | "private-constructors" | "protected-constructors" | "asyncFunctions" | "asyncMethods" | "decoratedFunctions" | "overrideMethods")[]
-}]
-// ----- sonar/no-empty-interface -----
-type SonarNoEmptyInterface = []|[{
-  allowSingleExtends?: boolean
-}]
-// ----- sonar/no-extend-native -----
-type SonarNoExtendNative = []|[{
-  exceptions?: string[]
-}]
 // ----- sonar/no-extra-arguments -----
 type SonarNoExtraArguments = []|[("sonar-runtime" | "metric")]
 // ----- sonar/no-gratuitous-expressions -----
 type SonarNoGratuitousExpressions = []|[("sonar-runtime" | "metric")]
-// ----- sonar/no-hardcoded-credentials -----
-type SonarNoHardcodedCredentials = []|[{
-  credentialWords?: string[]
+// ----- sonar/no-hardcoded-passwords -----
+type SonarNoHardcodedPasswords = []|[{
+  passwordWords?: string[]
+}]
+// ----- sonar/no-hardcoded-secrets -----
+type SonarNoHardcodedSecrets = []|[{
+  secretWords?: string
+  randomnessSensibility?: number
 }]
 // ----- sonar/no-identical-conditions -----
 type SonarNoIdenticalConditions = []|[("sonar-runtime" | "metric")]
@@ -10327,10 +9945,6 @@ type SonarNoInvariantReturns = []|[("sonar-runtime" | "metric")]
 type SonarNoIpForward = []|[("sonar-runtime" | "metric")]
 // ----- sonar/no-mime-sniff -----
 type SonarNoMimeSniff = []|[("sonar-runtime" | "metric")]
-// ----- sonar/no-misused-promises -----
-type SonarNoMisusedPromises = []|[{
-  [k: string]: unknown | undefined
-}]
 // ----- sonar/no-mixed-content -----
 type SonarNoMixedContent = []|[("sonar-runtime" | "metric")]
 // ----- sonar/no-nested-functions -----
@@ -10339,11 +9953,6 @@ type SonarNoNestedFunctions = []|[{
 }]|[{
   threshold?: number
 }, ("sonar-runtime" | "metric")]
-// ----- sonar/no-redeclare -----
-type SonarNoRedeclare = []|[{
-  builtinGlobals?: boolean
-  ignoreDeclarationMerge?: boolean
-}]
 // ----- sonar/no-redundant-optional -----
 type SonarNoRedundantOptional = []|[("sonar-runtime" | "metric")]
 // ----- sonar/no-redundant-parentheses -----
@@ -10358,129 +9967,20 @@ type SonarNoSameArgumentAssert = []|[("sonar-runtime" | "metric")]
 type SonarNoSameLineConditional = []|[("sonar-runtime" | "metric")]
 // ----- sonar/no-selector-parameter -----
 type SonarNoSelectorParameter = []|[("sonar-runtime" | "metric")]
-// ----- sonar/no-this-alias -----
-type SonarNoThisAlias = []|[{
-  
-  allowDestructuring?: boolean
-  
-  allowedNames?: string[]
-}]
 // ----- sonar/no-try-promise -----
 type SonarNoTryPromise = []|[("sonar-runtime" | "metric")]
-// ----- sonar/no-unknown-property -----
-type SonarNoUnknownProperty = []|[{
-  ignore?: string[]
-  [k: string]: unknown | undefined
-}]
-// ----- sonar/no-unsafe -----
-type SonarNoUnsafe = []|[{
-  checkAliases?: boolean
-}]
-// ----- sonar/no-unstable-nested-components -----
-type SonarNoUnstableNestedComponents = []|[{
-  customValidators?: string[]
-  allowAsProps?: boolean
-}]
-// ----- sonar/no-unused-expressions -----
-type SonarNoUnusedExpressions = []|[{
-  allowShortCircuit?: boolean
-  allowTernary?: boolean
-  allowTaggedTemplates?: boolean
-  enforceForJSX?: boolean
-}]
 // ----- sonar/no-variable-usage-before-declaration -----
 type SonarNoVariableUsageBeforeDeclaration = []|[("sonar-runtime" | "metric")]
 // ----- sonar/non-number-in-arithmetic-expression -----
 type SonarNonNumberInArithmeticExpression = []|[("sonar-runtime" | "metric")]
-// ----- sonar/object-shorthand -----
-type SonarObjectShorthand = ([]|[("always" | "methods" | "properties" | "never" | "consistent" | "consistent-as-needed")] | []|[("always" | "methods" | "properties")]|[("always" | "methods" | "properties"), {
-  avoidQuotes?: boolean
-}] | []|[("always" | "methods")]|[("always" | "methods"), {
-  ignoreConstructors?: boolean
-  methodsIgnorePattern?: string
-  avoidQuotes?: boolean
-  avoidExplicitReturnArrows?: boolean
-}])
-// ----- sonar/prefer-nullish-coalescing -----
-type SonarPreferNullishCoalescing = []|[{
-  allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing?: boolean
-  ignoreConditionalTests?: boolean
-  ignoreMixedLogicalExpressions?: boolean
-  ignorePrimitives?: ({
-    bigint?: boolean
-    boolean?: boolean
-    number?: boolean
-    string?: boolean
-    [k: string]: unknown | undefined
-  } | true)
-  ignoreTernaryTests?: boolean
-}]
-// ----- sonar/prefer-string-starts-ends-with -----
-type SonarPreferStringStartsEndsWith = []|[{
-  
-  allowSingleElementEquality?: ("always" | "never")
-}]
 // ----- sonar/regex-complexity -----
 type SonarRegexComplexity = []|[{
   threshold?: number
 }]|[{
   threshold?: number
 }, ("sonar-runtime" | "metric")]
-// ----- sonar/semi -----
-type SonarSemi = ([]|["never"]|["never", {
-  beforeStatementContinuationChars?: ("always" | "any" | "never")
-}] | []|["always"]|["always", {
-  omitLastInOneLineBlock?: boolean
-  omitLastInOneLineClassBody?: boolean
-}])
 // ----- sonar/shorthand-property-grouping -----
 type SonarShorthandPropertyGrouping = []|[("sonar-runtime" | "metric")]
-// ----- sonar/sonar-block-scoped-var -----
-type SonarSonarBlockScopedVar = []|[("sonar-runtime" | "metric")]
-// ----- sonar/sonar-max-lines -----
-type SonarSonarMaxLines = []|[{
-  maximum?: number
-}]
-// ----- sonar/sonar-max-lines-per-function -----
-type SonarSonarMaxLinesPerFunction = []|[{
-  maximum?: number
-}]
-// ----- sonar/sonar-max-params -----
-type SonarSonarMaxParams = []|[{
-  max?: number
-}]
-// ----- sonar/sonar-no-magic-numbers -----
-type SonarSonarNoMagicNumbers = []|[{
-  detectObjects?: boolean
-  enforceConst?: boolean
-  ignore?: (number | string)[]
-  ignoreArrayIndexes?: boolean
-  ignoreDefaultValues?: boolean
-  ignoreClassFieldInitialValues?: boolean
-  ignoreNumericLiteralTypes?: boolean
-  ignoreEnums?: boolean
-  ignoreReadonlyClassProperties?: boolean
-  ignoreTypeIndexes?: boolean
-}]
-// ----- sonar/sonar-prefer-optional-chain -----
-type SonarSonarPreferOptionalChain = []|[{
-  
-  checkAny?: boolean
-  
-  checkUnknown?: boolean
-  
-  checkString?: boolean
-  
-  checkNumber?: boolean
-  
-  checkBoolean?: boolean
-  
-  checkBigInt?: boolean
-  
-  requireNullish?: boolean
-  
-  allowPotentiallyUnsafeFixesThatModifyTheReturnTypeIKnowWhatImDoing?: boolean
-}]
 // ----- sonar/stateful-regex -----
 type SonarStatefulRegex = []|[("sonar-runtime" | "metric")]
 // ----- sonar/strict-transport-security -----
@@ -10501,11 +10001,6 @@ type SonarUnverifiedHostname = []|[("sonar-runtime" | "metric")]
 type SonarUpdatedConstVar = []|[("sonar-runtime" | "metric")]
 // ----- sonar/updated-loop-counter -----
 type SonarUpdatedLoopCounter = []|[("sonar-runtime" | "metric")]
-// ----- sonar/use-isnan -----
-type SonarUseIsnan = []|[{
-  enforceForSwitchCase?: boolean
-  enforceForIndexOf?: boolean
-}]
 // ----- sonar/use-type-alias -----
 type SonarUseTypeAlias = []|[("sonar-runtime" | "metric")]
 // ----- sonar/variable-name -----
