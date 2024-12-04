@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.10.5
+
+### Patch Changes
+
+- ee0caf4: Updated @graphql-eslint/eslint-plugin
+
 ## 2.10.4
 
 ### Patch Changes
