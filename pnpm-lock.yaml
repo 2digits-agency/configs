@@ -75,8 +75,8 @@ importers:
         specifier: 9.16.0
         version: 9.16.0
       '@graphql-eslint/eslint-plugin':
-        specifier: 4.2.0
-        version: 4.2.0(@types/node@22.10.1)(encoding@0.1.13)(eslint@9.16.0(jiti@2.4.0))(graphql@16.8.2)(typescript@5.7.2)
+        specifier: 4.2.1
+        version: 4.2.1(@types/node@22.10.1)(encoding@0.1.13)(eslint@9.16.0(jiti@2.4.0))(graphql@16.8.2)(typescript@5.7.2)
       '@next/eslint-plugin-next':
         specifier: 15.0.3
         version: 15.0.3
@@ -1046,8 +1046,8 @@ packages:
     resolution: {integrity: sha512-2b/g5hRmpbb1o4GnTZax9N9m0FXzz9OV42ZzI4rDDMDuHUqigAiQCEWChBWCY4ztAGVRjoWT19v0yMmc5/L5kA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@graphql-eslint/eslint-plugin@4.2.0':
-    resolution: {integrity: sha512-69TMzcyDcB4Blv0kCo5HiI4lF0ZON4Kdglmdw+mU/bL7Vv0f1rwliN5PJ35lqMqVO8oVnM82RgnF6jEwjtu3qA==}
+  '@graphql-eslint/eslint-plugin@4.2.1':
+    resolution: {integrity: sha512-7timICbqgq7fqgyaBCVfNcxUQtAXEJSA56ocxua0aiK6QF5Wh9wi8K7Pbyog0j9ViyWbQpxLHQ01DVsU0Z0Lyw==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: '>=8.44.0'
@@ -7396,7 +7396,7 @@ snapshots:
     dependencies:
       levn: 0.4.1
 
-  '@graphql-eslint/eslint-plugin@4.2.0(@types/node@22.10.1)(encoding@0.1.13)(eslint@9.16.0(jiti@2.4.0))(graphql@16.8.2)(typescript@5.7.2)':
+  '@graphql-eslint/eslint-plugin@4.2.1(@types/node@22.10.1)(encoding@0.1.13)(eslint@9.16.0(jiti@2.4.0))(graphql@16.8.2)(typescript@5.7.2)':
     dependencies:
       '@graphql-tools/code-file-loader': 8.1.6(graphql@16.8.2)
       '@graphql-tools/graphql-tag-pluck': 8.3.4(graphql@16.8.2)
