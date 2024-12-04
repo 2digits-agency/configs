@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 2.6.1
+
+### Patch Changes
+
+- 16f781f: Updated prettier
+
 ## 2.6.0
 
 ### Minor Changes
