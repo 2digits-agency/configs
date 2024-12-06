@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 2.10.6
+
+### Patch Changes
+
+- 2bd9077: Updated @next/eslint-plugin-next
+- 92cc201: Updated @graphql-eslint/eslint-plugin
+- 74bf5f7: Updated eslint-compat
+- 202b938: Updated eslint-plugin-react-hooks
+
 ## 2.10.5
 
 ### Patch Changes
