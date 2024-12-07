@@ -255,8 +255,8 @@ importers:
   packages/renovate:
     devDependencies:
       renovate:
-        specifier: 39.50.0
-        version: 39.50.0(@aws-sdk/client-sso-oidc@3.699.0(@aws-sdk/client-sts@3.699.0))(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 39.57.1
+        version: 39.57.1(@aws-sdk/client-sso-oidc@3.699.0(@aws-sdk/client-sts@3.699.0))(encoding@0.1.13)(typanion@3.14.0)
 
   packages/tsconfig:
     devDependencies:
@@ -3873,8 +3873,8 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  jsonata@2.0.5:
-    resolution: {integrity: sha512-wEse9+QLIIU5IaCgtJCPsFi/H4F3qcikWzF4bAELZiRz08ohfx3Q6CjDRf4ZPF5P/92RI3KIHtb7u3jqPaHXdQ==}
+  jsonata@2.0.6:
+    resolution: {integrity: sha512-WhQB5tXQ32qjkx2GYHFw2XbL90u+LLzjofAYwi+86g6SyZeXHz9F1Q0amy3dWRYczshOC3Haok9J4pOCgHtwyQ==}
     engines: {node: '>= 8'}
 
   jsonc-parser@3.3.1:
@@ -4965,8 +4965,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.50.0:
-    resolution: {integrity: sha512-jBF4L9NFKZH9/jIkGIqH3Rs9vlBvOiGZpphtkuMxrFIhJi22uh7elaLFdWVI06MBWl3tWBAMYI6V5zPZRWH2Aw==}
+  renovate@39.57.1:
+    resolution: {integrity: sha512-uwj8jBy1QD1zegLCbjx+yUhr0PdP+U/0SdgntrX+4TzxZccZeDlKH6HxDrZ5dUs4ZR/o5/5QVUD0ruD2t/RaIA==}
     engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^9.0.0}
     hasBin: true
 
@@ -10822,7 +10822,7 @@ snapshots:
 
   json5@2.2.3: {}
 
-  jsonata@2.0.5: {}
+  jsonata@2.0.6: {}
 
   jsonc-parser@3.3.1: {}
 
@@ -12036,7 +12036,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.50.0(@aws-sdk/client-sso-oidc@3.699.0(@aws-sdk/client-sts@3.699.0))(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.57.1(@aws-sdk/client-sso-oidc@3.699.0(@aws-sdk/client-sts@3.699.0))(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.699.0
       '@aws-sdk/client-ec2': 3.701.0
@@ -12107,7 +12107,7 @@ snapshots:
       json-dup-key-validator: 1.0.3
       json-stringify-pretty-compact: 3.0.0
       json5: 2.2.3
-      jsonata: 2.0.5
+      jsonata: 2.0.6
       jsonc-parser: 3.3.1
       klona: 2.0.6
       luxon: 3.5.0
