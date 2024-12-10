@@ -2629,6 +2629,11 @@ Backward pagination arguments
    */
   'react-extra/no-component-will-update'?: Linter.RuleEntry<[]>
   /**
+   * disallow the use of '<Context.Provider>'
+   * @see https://eslint-react.xyz/docs/rules/no-context-provider
+   */
+  'react-extra/no-context-provider'?: Linter.RuleEntry<[]>
+  /**
    * disallow using 'createRef' in function components
    * @see https://eslint-react.xyz/docs/rules/no-create-ref
    */
@@ -2648,6 +2653,11 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/no-duplicate-key
    */
   'react-extra/no-duplicate-key'?: Linter.RuleEntry<[]>
+  /**
+   * disallow the use of 'forwardRef'
+   * @see https://eslint-react.xyz/docs/rules/no-forward-ref
+   */
+  'react-extra/no-forward-ref'?: Linter.RuleEntry<[]>
   /**
    * disallow implicit 'key' props
    * @see https://eslint-react.xyz/docs/rules/no-implicit-key
