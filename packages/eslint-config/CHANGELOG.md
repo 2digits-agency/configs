@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 2.10.8
+
+### Patch Changes
+
+- dfe64a2: Updated eslint-plugin-n
+- 26a9d98: Updated eslint-plugin-jsdoc
+- e49bf28: Updated eslint-plugin-next
+
 ## 2.10.7
 
 ### Patch Changes
