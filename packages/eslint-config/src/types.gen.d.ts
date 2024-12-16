@@ -246,7 +246,7 @@ export interface RuleOptions {
    */
   'default-case'?: Linter.RuleEntry<DefaultCase>
   /**
-   * Enforce default clauses in switch statements to be last
+   * Enforce `default` clauses in switch statements to be last
    * @see https://eslint.org/docs/latest/rules/default-case-last
    */
   'default-case-last'?: Linter.RuleEntry<[]>
@@ -278,7 +278,7 @@ export interface RuleOptions {
    */
   'eqeqeq'?: Linter.RuleEntry<Eqeqeq>
   /**
-   * Enforce "for" loop update clause moving the counter in the right direction
+   * Enforce `for` loop update clause moving the counter in the right direction
    * @see https://eslint.org/docs/latest/rules/for-direction
    */
   'for-direction'?: Linter.RuleEntry<[]>
@@ -1767,7 +1767,7 @@ Backward pagination arguments
    */
   'no-octal-escape'?: Linter.RuleEntry<[]>
   /**
-   * Disallow reassigning `function` parameters
+   * Disallow reassigning function parameters
    * @see https://eslint.org/docs/latest/rules/no-param-reassign
    */
   'no-param-reassign'?: Linter.RuleEntry<NoParamReassign>
@@ -1862,7 +1862,7 @@ Backward pagination arguments
    */
   'no-return-await'?: Linter.RuleEntry<[]>
   /**
-   * Disallow `javascript:` urls
+   * Disallow `javascript:` URLs
    * @see https://eslint.org/docs/latest/rules/no-script-url
    */
   'no-script-url'?: Linter.RuleEntry<[]>
@@ -2407,7 +2407,7 @@ Backward pagination arguments
    */
   'prefer-object-has-own'?: Linter.RuleEntry<[]>
   /**
-   * Disallow using Object.assign with an object literal as the first argument and prefer the use of object spread instead
+   * Disallow using `Object.assign` with an object literal as the first argument and prefer the use of object spread instead
    * @see https://eslint.org/docs/latest/rules/prefer-object-spread
    */
   'prefer-object-spread'?: Linter.RuleEntry<[]>
@@ -3806,7 +3806,7 @@ Backward pagination arguments
    */
   'require-await'?: Linter.RuleEntry<[]>
   /**
-   * Enforce the use of `u` or `v` flag on RegExp
+   * Enforce the use of `u` or `v` flag on regular expressions
    * @see https://eslint.org/docs/latest/rules/require-unicode-regexp
    */
   'require-unicode-regexp'?: Linter.RuleEntry<RequireUnicodeRegexp>
@@ -4678,7 +4678,7 @@ Backward pagination arguments
    */
   'ts/no-wrapper-object-types'?: Linter.RuleEntry<[]>
   /**
-   * Enforce non-null assertions over explicit type casts
+   * Enforce non-null assertions over explicit type assertions
    * @see https://typescript-eslint.io/rules/non-nullable-type-assertion-style
    */
   'ts/non-nullable-type-assertion-style'?: Linter.RuleEntry<[]>
@@ -4763,7 +4763,7 @@ Backward pagination arguments
    */
   'ts/prefer-readonly-parameter-types'?: Linter.RuleEntry<TsPreferReadonlyParameterTypes>
   /**
-   * Enforce using type parameter when calling `Array#reduce` instead of casting
+   * Enforce using type parameter when calling `Array#reduce` instead of using a type assertion
    * @see https://typescript-eslint.io/rules/prefer-reduce-type-parameter
    */
   'ts/prefer-reduce-type-parameter'?: Linter.RuleEntry<[]>
