@@ -255,8 +255,8 @@ importers:
   packages/renovate:
     devDependencies:
       renovate:
-        specifier: 39.63.1
-        version: 39.63.1(@aws-sdk/client-sso-oidc@3.699.0(@aws-sdk/client-sts@3.699.0))(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 39.69.2
+        version: 39.69.2(@aws-sdk/client-sso-oidc@3.699.0(@aws-sdk/client-sts@3.699.0))(encoding@0.1.13)(typanion@3.14.0)
 
   packages/tsconfig:
     devDependencies:
@@ -2345,8 +2345,8 @@ packages:
     resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}
     engines: {node: '>=4'}
 
-  better-sqlite3@11.6.0:
-    resolution: {integrity: sha512-2J6k/eVxcFYY2SsTxsXrj6XylzHWPxveCn4fKPKZFv/Vqn/Cd7lOuX4d7rGQXT5zL+97MkNL3nSbCrIoe3LkgA==}
+  better-sqlite3@11.7.0:
+    resolution: {integrity: sha512-mXpa5jnIKKHeoGzBrUJrc65cXFKcILGZpU3FXR0pradUEm9MA7UZz02qfEejaMcm9iXrSOCenwwYMJ/tZ1y5Ig==}
 
   big-integer@1.6.52:
     resolution: {integrity: sha512-QxD8cf2eVqJOOz63z6JIN9BzvVs/dlySa5HGSBH5xtR8dPteIRQnBxxKqkNTiT6jbDTF6jAfrd4oMcND9RGbQg==}
@@ -4987,8 +4987,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.63.1:
-    resolution: {integrity: sha512-jQlSS/zQdwiXQV56LrZbBh5OJxiRJE4nAsVC5De71ptPWgp6xQDVnztjCdFBeDiu3Xvp37RMGCT+J1spHD6PWA==}
+  renovate@39.69.2:
+    resolution: {integrity: sha512-OL0/oB6hcA8sEsTMa02sT4YzgCXE6LlES5C++RRsV4qEhGyTXW1qw+rfRaAqWc3QMwO7Qbwy2wVy/RTLEkDWcQ==}
     engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^9.0.0}
     hasBin: true
 
@@ -9083,7 +9083,7 @@ snapshots:
     dependencies:
       is-windows: 1.0.2
 
-  better-sqlite3@11.6.0:
+  better-sqlite3@11.7.0:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.2
@@ -12112,7 +12112,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.63.1(@aws-sdk/client-sso-oidc@3.699.0(@aws-sdk/client-sts@3.699.0))(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.69.2(@aws-sdk/client-sso-oidc@3.699.0(@aws-sdk/client-sts@3.699.0))(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.699.0
       '@aws-sdk/client-ec2': 3.701.0
@@ -12224,7 +12224,7 @@ snapshots:
       yaml: 2.6.1
       zod: 3.23.8
     optionalDependencies:
-      better-sqlite3: 11.6.0
+      better-sqlite3: 11.7.0
       openpgp: 6.0.1
       re2: 1.21.4
     transitivePeerDependencies:
