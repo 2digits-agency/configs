@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 2.10.10
+
+### Patch Changes
+
+- 1d96eed: Updated globals
+- b642bc0: Updated @eslint-react/eslint-plugin
+- ebbdb29: Updated @next/eslint-plugin-next
+
 ## 2.10.9
 
 ### Patch Changes
