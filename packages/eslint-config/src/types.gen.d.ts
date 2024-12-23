@@ -2464,8 +2464,8 @@ Backward pagination arguments
    */
   'react-compiler/react-compiler'?: Linter.RuleEntry<ReactCompilerReactCompiler>
   /**
-   * disallow passing 'children' to void DOM elements
-   * @see https://eslint-react.xyz/docs/rules/dom-no-children-in-void-dom-elements
+   * disallow void elements (AKA self-closing elements) from having children
+   * @see https://eslint-react.xyz/docs/rules/dom-no-void-elements-with-children
    */
   'react-dom/no-children-in-void-dom-elements'?: Linter.RuleEntry<[]>
   /**
@@ -2524,6 +2524,11 @@ Backward pagination arguments
    */
   'react-dom/no-unsafe-target-blank'?: Linter.RuleEntry<[]>
   /**
+   * disallow void elements (AKA self-closing elements) from having children
+   * @see https://eslint-react.xyz/docs/rules/dom-no-void-elements-with-children
+   */
+  'react-dom/no-void-elements-with-children'?: Linter.RuleEntry<[]>
+  /**
    * disallow using shorthand boolean attributes
    * @see https://eslint-react.xyz/docs/rules/avoid-shorthand-boolean
    */
@@ -2540,12 +2545,12 @@ Backward pagination arguments
   'react-extra/ensure-forward-ref-using-ref'?: Linter.RuleEntry<[]>
   /**
    * disallow duplicate props
-   * @see https://eslint-react.xyz/docs/rules/jsx-no-duplicate-props
+   * @see https://eslint-react.xyz/docs/rules/no-duplicate-jsx-props
    */
   'react-extra/jsx-no-duplicate-props'?: Linter.RuleEntry<[]>
   /**
-   * a helper rule to mark variables as used
-   * @see https://eslint-react.xyz/docs/rules/jsx-uses-vars
+   * helpes `eslint/no-unused-vars` to correctly mark JSX variables as used.
+   * @see https://eslint-react.xyz/docs/rules/use-jsx-vars
    */
   'react-extra/jsx-uses-vars'?: Linter.RuleEntry<[]>
   /**
@@ -2648,6 +2653,11 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/no-direct-mutation-state
    */
   'react-extra/no-direct-mutation-state'?: Linter.RuleEntry<[]>
+  /**
+   * disallow duplicate props
+   * @see https://eslint-react.xyz/docs/rules/no-duplicate-jsx-props
+   */
+  'react-extra/no-duplicate-jsx-props'?: Linter.RuleEntry<[]>
   /**
    * disallow duplicate keys when rendering list
    * @see https://eslint-react.xyz/docs/rules/no-duplicate-key
@@ -2779,10 +2789,20 @@ Backward pagination arguments
    */
   'react-extra/prefer-shorthand-fragment'?: Linter.RuleEntry<[]>
   /**
+   * helpes `eslint/no-unused-vars` to correctly mark JSX variables as used.
+   * @see https://eslint-react.xyz/docs/rules/use-jsx-vars
+   */
+  'react-extra/use-jsx-vars'?: Linter.RuleEntry<[]>
+  /**
    * enforce custom hooks to use at least one other hook inside
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-redundant-custom-hook
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
    */
   'react-hooks-extra/ensure-custom-hooks-using-other-hooks'?: Linter.RuleEntry<[]>
+  /**
+   * disallow unnecessary usage of 'useCallback'
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-callback
+   */
+  'react-hooks-extra/ensure-use-callback-has-non-empty-deps'?: Linter.RuleEntry<[]>
   /**
    * disallow unnecessary usage of 'useMemo'
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-memo
@@ -2800,7 +2820,7 @@ Backward pagination arguments
   'react-hooks-extra/no-direct-set-state-in-use-layout-effect'?: Linter.RuleEntry<[]>
   /**
    * enforce custom hooks to use at least one other hook inside
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-redundant-custom-hook
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
    */
   'react-hooks-extra/no-redundant-custom-hook'?: Linter.RuleEntry<[]>
   /**
@@ -2813,6 +2833,11 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-memo
    */
   'react-hooks-extra/no-unnecessary-use-memo'?: Linter.RuleEntry<[]>
+  /**
+   * enforce custom hooks to use at least one other hook inside
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
+   */
+  'react-hooks-extra/no-useless-custom-hooks'?: Linter.RuleEntry<[]>
   /**
    * disallow function calls in 'useState' that aren't wrapped in an initializer function
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-prefer-use-state-lazy-initialization
