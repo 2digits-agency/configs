@@ -7,7 +7,7 @@ export function node(): TypedFlatConfigItem[] {
       name: '2digits:node',
       settings: {
         node: {
-          version: '>= 20.0.0',
+          version: '>= 22.0.0',
         },
       },
       plugins: {
