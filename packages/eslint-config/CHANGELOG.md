@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 2.11.0
+
+### Minor Changes
+
+- 2b1f002: Updated node to version 22 inside of node linting rules
+
+### Patch Changes
+
+- e550b29: Updated eslint-plugin-n
+- 1d96eed: Updated globals
+- a50c35f: Updated @eslint-react/eslint-plugin
+- b642bc0: Updated @eslint-react/eslint-plugin
+- ebbdb29: Updated @next/eslint-plugin-next
+
 ## 2.10.9
 
 ### Patch Changes
