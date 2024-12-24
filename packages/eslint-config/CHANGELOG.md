@@ -1,5 +1,21 @@
 # @2digits/eslint-config
 
+## 2.12.0
+
+### Minor Changes
+
+- e65a601: Added eslint-plugin-drizzle
+
+### Patch Changes
+
+- 4cd2c5b: Updated typescript-eslint
+- c1e2386: Updated @tanstack/eslint-plugin-query
+- d8c0f2c: Fixed tanstack eslint plugin setup
+- 282fc69: Updated @eslint-react/eslint-plugin
+- 33119ed: Updated eslint-plugin-react
+- Updated dependencies [4cd2c5b]
+  - @2digits/eslint-plugin@2.3.19
+
 ## 2.11.0
 
 ### Minor Changes
