@@ -2804,7 +2804,7 @@ Backward pagination arguments
    */
   'react-extra/use-jsx-vars'?: Linter.RuleEntry<[]>
   /**
-   * enforce custom hooks to use at least one other hook inside
+   * enforce custom Hooks to use at least one other hook inside
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
    */
   'react-hooks-extra/ensure-custom-hooks-using-other-hooks'?: Linter.RuleEntry<[]>
@@ -2829,7 +2829,7 @@ Backward pagination arguments
    */
   'react-hooks-extra/no-direct-set-state-in-use-layout-effect'?: Linter.RuleEntry<[]>
   /**
-   * enforce custom hooks to use at least one other hook inside
+   * enforce custom Hooks to use at least one other hook inside
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
    */
   'react-hooks-extra/no-redundant-custom-hook'?: Linter.RuleEntry<[]>
@@ -2844,7 +2844,7 @@ Backward pagination arguments
    */
   'react-hooks-extra/no-unnecessary-use-memo'?: Linter.RuleEntry<[]>
   /**
-   * enforce custom hooks to use at least one other hook inside
+   * enforce custom Hooks to use at least one other hook inside
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
    */
   'react-hooks-extra/no-useless-custom-hooks'?: Linter.RuleEntry<[]>
@@ -2884,22 +2884,22 @@ Backward pagination arguments
    */
   'react-naming-convention/use-state'?: Linter.RuleEntry<[]>
   /**
-   * enforce that every 'addEventListener' in a component or custom hook has a corresponding 'removeEventListener'.
+   * enforce that every 'addEventListener' in a component or custom Hook has a corresponding 'removeEventListener'.
    * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-event-listener
    */
   'react-web-api/no-leaked-event-listener'?: Linter.RuleEntry<[]>
   /**
-   * enforce that every 'setInterval' in a component or custom hook has a corresponding 'clearInterval'.
+   * enforce that every 'setInterval' in a component or custom Hook has a corresponding 'clearInterval'.
    * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-interval
    */
   'react-web-api/no-leaked-interval'?: Linter.RuleEntry<[]>
   /**
-   * enforce cleanup of 'ResizeObserver' instances in components and custom hooks.
+   * enforce cleanup of 'ResizeObserver' instances in components and custom Hooks.
    * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-resize-observer
    */
   'react-web-api/no-leaked-resize-observer'?: Linter.RuleEntry<[]>
   /**
-   * enforce that every 'setTimeout' in a component or custom hook has a corresponding 'clearTimeout'.
+   * enforce that every 'setTimeout' in a component or custom Hook has a corresponding 'clearTimeout'.
    * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-timeout
    */
   'react-web-api/no-leaked-timeout'?: Linter.RuleEntry<[]>
