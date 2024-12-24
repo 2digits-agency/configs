@@ -1,5 +1,6 @@
 export * from './antfu';
 export * from './comments';
+export * from './drizzle';
 export * from './graphql';
 export * from './ignores';
 export * from './javascript';

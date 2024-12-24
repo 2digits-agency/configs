@@ -28,6 +28,15 @@ export interface OptionsOverrides {
   overrides?: TypedFlatConfigItem['rules'];
 }
 
+export interface OptionsWithDrizzle extends OptionsOverrides {
+  /**
+   * Object names which refer to a Drizzle instance.
+   *
+   * @default ```['drizzle', 'db']```
+   */
+  drizzleObjectName?: string | string[];
+}
+
 export interface OptionsTypeScriptWithTypes extends OptionsOverrides {
   /**
    * Root directory of the project.

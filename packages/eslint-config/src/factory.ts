@@ -21,11 +21,13 @@ import {
   typescript,
   unicorn,
 } from './configs';
+import { drizzle } from './configs/drizzle';
 import { PluginNameMap } from './constants';
 import type {
   ConfigNames,
   OptionsOverrides,
   OptionsTypeScriptWithTypes,
+  OptionsWithDrizzle,
   OptionsWithFiles,
   OptionsWithIgnores,
   OptionsWithReact,
@@ -48,6 +50,7 @@ interface ESLint2DigitsOptions {
   tailwind?: SharedOptions<OptionsOverrides> | boolean;
   storybook?: SharedOptions<OptionsWithStorybook> | boolean;
   tanstack?: SharedOptions<OptionsOverrides> | boolean;
+  drizzle?: SharedOptions<OptionsWithDrizzle> | boolean;
 }
 
 function enabled<T extends SharedOptions>(
@@ -136,6 +139,10 @@ export function twoDigits(
     )
   ) {
     composer = composer.append(tanstack(config(options.tanstack)));
+  }
+
+  if (enabled(options.drizzle, isPackageExists('drizzle-kit') || isPackageExists('drizzle-orm'))) {
+    composer = composer.append(drizzle(config(options.drizzle)));
   }
 
   if (enabled(options.graphql, isPackageExists('graphql'))) {
