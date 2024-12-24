@@ -267,6 +267,16 @@ export interface RuleOptions {
    */
   'dot-notation'?: Linter.RuleEntry<DotNotation>
   /**
+   * Enforce that `delete` method is used with `where` to avoid deleting all the rows in a table.
+   * @see https://github.com/drizzle-team/eslint-plugin-drizzle
+   */
+  'drizzle/enforce-delete-with-where'?: Linter.RuleEntry<DrizzleEnforceDeleteWithWhere>
+  /**
+   * Enforce that `update` method is used with `where` to avoid deleting all the rows in a table.
+   * @see https://github.com/drizzle-team/eslint-plugin-drizzle
+   */
+  'drizzle/enforce-update-with-where'?: Linter.RuleEntry<DrizzleEnforceUpdateWithWhere>
+  /**
    * Require or disallow newline at the end of files
    * @see https://eslint.org/docs/latest/rules/eol-last
    * @deprecated
@@ -5821,6 +5831,14 @@ type DotNotation = []|[{
   allowKeywords?: boolean
   allowPattern?: string
 }]
+// ----- drizzle/enforce-delete-with-where -----
+type DrizzleEnforceDeleteWithWhere = []|[{
+  drizzleObjectName?: (string | unknown[])
+}]
+// ----- drizzle/enforce-update-with-where -----
+type DrizzleEnforceUpdateWithWhere = []|[{
+  drizzleObjectName?: (string | unknown[])
+}]
 // ----- eol-last -----
 type EolLast = []|[("always" | "never" | "unix" | "windows")]
 // ----- eqeqeq -----
@@ -10158,4 +10176,4 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   onlyEquality?: boolean
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:antfu' | '2digits:comments' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'
+export type ConfigNames = '2digits:antfu' | '2digits:comments' | '2digits:drizzle' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'

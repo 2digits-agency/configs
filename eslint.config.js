@@ -16,4 +16,5 @@ export default twoDigits({
   graphql: true,
   tanstack: true,
   turbo: true,
+  drizzle: true,
 });

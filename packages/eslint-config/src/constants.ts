@@ -20,4 +20,5 @@ export const PluginNameMap = {
   '@2digits': '@2digits',
   '@graphql-eslint': 'gql',
   sonarjs: 'sonar',
+  drizzle: 'drizzle',
 } as const;

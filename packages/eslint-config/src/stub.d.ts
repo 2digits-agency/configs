@@ -114,3 +114,20 @@ declare module 'eslint-plugin-react-compiler' {
   };
   export = exprt;
 }
+
+declare module 'eslint-plugin-drizzle' {
+  import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
+
+  declare const exprt: {
+    configs: {
+      recommended: ClassicConfig.Config;
+      all: ClassicConfig.Config;
+    };
+    rules: NonNullable<Linter.Plugin['rules']>;
+    meta: {
+      name: string;
+      version: string;
+    };
+  };
+  export = exprt;
+}
