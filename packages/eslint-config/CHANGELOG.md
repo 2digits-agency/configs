@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 2.12.2
+
+### Patch Changes
+
+- 80973ea: Updated eslint-plugin-storybook
+- 9c0e1cd: Updated @eslint-react/eslint-plugin
+
 ## 2.12.1
 
 ### Patch Changes
