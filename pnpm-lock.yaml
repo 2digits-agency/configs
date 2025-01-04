@@ -227,14 +227,14 @@ importers:
         specifier: 0.4.15
         version: 0.4.15
       prettier-plugin-jsdoc:
-        specifier: 1.3.0
-        version: 1.3.0(prettier@3.4.2)
+        specifier: 1.3.2
+        version: 1.3.2(prettier@3.4.2)
       prettier-plugin-sql:
         specifier: 0.18.1
         version: 0.18.1(prettier@3.4.2)
       prettier-plugin-tailwindcss:
         specifier: 0.6.9
-        version: 0.6.9(@ianvs/prettier-plugin-sort-imports@4.4.0(prettier@3.4.2))(prettier-plugin-jsdoc@1.3.0(prettier@3.4.2))(prettier@3.4.2)
+        version: 0.6.9(@ianvs/prettier-plugin-sort-imports@4.4.0(prettier@3.4.2))(prettier-plugin-jsdoc@1.3.2(prettier@3.4.2))(prettier@3.4.2)
       prettier-plugin-toml:
         specifier: 2.0.1
         version: 2.0.1(prettier@3.4.2)
@@ -4838,8 +4838,8 @@ packages:
   prettier-plugin-embed@0.4.15:
     resolution: {integrity: sha512-9pZVIp3bw2jw+Ge+iAMZ4j+sIVC9cPruZ93H2tj5Wa/3YDFDJ/uYyVWdUGfcFUnv28drhW2Bmome9xSGXsPKOw==}
 
-  prettier-plugin-jsdoc@1.3.0:
-    resolution: {integrity: sha512-cQm8xIa0fN9ieJFMXACQd6JPycl+8ouOijAqUqu44EF/s4fXL3Wi9sKXuEaodsEWgCN42Xby/bNhqgM1iWx4uw==}
+  prettier-plugin-jsdoc@1.3.2:
+    resolution: {integrity: sha512-LNi9eq0TjyZn/PUNf/SYQxxUvGg5FLK4alEbi3i/S+2JbMyTu790c/puFueXzx09KP44oWCJ+TaHRyM/a0rKJQ==}
     engines: {node: '>=14.13.1 || >=16.0.0'}
     peerDependencies:
       prettier: ^3.0.0
@@ -12216,7 +12216,7 @@ snapshots:
     transitivePeerDependencies:
       - babel-plugin-macros
 
-  prettier-plugin-jsdoc@1.3.0(prettier@3.4.2):
+  prettier-plugin-jsdoc@1.3.2(prettier@3.4.2):
     dependencies:
       binary-searching: 2.0.5
       comment-parser: 1.4.1
@@ -12233,12 +12233,12 @@ snapshots:
       sql-formatter: 15.4.5
       tslib: 2.6.3
 
-  prettier-plugin-tailwindcss@0.6.9(@ianvs/prettier-plugin-sort-imports@4.4.0(prettier@3.4.2))(prettier-plugin-jsdoc@1.3.0(prettier@3.4.2))(prettier@3.4.2):
+  prettier-plugin-tailwindcss@0.6.9(@ianvs/prettier-plugin-sort-imports@4.4.0(prettier@3.4.2))(prettier-plugin-jsdoc@1.3.2(prettier@3.4.2))(prettier@3.4.2):
     dependencies:
       prettier: 3.4.2
     optionalDependencies:
       '@ianvs/prettier-plugin-sort-imports': 4.4.0(prettier@3.4.2)
-      prettier-plugin-jsdoc: 1.3.0(prettier@3.4.2)
+      prettier-plugin-jsdoc: 1.3.2(prettier@3.4.2)
 
   prettier-plugin-toml@2.0.1(prettier@3.4.2):
     dependencies:
