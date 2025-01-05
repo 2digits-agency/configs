@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 2.6.2
+
+### Patch Changes
+
+- 6c65b78: Updated prettier-plugin-jsdoc
+
 ## 2.6.1
 
 ### Patch Changes
