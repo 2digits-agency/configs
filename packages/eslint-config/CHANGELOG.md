@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 2.12.3
+
+### Patch Changes
+
+- ec05dea: Updated @tanstack/eslint-plugin-query
+
 ## 2.12.2
 
 ### Patch Changes
