@@ -5,6 +5,7 @@ export * from './graphql';
 export * from './ignores';
 export * from './javascript';
 export * from './jsdoc';
+export * from './jsonc';
 export * from './next';
 export * from './node';
 export * from './prettier';
