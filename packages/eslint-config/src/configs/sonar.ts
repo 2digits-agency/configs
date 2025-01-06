@@ -20,6 +20,7 @@ export function sonar(): TypedFlatConfigItem[] {
         'sonar/cookie-no-httponly': 'error',
         'sonar/cors': 'error',
         'sonar/csrf': 'error',
+        'sonar/no-duplicate-string': ['error', { threshold: 5 }],
       },
     },
   ];
