@@ -21,7 +21,7 @@ export function jsonc(): TypedFlatConfigItem[] {
         'jsonc/comma-style': ['error', 'last'],
         'jsonc/indent': ['error', 2],
         'jsonc/key-spacing': ['error', { beforeColon: false, afterColon: true }],
-        'jsonc/object-curly-newline': 'off', // ['error', { consistent: true, multiline: true }],
+        'jsonc/object-curly-newline': 'off',
         'jsonc/object-curly-spacing': ['error', 'always'],
         'jsonc/object-property-newline': ['error', { allowMultiplePropertiesPerLine: true }],
         'jsonc/quote-props': 'error',
