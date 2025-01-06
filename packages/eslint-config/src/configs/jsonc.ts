@@ -6,7 +6,8 @@ import type { TypedFlatConfigItem } from '../types';
 
 export function jsonc(): TypedFlatConfigItem[] {
   return [
-    ...configs['flat/base'],
+    ...configs['flat/base'].map((config) => ({ ...config, name: '2digits:jsonc/base' })),
+
     {
       name: '2digits:jsonc/json',
       files: [GLOB_JSON],
@@ -240,7 +241,7 @@ export function jsonc(): TypedFlatConfigItem[] {
       },
     },
 
-    ...configs['flat/prettier'],
+    ...configs['flat/prettier'].map((config) => ({ ...config, name: '2digits:jsonc/prettier' })),
   ];
 }
 
