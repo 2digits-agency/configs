@@ -8,6 +8,7 @@ import {
   ignores,
   javascript,
   jsdoc,
+  jsonc,
   next,
   node,
   prettier,
@@ -87,6 +88,7 @@ export function twoDigits(
     sonar(),
     regexp(),
     antfu(),
+    jsonc(),
   );
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {
