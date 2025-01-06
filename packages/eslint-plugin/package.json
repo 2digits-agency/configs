@@ -1,15 +1,17 @@
 {
   "name": "@2digits/eslint-plugin",
-  "description": "An eslint plugin that provides a set of rules to enforce best practices for 2digits projects",
   "version": "2.3.20",
-  "type": "module",
+  "description": "An eslint plugin that provides a set of rules to enforce best practices for 2digits projects",
   "repository": {
     "url": "https://github.com/2digits-agency/configs",
     "directory": "packages/eslint-plugin"
   },
-  "license": "MIT",
-  "public": true,
-  "sideEffects": false,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -23,8 +25,7 @@
       }
     }
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -37,9 +38,8 @@
     "eslint-plugin",
     "2digits"
   ],
-  "files": [
-    "dist"
-  ],
+  "license": "MIT",
+  "public": true,
   "dependencies": {
     "@typescript-eslint/utils": "8.19.0",
     "eslint": "9.17.0",

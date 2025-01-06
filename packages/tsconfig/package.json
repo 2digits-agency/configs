@@ -1,9 +1,11 @@
 {
   "name": "@2digits/tsconfig",
   "version": "0.6.2",
-  "description": "Simplify your TypeScript configuration with @2digits/tsconfig - the hassle-free solution for seamless TypeScript development!",
-  "license": "MIT",
   "private": false,
+  "description": "Simplify your TypeScript configuration with @2digits/tsconfig - the hassle-free solution for seamless TypeScript development!",
+  "files": [
+    "tsconfig.json"
+  ],
   "exports": {
     "./package.json": "./package.json",
     ".": "./tsconfig.json",
@@ -15,13 +17,11 @@
   "keywords": [
     "tsconfig"
   ],
-  "files": [
-    "tsconfig.json"
-  ],
-  "peerDependencies": {
+  "license": "MIT",
+  "devDependencies": {
     "typescript": "5.7.2"
   },
-  "devDependencies": {
+  "peerDependencies": {
     "typescript": "5.7.2"
   }
 }

@@ -1,12 +1,14 @@
 {
   "name": "@2digits/eslint-config",
+  "version": "2.12.3",
   "description": "Effortlessly enforce best practices and catch errors with this comprehensive ESLint configuration for TypeScript, featuring popular plugins like @typescript-eslint, eslint-plugin-react, and eslint-plugin-unicorn.",
   "homepage": "https://2d-configs.vercel.app/",
-  "version": "2.12.3",
   "type": "module",
-  "license": "MIT",
-  "public": true,
-  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -20,8 +22,7 @@
       }
     }
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -33,9 +34,8 @@
   "keywords": [
     "eslint-config"
   ],
-  "files": [
-    "dist"
-  ],
+  "license": "MIT",
+  "public": true,
   "dependencies": {
     "@2digits/constants": "workspace:*",
     "@2digits/eslint-plugin": "workspace:*",

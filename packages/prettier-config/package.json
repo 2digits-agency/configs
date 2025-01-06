@@ -2,9 +2,11 @@
   "name": "@2digits/prettier-config",
   "version": "2.6.2",
   "type": "module",
-  "license": "MIT",
-  "public": true,
-  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -18,8 +20,7 @@
       }
     }
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -29,12 +30,8 @@
   "keywords": [
     "prettier-config"
   ],
-  "files": [
-    "dist"
-  ],
-  "peerDependencies": {
-    "prettier": "3.4.2"
-  },
+  "license": "MIT",
+  "public": true,
   "dependencies": {
     "@2digits/constants": "workspace:*",
     "@ianvs/prettier-plugin-sort-imports": "4.4.0",
@@ -52,5 +49,8 @@
     "prettier": "3.4.2",
     "tsup": "8.3.5",
     "typescript": "5.7.2"
+  },
+  "peerDependencies": {
+    "prettier": "3.4.2"
   }
 }
