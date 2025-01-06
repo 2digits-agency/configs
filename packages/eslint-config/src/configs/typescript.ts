@@ -55,7 +55,10 @@ export async function typescript(
             fixStyle: 'inline-type-imports',
           },
         ],
-        'ts/no-empty-interface': ['error', { allowSingleExtends: true }],
+        'ts/no-empty-object-type': [
+          'error',
+          { allowInterfaces: 'with-single-extends', allowObjectTypes: 'never' },
+        ],
         'ts/no-explicit-any': ['error'],
         'ts/no-import-type-side-effects': ['error'],
         'ts/no-misused-promises': 'off',
