@@ -1,5 +1,22 @@
 # @2digits/eslint-config
 
+## 2.13.0
+
+### Minor Changes
+
+- e6ebea1: Added eslint-plugin-jsonc
+- 47ab363: Added package.json and tsconfig.json sorting
+
+### Patch Changes
+
+- d644918: Updated typescript-eslint
+- 50638cc: Updated @tanstack/eslint-plugin-query
+- 6f5b02a: Added documentation url to package.json
+- 810580a: Replaced deprecated no-empty-interfaces rule
+- 1b7b444: Added documentation via eslint-config-inspector
+- Updated dependencies [d644918]
+  - @2digits/eslint-plugin@2.3.21
+
 ## 2.12.3
 
 ### Patch Changes

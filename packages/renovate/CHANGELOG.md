@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 0.1.5
+
+### Patch Changes
+
+- 4af6c14: Formatted renovate config
+
 ## 0.1.4
 
 ### Patch Changes
