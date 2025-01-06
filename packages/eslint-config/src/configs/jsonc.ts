@@ -7,16 +7,13 @@ import type { TypedFlatConfigItem } from '../types';
 export function jsonc(): TypedFlatConfigItem[] {
   return [
     {
-      name: '2digits:jsonc/setup',
-      plugins: {
-        jsonc: pluginJsonc,
-      },
-    },
-    {
-      name: '2digits:jsonc/rules',
+      name: '2digits:jsonc',
       files: [GLOB_JSON, GLOB_JSONC, GLOB_JSON5],
       languageOptions: {
         parser: parserJsonc,
+      },
+      plugins: {
+        jsonc: pluginJsonc,
       },
       rules: {
         'jsonc/array-bracket-spacing': ['error', 'never'],

@@ -28,6 +28,10 @@ export async function typescript(
         ts: plugin,
         '@2digits': twoDigits,
       },
+    },
+    {
+      name: '2digits:typescript/rules',
+      files: [GLOB_SRC],
       languageOptions: {
         parser,
         parserOptions: {
@@ -38,11 +42,6 @@ export async function typescript(
         },
         sourceType: 'module',
       },
-    },
-
-    {
-      name: '2digits:typescript/rules',
-      files: [GLOB_SRC],
       rules: {
         ...rules,
         'ts/restrict-template-expressions': ['error', { allowNumber: true }],
