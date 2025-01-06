@@ -1,18 +1,18 @@
 {
   "name": "@2digits/renovate-config",
   "version": "0.1.4",
-  "license": "MIT",
-  "public": false,
   "private": true,
-  "sideEffects": false,
   "type": "module",
+  "files": [
+    "default.json"
+  ],
+  "sideEffects": false,
   "scripts": {
     "lint": "eslint .",
     "test": "renovate-config-validator ./default.json"
   },
-  "files": [
-    "default.json"
-  ],
+  "license": "MIT",
+  "public": false,
   "devDependencies": {
     "renovate": "39.91.0"
   }
