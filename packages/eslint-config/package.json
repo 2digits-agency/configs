@@ -25,7 +25,9 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "eslint .",
-    "types": "tsc --noEmit"
+    "types": "tsc --noEmit",
+    "docs": "config-inspector build",
+    "docs:dev": "config-inspector"
   },
   "keywords": [
     "eslint-config"
@@ -68,6 +70,7 @@
   },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
+    "@eslint/config-inspector": "0.7.0",
     "@types/eslint__js": "8.42.3",
     "@types/node": "22.10.5",
     "@typescript-eslint/utils": "8.19.0",

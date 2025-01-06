@@ -17,4 +17,5 @@ export default twoDigits({
   tanstack: true,
   turbo: true,
   drizzle: true,
+  ts: true,
 });

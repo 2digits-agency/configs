@@ -1,0 +1,16 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "docs": {
+      "outputs": ["./.eslint-config-inspector/**"],
+      "dependsOn": ["build", "^build"],
+      "inputs": ["$TURBO_DEFAULT$", "../../eslint.config.js"]
+    },
+    "docs:dev": {
+      "dependsOn": ["build", "^build"],
+      "persistent": true,
+      "cache": false,
+      "interactive": true
+    }
+  }
+}
