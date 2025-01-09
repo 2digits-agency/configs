@@ -160,8 +160,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@eslint/config-inspector':
-        specifier: 0.7.0
-        version: 0.7.0(eslint@9.17.0(jiti@2.4.0))
+        specifier: 0.7.1
+        version: 0.7.1(eslint@9.17.0(jiti@2.4.0))
       '@types/eslint__js':
         specifier: 8.42.3
         version: 8.42.3
@@ -1195,8 +1195,8 @@ packages:
     resolution: {integrity: sha512-zdHg2FPIFNKPdcHWtiNT+jEFCHYVplAXRDlQDyqy0zGx/q2parwh7brGJSiTxRk/TSMkbM//zt/f5CHgyTyaSQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/config-inspector@0.7.0':
-    resolution: {integrity: sha512-soPcV7c4/oB9ktEIojw7O6n46+WIz0vEYnDj+PV6jLRFOD4PEFr40yA58nrpZuNRIo1catuLCJ9ZvP9Zedb/fQ==}
+  '@eslint/config-inspector@0.7.1':
+    resolution: {integrity: sha512-80+MJay0D/Kf2ImH04UOQtnL4141KviU0KNuT34xvQZ0TQ/aAfIzKnx4cc4lxIDOLi/ITCV3BxOQkHRrDULFQw==}
     hasBin: true
     peerDependencies:
       eslint: ^8.50.0 || ^9.0.0
@@ -7938,7 +7938,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/config-inspector@0.7.0(eslint@9.17.0(jiti@2.4.0))':
+  '@eslint/config-inspector@0.7.1(eslint@9.17.0(jiti@2.4.0))':
     dependencies:
       '@nodelib/fs.walk': 3.0.1
       bundle-require: 5.1.0(esbuild@0.24.2)
