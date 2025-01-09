@@ -1,5 +1,14 @@
 # @2digits/prettier-config
 
+## 2.6.3
+
+### Patch Changes
+
+- 1b9252d: Updated typescript
+- 5badc78: Updated local-pkg
+- Updated dependencies [1b9252d]
+  - @2digits/constants@0.3.5
+
 ## 2.6.2
 
 ### Patch Changes

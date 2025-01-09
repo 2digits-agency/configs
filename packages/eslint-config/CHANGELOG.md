@@ -1,5 +1,22 @@
 # @2digits/eslint-config
 
+## 2.13.1
+
+### Patch Changes
+
+- 35fe541: Updated eslint-flat-config-utils
+- 1b9252d: Updated typescript
+- d331989: Updated @next/eslint-plugin-next
+- 5badc78: Updated local-pkg
+- 9b0180f: Updated eslint-typegen
+- 138e4c4: Updated @eslint-react/eslint-plugin
+- f56ebf5: Updated eslint-plugin-flat-gitignore
+- fa080b6: Updated @eslint/config-inspector
+- Updated dependencies [e72363d]
+- Updated dependencies [1b9252d]
+  - @2digits/eslint-plugin@2.3.22
+  - @2digits/constants@0.3.5
+
 ## 2.13.0
 
 ### Minor Changes
