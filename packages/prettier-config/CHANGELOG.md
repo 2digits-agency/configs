@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 2.6.4
+
+### Patch Changes
+
+- 4ceff74: Updated @ianvs/prettier-plugin-sort-imports
+
 ## 2.6.3
 
 ### Patch Changes

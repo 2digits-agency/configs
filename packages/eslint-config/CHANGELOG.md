@@ -1,5 +1,15 @@
 # @2digits/eslint-config
 
+## 2.13.3
+
+### Patch Changes
+
+- d394a9b: Updated typescript-eslint
+- 5b735f5: Updated eslint-plugin-react and eslint-plugin-react-compiler
+- e26393f: Updated eslint-config-prettier
+- Updated dependencies [d394a9b]
+  - @2digits/eslint-plugin@2.3.24
+
 ## 2.13.2
 
 ### Patch Changes
