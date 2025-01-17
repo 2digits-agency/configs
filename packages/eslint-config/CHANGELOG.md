@@ -1,5 +1,18 @@
 # @2digits/eslint-config
 
+## 2.14.0
+
+### Minor Changes
+
+- 323e33c: Updated eslint-plugin-sonarjs to version 3.0
+- 524fc62: Updated eslint-plugin-sonarjs to 2.0.4
+
+### Patch Changes
+
+- b46e33a: Updated eslint-plugin-sonarjs
+- Updated dependencies [94828c6]
+  - @2digits/eslint-plugin@2.3.25
+
 ## 2.13.3
 
 ### Patch Changes

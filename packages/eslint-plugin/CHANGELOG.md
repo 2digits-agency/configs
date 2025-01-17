@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.3.25
+
+### Patch Changes
+
+- 94828c6: Updated vitest and eslint-vitest-rule-tester
+
 ## 2.3.24
 
 ### Patch Changes
