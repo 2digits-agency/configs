@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 2.14.1
+
+### Patch Changes
+
+- 324dc68: Updated eslint-plugin-tailwindcss
+- f9bd30b: Updated @next/eslint-plugin-next
+- 21c0f9c: Updated @tanstack/eslint-plugin-query
+- 7ef4056: Updated eslint-plugin-jsdoc
+- Updated dependencies [1832190]
+  - @2digits/eslint-plugin@2.3.26
+
 ## 2.14.0
 
 ### Minor Changes
