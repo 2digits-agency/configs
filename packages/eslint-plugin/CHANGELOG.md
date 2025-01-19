@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.3.26
+
+### Patch Changes
+
+- 1832190: Updated ts-pattern
+
 ## 2.3.25
 
 ### Patch Changes
