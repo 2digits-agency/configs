@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 2.14.2
+
+### Patch Changes
+
+- 35bb801: Updated typescript-eslint
+- acc5130: Updated @eslint-react/eslint-plugin
+- Updated dependencies [35bb801]
+  - @2digits/eslint-plugin@2.3.27
+
 ## 2.14.1
 
 ### Patch Changes
