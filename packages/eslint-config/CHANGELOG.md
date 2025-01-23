@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 2.14.4
+
+### Patch Changes
+
+- d51a1f6: Updated @eslint-react/eslint-plugin
+- f05e2a8: Updated eslint-flat-config-utils
+- 9419262: Updated @next/eslint-plugin-next
+
 ## 2.14.3
 
 ### Patch Changes
