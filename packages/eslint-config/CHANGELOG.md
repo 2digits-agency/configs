@@ -1,5 +1,15 @@
 # @2digits/eslint-config
 
+## 2.14.5
+
+### Patch Changes
+
+- f2bf009: Updated eslint-flat-config-utils and eslint-plugin-antfu to ESM only versions
+- 76f52a3: Updated eslint-plugin-jsdoc
+- efd2bc5: Updated eslint-plugin-jsonc
+- 459c98a: Updated eslint
+- d685e8d: Updated eslint-plugin-turbo
+
 ## 2.14.4
 
 ### Patch Changes
