@@ -4,6 +4,7 @@
   "automergeType": "pr",
   "platformAutomerge": true,
   "automerge": true,
+  "rebaseWhen": "automerging",
   "rangeStrategy": "pin",
   "reviewers": ["V1RE"],
   "timezone": "Europe/Amsterdam",
@@ -15,7 +16,12 @@
     { "groupName": "Orval", "matchPackageNames": ["orval", "/^@orval/"] },
     { "groupName": "Unified & Rehype", "matchPackageNames": ["unified", "/^rehype-/"] },
     { "groupName": "nativewind", "matchPackageNames": ["nativewind", "react-native-css-interop"] },
-    { "groupName": "react-native-firebase", "matchPackageNames": ["/^@react-native-firebase//"] }
+    { "groupName": "react-native-firebase", "matchPackageNames": ["/^@react-native-firebase//"] },
+    {
+      "groupName": "react-native-bottom-tabs",
+      "matchPackageNames": ["react-native-bottom-tabs", "/^@bottom-tabs//"]
+    },
+    { "groupName": "Hey API", "matchPackageNames": ["/^@hey-api//"] }
   ],
   "pruneStaleBranches": true,
   "ignorePrAuthor": false,
