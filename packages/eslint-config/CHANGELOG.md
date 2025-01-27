@@ -1,5 +1,15 @@
 # @2digits/eslint-config
 
+## 2.14.6
+
+### Patch Changes
+
+- 3cf4004: Updated @tanstack/eslint-plugin-query
+- 62cf0b1: Updated @eslint-react/eslint-plugin
+- ed326f3: Updated typescript-eslint
+- Updated dependencies [ed326f3]
+  - @2digits/eslint-plugin@2.3.29
+
 ## 2.14.5
 
 ### Patch Changes
