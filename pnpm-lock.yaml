@@ -267,8 +267,8 @@ importers:
   packages/renovate:
     devDependencies:
       renovate:
-        specifier: 39.137.1
-        version: 39.137.1(@aws-sdk/client-sso-oidc@3.726.0(@aws-sdk/client-sts@3.726.1))(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 39.140.3
+        version: 39.140.3(@aws-sdk/client-sso-oidc@3.726.0(@aws-sdk/client-sts@3.726.1))(encoding@0.1.13)(typanion@3.14.0)
 
   packages/tsconfig:
     devDependencies:
@@ -3196,8 +3196,8 @@ packages:
     resolution: {integrity: sha512-9HMlXtt/BNoYr8ooyjjNRdIilOTkVJXB+GhxMTtOKwk0R4j4lS4NpjuqmRxroBfnfTSHQIHQB7wryHhXarNjmQ==}
     engines: {node: '>=16'}
 
-  commander@13.0.0:
-    resolution: {integrity: sha512-oPYleIY8wmTVzkvQq10AEok6YcTC4sRUBl8F9gVuwchGVUCTbl/vhLTaQqutuuySYOsu8YTgV+OxKc/8Yvx+mQ==}
+  commander@13.1.0:
+    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
 
   commander@2.20.3:
@@ -4152,8 +4152,8 @@ packages:
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
-  graph-data-structure@4.3.0:
-    resolution: {integrity: sha512-rj0SZL3BLXHGZ/K6+Mw0PNrPu+x0uvHukr5dN/10u4Z77ROz5D+D66R+a3X9yZqJKVDcg/fN1FM5NfMX18ErAQ==}
+  graph-data-structure@4.3.1:
+    resolution: {integrity: sha512-S+Qp6xtMb4AAWsixMHShDx/X/RYaWQMvs+IksTW6jPyamRzx7xILfOdJ+qPfcbcteZeKa7KDRqeEQv+jHlrBmw==}
 
   grapheme-splitter@1.0.4:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
@@ -5777,8 +5777,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.137.1:
-    resolution: {integrity: sha512-5MVO+nwWA7asOMKLF+X6h4APbb1nqbUGtbc0OUOOprpt37rtdZAIBpvvDAHYHfXJqhFaGZ/RKX3c+extORFtmQ==}
+  renovate@39.140.3:
+    resolution: {integrity: sha512-Lw5aEgYEY0x//QYBZ0mkvOp4e4Oi8VpvyoImV/zD9pNsq2vLE4TWGBHmMqzuM//wLb3H1OSzEtY4vPFgVqBS3A==}
     engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^9.0.0}
     hasBin: true
 
@@ -10960,7 +10960,7 @@ snapshots:
 
   commander@11.0.0: {}
 
-  commander@13.0.0: {}
+  commander@13.1.0: {}
 
   commander@2.20.3: {}
 
@@ -12205,7 +12205,7 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  graph-data-structure@4.3.0: {}
+  graph-data-structure@4.3.1: {}
 
   grapheme-splitter@1.0.4: {}
 
@@ -13952,7 +13952,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.137.1(@aws-sdk/client-sso-oidc@3.726.0(@aws-sdk/client-sts@3.726.1))(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.140.3(@aws-sdk/client-sso-oidc@3.726.0(@aws-sdk/client-sts@3.726.1))(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.726.1
       '@aws-sdk/client-ec2': 3.726.1
@@ -13993,7 +13993,7 @@ snapshots:
       chalk: 4.1.2
       changelog-filename-regex: 2.0.1
       clean-git-ref: 2.0.1
-      commander: 13.0.0
+      commander: 13.1.0
       conventional-commits-detector: 1.0.3
       croner: 9.0.0
       cronstrue: 2.53.0
@@ -14017,7 +14017,7 @@ snapshots:
       good-enough-parser: 1.1.23
       google-auth-library: 9.15.0(encoding@0.1.13)
       got: 11.8.6
-      graph-data-structure: 4.3.0
+      graph-data-structure: 4.3.1
       handlebars: 4.7.8
       ignore: 7.0.3
       ini: 5.0.0
