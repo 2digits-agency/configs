@@ -2989,6 +2989,11 @@ Backward pagination arguments
    */
   'react-extra/no-unused-state'?: Linter.RuleEntry<[]>
   /**
+   * disallow the use of 'useContext'
+   * @see https://eslint-react.xyz/docs/rules/no-use-context
+   */
+  'react-extra/no-use-context'?: Linter.RuleEntry<[]>
+  /**
    * disallow unnecessary fragments
    * @see https://eslint-react.xyz/docs/rules/no-useless-fragment
    */
