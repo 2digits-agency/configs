@@ -69,8 +69,8 @@ importers:
         specifier: 1.25.0
         version: 1.25.0(eslint@9.19.0(jiti@2.4.0))(ts-api-utils@2.0.0(typescript@5.7.3))(typescript@5.7.3)
       '@eslint/compat':
-        specifier: 1.2.5
-        version: 1.2.5(eslint@9.19.0(jiti@2.4.0))
+        specifier: 1.2.6
+        version: 1.2.6(eslint@9.19.0(jiti@2.4.0))
       '@eslint/js':
         specifier: 9.19.0
         version: 9.19.0
@@ -1559,8 +1559,8 @@ packages:
     resolution: {integrity: sha512-br7JklOre9rgb52offLct1yEoBZ3ulrZXIg36RdP1PWs4Se02Wc7DQvXICEuxb4+tNSo9U+KQFvVIdoeThVzPQ==}
     engines: {bun: '>=1.0.15', node: '>=18.18.0'}
 
-  '@eslint/compat@1.2.5':
-    resolution: {integrity: sha512-5iuG/StT+7OfvhoBHPlmxkPA9om6aDUFgmD4+mWKAGsYt4vCe8rypneG03AuseyRHBmcCLXQtIH5S26tIoggLg==}
+  '@eslint/compat@1.2.6':
+    resolution: {integrity: sha512-k7HNCqApoDHM6XzT30zGoETj+D+uUcZUb+IVAJmar3u6bvHf7hhHJcWx09QHj4/a2qrKZMWU0E16tvkiAdv06Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^9.10.0
@@ -8922,7 +8922,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@eslint/compat@1.2.5(eslint@9.19.0(jiti@2.4.0))':
+  '@eslint/compat@1.2.6(eslint@9.19.0(jiti@2.4.0))':
     optionalDependencies:
       eslint: 9.19.0(jiti@2.4.0)
 
@@ -11421,7 +11421,7 @@ snapshots:
 
   eslint-config-flat-gitignore@2.0.0(eslint@9.19.0(jiti@2.4.0)):
     dependencies:
-      '@eslint/compat': 1.2.5(eslint@9.19.0(jiti@2.4.0))
+      '@eslint/compat': 1.2.6(eslint@9.19.0(jiti@2.4.0))
       eslint: 9.19.0(jiti@2.4.0)
 
   eslint-config-prettier@10.0.1(eslint@9.19.0(jiti@2.4.0)):
