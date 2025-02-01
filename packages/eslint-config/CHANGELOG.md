@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 2.14.7
+
+### Patch Changes
+
+- 0763a36: Updated eslint-config-flat-gitignore
+- a456260: Updated @tanstack/eslint-plugin-query
+- bb621dd: Updated @eslint/compat
+- f265e61: Updated react linting rules
+- 60fb81e: Updated turborepo
+- f03154d: Updated @eslint-react/eslint-plugin
+
 ## 2.14.6
 
 ### Patch Changes
