@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 2.14.8
+
+### Patch Changes
+
+- a1e5a7c: Updated typescript-eslint
+- 09a2cb7: Updated eslint-flat-config-utils
+- b28ee76: Updated @eslint-react/eslint-plugin
+- Updated dependencies [a1e5a7c]
+- Updated dependencies [4491baf]
+  - @2digits/eslint-plugin@2.3.30
+
 ## 2.14.7
 
 ### Patch Changes
