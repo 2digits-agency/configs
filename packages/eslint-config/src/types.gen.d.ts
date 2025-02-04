@@ -11536,6 +11536,8 @@ type TsNoUnnecessaryBooleanLiteralCompare = []|[{
   allowComparingNullableBooleansToFalse?: boolean
   
   allowComparingNullableBooleansToTrue?: boolean
+  
+  allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing?: boolean
 }]
 // ----- ts/no-unnecessary-condition -----
 type TsNoUnnecessaryCondition = []|[{
