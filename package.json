@@ -37,6 +37,16 @@
     "turbo": "2.4.0",
     "typescript": "5.7.3"
   },
-  "packageManager": "pnpm@9.15.5",
-  "prettier": "@2digits/prettier-config"
+  "packageManager": "pnpm@10.2.0",
+  "prettier": "@2digits/prettier-config",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "better-sqlite3",
+      "core-js-pure",
+      "dtrace-provider",
+      "protobufjs",
+      "re2"
+    ]
+  }
 }
