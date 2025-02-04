@@ -1,4 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>2digits-agency/configs//packages/renovate/default"]
+  "extends": ["local>2digits-agency/configs//packages/renovate/default"],
+  "rebaseWhen": "auto",
+  "schedule": ["at any time"],
+  "updateNotScheduled": true
 }
