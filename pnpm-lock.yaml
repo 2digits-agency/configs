@@ -267,8 +267,8 @@ importers:
   packages/renovate:
     devDependencies:
       renovate:
-        specifier: 39.162.1
-        version: 39.162.1(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 39.164.0
+        version: 39.164.0(encoding@0.1.13)(typanion@3.14.0)
 
   packages/tsconfig:
     devDependencies:
@@ -5737,8 +5737,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.162.1:
-    resolution: {integrity: sha512-xn7tLM1BkQNd0TgY4XWtdoRDXSz5obkLU0lJT1sYIKvOBxYOP+rYPFU3Q/nbX5b6nuTNRb7PL6lIayHnmgZVLg==}
+  renovate@39.164.0:
+    resolution: {integrity: sha512-jTXci5NVra7UCJO+5xKl9eUGFuBzgQcdAZc71Z1C27rTXR4ab7AWwaSt5I5VeTY2T68W8pKuVnU1Bf29IGNm/g==}
     engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^9.0.0}
     hasBin: true
 
@@ -8443,7 +8443,7 @@ snapshots:
       outdent: 0.5.0
       prettier: 2.8.8
       resolve-from: 5.0.0
-      semver: 7.6.3
+      semver: 7.7.0
 
   '@changesets/assemble-release-plan@6.0.5':
     dependencies:
@@ -8452,7 +8452,7 @@ snapshots:
       '@changesets/should-skip-package': 0.1.1
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
-      semver: 7.6.3
+      semver: 7.7.0
 
   '@changesets/changelog-git@0.2.0':
     dependencies:
@@ -8508,7 +8508,7 @@ snapshots:
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
       picocolors: 1.1.1
-      semver: 7.6.3
+      semver: 7.7.0
 
   '@changesets/get-release-plan@4.0.6':
     dependencies:
@@ -11273,7 +11273,7 @@ snapshots:
   eslint-compat-utils@0.5.1(eslint@9.20.0(jiti@2.4.0)):
     dependencies:
       eslint: 9.20.0(jiti@2.4.0)
-      semver: 7.6.3
+      semver: 7.7.0
 
   eslint-compat-utils@0.6.4(eslint@9.20.0(jiti@2.4.0)):
     dependencies:
@@ -13339,7 +13339,7 @@ snapshots:
       ky: 1.7.2
       registry-auth-token: 5.0.2
       registry-url: 6.0.1
-      semver: 7.6.3
+      semver: 7.7.0
 
   package-manager-detector@0.2.0: {}
 
@@ -13813,7 +13813,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.162.1(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.164.0(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.738.0
       '@aws-sdk/client-ec2': 3.738.0
@@ -14059,7 +14059,7 @@ snapshots:
 
   sembear@0.7.0:
     dependencies:
-      semver: 7.6.3
+      semver: 7.7.0
 
   semver-compare@1.0.0: {}
 
