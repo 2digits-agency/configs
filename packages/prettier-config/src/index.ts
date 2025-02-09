@@ -3,7 +3,7 @@ import { tailwindFunctions } from '@2digits/constants';
 import { defineConfig, getTypescriptVersion } from './utils';
 
 export default defineConfig({
-  printWidth: 100,
+  printWidth: 120,
   trailingComma: 'all',
   bracketSameLine: true,
   singleQuote: true,
