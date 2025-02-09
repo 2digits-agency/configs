@@ -1,5 +1,17 @@
 # @2digits/prettier-config
 
+## 2.7.0
+
+### Minor Changes
+
+- 6e8409a: Updated printWidth to 120
+- 898d3f2: Enabled experimentalOperatorPosition
+
+### Patch Changes
+
+- a4448ae: Updated prettier
+- 3a618b0: Exclude pnpm-lock.yaml by default
+
 ## 2.6.6
 
 ### Patch Changes
