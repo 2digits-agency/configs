@@ -11,12 +11,12 @@ import { devDependencies } from '../package.json';
 const semverRegex = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/;
 const localTypescriptVersion = devDependencies.typescript.replace(semverRegex, '');
 
-type PrettierConfigWithPlugins = Options &
-  ImportOrderConfig &
-  PluginOptions &
-  SqlFormatOptions &
-  PrettierTaploOptions &
-  PluginEmbedOptions;
+type PrettierConfigWithPlugins = Options
+  & ImportOrderConfig
+  & PluginOptions
+  & SqlFormatOptions
+  & PrettierTaploOptions
+  & PluginEmbedOptions;
 
 /**
  * Define a Prettier configuration with plugins.

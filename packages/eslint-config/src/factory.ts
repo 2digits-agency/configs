@@ -135,9 +135,9 @@ export function twoDigits(
   if (
     enabled(
       options.tanstack,
-      isPackageExists('react-query') ||
-        isPackageExists('@tanstack/react-query') ||
-        isPackageExists('@tanstack/react-query-devtools'),
+      isPackageExists('react-query')
+        || isPackageExists('@tanstack/react-query')
+        || isPackageExists('@tanstack/react-query-devtools'),
     )
   ) {
     composer = composer.append(tanstack(config(options.tanstack)));
