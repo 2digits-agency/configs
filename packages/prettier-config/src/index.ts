@@ -7,6 +7,7 @@ export default defineConfig({
   trailingComma: 'all',
   bracketSameLine: true,
   singleQuote: true,
+  experimentalOperatorPosition: 'start',
 
   importOrder: [
     '<BUILTIN_MODULES>',

@@ -1,5 +1,6 @@
-import type { PrettierConfig } from '@ianvs/prettier-plugin-sort-imports';
+import type { PrettierConfig as ImportOrderConfig } from '@ianvs/prettier-plugin-sort-imports';
 import { getPackageInfoSync } from 'local-pkg';
+import type { Options } from 'prettier';
 import type { PluginEmbedOptions } from 'prettier-plugin-embed';
 import type { SqlFormatOptions } from 'prettier-plugin-sql';
 import type { PluginOptions } from 'prettier-plugin-tailwindcss';
@@ -10,7 +11,8 @@ import { devDependencies } from '../package.json';
 const semverRegex = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/;
 const localTypescriptVersion = devDependencies.typescript.replace(semverRegex, '');
 
-type PrettierConfigWithPlugins = PrettierConfig &
+type PrettierConfigWithPlugins = Options &
+  ImportOrderConfig &
   PluginOptions &
   SqlFormatOptions &
   PrettierTaploOptions &
