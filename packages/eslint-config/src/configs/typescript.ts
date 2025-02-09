@@ -5,9 +5,7 @@ import { GLOB_SRC } from '../globs';
 import type { OptionsTypeScriptWithTypes, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
-export async function typescript(
-  options: OptionsTypeScriptWithTypes = {},
-): Promise<TypedFlatConfigItem[]> {
+export async function typescript(options: OptionsTypeScriptWithTypes = {}): Promise<TypedFlatConfigItem[]> {
   const { overrides = {}, parserOptions = {} } = options;
 
   const [{ plugin, configs, parser }, twoDigits] = await Promise.all([
@@ -17,9 +15,7 @@ export async function typescript(
 
   const strictConfig = renamePluginsInConfigs(configs.strictTypeChecked as never, PluginNameMap);
 
-  const rules = Object.fromEntries(
-    strictConfig.flatMap(({ rules }) => Object.entries(rules ?? {})),
-  );
+  const rules = Object.fromEntries(strictConfig.flatMap(({ rules }) => Object.entries(rules ?? {})));
 
   return [
     {
@@ -55,10 +51,7 @@ export async function typescript(
             fixStyle: 'inline-type-imports',
           },
         ],
-        'ts/no-empty-object-type': [
-          'error',
-          { allowInterfaces: 'with-single-extends', allowObjectTypes: 'never' },
-        ],
+        'ts/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends', allowObjectTypes: 'never' }],
         'ts/no-explicit-any': ['error'],
         'ts/no-import-type-side-effects': ['error'],
         'ts/no-misused-promises': 'off',

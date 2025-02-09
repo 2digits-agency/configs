@@ -9,13 +9,7 @@ import { interopDefault } from '../utils';
 export async function react(
   options: OptionsWithReact & OptionsTypeScriptWithTypes = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const {
-    files = [GLOB_TS, GLOB_TSX],
-    overrides = {},
-    parserOptions,
-    tsconfigRootDir,
-    reactCompiler = true,
-  } = options;
+  const { files = [GLOB_TS, GLOB_TSX], overrides = {}, parserOptions, tsconfigRootDir, reactCompiler = true } = options;
 
   const [pluginReact, pluginReactHooks, react, parser, pluginReactCompiler] = await Promise.all([
     interopDefault(import('@eslint-react/eslint-plugin')),

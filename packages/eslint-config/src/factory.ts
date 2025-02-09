@@ -54,10 +54,7 @@ interface ESLint2DigitsOptions {
   drizzle?: SharedOptions<OptionsWithDrizzle> | boolean;
 }
 
-function enabled<T extends SharedOptions>(
-  options: T | boolean | undefined,
-  defaults?: boolean,
-): options is T {
+function enabled<T extends SharedOptions>(options: T | boolean | undefined, defaults?: boolean): options is T {
   if (typeof options === 'boolean') {
     return options;
   }
@@ -135,9 +132,9 @@ export function twoDigits(
   if (
     enabled(
       options.tanstack,
-      isPackageExists('react-query') ||
-        isPackageExists('@tanstack/react-query') ||
-        isPackageExists('@tanstack/react-query-devtools'),
+      isPackageExists('react-query')
+        || isPackageExists('@tanstack/react-query')
+        || isPackageExists('@tanstack/react-query-devtools'),
     )
   ) {
     composer = composer.append(tanstack(config(options.tanstack)));

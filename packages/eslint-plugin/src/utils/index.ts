@@ -1,8 +1,4 @@
-import type {
-  RuleListener,
-  RuleWithMeta,
-  RuleWithMetaAndName,
-} from '@typescript-eslint/utils/eslint-utils';
+import type { RuleListener, RuleWithMeta, RuleWithMetaAndName } from '@typescript-eslint/utils/eslint-utils';
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint';
 import type { Rule } from 'eslint';
 
@@ -24,10 +20,7 @@ export interface RuleModule<T extends readonly unknown[]> extends Rule.RuleModul
 function RuleCreator(urlCreator: (name: string) => string) {
   // This function will get much easier to call when this is merged https://github.com/Microsoft/TypeScript/pull/26349
   // TODO - when the above PR lands; add type checking for the context.report `data` property
-  return function createNamedRule<
-    TOptions extends readonly Record<string, unknown>[],
-    TMessageIds extends string,
-  >({
+  return function createNamedRule<TOptions extends readonly Record<string, unknown>[], TMessageIds extends string>({
     name,
     meta,
     ...rule
@@ -45,10 +38,7 @@ function RuleCreator(urlCreator: (name: string) => string) {
   };
 }
 
-function createRule<
-  TOptions extends readonly Record<string, unknown>[],
-  TMessageIds extends string,
->({
+function createRule<TOptions extends readonly Record<string, unknown>[], TMessageIds extends string>({
   create,
   defaultOptions,
   meta,
@@ -68,9 +58,10 @@ function createRule<
   } as unknown as RuleModule<TOptions>;
 }
 
-export const createEslintRule = RuleCreator(
-  (ruleName) => `${blobUrl}${ruleName}.ts`,
-) as unknown as <TOptions extends readonly unknown[], TMessageIds extends string>({
+export const createEslintRule = RuleCreator((ruleName) => `${blobUrl}${ruleName}.ts`) as unknown as <
+  TOptions extends readonly unknown[],
+  TMessageIds extends string,
+>({
   name,
   meta,
   ...rule

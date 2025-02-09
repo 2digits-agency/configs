@@ -125,15 +125,7 @@ export function jsonc(): TypedFlatConfigItem[] {
         'jsonc/sort-keys': [
           'error',
           {
-            order: [
-              '$schema',
-              'extends',
-              'compilerOptions',
-              'references',
-              'files',
-              'include',
-              'exclude',
-            ],
+            order: ['$schema', 'extends', 'compilerOptions', 'references', 'files', 'include', 'exclude'],
             pathPattern: '^$',
           },
           {

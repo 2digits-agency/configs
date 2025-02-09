@@ -3,10 +3,11 @@ import { tailwindFunctions } from '@2digits/constants';
 import { defineConfig, getTypescriptVersion } from './utils';
 
 export default defineConfig({
-  printWidth: 100,
+  printWidth: 120,
   trailingComma: 'all',
   bracketSameLine: true,
   singleQuote: true,
+  experimentalOperatorPosition: 'start',
 
   importOrder: [
     '<BUILTIN_MODULES>',
@@ -45,5 +46,14 @@ export default defineConfig({
     require.resolve('prettier-plugin-sql'),
     require.resolve('prettier-plugin-embed'),
     require.resolve('prettier-plugin-tailwindcss'),
+  ],
+
+  overrides: [
+    {
+      files: ['pnpm-lock.yaml'],
+      options: {
+        requirePragma: true,
+      },
+    },
   ],
 });

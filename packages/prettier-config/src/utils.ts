@@ -1,5 +1,6 @@
-import type { PrettierConfig } from '@ianvs/prettier-plugin-sort-imports';
+import type { PrettierConfig as ImportOrderConfig } from '@ianvs/prettier-plugin-sort-imports';
 import { getPackageInfoSync } from 'local-pkg';
+import type { Options } from 'prettier';
 import type { PluginEmbedOptions } from 'prettier-plugin-embed';
 import type { SqlFormatOptions } from 'prettier-plugin-sql';
 import type { PluginOptions } from 'prettier-plugin-tailwindcss';
@@ -10,11 +11,12 @@ import { devDependencies } from '../package.json';
 const semverRegex = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/;
 const localTypescriptVersion = devDependencies.typescript.replace(semverRegex, '');
 
-type PrettierConfigWithPlugins = PrettierConfig &
-  PluginOptions &
-  SqlFormatOptions &
-  PrettierTaploOptions &
-  PluginEmbedOptions;
+type PrettierConfigWithPlugins = Options
+  & ImportOrderConfig
+  & PluginOptions
+  & SqlFormatOptions
+  & PrettierTaploOptions
+  & PluginEmbedOptions;
 
 /**
  * Define a Prettier configuration with plugins.
@@ -30,8 +32,8 @@ export function defineConfig<TConfig extends PrettierConfigWithPlugins>(config: 
 /**
  * Get the version of the locally installed TypeScript.
  *
- * @returns The local TypeScript version, or the version specified in this
- *   [package.json](../package.json) file if TypeScript is not installed locally.
+ * @returns The local TypeScript version, or the version specified in this [package.json](../package.json) file if
+ *   TypeScript is not installed locally.
  */
 export function getTypescriptVersion(): string {
   const ts = getPackageInfoSync('typescript');
