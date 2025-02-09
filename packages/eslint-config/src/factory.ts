@@ -54,10 +54,7 @@ interface ESLint2DigitsOptions {
   drizzle?: SharedOptions<OptionsWithDrizzle> | boolean;
 }
 
-function enabled<T extends SharedOptions>(
-  options: T | boolean | undefined,
-  defaults?: boolean,
-): options is T {
+function enabled<T extends SharedOptions>(options: T | boolean | undefined, defaults?: boolean): options is T {
   if (typeof options === 'boolean') {
     return options;
   }

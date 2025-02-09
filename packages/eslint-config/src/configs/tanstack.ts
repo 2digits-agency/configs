@@ -9,10 +9,7 @@ export async function tanstack(options: OptionsOverrides = {}): Promise<TypedFla
 
   const tanstack = await interopDefault(import('@tanstack/eslint-plugin-query'));
 
-  const recommended = renamePluginsInRules(
-    tanstack.configs['flat/recommended'].at(0)?.rules ?? {},
-    PluginNameMap,
-  );
+  const recommended = renamePluginsInRules(tanstack.configs['flat/recommended'].at(0)?.rules ?? {}, PluginNameMap);
 
   return [
     {

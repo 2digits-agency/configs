@@ -32,8 +32,8 @@ export function defineConfig<TConfig extends PrettierConfigWithPlugins>(config: 
 /**
  * Get the version of the locally installed TypeScript.
  *
- * @returns The local TypeScript version, or the version specified in this
- *   [package.json](../package.json) file if TypeScript is not installed locally.
+ * @returns The local TypeScript version, or the version specified in this [package.json](../package.json) file if
+ *   TypeScript is not installed locally.
  */
 export function getTypescriptVersion(): string {
   const ts = getPackageInfoSync('typescript');

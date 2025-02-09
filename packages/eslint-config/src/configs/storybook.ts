@@ -2,22 +2,13 @@ import { fixupPluginRules } from '@eslint/compat';
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
 
 import { GLOB_STORIES } from '../globs';
-import type {
-  OptionsTypeScriptWithTypes,
-  OptionsWithStorybook,
-  TypedFlatConfigItem,
-} from '../types';
+import type { OptionsTypeScriptWithTypes, OptionsWithStorybook, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
 export async function storybook(
   options: OptionsWithStorybook & OptionsTypeScriptWithTypes = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const {
-    files = [GLOB_STORIES],
-    overrides = {},
-    parserOptions,
-    storybookDirectory = '.storybook',
-  } = options;
+  const { files = [GLOB_STORIES], overrides = {}, parserOptions, storybookDirectory = '.storybook' } = options;
 
   const [storybook, parser] = await Promise.all([
     interopDefault(import('eslint-plugin-storybook')),
