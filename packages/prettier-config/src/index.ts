@@ -46,4 +46,13 @@ export default defineConfig({
     require.resolve('prettier-plugin-embed'),
     require.resolve('prettier-plugin-tailwindcss'),
   ],
+
+  overrides: [
+    {
+      files: ['pnpm-lock.yaml'],
+      options: {
+        requirePragma: true,
+      },
+    },
+  ],
 });
