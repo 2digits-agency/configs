@@ -1,7 +1,10 @@
 [tools]
-node = "22.13.1"
-pnpm = "10.2.1"
+node = "22.14.0"
+pnpm = "10.3.0"
 
 [env]
 FORCE_COLOR = "1"
 NODE_OPTIONS = "--no-deprecation"
+
+[settings]
+pin = true
