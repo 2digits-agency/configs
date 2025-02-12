@@ -267,8 +267,8 @@ importers:
   packages/renovate:
     devDependencies:
       renovate:
-        specifier: 39.166.0
-        version: 39.166.0(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 39.166.1
+        version: 39.166.1(encoding@0.1.13)(typanion@3.14.0)
 
   packages/tsconfig:
     devDependencies:
@@ -5774,8 +5774,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.166.0:
-    resolution: {integrity: sha512-96kgIe3Xvbv54jOwmQQtKDpH0JZM8UdGhftUkrXDs0sLQhBhxoJh+fJFyPdP18kOIGvsdhGiUCbfo+Rrf2VICA==}
+  renovate@39.166.1:
+    resolution: {integrity: sha512-h7Piw9JHB7E7gC2L8MfL4hjqgm/sOZw6N0bmTWP8Ri/T+5SbzSIXxG4oHANlFdingH+R0yeiWE0BoSXQAWwHkQ==}
     engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^9.0.0}
     hasBin: true
 
@@ -10292,7 +10292,7 @@ snapshots:
       fast-glob: 3.3.3
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.6.3
+      semver: 7.7.1
       ts-api-utils: 2.0.1(typescript@5.7.3)
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -11363,7 +11363,7 @@ snapshots:
   eslint-compat-utils@0.5.1(eslint@9.20.1(jiti@2.4.0)):
     dependencies:
       eslint: 9.20.1(jiti@2.4.0)
-      semver: 7.7.0
+      semver: 7.7.1
 
   eslint-compat-utils@0.6.4(eslint@9.20.1(jiti@2.4.0)):
     dependencies:
@@ -13429,7 +13429,7 @@ snapshots:
       ky: 1.7.2
       registry-auth-token: 5.0.2
       registry-url: 6.0.1
-      semver: 7.7.0
+      semver: 7.7.1
 
   package-manager-detector@0.2.0: {}
 
@@ -13905,7 +13905,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.166.0(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.166.1(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.738.0
       '@aws-sdk/client-ec2': 3.738.0
@@ -14151,7 +14151,7 @@ snapshots:
 
   sembear@0.7.0:
     dependencies:
-      semver: 7.7.0
+      semver: 7.7.1
 
   semver-compare@1.0.0: {}
 
