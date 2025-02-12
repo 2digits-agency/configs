@@ -1,5 +1,18 @@
 # @2digits/eslint-config
 
+## 2.14.10
+
+### Patch Changes
+
+- e0c2587: Updated typescript-eslint
+- ca03080: Updated @next/eslint-plugin-next
+- d4d4f07: Updated @tanstack/eslint-plugin-query
+- d6fa644: Updated eslint
+- 74fcf97: Updated turbo
+- Updated dependencies [e0c2587]
+- Updated dependencies [d6fa644]
+  - @2digits/eslint-plugin@2.3.32
+
 ## 2.14.9
 
 ### Patch Changes
