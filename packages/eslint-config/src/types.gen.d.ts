@@ -11542,7 +11542,7 @@ type TsNoUnnecessaryBooleanLiteralCompare = []|[{
 // ----- ts/no-unnecessary-condition -----
 type TsNoUnnecessaryCondition = []|[{
   
-  allowConstantLoopConditions?: boolean
+  allowConstantLoopConditions?: (boolean | ("always" | "never" | "only-allowed-literals"))
   
   allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing?: boolean
   
