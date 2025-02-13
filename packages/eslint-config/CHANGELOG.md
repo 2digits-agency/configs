@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 2.15.0
+
+### Minor Changes
+
+- f5c6de6: Added eslint-plugin-de-morgan for boolean logic
+
+### Patch Changes
+
+- e3abc4c: Updated turborepo
+- a73ce95: Updated globals
+
 ## 2.14.10
 
 ### Patch Changes
