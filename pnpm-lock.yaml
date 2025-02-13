@@ -98,6 +98,9 @@ importers:
       eslint-plugin-antfu:
         specifier: 3.0.0
         version: 3.0.0(eslint@9.20.1(jiti@2.4.0))
+      eslint-plugin-de-morgan:
+        specifier: 1.0.0
+        version: 1.0.0(eslint@9.20.1(jiti@2.4.0))
       eslint-plugin-drizzle:
         specifier: 0.2.3
         version: 0.2.3(eslint@9.20.1(jiti@2.4.0))
@@ -3627,6 +3630,12 @@ packages:
     resolution: {integrity: sha512-USaQMR17+l7a0XWS9Pk0T+t9PszkdeIncyAOp1vsjHQnDKIlusSg+9bwTYWIzlJXkHDarAI06cdt+d5mbAGEKA==}
     peerDependencies:
       eslint: '*'
+
+  eslint-plugin-de-morgan@1.0.0:
+    resolution: {integrity: sha512-MpaG9bTiiu0kvOskZPKvKguynFFC81nyynnY3czHOZvfhvsWFgfRG6ufQmSlzlDbWIf6u7fuEHp4+1uUfWdrvg==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      eslint: '>=8.0.0'
 
   eslint-plugin-drizzle@0.2.3:
     resolution: {integrity: sha512-BO+ymHo33IUNoJlC0rbd7HP9EwwpW4VIp49R/tWQF/d2E1K2kgTf0tCXT0v9MSiBr6gGR1LtPwMLapTKEWSg9A==}
@@ -11385,6 +11394,10 @@ snapshots:
       jsonc-eslint-parser: 2.4.0
 
   eslint-plugin-antfu@3.0.0(eslint@9.20.1(jiti@2.4.0)):
+    dependencies:
+      eslint: 9.20.1(jiti@2.4.0)
+
+  eslint-plugin-de-morgan@1.0.0(eslint@9.20.1(jiti@2.4.0)):
     dependencies:
       eslint: 9.20.1(jiti@2.4.0)
 

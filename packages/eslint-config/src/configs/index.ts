@@ -1,4 +1,5 @@
 export * from './antfu';
+export * from './boolean';
 export * from './comments';
 export * from './drizzle';
 export * from './graphql';
