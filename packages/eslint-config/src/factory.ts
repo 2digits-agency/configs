@@ -3,6 +3,7 @@ import { isPackageExists } from 'local-pkg';
 
 import {
   antfu,
+  boolean,
   comments,
   graphql,
   ignores,
@@ -78,6 +79,7 @@ export function twoDigits(
   let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>(
     ignores(options.ignores),
     javascript(options.js),
+    boolean(),
     node(),
     comments(),
     jsdoc(),

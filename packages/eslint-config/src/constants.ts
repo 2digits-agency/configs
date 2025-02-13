@@ -21,4 +21,5 @@ export const PluginNameMap = {
   '@graphql-eslint': 'gql',
   sonarjs: 'sonar',
   drizzle: 'drizzle',
+  'de-morgan': 'boolean',
 } as const;
