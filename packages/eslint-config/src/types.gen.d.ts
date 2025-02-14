@@ -4258,6 +4258,7 @@ Backward pagination arguments
   /**
    * Disabling Certificate Transparency monitoring is security-sensitive
    * @see https://sonarsource.github.io/rspec/#/rspec/S5742/javascript
+   * @deprecated
    */
   'sonar/certificate-transparency'?: Linter.RuleEntry<SonarCertificateTransparency>
   /**
@@ -10341,7 +10342,7 @@ type SonarClassName = []|[{
   format?: string
 }]
 // ----- sonar/cognitive-complexity -----
-type SonarCognitiveComplexity = []|[number]|[number, ("sonar-runtime" | "metric")]
+type SonarCognitiveComplexity = []|[(number | string)]|[(number | string), string]
 // ----- sonar/comment-regex -----
 type SonarCommentRegex = []|[{
   regularExpression?: string
