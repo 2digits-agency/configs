@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 2.15.1
+
+### Patch Changes
+
+- 2022af5: Updated eslint-plugin-de-morgan
+- 0f0d669: Updated eslint-plugin-sonarjs
+
 ## 2.15.0
 
 ### Minor Changes

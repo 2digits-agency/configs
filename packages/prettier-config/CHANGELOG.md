@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 2.7.1
+
+### Patch Changes
+
+- cdf78bf: Updated prettier
+
 ## 2.7.0
 
 ### Minor Changes
