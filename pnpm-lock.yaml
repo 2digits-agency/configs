@@ -96,8 +96,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       eslint-plugin-antfu:
-        specifier: 3.0.0
-        version: 3.0.0(eslint@9.20.1(jiti@2.4.0))
+        specifier: 3.1.0
+        version: 3.1.0(eslint@9.20.1(jiti@2.4.0))
       eslint-plugin-de-morgan:
         specifier: 1.0.1
         version: 1.0.1(eslint@9.20.1(jiti@2.4.0))
@@ -3119,8 +3119,8 @@ packages:
       '@eslint/json':
         optional: true
 
-  eslint-plugin-antfu@3.0.0:
-    resolution: {integrity: sha512-USaQMR17+l7a0XWS9Pk0T+t9PszkdeIncyAOp1vsjHQnDKIlusSg+9bwTYWIzlJXkHDarAI06cdt+d5mbAGEKA==}
+  eslint-plugin-antfu@3.1.0:
+    resolution: {integrity: sha512-BKlJcpIG8OGyU5JwQCdyTGaLuRgItheEYinhNroCx3bcuz2bCSYK0eNzJvPy2TY8yyz0uSSRxr5KHuQ1WOdOKg==}
     peerDependencies:
       eslint: '*'
 
@@ -10154,7 +10154,7 @@ snapshots:
       esquery: 1.6.0
       jsonc-eslint-parser: 2.4.0
 
-  eslint-plugin-antfu@3.0.0(eslint@9.20.1(jiti@2.4.0)):
+  eslint-plugin-antfu@3.1.0(eslint@9.20.1(jiti@2.4.0)):
     dependencies:
       eslint: 9.20.1(jiti@2.4.0)
 
