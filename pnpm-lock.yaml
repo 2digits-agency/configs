@@ -270,8 +270,8 @@ importers:
   packages/renovate:
     devDependencies:
       renovate:
-        specifier: 39.170.2
-        version: 39.170.2(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 39.171.1
+        version: 39.171.1(encoding@0.1.13)(typanion@3.14.0)
 
   packages/tsconfig:
     devDependencies:
@@ -5059,8 +5059,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  prettier@3.4.2:
-    resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
+  prettier@3.5.0:
+    resolution: {integrity: sha512-quyMrVt6svPS7CjQ9gKb3GLEX/rl3BCL2oa/QkNcXv4YNVBC9olt3s+H7ukto06q7B1Qz46PbrKLO34PR6vXcA==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -5241,8 +5241,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.170.2:
-    resolution: {integrity: sha512-65iVvjAl3GUKr2N3azfzywEkCYndGRzNZDO9jvqoSHOIZw5Ytk1/0GD/fvw9GjnEMsggdfnd4RgwnorbNbTfaA==}
+  renovate@39.171.1:
+    resolution: {integrity: sha512-pPP5E1l/mm8DcCG66dCojUaramO1JdjEj9eTvlZB9f5aeFOSwcmb5Kb8v9Y8Xmkbyug5XtSvHD2yjRf8pYz0lA==}
     engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^9.0.0}
     hasBin: true
 
@@ -12405,7 +12405,7 @@ snapshots:
 
   prettier@2.8.8: {}
 
-  prettier@3.4.2: {}
+  prettier@3.5.0: {}
 
   prettier@3.5.1: {}
 
@@ -12631,7 +12631,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.170.2(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.171.1(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.738.0
       '@aws-sdk/client-ec2': 3.738.0
@@ -12720,7 +12720,7 @@ snapshots:
       p-queue: 6.6.2
       p-throttle: 4.1.1
       parse-link-header: 2.0.0
-      prettier: 3.4.2
+      prettier: 3.5.0
       protobufjs: 7.4.0
       punycode: 2.3.1
       redis: 4.7.0
