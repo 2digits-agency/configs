@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 2.15.2
+
+### Patch Changes
+
+- d211c9d: Updated eslint-plugin-storybook
+- e7891a6: Updated typescript-eslint
+- 32255d7: Updated eslint-plugin-unicorn
+- 696db11: Updated eslint-plugin-antfu
+- Updated dependencies [e7891a6]
+  - @2digits/eslint-plugin@2.3.33
+
 ## 2.15.1
 
 ### Patch Changes
