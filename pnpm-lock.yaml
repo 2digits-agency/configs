@@ -270,8 +270,8 @@ importers:
   packages/renovate:
     devDependencies:
       renovate:
-        specifier: 39.172.0
-        version: 39.172.0(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 39.172.1
+        version: 39.172.1(encoding@0.1.13)(typanion@3.14.0)
 
   packages/tsconfig:
     devDependencies:
@@ -5284,8 +5284,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.172.0:
-    resolution: {integrity: sha512-CYqV6z2zgvqmgp6QHbGic30jNChfQYICs/93yfTLhu4PzD/RC31HZNP9K1k3KMobZgt8FUp6qCVH/yvmmdQxCw==}
+  renovate@39.172.1:
+    resolution: {integrity: sha512-wSqfQ2yoHDyHouIdWIK3X4OoWoauJCXkXRm6zlIEprw9ktx+oQBOP5GFyefHY+iM+JBV8OxguGU3csCQLS1pdw==}
     engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^9.0.0}
     hasBin: true
 
@@ -12725,7 +12725,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.172.0(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.172.1(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.738.0
       '@aws-sdk/client-ec2': 3.738.0
