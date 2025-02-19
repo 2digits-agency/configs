@@ -21,7 +21,7 @@ export interface TypedFlatConfigItem
   // eslint-disable-next-line ts/no-explicit-any
   plugins?: Record<string, any>;
 
-  languageOptions?: FlatConfig.LanguageOptions;
+  languageOptions?: FlatConfig.LanguageOptions & Record<string, unknown>;
 }
 
 export interface OptionsOverrides {
