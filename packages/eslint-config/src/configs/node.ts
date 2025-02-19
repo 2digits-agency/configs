@@ -1,9 +1,11 @@
+import { GLOB_SRC } from '../globs';
 import { pluginNode } from '../plugins';
 import type { TypedFlatConfigItem } from '../types';
 
 export function node(): TypedFlatConfigItem[] {
   return [
     {
+      files: [GLOB_SRC],
       name: '2digits:node',
       settings: {
         node: {

@@ -1,5 +1,6 @@
 import { findUp } from 'find-up';
 
+import { GLOB_SRC } from '../globs';
 import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
@@ -14,6 +15,7 @@ export async function tailwind(options: OptionsOverrides = {}): Promise<TypedFla
 
   return [
     {
+      files: [GLOB_SRC],
       name: '2digits:tailwind',
       plugins: {
         tailwindcss,

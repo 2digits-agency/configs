@@ -1,9 +1,11 @@
+import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
 export async function jsdoc(): Promise<TypedFlatConfigItem[]> {
   return [
     {
+      files: [GLOB_SRC],
       name: '2digits:jsdoc',
       plugins: {
         jsdoc: await interopDefault(import('eslint-plugin-jsdoc')),

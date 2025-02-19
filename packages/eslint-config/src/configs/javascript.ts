@@ -1,6 +1,7 @@
 import eslint from '@eslint/js';
 import globals from 'globals';
 
+import { GLOB_SRC } from '../globs';
 import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
 
 export function javascript(options: OptionsOverrides = {}): TypedFlatConfigItem[] {
@@ -8,6 +9,7 @@ export function javascript(options: OptionsOverrides = {}): TypedFlatConfigItem[
 
   return [
     {
+      files: [GLOB_SRC],
       name: '2digits:javascript',
       languageOptions: {
         ecmaVersion: 2022,
