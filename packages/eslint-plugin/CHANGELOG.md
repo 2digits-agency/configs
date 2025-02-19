@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.3.34
+
+### Patch Changes
+
+- c26b3b0: Updated vitest
+
 ## 2.3.33
 
 ### Patch Changes

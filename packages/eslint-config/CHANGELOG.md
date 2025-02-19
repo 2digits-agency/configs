@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 3.0.0
+
+### Major Changes
+
+- f0114ec: Added @eslint/css for css linting
+
+### Patch Changes
+
+- 1bc319a: Updated eslint-typegen
+- 04bbec0: Updated eslint-config-flat-gitignore
+- 5623a27: Updated eslint-plugin-de-morgan
+- Updated dependencies [c26b3b0]
+  - @2digits/eslint-plugin@2.3.34
+
 ## 2.15.2
 
 ### Patch Changes
