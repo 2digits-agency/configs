@@ -246,6 +246,35 @@ export interface RuleOptions {
    */
   'constructor-super'?: Linter.RuleEntry<[]>
   /**
+   * Disallow duplicate @import rules
+   * @see https://github.com/eslint/css/blob/main/docs/rules/no-duplicate-imports.md
+   */
+  'css/no-duplicate-imports'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow empty blocks
+   * @see https://github.com/eslint/css/blob/main/docs/rules/no-empty-blocks.md
+   */
+  'css/no-empty-blocks'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow invalid at-rules
+   * @see https://github.com/eslint/css/blob/main/docs/rules/no-invalid-at-rules.md
+   */
+  'css/no-invalid-at-rules'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow invalid properties
+   * @see https://github.com/eslint/css/blob/main/docs/rules/no-invalid-properties.md
+   */
+  'css/no-invalid-properties'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce the use of baseline features
+   */
+  'css/require-baseline'?: Linter.RuleEntry<CssRequireBaseline>
+  /**
+   * Require use of layers
+   * @see https://github.com/eslint/css/blob/main/docs/rules/use-layers.md
+   */
+  'css/use-layers'?: Linter.RuleEntry<CssUseLayers>
+  /**
    * Enforce consistent brace style for all control statements
    * @see https://eslint.org/docs/latest/rules/curly
    */
@@ -7195,6 +7224,16 @@ type ConsistentReturn = []|[{
 }]
 // ----- consistent-this -----
 type ConsistentThis = string[]
+// ----- css/require-baseline -----
+type CssRequireBaseline = []|[{
+  available?: ("widely" | "newly")
+}]
+// ----- css/use-layers -----
+type CssUseLayers = []|[{
+  allowUnnamedLayers?: boolean
+  requireImportLayers?: boolean
+  layerNamePattern?: string
+}]
 // ----- curly -----
 type Curly = ([]|["all"] | []|[("multi" | "multi-line" | "multi-or-nest")]|[("multi" | "multi-line" | "multi-or-nest"), "consistent"])
 // ----- default-case -----
@@ -12089,4 +12128,4 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   onlyEquality?: boolean
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:drizzle' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'
+export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css/recommended' | '2digits:drizzle' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn'

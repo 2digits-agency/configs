@@ -5,6 +5,8 @@ import {
   antfu,
   boolean,
   comments,
+  css,
+  drizzle,
   graphql,
   ignores,
   javascript,
@@ -23,7 +25,6 @@ import {
   typescript,
   unicorn,
 } from './configs';
-import { drizzle } from './configs/drizzle';
 import { PluginNameMap } from './constants';
 import type {
   ConfigNames,
@@ -88,6 +89,7 @@ export function twoDigits(
     regexp(),
     antfu(),
     jsonc(),
+    css(),
   );
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {
