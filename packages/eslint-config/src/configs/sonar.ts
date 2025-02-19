@@ -1,9 +1,11 @@
+import { GLOB_SRC } from '../globs';
 import { pluginSonar } from '../plugins';
 import type { TypedFlatConfigItem } from '../types';
 
 export function sonar(): TypedFlatConfigItem[] {
   return [
     {
+      files: [GLOB_SRC],
       name: '2digits:sonar',
       plugins: {
         sonar: pluginSonar,

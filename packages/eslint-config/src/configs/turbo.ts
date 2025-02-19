@@ -1,3 +1,4 @@
+import { GLOB_SRC } from '../globs';
 import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
@@ -8,6 +9,7 @@ export async function turbo(options: OptionsOverrides = {}): Promise<TypedFlatCo
 
   return [
     {
+      files: [GLOB_SRC],
       name: '2digits:turbo',
       plugins: {
         turbo,

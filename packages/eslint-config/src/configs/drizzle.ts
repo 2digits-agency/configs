@@ -1,5 +1,6 @@
 import { fixupPluginRules } from '@eslint/compat';
 
+import { GLOB_SRC } from '../globs';
 import type { OptionsWithDrizzle, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
@@ -10,6 +11,7 @@ export async function drizzle(options: OptionsWithDrizzle = {}): Promise<TypedFl
 
   return [
     {
+      files: [GLOB_SRC],
       name: '2digits:drizzle',
       plugins: {
         drizzle: fixupPluginRules(drizzle as never),
