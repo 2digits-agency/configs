@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.3.35
+
+### Patch Changes
+
+- 148f68f: Fixed plugin types
+
 ## 2.3.34
 
 ### Patch Changes

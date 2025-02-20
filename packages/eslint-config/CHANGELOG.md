@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 3.0.1
+
+### Patch Changes
+
+- b2c7ac7: Fixed @eslint/css installing fake deps
+- Updated dependencies [148f68f]
+  - @2digits/eslint-plugin@2.3.35
+
 ## 3.0.0
 
 ### Major Changes
