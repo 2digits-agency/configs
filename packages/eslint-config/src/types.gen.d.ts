@@ -5,7 +5,7 @@ import type { Linter } from 'eslint'
 export interface RuleOptions {
   /**
    * Enforce giving proper names to type parameters when there are two or more
-   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.3.34/packages/eslint/src/rules/type-param-names.ts
+   * @see https://github.com/2digits-agency/configs/blob/@2digits/eslint-plugin@2.3.35/packages/eslint/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
   /**
@@ -2818,7 +2818,7 @@ Backward pagination arguments
    */
   'react-extra/jsx-no-duplicate-props'?: Linter.RuleEntry<[]>
   /**
-   * helpes `eslint/no-unused-vars` to correctly mark JSX variables as used.
+   * marks variables used in JSX as used
    * @see https://eslint-react.xyz/docs/rules/use-jsx-vars
    */
   'react-extra/jsx-uses-vars'?: Linter.RuleEntry<[]>
@@ -2953,6 +2953,11 @@ Backward pagination arguments
    */
   'react-extra/no-missing-component-display-name'?: Linter.RuleEntry<[]>
   /**
+   * require 'displayName' for contexts.
+   * @see https://eslint-react.xyz/docs/rules/no-missing-context-display-name
+   */
+  'react-extra/no-missing-context-display-name'?: Linter.RuleEntry<[]>
+  /**
    * require 'key' when rendering list
    * @see https://eslint-react.xyz/docs/rules/no-missing-key
    */
@@ -3033,7 +3038,7 @@ Backward pagination arguments
    */
   'react-extra/no-use-context'?: Linter.RuleEntry<[]>
   /**
-   * disallow unnecessary fragments
+   * disallow useless fragments
    * @see https://eslint-react.xyz/docs/rules/no-useless-fragment
    */
   'react-extra/no-useless-fragment'?: Linter.RuleEntry<ReactExtraNoUselessFragment>
@@ -3063,7 +3068,7 @@ Backward pagination arguments
    */
   'react-extra/prefer-shorthand-fragment'?: Linter.RuleEntry<[]>
   /**
-   * helpes `eslint/no-unused-vars` to correctly mark JSX variables as used.
+   * marks variables used in JSX as used
    * @see https://eslint-react.xyz/docs/rules/use-jsx-vars
    */
   'react-extra/use-jsx-vars'?: Linter.RuleEntry<[]>
@@ -3143,7 +3148,7 @@ Backward pagination arguments
    */
   'react-naming-convention/filename-extension'?: Linter.RuleEntry<ReactNamingConventionFilenameExtension>
   /**
-   * enforce destructuring and symmetric naming of 'useState' hook value and setter variables
+   * enforce destructuring and symmetric naming of 'useState' hook value and setter
    * @see https://eslint-react.xyz/docs/rules/naming-convention-use-state
    */
   'react-naming-convention/use-state'?: Linter.RuleEntry<[]>
