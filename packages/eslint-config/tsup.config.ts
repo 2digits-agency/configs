@@ -6,7 +6,7 @@ import { flatConfigsToRulesDTS } from 'eslint-typegen/core';
 import { builtinRules } from 'eslint/use-at-your-own-risk';
 import { defineConfig } from 'tsup';
 
-import { name } from './package.json';
+import { dependencies, name } from './package.json';
 
 export default defineConfig({
   minify: true,
@@ -19,6 +19,8 @@ export default defineConfig({
   dts: true,
   shims: true,
   name,
+  skipNodeModulesBundle: false,
+  external: Object.keys(dependencies),
   plugins: [
     {
       name: 'eslint-typegen',

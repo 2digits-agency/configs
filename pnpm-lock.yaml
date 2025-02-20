@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@eslint/css>@types/css-tree': 2.3.10
+
 importers:
 
   .:
@@ -71,12 +74,15 @@ importers:
       '@eslint/compat':
         specifier: 1.2.6
         version: 1.2.6(eslint@9.20.1(jiti@2.4.0))
-      '@eslint/css':
-        specifier: 0.4.0
-        version: 0.4.0
+      '@eslint/core':
+        specifier: 0.11.0
+        version: 0.11.0
       '@eslint/js':
         specifier: 9.20.0
         version: 9.20.0
+      '@eslint/plugin-kit':
+        specifier: 0.2.6
+        version: 0.2.6
       '@graphql-eslint/eslint-plugin':
         specifier: 4.3.0
         version: 4.3.0(@types/node@22.13.4)(encoding@0.1.13)(eslint@9.20.1(jiti@2.4.0))(graphql@16.8.2)(typescript@5.7.3)
@@ -89,6 +95,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.24.1
         version: 8.24.1(eslint@9.20.1(jiti@2.4.0))(typescript@5.7.3)
+      css-tree:
+        specifier: 3.1.0
+        version: 3.1.0
       eslint-config-flat-gitignore:
         specifier: 2.1.0
         version: 2.1.0(eslint@9.20.1(jiti@2.4.0))
@@ -168,6 +177,9 @@ importers:
       '@eslint/config-inspector':
         specifier: 1.0.0
         version: 1.0.0(eslint@9.20.1(jiti@2.4.0))
+      '@eslint/css':
+        specifier: 0.4.0
+        version: 0.4.0
       '@types/eslint__js':
         specifier: 8.42.3
         version: 8.42.3
@@ -1111,6 +1123,10 @@ packages:
     resolution: {integrity: sha512-lB05FkqEdUg2AA0xEbUz0SnkXT1LcCTa438W4IWTUh4hdOnVbQyOJ81OrDXsJk/LSiJHubgGEFoR5EHq1NsH1A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@eslint/plugin-kit@0.2.6':
+    resolution: {integrity: sha512-+0TjwR1eAUdZtvv/ir1mGX+v0tUoR3VEPB8Up0LLJC+whRW0GgBBtpbOkg/a/U4Dxa6l5a3l9AJ1aWIQVyoWJA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
   '@graphql-eslint/eslint-plugin@4.3.0':
     resolution: {integrity: sha512-9UTJfYNGAK5GuFapsNvA+508ke8YPc9Yt6mgT4Lc+gS18p53oG5wmXd3jdmNeVOfxhUefJcJbn925vIrjg/8/g==}
     engines: {node: '>=18'}
@@ -2013,8 +2029,8 @@ packages:
   '@types/cacheable-request@6.0.3':
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
 
-  '@types/css-tree@file:packages/eslint-config/typings/css-tree':
-    resolution: {directory: packages/eslint-config/typings/css-tree, type: directory}
+  '@types/css-tree@2.3.10':
+    resolution: {integrity: sha512-WcaBazJ84RxABvRttQjjFWgTcHvZR9jGr0Y3hccPkHjFyk/a3N8EuxjKr+QfrwjoM5b1yI1Uj1i7EzOAAwBwag==}
 
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
@@ -7727,8 +7743,8 @@ snapshots:
   '@eslint/css@0.4.0':
     dependencies:
       '@eslint/core': 0.10.0
-      '@eslint/plugin-kit': 0.2.5
-      '@types/css-tree': file:packages/eslint-config/typings/css-tree
+      '@eslint/plugin-kit': 0.2.6
+      '@types/css-tree': 2.3.10
       css-tree: 3.1.0
 
   '@eslint/eslintrc@3.2.0':
@@ -7752,6 +7768,11 @@ snapshots:
   '@eslint/plugin-kit@0.2.5':
     dependencies:
       '@eslint/core': 0.10.0
+      levn: 0.4.1
+
+  '@eslint/plugin-kit@0.2.6':
+    dependencies:
+      '@eslint/core': 0.11.0
       levn: 0.4.1
 
   '@graphql-eslint/eslint-plugin@4.3.0(@types/node@22.13.4)(encoding@0.1.13)(eslint@9.20.1(jiti@2.4.0))(graphql@16.8.2)(typescript@5.7.3)':
@@ -8893,7 +8914,7 @@ snapshots:
       '@types/node': 22.13.4
       '@types/responselike': 1.0.3
 
-  '@types/css-tree@file:packages/eslint-config/typings/css-tree': {}
+  '@types/css-tree@2.3.10': {}
 
   '@types/debug@4.1.12':
     dependencies:
