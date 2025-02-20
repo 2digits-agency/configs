@@ -263,8 +263,8 @@ importers:
         specifier: 0.6.11
         version: 0.6.11(@ianvs/prettier-plugin-sort-imports@4.4.1(prettier@3.5.1))(prettier-plugin-jsdoc@1.3.2(prettier@3.5.1))(prettier@3.5.1)
       prettier-plugin-toml:
-        specifier: 2.0.1
-        version: 2.0.1(prettier@3.5.1)
+        specifier: 2.0.2
+        version: 2.0.2(prettier@3.5.1)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -285,8 +285,8 @@ importers:
   packages/renovate:
     devDependencies:
       renovate:
-        specifier: 39.175.8
-        version: 39.175.8(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 39.176.4
+        version: 39.176.4(encoding@0.1.13)(typanion@3.14.0)
 
   packages/tsconfig:
     devDependencies:
@@ -5075,8 +5075,8 @@ packages:
       prettier-plugin-svelte:
         optional: true
 
-  prettier-plugin-toml@2.0.1:
-    resolution: {integrity: sha512-99z1YOkViECHtXQjGIigd3talI/ybUI1zB3yniAwUrlWBXupNXThB1hM6bwSMUEj2/+tomTlMtT98F5t4s8IWA==}
+  prettier-plugin-toml@2.0.2:
+    resolution: {integrity: sha512-tUIIhyfdVX5DMsLGKX/2qaEwi3W48OkUSR7XC91PRI5jFzhexmaYWkrSP1Xh/eWUcEc0TVMQenM3lB09xLQstQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       prettier: ^3.0.3
@@ -5271,9 +5271,9 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.175.8:
-    resolution: {integrity: sha512-kXmoGrKXNOzvPGyOZy4SlMJOC/H6I9pEcaat9gZYUein2p5Gmlw96A/3Qlv7XsO2/37TsMCnKF3Wyrqz8kzYWw==}
-    engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^10.0.0}
+  renovate@39.176.4:
+    resolution: {integrity: sha512-W9yoJ1zxV6pzd1IDl6VlmQS2bBTTk579H0WHikCHLCZICzjpUe118j2xZp5IxozBEWHhv+ddGdgE1omhLaR5Jw==}
+    engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^9.0.0}
     hasBin: true
 
   repeat-string@1.6.1:
@@ -12423,7 +12423,7 @@ snapshots:
       '@ianvs/prettier-plugin-sort-imports': 4.4.1(prettier@3.5.1)
       prettier-plugin-jsdoc: 1.3.2(prettier@3.5.1)
 
-  prettier-plugin-toml@2.0.1(prettier@3.5.1):
+  prettier-plugin-toml@2.0.2(prettier@3.5.1):
     dependencies:
       '@taplo/lib': 0.4.0-alpha.2
       prettier: 3.5.1
@@ -12668,7 +12668,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.175.8(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.176.4(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.738.0
       '@aws-sdk/client-ec2': 3.738.0
