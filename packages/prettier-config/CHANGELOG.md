@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 2.7.2
+
+### Patch Changes
+
+- 8895765: Updated prettier-plugin-toml
+
 ## 2.7.1
 
 ### Patch Changes
