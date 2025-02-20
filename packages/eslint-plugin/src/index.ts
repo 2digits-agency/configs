@@ -1,5 +1,5 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
-import type { ESLint, Linter } from 'eslint';
+import type { Linter } from 'eslint';
 
 import { version } from '../package.json';
 
@@ -14,16 +14,13 @@ const plugin = {
   rules,
   configs: {
     recommended: {
-      plugins: {
-        get '@2digits'(): ESLint.Plugin {
-          return plugin;
-        },
-        set '@2digits'(_) {},
-      },
-      rules: recommended.rules as Record<string, Linter.RuleEntry<[]>>,
+      plugins: { '@2digits': {} as FlatConfig.Plugin },
+      rules: recommended.rules,
     },
   },
-} satisfies FlatConfig.Plugin;
+};
+
+plugin.configs.recommended.plugins['@2digits'] = plugin;
 
 export default plugin;
 
