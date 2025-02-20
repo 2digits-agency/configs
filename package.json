@@ -47,6 +47,9 @@
       "dtrace-provider",
       "protobufjs",
       "re2"
-    ]
+    ],
+    "overrides": {
+      "@eslint/css>@types/css-tree": "2.3.10"
+    }
   }
 }
