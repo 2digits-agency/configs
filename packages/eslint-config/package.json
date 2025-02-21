@@ -3,6 +3,11 @@
   "version": "3.0.1",
   "description": "Effortlessly enforce best practices and catch errors with this comprehensive ESLint configuration for TypeScript, featuring popular plugins like @typescript-eslint, eslint-plugin-react, and eslint-plugin-unicorn.",
   "homepage": "https://2d-configs.vercel.app/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/2digits-agency/configs.git",
+    "directory": "packages/eslint-config"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
