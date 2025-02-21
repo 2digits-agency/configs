@@ -1,0 +1,52 @@
+name: 🚀 pkg.pr.new Workflow
+
+concurrency:
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}-${{ github.ref == 'refs/heads/main' && github.sha || ''}}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  publish:
+    name: 📦 Publish Preview Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🗃️ Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: 🏭 Setup Node
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
+        with:
+          node-version: 22
+
+      - name: 🛸 Setup PNPM
+        uses: pnpm/action-setup@v3
+
+      - name: 📂 Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> "$GITHUB_ENV"
+
+      - name: 🧩 Setup pnpm cache
+        uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: 🚀 Publish with pkg.pr.new
+        run: pnpm pkg-pr-new publish './packages/*'

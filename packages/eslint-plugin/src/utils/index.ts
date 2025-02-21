@@ -2,9 +2,9 @@ import type { RuleListener, RuleWithMeta, RuleWithMetaAndName } from '@typescrip
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint';
 import type { Rule } from 'eslint';
 
-import { name, repository, version } from '../../package.json';
+import { repository } from '../../package.json';
 
-const blobUrl = `${repository.url}/blob/${name}@${version}/packages/eslint/src/rules/`;
+const blobUrl = `${repository.url.replaceAll('.git', '')}/tree/main/${repository.directory}/src/rules`;
 
 /** @public */
 export interface RuleModule<T extends readonly unknown[]> extends Rule.RuleModule {
