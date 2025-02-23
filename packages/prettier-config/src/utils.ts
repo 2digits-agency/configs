@@ -2,6 +2,7 @@ import type { PrettierConfig as ImportOrderConfig } from '@ianvs/prettier-plugin
 import { getPackageInfoSync } from 'local-pkg';
 import type { Options } from 'prettier';
 import type { PluginEmbedOptions } from 'prettier-plugin-embed';
+import type { ShParserOptions } from 'prettier-plugin-sh';
 import type { SqlFormatOptions } from 'prettier-plugin-sql';
 import type { PluginOptions } from 'prettier-plugin-tailwindcss';
 import type { PrettierTaploOptions } from 'prettier-plugin-toml';
@@ -16,7 +17,8 @@ type PrettierConfigWithPlugins = Options
   & PluginOptions
   & SqlFormatOptions
   & PrettierTaploOptions
-  & PluginEmbedOptions;
+  & PluginEmbedOptions
+  & Partial<ShParserOptions>;
 
 /**
  * Define a Prettier configuration with plugins.
