@@ -38,12 +38,16 @@ export default defineConfig({
   language: 'sqlite',
   keywordCase: 'upper',
 
+  experimentalWasm: true,
+  indent: 2,
+
   plugins: [
     require.resolve('prettier-plugin-toml'),
     require.resolve('@prettier/plugin-xml'),
     require.resolve('@ianvs/prettier-plugin-sort-imports'),
     require.resolve('prettier-plugin-jsdoc'),
     require.resolve('prettier-plugin-sql'),
+    require.resolve('prettier-plugin-sh'),
     require.resolve('prettier-plugin-embed'),
     require.resolve('prettier-plugin-tailwindcss'),
   ],
