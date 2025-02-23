@@ -84,8 +84,8 @@ importers:
         specifier: 9.20.0
         version: 9.20.0
       '@eslint/plugin-kit':
-        specifier: 0.2.6
-        version: 0.2.6
+        specifier: 0.2.7
+        version: 0.2.7
       '@graphql-eslint/eslint-plugin':
         specifier: 4.3.0
         version: 4.3.0(@types/node@22.13.4)(encoding@0.1.13)(eslint@9.20.1(jiti@2.4.0))(graphql@16.8.2)(typescript@5.7.3)
@@ -1109,6 +1109,10 @@ packages:
     resolution: {integrity: sha512-DWUB2pksgNEb6Bz2fggIy1wh6fGgZP4Xyy/Mt0QZPiloKKXerbqq9D3SBQTlCRYOrcRPu4vuz+CGjwdfqxnoWA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@eslint/core@0.12.0':
+    resolution: {integrity: sha512-cmrR6pytBuSMTaBweKoGMwu3EiHiEC+DoyupPmlZ0HxBJBtIxwe+j/E4XPIKNx+Q74c8lXKPwYawBf5glsTkHg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
   '@eslint/css@0.4.0':
     resolution: {integrity: sha512-aEvoIhIxa6nHvqTQxg56YgV8/9FO78ka1XnqkVnM07ZqJgeeILCNOHzwPs1z0N1vlj0Um2s4yMG8Ilau+D05Hg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -1129,8 +1133,8 @@ packages:
     resolution: {integrity: sha512-lB05FkqEdUg2AA0xEbUz0SnkXT1LcCTa438W4IWTUh4hdOnVbQyOJ81OrDXsJk/LSiJHubgGEFoR5EHq1NsH1A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/plugin-kit@0.2.6':
-    resolution: {integrity: sha512-+0TjwR1eAUdZtvv/ir1mGX+v0tUoR3VEPB8Up0LLJC+whRW0GgBBtpbOkg/a/U4Dxa6l5a3l9AJ1aWIQVyoWJA==}
+  '@eslint/plugin-kit@0.2.7':
+    resolution: {integrity: sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@graphql-eslint/eslint-plugin@4.3.0':
@@ -7855,10 +7859,14 @@ snapshots:
     dependencies:
       '@types/json-schema': 7.0.15
 
+  '@eslint/core@0.12.0':
+    dependencies:
+      '@types/json-schema': 7.0.15
+
   '@eslint/css@0.4.0':
     dependencies:
       '@eslint/core': 0.10.0
-      '@eslint/plugin-kit': 0.2.6
+      '@eslint/plugin-kit': 0.2.7
       '@types/css-tree': 2.3.10
       css-tree: 3.1.0
 
@@ -7885,9 +7893,9 @@ snapshots:
       '@eslint/core': 0.10.0
       levn: 0.4.1
 
-  '@eslint/plugin-kit@0.2.6':
+  '@eslint/plugin-kit@0.2.7':
     dependencies:
-      '@eslint/core': 0.11.0
+      '@eslint/core': 0.12.0
       levn: 0.4.1
 
   '@graphql-eslint/eslint-plugin@4.3.0(@types/node@22.13.4)(encoding@0.1.13)(eslint@9.20.1(jiti@2.4.0))(graphql@16.8.2)(typescript@5.7.3)':
