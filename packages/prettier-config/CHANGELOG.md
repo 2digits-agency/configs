@@ -1,5 +1,19 @@
 # @2digits/prettier-config
 
+## 3.0.0
+
+### Major Changes
+
+- 3996ba4: Added prettier-plugin-sh for shell formatting
+
+### Minor Changes
+
+- d9d43a8: Updated TOML formatting rules
+
+### Patch Changes
+
+- 132b051: Updated prettier
+
 ## 2.7.2
 
 ### Patch Changes
