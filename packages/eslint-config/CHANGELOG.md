@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 3.0.2
+
+### Patch Changes
+
+- 325b0ae: Updated globals
+- bf2539a: Updated eslint monorepo
+- fe4b180: Updated @eslint-react/eslint-plugin
+- 1397df8: Removed unused @types/eslint\_\_js
+- Updated dependencies [bf2539a]
+  - @2digits/eslint-plugin@2.3.36
+
 ## 3.0.1
 
 ### Patch Changes

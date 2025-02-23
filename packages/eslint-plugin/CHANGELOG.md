@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.3.36
+
+### Patch Changes
+
+- bf2539a: Updated eslint monorepo
+
 ## 2.3.35
 
 ### Patch Changes
