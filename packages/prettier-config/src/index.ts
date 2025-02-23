@@ -41,10 +41,13 @@ export default defineConfig({
   experimentalWasm: true,
   indent: 2,
 
+  allowedBlankLines: 1,
+  indentEntries: true,
+
   plugins: [
-    require.resolve('prettier-plugin-toml'),
     require.resolve('@prettier/plugin-xml'),
     require.resolve('@ianvs/prettier-plugin-sort-imports'),
+    require.resolve('prettier-plugin-toml'),
     require.resolve('prettier-plugin-jsdoc'),
     require.resolve('prettier-plugin-sql'),
     require.resolve('prettier-plugin-sh'),
