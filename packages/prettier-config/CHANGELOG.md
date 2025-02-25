@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 3.0.1
+
+### Patch Changes
+
+- bfa0249: Updated prettier-plugin-embed
+
 ## 3.0.0
 
 ### Major Changes
