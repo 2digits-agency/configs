@@ -1,5 +1,21 @@
 # @2digits/eslint-config
 
+## 3.0.3
+
+### Patch Changes
+
+- 8b327f6: Updated eslint-plugin-turbo
+- 8405435: Updated typescript-eslint
+- 0a2575e: Updated eslint-config-prettier
+- efa45d7: Updated @eslint-react/eslint-plugin
+- 73d2dbf: Updated tsup
+- 7d721fd: Updated turborepo
+- Updated dependencies [8405435]
+- Updated dependencies [ec02094]
+- Updated dependencies [73d2dbf]
+  - @2digits/eslint-plugin@2.3.37
+  - @2digits/constants@0.3.6
+
 ## 3.0.2
 
 ### Patch Changes

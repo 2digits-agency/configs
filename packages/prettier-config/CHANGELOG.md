@@ -1,5 +1,14 @@
 # @2digits/prettier-config
 
+## 3.0.1
+
+### Patch Changes
+
+- bfa0249: Updated prettier-plugin-embed
+- 73d2dbf: Updated tsup
+- Updated dependencies [73d2dbf]
+  - @2digits/constants@0.3.6
+
 ## 3.0.0
 
 ### Major Changes
