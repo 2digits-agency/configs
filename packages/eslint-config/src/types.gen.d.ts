@@ -2753,6 +2753,11 @@ Backward pagination arguments
    */
   'react-dom/no-find-dom-node'?: Linter.RuleEntry<[]>
   /**
+   * warns against using `flushSync`
+   * @see https://eslint-react.xyz/docs/rules/dom-no-flush-sync
+   */
+  'react-dom/no-flush-sync'?: Linter.RuleEntry<[]>
+  /**
    * enforce that button component have an explicit 'type' attribute
    * @see https://eslint-react.xyz/docs/rules/dom-no-missing-button-type
    */
