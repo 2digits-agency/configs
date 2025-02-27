@@ -7,7 +7,7 @@ export const PluginNameMap = {
   '@eslint-react': 'react-extra',
   'react-hooks': 'react-hooks',
   'react-compiler': 'react-compiler',
-  react: 'react',
+  '@stylistic/eslint-plugin': 'stylistic',
   '@typescript-eslint': 'ts',
   node: 'node',
   '@eslint-community/eslint-comments': 'comments',
