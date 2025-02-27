@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 3.0.2
+
+### Patch Changes
+
+- 792e0fe: Updated local-pkg
+
 ## 3.0.1
 
 ### Patch Changes
