@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 3.0.4
+
+### Patch Changes
+
+- a77ddff: Updated @eslint/config-inspector
+- 792e0fe: Updated local-pkg
+- 97c8dc5: Updated @next/eslint-plugin-next
+
 ## 3.0.3
 
 ### Patch Changes
