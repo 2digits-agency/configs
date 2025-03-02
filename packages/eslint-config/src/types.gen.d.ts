@@ -3143,6 +3143,11 @@ Backward pagination arguments
    */
   'react-naming-convention/component-name'?: Linter.RuleEntry<ReactNamingConventionComponentName>
   /**
+   * enforce context name to end with `Context`.
+   * @see https://eslint-react.xyz/docs/rules/naming-convention-context-name
+   */
+  'react-naming-convention/context-name'?: Linter.RuleEntry<[]>
+  /**
    * enforce naming convention for JSX filenames
    * @see https://eslint-react.xyz/docs/rules/naming-convention-filename
    */
