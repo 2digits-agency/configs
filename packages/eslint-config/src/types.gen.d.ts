@@ -3143,6 +3143,11 @@ Backward pagination arguments
    */
   'react-naming-convention/component-name'?: Linter.RuleEntry<ReactNamingConventionComponentName>
   /**
+   * enforce context name to end with `Context`.
+   * @see https://eslint-react.xyz/docs/rules/naming-convention-context-name
+   */
+  'react-naming-convention/context-name'?: Linter.RuleEntry<[]>
+  /**
    * enforce naming convention for JSX filenames
    * @see https://eslint-react.xyz/docs/rules/naming-convention-filename
    */
@@ -9371,7 +9376,18 @@ type NodeNoRestrictedRequire = []|[(string | {
 // ----- node/no-sync -----
 type NodeNoSync = []|[{
   allowAtRootLevel?: boolean
-  ignores?: string[]
+  ignores?: (string | {
+    from?: "file"
+    path?: string
+    name?: string[]
+  } | {
+    from?: "lib"
+    name?: string[]
+  } | {
+    from?: "package"
+    package?: string
+    name?: string[]
+  })[]
 }]
 // ----- node/no-unpublished-bin -----
 type NodeNoUnpublishedBin = []|[{

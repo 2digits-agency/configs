@@ -25,7 +25,7 @@ export async function react(
     {
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
-      ...pluginReactHooks.configs.recommended.rules,
+      ...pluginReactHooks.configs['recommended-latest'].rules,
       ...pluginReact.configs['recommended-type-checked'].rules,
     },
     PluginNameMap,
