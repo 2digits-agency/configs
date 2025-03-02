@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.3.7
+
+### Patch Changes
+
+- 77764ca: Updated typescript
+
 ## 0.3.6
 
 ### Patch Changes

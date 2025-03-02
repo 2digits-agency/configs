@@ -1,5 +1,23 @@
 # @2digits/eslint-config
 
+## 3.0.4
+
+### Patch Changes
+
+- 77764ca: Updated typescript
+- a77ddff: Updated @eslint/config-inspector
+- d034606: Removed unused code
+- d2ad4e6: Updated @types/node
+- 8b36ffc: Updated eslint-plugin-react-hooks
+- 792e0fe: Updated local-pkg
+- 97c8dc5: Updated @next/eslint-plugin-next
+- 18c1428: Updated @eslint-react/eslint-plugin
+- 544de13: Updated eslint-plugin-de-morgan
+- d1d2702: Updated eslint-plugin-n
+- Updated dependencies [77764ca]
+  - @2digits/eslint-plugin@2.3.38
+  - @2digits/constants@0.3.7
+
 ## 3.0.3
 
 ### Patch Changes

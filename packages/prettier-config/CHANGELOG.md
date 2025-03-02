@@ -1,5 +1,14 @@
 # @2digits/prettier-config
 
+## 3.0.2
+
+### Patch Changes
+
+- 77764ca: Updated typescript
+- 792e0fe: Updated local-pkg
+- Updated dependencies [77764ca]
+  - @2digits/constants@0.3.7
+
 ## 3.0.1
 
 ### Patch Changes

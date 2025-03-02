@@ -1,5 +1,15 @@
 # @2digits/tsconfig
 
+## 0.7.0
+
+### Minor Changes
+
+- 2fffed4: Updated tsconfig to only allow erasable syntax
+
+### Patch Changes
+
+- 77764ca: Updated typescript
+
 ## 0.6.3
 
 ### Patch Changes
