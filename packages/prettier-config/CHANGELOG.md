@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 3.0.3
+
+### Patch Changes
+
+- 69700ca: Updated deps
+
 ## 3.0.2
 
 ### Patch Changes

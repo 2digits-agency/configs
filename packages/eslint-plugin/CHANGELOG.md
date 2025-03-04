@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 2.3.39
+
+### Patch Changes
+
+- 69700ca: Updated deps
+
 ## 2.3.38
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 0.1.7
+
+### Patch Changes
+
+- 69700ca: Updated deps
+
 ## 0.1.6
 
 ### Patch Changes

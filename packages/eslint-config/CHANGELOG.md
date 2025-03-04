@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 3.0.5
+
+### Patch Changes
+
+- 69700ca: Updated deps
+- d168a1d: Updated react eslint plugin configs to use flat versions
+- Updated dependencies [69700ca]
+  - @2digits/eslint-plugin@2.3.39
+
 ## 3.0.4
 
 ### Patch Changes
