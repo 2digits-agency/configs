@@ -2833,7 +2833,7 @@ Backward pagination arguments
    */
   'react-extra/no-access-state-in-setstate'?: Linter.RuleEntry<[]>
   /**
-   * disallow using Array index as 'key'
+   * disallow using an item's index in the array as its key
    * @see https://eslint-react.xyz/docs/rules/no-array-index-key
    */
   'react-extra/no-array-index-key'?: Linter.RuleEntry<[]>
@@ -3138,12 +3138,12 @@ Backward pagination arguments
    */
   'react-hooks/rules-of-hooks'?: Linter.RuleEntry<[]>
   /**
-   * enforce component naming convention to 'PascalCase' or 'CONSTANT_CASE'
+   * enforce naming convention for components
    * @see https://eslint-react.xyz/docs/rules/naming-convention-component-name
    */
   'react-naming-convention/component-name'?: Linter.RuleEntry<ReactNamingConventionComponentName>
   /**
-   * enforce context name to end with `Context`.
+   * enforce context name to be a valid component name with the suffix 'Context'
    * @see https://eslint-react.xyz/docs/rules/naming-convention-context-name
    */
   'react-naming-convention/context-name'?: Linter.RuleEntry<[]>
@@ -10886,6 +10886,8 @@ type TsExplicitModuleBoundaryTypes = []|[{
   
   allowHigherOrderFunctions?: boolean
   
+  allowOverloadFunctions?: boolean
+  
   allowTypedFunctionExpressions?: boolean
 }]
 // ----- ts/init-declarations -----
@@ -11917,6 +11919,8 @@ type TsUnboundMethod = []|[{
 type TsUnifiedSignatures = []|[{
   
   ignoreDifferentlyNamedParameters?: boolean
+  
+  ignoreOverloadsWithDifferentJSDoc?: boolean
 }]
 // ----- turbo/no-undeclared-env-vars -----
 type TurboNoUndeclaredEnvVars = []|[{
