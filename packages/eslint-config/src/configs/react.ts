@@ -1,4 +1,3 @@
-import { fixupPluginRules } from '@eslint/compat';
 import { renamePluginsInRules } from 'eslint-flat-config-utils';
 
 import { PluginNameMap } from '../constants';
@@ -23,8 +22,8 @@ export async function react(
 
   const recommended = renamePluginsInRules(
     {
-      ...react.configs.recommended.rules,
-      ...react.configs['jsx-runtime'].rules,
+      ...react.configs.flat.recommended?.rules,
+      ...react.configs.flat['jsx-runtime']?.rules,
       ...pluginReactHooks.configs['recommended-latest'].rules,
       ...pluginReact.configs['recommended-type-checked'].rules,
     },
@@ -39,7 +38,7 @@ export async function react(
         'react-dom': plugins['@eslint-react/dom'],
         'react-web-api': plugins['@eslint-react/web-api'],
         'react-extra': plugins['@eslint-react'],
-        'react-hooks': fixupPluginRules(pluginReactHooks as never),
+        'react-hooks': pluginReactHooks,
         'react-hooks-extra': plugins['@eslint-react/hooks-extra'],
         'react-naming-convention': plugins['@eslint-react/naming-convention'],
         ...(reactCompiler ? { 'react-compiler': pluginReactCompiler } : {}),
