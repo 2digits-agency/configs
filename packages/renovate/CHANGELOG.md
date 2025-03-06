@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 0.1.8
+
+### Patch Changes
+
+- 3317e6f: Group all @nolyfill packages together
+- 557a83b: Updated dependencies
+
 ## 0.1.7
 
 ### Patch Changes
