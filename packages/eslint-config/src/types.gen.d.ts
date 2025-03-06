@@ -5622,7 +5622,7 @@ Backward pagination arguments
    */
   'storybook/story-exports'?: Linter.RuleEntry<[]>
   /**
-   * Use expect from `@storybook/test` or `@storybook/jest`
+   * Use expect from `@storybook/test`, `storybook/test` or `@storybook/jest`
    * @see https://github.com/storybookjs/eslint-plugin-storybook/blob/main/docs/rules/use-storybook-expect.md
    */
   'storybook/use-storybook-expect'?: Linter.RuleEntry<[]>
@@ -9376,18 +9376,7 @@ type NodeNoRestrictedRequire = []|[(string | {
 // ----- node/no-sync -----
 type NodeNoSync = []|[{
   allowAtRootLevel?: boolean
-  ignores?: (string | {
-    from?: "file"
-    path?: string
-    name?: string[]
-  } | {
-    from?: "lib"
-    name?: string[]
-  } | {
-    from?: "package"
-    package?: string
-    name?: string[]
-  })[]
+  ignores?: string[]
 }]
 // ----- node/no-unpublished-bin -----
 type NodeNoUnpublishedBin = []|[{
