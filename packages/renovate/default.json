@@ -12,16 +12,14 @@
   "updateNotScheduled": false,
   "packageRules": [
     { "groupName": "2DIGITS Configs", "matchPackageNames": ["/^@2digits/"] },
+    { "groupName": "Hey API", "matchPackageNames": ["/^@hey-api//"] },
+    { "groupName": "Nolyfill", "matchPackageNames": ["/^npm:@nolyfill//"] },
     { "groupName": "Notificare", "matchPackageNames": ["/^react-native-notificare/"] },
     { "groupName": "Orval", "matchPackageNames": ["orval", "/^@orval/"] },
     { "groupName": "Unified & Rehype", "matchPackageNames": ["unified", "/^rehype-/"] },
     { "groupName": "nativewind", "matchPackageNames": ["nativewind", "react-native-css-interop"] },
-    { "groupName": "react-native-firebase", "matchPackageNames": ["/^@react-native-firebase//"] },
-    {
-      "groupName": "react-native-bottom-tabs",
-      "matchPackageNames": ["react-native-bottom-tabs", "/^@bottom-tabs//"]
-    },
-    { "groupName": "Hey API", "matchPackageNames": ["/^@hey-api//"] }
+    { "groupName": "react-native-bottom-tabs", "matchPackageNames": ["react-native-bottom-tabs", "/^@bottom-tabs//"] },
+    { "groupName": "react-native-firebase", "matchPackageNames": ["/^@react-native-firebase//"] }
   ],
   "pruneStaleBranches": true,
   "ignorePrAuthor": false,
