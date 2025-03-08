@@ -2893,22 +2893,22 @@ Backward pagination arguments
    */
   'react-extra/no-complicated-conditional-rendering'?: Linter.RuleEntry<[]>
   /**
-   * disallow using 'componentWillMount'
+   * replace 'componentWillMount' with 'UNSAFE_componentWillMount'
    * @see https://eslint-react.xyz/docs/rules/no-component-will-mount
    */
   'react-extra/no-component-will-mount'?: Linter.RuleEntry<[]>
   /**
-   * disallow using 'componentWillReceiveProps'
+   * replace 'componentWillReceiveProps' with 'UNSAFE_componentWillReceiveProps'
    * @see https://eslint-react.xyz/docs/rules/no-component-will-receive-props
    */
   'react-extra/no-component-will-receive-props'?: Linter.RuleEntry<[]>
   /**
-   * disallow using 'componentWillReceiveProps'
+   * replace 'componentWillUpdate' with 'UNSAFE_componentWillUpdate'
    * @see https://eslint-react.xyz/docs/rules/no-component-will-update
    */
   'react-extra/no-component-will-update'?: Linter.RuleEntry<[]>
   /**
-   * disallow the use of '<Context.Provider>'
+   * replace '<Context.Provider>' with '<Context>'
    * @see https://eslint-react.xyz/docs/rules/no-context-provider
    */
   'react-extra/no-context-provider'?: Linter.RuleEntry<[]>
@@ -2938,7 +2938,7 @@ Backward pagination arguments
    */
   'react-extra/no-duplicate-key'?: Linter.RuleEntry<[]>
   /**
-   * disallow the use of 'forwardRef'
+   * replace 'forwardRef' with passing 'ref' as a prop
    * @see https://eslint-react.xyz/docs/rules/no-forward-ref
    */
   'react-extra/no-forward-ref'?: Linter.RuleEntry<[]>
@@ -3038,7 +3038,7 @@ Backward pagination arguments
    */
   'react-extra/no-unused-state'?: Linter.RuleEntry<[]>
   /**
-   * disallow the use of 'useContext'
+   * replace 'useContext' with 'use'
    * @see https://eslint-react.xyz/docs/rules/no-use-context
    */
   'react-extra/no-use-context'?: Linter.RuleEntry<[]>
@@ -3063,12 +3063,12 @@ Backward pagination arguments
    */
   'react-extra/prefer-read-only-props'?: Linter.RuleEntry<[]>
   /**
-   * enforce using shorthand boolean attributes
+   * enforce the use of shorthand syntax for boolean attributes
    * @see https://eslint-react.xyz/docs/rules/prefer-shorthand-boolean
    */
   'react-extra/prefer-shorthand-boolean'?: Linter.RuleEntry<[]>
   /**
-   * enforce using fragment syntax instead of 'Fragment' component
+   * enforce the use of shorthand syntax for fragments
    * @see https://eslint-react.xyz/docs/rules/prefer-shorthand-fragment
    */
   'react-extra/prefer-shorthand-fragment'?: Linter.RuleEntry<[]>
