@@ -76,8 +76,8 @@ catalogs:
       specifier: 2.0.1
       version: 2.0.1
     eslint-plugin-antfu:
-      specifier: 3.1.0
-      version: 3.1.0
+      specifier: 3.1.1
+      version: 3.1.1
     eslint-plugin-de-morgan:
       specifier: 1.2.0
       version: 1.2.0
@@ -321,7 +321,7 @@ importers:
         version: 2.0.1
       eslint-plugin-antfu:
         specifier: 'catalog:'
-        version: 3.1.0(eslint@9.21.0(jiti@2.4.0))
+        version: 3.1.1(eslint@9.21.0(jiti@2.4.0))
       eslint-plugin-de-morgan:
         specifier: 'catalog:'
         version: 1.2.0(eslint@9.21.0(jiti@2.4.0))
@@ -3299,8 +3299,8 @@ packages:
       '@eslint/json':
         optional: true
 
-  eslint-plugin-antfu@3.1.0:
-    resolution: {integrity: sha512-BKlJcpIG8OGyU5JwQCdyTGaLuRgItheEYinhNroCx3bcuz2bCSYK0eNzJvPy2TY8yyz0uSSRxr5KHuQ1WOdOKg==}
+  eslint-plugin-antfu@3.1.1:
+    resolution: {integrity: sha512-7Q+NhwLfHJFvopI2HBZbSxWXngTwBLKxW1AGXLr2lEGxcEIK/AsDs8pn8fvIizl5aZjBbVbVK5ujmMpBe4Tvdg==}
     peerDependencies:
       eslint: '*'
 
@@ -9888,7 +9888,7 @@ snapshots:
       esquery: 1.6.0
       jsonc-eslint-parser: 2.4.0
 
-  eslint-plugin-antfu@3.1.0(eslint@9.21.0(jiti@2.4.0)):
+  eslint-plugin-antfu@3.1.1(eslint@9.21.0(jiti@2.4.0)):
     dependencies:
       eslint: 9.21.0(jiti@2.4.0)
 
