@@ -49,8 +49,8 @@ catalogs:
       specifier: 3.4.1
       version: 3.4.1
     '@tanstack/eslint-plugin-query':
-      specifier: 5.66.1
-      version: 5.66.1
+      specifier: 5.67.2
+      version: 5.67.2
     '@types/node':
       specifier: 22.13.10
       version: 22.13.10
@@ -303,7 +303,7 @@ importers:
         version: 15.2.1
       '@tanstack/eslint-plugin-query':
         specifier: 'catalog:'
-        version: 5.66.1(eslint@9.21.0(jiti@2.4.0))(typescript@5.8.2)
+        version: 5.67.2(eslint@9.21.0(jiti@2.4.0))(typescript@5.8.2)
       '@typescript-eslint/parser':
         specifier: 'catalog:'
         version: 8.26.0(eslint@9.21.0(jiti@2.4.0))(typescript@5.8.2)
@@ -2310,8 +2310,8 @@ packages:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
 
-  '@tanstack/eslint-plugin-query@5.66.1':
-    resolution: {integrity: sha512-pYMVTGgJ7yPk9Rm6UWEmbY6TX0EmMmxJqYkthgeDCwEznToy2m+W928nUODFirtZBZlhBsqHy33LO0kyTlgf0w==}
+  '@tanstack/eslint-plugin-query@5.67.2':
+    resolution: {integrity: sha512-bWAA/0lYGBNv7lIV6tID2o5wC6yWUjkh9yx8ow9YMP3brxIhuUPdCAtJBhXL2nVzJTnc6FRrL401KFG5PPEkZg==}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
@@ -8848,7 +8848,7 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@tanstack/eslint-plugin-query@5.66.1(eslint@9.21.0(jiti@2.4.0))(typescript@5.8.2)':
+  '@tanstack/eslint-plugin-query@5.67.2(eslint@9.21.0(jiti@2.4.0))(typescript@5.8.2)':
     dependencies:
       '@typescript-eslint/utils': 8.26.0(eslint@9.21.0(jiti@2.4.0))(typescript@5.8.2)
       eslint: 9.21.0(jiti@2.4.0)
