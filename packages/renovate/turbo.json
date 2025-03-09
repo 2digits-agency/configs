@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "test": {
+      "dependsOn": ["^test", "build"]
+    },
+    "build": {
+      "outputs": ["./src/nolyfill.json"]
+    }
+  }
+}

@@ -1,29 +1,4 @@
 {
   "$schema": "./node_modules/renovate/renovate-schema.json",
-  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
-  "automergeType": "pr",
-  "platformAutomerge": true,
-  "automerge": true,
-  "rebaseWhen": "automerging",
-  "rangeStrategy": "pin",
-  "reviewers": ["V1RE"],
-  "timezone": "Europe/Amsterdam",
-  "schedule": ["after 18:00 before 07:00 every weekday", "every weekend"],
-  "updateNotScheduled": false,
-  "packageRules": [
-    { "groupName": "2DIGITS Configs", "matchPackageNames": ["/^@2digits/"] },
-    { "groupName": "Hey API", "matchPackageNames": ["/^@hey-api//"] },
-    { "groupName": "Nolyfill", "matchPackageNames": ["/^npm:@nolyfill//"] },
-    { "groupName": "Notificare", "matchPackageNames": ["/^react-native-notificare/"] },
-    { "groupName": "Orval", "matchPackageNames": ["orval", "/^@orval/"] },
-    { "groupName": "Unified & Rehype", "matchPackageNames": ["unified", "/^rehype-/"] },
-    { "groupName": "nativewind", "matchPackageNames": ["nativewind", "react-native-css-interop"] },
-    { "groupName": "react-native-bottom-tabs", "matchPackageNames": ["react-native-bottom-tabs", "/^@bottom-tabs//"] },
-    { "groupName": "react-native-firebase", "matchPackageNames": ["/^@react-native-firebase//"] }
-  ],
-  "pruneStaleBranches": true,
-  "ignorePrAuthor": false,
-  "prHourlyLimit": 0,
-  "prCreation": "immediate",
-  "dependencyDashboard": true
+  "extends": ["local>./src/default.json"]
 }

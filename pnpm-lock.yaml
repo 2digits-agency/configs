@@ -496,9 +496,21 @@ importers:
 
   packages/renovate:
     devDependencies:
+      '@2digits/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      eslint:
+        specifier: 'catalog:'
+        version: 9.22.0(jiti@2.4.0)
+      nolyfill:
+        specifier: 1.0.44
+        version: 1.0.44
       renovate:
         specifier: 'catalog:'
         version: 39.191.1(encoding@0.1.13)(typanion@3.14.0)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.8.2
 
   packages/tsconfig:
     devDependencies:
@@ -4654,6 +4666,11 @@ packages:
   node-sql-parser@4.18.0:
     resolution: {integrity: sha512-2YEOR5qlI1zUFbGMLKNfsrR5JUvFg9LxIRVE+xJe962pfVLH0rnItqLzv96XVs1Y1UIR8FxsXAuvX/lYAWZ2BQ==}
     engines: {node: '>=8'}
+
+  nolyfill@1.0.44:
+    resolution: {integrity: sha512-PoggwVLiJUn0MnodpftsiC7EuknW5+6v62ntTOQ6T6l7g2r6aoaOwgk0tQW2BxGLYw9bF298LL8jDFTmEFuzlA==}
+    engines: {node: '>=12.4.0'}
+    hasBin: true
 
   nopt@7.2.1:
     resolution: {integrity: sha512-taM24ViiimT/XntxbPyJQzCG+p4EKOpgD3mxFwW38mGjVUrfERQOeY4EDHjdnptttfHuHQXFx+lTP08Q+mLa/w==}
@@ -11555,6 +11572,8 @@ snapshots:
   node-sql-parser@4.18.0:
     dependencies:
       big-integer: 1.6.52
+
+  nolyfill@1.0.44: {}
 
   nopt@7.2.1:
     dependencies:
