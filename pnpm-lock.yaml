@@ -144,6 +144,9 @@ catalogs:
     magic-regexp:
       specifier: 0.8.0
       version: 0.8.0
+    nolyfill:
+      specifier: 1.0.44
+      version: 1.0.44
     pkg-pr-new:
       specifier: 0.0.40
       version: 0.0.40
@@ -169,8 +172,8 @@ catalogs:
       specifier: 2.0.2
       version: 2.0.2
     renovate:
-      specifier: 39.191.1
-      version: 39.191.1
+      specifier: 39.191.4
+      version: 39.191.4
     ts-pattern:
       specifier: 5.6.2
       version: 5.6.2
@@ -496,9 +499,21 @@ importers:
 
   packages/renovate:
     devDependencies:
+      '@2digits/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      eslint:
+        specifier: 'catalog:'
+        version: 9.22.0(jiti@2.4.0)
+      nolyfill:
+        specifier: 'catalog:'
+        version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 39.191.1(encoding@0.1.13)(typanion@3.14.0)
+        version: 39.191.4(encoding@0.1.13)(typanion@3.14.0)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.8.2
 
   packages/tsconfig:
     devDependencies:
@@ -2403,9 +2418,6 @@ packages:
   '@types/node@22.13.10':
     resolution: {integrity: sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw==}
 
-  '@types/node@22.13.9':
-    resolution: {integrity: sha512-acBjXdRJ3A6Pb3tqnw9HZmyR3Fiol3aGxRCK1x3d+6CDAMjl7I649wpSd+yNURCjbOUGu9tqtLKnTGxmK6CyGw==}
-
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
 
@@ -2530,26 +2542,26 @@ packages:
   '@xml-tools/parser@1.0.11':
     resolution: {integrity: sha512-aKqQ077XnR+oQtHJlrAflaZaL7qZsulWc/i/ZEooar5JiWj1eLt0+Wg28cpa+XLney107wXqneC+oG1IZvxkTA==}
 
-  '@yarnpkg/core@4.2.0':
-    resolution: {integrity: sha512-h+cjnATkpO0ya6I5U4RYvOet/IsswOje3eBq9CsFM4XJZ2nS4WBBeFwYe0tqLD87IwKsoyuIdUwZjPHcn2DM8g==}
+  '@yarnpkg/core@4.2.1':
+    resolution: {integrity: sha512-+nXgfe/SE1lGedYuLNvgFGT5DNTb2pc6XJQCok1zoGGxbhqdTfslcFcPQrarSOjbhYK+Vl/PfWP9o6j/YIcuDw==}
     engines: {node: '>=18.12.0'}
 
-  '@yarnpkg/fslib@3.1.1':
-    resolution: {integrity: sha512-NpeecISQEuDnmipElGa0cOC7DnlPf3+FXnuwwJTciJgt+S/BDb8VFBvXSE5UirGmsFWlf4mfZuuAC7e8Pmhh4g==}
+  '@yarnpkg/fslib@3.1.2':
+    resolution: {integrity: sha512-FpB2F1Lrm43F94klS9UN0ceOpe/PHZSpJB7bIkvReF/ba890bSdu1NokSKr998yaFee7yqeD9Wkid5ye7azF3A==}
     engines: {node: '>=18.12.0'}
 
-  '@yarnpkg/libzip@3.1.0':
-    resolution: {integrity: sha512-x66/F8wEOUL8Hi4NZFVVKCFNITN0keQt0ZNlY5V9dRb+judyO8aJv4hazO3WyblnGhClvuBPbx+a2X4LNS5ziA==}
+  '@yarnpkg/libzip@3.1.1':
+    resolution: {integrity: sha512-KNgpRq0w/az6nOLQDbRhX24m18Jk7YNieN8gw1FP9hSmW7141U8dhY7e8nfwvnu7P0XHvwj2MpAPVGfeaKTE+A==}
     engines: {node: '>=18.12.0'}
     peerDependencies:
-      '@yarnpkg/fslib': ^3.1.0
+      '@yarnpkg/fslib': ^3.1.2
 
-  '@yarnpkg/parsers@3.0.2':
-    resolution: {integrity: sha512-/HcYgtUSiJiot/XWGLOlGxPYUG65+/31V8oqk17vZLW1xlCoR4PampyePljOxY2n8/3jz9+tIFzICsyGujJZoA==}
+  '@yarnpkg/parsers@3.0.3':
+    resolution: {integrity: sha512-mQZgUSgFurUtA07ceMjxrWkYz8QtDuYkvPlu0ZqncgjopQ0t6CNEo/OSealkmnagSUx8ZD5ewvezUwUuMqutQg==}
     engines: {node: '>=18.12.0'}
 
-  '@yarnpkg/shell@4.1.1':
-    resolution: {integrity: sha512-0aS71iJrNQ4cezU5BJ5JpBTXkFQPKkzOEpDtMQm8E2H3g9PLxUe/5VdA60bZq/4N/qazLLYEOngcFZ6QRpraVQ==}
+  '@yarnpkg/shell@4.1.2':
+    resolution: {integrity: sha512-1ET4cNNd7//2tXHnLiHGzBbry5mlEmoKL8f32E5EKnn8Ke/gAcILeFdbX2G9C9w/7uBmFyWeSs530ib0SofVPQ==}
     engines: {node: '>=18.12.0'}
     hasBin: true
 
@@ -4655,6 +4667,11 @@ packages:
     resolution: {integrity: sha512-2YEOR5qlI1zUFbGMLKNfsrR5JUvFg9LxIRVE+xJe962pfVLH0rnItqLzv96XVs1Y1UIR8FxsXAuvX/lYAWZ2BQ==}
     engines: {node: '>=8'}
 
+  nolyfill@1.0.44:
+    resolution: {integrity: sha512-PoggwVLiJUn0MnodpftsiC7EuknW5+6v62ntTOQ6T6l7g2r6aoaOwgk0tQW2BxGLYw9bF298LL8jDFTmEFuzlA==}
+    engines: {node: '>=12.4.0'}
+    hasBin: true
+
   nopt@7.2.1:
     resolution: {integrity: sha512-taM24ViiimT/XntxbPyJQzCG+p4EKOpgD3mxFwW38mGjVUrfERQOeY4EDHjdnptttfHuHQXFx+lTP08Q+mLa/w==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
@@ -5268,8 +5285,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.191.1:
-    resolution: {integrity: sha512-iX6n3g6G9yMxitHQtMRhKMwUfccaCQW8nt7tQ7XO8vkRz/mZ6wHq7FqcS5/uzftO1V0Wf1M7BVotFnR9yYrCEQ==}
+  renovate@39.191.4:
+    resolution: {integrity: sha512-AXfqmSUcvP+PJXXxIyX4DAzBEmrLU0w4iu2kz9Cs0jMKms0g9i5SAxu4QtPXP8fgx+ez/kCBGtnGgIZJ+tMHng==}
     engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -8907,13 +8924,13 @@ snapshots:
 
   '@types/bunyan@1.8.11':
     dependencies:
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
 
   '@types/cacheable-request@6.0.3':
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
       '@types/responselike': 1.0.3
 
   '@types/css-tree@2.3.10': {}
@@ -8937,7 +8954,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
 
   '@types/mdast@3.0.15':
     dependencies:
@@ -8959,17 +8976,13 @@ snapshots:
     dependencies:
       undici-types: 6.20.0
 
-  '@types/node@22.13.9':
-    dependencies:
-      undici-types: 6.20.0
-
   '@types/normalize-package-data@2.4.4': {}
 
   '@types/parse-path@7.0.3': {}
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
 
   '@types/semver@7.5.8': {}
 
@@ -8989,7 +9002,7 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
     optional: true
 
   '@typescript-eslint/eslint-plugin@8.26.0(@typescript-eslint/parser@8.26.0(eslint@9.22.0(jiti@2.4.0))(typescript@5.8.2))(eslint@9.22.0(jiti@2.4.0))(typescript@5.8.2)':
@@ -9130,15 +9143,15 @@ snapshots:
     dependencies:
       chevrotain: 7.1.1
 
-  '@yarnpkg/core@4.2.0(typanion@3.14.0)':
+  '@yarnpkg/core@4.2.1(typanion@3.14.0)':
     dependencies:
       '@arcanis/slice-ansi': 1.1.1
       '@types/semver': 7.5.8
       '@types/treeify': 1.0.3
-      '@yarnpkg/fslib': 3.1.1
-      '@yarnpkg/libzip': 3.1.0(@yarnpkg/fslib@3.1.1)
-      '@yarnpkg/parsers': 3.0.2
-      '@yarnpkg/shell': 4.1.1(typanion@3.14.0)
+      '@yarnpkg/fslib': 3.1.2
+      '@yarnpkg/libzip': 3.1.1(@yarnpkg/fslib@3.1.2)
+      '@yarnpkg/parsers': 3.0.3
+      '@yarnpkg/shell': 4.1.2(typanion@3.14.0)
       camelcase: 5.3.1
       chalk: 3.0.0
       ci-info: 4.1.0
@@ -9161,25 +9174,25 @@ snapshots:
     transitivePeerDependencies:
       - typanion
 
-  '@yarnpkg/fslib@3.1.1':
+  '@yarnpkg/fslib@3.1.2':
     dependencies:
       tslib: 2.8.1
 
-  '@yarnpkg/libzip@3.1.0(@yarnpkg/fslib@3.1.1)':
+  '@yarnpkg/libzip@3.1.1(@yarnpkg/fslib@3.1.2)':
     dependencies:
       '@types/emscripten': 1.39.13
-      '@yarnpkg/fslib': 3.1.1
+      '@yarnpkg/fslib': 3.1.2
       tslib: 2.8.1
 
-  '@yarnpkg/parsers@3.0.2':
+  '@yarnpkg/parsers@3.0.3':
     dependencies:
       js-yaml: 3.14.1
       tslib: 2.8.1
 
-  '@yarnpkg/shell@4.1.1(typanion@3.14.0)':
+  '@yarnpkg/shell@4.1.2(typanion@3.14.0)':
     dependencies:
-      '@yarnpkg/fslib': 3.1.1
-      '@yarnpkg/parsers': 3.0.2
+      '@yarnpkg/fslib': 3.1.2
+      '@yarnpkg/parsers': 3.0.3
       chalk: 3.0.0
       clipanion: 4.0.0-rc.4(typanion@3.14.0)
       cross-spawn: 7.0.6
@@ -11556,6 +11569,8 @@ snapshots:
     dependencies:
       big-integer: 1.6.52
 
+  nolyfill@1.0.44: {}
+
   nopt@7.2.1:
     dependencies:
       abbrev: 2.0.0
@@ -11962,7 +11977,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 22.13.9
+      '@types/node': 22.13.10
       long: 5.2.3
 
   protocols@2.0.1: {}
@@ -12166,7 +12181,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.191.1(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.191.4(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.738.0
       '@aws-sdk/client-ec2': 3.738.0
@@ -12194,8 +12209,8 @@ snapshots:
       '@renovatebot/pep440': 4.1.0
       '@renovatebot/ruby-semver': 4.0.0
       '@sindresorhus/is': 4.6.0
-      '@yarnpkg/core': 4.2.0(typanion@3.14.0)
-      '@yarnpkg/parsers': 3.0.2
+      '@yarnpkg/core': 4.2.1(typanion@3.14.0)
+      '@yarnpkg/parsers': 3.0.3
       agentkeepalive: 4.6.0
       aggregate-error: 3.1.0
       async-mutex: 0.5.0

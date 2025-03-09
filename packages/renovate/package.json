@@ -4,16 +4,23 @@
   "private": true,
   "type": "module",
   "files": [
-    "default.json"
+    "default.json",
+    "src/*.json"
   ],
   "sideEffects": false,
   "scripts": {
     "lint": "eslint .",
-    "test": "renovate-config-validator ./default.json"
+    "build": "node --experimental-strip-types build.ts",
+    "test": "renovate-config-validator ./default.json ./src/*.json --strict",
+    "types": "tsc --noEmit"
   },
   "license": "MIT",
   "public": false,
   "devDependencies": {
-    "renovate": "catalog:"
+    "@2digits/tsconfig": "workspace:*",
+    "eslint": "catalog:",
+    "nolyfill": "catalog:",
+    "renovate": "catalog:",
+    "typescript": "catalog:"
   }
 }

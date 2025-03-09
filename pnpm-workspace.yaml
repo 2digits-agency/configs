@@ -1,6 +1,5 @@
 verifyDepsBeforeRun: install
 savePrefix: ''
-
 packages:
   - packages/*
 catalog:
@@ -50,6 +49,7 @@ catalog:
   jsonc-eslint-parser: 2.4.0
   local-pkg: 1.1.1
   magic-regexp: 0.8.0
+  nolyfill: 1.0.44
   pkg-pr-new: 0.0.40
   prettier: 3.5.3
   prettier-plugin-embed: 0.5.0
@@ -58,7 +58,7 @@ catalog:
   prettier-plugin-sql: 0.18.1
   prettier-plugin-tailwindcss: 0.6.11
   prettier-plugin-toml: 2.0.2
-  renovate: 39.191.1
+  renovate: 39.191.4
   ts-pattern: 5.6.2
   tsup: 8.4.0
   turbo: 2.4.4
