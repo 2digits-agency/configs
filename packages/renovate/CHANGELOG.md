@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.0.0
+
+### Major Changes
+
+- c71cb89: Added Nolyfill package grouping based on a generated json file
+
 ## 0.1.8
 
 ### Patch Changes
