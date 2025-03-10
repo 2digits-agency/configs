@@ -3,7 +3,7 @@
   "extends": [
     "config:recommended",
     "helpers:pinGitHubActionDigests",
-    "local>2digits-agency/configs//packages/renovate/src/nolyfill.json"
+    "github>2digits-agency/configs//packages/renovate/src/nolyfill.json"
   ],
   "automergeType": "pr",
   "platformAutomerge": true,
