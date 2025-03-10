@@ -55,4 +55,4 @@ jobs:
         run: pnpm install
 
       - name: 🧪 Test, lint, format, build, build and type-check
-        run: pnpm turbo run build test lint format types
+        run: pnpm turbo run build test lint format types knip

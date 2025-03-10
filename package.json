@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
-    "check": "turbo run --continue dependencies-successful test lint types format lint:pkg",
+    "check": "turbo run --continue dependencies-successful test lint types format lint:pkg knip",
     "check:watch": "turbo watch test lint types format lint:pkg",
     "clean": "find . -name node_modules -o -name .turbo -o -name dist -type d -prune | xargs rm -rf",
     "dev": "turbo run dev docs:dev",
@@ -20,7 +20,8 @@
     "publish": "changeset publish",
     "release": "turbo run build && changeset publish",
     "test": "turbo test",
-    "types": "turbo types"
+    "types": "turbo types",
+    "knip": "knip"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +34,7 @@
     "@manypkg/cli": "catalog:",
     "@types/node": "catalog:",
     "eslint": "catalog:",
+    "knip": "catalog:",
     "pkg-pr-new": "catalog:",
     "prettier": "catalog:",
     "turbo": "catalog:",

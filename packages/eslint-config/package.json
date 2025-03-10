@@ -33,8 +33,8 @@
     "dev": "tsup --watch",
     "lint": "eslint .",
     "types": "tsc --noEmit",
-    "docs": "config-inspector build",
-    "docs:dev": "config-inspector"
+    "docs": "eslint-config-inspector build",
+    "docs:dev": "eslint-config-inspector"
   },
   "keywords": [
     "eslint-config"

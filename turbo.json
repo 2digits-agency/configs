@@ -26,12 +26,12 @@
       "cache": false
     },
     "//#format": {
-      "dependsOn": ["@2digits/prettier-config#build"],
-      "cache": false
+      "dependsOn": ["@2digits/prettier-config#build"]
     },
     "//#format:fix": {
       "cache": false,
       "dependsOn": ["@2digits/prettier-config#build"]
-    }
+    },
+    "//#knip": {}
   }
 }
