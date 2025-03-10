@@ -1,5 +1,12 @@
 # @2digits/eslint-plugin
 
+## 2.3.42
+
+### Patch Changes
+
+- fce1f06: Added `stylistic/padding-line-between-statements` rules
+- 0cd3269: Updated deps
+
 ## 2.3.41
 
 ### Patch Changes

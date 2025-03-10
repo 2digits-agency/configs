@@ -1,5 +1,23 @@
 # @2digits/eslint-config
 
+## 4.0.0
+
+### Major Changes
+
+- 0adea6b: Removed eslint-plugin-react
+- 0adea6b: Introduced @stylistic/eslint-plugin for jsx related linting
+
+### Minor Changes
+
+- fce1f06: Added `stylistic/padding-line-between-statements` rules
+
+### Patch Changes
+
+- 0cd3269: Updated deps
+- Updated dependencies [fce1f06]
+- Updated dependencies [0cd3269]
+  - @2digits/eslint-plugin@2.3.42
+
 ## 3.0.7
 
 ### Patch Changes
