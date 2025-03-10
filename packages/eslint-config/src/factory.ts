@@ -70,6 +70,7 @@ function config<T>(options: SharedOptions<T> | undefined | boolean): T {
   }
 
   const { enable, ...rest } = options;
+
   return rest as T;
 }
 

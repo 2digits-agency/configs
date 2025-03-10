@@ -22,6 +22,7 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<TypedFlat
   } else {
     for (const rule of Object.keys(flatRecommended) as Array<keyof typeof rules>) {
       const ruleName = rule.replace('@graphql-eslint/', '') as keyof typeof gql.rules;
+
       if (
         ruleName in gql.rules
         && (gql.rules[ruleName].meta.docs?.requiresSchema || gql.rules[ruleName].meta.docs?.requiresSiblings)
