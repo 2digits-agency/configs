@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/knip/schema.json",
+  "workspaces": {
+    "packages/eslint-config": {
+      "ignoreDependencies": ["@eslint/core", "@eslint/plugin-kit", "css-tree"]
+    },
+    "packages/renovate": {
+      "entry": ["build.ts"]
+    }
+  }
+}
