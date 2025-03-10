@@ -172,8 +172,8 @@ catalogs:
       specifier: 2.0.2
       version: 2.0.2
     renovate:
-      specifier: 39.192.0
-      version: 39.192.0
+      specifier: 39.194.0
+      version: 39.194.0
     ts-pattern:
       specifier: 5.6.2
       version: 5.6.2
@@ -510,7 +510,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 39.192.0(encoding@0.1.13)(typanion@3.14.0)
+        version: 39.194.0(encoding@0.1.13)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 5.8.2
@@ -3000,8 +3000,8 @@ packages:
     resolution: {integrity: sha512-onMB0OkDjkXunhdW9htFjEhqrD54+M94i6ackoUkjHKbRnXdyEyKRelp4nJ1kAz32+s27jP1FsebpJCVl0BsvA==}
     engines: {node: '>=18.0'}
 
-  cronstrue@2.55.0:
-    resolution: {integrity: sha512-ZsBZNtQWb0Rk6CNGJlzpPBYqNE7t93Aez5ZCExLihGwmIpE5qThSTDQzDV8Z1Nw6ksmLkwI98nPKyciZ5sH7dw==}
+  cronstrue@2.56.0:
+    resolution: {integrity: sha512-/YC3b4D/E/S8ToQ7f676A2fqoC3vVpXKjJ4SMsP0jYsvRYJdZ6h9+Fq/Y7FoFDEUFCqLTca+G2qTV227lyyFZg==}
     hasBin: true
 
   cross-inspect@1.0.1:
@@ -5280,8 +5280,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.192.0:
-    resolution: {integrity: sha512-pqfl9TtsNGSU5bbDmaJM8ikFoO4B9Iq9a+uJJtXbyUgqIg5G6NsegiwGABkxKRv5HhpIlx0eBl+/hQkWPUMXvg==}
+  renovate@39.194.0:
+    resolution: {integrity: sha512-Occ9Wibdo7whGTqrqC+OpOlPi08uOoazX8xl/iWT40hPj76ljH0Gr4qcjJ4vL6r0LC+ecXGBvJViUviuEdjsbQ==}
     engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -9601,7 +9601,7 @@ snapshots:
 
   croner@9.0.0: {}
 
-  cronstrue@2.55.0: {}
+  cronstrue@2.56.0: {}
 
   cross-inspect@1.0.1:
     dependencies:
@@ -12174,7 +12174,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.192.0(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.194.0(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.738.0
       '@aws-sdk/client-ec2': 3.738.0
@@ -12218,7 +12218,7 @@ snapshots:
       commander: 13.1.0
       conventional-commits-detector: 1.0.3
       croner: 9.0.0
-      cronstrue: 2.55.0
+      cronstrue: 2.56.0
       deepmerge: 4.3.1
       dequal: 2.0.3
       detect-indent: 6.1.0
