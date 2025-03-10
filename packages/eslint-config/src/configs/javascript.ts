@@ -1,4 +1,5 @@
 import eslint from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
 import globals from 'globals';
 
 import { GLOB_SRC } from '../globs';
@@ -11,6 +12,9 @@ export function javascript(options: OptionsOverrides = {}): TypedFlatConfigItem[
     {
       files: [GLOB_SRC],
       name: '2digits:javascript',
+      plugins: {
+        stylistic,
+      },
       languageOptions: {
         ecmaVersion: 2022,
         globals: {
@@ -205,6 +209,17 @@ export function javascript(options: OptionsOverrides = {}): TypedFlatConfigItem[
         'valid-typeof': ['error', { requireStringLiterals: true }],
         'vars-on-top': 'error',
         yoda: ['error', 'never'],
+
+        'stylistic/padding-line-between-statements': [
+          'error',
+          { blankLine: 'always', prev: ['const', 'let'], next: '*' },
+          {
+            blankLine: 'any',
+            prev: ['const', 'let'],
+            next: ['const', 'let'],
+          },
+          { blankLine: 'always', prev: '*', next: 'return' },
+        ],
 
         ...overrides,
       },

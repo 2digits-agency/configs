@@ -51,6 +51,7 @@ function createRule<TOptions extends readonly Record<string, unknown>[], TMessag
           ...options,
         };
       }) as unknown as TOptions;
+
       return create(context as never, optionsWithDefault);
     }) as unknown,
     defaultOptions,
