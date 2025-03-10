@@ -10,10 +10,10 @@ export async function react(
 ): Promise<TypedFlatConfigItem[]> {
   const { files = [GLOB_TS, GLOB_TSX], overrides = {}, parserOptions, tsconfigRootDir, reactCompiler = true } = options;
 
-  const [pluginReact, pluginReactHooks, react, parser, pluginReactCompiler] = await Promise.all([
+  const [pluginReact, pluginReactHooks, stylistic, parser, pluginReactCompiler] = await Promise.all([
     interopDefault(import('@eslint-react/eslint-plugin')),
     interopDefault(import('eslint-plugin-react-hooks')),
-    interopDefault(import('eslint-plugin-react')),
+    interopDefault(import('@stylistic/eslint-plugin')),
     interopDefault(import('@typescript-eslint/parser')),
     reactCompiler ? interopDefault(import('eslint-plugin-react-compiler')) : undefined,
   ]);
@@ -22,8 +22,6 @@ export async function react(
 
   const recommended = renamePluginsInRules(
     {
-      ...react.configs.flat.recommended?.rules,
-      ...react.configs.flat['jsx-runtime']?.rules,
       ...pluginReactHooks.configs['recommended-latest'].rules,
       ...pluginReact.configs['recommended-type-checked'].rules,
     },
@@ -34,7 +32,7 @@ export async function react(
     {
       name: '2digits:react/setup',
       plugins: {
-        react,
+        stylistic,
         'react-dom': plugins['@eslint-react/dom'],
         'react-web-api': plugins['@eslint-react/web-api'],
         'react-extra': plugins['@eslint-react'],
@@ -81,9 +79,9 @@ export async function react(
 
         'react-naming-convention/use-state': 'error',
 
-        'react/jsx-curly-newline': 'off',
-        'react/jsx-newline': ['error', { prevent: false }],
-        'react/prop-types': 'off',
+        'stylistic/jsx-curly-newline': 'off',
+        'stylistic/jsx-newline': ['error', { prevent: false }],
+        'stylistic/jsx-self-closing-comp': 'error',
 
         ...overrides,
       },
