@@ -2,22 +2,22 @@ import type { TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
 export async function prettier(): Promise<TypedFlatConfigItem[]> {
-  const [prettier, react] = await Promise.all([
+  const [prettier, stylistic] = await Promise.all([
     interopDefault(import('eslint-config-prettier')),
-    interopDefault(import('eslint-plugin-react')),
+    interopDefault(import('@stylistic/eslint-plugin')),
   ]);
 
   return [
     {
       name: '2digits:prettier',
       plugins: {
-        react,
+        stylistic,
       },
       rules: {
         ...prettier.rules,
 
         'tailwindcss/classnames-order': 'off',
-        'react/jsx-newline': ['error', { prevent: false }],
+        'stylistic/jsx-newline': ['error', { prevent: false }],
       },
     },
   ];
