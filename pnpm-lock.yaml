@@ -82,8 +82,8 @@ catalogs:
       specifier: 3.1.1
       version: 3.1.1
     eslint-plugin-de-morgan:
-      specifier: 1.2.0
-      version: 1.2.0
+      specifier: 1.2.1
+      version: 1.2.1
     eslint-plugin-drizzle:
       specifier: 0.2.3
       version: 0.2.3
@@ -336,7 +336,7 @@ importers:
         version: 3.1.1(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-de-morgan:
         specifier: 'catalog:'
-        version: 1.2.0(eslint@9.22.0(jiti@2.4.2))
+        version: 1.2.1(eslint@9.22.0(jiti@2.4.2))
       eslint-plugin-drizzle:
         specifier: 'catalog:'
         version: 0.2.3(eslint@9.22.0(jiti@2.4.2))
@@ -3305,8 +3305,8 @@ packages:
     peerDependencies:
       eslint: '*'
 
-  eslint-plugin-de-morgan@1.2.0:
-    resolution: {integrity: sha512-XOZxiOMHchXn425a1DS/NOXVkGqKiTOCvVGIPru/l/bfF4Ant7u8d4+rXOqVFEN5Z8K+I/AO19U074gqnnBsJw==}
+  eslint-plugin-de-morgan@1.2.1:
+    resolution: {integrity: sha512-lzh5DWqdogO6kasbGdWNHy6XOMajv4CRQnEiv/XJFpL1xxG0hxF2uxF+KAkcTzR+w85l4nWoqGbI39ZF+sk4+g==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
       eslint: '>=8.0.0'
@@ -9900,7 +9900,7 @@ snapshots:
     dependencies:
       eslint: 9.22.0(jiti@2.4.2)
 
-  eslint-plugin-de-morgan@1.2.0(eslint@9.22.0(jiti@2.4.2)):
+  eslint-plugin-de-morgan@1.2.1(eslint@9.22.0(jiti@2.4.2)):
     dependencies:
       eslint: 9.22.0(jiti@2.4.2)
 
