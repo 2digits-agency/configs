@@ -2814,7 +2814,7 @@ Backward pagination arguments
   'react-extra/avoid-shorthand-fragment'?: Linter.RuleEntry<[]>
   /**
    * require a 'ref' parameter to be set when using 'forwardRef'
-   * @see https://eslint-react.xyz/docs/rules/ensure-forward-ref-using-ref
+   * @see https://eslint-react.xyz/docs/rules/no-useless-forward-ref
    */
   'react-extra/ensure-forward-ref-using-ref'?: Linter.RuleEntry<[]>
   /**
@@ -3042,6 +3042,11 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/no-use-context
    */
   'react-extra/no-use-context'?: Linter.RuleEntry<[]>
+  /**
+   * require a 'ref' parameter to be set when using 'forwardRef'
+   * @see https://eslint-react.xyz/docs/rules/no-useless-forward-ref
+   */
+  'react-extra/no-useless-forward-ref'?: Linter.RuleEntry<[]>
   /**
    * disallow useless fragments
    * @see https://eslint-react.xyz/docs/rules/no-useless-fragment
