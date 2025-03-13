@@ -2893,22 +2893,22 @@ Backward pagination arguments
    */
   'react-extra/no-complicated-conditional-rendering'?: Linter.RuleEntry<[]>
   /**
-   * replace 'componentWillMount' with 'UNSAFE_componentWillMount'
+   * replace usages of 'componentWillMount' with 'UNSAFE_componentWillMount'
    * @see https://eslint-react.xyz/docs/rules/no-component-will-mount
    */
   'react-extra/no-component-will-mount'?: Linter.RuleEntry<[]>
   /**
-   * replace 'componentWillReceiveProps' with 'UNSAFE_componentWillReceiveProps'
+   * replace usages of 'componentWillReceiveProps' with 'UNSAFE_componentWillReceiveProps'
    * @see https://eslint-react.xyz/docs/rules/no-component-will-receive-props
    */
   'react-extra/no-component-will-receive-props'?: Linter.RuleEntry<[]>
   /**
-   * replace 'componentWillUpdate' with 'UNSAFE_componentWillUpdate'
+   * replace usages of 'componentWillUpdate' with 'UNSAFE_componentWillUpdate'
    * @see https://eslint-react.xyz/docs/rules/no-component-will-update
    */
   'react-extra/no-component-will-update'?: Linter.RuleEntry<[]>
   /**
-   * replace '<Context.Provider>' with '<Context>'
+   * replace usages of '<Context.Provider>' with '<Context>'
    * @see https://eslint-react.xyz/docs/rules/no-context-provider
    */
   'react-extra/no-context-provider'?: Linter.RuleEntry<[]>
@@ -2938,7 +2938,7 @@ Backward pagination arguments
    */
   'react-extra/no-duplicate-key'?: Linter.RuleEntry<[]>
   /**
-   * replace 'forwardRef' with passing 'ref' as a prop
+   * replace usages of 'forwardRef' with passing 'ref' as a prop
    * @see https://eslint-react.xyz/docs/rules/no-forward-ref
    */
   'react-extra/no-forward-ref'?: Linter.RuleEntry<[]>
@@ -3038,7 +3038,7 @@ Backward pagination arguments
    */
   'react-extra/no-unused-state'?: Linter.RuleEntry<[]>
   /**
-   * replace 'useContext' with 'use'
+   * replace usages of 'useContext' with 'use'
    * @see https://eslint-react.xyz/docs/rules/no-use-context
    */
   'react-extra/no-use-context'?: Linter.RuleEntry<[]>
