@@ -96,7 +96,7 @@ const invalids: InvalidTestCase[] = [
   },
 ];
 
-run({
+await run({
   name: RULE_NAME,
   rule: typeParamNames,
   valid: valids,
