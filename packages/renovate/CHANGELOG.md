@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.0.1
+
+### Patch Changes
+
+- bf66f8d: Updated dependencies
+- 22e2060: Updated dependencies
+
 ## 1.0.0
 
 ### Major Changes

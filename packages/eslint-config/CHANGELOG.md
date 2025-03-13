@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 4.0.1
+
+### Patch Changes
+
+- bf66f8d: Updated dependencies
+- 22e2060: Updated dependencies
+
 ## 4.0.0
 
 ### Major Changes
