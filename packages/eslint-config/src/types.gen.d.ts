@@ -266,6 +266,11 @@ export interface RuleOptions {
    */
   'css/no-invalid-properties'?: Linter.RuleEntry<[]>
   /**
+   * Enforce the use of logical properties
+   * @see https://github.com/eslint/css/blob/main/docs/rules/prefer-logical-properties.md
+   */
+  'css/prefer-logical-properties'?: Linter.RuleEntry<CssPreferLogicalProperties>
+  /**
    * Enforce the use of baseline features
    */
   'css/require-baseline'?: Linter.RuleEntry<CssRequireBaseline>
@@ -7213,9 +7218,14 @@ type ConsistentReturn = []|[{
 }]
 // ----- consistent-this -----
 type ConsistentThis = string[]
+// ----- css/prefer-logical-properties -----
+type CssPreferLogicalProperties = []|[{
+  allowProperties?: string[]
+  allowUnits?: string[]
+}]
 // ----- css/require-baseline -----
 type CssRequireBaseline = []|[{
-  available?: ("widely" | "newly")
+  available?: (("widely" | "newly") | number)
 }]
 // ----- css/use-layers -----
 type CssUseLayers = []|[{
