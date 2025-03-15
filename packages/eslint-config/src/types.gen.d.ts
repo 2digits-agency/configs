@@ -2968,8 +2968,13 @@ Backward pagination arguments
    */
   'react-extra/no-missing-key'?: Linter.RuleEntry<[]>
   /**
-   * disallow using unstable nested components
-   * @see https://eslint-react.xyz/docs/rules/no-nested-components
+   * prevents nesting component definitions inside other components
+   * @see https://eslint-react.xyz/docs/rules/no-nested-component-definitions
+   */
+  'react-extra/no-nested-component-definitions'?: Linter.RuleEntry<[]>
+  /**
+   * prevents nesting component definitions inside other components
+   * @see https://eslint-react.xyz/docs/rules/no-nested-component-definitions
    */
   'react-extra/no-nested-components'?: Linter.RuleEntry<[]>
   /**
