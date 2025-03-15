@@ -21,18 +21,12 @@ catalogs:
     '@eslint/config-inspector':
       specifier: 1.0.2
       version: 1.0.2
-    '@eslint/core':
-      specifier: 0.12.0
-      version: 0.12.0
     '@eslint/css':
-      specifier: 0.4.0
-      version: 0.4.0
+      specifier: 0.5.0
+      version: 0.5.0
     '@eslint/js':
       specifier: 9.22.0
       version: 9.22.0
-    '@eslint/plugin-kit':
-      specifier: 0.2.7
-      version: 0.2.7
     '@graphql-eslint/eslint-plugin':
       specifier: 4.3.0
       version: 4.3.0
@@ -63,9 +57,6 @@ catalogs:
     '@typescript-eslint/utils':
       specifier: 8.26.1
       version: 8.26.1
-    css-tree:
-      specifier: 3.1.0
-      version: 3.1.0
     eslint:
       specifier: 9.22.0
       version: 9.22.0
@@ -197,7 +188,6 @@ catalogs:
       version: 3.0.8
 
 overrides:
-  '@eslint/css>@types/css-tree': 2.3.10
   array-includes: npm:@nolyfill/array-includes@1.0.44
   array.prototype.findlast: npm:@nolyfill/array.prototype.findlast@1.0.44
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
@@ -295,15 +285,12 @@ importers:
       '@eslint/compat':
         specifier: 'catalog:'
         version: 1.2.7(eslint@9.22.0(jiti@2.4.2))
-      '@eslint/core':
+      '@eslint/css':
         specifier: 'catalog:'
-        version: 0.12.0
+        version: 0.5.0
       '@eslint/js':
         specifier: 'catalog:'
         version: 9.22.0
-      '@eslint/plugin-kit':
-        specifier: 'catalog:'
-        version: 0.2.7
       '@graphql-eslint/eslint-plugin':
         specifier: 'catalog:'
         version: 4.3.0(@types/node@22.13.10)(encoding@0.1.13)(eslint@9.22.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.2)
@@ -319,9 +306,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: 'catalog:'
         version: 8.26.1(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.2)
-      css-tree:
-        specifier: 'catalog:'
-        version: 3.1.0
       eslint-config-flat-gitignore:
         specifier: 'catalog:'
         version: 2.1.0(eslint@9.22.0(jiti@2.4.2))
@@ -398,9 +382,6 @@ importers:
       '@eslint/config-inspector':
         specifier: 'catalog:'
         version: 1.0.2(eslint@9.22.0(jiti@2.4.2))
-      '@eslint/css':
-        specifier: 'catalog:'
-        version: 0.4.0
       '@types/node':
         specifier: 'catalog:'
         version: 22.13.10
@@ -1294,8 +1275,12 @@ packages:
     resolution: {integrity: sha512-cmrR6pytBuSMTaBweKoGMwu3EiHiEC+DoyupPmlZ0HxBJBtIxwe+j/E4XPIKNx+Q74c8lXKPwYawBf5glsTkHg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/css@0.4.0':
-    resolution: {integrity: sha512-aEvoIhIxa6nHvqTQxg56YgV8/9FO78ka1XnqkVnM07ZqJgeeILCNOHzwPs1z0N1vlj0Um2s4yMG8Ilau+D05Hg==}
+  '@eslint/css-tree@3.2.0':
+    resolution: {integrity: sha512-GWGIXIhTS+lUgO+L9pydqeDbWtMiYB5o8hRQmUmBM3oaU3VFSL1szgU0joCkNwW2J9m9ZVrb8rrYO+HCtW2/oQ==}
+    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
+
+  '@eslint/css@0.5.0':
+    resolution: {integrity: sha512-40n/DbZuJwYe15u64BCck1wU4X67wgvoejiOrc4GKJeFojv2jVZvy7zU2rYADxglCXn/US8SreXSrAsNJDSKFg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/eslintrc@3.3.0':
@@ -2348,9 +2333,6 @@ packages:
   '@types/cacheable-request@6.0.3':
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
 
-  '@types/css-tree@2.3.10':
-    resolution: {integrity: sha512-WcaBazJ84RxABvRttQjjFWgTcHvZR9jGr0Y3hccPkHjFyk/a3N8EuxjKr+QfrwjoM5b1yI1Uj1i7EzOAAwBwag==}
-
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
@@ -2997,10 +2979,6 @@ packages:
   css-select@5.1.0:
     resolution: {integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==}
 
-  css-tree@3.1.0:
-    resolution: {integrity: sha512-0eW44TGN5SQXU1mWSkKwFstI/22X2bG1nYzZTYMAWjylYURhse752YgbE4Cx46AC+bAvI+/dYTPRk1LqSUnu6w==}
-    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
-
   css-what@6.1.0:
     resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
     engines: {node: '>= 6'}
@@ -3208,10 +3186,6 @@ packages:
 
   end-of-stream@1.4.4:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
-
-  enhanced-resolve@5.17.1:
-    resolution: {integrity: sha512-LMHl3dXhTcfv8gM4kEzIUeTQ+7fpdA0l2tUf34BddXPkz2A5xJ5L/Pchd5BL6rdccM9QGvu0sWZzK1Z1t4wwyg==}
-    engines: {node: '>=10.13.0'}
 
   enhanced-resolve@5.18.1:
     resolution: {integrity: sha512-ZSW3ma5GkcQBIpwZTSRAI8N71Uuwgs93IezB7mf7R60tC8ZbJideoDNKjHn2O9KIlx6rkGTTEk1xUCK2E1Y2Yg==}
@@ -4085,10 +4059,6 @@ packages:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
     hasBin: true
 
-  jiti@2.4.0:
-    resolution: {integrity: sha512-H5UpaUI+aHOqZXlYOaFP/8AzKsg+guWu+Pr3Y8i7+Y3zr1aXAvCvTAQ1RxSc6oVD8R8c7brgNtTVP91E7upH/g==}
-    hasBin: true
-
   jiti@2.4.2:
     resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
     hasBin: true
@@ -4364,8 +4334,8 @@ packages:
   mdast-util-to-string@4.0.0:
     resolution: {integrity: sha512-0H44vDimn51F0YwvxSJSm0eCDOJTRlmN0R1yBh4HLj9wiV1Dn0QoXGbvFAWj2hSItVTlCmBF1hqKlIyUBVFLPg==}
 
-  mdn-data@2.12.2:
-    resolution: {integrity: sha512-IEn+pegP1aManZuckezWCO+XZQDplx1366JoVhTpMpBB1sPey/SbveZQUosKiKiGYjg1wH4pMlNgXbCiYgihQA==}
+  mdn-data@2.18.0:
+    resolution: {integrity: sha512-gtCy1yim/vpHF/tq3B4Z43x3zKWpYeb4IM3d/Mf4oMYcNuoXOYEaqtoFlLHw9zd7+WNN3jNh6/WXyUrD3OIiwQ==}
 
   mdurl@2.0.0:
     resolution: {integrity: sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==}
@@ -4592,11 +4562,6 @@ packages:
 
   nan@2.22.0:
     resolution: {integrity: sha512-nbajikzWTMwsW+eSsNm3QwlOs7het9gGJU5dDZzRTQGk03vyBOauxgI4VakDzE0PtsGTmXPsXTbbjVhRwR5mpw==}
-
-  nanoid@3.3.8:
-    resolution: {integrity: sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
 
   nanoid@3.3.9:
     resolution: {integrity: sha512-SppoicMGpZvbF1l3z4x7No3OlIjP7QJvC9XR7AhZr1kL133KHnKPztkKDc+Ir4aJ/1VhTySrtKhrsycmrMQfvg==}
@@ -7601,12 +7566,16 @@ snapshots:
     dependencies:
       '@types/json-schema': 7.0.15
 
-  '@eslint/css@0.4.0':
+  '@eslint/css-tree@3.2.0':
+    dependencies:
+      mdn-data: 2.18.0
+      source-map-js: 1.2.0
+
+  '@eslint/css@0.5.0':
     dependencies:
       '@eslint/core': 0.10.0
+      '@eslint/css-tree': 3.2.0
       '@eslint/plugin-kit': 0.2.7
-      '@types/css-tree': 2.3.10
-      css-tree: 3.1.0
 
   '@eslint/eslintrc@3.3.0':
     dependencies:
@@ -8912,8 +8881,6 @@ snapshots:
       '@types/node': 22.13.10
       '@types/responselike': 1.0.3
 
-  '@types/css-tree@2.3.10': {}
-
   '@types/debug@4.1.12':
     dependencies:
       '@types/ms': 0.7.34
@@ -9612,11 +9579,6 @@ snapshots:
       domutils: 3.1.0
       nth-check: 2.1.1
 
-  css-tree@3.1.0:
-    dependencies:
-      mdn-data: 2.12.2
-      source-map-js: 1.2.0
-
   css-what@6.1.0: {}
 
   cssesc@3.0.0: {}
@@ -9780,11 +9742,6 @@ snapshots:
   end-of-stream@1.4.4:
     dependencies:
       once: 1.4.0
-
-  enhanced-resolve@5.17.1:
-    dependencies:
-      graceful-fs: 4.2.11
-      tapable: 2.2.1
 
   enhanced-resolve@5.18.1:
     dependencies:
@@ -9954,7 +9911,7 @@ snapshots:
   eslint-plugin-n@17.16.2(eslint@9.22.0(jiti@2.4.2)):
     dependencies:
       '@eslint-community/eslint-utils': 4.4.1(eslint@9.22.0(jiti@2.4.2))
-      enhanced-resolve: 5.17.1
+      enhanced-resolve: 5.18.1
       eslint: 9.22.0(jiti@2.4.2)
       eslint-plugin-es-x: 7.8.0(eslint@9.22.0(jiti@2.4.2))
       get-tsconfig: 4.8.1
@@ -10604,7 +10561,7 @@ snapshots:
       '@graphql-tools/utils': 10.6.0(graphql@16.8.2)
       cosmiconfig: 8.3.6(typescript@5.8.2)
       graphql: 16.8.2
-      jiti: 2.4.0
+      jiti: 2.4.2
       minimatch: 9.0.5
       string-env-interpolation: 1.0.1
       tslib: 2.8.1
@@ -10866,8 +10823,6 @@ snapshots:
       '@isaacs/cliui': 8.0.2
 
   jiti@1.21.6: {}
-
-  jiti@2.4.0: {}
 
   jiti@2.4.2: {}
 
@@ -11184,7 +11139,7 @@ snapshots:
     dependencies:
       '@types/mdast': 4.0.3
 
-  mdn-data@2.12.2: {}
+  mdn-data@2.18.0: {}
 
   mdurl@2.0.0: {}
 
@@ -11494,8 +11449,6 @@ snapshots:
 
   nan@2.22.0:
     optional: true
-
-  nanoid@3.3.8: {}
 
   nanoid@3.3.9: {}
 
@@ -11864,7 +11817,7 @@ snapshots:
 
   postcss@8.4.40:
     dependencies:
-      nanoid: 3.3.8
+      nanoid: 3.3.9
       picocolors: 1.1.1
       source-map-js: 1.2.0
 
