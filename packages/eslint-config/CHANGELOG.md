@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 4.0.2
+
+### Patch Changes
+
+- 6a33a2a: Updated @eslint/css and removed old workarounds
+- 6d44759: Updated dependencies
+
 ## 4.0.1
 
 ### Patch Changes
