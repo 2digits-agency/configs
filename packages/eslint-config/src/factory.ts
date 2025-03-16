@@ -1,4 +1,5 @@
 import { FlatConfigComposer } from 'eslint-flat-config-utils';
+import { findUp } from 'find-up';
 import { isPackageExists } from 'local-pkg';
 
 import {
@@ -14,6 +15,7 @@ import {
   jsonc,
   next,
   node,
+  pnpm,
   prettier,
   react,
   regexp,
@@ -48,6 +50,7 @@ interface ESLint2DigitsOptions {
   turbo?: SharedOptions<OptionsOverrides> | boolean;
   js?: OptionsOverrides;
   ts?: SharedOptions<OptionsTypeScriptWithTypes> | boolean;
+  pnpm?: SharedOptions | boolean;
   graphql?: SharedOptions<OptionsWithFiles> | boolean;
   react?: SharedOptions<OptionsWithReact> | boolean;
   next?: SharedOptions<OptionsWithFiles> | boolean;
@@ -75,10 +78,16 @@ function config<T>(options: SharedOptions<T> | undefined | boolean): T {
   return rest as T;
 }
 
-export function twoDigits(
+export async function twoDigits(
   options: ESLint2DigitsOptions = {},
   ...userConfig: TypedFlatConfigItem[]
 ): Promise<TypedFlatConfigItem[]> {
+  let pnpmPromise;
+
+  if (options.pnpm === undefined) {
+    pnpmPromise = findUp('pnpm-workspace.yaml');
+  }
+
   let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>(
     ignores(options.ignores),
     javascript(options.js),
@@ -153,6 +162,10 @@ export function twoDigits(
 
   if (enabled(options.graphql, isPackageExists('graphql'))) {
     composer = composer.append(graphql(config(options.graphql)));
+  }
+
+  if (enabled(options.pnpm, !!(await pnpmPromise))) {
+    composer = composer.append(pnpm());
   }
 
   composer = composer.append(...userConfig);

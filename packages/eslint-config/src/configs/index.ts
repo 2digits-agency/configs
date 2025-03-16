@@ -10,6 +10,7 @@ export * from './jsdoc';
 export * from './jsonc';
 export * from './next';
 export * from './node';
+export * from './pnpm';
 export * from './prettier';
 export * from './react';
 export * from './regexp';

@@ -2646,6 +2646,31 @@ Backward pagination arguments
    */
   'padding-line-between-statements'?: Linter.RuleEntry<PaddingLineBetweenStatements>
   /**
+   * Enforce using "catalog:" in `package.json`
+   * @see https://github.com/antfu/eslint-plugin-pnpm/blob/main/src/rules/json-enforce-catalog.test.ts
+   */
+  'pnpm/json-enforce-catalog'?: Linter.RuleEntry<PnpmJsonEnforceCatalog>
+  /**
+   * Prefer having pnpm settings in `pnpm-workspace.yaml` instead of `package.json`. This would requires pnpm v10.6+, see https://github.com/orgs/pnpm/discussions/9037.
+   * @see https://github.com/antfu/eslint-plugin-pnpm/blob/main/src/rules/json-prefer-workspace-settings.test.ts
+   */
+  'pnpm/json-prefer-workspace-settings'?: Linter.RuleEntry<PnpmJsonPreferWorkspaceSettings>
+  /**
+   * Enforce using valid catalog in `package.json`
+   * @see https://github.com/antfu/eslint-plugin-pnpm/blob/main/src/rules/json-valid-catalog.test.ts
+   */
+  'pnpm/json-valid-catalog'?: Linter.RuleEntry<PnpmJsonValidCatalog>
+  /**
+   * Disallow unused catalogs in `pnpm-workspace.yaml`
+   * @see https://github.com/antfu/eslint-plugin-pnpm/blob/main/src/rules/yaml-no-duplicate-catalog-item.test.ts
+   */
+  'pnpm/yaml-no-duplicate-catalog-item'?: Linter.RuleEntry<PnpmYamlNoDuplicateCatalogItem>
+  /**
+   * Disallow unused catalogs in `pnpm-workspace.yaml`
+   * @see https://github.com/antfu/eslint-plugin-pnpm/blob/main/src/rules/yaml-no-unused-catalog-item.test.ts
+   */
+  'pnpm/yaml-no-unused-catalog-item'?: Linter.RuleEntry<[]>
+  /**
    * Require using arrow functions for callbacks
    * @see https://eslint.org/docs/latest/rules/prefer-arrow-callback
    */
@@ -9728,6 +9753,43 @@ type PaddingLineBetweenStatements = {
   prev: _PaddingLineBetweenStatementsStatementType
   next: _PaddingLineBetweenStatementsStatementType
 }[]
+// ----- pnpm/json-enforce-catalog -----
+type PnpmJsonEnforceCatalog = []|[{
+  
+  allowedProtocols?: string[]
+  
+  autofix?: boolean
+  
+  defaultCatalog?: string
+  
+  reuseExistingCatalog?: boolean
+  
+  conflicts?: ("new-catalog" | "overrides" | "error")
+  
+  fields?: string[]
+}]
+// ----- pnpm/json-prefer-workspace-settings -----
+type PnpmJsonPreferWorkspaceSettings = []|[{
+  
+  autofix?: boolean
+}]
+// ----- pnpm/json-valid-catalog -----
+type PnpmJsonValidCatalog = []|[{
+  
+  autoInsert?: boolean
+  
+  autoInsertDefaultSpecifier?: string
+  
+  autofix?: boolean
+  
+  enforceNoConflict?: boolean
+  
+  fields?: unknown[]
+}]
+// ----- pnpm/yaml-no-duplicate-catalog-item -----
+type PnpmYamlNoDuplicateCatalogItem = []|[{
+  allow?: string[]
+}]
 // ----- prefer-arrow-callback -----
 type PreferArrowCallback = []|[{
   allowNamedFunctions?: boolean
@@ -13158,4 +13220,4 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   onlyEquality?: boolean
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:drizzle' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/pnpm-workspace' | '2digits:yaml/prettier'
+export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:drizzle' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/pnpm-workspace' | '2digits:yaml/prettier'
