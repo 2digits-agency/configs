@@ -11,6 +11,8 @@ export const GLOB_JSONC = '**/*.jsonc';
 
 export const GLOB_CSS = '**/*.css';
 
+export const GLOB_YAML = '**/*.ya?ml';
+
 export const GLOB_EXCLUDE = [
   '**/node_modules',
   '**/dist',
