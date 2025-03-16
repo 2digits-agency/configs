@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 4.1.0
+
+### Minor Changes
+
+- 1d9473b: Added eslint-plugin-pnpm for linting pnpm monorepos
+- bc009b4: Added eslint-plugin-yml for yaml linting
+
 ## 4.0.2
 
 ### Patch Changes
