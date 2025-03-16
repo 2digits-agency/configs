@@ -29,14 +29,12 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint .",
     "types": "tsc --noEmit"
   },
   "license": "MIT",
   "public": true,
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
-    "eslint": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:"
   }

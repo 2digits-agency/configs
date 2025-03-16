@@ -1,5 +1,5 @@
 {
-  "globalPassThroughEnv": ["FORCE_COLOR"],
+  "globalPassThroughEnv": ["FORCE_COLOR", "COREPACK_HOME"],
   "ui": "tui",
   "tasks": {
     "build": {
@@ -16,7 +16,7 @@
     "dev": {
       "persistent": true
     },
-    "lint": {
+    "//#lint:root": {
       "dependsOn": ["@2digits/eslint-config#build"]
     },
     "//#lint:pkg": {

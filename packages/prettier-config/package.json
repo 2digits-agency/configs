@@ -29,7 +29,6 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint .",
     "types": "tsc --noEmit"
   },
   "keywords": [
@@ -51,7 +50,6 @@
   },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
-    "eslint": "catalog:",
     "prettier": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:"

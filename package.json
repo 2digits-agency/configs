@@ -5,16 +5,17 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
-    "check": "turbo run --continue dependencies-successful test lint types format lint:pkg knip",
-    "check:watch": "turbo watch test lint types format lint:pkg",
+    "check": "turbo run --continue dependencies-successful test lint:root types format lint:pkg knip",
+    "check:watch": "turbo watch test lint:root types format lint:pkg",
     "clean": "find . -name node_modules -o -name .turbo -o -name dist -type d -prune | xargs rm -rf",
     "dev": "turbo run dev docs:dev",
     "docs": "turbo run docs",
     "fix": "pnpm '/(lint|format):fix$/'",
     "format": "prettier \"**/*\" --ignore-unknown --ignore-path .gitignore --ignore-path .prettierignore --check",
     "format:fix": "prettier \"**/*\" --ignore-unknown --ignore-path .gitignore --ignore-path .prettierignore --write",
-    "lint": "turbo run --continue dependencies-successful lint lint:pkg",
-    "lint:fix": "turbo run --continue dependencies-successful lint:pkg:fix lint -- --fix",
+    "lint": "turbo run --continue dependencies-successful lint:root lint:pkg",
+    "lint:fix": "turbo run --continue dependencies-successful lint:pkg:fix lint:root -- --fix",
+    "lint:root": "eslint .",
     "lint:pkg": "manypkg check",
     "lint:pkg:fix": "manypkg fix",
     "publish": "changeset publish",
@@ -41,7 +42,6 @@
     "typescript": "catalog:"
   },
   "packageManager": "pnpm@10.6.3",
-  "prettier": "@2digits/prettier-config",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
@@ -76,5 +76,6 @@
       "string.prototype.repeat": "npm:@nolyfill/string.prototype.repeat@1.0.44",
       "which-typed-array": "npm:@nolyfill/which-typed-array@1.0.44"
     }
-  }
+  },
+  "prettier": "@2digits/prettier-config"
 }
