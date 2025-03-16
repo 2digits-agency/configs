@@ -9,7 +9,6 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "lint": "eslint .",
     "build": "node --experimental-strip-types build.ts",
     "test": "renovate-config-validator ./default.json ./src/*.json --strict",
     "types": "tsc --noEmit"
@@ -18,7 +17,6 @@
   "public": false,
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
-    "eslint": "catalog:",
     "nolyfill": "catalog:",
     "renovate": "catalog:",
     "typescript": "catalog:"
