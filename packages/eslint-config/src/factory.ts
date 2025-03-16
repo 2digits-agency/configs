@@ -24,6 +24,7 @@ import {
   turbo,
   typescript,
   unicorn,
+  yaml,
 } from './configs';
 import { PluginNameMap } from './constants';
 import type {
@@ -91,6 +92,7 @@ export function twoDigits(
     antfu(),
     jsonc(),
     css(),
+    yaml(),
   );
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {
