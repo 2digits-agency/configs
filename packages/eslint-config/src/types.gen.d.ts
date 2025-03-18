@@ -2788,6 +2788,11 @@ Backward pagination arguments
    */
   'react-dom/no-flush-sync'?: Linter.RuleEntry<[]>
   /**
+   * replaces usages of 'ReactDom.hydrate()' with 'hydrateRoot()'
+   * @see https://eslint-react.xyz/docs/rules/dom-no-hydrate
+   */
+  'react-dom/no-hydrate'?: Linter.RuleEntry<[]>
+  /**
    * enforce that button component have an explicit 'type' attribute
    * @see https://eslint-react.xyz/docs/rules/dom-no-missing-button-type
    */
@@ -2802,6 +2807,11 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/dom-no-namespace
    */
   'react-dom/no-namespace'?: Linter.RuleEntry<[]>
+  /**
+   * replace usages of 'ReactDom.render()' with 'createRoot(node).render()'
+   * @see https://eslint-react.xyz/docs/rules/dom-no-render
+   */
+  'react-dom/no-render'?: Linter.RuleEntry<[]>
   /**
    * disallow usage of the return value of 'ReactDOM.render'
    * @see https://eslint-react.xyz/docs/rules/dom-no-render-return-value
@@ -2827,6 +2837,11 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/dom-no-unsafe-target-blank
    */
   'react-dom/no-unsafe-target-blank'?: Linter.RuleEntry<[]>
+  /**
+   * replace usages of 'ReactDom.render()' with 'createRoot(node).render()'
+   * @see https://eslint-react.xyz/docs/rules/dom-no-use-form-state
+   */
+  'react-dom/no-use-form-state'?: Linter.RuleEntry<[]>
   /**
    * disallow void elements (AKA self-closing elements) from having children
    * @see https://eslint-react.xyz/docs/rules/dom-no-void-elements-with-children
@@ -3119,7 +3134,7 @@ Backward pagination arguments
   'react-extra/use-jsx-vars'?: Linter.RuleEntry<[]>
   /**
    * enforce custom Hooks to use at least one other hook inside
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-prefix
    */
   'react-hooks-extra/ensure-custom-hooks-using-other-hooks'?: Linter.RuleEntry<[]>
   /**
@@ -3144,7 +3159,7 @@ Backward pagination arguments
   'react-hooks-extra/no-direct-set-state-in-use-layout-effect'?: Linter.RuleEntry<[]>
   /**
    * enforce custom Hooks to use at least one other hook inside
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-prefix
    */
   'react-hooks-extra/no-redundant-custom-hook'?: Linter.RuleEntry<[]>
   /**
@@ -3159,7 +3174,12 @@ Backward pagination arguments
   'react-hooks-extra/no-unnecessary-use-memo'?: Linter.RuleEntry<[]>
   /**
    * enforce custom Hooks to use at least one other hook inside
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-useless-custom-hooks
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-prefix
+   */
+  'react-hooks-extra/no-unnecessary-use-prefix'?: Linter.RuleEntry<[]>
+  /**
+   * enforce custom Hooks to use at least one other hook inside
+   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-prefix
    */
   'react-hooks-extra/no-useless-custom-hooks'?: Linter.RuleEntry<[]>
   /**
