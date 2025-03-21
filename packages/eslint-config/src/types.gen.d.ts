@@ -2783,7 +2783,7 @@ Backward pagination arguments
    */
   'react-dom/no-find-dom-node'?: Linter.RuleEntry<[]>
   /**
-   * warns against using `flushSync`
+   * disallow 'flushSync'
    * @see https://eslint-react.xyz/docs/rules/dom-no-flush-sync
    */
   'react-dom/no-flush-sync'?: Linter.RuleEntry<[]>
@@ -2838,7 +2838,7 @@ Backward pagination arguments
    */
   'react-dom/no-unsafe-target-blank'?: Linter.RuleEntry<[]>
   /**
-   * replace usages of 'ReactDom.render()' with 'createRoot(node).render()'
+   * replace the usages of 'useFormState' with 'useActionState'
    * @see https://eslint-react.xyz/docs/rules/dom-no-use-form-state
    */
   'react-dom/no-use-form-state'?: Linter.RuleEntry<[]>
