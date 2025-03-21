@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 4.2.0
+
+### Minor Changes
+
+- 305656d: Added markdown linting
+
+### Patch Changes
+
+- 69980ff: Updated dependencies
+- Updated dependencies [69980ff]
+  - @2digits/eslint-plugin@2.3.43
+
 ## 4.1.1
 
 ### Patch Changes
