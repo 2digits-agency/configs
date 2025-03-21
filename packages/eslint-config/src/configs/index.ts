@@ -8,6 +8,7 @@ export * from './ignores';
 export * from './javascript';
 export * from './jsdoc';
 export * from './jsonc';
+export * from './markdown';
 export * from './next';
 export * from './node';
 export * from './pnpm';

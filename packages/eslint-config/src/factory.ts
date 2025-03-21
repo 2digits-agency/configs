@@ -13,6 +13,7 @@ import {
   javascript,
   jsdoc,
   jsonc,
+  markdown,
   next,
   node,
   pnpm,
@@ -102,6 +103,7 @@ export async function twoDigits(
     jsonc(),
     css(),
     yaml(),
+    markdown(),
   );
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {
