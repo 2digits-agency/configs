@@ -1,7 +1,7 @@
 import { renamePluginsInConfigs } from 'eslint-flat-config-utils';
 
 import { PluginNameMap } from '../constants';
-import { GLOB_SRC } from '../globs';
+import { GLOB_MARKDOWN_CODE, GLOB_SRC } from '../globs';
 import type { OptionsTypeScriptWithTypes, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
@@ -28,6 +28,7 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
     {
       name: '2digits:typescript/rules',
       files: [GLOB_SRC],
+      ignores: [GLOB_MARKDOWN_CODE],
       languageOptions: {
         parser,
         parserOptions: {
@@ -66,14 +67,15 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
         ],
         'ts/unbound-method': 'off',
 
-        ...(twoDigits.configs.recommended.rules as object),
+        ...twoDigits.configs.recommended.rules,
 
         ...overrides,
       },
     },
     {
-      files: ['**/*.d.ts'],
       name: '2digits:typescript/disables/dts',
+      files: ['**/*.d.ts'],
+      ignores: [GLOB_MARKDOWN_CODE],
       rules: {
         'unicorn/no-abusive-eslint-disable': 'off',
         'no-duplicate-imports': 'off',
@@ -82,15 +84,17 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
       },
     },
     {
-      files: ['**/*.{test,spec}.ts?(x)'],
       name: '2digits:typescript/disables/test',
+      files: ['**/*.{test,spec}.ts?(x)'],
+      ignores: [GLOB_MARKDOWN_CODE],
       rules: {
         'no-unused-expressions': 'off',
       },
     },
     {
-      files: ['**/*.js', '**/*.cjs', '**/*.cts'],
       name: '2digits:typescript/disables/cjs',
+      files: ['**/*.js', '**/*.cjs', '**/*.cts'],
+      ignores: [GLOB_MARKDOWN_CODE],
       rules: {
         'ts/no-require-imports': 'off',
         'ts/no-var-requires': 'off',
