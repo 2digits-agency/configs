@@ -15,6 +15,7 @@ export const GLOB_YAML = '**/*.ya?ml';
 
 export const GLOB_MARKDOWN = '**/*.md';
 export const GLOB_MARKDOWN_IN_MARKDOWN = '**/*.md/*.md';
+export const GLOB_MARKDOWN_CODE = `${GLOB_MARKDOWN}/${GLOB_SRC}`;
 
 export const GLOB_EXCLUDE = [
   '**/node_modules',
