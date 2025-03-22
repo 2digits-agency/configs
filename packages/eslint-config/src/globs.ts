@@ -11,7 +11,7 @@ export const GLOB_JSONC = '**/*.jsonc';
 
 export const GLOB_CSS = '**/*.css';
 
-export const GLOB_YAML = '**/*.ya?ml';
+export const GLOB_YAML = '**/*.y?(a)ml';
 
 export const GLOB_MARKDOWN = '**/*.md';
 export const GLOB_MARKDOWN_IN_MARKDOWN = '**/*.md/*.md';
@@ -24,6 +24,7 @@ export const GLOB_EXCLUDE = [
   '**/yarn.lock',
   '**/pnpm-lock.yaml',
   '**/bun.lockb',
+  '**/bun.lock',
 
   '**/output',
   '**/coverage',

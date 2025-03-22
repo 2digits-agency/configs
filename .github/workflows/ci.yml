@@ -7,8 +7,10 @@ concurrency:
 on:
   push:
     branches:
-      - 'main'
+      - main
   merge_group:
+    types:
+      - checks_requested
   pull_request:
     types:
       - synchronize

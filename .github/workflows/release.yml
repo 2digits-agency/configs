@@ -5,7 +5,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 on:
   push:
     branches:
-      - 'main'
+      - main
 
 jobs:
   publish:
