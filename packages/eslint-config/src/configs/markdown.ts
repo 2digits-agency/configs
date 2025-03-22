@@ -1,7 +1,7 @@
 import plugin from '@eslint/markdown';
 import { mergeProcessors, processorPassThrough } from 'eslint-merge-processors';
 
-import { GLOB_MARKDOWN, GLOB_MARKDOWN_IN_MARKDOWN } from '../globs';
+import { GLOB_MARKDOWN, GLOB_MARKDOWN_CODE, GLOB_MARKDOWN_IN_MARKDOWN } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
 const files = [GLOB_MARKDOWN];
@@ -17,6 +17,7 @@ export function markdown(): TypedFlatConfigItem[] {
     {
       name: '2digits:markdown/processor',
       files,
+      language: 'markdown/gfm',
       ignores: [GLOB_MARKDOWN_IN_MARKDOWN],
       /**
        * `eslint-plugin-markdown` only creates virtual files for code blocks, but not the markdown file itself. We use
@@ -27,6 +28,7 @@ export function markdown(): TypedFlatConfigItem[] {
     {
       name: '2digits:markdown/parser',
       files,
+      language: 'markdown/gfm',
       languageOptions: {
         parser: parserPlain,
       },
@@ -34,8 +36,45 @@ export function markdown(): TypedFlatConfigItem[] {
     {
       name: '2digits:markdown/rules',
       files,
+      language: 'markdown/gfm',
       rules: {
-        ...Object.fromEntries(plugin.configs.recommended.flatMap(({ rules }) => Object.entries(rules))),
+        'markdown/fenced-code-language': 'error',
+        'markdown/heading-increment': 'error',
+        'markdown/no-empty-links': 'error',
+        'markdown/no-invalid-label-refs': 'error',
+        'markdown/no-missing-label-refs': 'error',
+      },
+    },
+    {
+      name: '2digits:markdown/disables',
+      files: [GLOB_MARKDOWN_CODE],
+      languageOptions: {
+        parserOptions: {
+          ecmaFeatures: {
+            impliedStrict: true,
+          },
+        },
+      },
+      rules: {
+        'no-alert': 'off',
+        'no-console': 'off',
+        'no-labels': 'off',
+        'no-lone-blocks': 'off',
+        'no-restricted-syntax': 'off',
+        'no-undef': 'off',
+        'no-unused-expressions': 'off',
+        'no-unused-labels': 'off',
+        'no-unused-vars': 'off',
+        'node/prefer-global/process': 'off',
+        'ts/consistent-type-imports': 'off',
+        'ts/explicit-function-return-type': 'off',
+        'ts/no-namespace': 'off',
+        'ts/no-redeclare': 'off',
+        'ts/no-require-imports': 'off',
+        'ts/no-unused-expressions': 'off',
+        'ts/no-unused-vars': 'off',
+        'ts/no-use-before-define': 'off',
+        'unicode-bom': 'off',
       },
     },
   ];
