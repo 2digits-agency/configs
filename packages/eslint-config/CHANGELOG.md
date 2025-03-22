@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 4.3.0
+
+### Minor Changes
+
+- cad11e8: Fixed typescript rules linting unintended markdown snippets
+
+### Patch Changes
+
+- 0e11aac: Fixed markdown linting rules
+- ba9ca50: Updated dependencies
+- e6bc3c5: Fixed yaml linting rules not applying to yml files
+- Updated dependencies [ba9ca50]
+  - @2digits/eslint-plugin@2.3.44
+
 ## 4.2.0
 
 ### Minor Changes
