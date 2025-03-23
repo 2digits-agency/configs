@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 4.3.1
+
+### Patch Changes
+
+- e60793a: Updated dependencies
+- b8843b4: Added fixtures to test config
+
 ## 4.3.0
 
 ### Minor Changes
