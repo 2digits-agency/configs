@@ -7,6 +7,7 @@ export default twoDigits({
   ignores: {
     gitIgnore: {
       cwd: path.dirname(fileURLToPath(import.meta.url)),
+      files: ['.gitignore', '.prettierignore'],
     },
   },
   react: true,
