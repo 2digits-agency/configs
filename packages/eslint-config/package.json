@@ -33,7 +33,8 @@
     "dev": "tsup --watch",
     "types": "tsc --noEmit",
     "docs": "eslint-config-inspector build",
-    "docs:dev": "eslint-config-inspector"
+    "docs:dev": "eslint-config-inspector",
+    "test": "vitest --run"
   },
   "keywords": [
     "eslint-config"
@@ -86,10 +87,16 @@
     "@2digits/tsconfig": "workspace:*",
     "@eslint/config-inspector": "catalog:",
     "@types/node": "catalog:",
+    "@types/react": "catalog:",
     "@typescript-eslint/utils": "catalog:",
+    "dedent": "catalog:",
     "eslint": "catalog:",
     "eslint-typegen": "catalog:",
+    "execa": "catalog:",
+    "react": "catalog:",
+    "tinyglobby": "catalog:",
     "tsup": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }
