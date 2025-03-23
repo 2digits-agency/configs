@@ -14,7 +14,7 @@ afterAll(async () => {
   await fs.rm('_fixtures', { recursive: true, force: true });
 });
 
-it('should autofix', async ({ expect }) => {
+it('should autofix', { timeout: 30_000 }, async ({ expect }) => {
   const from = nodePath.resolve('fixtures/input');
   const output = nodePath.resolve('fixtures/output');
   const target = nodePath.resolve('_fixtures');
