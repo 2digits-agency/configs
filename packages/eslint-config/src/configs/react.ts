@@ -72,6 +72,7 @@ export async function react(
         'react-hooks-extra/no-redundant-custom-hook': 'error',
         'react-hooks-extra/no-unnecessary-use-memo': 'error',
 
+        'react-extra/no-useless-fragment': 'off',
         'react-extra/prefer-read-only-props': 'off',
         'react-extra/prefer-shorthand-boolean': 'error',
         'react-extra/prefer-shorthand-fragment': 'error',
