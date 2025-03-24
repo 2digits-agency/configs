@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 4.3.2
+
+### Patch Changes
+
+- fff8054: Updated config to allow useless fragments for text content
+- ae1cb1b: Updated dependencies
+- Updated dependencies [ae1cb1b]
+  - @2digits/eslint-plugin@2.3.45
+
 ## 4.3.1
 
 ### Patch Changes
