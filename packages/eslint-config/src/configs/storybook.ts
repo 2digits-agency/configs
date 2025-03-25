@@ -53,6 +53,7 @@ export async function storybook(
         'storybook/story-exports': 'error',
         'storybook/use-storybook-expect': 'error',
         'storybook/use-storybook-testing-library': 'error',
+        'storybook/meta-satisfies-type': 'error',
 
         ...overrides,
       },

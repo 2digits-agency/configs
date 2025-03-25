@@ -5168,6 +5168,11 @@ Backward pagination arguments
    */
   'storybook/meta-inline-properties'?: Linter.RuleEntry<StorybookMetaInlineProperties>
   /**
+   * Meta should use `satisfies Meta`
+   * @see https://github.com/storybookjs/eslint-plugin-storybook/blob/main/docs/rules/meta-satisfies-type.md
+   */
+  'storybook/meta-satisfies-type'?: Linter.RuleEntry<[]>
+  /**
    * A story should not have a redundant name property
    * @see https://github.com/storybookjs/eslint-plugin-storybook/blob/main/docs/rules/no-redundant-story-name.md
    */
