@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 4.3.3
+
+### Patch Changes
+
+- 27b7ab9: Included new "storybook/meta-satisfies-type" rule for storybook
+- 7f250e9: Updated dependencies
+
 ## 4.3.2
 
 ### Patch Changes
