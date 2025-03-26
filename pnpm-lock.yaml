@@ -31,8 +31,8 @@ catalogs:
       specifier: 6.3.0
       version: 6.3.0
     '@graphql-eslint/eslint-plugin':
-      specifier: 4.3.0
-      version: 4.3.0
+      specifier: 4.4.0
+      version: 4.4.0
     '@ianvs/prettier-plugin-sort-imports':
       specifier: 4.4.1
       version: 4.4.1
@@ -323,7 +323,7 @@ importers:
         version: 6.3.0
       '@graphql-eslint/eslint-plugin':
         specifier: 'catalog:'
-        version: 4.3.0(@types/node@22.13.13)(encoding@0.1.13)(eslint@9.23.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.2)
+        version: 4.4.0(@types/node@22.13.13)(encoding@0.1.13)(eslint@9.23.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.2)
       '@next/eslint-plugin-next':
         specifier: 'catalog:'
         version: 15.2.4
@@ -1435,8 +1435,8 @@ packages:
     resolution: {integrity: sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@graphql-eslint/eslint-plugin@4.3.0':
-    resolution: {integrity: sha512-9UTJfYNGAK5GuFapsNvA+508ke8YPc9Yt6mgT4Lc+gS18p53oG5wmXd3jdmNeVOfxhUefJcJbn925vIrjg/8/g==}
+  '@graphql-eslint/eslint-plugin@4.4.0':
+    resolution: {integrity: sha512-dhW6fpk3Souuaphhc38uMAGCcgKMgtCJWFygIKODw/Kns43wiQqRPVay0aNFY1JBx3aevn4KPT/BCOdm6HNncA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@apollo/subgraph': ^2
@@ -8205,7 +8205,7 @@ snapshots:
       '@eslint/core': 0.12.0
       levn: 0.4.1
 
-  '@graphql-eslint/eslint-plugin@4.3.0(@types/node@22.13.13)(encoding@0.1.13)(eslint@9.23.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.2)':
+  '@graphql-eslint/eslint-plugin@4.4.0(@types/node@22.13.13)(encoding@0.1.13)(eslint@9.23.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.2)':
     dependencies:
       '@graphql-tools/code-file-loader': 8.1.6(graphql@16.8.2)
       '@graphql-tools/graphql-tag-pluck': 8.3.5(graphql@16.8.2)
