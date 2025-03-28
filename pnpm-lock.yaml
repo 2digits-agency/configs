@@ -187,8 +187,8 @@ catalogs:
       specifier: 2.0.2
       version: 2.0.2
     react:
-      specifier: 19.0.0
-      version: 19.0.0
+      specifier: 19.1.0
+      version: 19.1.0
     renovate:
       specifier: 39.219.3
       version: 39.219.3
@@ -447,7 +447,7 @@ importers:
         version: 9.5.2
       react:
         specifier: 'catalog:'
-        version: 19.0.0
+        version: 19.1.0
       tinyglobby:
         specifier: 'catalog:'
         version: 0.2.12
@@ -5411,8 +5411,8 @@ packages:
   re2@1.21.4:
     resolution: {integrity: sha512-MVIfXWJmsP28mRsSt8HeL750ifb8H5+oF2UDIxGaiJCr8fkMqhLZ7kcX9ADRk2dC8qeGKedB7UVYRfBVpEiLfA==}
 
-  react@19.0.0:
-    resolution: {integrity: sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==}
+  react@19.1.0:
+    resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==}
     engines: {node: '>=0.10.0'}
 
   read-cache@1.0.0:
@@ -12842,7 +12842,7 @@ snapshots:
       - supports-color
     optional: true
 
-  react@19.0.0: {}
+  react@19.1.0: {}
 
   read-cache@1.0.0:
     dependencies:
