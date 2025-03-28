@@ -196,8 +196,8 @@ catalogs:
       specifier: 0.2.12
       version: 0.2.12
     ts-pattern:
-      specifier: 5.6.2
-      version: 5.6.2
+      specifier: 5.7.0
+      version: 5.7.0
     tsup:
       specifier: 8.4.0
       version: 8.4.0
@@ -474,7 +474,7 @@ importers:
         version: 0.8.0
       ts-pattern:
         specifier: 'catalog:'
-        version: 5.6.2
+        version: 5.7.0
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -5982,6 +5982,9 @@ packages:
 
   ts-pattern@5.6.2:
     resolution: {integrity: sha512-d4IxJUXROL5NCa3amvMg6VQW2HVtZYmUTPfvVtO7zJWGYLJ+mry9v2OmYm+z67aniQoQ8/yFNadiEwtNS9qQiw==}
+
+  ts-pattern@5.7.0:
+    resolution: {integrity: sha512-0/FvIG4g3kNkYgbNwBBW5pZBkfpeYQnH+2AA3xmjkCAit/DSDPKmgwC3fKof4oYUq6gupClVOJlFl+939VRBMg==}
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
@@ -13595,6 +13598,8 @@ snapshots:
   ts-interface-checker@0.1.13: {}
 
   ts-pattern@5.6.2: {}
+
+  ts-pattern@5.7.0: {}
 
   tslib@2.8.1: {}
 
