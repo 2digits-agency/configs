@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 4.3.5
+
+### Patch Changes
+
+- 100220d: Updated dependencies
+- Updated dependencies [100220d]
+  - @2digits/eslint-plugin@2.3.46
+
 ## 4.3.4
 
 ### Patch Changes
