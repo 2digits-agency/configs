@@ -2902,6 +2902,11 @@ Backward pagination arguments
    */
   'react-extra/jsx-no-undef'?: Linter.RuleEntry<[]>
   /**
+   * Marks React variables as used when JSX is used in the file.
+   * @see https://eslint-react.xyz/docs/rules/jsx-uses-react
+   */
+  'react-extra/jsx-uses-react'?: Linter.RuleEntry<[]>
+  /**
    * Marks variables used in JSX elements as used.
    * @see https://eslint-react.xyz/docs/rules/jsx-uses-vars
    */
@@ -12616,6 +12621,8 @@ type TsPreferNullishCoalescing = []|[{
   ignoreBooleanCoercion?: boolean
   
   ignoreConditionalTests?: boolean
+  
+  ignoreIfStatements?: boolean
   
   ignoreMixedLogicalExpressions?: boolean
   
