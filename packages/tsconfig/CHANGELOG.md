@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.7.1
+
+### Patch Changes
+
+- 29707a0: Updated dependencies
+
 ## 0.7.0
 
 ### Minor Changes
