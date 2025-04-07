@@ -103,8 +103,8 @@ catalogs:
       specifier: 0.3.1
       version: 0.3.1
     eslint-plugin-react-compiler:
-      specifier: 19.0.0-beta-e993439-20250328
-      version: 19.0.0-beta-e993439-20250328
+      specifier: 19.0.0-beta-e993439-20250405
+      version: 19.0.0-beta-e993439-20250405
     eslint-plugin-react-hooks:
       specifier: 5.2.0
       version: 5.2.0
@@ -371,7 +371,7 @@ importers:
         version: 0.3.1(eslint@9.24.0(jiti@2.4.2))
       eslint-plugin-react-compiler:
         specifier: 'catalog:'
-        version: 19.0.0-beta-e993439-20250328(eslint@9.24.0(jiti@2.4.2))
+        version: 19.0.0-beta-e993439-20250405(eslint@9.24.0(jiti@2.4.2))
       eslint-plugin-react-hooks:
         specifier: 'catalog:'
         version: 5.2.0(eslint@9.24.0(jiti@2.4.2))
@@ -3406,8 +3406,8 @@ packages:
     peerDependencies:
       eslint: ^9.0.0
 
-  eslint-plugin-react-compiler@19.0.0-beta-e993439-20250328:
-    resolution: {integrity: sha512-7hTFaGMz0YYLtkStJFBHjr2zOZwULxg2qCJ8pNYlaOqq2zL1/+Wg7BiDwrPZQIpAn3YQbBu1SHF509M3qpTyIg==}
+  eslint-plugin-react-compiler@19.0.0-beta-e993439-20250405:
+    resolution: {integrity: sha512-8ZQU4qGc8NOfsM7u7tf7gXmZ+d4tSK+7BFb+Fvs4s9ItQ12m/G6ttSGxompH/Jq7nXgnJ20EqQRshwVG6GwUdA==}
     engines: {node: ^14.17.0 || ^16.0.0 || >= 18.0.0}
     peerDependencies:
       eslint: '>=7'
@@ -10268,7 +10268,7 @@ snapshots:
       tinyglobby: 0.2.12
       yaml-eslint-parser: 1.3.0
 
-  eslint-plugin-react-compiler@19.0.0-beta-e993439-20250328(eslint@9.24.0(jiti@2.4.2)):
+  eslint-plugin-react-compiler@19.0.0-beta-e993439-20250405(eslint@9.24.0(jiti@2.4.2)):
     dependencies:
       '@babel/core': 7.25.2
       '@babel/parser': 7.26.2
