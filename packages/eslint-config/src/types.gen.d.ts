@@ -5776,6 +5776,11 @@ Backward pagination arguments
    */
   'tanstack/no-unstable-deps'?: Linter.RuleEntry<[]>
   /**
+   * Ensures queryFn returns a non-undefined value
+   * @see https://tanstack.com/query/latest/docs/eslint/no-void-query-fn
+   */
+  'tanstack/no-void-query-fn'?: Linter.RuleEntry<[]>
+  /**
    * Makes sure that QueryClient is stable
    * @see https://tanstack.com/query/latest/docs/eslint/stable-query-client
    */
