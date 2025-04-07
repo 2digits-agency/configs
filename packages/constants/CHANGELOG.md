@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 0.3.8
+
+### Patch Changes
+
+- 29707a0: Updated dependencies
+
 ## 0.3.7
 
 ### Patch Changes
