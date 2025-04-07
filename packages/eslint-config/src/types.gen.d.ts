@@ -2902,7 +2902,7 @@ Backward pagination arguments
    */
   'react-extra/jsx-no-undef'?: Linter.RuleEntry<[]>
   /**
-   * Marks React variables as used when JSX is used in the file.
+   * Marks React variables as used when JSX is used.
    * @see https://eslint-react.xyz/docs/rules/jsx-uses-react
    */
   'react-extra/jsx-uses-react'?: Linter.RuleEntry<[]>
