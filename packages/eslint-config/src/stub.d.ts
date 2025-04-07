@@ -45,14 +45,6 @@ declare module 'eslint-plugin-tailwindcss' {
   export = exprt;
 }
 
-declare module 'eslint-config-prettier' {
-  import type { ClassicConfig } from '@typescript-eslint/utils/ts-eslint';
-
-  declare const exprt: ClassicConfig.Config;
-
-  export = exprt;
-}
-
 declare module 'eslint-plugin-react-compiler' {
   import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
 
