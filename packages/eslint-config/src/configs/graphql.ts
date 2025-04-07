@@ -1,5 +1,4 @@
 import { renamePluginsInRules } from 'eslint-flat-config-utils';
-import { loadConfig } from 'graphql-config';
 
 import { PluginNameMap } from '../constants';
 import type { OptionsWithFiles, TypedFlatConfigItem } from '../types';
@@ -10,7 +9,9 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<TypedFlat
 
   const [gql, gqlSchema] = await Promise.all([
     interopDefault(import('@graphql-eslint/eslint-plugin')),
-    loadConfig({ throwOnEmpty: false, throwOnMissing: false }).then((g) => g?.getDefault().schema),
+    import('graphql-config').then(({ loadConfig }) =>
+      loadConfig({ throwOnEmpty: false, throwOnMissing: false }).then((g) => g?.getDefault().schema),
+    ),
   ]);
 
   const flatRecommended = gql.configs['flat/operations-recommended'].rules;

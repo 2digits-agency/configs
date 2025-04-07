@@ -1,19 +1,16 @@
-import { composer } from 'eslint-flat-config-utils';
+import flatIgnore from 'eslint-config-flat-gitignore';
 
 import { GLOB_EXCLUDE } from '../globs';
 import type { OptionsWithIgnores, TypedFlatConfigItem } from '../types';
-import { interopDefault } from '../utils';
 
-export async function ignores(options: OptionsWithIgnores = {}): Promise<TypedFlatConfigItem[]> {
+export function ignores(options: OptionsWithIgnores = {}): TypedFlatConfigItem[] {
   const { gitIgnore, ignores = [] } = options;
 
-  return composer(
+  return [
     {
       ignores: [GLOB_EXCLUDE, ignores].flat(),
       name: '2digits:ignores',
     },
-    interopDefault(import('eslint-config-flat-gitignore')).then((m) =>
-      m({ strict: false, ...gitIgnore, name: '2digits:gitignore' }),
-    ),
-  );
+    flatIgnore({ strict: false, ...gitIgnore, name: '2digits:gitignore' }),
+  ];
 }
