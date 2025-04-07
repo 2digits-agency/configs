@@ -9,28 +9,22 @@
     "directory": "packages/eslint-config"
   },
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
     }
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "unbuild",
+    "dev": "unbuild --watch",
     "types": "tsc --noEmit",
     "docs": "eslint-config-inspector build",
     "docs:dev": "eslint-config-inspector",
@@ -55,6 +49,7 @@
     "@stylistic/eslint-plugin": "catalog:",
     "@tanstack/eslint-plugin-query": "catalog:",
     "@typescript-eslint/parser": "catalog:",
+    "@typescript-eslint/utils": "catalog:",
     "eslint-config-flat-gitignore": "catalog:",
     "eslint-config-prettier": "catalog:",
     "eslint-flat-config-utils": "catalog:",
@@ -88,7 +83,6 @@
     "@eslint/config-inspector": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
-    "@typescript-eslint/utils": "catalog:",
     "dedent": "catalog:",
     "eslint": "catalog:",
     "eslint-typegen": "catalog:",
@@ -97,6 +91,7 @@
     "tinyglobby": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:",
+    "unbuild": "catalog:",
     "vitest": "catalog:"
   }
 }
