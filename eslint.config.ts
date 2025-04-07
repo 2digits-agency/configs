@@ -19,4 +19,5 @@ export default twoDigits({
   turbo: true,
   drizzle: true,
   ts: true,
+  pnpm: true,
 });
