@@ -1,4 +1,5 @@
 ---
+'@2digits/constants': major
 '@2digits/eslint-plugin': major
 '@2digits/eslint-config': patch
 ---
