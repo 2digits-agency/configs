@@ -8,28 +8,22 @@
     "directory": "packages/eslint-plugin"
   },
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
     }
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "unbuild",
+    "dev": "unbuild --watch",
     "types": "tsc --noEmit",
     "test": "vitest --run"
   },
@@ -50,8 +44,8 @@
     "@2digits/tsconfig": "workspace:*",
     "@typescript-eslint/parser": "catalog:",
     "eslint-vitest-rule-tester": "catalog:",
-    "tsup": "catalog:",
     "typescript": "catalog:",
+    "unbuild": "catalog:",
     "vitest": "catalog:"
   }
 }
