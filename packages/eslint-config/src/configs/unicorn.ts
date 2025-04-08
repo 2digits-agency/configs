@@ -1,5 +1,6 @@
+import pluginUnicorn from 'eslint-plugin-unicorn';
+
 import { GLOB_SRC } from '../globs';
-import { pluginUnicorn } from '../plugins';
 import type { TypedFlatConfigItem } from '../types';
 
 export function unicorn(): TypedFlatConfigItem[] {

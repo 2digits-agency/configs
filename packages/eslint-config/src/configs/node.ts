@@ -1,5 +1,6 @@
+import pluginNode from 'eslint-plugin-n';
+
 import { GLOB_SRC } from '../globs';
-import { pluginNode } from '../plugins';
 import type { TypedFlatConfigItem } from '../types';
 
 export function node(): TypedFlatConfigItem[] {
