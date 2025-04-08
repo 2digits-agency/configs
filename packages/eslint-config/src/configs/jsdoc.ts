@@ -1,14 +1,15 @@
+import jsdocPlugin from 'eslint-plugin-jsdoc';
+
 import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
-import { interopDefault } from '../utils';
 
-export async function jsdoc(): Promise<TypedFlatConfigItem[]> {
+export function jsdoc(): TypedFlatConfigItem[] {
   return [
     {
       files: [GLOB_SRC],
       name: '2digits:jsdoc',
       plugins: {
-        jsdoc: await interopDefault(import('eslint-plugin-jsdoc')),
+        jsdoc: jsdocPlugin,
       },
       rules: {
         'jsdoc/check-access': 'error',

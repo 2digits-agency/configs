@@ -1,4 +1,3 @@
-import stylistic from '@stylistic/eslint-plugin';
 import { renamePluginsInRules } from 'eslint-flat-config-utils';
 
 import { PluginNameMap } from '../constants';
@@ -11,11 +10,12 @@ export async function react(
 ): Promise<TypedFlatConfigItem[]> {
   const { files = [GLOB_TS, GLOB_TSX], overrides = {}, parserOptions, tsconfigRootDir, reactCompiler = true } = options;
 
-  const [pluginReact, pluginReactHooks, parser, pluginReactCompiler] = await Promise.all([
+  const [pluginReact, pluginReactHooks, parser, pluginReactCompiler, stylistic] = await Promise.all([
     interopDefault(import('@eslint-react/eslint-plugin')),
     interopDefault(import('eslint-plugin-react-hooks')),
     interopDefault(import('@typescript-eslint/parser')),
     reactCompiler ? interopDefault(import('eslint-plugin-react-compiler')) : undefined,
+    interopDefault(import('@stylistic/eslint-plugin')),
   ]);
 
   const plugins = pluginReact.configs.all.plugins;

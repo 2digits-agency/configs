@@ -1,21 +1,18 @@
-import jsoncParser from 'jsonc-eslint-parser';
-import yamlParser from 'yaml-eslint-parser';
-
 import type { TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
 export async function pnpm(): Promise<TypedFlatConfigItem[]> {
-  const plugin = await interopDefault(import('eslint-plugin-pnpm'));
+  const pnpm = await interopDefault(import('eslint-plugin-pnpm'));
 
   return [
     {
       name: '2digits:pnpm/package-json',
       files: ['**/package.json'],
       languageOptions: {
-        parser: jsoncParser,
+        parser: await interopDefault(import('jsonc-eslint-parser')),
       },
       plugins: {
-        pnpm: plugin,
+        pnpm,
       },
       rules: {
         'pnpm/json-enforce-catalog': 'error',
@@ -27,10 +24,10 @@ export async function pnpm(): Promise<TypedFlatConfigItem[]> {
       name: '2digits:pnpm/pnpm-workspace-yaml',
       files: ['pnpm-workspace.yaml'],
       languageOptions: {
-        parser: yamlParser,
+        parser: await interopDefault(import('yaml-eslint-parser')),
       },
       plugins: {
-        pnpm: plugin,
+        pnpm,
       },
       rules: {
         'pnpm/yaml-no-duplicate-catalog-item': 'error',
