@@ -3,15 +3,15 @@ import { match, P } from 'ts-pattern';
 
 import { createEslintRule } from '../utils';
 
-const prefix = anyOf('T', '$').at.lineStart();
-const initial = letter.uppercase;
-const remainder = oneOrMore(letter);
-const digits = digit.times.any().at.lineEnd();
-
-const PrefixRegex = createRegExp(prefix);
-const InitialRegex = createRegExp(prefix, initial);
-const RemainderRegex = createRegExp(prefix, initial, remainder);
-const TypeParamRegex = createRegExp(prefix, initial, remainder, digits);
+const PrefixRegex = createRegExp(anyOf('T', '$').at.lineStart());
+const InitialRegex = createRegExp(anyOf('T', '$').at.lineStart(), letter.uppercase);
+const RemainderRegex = createRegExp(anyOf('T', '$').at.lineStart(), letter.uppercase, oneOrMore(letter));
+const TypeParamRegex = createRegExp(
+  anyOf('T', '$').at.lineStart(),
+  letter.uppercase,
+  oneOrMore(letter),
+  digit.times.any().at.lineEnd(),
+);
 
 type MessageId = (typeof MessageId)[keyof typeof MessageId];
 const MessageId = {
