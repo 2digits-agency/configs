@@ -7,7 +7,7 @@
     "directory": "packages/prettier-config"
   },
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
@@ -16,8 +16,8 @@
     "./package.json": "./package.json",
     ".": {
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
       },
       "require": {
         "types": "./dist/index.d.cts",
@@ -27,8 +27,8 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "unbuild",
+    "dev": "unbuild --watch",
     "types": "tsc --noEmit"
   },
   "keywords": [
@@ -51,8 +51,8 @@
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
     "prettier": "catalog:",
-    "tsup": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "unbuild": "catalog:"
   },
   "peerDependencies": {
     "prettier": ">=3.0.0"
