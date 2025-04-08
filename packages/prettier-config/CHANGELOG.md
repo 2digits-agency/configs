@@ -1,5 +1,18 @@
 # @2digits/prettier-config
 
+## 3.2.0
+
+### Minor Changes
+
+- 5782eb5: Changed tsup to unbuild
+
+### Patch Changes
+
+- 940e238: Updated dependencies
+- Updated dependencies [3b4f480]
+- Updated dependencies [5782eb5]
+  - @2digits/constants@1.0.0
+
 ## 3.1.0
 
 ### Minor Changes

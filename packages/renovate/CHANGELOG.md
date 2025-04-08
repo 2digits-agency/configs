@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.0.12
+
+### Patch Changes
+
+- 940e238: Updated dependencies
+
 ## 1.0.11
 
 ### Patch Changes

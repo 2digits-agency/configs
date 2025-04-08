@@ -1,5 +1,18 @@
 # @2digits/eslint-config
 
+## 4.4.1
+
+### Patch Changes
+
+- 3b4f480: Changed to ESM export only
+- 940e238: Updated dependencies
+- Updated dependencies [18c91b9]
+- Updated dependencies [3b4f480]
+- Updated dependencies [5782eb5]
+- Updated dependencies [ed10498]
+  - @2digits/eslint-plugin@3.0.0
+  - @2digits/constants@1.0.0
+
 ## 4.4.0
 
 ### Minor Changes
