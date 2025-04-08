@@ -38,7 +38,6 @@ export default defineConfig({
   language: 'sqlite',
   keywordCase: 'upper',
 
-  experimentalWasm: true,
   indent: 2,
 
   allowedBlankLines: 1,
