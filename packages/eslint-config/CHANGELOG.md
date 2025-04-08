@@ -1,5 +1,22 @@
 # @2digits/eslint-config
 
+## 4.4.0
+
+### Minor Changes
+
+- 34f018f: Changed bundler from tsup to unbuild
+
+### Patch Changes
+
+- 942a661: Updated dependencies
+- e199c01: Deferred loading optional plugins
+- c155dc7: Removed unused stub typings
+- 3abdd8c: Removed unused exports from index.ts
+- 791274f: Loaded required plugins on start
+- 2760c26: Removed re-exporting plugins from plugins.ts
+- Updated dependencies [942a661]
+  - @2digits/eslint-plugin@2.3.49
+
 ## 4.3.7
 
 ### Patch Changes
