@@ -51,12 +51,7 @@ export const typeParamNames = createEslintRule<[], MessageId>({
         for (const param of params) {
           const { name } = param.name;
 
-          const messageId = match(name)
-            .with(P.string.regex(TypeParamRegex), () => false as const)
-            .with(P.not(P.string.regex(PrefixRegex)), () => MessageId.prefix)
-            .with(P.not(P.string.regex(InitialRegex)), () => MessageId.initial)
-            .with(P.not(P.string.regex(RemainderRegex)), () => MessageId.remainder)
-            .otherwise(() => false as const);
+          const messageId = getMessageId(name);
 
           if (messageId) {
             context.report({
@@ -70,3 +65,17 @@ export const typeParamNames = createEslintRule<[], MessageId>({
     };
   },
 });
+
+const typeParamSelect = P.string.regex(TypeParamRegex);
+const prefixSelect = P.not(P.string.regex(PrefixRegex));
+const initialSelect = P.not(P.string.regex(InitialRegex));
+const remainderSelect = P.not(P.string.regex(RemainderRegex));
+
+function getMessageId(name: string) {
+  return match(name)
+    .with(typeParamSelect, () => false as const)
+    .with(prefixSelect, () => MessageId.prefix)
+    .with(initialSelect, () => MessageId.initial)
+    .with(remainderSelect, () => MessageId.remainder)
+    .otherwise(() => false as const);
+}
