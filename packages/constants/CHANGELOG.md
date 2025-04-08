@@ -1,5 +1,15 @@
 # @2digits/constants
 
+## 1.0.0
+
+### Major Changes
+
+- 3b4f480: Changed to ESM export only
+
+### Minor Changes
+
+- 5782eb5: Changed tsup to unbuild
+
 ## 0.3.8
 
 ### Patch Changes

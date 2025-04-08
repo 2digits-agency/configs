@@ -1,5 +1,17 @@
 # @2digits/eslint-plugin
 
+## 3.0.0
+
+### Major Changes
+
+- 3b4f480: Changed to ESM export only
+
+### Minor Changes
+
+- 18c91b9: Precompiled magic-regexps during build
+- 5782eb5: Changed tsup to unbuild
+- ed10498: Improved performance by moving function creation out of hot path
+
 ## 2.3.49
 
 ### Patch Changes
