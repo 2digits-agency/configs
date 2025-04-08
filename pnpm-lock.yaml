@@ -291,12 +291,12 @@ importers:
       '@2digits/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      tsup:
-        specifier: 'catalog:'
-        version: 8.4.0(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)(yaml@2.7.1)
       typescript:
         specifier: 'catalog:'
         version: 5.8.3
+      unbuild:
+        specifier: 'catalog:'
+        version: 3.5.0(typescript@5.8.3)
 
   packages/eslint-config:
     dependencies:

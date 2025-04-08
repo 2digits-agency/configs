@@ -1,4 +1,5 @@
 ---
+'@2digits/constants': minor
 '@2digits/eslint-plugin': minor
 ---
 
