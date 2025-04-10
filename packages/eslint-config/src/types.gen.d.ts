@@ -3087,7 +3087,7 @@ Backward pagination arguments
    */
   'react-extra/no-set-state-in-component-will-update'?: Linter.RuleEntry<[]>
   /**
-   * Disallow deprecated string `refs`.
+   * Replaces string refs with callback refs.
    * @see https://eslint-react.xyz/docs/rules/no-string-refs
    */
   'react-extra/no-string-refs'?: Linter.RuleEntry<[]>
