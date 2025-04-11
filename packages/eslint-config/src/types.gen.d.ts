@@ -2952,7 +2952,7 @@ Backward pagination arguments
    */
   'react-extra/no-children-to-array'?: Linter.RuleEntry<[]>
   /**
-   * Disallow class components.
+   * Disallow class components except for error boundaries.
    * @see https://eslint-react.xyz/docs/rules/no-class-component
    */
   'react-extra/no-class-component'?: Linter.RuleEntry<[]>
@@ -3052,6 +3052,11 @@ Backward pagination arguments
    */
   'react-extra/no-missing-key'?: Linter.RuleEntry<[]>
   /**
+   * Prevents incorrect usage of `captureOwnerStack`.
+   * @see https://eslint-react.xyz/docs/rules/no-misused-capture-owner-stack
+   */
+  'react-extra/no-misused-capture-owner-stack'?: Linter.RuleEntry<[]>
+  /**
    * Disallow nesting component definitions inside other components.
    * @see https://eslint-react.xyz/docs/rules/no-nested-component-definitions
    */
@@ -3061,6 +3066,11 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/no-nested-component-definitions
    */
   'react-extra/no-nested-components'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow nesting lazy component declarations inside other components.
+   * @see https://eslint-react.xyz/docs/rules/no-nested-component-definitions
+   */
+  'react-extra/no-nested-lazy-component-declarations'?: Linter.RuleEntry<[]>
   /**
    * Disallow `propTypes` in favor of TypeScript or another type-checking solution.
    * @see https://eslint-react.xyz/docs/rules/no-prop-types
@@ -3077,7 +3087,7 @@ Backward pagination arguments
    */
   'react-extra/no-set-state-in-component-did-mount'?: Linter.RuleEntry<[]>
   /**
-   * Disallows calling `this.setState` in `componentDidUpdate` outside of functions, such as callbacks.
+   * Disallow calling `this.setState` in `componentDidUpdate` outside of functions, such as callbacks.
    * @see https://eslint-react.xyz/docs/rules/no-set-state-in-component-did-update
    */
   'react-extra/no-set-state-in-component-did-update'?: Linter.RuleEntry<[]>
