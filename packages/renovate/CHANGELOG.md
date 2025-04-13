@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.0.14
+
+### Patch Changes
+
+- 090ed3a: Updated dependencies
+
 ## 1.0.13
 
 ### Patch Changes
