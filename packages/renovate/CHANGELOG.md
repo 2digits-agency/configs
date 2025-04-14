@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.0.15
+
+### Patch Changes
+
+- ea12e97: Updated dependencies
+
 ## 1.0.14
 
 ### Patch Changes
