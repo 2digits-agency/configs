@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 4.4.4
+
+### Patch Changes
+
+- ea12e97: Updated dependencies
+- Updated dependencies [ea12e97]
+  - @2digits/eslint-plugin@3.0.2
+
 ## 4.4.3
 
 ### Patch Changes
