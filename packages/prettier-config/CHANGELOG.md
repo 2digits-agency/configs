@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 3.3.0
+
+### Minor Changes
+
+- 7551538: Fixed ESM CJS interop in unbuild
+
 ## 3.2.1
 
 ### Patch Changes
