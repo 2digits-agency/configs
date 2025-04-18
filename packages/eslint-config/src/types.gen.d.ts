@@ -1390,30 +1390,37 @@ Backward pagination arguments
   'logical-assignment-operators'?: Linter.RuleEntry<LogicalAssignmentOperators>
   /**
    * Require languages for fenced code blocks
+   * @see https://github.com/eslint/markdown/blob/main/docs/rules/fenced-code-language.md
    */
   'markdown/fenced-code-language'?: Linter.RuleEntry<MarkdownFencedCodeLanguage>
   /**
    * Enforce heading levels increment by one
+   * @see https://github.com/eslint/markdown/blob/main/docs/rules/heading-increment.md
    */
   'markdown/heading-increment'?: Linter.RuleEntry<[]>
   /**
    * Disallow duplicate headings in the same document
+   * @see https://github.com/eslint/markdown/blob/main/docs/rules/no-duplicate-headings.md
    */
   'markdown/no-duplicate-headings'?: Linter.RuleEntry<[]>
   /**
    * Disallow empty links
+   * @see https://github.com/eslint/markdown/blob/main/docs/rules/no-empty-links.md
    */
   'markdown/no-empty-links'?: Linter.RuleEntry<[]>
   /**
    * Disallow HTML tags
+   * @see https://github.com/eslint/markdown/blob/main/docs/rules/no-html.md
    */
   'markdown/no-html'?: Linter.RuleEntry<MarkdownNoHtml>
   /**
    * Disallow invalid label references
+   * @see https://github.com/eslint/markdown/blob/main/docs/rules/no-invalid-label-refs.md
    */
   'markdown/no-invalid-label-refs'?: Linter.RuleEntry<[]>
   /**
    * Disallow missing label references
+   * @see https://github.com/eslint/markdown/blob/main/docs/rules/no-missing-label-refs.md
    */
   'markdown/no-missing-label-refs'?: Linter.RuleEntry<[]>
   /**
