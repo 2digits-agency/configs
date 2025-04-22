@@ -9152,7 +9152,7 @@ type NoEmpty = []|[{
 }]
 // ----- no-empty-function -----
 type NoEmptyFunction = []|[{
-  allow?: ("functions" | "arrowFunctions" | "generatorFunctions" | "methods" | "generatorMethods" | "getters" | "setters" | "constructors" | "asyncFunctions" | "asyncMethods")[]
+  allow?: ("functions" | "arrowFunctions" | "generatorFunctions" | "methods" | "generatorMethods" | "getters" | "setters" | "constructors" | "asyncFunctions" | "asyncMethods" | "privateConstructors" | "protectedConstructors" | "decoratedFunctions" | "overrideMethods")[]
 }]
 // ----- no-empty-pattern -----
 type NoEmptyPattern = []|[{
@@ -9354,13 +9354,9 @@ type NoRestrictedModules = ((string | {
 }[])
 // ----- no-restricted-properties -----
 type NoRestrictedProperties = ({
-  object: string
-  property?: string
-  message?: string
+  [k: string]: unknown | undefined
 } | {
-  object?: string
-  property: string
-  message?: string
+  [k: string]: unknown | undefined
 })[]
 // ----- no-restricted-syntax -----
 type NoRestrictedSyntax = (string | {
@@ -12518,6 +12514,8 @@ type TsNoUnnecessaryCondition = []|[{
 }]
 // ----- ts/no-unnecessary-type-assertion -----
 type TsNoUnnecessaryTypeAssertion = []|[{
+  
+  checkLiteralConstAssertions?: boolean
   
   typesToIgnore?: string[]
 }]
