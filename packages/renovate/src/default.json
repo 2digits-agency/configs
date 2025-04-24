@@ -22,7 +22,9 @@
     { "groupName": "Unified & Rehype", "matchPackageNames": ["unified", "/^rehype-/"] },
     { "groupName": "nativewind", "matchPackageNames": ["nativewind", "react-native-css-interop"] },
     { "groupName": "react-native-bottom-tabs", "matchPackageNames": ["react-native-bottom-tabs", "/^@bottom-tabs//"] },
-    { "groupName": "react-native-firebase", "matchPackageNames": ["/^@react-native-firebase//"] }
+    { "groupName": "react-native-firebase", "matchPackageNames": ["/^@react-native-firebase//"] },
+    { "groupName": "PostHog", "matchPackageNames": ["/^posthog-/"] },
+    { "groupName": "Better Auth", "matchPackageNames": ["better-auth", "/^@better-auth//"] }
   ],
   "pruneStaleBranches": true,
   "ignorePrAuthor": false,
