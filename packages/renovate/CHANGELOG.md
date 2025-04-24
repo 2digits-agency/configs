@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.1.0
+
+### Minor Changes
+
+- c707f27: Added PostHog group
+- b8507e0: Added better-auth group
+
 ## 1.0.18
 
 ### Patch Changes
