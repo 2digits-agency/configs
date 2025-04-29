@@ -151,8 +151,8 @@ catalogs:
       specifier: 2.4.0
       version: 2.4.0
     knip:
-      specifier: 5.51.0
-      version: 5.51.0
+      specifier: 5.51.1
+      version: 5.51.1
     local-pkg:
       specifier: 1.1.1
       version: 1.1.1
@@ -190,8 +190,8 @@ catalogs:
       specifier: 19.1.0
       version: 19.1.0
     renovate:
-      specifier: 39.263.1
-      version: 39.263.1
+      specifier: 39.264.0
+      version: 39.264.0
     tinyglobby:
       specifier: 0.2.13
       version: 0.2.13
@@ -269,7 +269,7 @@ importers:
         version: 9.25.1(jiti@2.4.2)
       knip:
         specifier: 'catalog:'
-        version: 5.51.0(@types/node@22.15.3)(typescript@5.8.3)
+        version: 5.51.1(@types/node@22.15.3)(typescript@5.8.3)
       pkg-pr-new:
         specifier: 'catalog:'
         version: 0.0.43
@@ -551,7 +551,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 39.263.1(encoding@0.1.13)(typanion@3.14.0)
+        version: 39.264.0(encoding@0.1.13)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 5.8.3
@@ -4687,8 +4687,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@5.51.0:
-    resolution: {integrity: sha512-gw5TzLt9FikIk1oPWDc7jPRb/+L3Aw1ia25hWUQBb+hXS/Rbdki/0rrzQygjU5/CVYnRWYqc1kgdNi60Jm1lPg==}
+  knip@5.51.1:
+    resolution: {integrity: sha512-LIv9sQXA0wveWjCbKeKxOPKlCvs+0MXztB8lF0/i4rshxYOb7WZ2B5nCk0fMTodIk1pHdW5h7e0Dv0CsN1TjdQ==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -6010,8 +6010,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@39.263.1:
-    resolution: {integrity: sha512-9vRO5J+0qOcU123yCiWYlUE1qj60WHpiUbdKIARKK3YivzBJlbede+1hpiScbPAPw1faFYf1lx6j2CnVzjvEgg==}
+  renovate@39.264.0:
+    resolution: {integrity: sha512-/XoV0NWdwvjotd94PgQ9WU7A7/xGpUtwxwWaE78qY2ZgHjNe/+dA1v5dpJh9tqn6W/4vW38jSBjxvo6sylV5gA==}
     engines: {node: ^20.15.1 || ^22.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -12237,7 +12237,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@5.51.0(@types/node@22.15.3)(typescript@5.8.3):
+  knip@5.51.1(@types/node@22.15.3)(typescript@5.8.3):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@types/node': 22.15.3
@@ -13773,7 +13773,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@39.263.1(encoding@0.1.13)(typanion@3.14.0):
+  renovate@39.264.0(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.777.0
       '@aws-sdk/client-ec2': 3.779.0
