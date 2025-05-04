@@ -2205,7 +2205,7 @@ Backward pagination arguments
    * Disallow identifiers from shadowing restricted names
    * @see https://eslint.org/docs/latest/rules/no-shadow-restricted-names
    */
-  'no-shadow-restricted-names'?: Linter.RuleEntry<[]>
+  'no-shadow-restricted-names'?: Linter.RuleEntry<NoShadowRestrictedNames>
   /**
    * Disallow spacing between function identifiers and their applications (deprecated)
    * @see https://eslint.org/docs/latest/rules/no-spaced-func
@@ -9407,6 +9407,10 @@ type NoShadow = []|[{
   allow?: string[]
   ignoreOnInitialization?: boolean
 }]
+// ----- no-shadow-restricted-names -----
+type NoShadowRestrictedNames = []|[{
+  reportGlobalThis?: boolean
+}]
 // ----- no-sync -----
 type NoSync = []|[{
   allowAtRootLevel?: boolean
@@ -9458,6 +9462,7 @@ type NoUnusedExpressions = []|[{
   allowTernary?: boolean
   allowTaggedTemplates?: boolean
   enforceForJSX?: boolean
+  ignoreDirectives?: boolean
 }]
 // ----- no-unused-vars -----
 type NoUnusedVars = []|[(("all" | "local") | {
@@ -12552,6 +12557,7 @@ type TsNoUnusedExpressions = []|[{
   allowTernary?: boolean
   allowTaggedTemplates?: boolean
   enforceForJSX?: boolean
+  ignoreDirectives?: boolean
 }]
 // ----- ts/no-unused-vars -----
 type TsNoUnusedVars = []|[(("all" | "local") | {
