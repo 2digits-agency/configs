@@ -2899,6 +2899,11 @@ Backward pagination arguments
    */
   'react-extra/ensure-forward-ref-using-ref'?: Linter.RuleEntry<[]>
   /**
+   * Enforces that the 'key' attribute is placed before the spread attribute in JSX elements.
+   * @see https://eslint-react.xyz/docs/rules/jsx-key-before-spread
+   */
+  'react-extra/jsx-key-before-spread'?: Linter.RuleEntry<[]>
+  /**
    * Disallow duplicate props in JSX elements.
    * @see https://eslint-react.xyz/docs/rules/jsx-no-duplicate-props
    */
@@ -6192,6 +6197,11 @@ Backward pagination arguments
    * @see https://typescript-eslint.io/rules/no-unnecessary-type-constraint
    */
   'ts/no-unnecessary-type-constraint'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow conversion idioms when they do not change the type or value of the expression
+   * @see https://typescript-eslint.io/rules/no-unnecessary-type-conversion
+   */
+  'ts/no-unnecessary-type-conversion'?: Linter.RuleEntry<[]>
   /**
    * Disallow type parameters that aren't used multiple times
    * @see https://typescript-eslint.io/rules/no-unnecessary-type-parameters
@@ -12619,6 +12629,8 @@ type TsOnlyThrowError = []|[{
     name: (string | [string, ...(string)[]])
     package: string
   })[]
+  
+  allowRethrowing?: boolean
   
   allowThrowingAny?: boolean
   
