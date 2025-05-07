@@ -40,8 +40,8 @@ catalogs:
       specifier: 0.24.0
       version: 0.24.0
     '@next/eslint-plugin-next':
-      specifier: 15.3.1
-      version: 15.3.1
+      specifier: 15.3.2
+      version: 15.3.2
     '@prettier/plugin-xml':
       specifier: 3.4.1
       version: 3.4.1
@@ -326,7 +326,7 @@ importers:
         version: 4.4.0(@types/node@22.15.3)(encoding@0.1.13)(eslint@9.26.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.3)
       '@next/eslint-plugin-next':
         specifier: 'catalog:'
-        version: 15.3.1
+        version: 15.3.2
       '@stylistic/eslint-plugin':
         specifier: 'catalog:'
         version: 4.2.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
@@ -1763,8 +1763,8 @@ packages:
     resolution: {integrity: sha512-k/1pb70eD638anoi0e8wUGAlbMJXyvdV4p62Ko+EZ7eBe1xMx8Uhak1R5DgfoofsK5IBBnRwsYGTaLZl+6/+RQ==}
     engines: {node: '>=18'}
 
-  '@next/eslint-plugin-next@15.3.1':
-    resolution: {integrity: sha512-oEs4dsfM6iyER3jTzMm4kDSbrQJq8wZw5fmT6fg2V3SMo+kgG+cShzLfEV20senZzv8VF+puNLheiGPlBGsv2A==}
+  '@next/eslint-plugin-next@15.3.2':
+    resolution: {integrity: sha512-ijVRTXBgnHT33aWnDtmlG+LJD+5vhc9AKTJPquGG5NKXjpKNjc62woIhFtrAcWdBobt8kqjCoaJ0q6sDQoX7aQ==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -9107,7 +9107,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@next/eslint-plugin-next@15.3.1':
+  '@next/eslint-plugin-next@15.3.2':
     dependencies:
       fast-glob: 3.3.1
 
