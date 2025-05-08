@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.1.5
+
+### Patch Changes
+
+- 32ceba1: Updated dependencies
+
 ## 1.1.4
 
 ### Patch Changes
