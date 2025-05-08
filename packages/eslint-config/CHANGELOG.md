@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 4.4.12
+
+### Patch Changes
+
+- 32ceba1: Updated dependencies
+
 ## 4.4.11
 
 ### Patch Changes
