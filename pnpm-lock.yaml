@@ -190,8 +190,8 @@ catalogs:
       specifier: 19.1.0
       version: 19.1.0
     renovate:
-      specifier: 40.10.1
-      version: 40.10.1
+      specifier: 40.11.2
+      version: 40.11.2
     tinyglobby:
       specifier: 0.2.13
       version: 0.2.13
@@ -551,7 +551,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 40.10.1(encoding@0.1.13)(typanion@3.14.0)
+        version: 40.11.2(encoding@0.1.13)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 5.8.3
@@ -2692,9 +2692,6 @@ packages:
   '@types/node@22.15.16':
     resolution: {integrity: sha512-3pr+KjwpVujqWqOKT8mNR+rd09FqhBLwg+5L/4t0cNYBzm/yEiYGCxWttjaPBsLtAo+WFNoXzGJfolM1JuRXoA==}
 
-  '@types/node@22.15.3':
-    resolution: {integrity: sha512-lX7HFZeHf4QG/J7tBZqrCAXwz9J5RD56Y6MpP0eJkka8p+K0RY/yBTW7CYFJ4VGCclxqOLKmiGP5juQc6MKgcw==}
-
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
 
@@ -3390,8 +3387,8 @@ packages:
     resolution: {integrity: sha512-onMB0OkDjkXunhdW9htFjEhqrD54+M94i6ackoUkjHKbRnXdyEyKRelp4nJ1kAz32+s27jP1FsebpJCVl0BsvA==}
     engines: {node: '>=18.0'}
 
-  cronstrue@2.59.0:
-    resolution: {integrity: sha512-YKGmAy84hKH+hHIIER07VCAHf9u0Ldelx1uU6EBxsRPDXIA1m5fsKmJfyC3xBhw6cVC/1i83VdbL4PvepTrt8A==}
+  cronstrue@2.60.0:
+    resolution: {integrity: sha512-wyjlMlSaKyRjpDh1WP1Oqcy98zMT0OPJlBgffIr8Edx1/ZDpwkTb9IOzHL7CipyW5va7eJ9hC4D1X7gtq8Cuww==}
     hasBin: true
 
   cross-inspect@1.0.1:
@@ -6178,8 +6175,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@40.10.1:
-    resolution: {integrity: sha512-RWPKbSQGaBrlUK/wg5JWZszVlwD+spnWbLQSrjBlm7teU8s+si0iQgaLPDVaIbGacZtEBELAC85+IT7GksP4Dg==}
+  renovate@40.11.2:
+    resolution: {integrity: sha512-qVI7dhxctWDd62AtjEDJYdtmVeCrRMudJLxeUYTHtoOfbo0YB1cnhNu1mPeR1o1Vac072887qr29rUHM6nl1lg==}
     engines: {node: ^22.13.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -10132,13 +10129,13 @@ snapshots:
 
   '@types/bunyan@1.8.11':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
 
   '@types/cacheable-request@6.0.3':
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
       '@types/responselike': 1.0.3
 
   '@types/debug@4.1.12':
@@ -10160,7 +10157,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
 
   '@types/mdast@3.0.15':
     dependencies:
@@ -10182,10 +10179,6 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@22.15.3':
-    dependencies:
-      undici-types: 6.21.0
-
   '@types/normalize-package-data@2.4.4': {}
 
   '@types/parse-path@7.0.3': {}
@@ -10200,7 +10193,7 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
 
   '@types/semver@7.5.8': {}
 
@@ -10220,7 +10213,7 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
     optional: true
 
   '@typescript-eslint/eslint-plugin@8.32.0(@typescript-eslint/parser@8.32.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)':
@@ -10949,7 +10942,7 @@ snapshots:
 
   croner@9.0.0: {}
 
-  cronstrue@2.59.0: {}
+  cronstrue@2.60.0: {}
 
   cross-inspect@1.0.1:
     dependencies:
@@ -13960,7 +13953,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
       long: 5.2.3
 
   protocols@2.0.1: {}
@@ -13993,7 +13986,7 @@ snapshots:
       quick-lru: 7.0.0
       url-join: 5.0.0
       validate-npm-package-name: 5.0.1
-      zod: 3.24.2
+      zod: 3.24.3
       zod-package-json: 1.1.0
 
   query-string@9.1.1:
@@ -14164,7 +14157,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@40.10.1(encoding@0.1.13)(typanion@3.14.0):
+  renovate@40.11.2(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.799.0
       '@aws-sdk/client-ec2': 3.800.0
@@ -14214,7 +14207,7 @@ snapshots:
       commander: 13.1.0
       conventional-commits-detector: 1.0.3
       croner: 9.0.0
-      cronstrue: 2.59.0
+      cronstrue: 2.60.0
       deepmerge: 4.3.1
       dequal: 2.0.3
       detect-indent: 7.0.1
