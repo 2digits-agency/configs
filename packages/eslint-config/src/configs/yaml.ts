@@ -4,7 +4,7 @@ import parser from 'yaml-eslint-parser';
 import { GLOB_YAML } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
-export function yaml(): TypedFlatConfigItem[] {
+export function yaml(): Array<TypedFlatConfigItem> {
   return [
     {
       name: '2digits:yaml/setup',

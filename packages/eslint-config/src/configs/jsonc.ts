@@ -4,7 +4,7 @@ import parser from 'jsonc-eslint-parser';
 import { GLOB_JSON, GLOB_JSON5, GLOB_JSONC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
-export function jsonc(): TypedFlatConfigItem[] {
+export function jsonc(): Array<TypedFlatConfigItem> {
   return [
     ...configs['flat/base'].map((config) => ({ ...config, name: '2digits:jsonc/base' })),
 

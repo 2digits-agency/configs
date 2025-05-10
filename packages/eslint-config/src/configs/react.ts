@@ -7,7 +7,7 @@ import { interopDefault } from '../utils';
 
 export async function react(
   options: OptionsWithReact & OptionsTypeScriptWithTypes = {},
-): Promise<TypedFlatConfigItem[]> {
+): Promise<Array<TypedFlatConfigItem>> {
   const { files = [GLOB_TS, GLOB_TSX], overrides = {}, parserOptions, tsconfigRootDir, reactCompiler = true } = options;
 
   const [pluginReact, pluginReactHooks, parser, pluginReactCompiler, stylistic] = await Promise.all([

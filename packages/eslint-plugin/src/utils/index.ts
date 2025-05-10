@@ -7,7 +7,7 @@ import { repository } from '../../package.json';
 const blobUrl = `${repository.url.replaceAll('.git', '')}/tree/main/${repository.directory}/src/rules`;
 
 /** @public */
-export interface RuleModule<T extends readonly unknown[]> extends Rule.RuleModule {
+export interface RuleModule<T extends ReadonlyArray<unknown>> extends Rule.RuleModule {
   defaultOptions: T;
 }
 
@@ -20,7 +20,7 @@ export interface RuleModule<T extends readonly unknown[]> extends Rule.RuleModul
 function RuleCreator(urlCreator: (name: string) => string) {
   // This function will get much easier to call when this is merged https://github.com/Microsoft/TypeScript/pull/26349
   // TODO - when the above PR lands; add type checking for the context.report `data` property
-  return function createNamedRule<TOptions extends readonly Record<string, unknown>[], TMessageIds extends string>({
+  return function createNamedRule<TOptions extends ReadonlyArray<Record<string, unknown>>, TMessageIds extends string>({
     name,
     meta,
     ...rule
@@ -38,7 +38,7 @@ function RuleCreator(urlCreator: (name: string) => string) {
   };
 }
 
-function createRule<TOptions extends readonly Record<string, unknown>[], TMessageIds extends string>({
+function createRule<TOptions extends ReadonlyArray<Record<string, unknown>>, TMessageIds extends string>({
   create,
   defaultOptions,
   meta,
@@ -60,7 +60,7 @@ function createRule<TOptions extends readonly Record<string, unknown>[], TMessag
 }
 
 export const createEslintRule = RuleCreator((ruleName) => `${blobUrl}${ruleName}.ts`) as unknown as <
-  TOptions extends readonly unknown[],
+  TOptions extends ReadonlyArray<unknown>,
   TMessageIds extends string,
 >({
   name,

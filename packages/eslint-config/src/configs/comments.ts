@@ -8,7 +8,7 @@ import type { TypedFlatConfigItem } from '../types';
 
 const recommended = renamePluginsInRules(configs.recommended.rules as never, PluginNameMap);
 
-export function comments(): TypedFlatConfigItem[] {
+export function comments(): Array<TypedFlatConfigItem> {
   return [
     {
       files: [GLOB_SRC],

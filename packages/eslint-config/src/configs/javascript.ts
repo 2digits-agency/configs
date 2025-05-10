@@ -5,7 +5,7 @@ import globals from 'globals';
 import { GLOB_SRC } from '../globs';
 import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
 
-export function javascript(options: OptionsOverrides = {}): TypedFlatConfigItem[] {
+export function javascript(options: OptionsOverrides = {}): Array<TypedFlatConfigItem> {
   const { overrides = {} } = options;
 
   return [

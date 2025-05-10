@@ -3,7 +3,7 @@ import pluginDeMorgan from 'eslint-plugin-de-morgan';
 import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
-export function boolean(): TypedFlatConfigItem[] {
+export function boolean(): Array<TypedFlatConfigItem> {
   return [
     {
       files: [GLOB_SRC],

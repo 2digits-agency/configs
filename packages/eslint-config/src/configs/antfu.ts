@@ -3,7 +3,7 @@ import pluginAntfu from 'eslint-plugin-antfu';
 import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
-export function antfu(): TypedFlatConfigItem[] {
+export function antfu(): Array<TypedFlatConfigItem> {
   return [
     {
       files: [GLOB_SRC],

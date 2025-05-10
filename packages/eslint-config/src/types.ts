@@ -34,7 +34,7 @@ export interface OptionsWithDrizzle extends OptionsOverrides {
    *
    * @default ```['drizzle', 'db']```
    */
-  drizzleObjectName?: string | string[];
+  drizzleObjectName?: string | Array<string>;
 }
 
 export interface OptionsTypeScriptWithTypes extends OptionsOverrides {
@@ -51,7 +51,7 @@ export interface OptionsTypeScriptWithTypes extends OptionsOverrides {
 
 export interface OptionsWithFiles extends OptionsOverrides {
   /** An array of glob patterns to match the files to which this configuration applies. */
-  files?: string[];
+  files?: Array<string>;
 }
 
 export interface OptionsWithStorybook extends OptionsWithFiles {
@@ -77,5 +77,5 @@ export interface OptionsWithIgnores {
   gitIgnore?: Omit<FlatGitignoreOptions, 'name' | 'root'>;
 
   /** An array of glob patterns to ignore in addition to the default ignores. */
-  ignores?: string[];
+  ignores?: Array<string>;
 }

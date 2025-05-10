@@ -2,7 +2,7 @@ import { GLOB_SRC } from '../globs';
 import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
-export async function turbo(options: OptionsOverrides = {}): Promise<TypedFlatConfigItem[]> {
+export async function turbo(options: OptionsOverrides = {}): Promise<Array<TypedFlatConfigItem>> {
   const { overrides = {} } = options;
 
   const turbo = await interopDefault(import('eslint-plugin-turbo'));

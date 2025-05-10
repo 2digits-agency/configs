@@ -3,7 +3,7 @@ import pluginUnicorn from 'eslint-plugin-unicorn';
 import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
-export function unicorn(): TypedFlatConfigItem[] {
+export function unicorn(): Array<TypedFlatConfigItem> {
   return [
     {
       files: [GLOB_SRC],

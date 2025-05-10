@@ -4,7 +4,7 @@ import { GLOB_SRC } from '../globs';
 import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
-export async function tailwind(options: OptionsOverrides = {}): Promise<TypedFlatConfigItem[]> {
+export async function tailwind(options: OptionsOverrides = {}): Promise<Array<TypedFlatConfigItem>> {
   const { overrides = {} } = options;
 
   const [tailwindcss, { tailwindFunctions }, config] = await Promise.all([

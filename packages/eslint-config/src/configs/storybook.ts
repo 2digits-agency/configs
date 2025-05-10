@@ -7,7 +7,7 @@ import { interopDefault } from '../utils';
 
 export async function storybook(
   options: OptionsWithStorybook & OptionsTypeScriptWithTypes = {},
-): Promise<TypedFlatConfigItem[]> {
+): Promise<Array<TypedFlatConfigItem>> {
   const { files = [GLOB_STORIES], overrides = {}, parserOptions, storybookDirectory = '.storybook' } = options;
 
   const [storybook, parser] = await Promise.all([

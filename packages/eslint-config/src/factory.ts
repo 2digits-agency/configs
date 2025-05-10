@@ -81,8 +81,8 @@ function config<T>(options: SharedOptions<T> | undefined | boolean): T {
 
 export async function twoDigits(
   options: ESLint2DigitsOptions = {},
-  ...userConfig: TypedFlatConfigItem[]
-): Promise<TypedFlatConfigItem[]> {
+  ...userConfig: Array<TypedFlatConfigItem>
+): Promise<Array<TypedFlatConfigItem>> {
   let pnpmPromise;
 
   if (options.pnpm === undefined) {

@@ -6,7 +6,7 @@ import { RULE_NAME, typeParamNames } from '../../src/rules/type-param-names';
 /** Gives nice syntax highlighting */
 const typescript = String.raw;
 
-const valids: ValidTestCase[] = [
+const valids: Array<ValidTestCase> = [
   typescript`type Foo<T> = T;`,
 
   typescript`
@@ -24,7 +24,7 @@ const valids: ValidTestCase[] = [
   typescript`type Foo<$Data, $Error> = $Data | $Error;`,
 ];
 
-const invalids: InvalidTestCase[] = [
+const invalids: Array<InvalidTestCase> = [
   {
     code: typescript` type Foo<U> = U; `,
     errors: [{ messageId: 'prefix', data: { name: 'U' } }],

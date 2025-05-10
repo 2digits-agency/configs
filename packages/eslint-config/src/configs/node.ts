@@ -3,7 +3,7 @@ import pluginNode from 'eslint-plugin-n';
 import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
-export function node(): TypedFlatConfigItem[] {
+export function node(): Array<TypedFlatConfigItem> {
   return [
     {
       files: [GLOB_SRC],
