@@ -52,8 +52,8 @@ catalogs:
       specifier: 5.74.7
       version: 5.74.7
     '@types/node':
-      specifier: 22.15.16
-      version: 22.15.16
+      specifier: 22.15.17
+      version: 22.15.17
     '@types/react':
       specifier: 19.1.3
       version: 19.1.3
@@ -73,8 +73,8 @@ catalogs:
       specifier: 2.1.0
       version: 2.1.0
     eslint-config-prettier:
-      specifier: 10.1.3
-      version: 10.1.3
+      specifier: 10.1.5
+      version: 10.1.5
     eslint-flat-config-utils:
       specifier: 2.0.1
       version: 2.0.1
@@ -91,14 +91,14 @@ catalogs:
       specifier: 0.2.3
       version: 0.2.3
     eslint-plugin-jsdoc:
-      specifier: 50.6.11
-      version: 50.6.11
+      specifier: 50.6.13
+      version: 50.6.13
     eslint-plugin-jsonc:
       specifier: 2.20.0
       version: 2.20.0
     eslint-plugin-n:
-      specifier: 17.17.0
-      version: 17.17.0
+      specifier: 17.18.0
+      version: 17.18.0
     eslint-plugin-pnpm:
       specifier: 0.3.1
       version: 0.3.1
@@ -136,8 +136,8 @@ catalogs:
       specifier: 2.2.0
       version: 2.2.0
     execa:
-      specifier: 9.5.2
-      version: 9.5.2
+      specifier: 9.5.3
+      version: 9.5.3
     find-up:
       specifier: 7.0.0
       version: 7.0.0
@@ -175,8 +175,8 @@ catalogs:
       specifier: 1.3.2
       version: 1.3.2
     prettier-plugin-sh:
-      specifier: 0.17.2
-      version: 0.17.2
+      specifier: 0.17.4
+      version: 0.17.4
     prettier-plugin-sql:
       specifier: 0.19.0
       version: 0.19.0
@@ -190,8 +190,8 @@ catalogs:
       specifier: 19.1.0
       version: 19.1.0
     renovate:
-      specifier: 40.10.1
-      version: 40.10.1
+      specifier: 40.11.2
+      version: 40.11.2
     tinyglobby:
       specifier: 0.2.13
       version: 0.2.13
@@ -263,13 +263,13 @@ importers:
         version: 0.24.0
       '@types/node':
         specifier: 'catalog:'
-        version: 22.15.16
+        version: 22.15.17
       eslint:
         specifier: 'catalog:'
         version: 9.26.0(jiti@2.4.2)
       knip:
         specifier: 'catalog:'
-        version: 5.55.1(@types/node@22.15.16)(typescript@5.8.3)
+        version: 5.55.1(@types/node@22.15.17)(typescript@5.8.3)
       pkg-pr-new:
         specifier: 'catalog:'
         version: 0.0.43
@@ -323,7 +323,7 @@ importers:
         version: 6.4.0
       '@graphql-eslint/eslint-plugin':
         specifier: 'catalog:'
-        version: 4.4.0(@types/node@22.15.16)(encoding@0.1.13)(eslint@9.26.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.3)
+        version: 4.4.0(@types/node@22.15.17)(encoding@0.1.13)(eslint@9.26.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.3)
       '@next/eslint-plugin-next':
         specifier: 'catalog:'
         version: 15.3.2
@@ -344,7 +344,7 @@ importers:
         version: 2.1.0(eslint@9.26.0(jiti@2.4.2))
       eslint-config-prettier:
         specifier: 'catalog:'
-        version: 10.1.3(eslint@9.26.0(jiti@2.4.2))
+        version: 10.1.5(eslint@9.26.0(jiti@2.4.2))
       eslint-flat-config-utils:
         specifier: 'catalog:'
         version: 2.0.1
@@ -362,13 +362,13 @@ importers:
         version: 0.2.3(eslint@9.26.0(jiti@2.4.2))
       eslint-plugin-jsdoc:
         specifier: 'catalog:'
-        version: 50.6.11(eslint@9.26.0(jiti@2.4.2))
+        version: 50.6.13(eslint@9.26.0(jiti@2.4.2))
       eslint-plugin-jsonc:
         specifier: 'catalog:'
         version: 2.20.0(eslint@9.26.0(jiti@2.4.2))
       eslint-plugin-n:
         specifier: 'catalog:'
-        version: 17.17.0(eslint@9.26.0(jiti@2.4.2))
+        version: 17.18.0(eslint@9.26.0(jiti@2.4.2))
       eslint-plugin-pnpm:
         specifier: 'catalog:'
         version: 0.3.1(eslint@9.26.0(jiti@2.4.2))
@@ -407,7 +407,7 @@ importers:
         version: 16.1.0
       graphql-config:
         specifier: 'catalog:'
-        version: 5.1.5(@types/node@22.15.16)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3)
+        version: 5.1.5(@types/node@22.15.17)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3)
       jsonc-eslint-parser:
         specifier: 'catalog:'
         version: 2.4.0
@@ -429,7 +429,7 @@ importers:
         version: 1.0.2(eslint@9.26.0(jiti@2.4.2))
       '@types/node':
         specifier: 'catalog:'
-        version: 22.15.16
+        version: 22.15.17
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.3
@@ -444,7 +444,7 @@ importers:
         version: 2.1.0(eslint@9.26.0(jiti@2.4.2))
       execa:
         specifier: 'catalog:'
-        version: 9.5.2
+        version: 9.5.3
       react:
         specifier: 'catalog:'
         version: 19.1.0
@@ -459,7 +459,7 @@ importers:
         version: 3.5.0(typescript@5.8.3)
       vitest:
         specifier: 'catalog:'
-        version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.16)
+        version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)
 
   packages/eslint-plugin:
     dependencies:
@@ -481,7 +481,7 @@ importers:
         version: 8.32.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
       eslint-vitest-rule-tester:
         specifier: 'catalog:'
-        version: 2.2.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.16))
+        version: 2.2.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.17))
       magic-regexp:
         specifier: 'catalog:'
         version: 0.10.0
@@ -493,7 +493,7 @@ importers:
         version: 3.5.0(typescript@5.8.3)
       vitest:
         specifier: 'catalog:'
-        version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.16)
+        version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)
 
   packages/prettier-config:
     dependencies:
@@ -517,7 +517,7 @@ importers:
         version: 1.3.2(prettier@3.5.3)
       prettier-plugin-sh:
         specifier: 'catalog:'
-        version: 0.17.2(prettier@3.5.3)
+        version: 0.17.4(prettier@3.5.3)
       prettier-plugin-sql:
         specifier: 'catalog:'
         version: 0.19.0(prettier@3.5.3)
@@ -551,7 +551,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 40.10.1(encoding@0.1.13)(typanion@3.14.0)
+        version: 40.11.2(encoding@0.1.13)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 5.8.3
@@ -2203,8 +2203,8 @@ packages:
   '@repeaterjs/repeater@3.0.6':
     resolution: {integrity: sha512-Javneu5lsuhwNCryN+pXH93VPQ8g0dBX7wItHFgYiwQmzE1sVdg5tWHiOgHywzL2W21XQopa7IwIEnNbmeUJYA==}
 
-  '@reteps/dockerfmt@0.3.4':
-    resolution: {integrity: sha512-IHIyUHVsASQmUheWTmIVxnMdOayvIa4e9XGyt1qpuz6l+dv89H8WXg/jV6PNMX9286O0m2wd3zvmNfgpp7IsCA==}
+  '@reteps/dockerfmt@0.3.6':
+    resolution: {integrity: sha512-Tb5wIMvBf/nLejTQ61krK644/CEMB/cpiaIFXqGApfGqO3GwcR3qnI0DbmkFVCl2OyEp8LnLX3EkucoL0+tbFg==}
     engines: {node: ^v12.20.0 || ^14.13.0 || >=16.0.0}
 
   '@rollup/plugin-alias@5.1.1':
@@ -2692,8 +2692,8 @@ packages:
   '@types/node@22.15.16':
     resolution: {integrity: sha512-3pr+KjwpVujqWqOKT8mNR+rd09FqhBLwg+5L/4t0cNYBzm/yEiYGCxWttjaPBsLtAo+WFNoXzGJfolM1JuRXoA==}
 
-  '@types/node@22.15.3':
-    resolution: {integrity: sha512-lX7HFZeHf4QG/J7tBZqrCAXwz9J5RD56Y6MpP0eJkka8p+K0RY/yBTW7CYFJ4VGCclxqOLKmiGP5juQc6MKgcw==}
+  '@types/node@22.15.17':
+    resolution: {integrity: sha512-wIX2aSZL5FE+MR0JlvF87BNVrtFWf6AE6rxSE9X7OwnVvoyCQjpzSRJ+M87se/4QCkCiebQAqrJ0y6fwIyi7nw==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -3390,8 +3390,8 @@ packages:
     resolution: {integrity: sha512-onMB0OkDjkXunhdW9htFjEhqrD54+M94i6ackoUkjHKbRnXdyEyKRelp4nJ1kAz32+s27jP1FsebpJCVl0BsvA==}
     engines: {node: '>=18.0'}
 
-  cronstrue@2.59.0:
-    resolution: {integrity: sha512-YKGmAy84hKH+hHIIER07VCAHf9u0Ldelx1uU6EBxsRPDXIA1m5fsKmJfyC3xBhw6cVC/1i83VdbL4PvepTrt8A==}
+  cronstrue@2.60.0:
+    resolution: {integrity: sha512-wyjlMlSaKyRjpDh1WP1Oqcy98zMT0OPJlBgffIr8Edx1/ZDpwkTb9IOzHL7CipyW5va7eJ9hC4D1X7gtq8Cuww==}
     hasBin: true
 
   cross-inspect@1.0.1:
@@ -3755,8 +3755,8 @@ packages:
     peerDependencies:
       eslint: ^9.5.0
 
-  eslint-config-prettier@10.1.3:
-    resolution: {integrity: sha512-vDo4d9yQE+cS2tdIT4J02H/16veRvkHgiLDRpej+WL67oCfbOb97itZXn8wMPJ/GsiEBVjrjs//AVNw2Cp1EcA==}
+  eslint-config-prettier@10.1.5:
+    resolution: {integrity: sha512-zc1UmCpNltmVY34vuLRV61r1K27sWuX39E+uyUnY8xS2Bex88VV9cugG+UZbRSRGtGyFboj+D8JODyme1plMpw==}
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
@@ -3802,8 +3802,8 @@ packages:
     peerDependencies:
       eslint: '>=8'
 
-  eslint-plugin-jsdoc@50.6.11:
-    resolution: {integrity: sha512-k4+MnBCGR8cuIB5MZ++FGd4gbXxjob2rX1Nq0q3nWFF4xSGZENTgTLZSjb+u9B8SAnP6lpGV2FJrBjllV3pVSg==}
+  eslint-plugin-jsdoc@50.6.13:
+    resolution: {integrity: sha512-a51b3w+b0vEX4t9NUE9QwXaZoi7LS6DZ+0JRXtfyrbnoUB43HKTgrGqWB1i7586D8XmeZcJfhPi9D1bk7yPbmw==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
@@ -3814,8 +3814,8 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-plugin-n@17.17.0:
-    resolution: {integrity: sha512-2VvPK7Mo73z1rDFb6pTvkH6kFibAmnTubFq5l83vePxu0WiY1s0LOtj2WHb6Sa40R3w4mnh8GFYbHBQyMlotKw==}
+  eslint-plugin-n@17.18.0:
+    resolution: {integrity: sha512-hvZ/HusueqTJ7VDLoCpjN0hx4N4+jHIWTXD4TMLHy9F23XkDagR9v+xQWRWR57yY55GPF8NnD4ox9iGTxirY8A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: '>=8.23.0'
@@ -4024,8 +4024,8 @@ packages:
     resolution: {integrity: sha512-l19WpE2m9hSuyP06+FbuUUf1G+R0SFLrtQfbRb9PRr+oimOfxQhgGCbVaXg5IvZyyTThJsxh6L/srkMiCeBPDA==}
     engines: {node: '>=18.0.0'}
 
-  execa@9.5.2:
-    resolution: {integrity: sha512-EHlpxMCpHWSAh1dgS6bVeoLAXGnJNdR93aabr4QCGbzOM73o5XmRfM/e5FUqsw3aagP8S8XEWUWFAxnRBnAF0Q==}
+  execa@9.5.3:
+    resolution: {integrity: sha512-QFNnTvU3UjgWFy8Ef9iDHvIdcgZ344ebkwYx4/KLbR+CKQA4xBaHzv+iRpp86QfMHP8faFQLh8iOc57215y4Rg==}
     engines: {node: ^18.19.0 || >=20.5.0}
 
   expand-template@2.0.3:
@@ -5898,8 +5898,8 @@ packages:
     peerDependencies:
       prettier: ^3.0.0
 
-  prettier-plugin-sh@0.17.2:
-    resolution: {integrity: sha512-7+dEo/IYbhrUj4qP+1QXj41/5Hv9ZkxBuEatI1jywrcAlVF1aGhdYJF4Sn+M67nkA16iRL53W4FSRe1bitTdmQ==}
+  prettier-plugin-sh@0.17.4:
+    resolution: {integrity: sha512-aAVKXZ7GTEMZdZsIPSwMwddwPvt2ibMbRGd4OJAP0G7QoeYZV+mPNg2Oln3R53sZ4PVjeAA7Xzi/PuI0QlHHfQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       prettier: ^3.0.3
@@ -6178,8 +6178,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@40.10.1:
-    resolution: {integrity: sha512-RWPKbSQGaBrlUK/wg5JWZszVlwD+spnWbLQSrjBlm7teU8s+si0iQgaLPDVaIbGacZtEBELAC85+IT7GksP4Dg==}
+  renovate@40.11.2:
+    resolution: {integrity: sha512-qVI7dhxctWDd62AtjEDJYdtmVeCrRMudJLxeUYTHtoOfbo0YB1cnhNu1mPeR1o1Vac072887qr29rUHM6nl1lg==}
     engines: {node: ^22.13.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -8778,7 +8778,7 @@ snapshots:
       '@eslint/core': 0.13.0
       levn: 0.4.1
 
-  '@graphql-eslint/eslint-plugin@4.4.0(@types/node@22.15.16)(encoding@0.1.13)(eslint@9.26.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.3)':
+  '@graphql-eslint/eslint-plugin@4.4.0(@types/node@22.15.17)(encoding@0.1.13)(eslint@9.26.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.3)':
     dependencies:
       '@graphql-tools/code-file-loader': 8.1.6(graphql@16.8.2)
       '@graphql-tools/graphql-tag-pluck': 8.3.5(graphql@16.8.2)
@@ -8787,7 +8787,7 @@ snapshots:
       eslint: 9.26.0(jiti@2.4.2)
       fast-glob: 3.3.3
       graphql: 16.8.2
-      graphql-config: 5.1.5(@types/node@22.15.16)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3)
+      graphql-config: 5.1.5(@types/node@22.15.17)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3)
       graphql-depth-limit: 1.1.0(graphql@16.8.2)
       lodash.lowercase: 4.3.0
     transitivePeerDependencies:
@@ -8843,14 +8843,14 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@graphql-tools/executor-http@1.1.9(@types/node@22.15.16)(graphql@16.8.2)':
+  '@graphql-tools/executor-http@1.1.9(@types/node@22.15.17)(graphql@16.8.2)':
     dependencies:
       '@graphql-tools/utils': 10.8.6(graphql@16.8.2)
       '@repeaterjs/repeater': 3.0.6
       '@whatwg-node/fetch': 0.10.1
       extract-files: 11.0.0
       graphql: 16.8.2
-      meros: 1.3.0(@types/node@22.15.16)
+      meros: 1.3.0(@types/node@22.15.17)
       tslib: 2.8.1
       value-or-promise: 1.0.12
     transitivePeerDependencies:
@@ -8935,11 +8935,11 @@ snapshots:
       graphql: 16.8.2
       tslib: 2.8.1
 
-  '@graphql-tools/url-loader@8.0.16(@types/node@22.15.16)(encoding@0.1.13)(graphql@16.8.2)':
+  '@graphql-tools/url-loader@8.0.16(@types/node@22.15.17)(encoding@0.1.13)(graphql@16.8.2)':
     dependencies:
       '@ardatan/sync-fetch': 0.0.1(encoding@0.1.13)
       '@graphql-tools/executor-graphql-ws': 1.3.2(graphql@16.8.2)
-      '@graphql-tools/executor-http': 1.1.9(@types/node@22.15.16)(graphql@16.8.2)
+      '@graphql-tools/executor-http': 1.1.9(@types/node@22.15.17)(graphql@16.8.2)
       '@graphql-tools/executor-legacy-ws': 1.1.3(graphql@16.8.2)
       '@graphql-tools/utils': 10.8.6(graphql@16.8.2)
       '@graphql-tools/wrap': 10.0.18(graphql@16.8.2)
@@ -9604,7 +9604,7 @@ snapshots:
 
   '@repeaterjs/repeater@3.0.6': {}
 
-  '@reteps/dockerfmt@0.3.4': {}
+  '@reteps/dockerfmt@0.3.6': {}
 
   '@rollup/plugin-alias@5.1.1(rollup@4.34.8)':
     optionalDependencies:
@@ -10132,13 +10132,13 @@ snapshots:
 
   '@types/bunyan@1.8.11':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
 
   '@types/cacheable-request@6.0.3':
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
       '@types/responselike': 1.0.3
 
   '@types/debug@4.1.12':
@@ -10160,7 +10160,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
 
   '@types/mdast@3.0.15':
     dependencies:
@@ -10182,7 +10182,7 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@22.15.3':
+  '@types/node@22.15.17':
     dependencies:
       undici-types: 6.21.0
 
@@ -10200,7 +10200,7 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
 
   '@types/semver@7.5.8': {}
 
@@ -10216,11 +10216,11 @@ snapshots:
 
   '@types/ws@8.5.10':
     dependencies:
-      '@types/node': 22.15.16
+      '@types/node': 22.15.17
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
     optional: true
 
   '@typescript-eslint/eslint-plugin@8.32.0(@typescript-eslint/parser@8.32.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)':
@@ -10355,13 +10355,13 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.1.3(vite@5.1.3(@types/node@22.15.16))':
+  '@vitest/mocker@3.1.3(vite@5.1.3(@types/node@22.15.17))':
     dependencies:
       '@vitest/spy': 3.1.3
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 5.1.3(@types/node@22.15.16)
+      vite: 5.1.3(@types/node@22.15.17)
 
   '@vitest/pretty-format@3.1.3':
     dependencies:
@@ -10949,7 +10949,7 @@ snapshots:
 
   croner@9.0.0: {}
 
-  cronstrue@2.59.0: {}
+  cronstrue@2.60.0: {}
 
   cross-inspect@1.0.1:
     dependencies:
@@ -11335,7 +11335,7 @@ snapshots:
       '@eslint/compat': 1.2.9(eslint@9.26.0(jiti@2.4.2))
       eslint: 9.26.0(jiti@2.4.2)
 
-  eslint-config-prettier@10.1.3(eslint@9.26.0(jiti@2.4.2)):
+  eslint-config-prettier@10.1.5(eslint@9.26.0(jiti@2.4.2)):
     dependencies:
       eslint: 9.26.0(jiti@2.4.2)
 
@@ -11367,12 +11367,12 @@ snapshots:
 
   eslint-plugin-es-x@7.8.0(eslint@9.26.0(jiti@2.4.2)):
     dependencies:
-      '@eslint-community/eslint-utils': 4.5.1(eslint@9.26.0(jiti@2.4.2))
+      '@eslint-community/eslint-utils': 4.7.0(eslint@9.26.0(jiti@2.4.2))
       '@eslint-community/regexpp': 4.12.1
       eslint: 9.26.0(jiti@2.4.2)
       eslint-compat-utils: 0.5.1(eslint@9.26.0(jiti@2.4.2))
 
-  eslint-plugin-jsdoc@50.6.11(eslint@9.26.0(jiti@2.4.2)):
+  eslint-plugin-jsdoc@50.6.13(eslint@9.26.0(jiti@2.4.2)):
     dependencies:
       '@es-joy/jsdoccomment': 0.49.0
       are-docs-informative: 0.0.2
@@ -11402,9 +11402,9 @@ snapshots:
     transitivePeerDependencies:
       - '@eslint/json'
 
-  eslint-plugin-n@17.17.0(eslint@9.26.0(jiti@2.4.2)):
+  eslint-plugin-n@17.18.0(eslint@9.26.0(jiti@2.4.2)):
     dependencies:
-      '@eslint-community/eslint-utils': 4.5.1(eslint@9.26.0(jiti@2.4.2))
+      '@eslint-community/eslint-utils': 4.7.0(eslint@9.26.0(jiti@2.4.2))
       enhanced-resolve: 5.18.1
       eslint: 9.26.0(jiti@2.4.2)
       eslint-plugin-es-x: 7.8.0(eslint@9.26.0(jiti@2.4.2))
@@ -11655,12 +11655,12 @@ snapshots:
 
   eslint-visitor-keys@4.2.0: {}
 
-  eslint-vitest-rule-tester@2.2.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.16)):
+  eslint-vitest-rule-tester@2.2.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)):
     dependencies:
       '@types/eslint': 9.6.1
       '@typescript-eslint/utils': 8.32.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.26.0(jiti@2.4.2)
-      vitest: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.16)
+      vitest: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -11751,7 +11751,7 @@ snapshots:
     dependencies:
       eventsource-parser: 3.0.1
 
-  execa@9.5.2:
+  execa@9.5.3:
     dependencies:
       '@sindresorhus/merge-streams': 4.0.0
       cross-spawn: 7.0.6
@@ -12175,13 +12175,13 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql-config@5.1.5(@types/node@22.15.16)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3):
+  graphql-config@5.1.5(@types/node@22.15.17)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3):
     dependencies:
       '@graphql-tools/graphql-file-loader': 8.0.4(graphql@16.8.2)
       '@graphql-tools/json-file-loader': 8.0.4(graphql@16.8.2)
       '@graphql-tools/load': 8.1.0(graphql@16.8.2)
       '@graphql-tools/merge': 9.0.24(graphql@16.8.2)
-      '@graphql-tools/url-loader': 8.0.16(@types/node@22.15.16)(encoding@0.1.13)(graphql@16.8.2)
+      '@graphql-tools/url-loader': 8.0.16(@types/node@22.15.17)(encoding@0.1.13)(graphql@16.8.2)
       '@graphql-tools/utils': 10.8.6(graphql@16.8.2)
       cosmiconfig: 8.3.6(typescript@5.8.3)
       graphql: 16.8.2
@@ -12591,10 +12591,10 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@5.55.1(@types/node@22.15.16)(typescript@5.8.3):
+  knip@5.55.1(@types/node@22.15.17)(typescript@5.8.3):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
-      '@types/node': 22.15.16
+      '@types/node': 22.15.17
       enhanced-resolve: 5.18.1
       fast-glob: 3.3.3
       formatly: 0.2.3
@@ -12944,9 +12944,9 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  meros@1.3.0(@types/node@22.15.16):
+  meros@1.3.0(@types/node@22.15.17):
     optionalDependencies:
-      '@types/node': 22.15.16
+      '@types/node': 22.15.17
 
   micro-memoize@4.1.3: {}
 
@@ -13897,9 +13897,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  prettier-plugin-sh@0.17.2(prettier@3.5.3):
+  prettier-plugin-sh@0.17.4(prettier@3.5.3):
     dependencies:
-      '@reteps/dockerfmt': 0.3.4
+      '@reteps/dockerfmt': 0.3.6
       prettier: 3.5.3
       sh-syntax: 0.5.6
 
@@ -13960,7 +13960,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 22.15.3
+      '@types/node': 22.15.16
       long: 5.2.3
 
   protocols@2.0.1: {}
@@ -14164,7 +14164,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@40.10.1(encoding@0.1.13)(typanion@3.14.0):
+  renovate@40.11.2(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.799.0
       '@aws-sdk/client-ec2': 3.800.0
@@ -14214,7 +14214,7 @@ snapshots:
       commander: 13.1.0
       conventional-commits-detector: 1.0.3
       croner: 9.0.0
-      cronstrue: 2.59.0
+      cronstrue: 2.60.0
       deepmerge: 4.3.1
       dequal: 2.0.3
       detect-indent: 7.0.1
@@ -15141,13 +15141,13 @@ snapshots:
       unist-util-stringify-position: 2.0.3
       vfile-message: 2.0.4
 
-  vite-node@3.1.3(@types/node@22.15.16):
+  vite-node@3.1.3(@types/node@22.15.17):
     dependencies:
       cac: 6.7.14
       debug: 4.4.0
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 5.1.3(@types/node@22.15.16)
+      vite: 5.1.3(@types/node@22.15.17)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -15158,19 +15158,19 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.1.3(@types/node@22.15.16):
+  vite@5.1.3(@types/node@22.15.17):
     dependencies:
       esbuild: 0.19.12
       postcss: 8.5.3
       rollup: 4.34.8
     optionalDependencies:
-      '@types/node': 22.15.16
+      '@types/node': 22.15.17
       fsevents: 2.3.3
 
-  vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.16):
+  vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.17):
     dependencies:
       '@vitest/expect': 3.1.3
-      '@vitest/mocker': 3.1.3(vite@5.1.3(@types/node@22.15.16))
+      '@vitest/mocker': 3.1.3(vite@5.1.3(@types/node@22.15.17))
       '@vitest/pretty-format': 3.1.3
       '@vitest/runner': 3.1.3
       '@vitest/snapshot': 3.1.3
@@ -15187,12 +15187,12 @@ snapshots:
       tinyglobby: 0.2.13
       tinypool: 1.0.2
       tinyrainbow: 2.0.0
-      vite: 5.1.3(@types/node@22.15.16)
-      vite-node: 3.1.3(@types/node@22.15.16)
+      vite: 5.1.3(@types/node@22.15.17)
+      vite-node: 3.1.3(@types/node@22.15.17)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/debug': 4.1.12
-      '@types/node': 22.15.16
+      '@types/node': 22.15.17
     transitivePeerDependencies:
       - less
       - lightningcss
