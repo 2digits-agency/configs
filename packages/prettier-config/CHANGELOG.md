@@ -1,5 +1,12 @@
 # @2digits/prettier-config
 
+## 3.3.1
+
+### Patch Changes
+
+- 75642dc: Updated dependencies
+- 8f7bd6b: Removed defineConfig from utils and use satisfies directly
+
 ## 3.3.0
 
 ### Minor Changes

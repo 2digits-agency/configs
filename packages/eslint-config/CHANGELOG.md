@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 4.4.13
+
+### Patch Changes
+
+- 75642dc: Updated dependencies
+
 ## 4.4.12
 
 ### Patch Changes
