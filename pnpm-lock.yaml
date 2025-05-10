@@ -184,8 +184,8 @@ catalogs:
       specifier: 0.6.11
       version: 0.6.11
     prettier-plugin-toml:
-      specifier: 2.0.4
-      version: 2.0.4
+      specifier: 2.0.5
+      version: 2.0.5
     react:
       specifier: 19.1.0
       version: 19.1.0
@@ -526,7 +526,7 @@ importers:
         version: 0.6.11(@ianvs/prettier-plugin-sort-imports@4.4.1(prettier@3.5.3))(prettier-plugin-jsdoc@1.3.2(prettier@3.5.3))(prettier@3.5.3)
       prettier-plugin-toml:
         specifier: 'catalog:'
-        version: 2.0.4(prettier@3.5.3)
+        version: 2.0.5(prettier@3.5.3)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -5965,8 +5965,8 @@ packages:
       prettier-plugin-svelte:
         optional: true
 
-  prettier-plugin-toml@2.0.4:
-    resolution: {integrity: sha512-uOTNPClqnE3T9XJ8hCqAJek70Jnk3/ZuAG/aXRTmrWbVe8lJyuZ60KV7OtgWqF+iGZOPVpkh+giHhX9GZYRHGA==}
+  prettier-plugin-toml@2.0.5:
+    resolution: {integrity: sha512-WjXXKQyY4TdXWHU1v73UJxK/oDLSppf+b9KrSVl2kC4ZOr9CIVPKTQ/JxttgbYMaH8r3ihw7WYhMpI1EFa1obg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       prettier: ^3.0.3
@@ -13918,7 +13918,7 @@ snapshots:
       '@ianvs/prettier-plugin-sort-imports': 4.4.1(prettier@3.5.3)
       prettier-plugin-jsdoc: 1.3.2(prettier@3.5.3)
 
-  prettier-plugin-toml@2.0.4(prettier@3.5.3):
+  prettier-plugin-toml@2.0.5(prettier@3.5.3):
     dependencies:
       '@taplo/lib': 0.5.0
       prettier: 3.5.3
