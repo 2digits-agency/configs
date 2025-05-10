@@ -2,8 +2,9 @@ import type { PrettierConfig as ImportOrderConfig } from '@ianvs/prettier-plugin
 import { getPackageInfoSync } from 'local-pkg';
 import type { Options } from 'prettier';
 import type { PluginEmbedOptions } from 'prettier-plugin-embed';
+import type { Options as JSDocOptions } from 'prettier-plugin-jsdoc';
 import type { ShParserOptions } from 'prettier-plugin-sh';
-import type { SqlFormatOptions } from 'prettier-plugin-sql';
+import type { SqlBaseOptions } from 'prettier-plugin-sql';
 import type { PluginOptions } from 'prettier-plugin-tailwindcss';
 import type { PrettierTaploOptions } from 'prettier-plugin-toml';
 
@@ -12,24 +13,22 @@ import { devDependencies } from '../package.json';
 const semverRegex = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/;
 const localTypescriptVersion = devDependencies.typescript.replace(semverRegex, '');
 
-type PrettierConfigWithPlugins = Options
-  & ImportOrderConfig
-  & PluginOptions
-  & SqlFormatOptions
-  & PrettierTaploOptions
-  & PluginEmbedOptions
-  & Partial<ShParserOptions>;
+type NormalizeOptions<T> = {
+  [K in keyof T as unknown extends T[K] ? never : K]?: T[K];
+} extends infer B
+  ? B
+  : never;
 
-/**
- * Define a Prettier configuration with plugins.
- *
- * @template TConfig The Prettier configuration with plugins.
- * @param config The Prettier configuration with plugins.
- * @returns The Prettier configuration with plugins.
- */
-export function defineConfig<TConfig extends PrettierConfigWithPlugins>(config: TConfig): TConfig {
-  return config;
-}
+export type PrettierConfigWithPlugins = NormalizeOptions<
+  Options
+    & JSDocOptions
+    & ImportOrderConfig
+    & PluginOptions
+    & SqlBaseOptions
+    & PrettierTaploOptions
+    & PluginEmbedOptions
+    & ShParserOptions
+>;
 
 /**
  * Get the version of the locally installed TypeScript.
