@@ -1,8 +1,8 @@
 import { tailwindFunctions } from '@2digits/constants';
 
-import { defineConfig, getTypescriptVersion } from './utils';
+import { getTypescriptVersion, type PrettierConfigWithPlugins } from './utils';
 
-export default defineConfig({
+export default {
   printWidth: 120,
   trailingComma: 'all',
   bracketSameLine: true,
@@ -62,4 +62,4 @@ export default defineConfig({
       },
     },
   ],
-});
+} as const satisfies PrettierConfigWithPlugins;
