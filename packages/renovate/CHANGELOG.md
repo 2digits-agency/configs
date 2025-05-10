@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.1.6
+
+### Patch Changes
+
+- 75642dc: Updated dependencies
+
 ## 1.1.5
 
 ### Patch Changes
