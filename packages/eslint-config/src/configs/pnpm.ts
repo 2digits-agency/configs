@@ -1,7 +1,7 @@
 import type { TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
-export async function pnpm(): Promise<TypedFlatConfigItem[]> {
+export async function pnpm(): Promise<Array<TypedFlatConfigItem>> {
   const pnpm = await interopDefault(import('eslint-plugin-pnpm'));
 
   return [

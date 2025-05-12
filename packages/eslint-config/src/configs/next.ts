@@ -8,7 +8,7 @@ import { interopDefault } from '../utils';
 
 export async function next(
   options: OptionsWithFiles & OptionsTypeScriptWithTypes = {},
-): Promise<TypedFlatConfigItem[]> {
+): Promise<Array<TypedFlatConfigItem>> {
   const { files = [GLOB_TS, GLOB_TSX], overrides = {}, parserOptions } = options;
 
   const [next, parser] = await Promise.all([

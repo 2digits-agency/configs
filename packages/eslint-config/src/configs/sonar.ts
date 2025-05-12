@@ -3,7 +3,7 @@ import pluginSonar from 'eslint-plugin-sonarjs';
 import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
-export function sonar(): TypedFlatConfigItem[] {
+export function sonar(): Array<TypedFlatConfigItem> {
   return [
     {
       files: [GLOB_SRC],

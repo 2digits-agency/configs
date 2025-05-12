@@ -4,7 +4,7 @@ import { PluginNameMap } from '../constants';
 import type { OptionsWithFiles, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
-export async function graphql(options: OptionsWithFiles = {}): Promise<TypedFlatConfigItem[]> {
+export async function graphql(options: OptionsWithFiles = {}): Promise<Array<TypedFlatConfigItem>> {
   const { overrides = {}, files = ['**/*.graphql', '**/*.gql'] } = options;
 
   const [gql, gqlSchema] = await Promise.all([

@@ -5,7 +5,7 @@ import { GLOB_MARKDOWN_CODE, GLOB_SRC } from '../globs';
 import type { OptionsTypeScriptWithTypes, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
-export async function typescript(options: OptionsTypeScriptWithTypes = {}): Promise<TypedFlatConfigItem[]> {
+export async function typescript(options: OptionsTypeScriptWithTypes = {}): Promise<Array<TypedFlatConfigItem>> {
   const { overrides = {}, parserOptions = {} } = options;
 
   const [{ plugin, configs, parser }, twoDigits] = await Promise.all([
@@ -41,6 +41,7 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
       },
       rules: {
         ...rules,
+        'ts/array-type': ['error', { default: 'generic', readonly: 'generic' }],
         'ts/restrict-template-expressions': ['error', { allowNumber: true }],
         'ts/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
         'ts/consistent-type-exports': ['error'],

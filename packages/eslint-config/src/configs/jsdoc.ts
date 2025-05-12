@@ -3,7 +3,7 @@ import jsdocPlugin from 'eslint-plugin-jsdoc';
 import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
-export function jsdoc(): TypedFlatConfigItem[] {
+export function jsdoc(): Array<TypedFlatConfigItem> {
   return [
     {
       files: [GLOB_SRC],

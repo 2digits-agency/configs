@@ -41,9 +41,9 @@ async function generateTypes() {
     ...(Object.values(await import('./src/configs')).map((config) => config()) as []),
   );
 
-  const configNames = configs.map((i) => i.name).filter(Boolean) as string[];
+  const configNames = configs.map((i) => i.name).filter(Boolean) as Array<string>;
 
-  let dts = await flatConfigsToRulesDTS(configs as Linter.Config[], {
+  let dts = await flatConfigsToRulesDTS(configs as Array<Linter.Config>, {
     includeAugmentation: false,
   });
 

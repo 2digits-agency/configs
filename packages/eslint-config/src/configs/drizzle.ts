@@ -4,7 +4,7 @@ import { GLOB_SRC } from '../globs';
 import type { OptionsWithDrizzle, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
-export async function drizzle(options: OptionsWithDrizzle = {}): Promise<TypedFlatConfigItem[]> {
+export async function drizzle(options: OptionsWithDrizzle = {}): Promise<Array<TypedFlatConfigItem>> {
   const { overrides = {}, drizzleObjectName = ['drizzle', 'db'] } = options;
 
   const drizzle = await interopDefault(import('eslint-plugin-drizzle'));

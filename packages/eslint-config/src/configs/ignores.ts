@@ -3,7 +3,7 @@ import flatIgnore from 'eslint-config-flat-gitignore';
 import { GLOB_EXCLUDE } from '../globs';
 import type { OptionsWithIgnores, TypedFlatConfigItem } from '../types';
 
-export function ignores(options: OptionsWithIgnores = {}): TypedFlatConfigItem[] {
+export function ignores(options: OptionsWithIgnores = {}): Array<TypedFlatConfigItem> {
   const { gitIgnore, ignores = [] } = options;
 
   return [

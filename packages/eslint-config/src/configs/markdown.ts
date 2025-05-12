@@ -6,7 +6,7 @@ import type { TypedFlatConfigItem } from '../types';
 
 const files = [GLOB_MARKDOWN];
 
-export function markdown(): TypedFlatConfigItem[] {
+export function markdown(): Array<TypedFlatConfigItem> {
   return [
     {
       name: '2digits:markdown/setup',
