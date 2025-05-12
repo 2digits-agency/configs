@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 3.0.7
+
+### Patch Changes
+
+- 152c522: Updated code to match linting rules
+
 ## 3.0.6
 
 ### Patch Changes

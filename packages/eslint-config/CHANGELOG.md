@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 4.5.0
+
+### Minor Changes
+
+- 17e02f9: Updated ts/array-type to the `generic` option
+
+### Patch Changes
+
+- 152c522: Updated code to match linting rules
+- Updated dependencies [152c522]
+  - @2digits/eslint-plugin@3.0.7
+
 ## 4.4.13
 
 ### Patch Changes
