@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 3.0.8
+
+### Patch Changes
+
+- e8b8289: Updated dependencies
+
 ## 3.0.7
 
 ### Patch Changes
