@@ -76,8 +76,8 @@ catalogs:
       specifier: 10.1.5
       version: 10.1.5
     eslint-flat-config-utils:
-      specifier: 2.0.1
-      version: 2.0.1
+      specifier: 2.1.0
+      version: 2.1.0
     eslint-merge-processors:
       specifier: 2.0.0
       version: 2.0.0
@@ -347,7 +347,7 @@ importers:
         version: 10.1.5(eslint@9.27.0(jiti@2.4.2))
       eslint-flat-config-utils:
         specifier: 'catalog:'
-        version: 2.0.1
+        version: 2.1.0
       eslint-merge-processors:
         specifier: 'catalog:'
         version: 2.0.0(eslint@9.27.0(jiti@2.4.2))
@@ -3821,8 +3821,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-flat-config-utils@2.0.1:
-    resolution: {integrity: sha512-brf0eAgQ6JlKj3bKfOTuuI7VcCZvi8ZCD1MMTVoEvS/d38j8cByZViLFALH/36+eqB17ukmfmKq3bWzGvizejA==}
+  eslint-flat-config-utils@2.1.0:
+    resolution: {integrity: sha512-6fjOJ9tS0k28ketkUcQ+kKptB4dBZY2VijMZ9rGn8Cwnn1SH0cZBoPXT8AHBFHxmHcLFQK9zbELDinZ2Mr1rng==}
 
   eslint-json-compat-utils@0.2.1:
     resolution: {integrity: sha512-YzEodbDyW8DX8bImKhAcCeu/L31Dd/70Bidx2Qex9OFUtgzXLqtfWL4Hr5fM/aCCB8QUZLuJur0S9k6UfgFkfg==}
@@ -11319,7 +11319,7 @@ snapshots:
     dependencies:
       eslint: 9.27.0(jiti@2.4.2)
 
-  eslint-flat-config-utils@2.0.1:
+  eslint-flat-config-utils@2.1.0:
     dependencies:
       pathe: 2.0.3
 
