@@ -8,22 +8,19 @@
     "directory": "packages/eslint-plugin"
   },
   "type": "module",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.cts",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    },
+    ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown --minify",
     "dev": "tsdown --watch",
     "types": "tsc --noEmit",
     "test": "vitest --run"

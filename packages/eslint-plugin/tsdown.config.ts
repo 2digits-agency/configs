@@ -7,7 +7,5 @@ export default defineConfig({
   fixedExtension: true,
   exports: true,
 
-  format: ['esm', 'cjs'],
-
   shims: true,
 });

@@ -19,7 +19,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown --minify",
     "dev": "tsdown --watch",
     "types": "tsc --noEmit"
   },
