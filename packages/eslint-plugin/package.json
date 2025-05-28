@@ -8,22 +8,23 @@
     "directory": "packages/eslint-plugin"
   },
   "type": "module",
-  "main": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
   "files": [
     "dist"
   ],
   "exports": {
-    "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.mts",
-      "default": "./dist/index.mjs"
-    }
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "scripts": {
-    "build": "unbuild",
-    "dev": "unbuild --watch",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
     "types": "tsc --noEmit",
     "test": "vitest --run"
   },
@@ -44,8 +45,8 @@
     "@typescript-eslint/parser": "catalog:",
     "eslint-vitest-rule-tester": "catalog:",
     "magic-regexp": "catalog:",
+    "tsdown": "catalog:",
     "typescript": "catalog:",
-    "unbuild": "catalog:",
     "vitest": "catalog:"
   }
 }
