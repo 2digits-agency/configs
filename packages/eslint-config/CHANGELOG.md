@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 4.6.0
+
+### Minor Changes
+
+- c1a347c: Updated from unbuild to tsdown
+
+### Patch Changes
+
+- d68354b: Updated dependencies
+- Updated dependencies [d68354b]
+- Updated dependencies [c1a347c]
+  - @2digits/eslint-plugin@3.1.0
+  - @2digits/constants@1.1.0
+
 ## 4.5.3
 
 ### Patch Changes

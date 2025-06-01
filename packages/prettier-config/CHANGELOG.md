@@ -1,5 +1,17 @@
 # @2digits/prettier-config
 
+## 3.4.0
+
+### Minor Changes
+
+- c1a347c: Updated from unbuild to tsdown
+
+### Patch Changes
+
+- d68354b: Updated dependencies
+- Updated dependencies [c1a347c]
+  - @2digits/constants@1.1.0
+
 ## 3.3.2
 
 ### Patch Changes
