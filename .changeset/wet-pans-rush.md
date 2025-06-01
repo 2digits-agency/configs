@@ -1,0 +1,7 @@
+---
+'@2digits/prettier-config': minor
+'@2digits/eslint-plugin': minor
+'@2digits/constants': minor
+---
+
+Updated from unbuild to tsdown
