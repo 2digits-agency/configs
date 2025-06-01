@@ -1,5 +1,15 @@
 # @2digits/eslint-plugin
 
+## 3.1.0
+
+### Minor Changes
+
+- c1a347c: Updated from unbuild to tsdown
+
+### Patch Changes
+
+- d68354b: Updated dependencies
+
 ## 3.0.10
 
 ### Patch Changes
