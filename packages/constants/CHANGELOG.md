@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 1.1.1
+
+### Patch Changes
+
+- 34e2fce: Updated dependencies
+
 ## 1.1.0
 
 ### Minor Changes
