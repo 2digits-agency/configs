@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 3.4.1
+
+### Patch Changes
+
+- 34e2fce: Updated dependencies
+- Updated dependencies [34e2fce]
+  - @2digits/constants@1.1.1
+
 ## 3.4.0
 
 ### Minor Changes
