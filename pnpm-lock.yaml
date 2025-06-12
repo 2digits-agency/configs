@@ -52,8 +52,8 @@ catalogs:
       specifier: 5.78.0
       version: 5.78.0
     '@types/node':
-      specifier: 22.15.30
-      version: 22.15.30
+      specifier: 22.15.31
+      version: 22.15.31
     '@types/react':
       specifier: 19.1.6
       version: 19.1.6
@@ -263,13 +263,13 @@ importers:
         version: 0.24.0
       '@types/node':
         specifier: 'catalog:'
-        version: 22.15.30
+        version: 22.15.31
       eslint:
         specifier: 'catalog:'
         version: 9.28.0(jiti@2.4.2)
       knip:
         specifier: 'catalog:'
-        version: 5.60.2(@types/node@22.15.30)(typescript@5.8.3)
+        version: 5.60.2(@types/node@22.15.31)(typescript@5.8.3)
       pkg-pr-new:
         specifier: 'catalog:'
         version: 0.0.51
@@ -323,7 +323,7 @@ importers:
         version: 6.5.0
       '@graphql-eslint/eslint-plugin':
         specifier: 'catalog:'
-        version: 4.4.0(@types/node@22.15.30)(encoding@0.1.13)(eslint@9.28.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.3)
+        version: 4.4.0(@types/node@22.15.31)(encoding@0.1.13)(eslint@9.28.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.3)
       '@next/eslint-plugin-next':
         specifier: 'catalog:'
         version: 15.3.3
@@ -407,7 +407,7 @@ importers:
         version: 16.2.0
       graphql-config:
         specifier: 'catalog:'
-        version: 5.1.5(@types/node@22.15.30)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3)
+        version: 5.1.5(@types/node@22.15.31)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3)
       jsonc-eslint-parser:
         specifier: 'catalog:'
         version: 2.4.0
@@ -429,7 +429,7 @@ importers:
         version: 1.1.0(eslint@9.28.0(jiti@2.4.2))
       '@types/node':
         specifier: 'catalog:'
-        version: 22.15.30
+        version: 22.15.31
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.6
@@ -459,7 +459,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 'catalog:'
-        version: 3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)
+        version: 3.2.2(@types/debug@4.1.12)(@types/node@22.15.31)
 
   packages/eslint-plugin:
     dependencies:
@@ -481,7 +481,7 @@ importers:
         version: 8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
       eslint-vitest-rule-tester:
         specifier: 'catalog:'
-        version: 2.2.0(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.2.2(@types/debug@4.1.12)(@types/node@22.15.30))
+        version: 2.2.0(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.2.2(@types/debug@4.1.12)(@types/node@22.15.31))
       magic-regexp:
         specifier: 'catalog:'
         version: 0.10.0
@@ -493,7 +493,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 'catalog:'
-        version: 3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)
+        version: 3.2.2(@types/debug@4.1.12)(@types/node@22.15.31)
 
   packages/prettier-config:
     dependencies:
@@ -2642,6 +2642,9 @@ packages:
 
   '@types/node@22.15.30':
     resolution: {integrity: sha512-6Q7lr06bEHdlfplU6YRbgG1SFBdlsfNC4/lX+SkhiTs0cpJkOElmWls8PxDFv4yY/xKb8Y6SO0OmSX4wgqTZbA==}
+
+  '@types/node@22.15.31':
+    resolution: {integrity: sha512-jnVe5ULKl6tijxUhvQeNbQG/84fHfg+yMak02cT8QVhBx/F05rAVxCGBYYTh2EKz22D6JF5ktXuNwdx7b9iEGw==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -8240,7 +8243,7 @@ snapshots:
       '@eslint/core': 0.14.0
       levn: 0.4.1
 
-  '@graphql-eslint/eslint-plugin@4.4.0(@types/node@22.15.30)(encoding@0.1.13)(eslint@9.28.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.3)':
+  '@graphql-eslint/eslint-plugin@4.4.0(@types/node@22.15.31)(encoding@0.1.13)(eslint@9.28.0(jiti@2.4.2))(graphql@16.8.2)(typescript@5.8.3)':
     dependencies:
       '@graphql-tools/code-file-loader': 8.1.6(graphql@16.8.2)
       '@graphql-tools/graphql-tag-pluck': 8.3.5(graphql@16.8.2)
@@ -8249,7 +8252,7 @@ snapshots:
       eslint: 9.28.0(jiti@2.4.2)
       fast-glob: 3.3.3
       graphql: 16.8.2
-      graphql-config: 5.1.5(@types/node@22.15.30)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3)
+      graphql-config: 5.1.5(@types/node@22.15.31)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3)
       graphql-depth-limit: 1.1.0(graphql@16.8.2)
       lodash.lowercase: 4.3.0
     transitivePeerDependencies:
@@ -8305,14 +8308,14 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@graphql-tools/executor-http@1.1.9(@types/node@22.15.30)(graphql@16.8.2)':
+  '@graphql-tools/executor-http@1.1.9(@types/node@22.15.31)(graphql@16.8.2)':
     dependencies:
       '@graphql-tools/utils': 10.8.6(graphql@16.8.2)
       '@repeaterjs/repeater': 3.0.6
       '@whatwg-node/fetch': 0.10.1
       extract-files: 11.0.0
       graphql: 16.8.2
-      meros: 1.3.0(@types/node@22.15.30)
+      meros: 1.3.0(@types/node@22.15.31)
       tslib: 2.8.1
       value-or-promise: 1.0.12
     transitivePeerDependencies:
@@ -8397,11 +8400,11 @@ snapshots:
       graphql: 16.8.2
       tslib: 2.8.1
 
-  '@graphql-tools/url-loader@8.0.16(@types/node@22.15.30)(encoding@0.1.13)(graphql@16.8.2)':
+  '@graphql-tools/url-loader@8.0.16(@types/node@22.15.31)(encoding@0.1.13)(graphql@16.8.2)':
     dependencies:
       '@ardatan/sync-fetch': 0.0.1(encoding@0.1.13)
       '@graphql-tools/executor-graphql-ws': 1.3.2(graphql@16.8.2)
-      '@graphql-tools/executor-http': 1.1.9(@types/node@22.15.30)(graphql@16.8.2)
+      '@graphql-tools/executor-http': 1.1.9(@types/node@22.15.31)(graphql@16.8.2)
       '@graphql-tools/executor-legacy-ws': 1.1.3(graphql@16.8.2)
       '@graphql-tools/utils': 10.8.6(graphql@16.8.2)
       '@graphql-tools/wrap': 10.0.18(graphql@16.8.2)
@@ -9701,6 +9704,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/node@22.15.31':
+    dependencies:
+      undici-types: 6.21.0
+
   '@types/normalize-package-data@2.4.4': {}
 
   '@types/parse-path@7.0.3': {}
@@ -9729,7 +9736,7 @@ snapshots:
 
   '@types/ws@8.5.10':
     dependencies:
-      '@types/node': 22.15.30
+      '@types/node': 22.15.31
 
   '@types/yauzl@2.10.3':
     dependencies:
@@ -9845,13 +9852,13 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.2.2(vite@5.1.3(@types/node@22.15.30))':
+  '@vitest/mocker@3.2.2(vite@5.1.3(@types/node@22.15.31))':
     dependencies:
       '@vitest/spy': 3.2.2
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 5.1.3(@types/node@22.15.30)
+      vite: 5.1.3(@types/node@22.15.31)
 
   '@vitest/pretty-format@3.0.9':
     dependencies:
@@ -11018,12 +11025,12 @@ snapshots:
 
   eslint-visitor-keys@4.2.0: {}
 
-  eslint-vitest-rule-tester@2.2.0(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)):
+  eslint-vitest-rule-tester@2.2.0(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.2.2(@types/debug@4.1.12)(@types/node@22.15.31)):
     dependencies:
       '@types/eslint': 9.6.1
       '@typescript-eslint/utils': 8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.28.0(jiti@2.4.2)
-      vitest: 3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)
+      vitest: 3.2.2(@types/debug@4.1.12)(@types/node@22.15.31)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -11461,13 +11468,13 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql-config@5.1.5(@types/node@22.15.30)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3):
+  graphql-config@5.1.5(@types/node@22.15.31)(encoding@0.1.13)(graphql@16.8.2)(typescript@5.8.3):
     dependencies:
       '@graphql-tools/graphql-file-loader': 8.0.4(graphql@16.8.2)
       '@graphql-tools/json-file-loader': 8.0.4(graphql@16.8.2)
       '@graphql-tools/load': 8.1.0(graphql@16.8.2)
       '@graphql-tools/merge': 9.0.24(graphql@16.8.2)
-      '@graphql-tools/url-loader': 8.0.16(@types/node@22.15.30)(encoding@0.1.13)(graphql@16.8.2)
+      '@graphql-tools/url-loader': 8.0.16(@types/node@22.15.31)(encoding@0.1.13)(graphql@16.8.2)
       '@graphql-tools/utils': 10.8.6(graphql@16.8.2)
       cosmiconfig: 8.3.6(typescript@5.8.3)
       graphql: 16.8.2
@@ -11865,10 +11872,10 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@5.60.2(@types/node@22.15.30)(typescript@5.8.3):
+  knip@5.60.2(@types/node@22.15.31)(typescript@5.8.3):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
-      '@types/node': 22.15.30
+      '@types/node': 22.15.31
       fast-glob: 3.3.3
       formatly: 0.2.4
       jiti: 2.4.2
@@ -12188,9 +12195,9 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  meros@1.3.0(@types/node@22.15.30):
+  meros@1.3.0(@types/node@22.15.31):
     optionalDependencies:
-      '@types/node': 22.15.30
+      '@types/node': 22.15.31
 
   micro-memoize@4.1.3: {}
 
@@ -14149,13 +14156,13 @@ snapshots:
       unist-util-stringify-position: 2.0.3
       vfile-message: 2.0.4
 
-  vite-node@3.2.2(@types/node@22.15.30):
+  vite-node@3.2.2(@types/node@22.15.31):
     dependencies:
       cac: 6.7.14
       debug: 4.4.1
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 5.1.3(@types/node@22.15.30)
+      vite: 5.1.3(@types/node@22.15.31)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -14166,20 +14173,20 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.1.3(@types/node@22.15.30):
+  vite@5.1.3(@types/node@22.15.31):
     dependencies:
       esbuild: 0.19.12
       postcss: 8.5.3
       rollup: 4.34.8
     optionalDependencies:
-      '@types/node': 22.15.30
+      '@types/node': 22.15.31
       fsevents: 2.3.3
 
-  vitest@3.2.2(@types/debug@4.1.12)(@types/node@22.15.30):
+  vitest@3.2.2(@types/debug@4.1.12)(@types/node@22.15.31):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.2
-      '@vitest/mocker': 3.2.2(vite@5.1.3(@types/node@22.15.30))
+      '@vitest/mocker': 3.2.2(vite@5.1.3(@types/node@22.15.31))
       '@vitest/pretty-format': 3.2.2
       '@vitest/runner': 3.2.2
       '@vitest/snapshot': 3.2.2
@@ -14197,12 +14204,12 @@ snapshots:
       tinyglobby: 0.2.14
       tinypool: 1.1.0
       tinyrainbow: 2.0.0
-      vite: 5.1.3(@types/node@22.15.30)
-      vite-node: 3.2.2(@types/node@22.15.30)
+      vite: 5.1.3(@types/node@22.15.31)
+      vite-node: 3.2.2(@types/node@22.15.31)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/debug': 4.1.12
-      '@types/node': 22.15.30
+      '@types/node': 22.15.31
     transitivePeerDependencies:
       - less
       - lightningcss
