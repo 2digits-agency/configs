@@ -276,6 +276,11 @@ export interface RuleOptions {
    */
   'css/prefer-logical-properties'?: Linter.RuleEntry<CssPreferLogicalProperties>
   /**
+   * Enforce the use of relative font units
+   * @see https://github.com/eslint/css/blob/main/docs/rules/relative-font-units.md
+   */
+  'css/relative-font-units'?: Linter.RuleEntry<CssRelativeFontUnits>
+  /**
    * Enforce the use of baseline features
    * @see https://github.com/eslint/css/blob/main/docs/rules/use-baseline.md
    */
@@ -7579,6 +7584,11 @@ type ConsistentThis = string[]
 type CssPreferLogicalProperties = []|[{
   allowProperties?: string[]
   allowUnits?: string[]
+}]
+// ----- css/relative-font-units -----
+type CssRelativeFontUnits = []|[{
+  allowUnits?: ("%" | "cap" | "ch" | "em" | "ex" | "ic" | "lh" | "rcap" | "rch" | "rem" | "rex" | "ric" | "rlh")[]
+  [k: string]: unknown | undefined
 }]
 // ----- css/use-baseline -----
 type CssUseBaseline = []|[{
