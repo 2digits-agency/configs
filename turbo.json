@@ -32,6 +32,8 @@
       "cache": false,
       "dependsOn": ["@2digits/prettier-config#build"]
     },
-    "//#knip": {}
+    "//#knip": {
+      "dependsOn": ["@2digits/eslint-config#build", "@2digits/prettier-config#build"]
+    }
   }
 }
