@@ -115,8 +115,8 @@ catalogs:
       specifier: 3.0.2
       version: 3.0.2
     eslint-plugin-storybook:
-      specifier: 9.0.6
-      version: 9.0.6
+      specifier: 9.0.12
+      version: 9.0.12
     eslint-plugin-tailwindcss:
       specifier: 3.18.0
       version: 3.18.0
@@ -386,7 +386,7 @@ importers:
         version: 3.0.2(eslint@9.28.0(jiti@2.4.2))
       eslint-plugin-storybook:
         specifier: 'catalog:'
-        version: 9.0.6(eslint@9.28.0(jiti@2.4.2))(storybook@9.0.0(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3)
+        version: 9.0.12(eslint@9.28.0(jiti@2.4.2))(storybook@9.0.0(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3)
       eslint-plugin-tailwindcss:
         specifier: 'catalog:'
         version: 3.18.0(tailwindcss@3.4.4)
@@ -3773,12 +3773,12 @@ packages:
     peerDependencies:
       eslint: ^8.0.0 || ^9.0.0
 
-  eslint-plugin-storybook@9.0.6:
-    resolution: {integrity: sha512-eVxNgHXojaUAVh2uu2ACHJRZfar1E5CnOMp01QIYVZxlkEmaMTR6/V2MAVpKbEnvKi/xjTOPyygufFRhpyXrqA==}
+  eslint-plugin-storybook@9.0.12:
+    resolution: {integrity: sha512-dSzcozoI7tQRqfMODWfxahrRmKWsK88yKSUcO0+s361oYcX7nf8nEu99TQ/wuDLRHh+Zi7E2j43cPMH8gFo8OA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       eslint: '>=8'
-      storybook: ^9.0.6
+      storybook: ^9.0.12
 
   eslint-plugin-tailwindcss@3.18.0:
     resolution: {integrity: sha512-PQDU4ZMzFH0eb2DrfHPpbgo87Zgg2EXSMOj1NSfzdZm+aJzpuwGerfowMIaVehSREEa0idbf/eoNYAOHSJoDAQ==}
@@ -10950,7 +10950,7 @@ snapshots:
       semver: 7.7.1
       typescript: 5.8.3
 
-  eslint-plugin-storybook@9.0.6(eslint@9.28.0(jiti@2.4.2))(storybook@9.0.0(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3):
+  eslint-plugin-storybook@9.0.12(eslint@9.28.0(jiti@2.4.2))(storybook@9.0.0(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3):
     dependencies:
       '@typescript-eslint/utils': 8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.28.0(jiti@2.4.2)
