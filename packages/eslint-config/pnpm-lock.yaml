@@ -3,7 +3,6 @@ lockfileVersion: '9.0'
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
-  injectWorkspacePackages: true
 
 catalogs:
   default:
@@ -192,10 +191,10 @@ importers:
     dependencies:
       '@2digits/constants':
         specifier: workspace:*
-        version: file:../constants
+        version: link:../constants
       '@2digits/eslint-plugin':
         specifier: workspace:*
-        version: file:../eslint-plugin(jiti@2.4.2)(typescript@5.8.3)
+        version: link:../eslint-plugin
       '@eslint-community/eslint-plugin-eslint-comments':
         specifier: 'catalog:'
         version: 4.5.0(eslint@9.29.0(jiti@2.4.2))
@@ -316,7 +315,7 @@ importers:
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
-        version: file:../tsconfig(typescript@5.8.3)
+        version: link:../tsconfig
       '@eslint/config-inspector':
         specifier: 'catalog:'
         version: 1.1.0(eslint@9.29.0(jiti@2.4.2))
@@ -355,17 +354,6 @@ importers:
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.32)(jiti@2.4.2)(yaml@2.8.0)
 
 packages:
-
-  '@2digits/constants@file:../constants':
-    resolution: {directory: ../constants, type: directory}
-
-  '@2digits/eslint-plugin@file:../eslint-plugin':
-    resolution: {directory: ../eslint-plugin, type: directory}
-
-  '@2digits/tsconfig@file:../tsconfig':
-    resolution: {directory: ../tsconfig, type: directory}
-    peerDependencies:
-      typescript: 5.8.3
 
   '@adobe/css-tools@4.4.3':
     resolution: {integrity: sha512-VQKMkwriZbaOgVCby1UDY/LDk5fIjhQicCvVPFqfe+69fWaPWydbWJ3wRt59/YzIwda1I81loas3oCoHxnqvdA==}
@@ -3473,22 +3461,6 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
-
-  '@2digits/constants@file:../constants': {}
-
-  '@2digits/eslint-plugin@file:../eslint-plugin(jiti@2.4.2)(typescript@5.8.3)':
-    dependencies:
-      '@typescript-eslint/utils': 8.34.1(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
-      eslint: 9.29.0(jiti@2.4.2)
-      ts-pattern: 5.7.1
-    transitivePeerDependencies:
-      - jiti
-      - supports-color
-      - typescript
-
-  '@2digits/tsconfig@file:../tsconfig(typescript@5.8.3)':
-    dependencies:
-      typescript: 5.8.3
 
   '@adobe/css-tools@4.4.3': {}
 

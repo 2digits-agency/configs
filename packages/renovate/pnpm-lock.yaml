@@ -3,7 +3,6 @@ lockfileVersion: '9.0'
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
-  injectWorkspacePackages: true
 
 catalogs:
   default:
@@ -48,7 +47,7 @@ importers:
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
-        version: file:../tsconfig(typescript@5.8.3)
+        version: link:../tsconfig
       nolyfill:
         specifier: 'catalog:'
         version: 1.0.44
@@ -60,11 +59,6 @@ importers:
         version: 5.8.3
 
 packages:
-
-  '@2digits/tsconfig@file:../tsconfig':
-    resolution: {directory: ../tsconfig, type: directory}
-    peerDependencies:
-      typescript: 5.8.3
 
   '@arcanis/slice-ansi@1.1.1':
     resolution: {integrity: sha512-xguP2WR2Dv0gQ7Ykbdb7BNCnPnIPB94uTi0Z2NvkRBEnhbwjOQ7QyQKJXrVQg4qDpiD9hA5l5cCwy/z2OXgc3w==}
@@ -2857,10 +2851,6 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
-
-  '@2digits/tsconfig@file:../tsconfig(typescript@5.8.3)':
-    dependencies:
-      typescript: 5.8.3
 
   '@arcanis/slice-ansi@1.1.1':
     dependencies:

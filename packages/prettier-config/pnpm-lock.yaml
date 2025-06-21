@@ -3,7 +3,6 @@ lockfileVersion: '9.0'
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
-  injectWorkspacePackages: true
 
 catalogs:
   default:
@@ -75,7 +74,7 @@ importers:
     dependencies:
       '@2digits/constants':
         specifier: workspace:*
-        version: file:../constants
+        version: link:../constants
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 'catalog:'
         version: 4.4.2(prettier@3.5.3)
@@ -106,7 +105,7 @@ importers:
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
-        version: file:../tsconfig(typescript@5.8.3)
+        version: link:../tsconfig
       prettier:
         specifier: 'catalog:'
         version: 3.5.3
@@ -118,14 +117,6 @@ importers:
         version: 5.8.3
 
 packages:
-
-  '@2digits/constants@file:../constants':
-    resolution: {directory: ../constants, type: directory}
-
-  '@2digits/tsconfig@file:../tsconfig':
-    resolution: {directory: ../tsconfig, type: directory}
-    peerDependencies:
-      typescript: 5.8.3
 
   '@babel/code-frame@7.27.1':
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
@@ -767,12 +758,6 @@ packages:
     resolution: {integrity: sha512-0ASV06AAoKCDkS2+xw5RXJywruurpbC4JZSm7nr7MOt1ojAzvyyaO+UxZf18j8FCF6kmzCZKcAgN/yu2gm2XgQ==}
 
 snapshots:
-
-  '@2digits/constants@file:../constants': {}
-
-  '@2digits/tsconfig@file:../tsconfig(typescript@5.8.3)':
-    dependencies:
-      typescript: 5.8.3
 
   '@babel/code-frame@7.27.1':
     dependencies:
