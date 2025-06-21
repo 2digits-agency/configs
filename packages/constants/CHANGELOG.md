@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 1.1.2
+
+### Patch Changes
+
+- f88036c: Changed pnpm settings thoughout monorepo
+
 ## 1.1.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @2digits/tsconfig
 
+## 0.8.0
+
+### Minor Changes
+
+- 76197fe: Enable incremental by default
+
+### Patch Changes
+
+- f88036c: Changed pnpm settings thoughout monorepo
+
 ## 0.7.1
 
 ### Patch Changes
