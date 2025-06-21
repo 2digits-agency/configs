@@ -1,6 +1,5 @@
 import { writeFile } from 'node:fs/promises';
 
-import type { Linter } from 'eslint';
 import { composer } from 'eslint-flat-config-utils';
 import { flatConfigsToRulesDTS } from 'eslint-typegen/core';
 import { builtinRules } from 'eslint/use-at-your-own-risk';
@@ -31,7 +30,7 @@ export default defineConfig({
 
       const configNames = configs.map((i) => i.name).filter(Boolean) as Array<string>;
 
-      let dts = await flatConfigsToRulesDTS(configs as Array<Linter.Config>, {
+      let dts = await flatConfigsToRulesDTS(configs, {
         includeAugmentation: false,
       });
 
