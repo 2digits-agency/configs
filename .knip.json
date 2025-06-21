@@ -1,9 +1,6 @@
 {
   "$schema": "./node_modules/knip/schema.json",
   "workspaces": {
-    "packages/renovate": {
-      "entry": ["build.ts"]
-    },
     "packages/eslint-config": {
       "ignore": ["fixtures/**", "_fixtures/**"],
       "ignoreDependencies": ["react", "@types/react"]
