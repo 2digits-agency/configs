@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.1.15
+
+### Patch Changes
+
+- cc20cef: Updated dependencies
+
 ## 1.1.14
 
 ### Patch Changes

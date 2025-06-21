@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 4.6.5
+
+### Patch Changes
+
+- cc20cef: Updated dependencies
+
 ## 4.6.4
 
 ### Patch Changes

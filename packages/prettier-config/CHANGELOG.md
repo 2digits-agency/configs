@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 3.4.2
+
+### Patch Changes
+
+- cc20cef: Updated dependencies
+
 ## 3.4.1
 
 ### Patch Changes
