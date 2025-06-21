@@ -7,8 +7,8 @@
       "outputs": ["dist/**"]
     },
     "types": {
-      "dependsOn": ["^types", "build"],
-      "cache": false
+      "dependsOn": ["^types", "build", "^build"],
+      "outputs": ["tsconfig.tsbuildinfo"]
     },
     "test": {
       "dependsOn": ["^test"]
