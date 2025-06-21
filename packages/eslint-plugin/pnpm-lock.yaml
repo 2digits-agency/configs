@@ -3,7 +3,6 @@ lockfileVersion: '9.0'
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
-  injectWorkspacePackages: true
 
 catalogs:
   default:
@@ -76,7 +75,7 @@ importers:
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
-        version: file:../tsconfig(typescript@5.8.3)
+        version: link:../tsconfig
       '@typescript-eslint/parser':
         specifier: 'catalog:'
         version: 8.34.1(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
@@ -97,11 +96,6 @@ importers:
         version: 3.2.4(jiti@2.4.2)
 
 packages:
-
-  '@2digits/tsconfig@file:../tsconfig':
-    resolution: {directory: ../tsconfig, type: directory}
-    peerDependencies:
-      typescript: 5.8.3
 
   '@andrewbranch/untar.js@1.0.3':
     resolution: {integrity: sha512-Jh15/qVmrLGhkKJBdXlK1+9tY4lZruYjsgkDFj08ZmDiWVBLJcqkok7Z0/R0In+i1rScBpJlSvrTS2Lm41Pbnw==}
@@ -1371,10 +1365,6 @@ packages:
     engines: {node: '>=10'}
 
 snapshots:
-
-  '@2digits/tsconfig@file:../tsconfig(typescript@5.8.3)':
-    dependencies:
-      typescript: 5.8.3
 
   '@andrewbranch/untar.js@1.0.3':
     optional: true

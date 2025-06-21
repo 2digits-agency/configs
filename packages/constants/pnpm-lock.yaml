@@ -3,7 +3,6 @@ lockfileVersion: '9.0'
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
-  injectWorkspacePackages: true
 
 catalogs:
   default:
@@ -45,7 +44,7 @@ importers:
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
-        version: file:../tsconfig(typescript@5.8.3)
+        version: link:../tsconfig
       tsdown:
         specifier: 'catalog:'
         version: 0.12.8(typescript@5.8.3)
@@ -54,11 +53,6 @@ importers:
         version: 5.8.3
 
 packages:
-
-  '@2digits/tsconfig@file:../tsconfig':
-    resolution: {directory: ../tsconfig, type: directory}
-    peerDependencies:
-      typescript: 5.8.3
 
   '@babel/generator@7.27.5':
     resolution: {integrity: sha512-ZGhA37l0e/g2s1Cnzdix0O3aLYm66eF8aufiVteOgnwxgnRP8GoyMj7VWsgWnQbVKXyge7hqrFh2K2TQM6t1Hw==}
@@ -345,10 +339,6 @@ packages:
     resolution: {integrity: sha512-nqG5NNL2wFVGZ0NA/aCFw0oJ2pxSf1lwg4Z5ill8wd7K4KX/rQbHlwbh+bjctXL5Ly1xtzHenHGOK0b+lG6JVg==}
 
 snapshots:
-
-  '@2digits/tsconfig@file:../tsconfig(typescript@5.8.3)':
-    dependencies:
-      typescript: 5.8.3
 
   '@babel/generator@7.27.5':
     dependencies:
