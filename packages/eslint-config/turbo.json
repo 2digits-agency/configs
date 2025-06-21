@@ -4,7 +4,7 @@
     "docs": {
       "outputs": ["./.eslint-config-inspector/**"],
       "dependsOn": ["build", "^build"],
-      "inputs": ["$TURBO_DEFAULT$", "../../eslint.config.js"]
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/eslint.config.ts"]
     },
     "docs:dev": {
       "dependsOn": ["build", "^build"],
