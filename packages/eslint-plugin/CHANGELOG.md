@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 3.1.4
+
+### Patch Changes
+
+- f88036c: Changed pnpm settings thoughout monorepo
+
 ## 3.1.3
 
 ### Patch Changes

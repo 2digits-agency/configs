@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 3.4.3
+
+### Patch Changes
+
+- f88036c: Changed pnpm settings thoughout monorepo
+- Updated dependencies [f88036c]
+  - @2digits/constants@1.1.2
+
 ## 3.4.2
 
 ### Patch Changes

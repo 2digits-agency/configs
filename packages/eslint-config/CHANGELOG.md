@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 4.6.6
+
+### Patch Changes
+
+- 28d45fd: Removed the sorting of pnpm-workspace.yaml since pnpm sorts it automatically when setting catalogMode to strict
+- 9c9967e: Removed explicit install of @types/node, since it's already in the monorepo root
+- f88036c: Changed pnpm settings thoughout monorepo
+- Updated dependencies [f88036c]
+  - @2digits/eslint-plugin@3.1.4
+  - @2digits/constants@1.1.2
+
 ## 4.6.5
 
 ### Patch Changes

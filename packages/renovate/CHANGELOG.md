@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.1.16
+
+### Patch Changes
+
+- f88036c: Changed pnpm settings thoughout monorepo
+
 ## 1.1.15
 
 ### Patch Changes
