@@ -49,44 +49,6 @@ export function yaml(): Array<TypedFlatConfigItem> {
     },
 
     {
-      name: '2digits:yaml/pnpm-workspace',
-      ...SHARED_OPTIONS,
-      files: ['pnpm-workspace.yaml'],
-      rules: {
-        'yml/sort-keys': [
-          'error',
-          {
-            order: [
-              'packages',
-              'overrides',
-              'patchedDependencies',
-              'hoistPattern',
-              'catalog',
-              'catalogs',
-
-              'allowedDeprecatedVersions',
-              'allowNonAppliedPatches',
-              'configDependencies',
-              'ignoredBuiltDependencies',
-              'ignoredOptionalDependencies',
-              'neverBuiltDependencies',
-              'onlyBuiltDependencies',
-              'onlyBuiltDependenciesFile',
-              'packageExtensions',
-              'peerDependencyRules',
-              'supportedArchitectures',
-            ],
-            pathPattern: '^$',
-          },
-          {
-            order: { type: 'asc' },
-            pathPattern: '.*',
-          },
-        ],
-      },
-    },
-
-    {
       name: '2digits:yaml/prettier',
       ...SHARED_OPTIONS,
       rules: {
