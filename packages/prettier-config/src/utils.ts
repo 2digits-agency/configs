@@ -1,12 +1,8 @@
 import type { PrettierConfig as ImportOrderConfig } from '@ianvs/prettier-plugin-sort-imports';
 import { getPackageInfoSync } from 'local-pkg';
 import type { Options } from 'prettier';
-import type { PluginEmbedOptions } from 'prettier-plugin-embed';
-import type { Options as JSDocOptions } from 'prettier-plugin-jsdoc';
-import type { ShParserOptions } from 'prettier-plugin-sh';
-import type { SqlBaseOptions } from 'prettier-plugin-sql';
 import type { PluginOptions } from 'prettier-plugin-tailwindcss';
-import type { PrettierTaploOptions } from 'prettier-plugin-toml';
+import type { Options as JSDocOptions } from 'prettier-plugin-jsdoc';
 
 import { devDependencies } from '../package.json';
 
@@ -19,16 +15,7 @@ type NormalizeOptions<T> = {
   ? B
   : never;
 
-export type PrettierConfigWithPlugins = NormalizeOptions<
-  Options
-    & JSDocOptions
-    & ImportOrderConfig
-    & PluginOptions
-    & SqlBaseOptions
-    & PrettierTaploOptions
-    & PluginEmbedOptions
-    & ShParserOptions
->;
+export type PrettierConfigWithPlugins = NormalizeOptions<Options & ImportOrderConfig & JSDocOptions & PluginOptions>;
 
 /**
  * Get the version of the locally installed TypeScript.
