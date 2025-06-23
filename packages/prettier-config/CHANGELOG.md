@@ -1,5 +1,15 @@
 # @2digits/prettier-config
 
+## 4.0.0
+
+### Major Changes
+
+- ace3d75: Removed barely used prettier plugins
+
+### Minor Changes
+
+- 1e6a7ce: Updated prettier to version 3.6.0
+
 ## 3.4.3
 
 ### Patch Changes

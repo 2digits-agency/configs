@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 3.1.5
+
+### Patch Changes
+
+- 3d6249f: Updated dependencies
+
 ## 3.1.4
 
 ### Patch Changes
