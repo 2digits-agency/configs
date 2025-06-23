@@ -35,22 +35,11 @@ export default {
 
   tailwindFunctions,
 
-  language: 'sqlite',
-  keywordCase: 'upper',
-
-  indent: 2,
-
-  allowedBlankLines: 1,
-  indentEntries: true,
-
   plugins: [
     require.resolve('@prettier/plugin-xml'),
     require.resolve('@ianvs/prettier-plugin-sort-imports'),
-    require.resolve('prettier-plugin-toml'),
     require.resolve('prettier-plugin-jsdoc'),
-    require.resolve('prettier-plugin-sql'),
-    require.resolve('prettier-plugin-sh'),
-    require.resolve('prettier-plugin-embed'),
+    require.resolve('@prettier/plugin-oxc'),
     require.resolve('prettier-plugin-tailwindcss'),
   ],
 
