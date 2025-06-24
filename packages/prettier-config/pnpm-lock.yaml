@@ -10,8 +10,8 @@ catalogs:
       specifier: 4.4.2
       version: 4.4.2
     '@prettier/plugin-oxc':
-      specifier: 0.0.3
-      version: 0.0.3
+      specifier: 0.0.4
+      version: 0.0.4
     '@prettier/plugin-xml':
       specifier: 3.4.1
       version: 3.4.1
@@ -71,7 +71,7 @@ importers:
         version: 4.4.2(prettier@3.6.0)
       '@prettier/plugin-oxc':
         specifier: 'catalog:'
-        version: 0.0.3
+        version: 0.0.4
       '@prettier/plugin-xml':
         specifier: 'catalog:'
         version: 3.4.1(prettier@3.6.0)
@@ -271,8 +271,8 @@ packages:
   '@oxc-project/types@0.74.0':
     resolution: {integrity: sha512-KOw/RZrVlHGhCXh1RufBFF7Nuo7HdY5w1lRJukM/igIl6x9qtz8QycDvZdzb4qnHO7znrPyo2sJrFJK2eKHgfQ==}
 
-  '@prettier/plugin-oxc@0.0.3':
-    resolution: {integrity: sha512-mtVlaFQA4Bq6flltVUUD0UaXwSWnDkQpcb5tkQColZzWb6tr4C27YGJpxIIUgKzJ0NrLxFrdcEkUgQXU/RJdtg==}
+  '@prettier/plugin-oxc@0.0.4':
+    resolution: {integrity: sha512-UGXe+g/rSRbglL0FOJiar+a+nUrst7KaFmsg05wYbKiInGWP6eAj/f8A2Uobgo5KxEtb2X10zeflNH6RK2xeIQ==}
     engines: {node: '>=14'}
 
   '@prettier/plugin-xml@3.4.1':
@@ -880,7 +880,7 @@ snapshots:
 
   '@oxc-project/types@0.74.0': {}
 
-  '@prettier/plugin-oxc@0.0.3':
+  '@prettier/plugin-oxc@0.0.4':
     dependencies:
       oxc-parser: 0.74.0
 
