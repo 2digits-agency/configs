@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 4.6.9
+
+### Patch Changes
+
+- a89a540: Updated dependencies
+- Updated dependencies [a89a540]
+  - @2digits/eslint-plugin@3.1.6
+  - @2digits/constants@1.1.3
+
 ## 4.6.8
 
 ### Patch Changes

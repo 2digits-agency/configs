@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.1.19
+
+### Patch Changes
+
+- a89a540: Updated dependencies
+
 ## 1.1.18
 
 ### Patch Changes

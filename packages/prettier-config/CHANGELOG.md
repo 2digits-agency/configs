@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 4.0.2
+
+### Patch Changes
+
+- a89a540: Updated dependencies
+- Updated dependencies [a89a540]
+  - @2digits/constants@1.1.3
+
 ## 4.0.1
 
 ### Patch Changes

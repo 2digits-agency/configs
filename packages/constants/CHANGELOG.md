@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 1.1.3
+
+### Patch Changes
+
+- a89a540: Updated dependencies
+
 ## 1.1.2
 
 ### Patch Changes

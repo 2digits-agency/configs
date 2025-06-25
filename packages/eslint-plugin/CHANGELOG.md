@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 3.1.6
+
+### Patch Changes
+
+- a89a540: Updated dependencies
+
 ## 3.1.5
 
 ### Patch Changes
