@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 3.1.7
+
+### Patch Changes
+
+- b4af45e: Updated dependencies
+
 ## 3.1.6
 
 ### Patch Changes
