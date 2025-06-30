@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 4.6.11
+
+### Patch Changes
+
+- dbc588d: Updated dependencies
+- Updated dependencies [dbc588d]
+  - @2digits/eslint-plugin@3.1.8
+
 ## 4.6.10
 
 ### Patch Changes
