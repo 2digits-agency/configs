@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 3.1.8
+
+### Patch Changes
+
+- dbc588d: Updated dependencies
+
 ## 3.1.7
 
 ### Patch Changes
