@@ -8143,6 +8143,7 @@ type JsdocMultilineBlocks = []|[{
   noMultilineBlocks?: boolean
   noSingleLineBlocks?: boolean
   noZeroLineText?: boolean
+  requireSingleLineUnderCount?: number
   singleLineTags?: string[]
 }]
 // ----- jsdoc/no-bad-blocks -----
