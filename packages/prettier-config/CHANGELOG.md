@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 4.0.4
+
+### Patch Changes
+
+- 632cd21: Updated dependencies
+
 ## 4.0.3
 
 ### Patch Changes
