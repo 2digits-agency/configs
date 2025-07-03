@@ -1,5 +1,15 @@
 # @2digits/eslint-config
 
+## 4.7.0
+
+### Minor Changes
+
+- 709039c: Added new github actions linting rules
+
+### Patch Changes
+
+- 5188775: Updated dependencies
+
 ## 4.6.12
 
 ### Patch Changes
