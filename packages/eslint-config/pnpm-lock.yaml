@@ -75,6 +75,9 @@ catalogs:
     eslint-plugin-drizzle:
       specifier: 0.2.3
       version: 0.2.3
+    eslint-plugin-github-action:
+      specifier: 0.0.16
+      version: 0.0.16
     eslint-plugin-jsdoc:
       specifier: 51.3.3
       version: 51.3.3
@@ -249,6 +252,9 @@ importers:
       eslint-plugin-drizzle:
         specifier: 'catalog:'
         version: 0.2.3(eslint@9.30.1(jiti@2.4.2))
+      eslint-plugin-github-action:
+        specifier: 'catalog:'
+        version: 0.0.16(eslint@9.30.1(jiti@2.4.2))
       eslint-plugin-jsdoc:
         specifier: 'catalog:'
         version: 51.3.3(eslint@9.30.1(jiti@2.4.2))
@@ -1000,6 +1006,10 @@ packages:
   '@nolyfill/shared@1.0.44':
     resolution: {integrity: sha512-NI1zxDh4LYL7PYlKKCwojjuc5CEZslywrOTKBNyodjmWjRiZ4AlCMs3Gp+zDoPQPNkYCSQp/luNojHmJWWfCbw==}
 
+  '@ntnyq/utils@0.6.5':
+    resolution: {integrity: sha512-sjCzIYGXvRRuwN37twCVjszeDTfPtDE3hQ+vT/orH9Xo0ubKQDEA+HsyTewN1vo3ao0Kl3DGpsgPJ4nxy+nyvQ==}
+    engines: {node: '>=18.18.0'}
+
   '@oxc-project/runtime@0.73.2':
     resolution: {integrity: sha512-wbUN3K3zjMRHxAsNm1nKHebSnDY800b3LxQFTr9wSZpdQdhiQQAZpRIFsYjh0sAotoyqahN576sB1DmpPUhl5Q==}
     engines: {node: '>=6.9.0'}
@@ -1588,6 +1598,9 @@ packages:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
 
+  change-case@5.4.4:
+    resolution: {integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==}
+
   character-entities@2.0.2:
     resolution: {integrity: sha512-shx7oQ0Awen/BRIdkjkvz54PnEEI/EjwXDSIZp86/KKdbafHh1Df/RYGBhn4hbe2+uKC9FnT5UCEdyPz3ai9hQ==}
 
@@ -1893,6 +1906,12 @@ packages:
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       eslint: '>=8'
+
+  eslint-plugin-github-action@0.0.16:
+    resolution: {integrity: sha512-eo7vvTZYpwfNbECYa67Lbg2xeM1Hcmh47CRK6AfqUFGxyouDKem7DQB9heopRMwk07bE4Ykkh5QEXRX3s12BVQ==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^9.5.0
 
   eslint-plugin-jsdoc@51.3.3:
     resolution: {integrity: sha512-8XK/9wncTh4PPntQfM4iYJ2v/kvX4qsfBzp+dTnyxpERWhl2R9hEJw1ihws+yAecg9CC6ExTfMInEg3wSK9kWA==}
@@ -3303,6 +3322,10 @@ packages:
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
+  uncase@0.1.0:
+    resolution: {integrity: sha512-xLz7Ekr0e+kNRy9lsxkaui5mZvDWlVMslLjacUPna7b4JrzHW3ZGsp9482bUoqIo0V7gDxSF2HxuKtABwo7SmA==}
+    engines: {node: '>=18.18.0'}
+
   unconfig@7.3.2:
     resolution: {integrity: sha512-nqG5NNL2wFVGZ0NA/aCFw0oJ2pxSf1lwg4Z5ill8wd7K4KX/rQbHlwbh+bjctXL5Ly1xtzHenHGOK0b+lG6JVg==}
 
@@ -4318,6 +4341,8 @@ snapshots:
 
   '@nolyfill/shared@1.0.44': {}
 
+  '@ntnyq/utils@0.6.5': {}
+
   '@oxc-project/runtime@0.73.2': {}
 
   '@oxc-project/types@0.73.2': {}
@@ -4900,6 +4925,8 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
+  change-case@5.4.4: {}
+
   character-entities@2.0.2: {}
 
   check-error@2.1.1: {}
@@ -5155,6 +5182,14 @@ snapshots:
       '@eslint-community/regexpp': 4.12.1
       eslint: 9.30.1(jiti@2.4.2)
       eslint-compat-utils: 0.5.1(eslint@9.30.1(jiti@2.4.2))
+
+  eslint-plugin-github-action@0.0.16(eslint@9.30.1(jiti@2.4.2)):
+    dependencies:
+      '@ntnyq/utils': 0.6.5
+      '@types/json-schema': 7.0.15
+      eslint: 9.30.1(jiti@2.4.2)
+      uncase: 0.1.0
+      yaml-eslint-parser: 1.3.0
 
   eslint-plugin-jsdoc@51.3.3(eslint@9.30.1(jiti@2.4.2)):
     dependencies:
@@ -6865,6 +6900,10 @@ snapshots:
   typescript@5.8.3: {}
 
   ufo@1.6.1: {}
+
+  uncase@0.1.0:
+    dependencies:
+      change-case: 5.4.4
 
   unconfig@7.3.2:
     dependencies:

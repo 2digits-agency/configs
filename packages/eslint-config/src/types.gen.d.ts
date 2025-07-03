@@ -392,6 +392,81 @@ export interface RuleOptions {
    */
   'getter-return'?: Linter.RuleEntry<GetterReturn>
   /**
+   * enforce naming convention to action name.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/action-name-casing.html
+   */
+  'github-action/action-name-casing'?: Linter.RuleEntry<GithubActionActionNameCasing>
+  /**
+   * enforce naming convention to job id.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/job-id-casing.html
+   */
+  'github-action/job-id-casing'?: Linter.RuleEntry<GithubActionJobIdCasing>
+  /**
+   * enforce maximum jobs per action file.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/max-jobs-per-action.html
+   */
+  'github-action/max-jobs-per-action'?: Linter.RuleEntry<GithubActionMaxJobsPerAction>
+  /**
+   * disallow using external job.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/no-external-job.html
+   */
+  'github-action/no-external-job'?: Linter.RuleEntry<[]>
+  /**
+   * disallow using invalid key.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/no-invalid-key.html
+   */
+  'github-action/no-invalid-key'?: Linter.RuleEntry<[]>
+  /**
+   * disallow using top level env.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/no-top-level-env.html
+   */
+  'github-action/no-top-level-env'?: Linter.RuleEntry<[]>
+  /**
+   * disallow using top level permissions.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/no-top-level-permissions.html
+   */
+  'github-action/no-top-level-permissions'?: Linter.RuleEntry<[]>
+  /**
+   * enforce action file extension.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/prefer-file-extension.html
+   */
+  'github-action/prefer-file-extension'?: Linter.RuleEntry<GithubActionPreferFileExtension>
+  /**
+   * enforce the style of job step uses.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/prefer-step-uses-style.html
+   */
+  'github-action/prefer-step-uses-style'?: Linter.RuleEntry<GithubActionPreferStepUsesStyle>
+  /**
+   * require a string action name.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/require-action-name.html
+   */
+  'github-action/require-action-name'?: Linter.RuleEntry<[]>
+  /**
+   * require a string action run-name.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/require-action-run-name.html
+   */
+  'github-action/require-action-run-name'?: Linter.RuleEntry<[]>
+  /**
+   * require a string job name.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/require-job-name.html
+   */
+  'github-action/require-job-name'?: Linter.RuleEntry<[]>
+  /**
+   * require a string job step name.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/require-job-step-name.html
+   */
+  'github-action/require-job-step-name'?: Linter.RuleEntry<[]>
+  /**
+   * disallow invalid timeout-minutes.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/valid-timeout-minutes.html
+   */
+  'github-action/valid-timeout-minutes'?: Linter.RuleEntry<GithubActionValidTimeoutMinutes>
+  /**
+   * disallow invalid trigger events.
+   * @see https://eslint-plugin-github-action.ntnyq.com/rules/valid-trigger-events.html
+   */
+  'github-action/valid-trigger-events'?: Linter.RuleEntry<[]>
+  /**
    * Require `require()` calls to be placed at top-level module scope
    * @see https://eslint.org/docs/latest/rules/global-require
    * @deprecated
@@ -7685,6 +7760,66 @@ type GeneratorStarSpacing = []|[(("before" | "after" | "both" | "neither") | {
 type GetterReturn = []|[{
   allowImplicit?: boolean
 }]
+// ----- github-action/action-name-casing -----
+type GithubActionActionNameCasing = []|[(("camelCase" | "kebab-case" | "PascalCase" | "snake_case" | "Title Case" | "Train-Case" | "SCREAMING_SNAKE_CASE") | {
+  "kebab-case"?: boolean
+  camelCase?: boolean
+  PascalCase?: boolean
+  snake_case?: boolean
+  "Title Case"?: boolean
+  "Train-Case"?: boolean
+  SCREAMING_SNAKE_CASE?: boolean
+  
+  ignores?: string[]
+})]
+// ----- github-action/job-id-casing -----
+type GithubActionJobIdCasing = []|[(("camelCase" | "kebab-case" | "PascalCase" | "snake_case" | "Train-Case" | "SCREAMING_SNAKE_CASE") | {
+  "kebab-case"?: boolean
+  camelCase?: boolean
+  PascalCase?: boolean
+  snake_case?: boolean
+  "Train-Case"?: boolean
+  SCREAMING_SNAKE_CASE?: boolean
+  
+  ignores?: string[]
+})]
+// ----- github-action/max-jobs-per-action -----
+type GithubActionMaxJobsPerAction = []|[number]
+// ----- github-action/prefer-file-extension -----
+type GithubActionPreferFileExtension = []|[(("yml" | "yaml") | {
+  extension?: ("yml" | "yaml")
+  caseSensitive?: boolean
+})]
+// ----- github-action/prefer-step-uses-style -----
+type GithubActionPreferStepUsesStyle = []|[(("release" | "commit" | "branch") | {
+  commit?: boolean
+  release?: boolean
+  branch?: boolean
+  allowRepository?: boolean
+  allowDocker?: boolean
+  
+  ignores?: string[]
+})]
+// ----- github-action/valid-timeout-minutes -----
+type GithubActionValidTimeoutMinutes = []|[(number | {
+  
+  min?: number
+  
+  max?: number
+} | {
+  job?: (number | {
+    
+    min?: number
+    
+    max?: number
+  })
+  step?: (number | {
+    
+    min?: number
+    
+    max?: number
+  })
+})]
 // ----- gql/alphabetize -----
 type GqlAlphabetize = [{
   
@@ -13370,4 +13505,4 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   onlyEquality?: boolean
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:drizzle' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier'
+export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier'

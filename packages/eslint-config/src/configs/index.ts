@@ -3,6 +3,7 @@ export * from './boolean';
 export * from './comments';
 export * from './css';
 export * from './drizzle';
+export * from './github-actions';
 export * from './graphql';
 export * from './ignores';
 export * from './javascript';
