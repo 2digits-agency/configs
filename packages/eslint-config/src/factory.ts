@@ -8,6 +8,7 @@ import {
   comments,
   css,
   drizzle,
+  githubActions,
   graphql,
   ignores,
   javascript,
@@ -104,6 +105,7 @@ export async function twoDigits(
     css(),
     yaml(),
     markdown(),
+    githubActions(),
   );
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {
