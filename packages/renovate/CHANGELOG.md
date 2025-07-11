@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.1.21
+
+### Patch Changes
+
+- 8bacc71: Updated dependencies
+
 ## 1.1.20
 
 ### Patch Changes
