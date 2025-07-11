@@ -1,8 +1,8 @@
 import type { PrettierConfig as ImportOrderConfig } from '@ianvs/prettier-plugin-sort-imports';
 import { getPackageInfoSync } from 'local-pkg';
 import type { Options } from 'prettier';
-import type { PluginOptions } from 'prettier-plugin-tailwindcss';
 import type { Options as JSDocOptions } from 'prettier-plugin-jsdoc';
+import type { PluginOptions } from 'prettier-plugin-tailwindcss';
 
 import { devDependencies } from '../package.json';
 
