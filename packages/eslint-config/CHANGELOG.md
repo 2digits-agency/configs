@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 4.7.2
+
+### Patch Changes
+
+- 7ad7eb2: Updated dependencies
+- 02250bc: Added tailwind-csstree for better tailwind parsing
+- Updated dependencies [7ad7eb2]
+  - @2digits/eslint-plugin@3.1.11
+
 ## 4.7.1
 
 ### Patch Changes
