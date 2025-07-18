@@ -1,5 +1,5 @@
 import plugin from '@eslint/css';
-import { tailwindSyntax } from '@eslint/css/syntax';
+import { tailwind3 } from 'tailwind-csstree';
 
 import { GLOB_CSS } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
@@ -15,7 +15,7 @@ export function css(): Array<TypedFlatConfigItem> {
       },
       languageOptions: {
         tolerant: true,
-        customSyntax: tailwindSyntax,
+        customSyntax: tailwind3,
       },
       rules: {
         ...plugin.configs.recommended.rules,
