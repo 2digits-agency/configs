@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 1.1.5
+
+### Patch Changes
+
+- 73511c9: Updated dependencies
+
 ## 1.1.4
 
 ### Patch Changes
