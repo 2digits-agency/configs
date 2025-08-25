@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.1.25
+
+### Patch Changes
+
+- 0dfe8fc: Pinned rolldown-plugin-dts version to fix issues
+- a72cdd1: Updated dependencies
+
 ## 1.1.24
 
 ### Patch Changes
