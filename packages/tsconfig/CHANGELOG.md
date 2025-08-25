@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.8.2
+
+### Patch Changes
+
+- 0dfe8fc: Pinned rolldown-plugin-dts version to fix issues
+
 ## 0.8.1
 
 ### Patch Changes

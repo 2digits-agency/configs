@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 4.7.5
+
+### Patch Changes
+
+- 0dfe8fc: Pinned rolldown-plugin-dts version to fix issues
+- a72cdd1: Updated dependencies
+- Updated dependencies [0dfe8fc]
+- Updated dependencies [a72cdd1]
+  - @2digits/eslint-plugin@3.1.14
+  - @2digits/constants@1.1.6
+
 ## 4.7.4
 
 ### Patch Changes

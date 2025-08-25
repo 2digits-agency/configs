@@ -1,5 +1,12 @@
 # @2digits/constants
 
+## 1.1.6
+
+### Patch Changes
+
+- 0dfe8fc: Pinned rolldown-plugin-dts version to fix issues
+- a72cdd1: Updated dependencies
+
 ## 1.1.5
 
 ### Patch Changes
