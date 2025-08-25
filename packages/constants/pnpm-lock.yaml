@@ -31,6 +31,7 @@ overrides:
   object.entries: npm:@nolyfill/object.entries@1.0.44
   object.fromentries: npm:@nolyfill/object.fromentries@1.0.44
   object.values: npm:@nolyfill/object.values@1.0.44
+  rolldown-plugin-dts: 0.15.6
   safe-buffer: npm:@nolyfill/safe-buffer@1.0.44
   safer-buffer: npm:@nolyfill/safer-buffer@1.0.44
   side-channel: npm:@nolyfill/side-channel@1.0.44
@@ -278,8 +279,8 @@ packages:
   resolve-pkg-maps@1.0.0:
     resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==}
 
-  rolldown-plugin-dts@0.14.3:
-    resolution: {integrity: sha512-LsUPsPV2XpACe5wikxQzYBD0qg4nyxwUkLos5oF8v8qVO9jPpH6GRg2S5ZUELFry04Ab58C9Tibbi7dEbVLp2w==}
+  rolldown-plugin-dts@0.15.6:
+    resolution: {integrity: sha512-AxQlyx3Nszob5QLmVUjz/VnC5BevtUo0h8tliuE0egddss7IbtCBU7GOe7biRU0fJNRQJmQjPKXFcc7K98j3+w==}
     engines: {node: '>=20.18.0'}
     peerDependencies:
       '@typescript/native-preview': '>=7.0.0-dev.20250601.1'
@@ -515,7 +516,7 @@ snapshots:
 
   resolve-pkg-maps@1.0.0: {}
 
-  rolldown-plugin-dts@0.14.3(rolldown@1.0.0-beta.33)(typescript@5.9.2):
+  rolldown-plugin-dts@0.15.6(rolldown@1.0.0-beta.33)(typescript@5.9.2):
     dependencies:
       '@babel/generator': 7.28.3
       '@babel/parser': 7.28.3
@@ -573,7 +574,7 @@ snapshots:
       empathic: 2.0.0
       hookable: 5.5.3
       rolldown: 1.0.0-beta.33
-      rolldown-plugin-dts: 0.14.3(rolldown@1.0.0-beta.33)(typescript@5.9.2)
+      rolldown-plugin-dts: 0.15.6(rolldown@1.0.0-beta.33)(typescript@5.9.2)
       semver: 7.7.2
       tinyexec: 1.0.1
       tinyglobby: 0.2.14
