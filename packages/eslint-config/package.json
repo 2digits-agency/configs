@@ -91,5 +91,10 @@
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "tsdown@0.14.2": "../../patches/tsdown.patch"
+    }
   }
 }

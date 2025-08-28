@@ -18,7 +18,7 @@ catalog:
   '@prettier/plugin-xml': 3.4.2
   '@stylistic/eslint-plugin': 5.2.3
   '@tanstack/eslint-plugin-query': 5.83.1
-  '@types/node': 22.17.2
+  '@types/node': 22.18.0
   '@types/react': 19.1.12
   '@typescript-eslint/parser': 8.41.0
   '@typescript-eslint/utils': 8.41.0
@@ -75,10 +75,11 @@ catalog:
 catalogMode: strict
 
 onlyBuiltDependencies:
-  - esbuild
   - better-sqlite3
   - core-js-pure
   - dtrace-provider
+  - esbuild
+  - oxc-resolver
   - protobufjs
   - re2
 

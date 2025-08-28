@@ -1,0 +1,13 @@
+diff --git a/dist/src-BhIGOkxO.mjs b/dist/src-BhIGOkxO.mjs
+index 8afd548f0cdfd36b10dd0ed94b08915b891e2786..73953f471adecfc9e149c9d206b24e9d065152fa 100644
+--- a/dist/src-BhIGOkxO.mjs
++++ b/dist/src-BhIGOkxO.mjs
+@@ -570,7 +570,7 @@ async function loadConfigFile(options, workspace) {
+ 			} else if (stats.isDirectory()) cwd = resolved;
+ 		}
+ 	}
+-	const nativeTS = process.features.typescript || process.versions.bun || process.versions.deno;
++	const nativeTS = process.versions.bun || process.versions.deno;
+ 	let { config, sources } = await loadConfig.async({
+ 		sources: overrideConfig ? [{
+ 			files: filePath,
