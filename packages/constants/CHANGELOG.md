@@ -1,5 +1,12 @@
 # @2digits/constants
 
+## 1.1.7
+
+### Patch Changes
+
+- 4050acf: Patched tsdown
+- 487df06: Updated packages
+
 ## 1.1.6
 
 ### Patch Changes
