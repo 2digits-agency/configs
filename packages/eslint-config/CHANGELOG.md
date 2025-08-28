@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 4.7.6
+
+### Patch Changes
+
+- 4050acf: Patched tsdown
+- 487df06: Updated packages
+- Updated dependencies [4050acf]
+- Updated dependencies [487df06]
+  - @2digits/eslint-plugin@3.1.15
+  - @2digits/constants@1.1.7
+
 ## 4.7.5
 
 ### Patch Changes

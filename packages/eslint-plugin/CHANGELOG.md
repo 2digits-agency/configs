@@ -1,5 +1,12 @@
 # @2digits/eslint-plugin
 
+## 3.1.15
+
+### Patch Changes
+
+- 4050acf: Patched tsdown
+- 487df06: Updated packages
+
 ## 3.1.14
 
 ### Patch Changes

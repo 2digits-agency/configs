@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.1.26
+
+### Patch Changes
+
+- 487df06: Updated packages
+
 ## 1.1.25
 
 ### Patch Changes
