@@ -41,7 +41,6 @@ export function sonar(): Array<TypedFlatConfigItem> {
         'sonar/no-inverted-boolean-check': 'error',
         'sonar/no-nested-switch': 'error',
         'sonar/no-nested-template-literals': 'error',
-        'sonar/no-one-iteration-loop': 'error',
         'sonar/no-redundant-boolean': 'error',
         'sonar/no-same-line-conditional': 'error',
         'sonar/no-small-switch': 'error',

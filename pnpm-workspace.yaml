@@ -11,17 +11,17 @@ catalog:
   '@eslint/js': 9.34.0
   '@eslint/markdown': 7.2.0
   '@graphql-eslint/eslint-plugin': 4.4.0
-  '@ianvs/prettier-plugin-sort-imports': 4.6.2
+  '@ianvs/prettier-plugin-sort-imports': 4.6.3
   '@manypkg/cli': 0.25.0
-  '@next/eslint-plugin-next': 15.5.0
+  '@next/eslint-plugin-next': 15.5.2
   '@prettier/plugin-oxc': 0.0.4
   '@prettier/plugin-xml': 3.4.2
   '@stylistic/eslint-plugin': 5.2.3
   '@tanstack/eslint-plugin-query': 5.83.1
   '@types/node': 22.17.2
-  '@types/react': 19.1.11
-  '@typescript-eslint/parser': 8.40.0
-  '@typescript-eslint/utils': 8.40.0
+  '@types/react': 19.1.12
+  '@typescript-eslint/parser': 8.41.0
+  '@typescript-eslint/utils': 8.41.0
   dedent: 1.6.0
   eslint: 9.34.0
   eslint-config-flat-gitignore: 2.1.0
@@ -39,7 +39,7 @@ catalog:
   eslint-plugin-react-compiler: 19.1.0-rc.2
   eslint-plugin-react-hooks: 5.2.0
   eslint-plugin-regexp: 2.10.0
-  eslint-plugin-sonarjs: 3.0.4
+  eslint-plugin-sonarjs: 3.0.5
   eslint-plugin-storybook: 9.1.3
   eslint-plugin-tailwindcss: 3.18.2
   eslint-plugin-turbo: 2.5.6
@@ -56,19 +56,19 @@ catalog:
   local-pkg: 1.1.2
   magic-regexp: 0.10.0
   nolyfill: 1.0.44
-  pkg-pr-new: 0.0.57
+  pkg-pr-new: 0.0.58
   prettier: 3.6.2
   prettier-plugin-jsdoc: 1.3.3
   prettier-plugin-tailwindcss: 0.6.14
   react: 19.1.1
-  renovate: 41.82.10
+  renovate: 41.88.0
   tailwind-csstree: 0.1.3
   tinyglobby: 0.2.14
   ts-pattern: 5.8.0
-  tsdown: 0.14.1
+  tsdown: 0.14.2
   turbo: 2.5.6
   typescript: 5.9.2
-  typescript-eslint: 8.40.0
+  typescript-eslint: 8.41.0
   vitest: 3.2.4
   yaml-eslint-parser: 1.3.0
 
@@ -102,7 +102,6 @@ overrides:
   object.entries: npm:@nolyfill/object.entries@1.0.44
   object.fromentries: npm:@nolyfill/object.fromentries@1.0.44
   object.values: npm:@nolyfill/object.values@1.0.44
-  rolldown-plugin-dts: 0.15.6
   safe-buffer: npm:@nolyfill/safe-buffer@1.0.44
   safer-buffer: npm:@nolyfill/safer-buffer@1.0.44
   side-channel: npm:@nolyfill/side-channel@1.0.44
