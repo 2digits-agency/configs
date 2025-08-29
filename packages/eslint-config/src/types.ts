@@ -79,3 +79,16 @@ export interface OptionsWithIgnores {
   /** An array of glob patterns to ignore in addition to the default ignores. */
   ignores?: Array<string>;
 }
+
+export interface OptionsCss extends OptionsOverrides {
+  /**
+   * Force Tailwind custom syntax major version.
+   * When omitted, auto-detects installed Tailwind major and falls back to v3.
+   */
+  tailwindMajor?: 3 | 4;
+
+  /**
+   * Provide a custom CSS parser syntax object. Overrides tailwindMajor detection.
+   */
+  customSyntax?: unknown;
+}
