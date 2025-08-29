@@ -246,10 +246,20 @@ export interface RuleOptions {
    */
   'constructor-super'?: Linter.RuleEntry<[]>
   /**
+   * Enforce use of fallback fonts and a generic font last
+   * @see https://github.com/eslint/css/blob/main/docs/rules/font-family-fallbacks.md
+   */
+  'css/font-family-fallbacks'?: Linter.RuleEntry<[]>
+  /**
    * Disallow duplicate @import rules
    * @see https://github.com/eslint/css/blob/main/docs/rules/no-duplicate-imports.md
    */
   'css/no-duplicate-imports'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow duplicate selectors within keyframe blocks
+   * @see https://github.com/eslint/css/blob/main/docs/rules/no-duplicate-keyframe-selectors.md
+   */
+  'css/no-duplicate-keyframe-selectors'?: Linter.RuleEntry<[]>
   /**
    * Disallow empty blocks
    * @see https://github.com/eslint/css/blob/main/docs/rules/no-empty-blocks.md
@@ -3250,7 +3260,7 @@ Backward pagination arguments
   'react-extra/no-nested-components'?: Linter.RuleEntry<[]>
   /**
    * Disallow nesting lazy component declarations inside other components.
-   * @see https://eslint-react.xyz/docs/rules/no-nested-component-definitions
+   * @see https://eslint-react.xyz/docs/rules/no-nested-lazy-component-declarations
    */
   'react-extra/no-nested-lazy-component-declarations'?: Linter.RuleEntry<[]>
   /**
@@ -7708,11 +7718,13 @@ type CssPreferLogicalProperties = []|[{
 // ----- css/relative-font-units -----
 type CssRelativeFontUnits = []|[{
   allowUnits?: ("%" | "cap" | "ch" | "em" | "ex" | "ic" | "lh" | "rcap" | "rch" | "rem" | "rex" | "ric" | "rlh")[]
-  [k: string]: unknown | undefined
 }]
 // ----- css/use-baseline -----
 type CssUseBaseline = []|[{
   available?: (("widely" | "newly") | number)
+  allowAtRules?: string[]
+  allowProperties?: string[]
+  allowSelectors?: string[]
 }]
 // ----- css/use-layers -----
 type CssUseLayers = []|[{
