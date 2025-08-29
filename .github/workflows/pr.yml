@@ -49,4 +49,4 @@ jobs:
         run: pnpm build
 
       - name: 🚀 Publish with pkg.pr.new
-        run: pnpm pkg-pr-new publish './packages/*'
+        run: pnpm pkg-pr-new publish './packages/*' --packageManager pnpm --pnpm
