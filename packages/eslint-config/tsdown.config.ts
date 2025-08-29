@@ -30,7 +30,7 @@ export default defineConfig({
 
       const configNames = configs.map((i) => i.name).filter(Boolean) as Array<string>;
 
-      let dts = await flatConfigsToRulesDTS(configs, {
+      let dts = await flatConfigsToRulesDTS(configs as never, {
         includeAugmentation: false,
       });
 
