@@ -33,6 +33,7 @@ import {
 import { PluginNameMap } from './constants';
 import type {
   ConfigNames,
+  OptionsCss,
   OptionsOverrides,
   OptionsTypeScriptWithTypes,
   OptionsWithDrizzle,
@@ -49,6 +50,7 @@ type SharedOptions<T = unknown> = T & {
 
 interface ESLint2DigitsOptions {
   ignores?: OptionsWithIgnores;
+  css?: SharedOptions<OptionsCss> | boolean;
   turbo?: SharedOptions<OptionsOverrides> | boolean;
   js?: OptionsOverrides;
   ts?: SharedOptions<OptionsTypeScriptWithTypes> | boolean;
@@ -102,11 +104,14 @@ export async function twoDigits(
     regexp(),
     antfu(),
     jsonc(),
-    css(),
     yaml(),
     markdown(),
     githubActions(),
   );
+
+  if (enabled(options.css)) {
+    composer = composer.append(css(config(options.css)));
+  }
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {
     composer = composer.append(turbo(config(options.turbo)));
