@@ -90,6 +90,5 @@ export interface OptionsCss extends OptionsOverrides {
   /**
    * Provide a custom CSS parser syntax object. Overrides tailwindMajor detection.
    */
-  // eslint-disable-next-line ts/no-explicit-any
-  customSyntax?: any;
+  customSyntax?: unknown;
 }
