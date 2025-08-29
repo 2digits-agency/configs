@@ -29,10 +29,5 @@
     "@2digits/tsconfig": "workspace:*",
     "tsdown": "catalog:",
     "typescript": "catalog:"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "tsdown@0.14.2": "../../patches/tsdown.patch"
-    }
   }
 }
