@@ -18,19 +18,32 @@
   ],
   "exports": {
     ".": "./dist/index.mjs",
+    "./bin": "./dist/bin.mjs",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "scripts": {
+    "bin": "tsx ./src/bin.ts",
     "build": "tsdown --minify",
     "dev": "tsdown --watch",
     "types": "tsc --noEmit"
   },
   "license": "MIT",
   "public": true,
+  "dependencies": {
+    "@effect/cli": "catalog:",
+    "@effect/platform": "catalog:",
+    "@effect/platform-node": "catalog:",
+    "effect": "catalog:",
+    "nypm": "catalog:",
+    "pkg-types": "catalog:"
+  },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
+    "@effect/language-service": "catalog:",
     "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "unplugin-replace": "catalog:"
   }
 }

@@ -1,1 +1,1 @@
-export const tailwindFunctions = ['tv', 'cn', 'cnBase', 'classnames', 'clsx', 'cx'];
+export * from './Cli';

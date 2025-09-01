@@ -1,0 +1,62 @@
+import { Path } from '@effect/platform';
+import { Data, Effect } from 'effect';
+import * as pkgTypes from 'pkg-types';
+
+class PackageManagerError extends Data.TaggedError('PackageManagerError')<{
+  cause: unknown;
+}> {}
+
+export class PackageManagerService extends Effect.Service<PackageManagerService>()('PackageManagerService', {
+  effect: Effect.gen(function* () {
+    const path = yield* Path.Path;
+
+    const resolveRoot = Effect.fn('PackageManagerService.resolveRoot')(function* () {
+      return yield* Effect.tryPromise({
+        try: () => pkgTypes.findWorkspaceDir(),
+        catch: (cause) => new PackageManagerError({ cause }),
+      }).pipe(Effect.map((dir) => path.normalize(dir)));
+    });
+
+    const readPackageJson = Effect.fn('PackageManagerService.readPackageJson')(function* (
+      options: {
+        /**
+         * The root from which to resolve the package.json file. If not provided, it will be resolved automatically from the current working directory.
+         *
+         * @default `process.cwd()`
+         */
+        id?: string;
+      } = {},
+    ) {
+      return yield* Effect.tryPromise({
+        try: () => pkgTypes.readPackageJSON(options.id),
+        catch: (cause) => new PackageManagerError({ cause }),
+      });
+    });
+
+    const writePackageJson = Effect.fn('PackageManagerService.writePackageJson')(function* (options: {
+      /**
+       * The root from which to resolve the package.json file. If not provided, it will be resolved automatically from the current working directory.
+       *
+       * @default `process.cwd()`
+       */
+      id?: string;
+
+      /**
+       * The content of the `package.json` file to write.
+       */
+      content: pkgTypes.PackageJson;
+    }) {
+      return yield* Effect.tryPromise({
+        try: () => pkgTypes.writePackageJSON(options.id ?? process.cwd(), options.content),
+        catch: (cause) => new PackageManagerError({ cause }),
+      });
+    });
+
+    return {
+      resolveRoot,
+      readPackageJson,
+      writePackageJson,
+    };
+  }),
+  dependencies: [Path.layer],
+}) {}
