@@ -285,6 +285,18 @@ importers:
         specifier: 'catalog:'
         version: 5.9.2
 
+  packages/cli:
+    devDependencies:
+      '@2digits/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.14.2(patch_hash=d0b372a605331e51cd90a8230410958d5f866f59c93dcd7c5ea3a02ba4422eaf)(oxc-resolver@11.6.2)(typescript@5.9.2)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.2
+
   packages/constants:
     devDependencies:
       '@2digits/tsconfig':

@@ -1,0 +1,36 @@
+{
+  "name": "@2digits/cli",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/2digits-agency/configs.git",
+    "directory": "packages/cli"
+  },
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "bin": {
+    "2d": "./dist/bin.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsdown --minify",
+    "dev": "tsdown --watch",
+    "types": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "public": true,
+  "devDependencies": {
+    "@2digits/tsconfig": "workspace:*",
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
+  }
+}
