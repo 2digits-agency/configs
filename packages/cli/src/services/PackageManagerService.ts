@@ -1,5 +1,6 @@
 import { Path } from '@effect/platform';
 import { Data, Effect } from 'effect';
+import * as nypm from 'nypm';
 import * as pkgTypes from 'pkg-types';
 
 class PackageManagerError extends Data.TaggedError('PackageManagerError')<{
@@ -28,7 +29,7 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
       } = {},
     ) {
       return yield* Effect.tryPromise({
-        try: () => pkgTypes.readPackageJSON(options.id),
+        try: () => pkgTypes.readPackageJSON(`${options.id ?? process.cwd()}/package.json`),
         catch: (cause) => new PackageManagerError({ cause }),
       });
     });
@@ -47,15 +48,43 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
       content: pkgTypes.PackageJson;
     }) {
       return yield* Effect.tryPromise({
-        try: () => pkgTypes.writePackageJSON(options.id ?? process.cwd(), options.content),
+        try: () => pkgTypes.writePackageJSON(`${options.id ?? process.cwd()}/package.json`, options.content),
         catch: (cause) => new PackageManagerError({ cause }),
       });
+    });
+
+    const addDependencies = Effect.fn('PackageManagerService.addDependencies')(function* (options: {
+      /**
+       * The workspace to which the dependency should be added. If not provided, the dependency will be added to the root workspace.
+       */
+      workspace?: string;
+      dependencies?: Array<string>;
+      devDependencies?: Array<string>;
+    }) {
+      if (options.devDependencies) {
+        const devDeps = yield* Effect.tryPromise({
+          try: () => nypm.addDependency(options.devDependencies ?? [], { workspace: options.workspace, dev: true }),
+          catch: (cause) => new PackageManagerError({ cause }),
+        });
+
+        yield* Effect.logDebug(`Added devDependencies: ${options.devDependencies.join(', ')}`, devDeps);
+      }
+
+      if (options.dependencies) {
+        const deps = yield* Effect.tryPromise({
+          try: () => nypm.addDependency(options.dependencies ?? [], { workspace: options.workspace }),
+          catch: (cause) => new PackageManagerError({ cause }),
+        });
+
+        yield* Effect.logDebug(`Added dependencies: ${options.dependencies.join(', ')}`, deps);
+      }
     });
 
     return {
       resolveRoot,
       readPackageJson,
       writePackageJson,
+      addDependencies,
     };
   }),
   dependencies: [Path.layer],

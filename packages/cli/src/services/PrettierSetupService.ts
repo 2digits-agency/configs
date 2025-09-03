@@ -32,11 +32,13 @@ export class PrettierSetupService extends Effect.Service<PrettierSetupService>()
 
       yield* pm.writePackageJson({ id: root, content: packageJson });
 
-      yield* Effect.logFatal('TODO: Install dependencies (prettier, @2digits/prettier-config)');
+      yield* pm.addDependencies({
+        devDependencies: ['prettier', '@2digits/prettier-config'],
+      });
 
       yield* Effect.logInfo('🎉 Prettier setup complete!');
-      yield* Effect.logInfo("Run 'npm run format' to check formatting");
-      yield* Effect.logInfo("Run 'npm run format:fix' to fix formatting issues");
+      yield* Effect.logInfo("Run '" + " format' to check formatting");
+      yield* Effect.logInfo("Run '" + " format:fix' to fix formatting issues");
     });
 
     return {
