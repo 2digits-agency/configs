@@ -1,10 +1,12 @@
-import { Path } from '@effect/platform';
-import { Data, Effect } from 'effect';
+/* eslint-disable unicorn/no-array-callback-reference */
+import { Command, Path } from '@effect/platform';
+import { Array, Data, Effect, Stream, String } from 'effect';
 import * as nypm from 'nypm';
 import * as pkgTypes from 'pkg-types';
 
 class PackageManagerError extends Data.TaggedError('PackageManagerError')<{
   cause: unknown;
+  message?: string;
 }> {}
 
 export class PackageManagerService extends Effect.Service<PackageManagerService>()('PackageManagerService', {
@@ -15,7 +17,7 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
       return yield* Effect.tryPromise({
         try: () => pkgTypes.findWorkspaceDir(),
         catch: (cause) => new PackageManagerError({ cause }),
-      }).pipe(Effect.map((dir) => path.normalize(dir)));
+      }).pipe(Effect.map(path.normalize));
     });
 
     const readPackageJson = Effect.fn('PackageManagerService.readPackageJson')(function* (
@@ -28,8 +30,10 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
         id?: string;
       } = {},
     ) {
+      const pkgPath = path.resolve(options.id ?? process.cwd(), 'package.json');
+
       return yield* Effect.tryPromise({
-        try: () => pkgTypes.readPackageJSON(`${options.id ?? process.cwd()}/package.json`),
+        try: () => pkgTypes.readPackageJSON(pkgPath),
         catch: (cause) => new PackageManagerError({ cause }),
       });
     });
@@ -47,38 +51,100 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
        */
       content: pkgTypes.PackageJson;
     }) {
+      const pkgPath = path.resolve(options.id ?? process.cwd(), 'package.json');
+
       return yield* Effect.tryPromise({
-        try: () => pkgTypes.writePackageJSON(`${options.id ?? process.cwd()}/package.json`, options.content),
+        try: () => pkgTypes.writePackageJSON(pkgPath, options.content),
         catch: (cause) => new PackageManagerError({ cause }),
       });
     });
 
-    const addDependencies = Effect.fn('PackageManagerService.addDependencies')(function* (options: {
+    interface AddDependenciesOptions {
       /**
        * The workspace to which the dependency should be added. If not provided, the dependency will be added to the root workspace.
        */
       workspace?: string;
       dependencies?: Array<string>;
       devDependencies?: Array<string>;
-    }) {
-      if (options.devDependencies) {
-        const devDeps = yield* Effect.tryPromise({
-          try: () => nypm.addDependency(options.devDependencies ?? [], { workspace: options.workspace, dev: true }),
-          catch: (cause) => new PackageManagerError({ cause }),
-        });
+    }
 
-        yield* Effect.logDebug(`Added devDependencies: ${options.devDependencies.join(', ')}`, devDeps);
+    const addDependencies = Effect.fn('PackageManagerService.addDependencies')(function* (
+      options: AddDependenciesOptions,
+    ) {
+      const pm = yield* getPackageManager();
+
+      const workspace = options.workspace ?? true;
+
+      if (options.devDependencies && Array.isNonEmptyArray(options.devDependencies)) {
+        const devDepsCmd = Command.make(
+          nypm.addDependencyCommand(pm.name, options.devDependencies, { workspace, dev: true, short: true }),
+        ).pipe(Command.runInShell(true));
+
+        const { exitCode, stderr } = yield* Command.start(devDepsCmd).pipe(
+          Effect.flatMap((process) =>
+            Effect.all({
+              stdout: process.stdout.pipe(
+                Stream.decodeText(),
+                Stream.tap(Effect.logDebug),
+                Stream.runFold(String.empty, String.concat),
+              ),
+              stderr: process.stderr.pipe(
+                Stream.decodeText(),
+                Stream.tap(Effect.logDebug),
+                Stream.runFold(String.empty, String.concat),
+              ),
+              exitCode: process.exitCode,
+            }),
+          ),
+        );
+
+        if (exitCode !== 0) {
+          yield* Effect.logError(`Command failed with exit code ${exitCode}: ${devDepsCmd.toString()}`);
+
+          return yield* new PackageManagerError({
+            message: `Failed to add devDependencies: ${stderr}`,
+            cause: exitCode,
+          });
+        }
+
+        yield* Effect.logDebug(`Added devDependencies: ${options.devDependencies.join(', ')}`);
       }
 
-      if (options.dependencies) {
-        const deps = yield* Effect.tryPromise({
-          try: () => nypm.addDependency(options.dependencies ?? [], { workspace: options.workspace }),
-          catch: (cause) => new PackageManagerError({ cause }),
-        });
+      if (options.dependencies && Array.isNonEmptyArray(options.dependencies)) {
+        const depsCmd = Command.make(
+          nypm.addDependencyCommand(pm.name, options.dependencies, { workspace, short: true }),
+        ).pipe(Command.runInShell(true));
 
-        yield* Effect.logDebug(`Added dependencies: ${options.dependencies.join(', ')}`, deps);
+        const { exitCode, stderr } = yield* Command.start(depsCmd).pipe(
+          Effect.flatMap((process) =>
+            Effect.all({
+              stdout: process.stdout.pipe(
+                Stream.decodeText(),
+                Stream.tap(Effect.logDebug),
+                Stream.runFold(String.empty, String.concat),
+              ),
+              stderr: process.stderr.pipe(
+                Stream.decodeText(),
+                Stream.tap(Effect.logDebug),
+                Stream.runFold(String.empty, String.concat),
+              ),
+              exitCode: process.exitCode,
+            }),
+          ),
+        );
+
+        if (exitCode !== 0) {
+          yield* Effect.logError(`Command failed with exit code ${exitCode}: ${depsCmd.toString()}`);
+
+          return yield* new PackageManagerError({
+            message: `Failed to add dependencies: ${stderr}`,
+            cause: exitCode,
+          });
+        }
+
+        yield* Effect.logDebug(`Added dependencies: ${options.dependencies.join(', ')}`);
       }
-    });
+    }, Effect.scoped);
 
     const getPackageManager = Effect.fn('PackageManagerService.getPackageManager')(function* () {
       const root = yield* resolveRoot();
