@@ -1,6 +1,7 @@
 {
   "name": "@2digits/cli",
   "version": "1.0.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/2digits-agency/configs.git",
@@ -29,7 +30,6 @@
     "types": "tsc --noEmit"
   },
   "license": "MIT",
-  "public": true,
   "dependencies": {
     "@effect/cli": "catalog:",
     "@effect/platform": "catalog:",
