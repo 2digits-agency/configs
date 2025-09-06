@@ -1,15 +1,16 @@
 {
   "name": "@2digits/cli",
   "version": "1.0.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/2digits-agency/configs.git",
     "directory": "packages/cli"
   },
   "type": "module",
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/bin.mjs",
+  "module": "./dist/bin.mjs",
+  "types": "./dist/bin.d.mts",
   "bin": {
     "2d": "./dist/bin.mjs"
   },
@@ -17,20 +18,31 @@
     "dist"
   ],
   "exports": {
-    ".": "./dist/index.mjs",
+    ".": "./dist/bin.mjs",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "scripts": {
+    "bin": "tsx ./src/bin.ts",
     "build": "tsdown --minify",
     "dev": "tsdown --watch",
     "types": "tsc --noEmit"
   },
   "license": "MIT",
-  "public": true,
+  "dependencies": {
+    "@effect/cli": "catalog:",
+    "@effect/platform": "catalog:",
+    "@effect/platform-node": "catalog:",
+    "effect": "catalog:",
+    "nypm": "catalog:",
+    "pkg-types": "catalog:"
+  },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
+    "@effect/language-service": "catalog:",
     "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "unplugin-replace": "catalog:"
   }
 }
