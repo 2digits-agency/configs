@@ -4,7 +4,7 @@ import Replace from 'unplugin-replace';
 import pkg from './package.json';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/bin.ts'],
+  entry: ['src/bin.ts'],
 
   dts: true,
   fixedExtension: true,
