@@ -1,21 +1,21 @@
 import { Command, Options } from '@effect/cli';
-import { Console, Effect } from 'effect';
+import { Console, Effect, Option } from 'effect';
 
 import { moduleVersion } from './internal/version';
 import { PrettierSetupService } from './services/PrettierSetupService';
 
 const command = Command.make('2d', {
   prettier: Options.boolean('prettier').pipe(
-    Options.withAlias('p'),
-    Options.withDefault(true),
+    Options.optional,
+    Options.withDefault(Option.some(true)),
     Options.withDescription('Setup Prettier with @2digits/prettier-config'),
   ),
 }).pipe(
   Command.withDescription('Setup the 2DIGITS configs in your project'),
   Command.withHandler(
-    Effect.fn(
+    Effect.fn('2d')(
       function* ({ prettier }) {
-        if (prettier) {
+        if (Option.isNone(prettier) || !prettier.value) {
           yield* Effect.logDebug('Setting up Prettier...');
 
           const setupService = yield* PrettierSetupService;
