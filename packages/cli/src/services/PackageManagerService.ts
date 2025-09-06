@@ -80,11 +80,37 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
       }
     });
 
+    const getPackageManager = Effect.fn('PackageManagerService.getPackageManager')(function* () {
+      const root = yield* resolveRoot();
+
+      const pm = yield* Effect.tryPromise({
+        try: () => nypm.detectPackageManager(root),
+        catch: (cause) => new PackageManagerError({ cause }),
+      });
+
+      if (!pm) {
+        return yield* new PackageManagerError({ cause: 'Could not detect package manager' });
+      }
+
+      return pm as nypm.PackageManager;
+    });
+
+    const runScriptCommand = Effect.fn('PackageManagerService.runScriptCommand')(function* (options: {
+      script: string;
+      args?: Array<string>;
+    }) {
+      const pm = yield* getPackageManager();
+
+      return nypm.runScriptCommand(pm.name, options.script, { args: options.args });
+    });
+
     return {
       resolveRoot,
       readPackageJson,
       writePackageJson,
       addDependencies,
+      getPackageManager,
+      runScriptCommand,
     };
   }),
   dependencies: [Path.layer],

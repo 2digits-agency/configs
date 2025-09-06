@@ -36,9 +36,12 @@ export class PrettierSetupService extends Effect.Service<PrettierSetupService>()
         devDependencies: ['prettier', '@2digits/prettier-config'],
       });
 
+      const formatCmd = yield* pm.runScriptCommand({ script: 'format' });
+      const formatFixCmd = yield* pm.runScriptCommand({ script: 'format:fix' });
+
       yield* Effect.logInfo('🎉 Prettier setup complete!');
-      yield* Effect.logInfo("Run '" + " format' to check formatting");
-      yield* Effect.logInfo("Run '" + " format:fix' to fix formatting issues");
+      yield* Effect.logInfo(`Run '${formatCmd}' to check formatting`);
+      yield* Effect.logInfo(`Run '${formatFixCmd}' to fix formatting issues`);
     });
 
     return {
