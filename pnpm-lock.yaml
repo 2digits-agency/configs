@@ -267,9 +267,9 @@ overrides:
   which-typed-array: npm:@nolyfill/which-typed-array@1.0.44
 
 patchedDependencies:
-  tsdown:
-    hash: d0b372a605331e51cd90a8230410958d5f866f59c93dcd7c5ea3a02ba4422eaf
-    path: patches/tsdown.patch
+  tsdown@0.15.0:
+    hash: e759db58a1f4d43988c75d3f547976c7761b76d4bebc48fa0fb4d19ec1163b13
+    path: patches/tsdown@0.15.0.patch
 
 importers:
 
@@ -341,7 +341,7 @@ importers:
         version: 0.38.4
       tsdown:
         specifier: 'catalog:'
-        version: 0.15.0(patch_hash=d0b372a605331e51cd90a8230410958d5f866f59c93dcd7c5ea3a02ba4422eaf)(oxc-resolver@11.6.2)(typescript@5.9.2)
+        version: 0.15.0(patch_hash=e759db58a1f4d43988c75d3f547976c7761b76d4bebc48fa0fb4d19ec1163b13)(oxc-resolver@11.6.2)(typescript@5.9.2)
       tsx:
         specifier: 'catalog:'
         version: 4.20.5
@@ -359,7 +359,7 @@ importers:
         version: link:../tsconfig
       tsdown:
         specifier: 'catalog:'
-        version: 0.15.0(patch_hash=d0b372a605331e51cd90a8230410958d5f866f59c93dcd7c5ea3a02ba4422eaf)(oxc-resolver@11.6.2)(typescript@5.9.2)
+        version: 0.15.0(patch_hash=e759db58a1f4d43988c75d3f547976c7761b76d4bebc48fa0fb4d19ec1163b13)(oxc-resolver@11.6.2)(typescript@5.9.2)
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
@@ -525,7 +525,7 @@ importers:
         version: 0.2.15
       tsdown:
         specifier: 'catalog:'
-        version: 0.15.0(patch_hash=d0b372a605331e51cd90a8230410958d5f866f59c93dcd7c5ea3a02ba4422eaf)(oxc-resolver@11.6.2)(typescript@5.9.2)
+        version: 0.15.0(patch_hash=e759db58a1f4d43988c75d3f547976c7761b76d4bebc48fa0fb4d19ec1163b13)(oxc-resolver@11.6.2)(typescript@5.9.2)
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
@@ -559,7 +559,7 @@ importers:
         version: 0.10.0
       tsdown:
         specifier: 'catalog:'
-        version: 0.15.0(patch_hash=d0b372a605331e51cd90a8230410958d5f866f59c93dcd7c5ea3a02ba4422eaf)(oxc-resolver@11.6.2)(typescript@5.9.2)
+        version: 0.15.0(patch_hash=e759db58a1f4d43988c75d3f547976c7761b76d4bebc48fa0fb4d19ec1163b13)(oxc-resolver@11.6.2)(typescript@5.9.2)
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
@@ -599,7 +599,7 @@ importers:
         version: 3.6.2
       tsdown:
         specifier: 'catalog:'
-        version: 0.15.0(patch_hash=d0b372a605331e51cd90a8230410958d5f866f59c93dcd7c5ea3a02ba4422eaf)(oxc-resolver@11.6.2)(typescript@5.9.2)
+        version: 0.15.0(patch_hash=e759db58a1f4d43988c75d3f547976c7761b76d4bebc48fa0fb4d19ec1163b13)(oxc-resolver@11.6.2)(typescript@5.9.2)
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
@@ -14606,7 +14606,7 @@ snapshots:
 
   ts-pattern@5.8.0: {}
 
-  tsdown@0.15.0(patch_hash=d0b372a605331e51cd90a8230410958d5f866f59c93dcd7c5ea3a02ba4422eaf)(oxc-resolver@11.6.2)(typescript@5.9.2):
+  tsdown@0.15.0(patch_hash=e759db58a1f4d43988c75d3f547976c7761b76d4bebc48fa0fb4d19ec1163b13)(oxc-resolver@11.6.2)(typescript@5.9.2):
     dependencies:
       ansis: 4.1.0
       cac: 6.7.14
