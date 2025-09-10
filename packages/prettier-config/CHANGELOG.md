@@ -1,5 +1,15 @@
 # @2digits/prettier-config
 
+## 4.0.11
+
+### Patch Changes
+
+- 136e668: Patched tsdown
+- 681265d: Updated dependencies
+- Updated dependencies [136e668]
+- Updated dependencies [681265d]
+  - @2digits/constants@1.1.8
+
 ## 4.0.10
 
 ### Patch Changes

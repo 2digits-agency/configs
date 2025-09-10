@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 4.8.4
+
+### Patch Changes
+
+- 136e668: Patched tsdown
+- 681265d: Updated dependencies
+- Updated dependencies [136e668]
+- Updated dependencies [681265d]
+  - @2digits/constants@1.1.8
+  - @2digits/eslint-plugin@3.1.18
+
 ## 4.8.3
 
 ### Patch Changes
