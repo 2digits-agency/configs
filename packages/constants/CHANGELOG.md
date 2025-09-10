@@ -1,5 +1,12 @@
 # @2digits/constants
 
+## 1.1.8
+
+### Patch Changes
+
+- 136e668: Patched tsdown
+- 681265d: Updated dependencies
+
 ## 1.1.7
 
 ### Patch Changes
