@@ -21,8 +21,8 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsdown --minify",
-    "dev": "tsdown --watch",
+    "build": "tsdown --minify --config-loader unconfig",
+    "dev": "tsdown --watch --config-loader unconfig",
     "types": "tsc --noEmit",
     "docs": "eslint-config-inspector build",
     "docs:dev": "eslint-config-inspector",

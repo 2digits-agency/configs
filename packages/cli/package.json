@@ -24,8 +24,8 @@
   "sideEffects": false,
   "scripts": {
     "bin": "tsx ./src/bin.ts",
-    "build": "tsdown --minify",
-    "dev": "tsdown --watch",
+    "build": "tsdown --minify --config-loader unconfig",
+    "dev": "tsdown --watch --config-loader unconfig",
     "types": "tsc --noEmit"
   },
   "license": "MIT",
