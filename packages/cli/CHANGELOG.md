@@ -1,5 +1,12 @@
 # @2digits/cli
 
+## 1.0.3
+
+### Patch Changes
+
+- 69689ad: Updated dependencies
+- ca321d4: Fixed tsdown builds by using the new --config-loader option
+
 ## 1.0.2
 
 ### Patch Changes

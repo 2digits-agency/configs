@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 4.0.12
+
+### Patch Changes
+
+- ca321d4: Fixed tsdown builds by using the new --config-loader option
+- Updated dependencies [ca321d4]
+  - @2digits/constants@1.1.9
+
 ## 4.0.11
 
 ### Patch Changes

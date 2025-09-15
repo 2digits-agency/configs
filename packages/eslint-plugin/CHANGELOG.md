@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 3.1.19
+
+### Patch Changes
+
+- ca321d4: Fixed tsdown builds by using the new --config-loader option
+
 ## 3.1.18
 
 ### Patch Changes
