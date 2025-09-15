@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 1.1.9
+
+### Patch Changes
+
+- ca321d4: Fixed tsdown builds by using the new --config-loader option
+
 ## 1.1.8
 
 ### Patch Changes
