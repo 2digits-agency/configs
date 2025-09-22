@@ -3,10 +3,11 @@ import { Effect } from 'effect';
 import { PackageManagerService } from './PackageManagerService';
 
 export class PrettierSetupService extends Effect.Service<PrettierSetupService>()('PrettierSetupService', {
-  effect: Effect.gen(function* () {
-    const pm = yield* PackageManagerService;
+  accessors: true,
+  effect: Effect.gen(function*() {
+    const pm = yield* PackageManagerService
 
-    const setup = Effect.fn('PrettierSetupService.setup')(function* () {
+    const setup = Effect.fn('PrettierSetupService.setup')(function*() {
       yield* Effect.logInfo('🚀 Setting up Prettier...');
 
       const root = yield* pm.resolveRoot();

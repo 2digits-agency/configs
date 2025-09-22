@@ -1,5 +1,6 @@
 /* eslint-disable unicorn/no-array-callback-reference */
-import { Command, Path } from '@effect/platform';
+import { Command, FileSystem, Path } from '@effect/platform';
+import { NodeFileSystem, NodePath } from '@effect/platform-node';
 import { Array, Data, Effect, Stream, String } from 'effect';
 import * as nypm from 'nypm';
 import * as pkgTypes from 'pkg-types';
@@ -10,15 +11,16 @@ class PackageManagerError extends Data.TaggedError('PackageManagerError')<{
 }> {}
 
 export class PackageManagerService extends Effect.Service<PackageManagerService>()('PackageManagerService', {
-  effect: Effect.gen(function* () {
-    const path = yield* Path.Path;
+  accessors: true,
+  effect: Effect.gen(function*() {
+    const path = yield* Path.Path
 
-    const resolveRoot = Effect.fn('PackageManagerService.resolveRoot')(function* () {
+    const resolveRoot = Effect.fn('PackageManagerService.resolveRoot')(function*() {
       return yield* Effect.tryPromise({
         try: () => pkgTypes.findWorkspaceDir(),
         catch: (cause) => new PackageManagerError({ cause }),
-      }).pipe(Effect.map(path.normalize));
-    });
+      }).pipe(Effect.map(path.normalize))
+    })
 
     const readPackageJson = Effect.fn('PackageManagerService.readPackageJson')(function* (
       options: {
@@ -170,6 +172,80 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
       return nypm.runScriptCommand(pm.name, options.script, { args: options.args });
     });
 
+    /**
+     * Reads and parses a gitignore-style file, returning the patterns
+     */
+    const readIgnoreFile = (filePath: string) =>
+      Effect.gen(function*() {
+        const fs = yield* FileSystem.FileSystem
+        const exists = yield* fs.exists(filePath)
+        if (!exists) {
+          return []
+        }
+
+        const content = yield* fs.readFileString(filePath)
+
+        // Parse patterns (remove comments and empty lines)
+        const patterns = content
+          .split("\n")
+          .map((line) => line.trim())
+          .filter((line) => line && !line.startsWith("#"))
+
+        return patterns
+      })
+
+    /**
+     * Finds the git repository root by walking up the directory tree
+     */
+    const findGitRoot = (startDir: string) =>
+      Effect.gen(function*() {
+        const fs = yield* FileSystem.FileSystem
+        let currentDir = path.resolve(startDir)
+
+        while (true) {
+          const gitPath = path.join(currentDir, ".git")
+          const exists = yield* fs.exists(gitPath)
+
+          if (exists) {
+            return currentDir
+          }
+
+          const parentDir = path.dirname(currentDir)
+
+          // If we've reached the filesystem root, stop
+          if (parentDir === currentDir) {
+            return null
+          }
+
+          currentDir = parentDir
+        }
+      })
+
+    /**
+     * Loads ignore patterns from both current directory and git root
+     */
+    const loadAllIgnorePatterns = (directory: string) =>
+      Effect.gen(function*() {
+        const allPatterns: Array<string> = []
+
+        // Load patterns from current directory
+        const currentDirPatterns = yield* readIgnoreFile(path.join(directory, ".gitignore"))
+        for (const pattern of currentDirPatterns) {
+          allPatterns.push(pattern)
+        }
+
+        // Find and load patterns from git root (if different from current dir)
+        const gitRoot = yield* findGitRoot(directory)
+        if (gitRoot && gitRoot !== directory) {
+          const gitRootPatterns = yield* readIgnoreFile(path.join(gitRoot, ".gitignore"))
+          for (const pattern of gitRootPatterns) {
+            allPatterns.push(pattern)
+          }
+        }
+
+        return allPatterns
+      })
+
     return {
       resolveRoot,
       readPackageJson,
@@ -177,7 +253,10 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
       addDependencies,
       getPackageManager,
       runScriptCommand,
+      readIgnoreFile,
+      findGitRoot,
+      loadAllIgnorePatterns,
     };
   }),
-  dependencies: [Path.layer],
+  dependencies: [NodePath.layer, NodeFileSystem.layer],
 }) {}

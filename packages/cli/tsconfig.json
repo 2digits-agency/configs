@@ -1,8 +1,16 @@
 {
   "extends": "@2digits/tsconfig/tsconfig.json",
   "compilerOptions": {
-    "plugins": [{ "name": "@effect/language-service" }]
+    "plugins": [
+      {
+        "name": "@effect/language-service",
+        "transform": "@effect/language-service/transform"
+      }
+    ],
+    "types": ["vitest/globals"],
+    "baseUrl": ".",
+    "composite": true
   },
-  "include": ["**/*.ts"],
+  "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"]
 }
