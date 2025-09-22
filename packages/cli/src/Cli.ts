@@ -18,9 +18,9 @@ const command = Command.make('2d', {
         if (Option.isNone(prettier) || !prettier.value) {
           yield* Effect.logDebug('Setting up Prettier...');
 
-          const setupService = yield* PrettierSetupService;
+          const setupService = yield* PrettierSetupService
 
-          yield* setupService.setup();
+          yield* setupService.setup()
         } else {
           yield* Effect.logDebug('Skipping Prettier setup');
         }
