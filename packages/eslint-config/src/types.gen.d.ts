@@ -1201,6 +1201,11 @@ Backward pagination arguments
    */
   'jsdoc/require-returns-type'?: Linter.RuleEntry<JsdocRequireReturnsType>
   /**
+   * Requires tags be present, optionally for specific contexts
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-tags.md#repos-sticky-header
+   */
+  'jsdoc/require-tags'?: Linter.RuleEntry<JsdocRequireTags>
+  /**
    * Requires `@template` tags be present when type parameters are used.
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-template.md#repos-sticky-header
    */
@@ -1246,7 +1251,7 @@ Backward pagination arguments
    */
   'jsdoc/sort-tags'?: Linter.RuleEntry<JsdocSortTags>
   /**
-   * Enforces lines (or no lines) between tags.
+   * Enforces lines (or no lines) before, after, or between tags.
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/tag-lines.md#repos-sticky-header
    */
   'jsdoc/tag-lines'?: Linter.RuleEntry<JsdocTagLines>
@@ -8803,6 +8808,15 @@ type JsdocRequireReturnsType = []|[{
     context?: string
   })[]
 }]
+// ----- jsdoc/require-tags -----
+type JsdocRequireTags = []|[{
+  
+  tags?: (string | {
+    context?: string
+    tag?: string
+    [k: string]: unknown | undefined
+  })[]
+}]
 // ----- jsdoc/require-template -----
 type JsdocRequireTemplate = []|[{
   
@@ -8876,6 +8890,8 @@ type JsdocTagLines = []|[("always" | "any" | "never")]|[("always" | "any" | "nev
   count?: number
   
   endLines?: (number | null)
+  
+  maxBlockLines?: (number | null)
   
   startLines?: (number | null)
   
@@ -11246,6 +11262,10 @@ type StylisticGeneratorStarSpacing = []|[(("before" | "after" | "both" | "neithe
     before?: boolean
     after?: boolean
   })
+  shorthand?: (("before" | "after" | "both" | "neither") | {
+    before?: boolean
+    after?: boolean
+  })
 })]
 // ----- stylistic/implicit-arrow-linebreak -----
 type StylisticImplicitArrowLinebreak = []|[("beside" | "below")]
@@ -11491,22 +11511,6 @@ type StylisticKeywordSpacing = []|[{
       before?: boolean
       after?: boolean
     }
-    arguments?: {
-      before?: boolean
-      after?: boolean
-    }
-    as?: {
-      before?: boolean
-      after?: boolean
-    }
-    async?: {
-      before?: boolean
-      after?: boolean
-    }
-    await?: {
-      before?: boolean
-      after?: boolean
-    }
     boolean?: {
       before?: boolean
       after?: boolean
@@ -11571,10 +11575,6 @@ type StylisticKeywordSpacing = []|[{
       before?: boolean
       after?: boolean
     }
-    eval?: {
-      before?: boolean
-      after?: boolean
-    }
     export?: {
       before?: boolean
       after?: boolean
@@ -11603,15 +11603,7 @@ type StylisticKeywordSpacing = []|[{
       before?: boolean
       after?: boolean
     }
-    from?: {
-      before?: boolean
-      after?: boolean
-    }
     function?: {
-      before?: boolean
-      after?: boolean
-    }
-    get?: {
       before?: boolean
       after?: boolean
     }
@@ -11647,10 +11639,6 @@ type StylisticKeywordSpacing = []|[{
       before?: boolean
       after?: boolean
     }
-    let?: {
-      before?: boolean
-      after?: boolean
-    }
     long?: {
       before?: boolean
       after?: boolean
@@ -11664,10 +11652,6 @@ type StylisticKeywordSpacing = []|[{
       after?: boolean
     }
     null?: {
-      before?: boolean
-      after?: boolean
-    }
-    of?: {
       before?: boolean
       after?: boolean
     }
@@ -11688,10 +11672,6 @@ type StylisticKeywordSpacing = []|[{
       after?: boolean
     }
     return?: {
-      before?: boolean
-      after?: boolean
-    }
-    set?: {
       before?: boolean
       after?: boolean
     }
@@ -11739,15 +11719,7 @@ type StylisticKeywordSpacing = []|[{
       before?: boolean
       after?: boolean
     }
-    type?: {
-      before?: boolean
-      after?: boolean
-    }
     typeof?: {
-      before?: boolean
-      after?: boolean
-    }
-    using?: {
       before?: boolean
       after?: boolean
     }
@@ -11768,6 +11740,54 @@ type StylisticKeywordSpacing = []|[{
       after?: boolean
     }
     with?: {
+      before?: boolean
+      after?: boolean
+    }
+    arguments?: {
+      before?: boolean
+      after?: boolean
+    }
+    as?: {
+      before?: boolean
+      after?: boolean
+    }
+    async?: {
+      before?: boolean
+      after?: boolean
+    }
+    await?: {
+      before?: boolean
+      after?: boolean
+    }
+    eval?: {
+      before?: boolean
+      after?: boolean
+    }
+    from?: {
+      before?: boolean
+      after?: boolean
+    }
+    get?: {
+      before?: boolean
+      after?: boolean
+    }
+    let?: {
+      before?: boolean
+      after?: boolean
+    }
+    of?: {
+      before?: boolean
+      after?: boolean
+    }
+    set?: {
+      before?: boolean
+      after?: boolean
+    }
+    type?: {
+      before?: boolean
+      after?: boolean
+    }
+    using?: {
       before?: boolean
       after?: boolean
     }
@@ -12072,6 +12092,18 @@ type StylisticObjectCurlyNewline = []|[((("always" | "never") | {
 type StylisticObjectCurlySpacing = []|[("always" | "never")]|[("always" | "never"), {
   arraysInObjects?: boolean
   objectsInObjects?: boolean
+  overrides?: {
+    ObjectPattern?: ("always" | "never")
+    ObjectExpression?: ("always" | "never")
+    ImportDeclaration?: ("always" | "never")
+    ImportAttributes?: ("always" | "never")
+    ExportNamedDeclaration?: ("always" | "never")
+    ExportAllDeclaration?: ("always" | "never")
+    TSMappedType?: ("always" | "never")
+    TSTypeLiteral?: ("always" | "never")
+    TSInterfaceBody?: ("always" | "never")
+    TSEnumBody?: ("always" | "never")
+  }
 }]
 // ----- stylistic/object-property-newline -----
 type StylisticObjectPropertyNewline = []|[{
