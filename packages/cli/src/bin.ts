@@ -5,7 +5,13 @@ import { Effect, Layer } from 'effect';
 
 import { cli } from './Cli';
 import { PrettierSetupService } from './services/PrettierSetupService';
+import { VsCodeSetupService } from './services/VsCodeSetupService';
 
-const MainLive = Layer.mergeAll(CliConfig.layer(), PrettierSetupService.Default, NodeContext.layer);
+const MainLive = Layer.mergeAll(
+  CliConfig.layer(),
+  PrettierSetupService.Default,
+  VsCodeSetupService.Default,
+  NodeContext.layer
+);
 
 cli(process.argv).pipe(Effect.provide(MainLive), NodeRuntime.runMain);
