@@ -26,6 +26,8 @@
     "bin": "tsx ./src/bin.ts",
     "build": "tsdown --minify --config-loader unconfig",
     "dev": "tsdown --watch --config-loader unconfig",
+    "test": "vitest --run",
+    "test:watch": "vitest",
     "types": "tsc --noEmit"
   },
   "license": "MIT",
@@ -40,9 +42,11 @@
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
     "@effect/language-service": "catalog:",
+    "@effect/vitest": "catalog:",
     "tsdown": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
-    "unplugin-replace": "catalog:"
+    "unplugin-replace": "catalog:",
+    "vitest": "catalog:"
   }
 }
