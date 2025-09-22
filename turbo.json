@@ -11,7 +11,8 @@
       "outputs": ["tsconfig.tsbuildinfo"]
     },
     "test": {
-      "dependsOn": ["^test"]
+      "dependsOn": ["^test"],
+      "outputs": ["coverage/**"]
     },
     "dev": {
       "persistent": true
