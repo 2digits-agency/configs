@@ -1216,6 +1216,11 @@ Backward pagination arguments
    */
   'jsdoc/require-template'?: Linter.RuleEntry<JsdocRequireTemplate>
   /**
+   * Requires a description for `@template` tags
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-template-description.md#repos-sticky-header
+   */
+  'jsdoc/require-template-description'?: Linter.RuleEntry<[]>
+  /**
    * Requires that throw statements are documented with `@throws` tags.
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-throws.md#repos-sticky-header
    */
@@ -3039,11 +3044,6 @@ Backward pagination arguments
    */
   'react-compiler/react-compiler'?: Linter.RuleEntry<ReactCompilerReactCompiler>
   /**
-   * Disallow `children` in void DOM elements.
-   * @see https://eslint-react.xyz/docs/rules/dom-no-void-elements-with-children
-   */
-  'react-dom/no-children-in-void-dom-elements'?: Linter.RuleEntry<[]>
-  /**
    * Disallow `dangerouslySetInnerHTML`.
    * @see https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml
    */
@@ -3099,6 +3099,11 @@ Backward pagination arguments
    */
   'react-dom/no-script-url'?: Linter.RuleEntry<[]>
   /**
+   * Disallows the use of string style prop.
+   * @see https://eslint-react.xyz/docs/rules/dom-no-string-style-prop
+   */
+  'react-dom/no-string-style-prop'?: Linter.RuleEntry<[]>
+  /**
    * Disallow unknown `DOM` property.
    * @see https://eslint-react.xyz/docs/rules/dom-no-unknown-property
    */
@@ -3124,25 +3129,15 @@ Backward pagination arguments
    */
   'react-dom/no-void-elements-with-children'?: Linter.RuleEntry<[]>
   /**
-   * Enforces explicit boolean values for boolean attributes.
-   * @see https://eslint-react.xyz/docs/rules/avoid-shorthand-boolean
-   */
-  'react-extra/avoid-shorthand-boolean'?: Linter.RuleEntry<[]>
-  /**
-   * Enforces explicit `<Fragment>` components instead of the shorthand `<>` or `</>` syntax.
-   * @see https://eslint-react.xyz/docs/rules/avoid-shorthand-fragment
-   */
-  'react-extra/avoid-shorthand-fragment'?: Linter.RuleEntry<[]>
-  /**
-   * Disallow useless `forwardRef` calls on components that don't use `ref`s.
-   * @see https://eslint-react.xyz/docs/rules/no-useless-forward-ref
-   */
-  'react-extra/ensure-forward-ref-using-ref'?: Linter.RuleEntry<[]>
-  /**
    * Enforces that the 'key' attribute is placed before the spread attribute in JSX elements.
    * @see https://eslint-react.xyz/docs/rules/jsx-key-before-spread
    */
   'react-extra/jsx-key-before-spread'?: Linter.RuleEntry<[]>
+  /**
+   * Prevents comments from being inserted as text nodes.
+   * @see https://eslint-react.xyz/docs/rules/jsx-no-comment-textnodes
+   */
+  'react-extra/jsx-no-comment-textnodes'?: Linter.RuleEntry<[]>
   /**
    * Disallow duplicate props in JSX elements.
    * @see https://eslint-react.xyz/docs/rules/jsx-no-duplicate-props
@@ -3158,6 +3153,16 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/jsx-no-undef
    */
   'react-extra/jsx-no-undef'?: Linter.RuleEntry<[]>
+  /**
+   * Enforces shorthand syntax for boolean attributes.
+   * @see https://eslint-react.xyz/docs/rules/jsx-shorthand-boolean
+   */
+  'react-extra/jsx-shorthand-boolean'?: Linter.RuleEntry<ReactExtraJsxShorthandBoolean>
+  /**
+   * Enforces shorthand syntax for fragments.
+   * @see https://eslint-react.xyz/docs/rules/jsx-shorthand-fragment
+   */
+  'react-extra/jsx-shorthand-fragment'?: Linter.RuleEntry<ReactExtraJsxShorthandFragment>
   /**
    * Marks React variables as used when JSX is used.
    * @see https://eslint-react.xyz/docs/rules/jsx-uses-react
@@ -3219,21 +3224,6 @@ Backward pagination arguments
    */
   'react-extra/no-clone-element'?: Linter.RuleEntry<[]>
   /**
-   * Prevents comments from being inserted as text nodes.
-   * @see https://eslint-react.xyz/docs/rules/no-comment-textnodes
-   */
-  'react-extra/no-comment-textnodes'?: Linter.RuleEntry<[]>
-  /**
-   * Disallow complex conditional rendering in JSX expressions.
-   * @see https://eslint-react.xyz/docs/rules/no-complex-conditional-rendering
-   */
-  'react-extra/no-complex-conditional-rendering'?: Linter.RuleEntry<[]>
-  /**
-   * Disallow complex conditional rendering in JSX expressions.
-   * @see https://eslint-react.xyz/docs/rules/no-complex-conditional-rendering
-   */
-  'react-extra/no-complicated-conditional-rendering'?: Linter.RuleEntry<[]>
-  /**
    * Replace usages of `componentWillMount` with `UNSAFE_componentWillMount`.
    * @see https://eslint-react.xyz/docs/rules/no-component-will-mount
    */
@@ -3269,15 +3259,15 @@ Backward pagination arguments
    */
   'react-extra/no-direct-mutation-state'?: Linter.RuleEntry<[]>
   /**
-   * Disallow duplicate props in JSX elements.
-   * @see https://eslint-react.xyz/docs/rules/jsx-no-duplicate-props
-   */
-  'react-extra/no-duplicate-jsx-props'?: Linter.RuleEntry<[]>
-  /**
    * Disallow duplicate `key` on elements in the same array or a list of `children`.
    * @see https://eslint-react.xyz/docs/rules/no-duplicate-key
    */
   'react-extra/no-duplicate-key'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow certain props on components.
+   * @see https://eslint-react.xyz/docs/rules/no-forbidden-props
+   */
+  'react-extra/no-forbidden-props'?: Linter.RuleEntry<ReactExtraNoForbiddenProps>
   /**
    * Replaces usages of `forwardRef` with passing `ref` as a prop.
    * @see https://eslint-react.xyz/docs/rules/no-forward-ref
@@ -3319,11 +3309,6 @@ Backward pagination arguments
    */
   'react-extra/no-nested-component-definitions'?: Linter.RuleEntry<[]>
   /**
-   * Disallow nesting component definitions inside other components.
-   * @see https://eslint-react.xyz/docs/rules/no-nested-component-definitions
-   */
-  'react-extra/no-nested-components'?: Linter.RuleEntry<[]>
-  /**
    * Disallow nesting lazy component declarations inside other components.
    * @see https://eslint-react.xyz/docs/rules/no-nested-lazy-component-declarations
    */
@@ -3359,6 +3344,26 @@ Backward pagination arguments
    */
   'react-extra/no-string-refs'?: Linter.RuleEntry<[]>
   /**
+   * Prevents the use of unnecessary `key` props on JSX elements when rendering lists.
+   * @see https://eslint-react.xyz/docs/rules/no-unnecessary-key
+   */
+  'react-extra/no-unnecessary-key'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow unnecessary usage of `useCallback`.
+   * @see https://eslint-react.xyz/docs/rules/no-unnecessary-use-callback
+   */
+  'react-extra/no-unnecessary-use-callback'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow unnecessary usage of `useMemo`.
+   * @see https://eslint-react.xyz/docs/rules/no-unnecessary-use-memo
+   */
+  'react-extra/no-unnecessary-use-memo'?: Linter.RuleEntry<[]>
+  /**
+   * Enforces that a function with the `use` prefix should use at least one Hook inside of it.
+   * @see https://eslint-react.xyz/docs/rules/no-unnecessary-use-prefix
+   */
+  'react-extra/no-unnecessary-use-prefix'?: Linter.RuleEntry<[]>
+  /**
    * Warns the usage of `UNSAFE_componentWillMount` in class components.
    * @see https://eslint-react.xyz/docs/rules/no-unsafe-component-will-mount
    */
@@ -3389,6 +3394,11 @@ Backward pagination arguments
    */
   'react-extra/no-unused-class-component-members'?: Linter.RuleEntry<[]>
   /**
+   * Warns about unused component prop declarations.
+   * @see https://eslint-react.xyz/docs/rules/no-unused-props
+   */
+  'react-extra/no-unused-props'?: Linter.RuleEntry<[]>
+  /**
    * Warns unused class component state.
    * @see https://eslint-react.xyz/docs/rules/no-unused-state
    */
@@ -3415,84 +3425,24 @@ Backward pagination arguments
   'react-extra/prefer-destructuring-assignment'?: Linter.RuleEntry<[]>
   /**
    * Enforces React is imported via a namespace import.
-   * @see https://eslint-react.xyz/docs/rules/prefer-react-namespace-import
+   * @see https://eslint-react.xyz/docs/rules/prefer-namespace-import
    */
-  'react-extra/prefer-react-namespace-import'?: Linter.RuleEntry<[]>
+  'react-extra/prefer-namespace-import'?: Linter.RuleEntry<[]>
   /**
    * Enforces read-only props in components.
    * @see https://eslint-react.xyz/docs/rules/prefer-read-only-props
    */
   'react-extra/prefer-read-only-props'?: Linter.RuleEntry<[]>
   /**
-   * Enforces shorthand syntax for boolean attributes.
-   * @see https://eslint-react.xyz/docs/rules/prefer-shorthand-boolean
+   * Enforces function calls made inside `useState` to be wrapped in an `initializer function`.
+   * @see https://eslint-react.xyz/docs/rules/prefer-use-state-lazy-initialization
    */
-  'react-extra/prefer-shorthand-boolean'?: Linter.RuleEntry<[]>
-  /**
-   * Enforces shorthand syntax for fragments.
-   * @see https://eslint-react.xyz/docs/rules/prefer-shorthand-fragment
-   */
-  'react-extra/prefer-shorthand-fragment'?: Linter.RuleEntry<[]>
-  /**
-   * Marks variables used in JSX elements as used.
-   * @see https://eslint-react.xyz/docs/rules/jsx-uses-vars
-   */
-  'react-extra/use-jsx-vars'?: Linter.RuleEntry<[]>
-  /**
-   * Enforces that a function with the `use` prefix should use at least one Hook inside of it.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-prefix
-   */
-  'react-hooks-extra/ensure-custom-hooks-using-other-hooks'?: Linter.RuleEntry<[]>
-  /**
-   * Disallow unnecessary usage of `useCallback`.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-callback
-   */
-  'react-hooks-extra/ensure-use-callback-has-non-empty-deps'?: Linter.RuleEntry<[]>
-  /**
-   * Disallow unnecessary usage of `useMemo`.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-memo
-   */
-  'react-hooks-extra/ensure-use-memo-has-non-empty-deps'?: Linter.RuleEntry<[]>
+  'react-extra/prefer-use-state-lazy-initialization'?: Linter.RuleEntry<[]>
   /**
    * Disallow direct calls to the `set` function of `useState` in `useEffect`.
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-effect
    */
   'react-hooks-extra/no-direct-set-state-in-use-effect'?: Linter.RuleEntry<[]>
-  /**
-   * Disallow direct calls to the `set` function of `useState` in `useLayoutEffect`.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-layout-effect
-   */
-  'react-hooks-extra/no-direct-set-state-in-use-layout-effect'?: Linter.RuleEntry<[]>
-  /**
-   * Enforces that a function with the `use` prefix should use at least one Hook inside of it.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-prefix
-   */
-  'react-hooks-extra/no-redundant-custom-hook'?: Linter.RuleEntry<[]>
-  /**
-   * Disallow unnecessary usage of `useCallback`.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-callback
-   */
-  'react-hooks-extra/no-unnecessary-use-callback'?: Linter.RuleEntry<[]>
-  /**
-   * Disallow unnecessary usage of `useMemo`.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-memo
-   */
-  'react-hooks-extra/no-unnecessary-use-memo'?: Linter.RuleEntry<[]>
-  /**
-   * Enforces that a function with the `use` prefix should use at least one Hook inside of it.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-prefix
-   */
-  'react-hooks-extra/no-unnecessary-use-prefix'?: Linter.RuleEntry<[]>
-  /**
-   * Enforces that a function with the `use` prefix should use at least one Hook inside of it.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-unnecessary-use-prefix
-   */
-  'react-hooks-extra/no-useless-custom-hooks'?: Linter.RuleEntry<[]>
-  /**
-   * Enforces function calls made inside `useState` to be wrapped in an `initializer function`.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-prefer-use-state-lazy-initialization
-   */
-  'react-hooks-extra/prefer-use-state-lazy-initialization'?: Linter.RuleEntry<[]>
   /**
    * verifies the list of dependencies for Hooks like useEffect and similar
    * @see https://github.com/facebook/react/issues/14920
@@ -8339,6 +8289,8 @@ type JsdocCheckTagNames = []|[{
   
   enableFixer?: boolean
   
+  inlineTags?: string[]
+  
   jsxTags?: boolean
   
   typed?: boolean
@@ -10721,6 +10673,21 @@ type ReactCompilerReactCompiler = []|[{
 type ReactDomNoUnknownProperty = []|[{
   ignore?: string[]
   requireDataLowercase?: boolean
+}]
+// ----- react-extra/jsx-shorthand-boolean -----
+type ReactExtraJsxShorthandBoolean = []|[(-1 | 1)]
+// ----- react-extra/jsx-shorthand-fragment -----
+type ReactExtraJsxShorthandFragment = []|[(-1 | 1)]
+// ----- react-extra/no-forbidden-props -----
+type ReactExtraNoForbiddenProps = []|[{
+  forbid?: (string | {
+    excludedNodes?: string[]
+    prop: string
+  } | {
+    includedNodes?: string[]
+    prop: string
+  })[]
+  [k: string]: unknown | undefined
 }]
 // ----- react-extra/no-useless-fragment -----
 type ReactExtraNoUselessFragment = []|[{
