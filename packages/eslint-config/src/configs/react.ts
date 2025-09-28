@@ -23,6 +23,7 @@ export async function react(
   const recommended = renamePluginsInRules(
     {
       ...pluginReactHooks.configs['recommended-latest'].rules,
+      ...pluginReact.configs['disable-conflict-eslint-plugin-react'].rules,
       ...pluginReact.configs['recommended-type-checked'].rules,
     },
     PluginNameMap,
@@ -67,16 +68,17 @@ export async function react(
 
         ...(reactCompiler ? { 'react-compiler/react-compiler': 'error' } : {}),
 
-        'react-hooks-extra/no-unnecessary-use-callback': 'error',
-        'react-hooks-extra/prefer-use-state-lazy-initialization': 'error',
-        'react-hooks-extra/no-redundant-custom-hook': 'error',
-        'react-hooks-extra/no-unnecessary-use-memo': 'error',
+        'react-extra/no-unnecessary-use-callback': 'error',
+        'react-extra/prefer-use-state-lazy-initialization': 'error',
+        'react-extra/no-unnecessary-use-prefix': 'error',
+        'react-extra/no-unnecessary-use-memo': 'error',
+        'react-hooks-extra/no-direct-set-state-in-use-effect': 'error',
 
         'react-extra/no-useless-fragment': 'off',
         'react-extra/prefer-read-only-props': 'off',
-        'react-extra/prefer-shorthand-boolean': 'error',
-        'react-extra/prefer-shorthand-fragment': 'error',
-        'react-extra/prefer-react-namespace-import': 'error',
+        'react-extra/jsx-shorthand-boolean': 'error',
+        'react-extra/jsx-shorthand-fragment': 'error',
+        'react-extra/prefer-namespace-import': 'error',
 
         'react-naming-convention/use-state': 'error',
 
