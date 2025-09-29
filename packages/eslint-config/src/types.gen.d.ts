@@ -3394,7 +3394,7 @@ Backward pagination arguments
    */
   'react-extra/no-unused-class-component-members'?: Linter.RuleEntry<[]>
   /**
-   * Warns about unused component prop declarations.
+   * Warns component props that are defined but never used.
    * @see https://eslint-react.xyz/docs/rules/no-unused-props
    */
   'react-extra/no-unused-props'?: Linter.RuleEntry<[]>
