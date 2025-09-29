@@ -1,5 +1,12 @@
 # @2digits/eslint-plugin
 
+## 3.1.23
+
+### Patch Changes
+
+- 1a8b7d1: Updated dependencies
+- 63b9124: Added name to RuleCreator
+
 ## 3.1.22
 
 ### Patch Changes
