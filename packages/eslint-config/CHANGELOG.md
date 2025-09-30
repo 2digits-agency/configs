@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 4.8.10
+
+### Patch Changes
+
+- bd13468: Updated dependencies
+
 ## 4.8.9
 
 ### Patch Changes
