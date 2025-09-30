@@ -3129,6 +3129,11 @@ Backward pagination arguments
    */
   'react-dom/no-void-elements-with-children'?: Linter.RuleEntry<[]>
   /**
+   * Enforces React Dom is imported via a namespace import.
+   * @see https://eslint-react.xyz/docs/rules/dom-prefer-namespace-import
+   */
+  'react-dom/prefer-namespace-import'?: Linter.RuleEntry<[]>
+  /**
    * Enforces that the 'key' attribute is placed before the spread attribute in JSX elements.
    * @see https://eslint-react.xyz/docs/rules/jsx-key-before-spread
    */
