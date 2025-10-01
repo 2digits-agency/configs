@@ -3,11 +3,5 @@
   "extends": ["local>2digits-agency/configs//packages/renovate/default"],
   "rebaseWhen": "auto",
   "schedule": ["at any time"],
-  "updateNotScheduled": true,
-  "packageRules": [
-    {
-      "matchDepTypes": ["peerDependencies"],
-      "matchUpdateTypes": ["major"]
-    }
-  ]
+  "updateNotScheduled": true
 }
