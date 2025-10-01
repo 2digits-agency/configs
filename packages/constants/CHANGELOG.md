@@ -1,5 +1,12 @@
 # @2digits/constants
 
+## 1.1.10
+
+### Patch Changes
+
+- 19e99a8: Updated dependencies
+- 2a9fbab: Deduplicated dependencies
+
 ## 1.1.9
 
 ### Patch Changes
