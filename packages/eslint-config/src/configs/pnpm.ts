@@ -7,7 +7,7 @@ export async function pnpm(): Promise<Array<TypedFlatConfigItem>> {
   return [
     {
       name: '2digits:pnpm/package-json',
-      files: ['**/package.json'],
+      files: ['package.json', '**/package.json'],
       languageOptions: {
         parser: await interopDefault(import('jsonc-eslint-parser')),
       },
@@ -32,6 +32,7 @@ export async function pnpm(): Promise<Array<TypedFlatConfigItem>> {
       rules: {
         'pnpm/yaml-no-duplicate-catalog-item': 'error',
         'pnpm/yaml-no-unused-catalog-item': 'error',
+        'pnpm/yaml-valid-packages': 'error',
       },
     },
   ];
