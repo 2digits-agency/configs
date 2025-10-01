@@ -1006,6 +1006,11 @@ Backward pagination arguments
    */
   'jsdoc/empty-tags'?: Linter.RuleEntry<JsdocEmptyTags>
   /**
+   * Reports use of JSDoc tags in non-tag positions (in the default "typescript" mode).
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/escape-inline-tags.md#repos-sticky-header
+   */
+  'jsdoc/escape-inline-tags'?: Linter.RuleEntry<JsdocEscapeInlineTags>
+  /**
    * Prohibits use of `@implements` on non-constructor functions (to enforce the tag only being used on classes/constructors).
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/implements-on-classes.md#repos-sticky-header
    */
@@ -2946,6 +2951,11 @@ Backward pagination arguments
    * @see https://github.com/antfu/pnpm-workspace-utils/tree/main/packages/eslint-plugin-pnpm/src/rules/yaml/yaml-no-unused-catalog-item.test.ts
    */
   'pnpm/yaml-no-unused-catalog-item'?: Linter.RuleEntry<[]>
+  /**
+   * Ensure all package patterns in `pnpm-workspace.yaml` match at least one directory
+   * @see https://github.com/antfu/pnpm-workspace-utils/tree/main/packages/eslint-plugin-pnpm/src/rules/yaml/yaml-valid-packages.test.ts
+   */
+  'pnpm/yaml-valid-packages'?: Linter.RuleEntry<[]>
   /**
    * Require using arrow functions for callbacks
    * @see https://eslint.org/docs/latest/rules/prefer-arrow-callback
@@ -8356,6 +8366,15 @@ type JsdocEmptyTags = []|[{
   
   tags?: string[]
 }]
+// ----- jsdoc/escape-inline-tags -----
+type JsdocEscapeInlineTags = []|[{
+  
+  allowedInlineTags?: string[]
+  
+  enableFixer?: boolean
+  
+  fixType?: ("backticks" | "backslash")
+}]
 // ----- jsdoc/implements-on-classes -----
 type JsdocImplementsOnClasses = []|[{
   
@@ -8767,6 +8786,8 @@ type JsdocRequireReturnsCheck = []|[{
   exemptAsync?: boolean
   
   exemptGenerators?: boolean
+  
+  noNativeTypes?: boolean
   
   reportMissingReturnForUndefinedTypes?: boolean
 }]
