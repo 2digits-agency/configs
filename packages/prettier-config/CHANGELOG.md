@@ -1,5 +1,16 @@
 # @2digits/prettier-config
 
+## 4.0.13
+
+### Patch Changes
+
+- 0d0a1a5: Changed peerDependencies to use catalog:
+- 19e99a8: Updated dependencies
+- 2a9fbab: Deduplicated dependencies
+- Updated dependencies [19e99a8]
+- Updated dependencies [2a9fbab]
+  - @2digits/constants@1.1.10
+
 ## 4.0.12
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @2digits/tsconfig
 
+## 0.8.3
+
+### Patch Changes
+
+- 0d0a1a5: Changed peerDependencies to use catalog:
+- 19e99a8: Updated dependencies
+- 2a9fbab: Deduplicated dependencies
+
 ## 0.8.2
 
 ### Patch Changes

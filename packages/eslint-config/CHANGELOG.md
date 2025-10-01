@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 4.8.11
+
+### Patch Changes
+
+- 19e99a8: Updated dependencies
+- 8bfcdc6: Fixed pnpm root package.json linting and check pnpm-workspace for valid packages
+- 2a9fbab: Deduplicated dependencies
+- Updated dependencies [19e99a8]
+- Updated dependencies [2a9fbab]
+  - @2digits/constants@1.1.10
+  - @2digits/eslint-plugin@3.1.24
+
 ## 4.8.10
 
 ### Patch Changes

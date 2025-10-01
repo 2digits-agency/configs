@@ -1,5 +1,12 @@
 # @2digits/cli
 
+## 1.0.9
+
+### Patch Changes
+
+- 19e99a8: Updated dependencies
+- 2a9fbab: Deduplicated dependencies
+
 ## 1.0.8
 
 ### Patch Changes
