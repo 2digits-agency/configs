@@ -21,6 +21,8 @@ export default twoDigits(
     drizzle: true,
     ts: true,
     pnpm: true,
+    css: true,
+    depend: true,
   },
   {
     files: ['packages/cli/src/**/*.ts'],

@@ -7,6 +7,7 @@ import {
   boolean,
   comments,
   css,
+  depend,
   drizzle,
   githubActions,
   graphql,
@@ -62,6 +63,7 @@ interface ESLint2DigitsOptions {
   storybook?: SharedOptions<OptionsWithStorybook> | boolean;
   tanstack?: SharedOptions<OptionsOverrides> | boolean;
   drizzle?: SharedOptions<OptionsWithDrizzle> | boolean;
+  depend?: SharedOptions | boolean;
 }
 
 function enabled<T extends SharedOptions>(options: T | boolean | undefined, defaults?: boolean): options is T {
@@ -111,6 +113,10 @@ export async function twoDigits(
 
   if (enabled(options.css)) {
     composer = composer.append(css(config(options.css)));
+  }
+
+  if (enabled(options.depend, true)) {
+    composer = composer.append(depend());
   }
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {
