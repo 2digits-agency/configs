@@ -1,6 +1,6 @@
 import { FlatConfigComposer } from 'eslint-flat-config-utils';
-import { findUp } from 'find-up';
 import { isPackageExists } from 'local-pkg';
+import { findWorkspaceDir } from 'pkg-types';
 
 import {
   antfu,
@@ -91,7 +91,7 @@ export async function twoDigits(
   let pnpmPromise;
 
   if (options.pnpm === undefined) {
-    pnpmPromise = findUp('pnpm-workspace.yaml');
+    pnpmPromise = findWorkspaceDir();
   }
 
   let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>(
