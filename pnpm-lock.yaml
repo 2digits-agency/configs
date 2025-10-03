@@ -105,6 +105,9 @@ catalogs:
     eslint-plugin-de-morgan:
       specifier: 2.0.0
       version: 2.0.0
+    eslint-plugin-depend:
+      specifier: 1.3.1
+      version: 1.3.1
     eslint-plugin-drizzle:
       specifier: 0.2.3
       version: 0.2.3
@@ -421,6 +424,9 @@ importers:
       eslint-plugin-de-morgan:
         specifier: 'catalog:'
         version: 2.0.0(eslint@9.36.0(jiti@2.6.0))
+      eslint-plugin-depend:
+        specifier: 'catalog:'
+        version: 1.3.1
       eslint-plugin-drizzle:
         specifier: 'catalog:'
         version: 0.2.3(eslint@9.36.0(jiti@2.6.0))
@@ -3957,6 +3963,9 @@ packages:
     peerDependencies:
       eslint: '>=8.0.0'
 
+  eslint-plugin-depend@1.3.1:
+    resolution: {integrity: sha512-1uo2rFAr9vzNrCYdp7IBZRB54LiyVxfaIso0R6/QV3t6Dax6DTbW/EV2Hktf0f4UtmGHK8UyzJWI382pwW04jw==}
+
   eslint-plugin-drizzle@0.2.3:
     resolution: {integrity: sha512-BO+ymHo33IUNoJlC0rbd7HP9EwwpW4VIp49R/tWQF/d2E1K2kgTf0tCXT0v9MSiBr6gGR1LtPwMLapTKEWSg9A==}
     peerDependencies:
@@ -5313,6 +5322,9 @@ packages:
 
   module-details-from-path@1.0.4:
     resolution: {integrity: sha512-EGWKgxALGMgzvxYF1UyGTy0HXX/2vHLkw6+NvDKW2jypWbHpjQuj4UMcqQWXHERJhVGKikolT06G3bcKe4fi7w==}
+
+  module-replacements@2.9.0:
+    resolution: {integrity: sha512-Huqvn/LX14pkuMroDdYNzqSpFbyIneAZX+/y9qaVr3++Eo/CTm/PZKhLbwwJCPaZDL/ia/xSV492N2jPNuvfcQ==}
 
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
@@ -11231,6 +11243,12 @@ snapshots:
     dependencies:
       eslint: 9.36.0(jiti@2.6.0)
 
+  eslint-plugin-depend@1.3.1:
+    dependencies:
+      empathic: 2.0.0
+      module-replacements: 2.9.0
+      semver: 7.7.2
+
   eslint-plugin-drizzle@0.2.3(eslint@9.36.0(jiti@2.6.0)):
     dependencies:
       eslint: 9.36.0(jiti@2.6.0)
@@ -13012,6 +13030,8 @@ snapshots:
       ufo: 1.6.1
 
   module-details-from-path@1.0.4: {}
+
+  module-replacements@2.9.0: {}
 
   moment@2.30.1:
     optional: true
