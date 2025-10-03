@@ -1,12 +1,13 @@
 import { FlatConfigComposer } from 'eslint-flat-config-utils';
-import { findUp } from 'find-up';
 import { isPackageExists } from 'local-pkg';
+import { findWorkspaceDir } from 'pkg-types';
 
 import {
   antfu,
   boolean,
   comments,
   css,
+  depend,
   drizzle,
   githubActions,
   graphql,
@@ -62,6 +63,7 @@ interface ESLint2DigitsOptions {
   storybook?: SharedOptions<OptionsWithStorybook> | boolean;
   tanstack?: SharedOptions<OptionsOverrides> | boolean;
   drizzle?: SharedOptions<OptionsWithDrizzle> | boolean;
+  depend?: SharedOptions | boolean;
 }
 
 function enabled<T extends SharedOptions>(options: T | boolean | undefined, defaults?: boolean): options is T {
@@ -89,7 +91,7 @@ export async function twoDigits(
   let pnpmPromise;
 
   if (options.pnpm === undefined) {
-    pnpmPromise = findUp('pnpm-workspace.yaml');
+    pnpmPromise = findWorkspaceDir();
   }
 
   let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>(
@@ -111,6 +113,10 @@ export async function twoDigits(
 
   if (enabled(options.css)) {
     composer = composer.append(css(config(options.css)));
+  }
+
+  if (enabled(options.depend, true)) {
+    composer = composer.append(depend());
   }
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {

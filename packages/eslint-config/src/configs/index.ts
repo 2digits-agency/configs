@@ -2,6 +2,7 @@ export * from './antfu';
 export * from './boolean';
 export * from './comments';
 export * from './css';
+export * from './depend';
 export * from './drizzle';
 export * from './github-actions';
 export * from './graphql';
