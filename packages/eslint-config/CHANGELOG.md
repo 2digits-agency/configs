@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 4.9.0
+
+### Minor Changes
+
+- 14df9f0: Added eslint-plugin-depend
+- 6323b10: Replaced find-up for faster alternatives
+
+### Patch Changes
+
+- 361364f: Updated dependencies
+
 ## 4.8.11
 
 ### Patch Changes
