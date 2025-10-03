@@ -22,7 +22,6 @@ export async function react(
 
   const recommended = renamePluginsInRules(
     {
-      ...pluginReactHooks.configs['recommended-latest'].rules,
       ...pluginReact.configs['disable-conflict-eslint-plugin-react'].rules,
       ...pluginReact.configs['recommended-type-checked'].rules,
     },
@@ -85,6 +84,9 @@ export async function react(
         'stylistic/jsx-curly-newline': 'off',
         'stylistic/jsx-newline': ['error', { prevent: false }],
         'stylistic/jsx-self-closing-comp': 'error',
+
+        'react-hooks/rules-of-hooks': 'error',
+        'react-hooks/exhaustive-deps': 'warn',
 
         ...overrides,
       },
