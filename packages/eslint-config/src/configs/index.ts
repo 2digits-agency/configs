@@ -21,6 +21,7 @@ export * from './sonar';
 export * from './storybook';
 export * from './tailwind';
 export * from './tanstackQuery';
+export * from './tanstackRouter';
 export * from './turbo';
 export * from './typescript';
 export * from './unicorn';
