@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 4.10.0
+
+### Minor Changes
+
+- 2df758a: Renamed tanstack rules to tanstack-query
+- a846a66: Renamed options.tanstack to options.tanstackQuery
+- e140669: Added @tanstack/eslint-plugin-router when detecting tanstack router
+
+### Patch Changes
+
+- 4acf53b: Enforce better plugin naming type-safety
+
 ## 4.9.1
 
 ### Patch Changes
