@@ -16,7 +16,7 @@ export default twoDigits(
     tailwind: true,
     storybook: true,
     graphql: true,
-    tanstack: true,
+    tanstackQuery: true,
     turbo: true,
     drizzle: true,
     ts: true,
