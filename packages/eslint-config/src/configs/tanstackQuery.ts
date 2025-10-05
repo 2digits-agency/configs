@@ -15,8 +15,8 @@ export async function tanstackQuery(options: OptionsOverrides = {}): Promise<Arr
   return [
     {
       files: [GLOB_SRC],
-      name: '2digits:tanstack',
-      plugins: { tanstack },
+      name: '2digits:tanstack-query',
+      plugins: { 'tanstack-query': tanstack },
       rules: {
         ...recommended,
 

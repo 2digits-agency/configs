@@ -6091,37 +6091,37 @@ Backward pagination arguments
    * Exhaustive deps rule for useQuery
    * @see https://tanstack.com/query/latest/docs/eslint/exhaustive-deps
    */
-  'tanstack/exhaustive-deps'?: Linter.RuleEntry<[]>
+  'tanstack-query/exhaustive-deps'?: Linter.RuleEntry<[]>
   /**
    * Ensure correct order of inference sensitive properties for infinite queries
    * @see https://tanstack.com/query/latest/docs/eslint/infinite-query-property-order
    */
-  'tanstack/infinite-query-property-order'?: Linter.RuleEntry<[]>
+  'tanstack-query/infinite-query-property-order'?: Linter.RuleEntry<[]>
   /**
    * Ensure correct order of inference-sensitive properties in useMutation()
    * @see https://tanstack.com/query/latest/docs/eslint/mutation-property-order
    */
-  'tanstack/mutation-property-order'?: Linter.RuleEntry<[]>
+  'tanstack-query/mutation-property-order'?: Linter.RuleEntry<[]>
   /**
    * Disallows rest destructuring in queries
    * @see https://tanstack.com/query/latest/docs/eslint/no-rest-destructuring
    */
-  'tanstack/no-rest-destructuring'?: Linter.RuleEntry<[]>
+  'tanstack-query/no-rest-destructuring'?: Linter.RuleEntry<[]>
   /**
    * Disallow putting the result of query hooks directly in a React hook dependency array
    * @see https://tanstack.com/query/latest/docs/eslint/no-unstable-deps
    */
-  'tanstack/no-unstable-deps'?: Linter.RuleEntry<[]>
+  'tanstack-query/no-unstable-deps'?: Linter.RuleEntry<[]>
   /**
    * Ensures queryFn returns a non-undefined value
    * @see https://tanstack.com/query/latest/docs/eslint/no-void-query-fn
    */
-  'tanstack/no-void-query-fn'?: Linter.RuleEntry<[]>
+  'tanstack-query/no-void-query-fn'?: Linter.RuleEntry<[]>
   /**
    * Makes sure that QueryClient is stable
    * @see https://tanstack.com/query/latest/docs/eslint/stable-query-client
    */
-  'tanstack/stable-query-client'?: Linter.RuleEntry<[]>
+  'tanstack-query/stable-query-client'?: Linter.RuleEntry<[]>
   /**
    * Require or disallow spacing around embedded expressions of template strings
    * @see https://eslint.org/docs/latest/rules/template-curly-spacing

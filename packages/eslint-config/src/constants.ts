@@ -16,7 +16,7 @@ export const PluginNameMap = {
   jsdoc: 'jsdoc',
   unicorn: 'unicorn',
   tailwindcss: 'tailwindcss',
-  '@tanstack/query': 'tanstack',
+  '@tanstack/query': 'tanstack-query',
   '@2digits': '@2digits',
   '@graphql-eslint': 'gql',
   sonarjs: 'sonar',
