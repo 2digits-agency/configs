@@ -22,4 +22,13 @@ export const PluginNameMap = {
   sonarjs: 'sonar',
   drizzle: 'drizzle',
   'de-morgan': 'boolean',
+  antfu: 'antfu',
+  css: 'css',
+  depend: 'depend',
+  'github-action': 'github-action',
+  jsonc: 'jsonc',
+  markdown: 'markdown',
+  pnpm: 'pnpm',
+  regexp: 'regexp',
+  yml: 'yml',
 } as const;
