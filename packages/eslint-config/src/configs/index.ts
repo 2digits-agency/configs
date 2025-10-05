@@ -20,7 +20,7 @@ export * from './regexp';
 export * from './sonar';
 export * from './storybook';
 export * from './tailwind';
-export * from './tanstack';
+export * from './tanstackQuery';
 export * from './turbo';
 export * from './typescript';
 export * from './unicorn';
