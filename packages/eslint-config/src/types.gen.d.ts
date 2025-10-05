@@ -6091,37 +6091,42 @@ Backward pagination arguments
    * Exhaustive deps rule for useQuery
    * @see https://tanstack.com/query/latest/docs/eslint/exhaustive-deps
    */
-  'tanstack/exhaustive-deps'?: Linter.RuleEntry<[]>
+  'tanstack-query/exhaustive-deps'?: Linter.RuleEntry<[]>
   /**
    * Ensure correct order of inference sensitive properties for infinite queries
    * @see https://tanstack.com/query/latest/docs/eslint/infinite-query-property-order
    */
-  'tanstack/infinite-query-property-order'?: Linter.RuleEntry<[]>
+  'tanstack-query/infinite-query-property-order'?: Linter.RuleEntry<[]>
   /**
    * Ensure correct order of inference-sensitive properties in useMutation()
    * @see https://tanstack.com/query/latest/docs/eslint/mutation-property-order
    */
-  'tanstack/mutation-property-order'?: Linter.RuleEntry<[]>
+  'tanstack-query/mutation-property-order'?: Linter.RuleEntry<[]>
   /**
    * Disallows rest destructuring in queries
    * @see https://tanstack.com/query/latest/docs/eslint/no-rest-destructuring
    */
-  'tanstack/no-rest-destructuring'?: Linter.RuleEntry<[]>
+  'tanstack-query/no-rest-destructuring'?: Linter.RuleEntry<[]>
   /**
    * Disallow putting the result of query hooks directly in a React hook dependency array
    * @see https://tanstack.com/query/latest/docs/eslint/no-unstable-deps
    */
-  'tanstack/no-unstable-deps'?: Linter.RuleEntry<[]>
+  'tanstack-query/no-unstable-deps'?: Linter.RuleEntry<[]>
   /**
    * Ensures queryFn returns a non-undefined value
    * @see https://tanstack.com/query/latest/docs/eslint/no-void-query-fn
    */
-  'tanstack/no-void-query-fn'?: Linter.RuleEntry<[]>
+  'tanstack-query/no-void-query-fn'?: Linter.RuleEntry<[]>
   /**
    * Makes sure that QueryClient is stable
    * @see https://tanstack.com/query/latest/docs/eslint/stable-query-client
    */
-  'tanstack/stable-query-client'?: Linter.RuleEntry<[]>
+  'tanstack-query/stable-query-client'?: Linter.RuleEntry<[]>
+  /**
+   * Ensure correct order of inference sensitive properties for createRoute functions
+   * @see https://tanstack.com/router/latest/docs/eslint/create-route-property-order
+   */
+  'tanstack-router/create-route-property-order'?: Linter.RuleEntry<[]>
   /**
    * Require or disallow spacing around embedded expressions of template strings
    * @see https://eslint.org/docs/latest/rules/template-curly-spacing
@@ -14220,4 +14225,4 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   onlyEquality?: boolean
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:depend' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier'
+export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:depend' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack-query' | '2digits:tanstack-router' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier'

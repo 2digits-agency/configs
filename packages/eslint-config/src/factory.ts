@@ -25,7 +25,8 @@ import {
   sonar,
   storybook,
   tailwind,
-  tanstack,
+  tanstackQuery,
+  tanstackRouter,
   turbo,
   typescript,
   unicorn,
@@ -61,7 +62,8 @@ interface ESLint2DigitsOptions {
   next?: SharedOptions<OptionsWithFiles> | boolean;
   tailwind?: SharedOptions<OptionsOverrides> | boolean;
   storybook?: SharedOptions<OptionsWithStorybook> | boolean;
-  tanstack?: SharedOptions<OptionsOverrides> | boolean;
+  tanstackQuery?: SharedOptions<OptionsOverrides> | boolean;
+  tanstackRouter?: SharedOptions<OptionsOverrides> | boolean;
   drizzle?: SharedOptions<OptionsWithDrizzle> | boolean;
   depend?: SharedOptions | boolean;
 }
@@ -162,13 +164,17 @@ export async function twoDigits(
 
   if (
     enabled(
-      options.tanstack,
+      options.tanstackQuery,
       isPackageExists('react-query')
         || isPackageExists('@tanstack/react-query')
         || isPackageExists('@tanstack/react-query-devtools'),
     )
   ) {
-    composer = composer.append(tanstack(config(options.tanstack)));
+    composer = composer.append(tanstackQuery(config(options.tanstackQuery)));
+  }
+
+  if (enabled(options.tanstackRouter, isPackageExists('@tanstack/react-router'))) {
+    composer = composer.append(tanstackRouter(config(options.tanstackRouter)));
   }
 
   if (enabled(options.drizzle, isPackageExists('drizzle-kit') || isPackageExists('drizzle-orm'))) {

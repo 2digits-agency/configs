@@ -5,7 +5,7 @@ import { GLOB_SRC } from '../globs';
 import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
-export async function tanstack(options: OptionsOverrides = {}): Promise<Array<TypedFlatConfigItem>> {
+export async function tanstackQuery(options: OptionsOverrides = {}): Promise<Array<TypedFlatConfigItem>> {
   const { overrides = {} } = options;
 
   const tanstack = await interopDefault(import('@tanstack/eslint-plugin-query'));
@@ -15,8 +15,8 @@ export async function tanstack(options: OptionsOverrides = {}): Promise<Array<Ty
   return [
     {
       files: [GLOB_SRC],
-      name: '2digits:tanstack',
-      plugins: { tanstack },
+      name: '2digits:tanstack-query',
+      plugins: { 'tanstack-query': tanstack },
       rules: {
         ...recommended,
 

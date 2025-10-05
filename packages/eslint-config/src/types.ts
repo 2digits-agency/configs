@@ -3,6 +3,7 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
 import type { Linter } from 'eslint';
 import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore';
 
+import type { PluginNameMap } from './constants';
 import type { RuleOptions } from './types.gen';
 
 export type { ConfigNames } from './types.gen';
@@ -19,7 +20,7 @@ export interface TypedFlatConfigItem
    * @see [Using plugins in your configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#using-plugins-in-your-configuration)
    */
   // eslint-disable-next-line ts/no-explicit-any
-  plugins?: Record<string, any>;
+  plugins?: Partial<Record<(typeof PluginNameMap)[keyof typeof PluginNameMap], any>>;
 
   languageOptions?: FlatConfig.LanguageOptions & Record<string, unknown>;
 }
