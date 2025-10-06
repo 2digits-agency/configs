@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.0.12
+
+### Patch Changes
+
+- b8d3716: Updated dependencies
+
 ## 1.0.11
 
 ### Patch Changes
