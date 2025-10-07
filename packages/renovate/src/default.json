@@ -16,15 +16,18 @@
   "updateNotScheduled": false,
   "packageRules": [
     { "groupName": "2DIGITS Configs", "matchPackageNames": ["/^@2digits/"] },
+    { "groupName": "Better Auth", "matchPackageNames": ["better-auth", "/^@better-auth//"] },
     { "groupName": "Hey API", "matchPackageNames": ["/^@hey-api//"] },
     { "groupName": "Notificare", "matchPackageNames": ["/^react-native-notificare/"] },
     { "groupName": "Orval", "matchPackageNames": ["orval", "/^@orval/"] },
-    { "groupName": "Unified & Rehype", "matchPackageNames": ["unified", "/^rehype-/"] },
-    { "groupName": "nativewind", "matchPackageNames": ["nativewind", "react-native-css-interop"] },
-    { "groupName": "react-native-bottom-tabs", "matchPackageNames": ["react-native-bottom-tabs", "/^@bottom-tabs//"] },
-    { "groupName": "react-native-firebase", "matchPackageNames": ["/^@react-native-firebase//"] },
+    { "groupName": "Payload", "matchPackageNames": ["payload", "/^@payloadcms//"] },
     { "groupName": "PostHog", "matchPackageNames": ["/^posthog-/"] },
-    { "groupName": "Better Auth", "matchPackageNames": ["better-auth", "/^@better-auth//"] }
+    { "groupName": "React Email", "matchPackageNames": ["react-email", "/^@react-email//"] },
+    { "groupName": "Unified & Rehype", "matchPackageNames": ["unified", "/^rehype-/"] },
+    { "groupName": "nativewind", "matchPackageNames": ["nativewind", "react-native-css-interop", "react-native-css"] },
+    { "groupName": "oRPC", "matchPackageNames": ["/^@orpc//"] },
+    { "groupName": "react-native-bottom-tabs", "matchPackageNames": ["react-native-bottom-tabs", "/^@bottom-tabs//"] },
+    { "groupName": "react-native-firebase", "matchPackageNames": ["/^@react-native-firebase//"] }
   ],
   "pruneStaleBranches": true,
   "ignorePrAuthor": false,
