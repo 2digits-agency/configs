@@ -9033,9 +9033,35 @@ type JsdocTypeFormatting = []|[{
   
   arrayBrackets?: ("angle" | "square")
   
+  arrowFunctionPostReturnMarkerSpacing?: string
+  
+  arrowFunctionPreReturnMarkerSpacing?: string
+  
   enableFixer?: boolean
   
+  functionOrClassParameterSpacing?: string
+  
+  functionOrClassPostGenericSpacing?: string
+  
+  functionOrClassPostReturnMarkerSpacing?: string
+  
+  functionOrClassPreReturnMarkerSpacing?: string
+  
+  functionOrClassTypeParameterSpacing?: string
+  
+  genericAndTupleElementSpacing?: string
+  
   genericDot?: boolean
+  
+  keyValuePostColonSpacing?: string
+  
+  keyValuePostKeySpacing?: string
+  
+  keyValuePostOptionalSpacing?: string
+  
+  keyValuePostVariadicSpacing?: string
+  
+  methodQuotes?: ("double" | "single")
   
   objectFieldIndent?: string
   
@@ -9046,6 +9072,12 @@ type JsdocTypeFormatting = []|[{
   objectFieldSeparatorOptionalLinebreak?: boolean
   
   objectFieldSeparatorTrailingPunctuation?: boolean
+  
+  parameterDefaultValueSpacing?: string
+  
+  postMethodNameSpacing?: string
+  
+  postNewSpacing?: string
   
   separatorForSingleObjectField?: boolean
   
