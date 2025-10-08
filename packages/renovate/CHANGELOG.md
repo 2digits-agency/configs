@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.1.41
+
+### Patch Changes
+
+- 184e9c9: Updated renovate config to group more packages
+- 786f0f4: Updated dependencies
+
 ## 1.1.40
 
 ### Patch Changes

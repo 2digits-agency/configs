@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.8.4
+
+### Patch Changes
+
+- 5c75f4b: Added allowArbitraryExtensions=true to enable e.g. .d.json.ts
+
 ## 0.8.3
 
 ### Patch Changes
