@@ -175,8 +175,8 @@ catalogs:
       specifier: 2.4.1
       version: 2.4.1
     knip:
-      specifier: 5.64.2
-      version: 5.64.2
+      specifier: 5.64.3
+      version: 5.64.3
     local-pkg:
       specifier: 1.1.2
       version: 1.1.2
@@ -299,7 +299,7 @@ importers:
         version: 9.37.0(jiti@2.6.0)
       knip:
         specifier: 'catalog:'
-        version: 5.64.2(@types/node@22.18.8)(typescript@5.9.3)
+        version: 5.64.3(@types/node@22.18.8)(typescript@5.9.3)
       pkg-pr-new:
         specifier: 'catalog:'
         version: 0.0.60
@@ -1730,9 +1730,6 @@ packages:
 
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
-
-  '@napi-rs/wasm-runtime@1.0.5':
-    resolution: {integrity: sha512-TBr9Cf9onSAS2LQ2+QHx6XcC6h9+RIzJgbqG3++9TUZSH204AwEy5jg3BTQ0VATsyoGj4ee49tN/y6rvaOOtcg==}
 
   '@napi-rs/wasm-runtime@1.0.6':
     resolution: {integrity: sha512-DXj75ewm11LIWUk198QSKUTxjyRjsBwk09MuMk5DGK+GDUtyPhhEHOGP/Xwwj3DjQXXkivoBirmOnKrLfc0+9g==}
@@ -4961,8 +4958,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@5.64.2:
-    resolution: {integrity: sha512-gyIN+ZqZjyxdsocvkZx2HMy7D9+5WAgFrTM69sGg1QZ8wZuabtanhAP8ZnroctU26sQ5bO2RSPvjnOn0pRNuKw==}
+  knip@5.64.3:
+    resolution: {integrity: sha512-P9dZetEZfSBwNBFwj55CAnPAMdzVLTTscWx6rdB8eBmPqXPji8F3L+hhWi+Xp+u9O6Xp2ClRDq2JENSK8Z04Qg==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -9006,13 +9003,6 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@napi-rs/wasm-runtime@1.0.5':
-    dependencies:
-      '@emnapi/core': 1.5.0
-      '@emnapi/runtime': 1.5.0
-      '@tybys/wasm-util': 0.10.1
-    optional: true
-
   '@napi-rs/wasm-runtime@1.0.6':
     dependencies:
       '@emnapi/core': 1.5.0
@@ -9398,7 +9388,7 @@ snapshots:
 
   '@oxc-resolver/binding-wasm32-wasi@11.8.4':
     dependencies:
-      '@napi-rs/wasm-runtime': 1.0.5
+      '@napi-rs/wasm-runtime': 1.0.6
     optional: true
 
   '@oxc-resolver/binding-win32-arm64-msvc@11.8.4':
@@ -12477,7 +12467,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@5.64.2(@types/node@22.18.8)(typescript@5.9.3):
+  knip@5.64.3(@types/node@22.18.8)(typescript@5.9.3):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@types/node': 22.18.8
@@ -14236,7 +14226,7 @@ snapshots:
       esbuild: 0.25.9
       esbuild-register: 3.6.0(esbuild@0.25.9)
       recast: 0.23.11
-      semver: 7.7.2
+      semver: 7.7.3
       ws: 8.18.3
     optionalDependencies:
       prettier: 3.6.2
