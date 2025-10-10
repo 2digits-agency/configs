@@ -13,8 +13,8 @@ catalogs:
       specifier: 0.71.0
       version: 0.71.0
     '@effect/language-service':
-      specifier: 0.43.2
-      version: 0.43.2
+      specifier: 0.44.0
+      version: 0.44.0
     '@effect/platform':
       specifier: 0.92.1
       version: 0.92.1
@@ -339,7 +339,7 @@ importers:
         version: link:../tsconfig
       '@effect/language-service':
         specifier: 'catalog:'
-        version: 0.43.2
+        version: 0.44.0
       tsdown:
         specifier: 'catalog:'
         version: 0.15.6(oxc-resolver@11.8.4)(typescript@5.9.3)
@@ -1083,8 +1083,8 @@ packages:
       lmdb:
         optional: true
 
-  '@effect/language-service@0.43.2':
-    resolution: {integrity: sha512-87V/AmnbJQDZmR6tbUpKDlejV2IWK2ldzHi8ZT5pauvw+Hh8Ksn+1eep5RWn3qwI39L9AUPCPS5kYcqXqI1ANA==}
+  '@effect/language-service@0.44.0':
+    resolution: {integrity: sha512-ya9cDN0CvmZl2jAhGOBEvp15e+t/9LDdwkH1+vO8wnz/5BdsAZLVo3O3SYO5rtHQiL3rJBwPkn3Z7X6pZ8E8ww==}
     hasBin: true
 
   '@effect/platform-node-shared@0.51.3':
@@ -8221,7 +8221,7 @@ snapshots:
       effect: 3.18.4
       uuid: 11.1.0
 
-  '@effect/language-service@0.43.2': {}
+  '@effect/language-service@0.44.0': {}
 
   '@effect/platform-node-shared@0.51.3(@effect/cluster@0.48.3(@effect/platform@0.92.1(effect@3.18.4))(@effect/rpc@0.69.2(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(@effect/sql@0.44.2(@effect/experimental@0.54.6(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(@effect/workflow@0.9.3(@effect/platform@0.92.1(effect@3.18.4))(@effect/rpc@0.69.2(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(effect@3.18.4))(effect@3.18.4))(@effect/platform@0.92.1(effect@3.18.4))(@effect/rpc@0.69.2(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(@effect/sql@0.44.2(@effect/experimental@0.54.6(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(effect@3.18.4)':
     dependencies:
@@ -14236,7 +14236,7 @@ snapshots:
       esbuild: 0.25.9
       esbuild-register: 3.6.0(esbuild@0.25.9)
       recast: 0.23.11
-      semver: 7.7.2
+      semver: 7.7.3
       ws: 8.18.3
     optionalDependencies:
       prettier: 3.6.2
