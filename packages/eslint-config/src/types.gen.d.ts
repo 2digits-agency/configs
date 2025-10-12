@@ -301,6 +301,11 @@ export interface RuleOptions {
    */
   'css/relative-font-units'?: Linter.RuleEntry<CssRelativeFontUnits>
   /**
+   * Disallow and limit CSS selectors
+   * @see https://github.com/eslint/css/blob/main/docs/rules/selector-complexity.md
+   */
+  'css/selector-complexity'?: Linter.RuleEntry<CssSelectorComplexity>
+  /**
    * Enforce the use of baseline features
    * @see https://github.com/eslint/css/blob/main/docs/rules/use-baseline.md
    */
@@ -1280,6 +1285,26 @@ Backward pagination arguments
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/text-escaping.md#repos-sticky-header
    */
   'jsdoc/text-escaping'?: Linter.RuleEntry<JsdocTextEscaping>
+  /**
+   * Prefers either function properties or method signatures
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/ts-method-signature-style.md#repos-sticky-header
+   */
+  'jsdoc/ts-method-signature-style'?: Linter.RuleEntry<JsdocTsMethodSignatureStyle>
+  /**
+   * Warns against use of the empty object type
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/ts-no-empty-object-type.md#repos-sticky-header
+   */
+  'jsdoc/ts-no-empty-object-type'?: Linter.RuleEntry<[]>
+  /**
+   * Catches unnecessary template expressions such as string expressions within a template literal.
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/ts-no-unnecessary-template-expression.md#repos-sticky-header
+   */
+  'jsdoc/ts-no-unnecessary-template-expression'?: Linter.RuleEntry<JsdocTsNoUnnecessaryTemplateExpression>
+  /**
+   * Prefers function types over call signatures when there are no other properties.
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/ts-prefer-function-type.md#repos-sticky-header
+   */
+  'jsdoc/ts-prefer-function-type'?: Linter.RuleEntry<JsdocTsPreferFunctionType>
   /**
    * Formats JSDoc type values.
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/type-formatting.md#repos-sticky-header
@@ -3577,6 +3602,10 @@ Backward pagination arguments
    * Validates usage of the useMemo() hook against common mistakes. See [`useMemo()` docs](https://react.dev/reference/react/useMemo) for more information.
    */
   'react-hooks/use-memo'?: Linter.RuleEntry<ReactHooksUseMemo>
+  /**
+   * Validates that useMemos always return a value. See [`useMemo()` docs](https://react.dev/reference/react/useMemo) for more information.
+   */
+  'react-hooks/void-use-memo'?: Linter.RuleEntry<ReactHooksVoidUseMemo>
   /**
    * Enforces naming conventions for components.
    * @see https://eslint-react.xyz/docs/rules/naming-convention-component-name
@@ -7884,6 +7913,23 @@ type CssPreferLogicalProperties = []|[{
 type CssRelativeFontUnits = []|[{
   allowUnits?: ("%" | "cap" | "ch" | "em" | "ex" | "ic" | "lh" | "rcap" | "rch" | "rem" | "rex" | "ric" | "rlh")[]
 }]
+// ----- css/selector-complexity -----
+type CssSelectorComplexity = []|[{
+  maxIds?: number
+  maxClasses?: number
+  maxTypes?: number
+  maxAttributes?: number
+  maxPseudoClasses?: number
+  maxUniversals?: number
+  maxCompounds?: number
+  maxCombinators?: number
+  disallowCombinators?: string[]
+  disallowPseudoClasses?: string[]
+  disallowPseudoElements?: string[]
+  disallowAttributes?: string[]
+  disallowAttributeMatchers?: string[]
+  [k: string]: unknown | undefined
+}]
 // ----- css/use-baseline -----
 type CssUseBaseline = []|[{
   available?: (("widely" | "newly") | number)
@@ -9027,6 +9073,21 @@ type JsdocTextEscaping = []|[{
   escapeHTML?: boolean
   
   escapeMarkdown?: boolean
+}]
+// ----- jsdoc/ts-method-signature-style -----
+type JsdocTsMethodSignatureStyle = []|[("method" | "property")]|[("method" | "property"), {
+  
+  enableFixer?: boolean
+}]
+// ----- jsdoc/ts-no-unnecessary-template-expression -----
+type JsdocTsNoUnnecessaryTemplateExpression = []|[{
+  
+  enableFixer?: boolean
+}]
+// ----- jsdoc/ts-prefer-function-type -----
+type JsdocTsPreferFunctionType = []|[{
+  
+  enableFixer?: boolean
 }]
 // ----- jsdoc/type-formatting -----
 type JsdocTypeFormatting = []|[{
@@ -10989,6 +11050,10 @@ type ReactHooksUnsupportedSyntax = []|[{
 }]
 // ----- react-hooks/use-memo -----
 type ReactHooksUseMemo = []|[{
+  [k: string]: unknown | undefined
+}]
+// ----- react-hooks/void-use-memo -----
+type ReactHooksVoidUseMemo = []|[{
   [k: string]: unknown | undefined
 }]
 // ----- react-naming-convention/component-name -----
