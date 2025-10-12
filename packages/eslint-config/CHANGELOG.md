@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 4.10.3
+
+### Patch Changes
+
+- cd8a68d: Updated dependencies
+
 ## 4.10.2
 
 ### Patch Changes
