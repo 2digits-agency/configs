@@ -34,8 +34,8 @@ catalogs:
       specifier: 1.3.0
       version: 1.3.0
     '@eslint/css':
-      specifier: 0.12.0
-      version: 0.12.0
+      specifier: 0.13.0
+      version: 0.13.0
     '@eslint/js':
       specifier: 9.37.0
       version: 9.37.0
@@ -384,7 +384,7 @@ importers:
         version: 1.4.0(eslint@9.37.0(jiti@2.6.0))
       '@eslint/css':
         specifier: 'catalog:'
-        version: 0.12.0
+        version: 0.13.0
       '@eslint/js':
         specifier: 'catalog:'
         version: 9.37.0
@@ -1410,8 +1410,8 @@ packages:
     resolution: {integrity: sha512-bJgnXu0D0K1BbfPfHTmCaJe2ucBOjeg/tG37H2CSqYCw51VMmBtPfWrH8LKPLAVCOp0h94e1n8PfR3v9iRbtyA==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
 
-  '@eslint/css@0.12.0':
-    resolution: {integrity: sha512-cwDOIsLwCkVGNI8iLakioJcdu/QL0cG+h+02/KxunDfnD5bZqlqZMsVlWH+Egf7+KjoyNVYAYoG71tEW4avsGg==}
+  '@eslint/css@0.13.0':
+    resolution: {integrity: sha512-nPUDpWDKq3uXrvvft+wfZmx7jCF/TLMzXassUrSxLTumQ7Cr4F/HTUcibVit2MdbSqfgAkWgLRc6Gns5/PRAEA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/eslintrc@3.3.1':
@@ -8567,7 +8567,7 @@ snapshots:
       mdn-data: 2.23.0
       source-map-js: 1.2.1
 
-  '@eslint/css@0.12.0':
+  '@eslint/css@0.13.0':
     dependencies:
       '@eslint/core': 0.16.0
       '@eslint/css-tree': 3.6.5
