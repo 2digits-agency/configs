@@ -136,8 +136,8 @@ catalogs:
       specifier: 19.1.0-rc.2
       version: 19.1.0-rc.2
     eslint-plugin-react-hooks:
-      specifier: 6.1.1
-      version: 6.1.1
+      specifier: 7.0.0
+      version: 7.0.0
     eslint-plugin-regexp:
       specifier: 2.10.0
       version: 2.10.0
@@ -459,7 +459,7 @@ importers:
         version: 19.1.0-rc.2(eslint@9.37.0(jiti@2.6.0))
       eslint-plugin-react-hooks:
         specifier: 'catalog:'
-        version: 6.1.1(eslint@9.37.0(jiti@2.6.0))
+        version: 7.0.0(eslint@9.37.0(jiti@2.6.0))
       eslint-plugin-regexp:
         specifier: 'catalog:'
         version: 2.10.0(eslint@9.37.0(jiti@2.6.0))
@@ -4099,8 +4099,8 @@ packages:
       eslint: ^9.36.0
       typescript: ^5.9.3
 
-  eslint-plugin-react-hooks@6.1.1:
-    resolution: {integrity: sha512-St9EKZzOAQF704nt2oJvAKZHjhrpg25ClQoaAlHmPZuajFldVLqRDW4VBNAS01NzeiQF0m0qhG1ZA807K6aVaQ==}
+  eslint-plugin-react-hooks@7.0.0:
+    resolution: {integrity: sha512-fNXaOwvKwq2+pXiRpXc825Vd63+KM4DLL40Rtlycb8m7fYpp6efrTp1sa6ZbP/Ap58K2bEKFXRmhURE+CJAQWw==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
@@ -11490,11 +11490,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-react-hooks@6.1.1(eslint@9.37.0(jiti@2.6.0)):
+  eslint-plugin-react-hooks@7.0.0(eslint@9.37.0(jiti@2.6.0)):
     dependencies:
       '@babel/core': 7.28.3
       '@babel/parser': 7.28.4
       eslint: 9.37.0(jiti@2.6.0)
+      hermes-parser: 0.25.1
       zod: 4.1.11
       zod-validation-error: 3.5.2(zod@4.1.11)
     transitivePeerDependencies:
