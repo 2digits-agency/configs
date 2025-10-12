@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.1.42
+
+### Patch Changes
+
+- cd8a68d: Updated dependencies
+
 ## 1.1.41
 
 ### Patch Changes
