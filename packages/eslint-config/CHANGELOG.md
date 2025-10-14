@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 4.11.0
+
+### Minor Changes
+
+- 5927e83: Added eslint-plugin-zod-x for linting schemas
+
+### Patch Changes
+
+- 750bb2b: Updated dependencies
+- Updated dependencies [750bb2b]
+  - @2digits/eslint-plugin@3.1.27
+
 ## 4.10.3
 
 ### Patch Changes
