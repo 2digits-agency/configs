@@ -10930,7 +10930,6 @@ type ReactExtraNoForbiddenProps = []|[{
     includedNodes?: string[]
     prop: string
   })[]
-  [k: string]: unknown | undefined
 }]
 // ----- react-extra/no-useless-fragment -----
 type ReactExtraNoUselessFragment = []|[{
