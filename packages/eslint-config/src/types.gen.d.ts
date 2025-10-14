@@ -7726,6 +7726,61 @@ Backward pagination arguments
    * @see https://eslint.org/docs/latest/rules/yoda
    */
   'yoda'?: Linter.RuleEntry<Yoda>
+  /**
+   * Enforce consistent Zod array style
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/consistent-array-style.md
+   */
+  'zod/array-style'?: Linter.RuleEntry<ZodArrayStyle>
+  /**
+   * Enforce consistent source from Zod imports
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/consistent-import-source.md
+   */
+  'zod/consistent-import-source'?: Linter.RuleEntry<ZodConsistentImportSource>
+  /**
+   * Disallow usage of z.any() in Zod schemas
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-any.md
+   */
+  'zod/no-any'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow usage of z.custom() without arguments
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-empty-custom-schema.md
+   */
+  'zod/no-empty-custom-schema'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow throwing errors directly inside Zod refine callbacks
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-throw-in-refine.md
+   */
+  'zod/no-throw-in-refine'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce usage of .meta() over .describe()
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-meta.md
+   */
+  'zod/prefer-meta'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce .meta() as last method
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-meta-last.md
+   */
+  'zod/prefer-meta-last'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce importing zod as a namespace import (import * as z from 'zod')
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-namespace-import.md
+   */
+  'zod/prefer-namespace-import'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce usage of .strictObject() over .object() and/or .looseObject()
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-strict-object.md
+   */
+  'zod/prefer-strict-object'?: Linter.RuleEntry<ZodPreferStrictObject>
+  /**
+   * Enforce that custom refinements include an error message
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/require-error-message.md
+   */
+  'zod/require-error-message'?: Linter.RuleEntry<[]>
+  /**
+   * Require schema suffix when declaring a Zod schema
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/require-schema-suffix.md
+   */
+  'zod/require-schema-suffix'?: Linter.RuleEntry<ZodRequireSchemaSuffix>
 }
 
 /* ======= Declarations ======= */
@@ -14341,5 +14396,27 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
   exceptRange?: boolean
   onlyEquality?: boolean
 }]
+// ----- zod/array-style -----
+type ZodArrayStyle = []|[{
+  
+  style?: ("function" | "method")
+  [k: string]: unknown | undefined
+}]
+// ----- zod/consistent-import-source -----
+type ZodConsistentImportSource = []|[{
+  
+  sources?: [("zod" | "zod/mini" | "zod/v4" | "zod/v4-mini" | "zod/v3"), ...(("zod" | "zod/mini" | "zod/v4" | "zod/v4-mini" | "zod/v3"))[]]
+}]
+// ----- zod/prefer-strict-object -----
+type ZodPreferStrictObject = []|[{
+  
+  allow?: ("object" | "looseObject")[]
+  [k: string]: unknown | undefined
+}]
+// ----- zod/require-schema-suffix -----
+type ZodRequireSchemaSuffix = []|[{
+  
+  suffix?: string
+}]
 // Names of all the configs
-export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:depend' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack-query' | '2digits:tanstack-router' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier'
+export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:depend' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack-query' | '2digits:tanstack-router' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier' | '2digits:zod'

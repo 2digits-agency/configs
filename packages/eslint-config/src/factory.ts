@@ -31,6 +31,7 @@ import {
   typescript,
   unicorn,
   yaml,
+  zod,
 } from './configs';
 import { PluginNameMap } from './constants';
 import type {
@@ -66,6 +67,7 @@ interface ESLint2DigitsOptions {
   tanstackRouter?: SharedOptions<OptionsOverrides> | boolean;
   drizzle?: SharedOptions<OptionsWithDrizzle> | boolean;
   depend?: SharedOptions | boolean;
+  zod?: SharedOptions | boolean;
 }
 
 function enabled<T extends SharedOptions>(options: T | boolean | undefined, defaults?: boolean): options is T {
@@ -86,6 +88,7 @@ function config<T>(options: SharedOptions<T> | undefined | boolean): T {
   return rest as T;
 }
 
+// eslint-disable-next-line sonar/cognitive-complexity
 export async function twoDigits(
   options: ESLint2DigitsOptions = {},
   ...userConfig: Array<TypedFlatConfigItem>
@@ -179,6 +182,10 @@ export async function twoDigits(
 
   if (enabled(options.drizzle, isPackageExists('drizzle-kit') || isPackageExists('drizzle-orm'))) {
     composer = composer.append(drizzle(config(options.drizzle)));
+  }
+
+  if (enabled(options.zod, isPackageExists('zod'))) {
+    composer = composer.append(zod(config(options.zod)));
   }
 
   if (enabled(options.graphql, isPackageExists('graphql'))) {
