@@ -32,4 +32,5 @@ export const PluginNameMap = {
   pnpm: 'pnpm',
   regexp: 'regexp',
   yml: 'yml',
+  'zod-x': 'zod',
 } as const;
