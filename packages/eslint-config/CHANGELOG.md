@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 4.11.1
+
+### Patch Changes
+
+- 74ce116: Updated dependencies
+
 ## 4.11.0
 
 ### Minor Changes
