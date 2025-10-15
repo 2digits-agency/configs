@@ -1,3 +1,4 @@
+import type { ESLint } from 'eslint';
 import { renamePluginsInRules } from 'eslint-flat-config-utils';
 
 import { PluginNameMap } from '../constants';
@@ -18,7 +19,7 @@ export async function react(
     interopDefault(import('@stylistic/eslint-plugin')),
   ]);
 
-  const plugins = pluginReact.configs.all.plugins;
+  const plugins = (pluginReact.configs.all as { plugins: Record<string, ESLint.Plugin> }).plugins;
 
   const recommended = renamePluginsInRules(
     {
