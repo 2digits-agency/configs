@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.0.16
+
+### Patch Changes
+
+- 49dbe02: Sync pnpm workspace catalog: bump the cataloged `@effect/language-service` dev dependency to the newer catalog version (keeps the CLI dev deps up to date).
+
 ## 1.0.15
 
 ### Patch Changes
