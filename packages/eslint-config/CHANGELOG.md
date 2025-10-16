@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 4.11.2
+
+### Patch Changes
+
+- 78ecbb3: Sync pnpm workspace catalog: update cataloged dependencies (`@tanstack/eslint-plugin-query`, `eslint-plugin-storybook`) to their bumped catalog versions.
+
 ## 4.11.1
 
 ### Patch Changes

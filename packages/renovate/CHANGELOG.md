@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.1.45
+
+### Patch Changes
+
+- 1118ff5: Sync pnpm workspace catalog: bump the cataloged `renovate` dev dependency to the updated catalog version.
+
 ## 1.1.44
 
 ### Patch Changes
