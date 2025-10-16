@@ -1,5 +1,5 @@
 ---
-'@2digits/cli': patch
+'@2digits/eslint-config': patch
 ---
 
-Updated dependencies
+Sync pnpm workspace catalog: update cataloged dependencies (`@tanstack/eslint-plugin-query`, `eslint-plugin-storybook`) to their bumped catalog versions.
