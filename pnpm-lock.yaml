@@ -211,8 +211,8 @@ catalogs:
       specifier: 19.2.0
       version: 19.2.0
     renovate:
-      specifier: 41.152.2
-      version: 41.152.2
+      specifier: 41.152.4
+      version: 41.152.4
     tailwind-csstree:
       specifier: 0.1.4
       version: 0.1.4
@@ -630,7 +630,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 41.152.2(encoding@0.1.13)(typanion@3.14.0)
+        version: 41.152.4(encoding@0.1.13)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -6014,8 +6014,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@41.152.2:
-    resolution: {integrity: sha512-Cs8vxaIGTqWc2qWVoBIMBwn+vCmT95Wksxj3AwjcrL/ZdUOFJZJlzHWly/ufr3KmxydPF6FLLNesSuxRV0qAcg==}
+  renovate@41.152.4:
+    resolution: {integrity: sha512-Yp4ZZyLWng/zedR3D+kImCNNZrBKEvAsDFpM1D9kFqGUUFxZg35B8MMWdTMoVy/hxCfsLDfGOzSayEhxqzlEAQ==}
     engines: {node: ^22.13.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -13696,7 +13696,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@41.152.2(encoding@0.1.13)(typanion@3.14.0):
+  renovate@41.152.4(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.899.0
       '@aws-sdk/client-ec2': 3.899.0
