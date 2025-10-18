@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.0
+
+### Minor Changes
+
+- 0b01013: Updated dependencies
+
 ## 1.1.46
 
 ### Patch Changes
