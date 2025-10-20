@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.0.18
+
+### Patch Changes
+
+- 75a4e83: Updated dependencies
+
 ## 1.0.17
 
 ### Patch Changes

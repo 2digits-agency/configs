@@ -1,5 +1,15 @@
 # @2digits/eslint-config
 
+## 4.12.1
+
+### Patch Changes
+
+- 75a4e83: Updated dependencies
+- 4e87928: Removed stubbed eslint-plugin-next types
+- fbf63f5: Updated zod/no-optional-and-default-together to prefer using .default when .optional and .default are both present
+- Updated dependencies [75a4e83]
+  - @2digits/eslint-plugin@3.2.1
+
 ## 4.12.0
 
 ### Minor Changes
