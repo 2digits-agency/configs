@@ -21,6 +21,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/prefer-meta-last': 'error',
         'zod/prefer-namespace-import': 'error',
         'zod/require-schema-suffix': ['warn', { suffix: 'Schema' }],
+        'zod/no-optional-and-default-together': ['warn', { preferredMethod: 'default' }],
 
         ...overrides,
       },
