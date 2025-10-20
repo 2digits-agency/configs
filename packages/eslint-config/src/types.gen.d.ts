@@ -7752,6 +7752,11 @@ Backward pagination arguments
    */
   'zod/no-empty-custom-schema'?: Linter.RuleEntry<[]>
   /**
+   * Disallow using both `.optional()` and `.default()` on the same Zod schema
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-optional-and-default-together.md
+   */
+  'zod/no-optional-and-default-together'?: Linter.RuleEntry<ZodNoOptionalAndDefaultTogether>
+  /**
    * Disallow throwing errors directly inside Zod refine callbacks
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-throw-in-refine.md
    */
@@ -14462,6 +14467,11 @@ type ZodArrayStyle = []|[{
 type ZodConsistentImportSource = []|[{
   
   sources?: [("zod" | "zod/mini" | "zod/v4" | "zod/v4-mini" | "zod/v3"), ...(("zod" | "zod/mini" | "zod/v4" | "zod/v4-mini" | "zod/v3"))[]]
+}]
+// ----- zod/no-optional-and-default-together -----
+type ZodNoOptionalAndDefaultTogether = []|[{
+  
+  preferredMethod?: ("none" | "default" | "optional")
 }]
 // ----- zod/prefer-strict-object -----
 type ZodPreferStrictObject = []|[{
