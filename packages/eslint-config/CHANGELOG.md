@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 4.12.2
+
+### Patch Changes
+
+- 1881a7c: Enabled zod/no-number-schema-with-int rule
+- 60f2878: Updated dependencies
+
 ## 4.12.1
 
 ### Patch Changes
