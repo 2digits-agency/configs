@@ -7742,15 +7742,20 @@ Backward pagination arguments
    */
   'zod/consistent-import-source'?: Linter.RuleEntry<ZodConsistentImportSource>
   /**
-   * Disallow usage of z.any() in Zod schemas
+   * Disallow usage of `z.any()` in Zod schemas
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-any.md
    */
   'zod/no-any'?: Linter.RuleEntry<[]>
   /**
-   * Disallow usage of z.custom() without arguments
+   * Disallow usage of `z.custom()` without arguments
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-empty-custom-schema.md
    */
   'zod/no-empty-custom-schema'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow usage of `z.number().int()` as it is considered legacy
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-number-schema-with-int.md
+   */
+  'zod/no-number-schema-with-int'?: Linter.RuleEntry<[]>
   /**
    * Disallow using both `.optional()` and `.default()` on the same Zod schema
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-optional-and-default-together.md
@@ -7762,22 +7767,22 @@ Backward pagination arguments
    */
   'zod/no-throw-in-refine'?: Linter.RuleEntry<[]>
   /**
-   * Enforce usage of .meta() over .describe()
+   * Enforce usage of `.meta()` over `.describe()`
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-meta.md
    */
   'zod/prefer-meta'?: Linter.RuleEntry<[]>
   /**
-   * Enforce .meta() as last method
+   * Enforce `.meta()` as last method
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-meta-last.md
    */
   'zod/prefer-meta-last'?: Linter.RuleEntry<[]>
   /**
-   * Enforce importing zod as a namespace import (import * as z from 'zod')
+   * Enforce importing zod as a namespace import (`import * as z from 'zod'`)
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-namespace-import.md
    */
   'zod/prefer-namespace-import'?: Linter.RuleEntry<[]>
   /**
-   * Enforce usage of .strictObject() over .object() and/or .looseObject()
+   * Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()`
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-strict-object.md
    */
   'zod/prefer-strict-object'?: Linter.RuleEntry<ZodPreferStrictObject>
