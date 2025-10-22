@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.0.19
+
+### Patch Changes
+
+- 60f2878: Updated dependencies
+
 ## 1.0.18
 
 ### Patch Changes
