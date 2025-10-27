@@ -1,5 +1,15 @@
 # @2digits/eslint-config
 
+## 4.12.3
+
+### Patch Changes
+
+- 8950411: Updated dependencies
+- db900bc: Updated dependencies
+- Updated dependencies [8950411]
+- Updated dependencies [db900bc]
+  - @2digits/eslint-plugin@3.2.2
+
 ## 4.12.2
 
 ### Patch Changes
