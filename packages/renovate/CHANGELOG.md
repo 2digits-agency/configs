@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.2.3
+
+### Patch Changes
+
+- 8950411: Updated dependencies
+- db900bc: Updated dependencies
+
 ## 1.2.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.0.20
+
+### Patch Changes
+
+- db900bc: Updated dependencies
+
 ## 1.0.19
 
 ### Patch Changes
