@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 4.12.4
+
+### Patch Changes
+
+- 4c462e8: Updated dependencies
+- a63eaeb: Removed fixupPluginRules from @eslint/compat for storybook plugin
+- e5ec692: Fixed automatic storybook installation check for storybook linting rules
+
 ## 4.12.3
 
 ### Patch Changes

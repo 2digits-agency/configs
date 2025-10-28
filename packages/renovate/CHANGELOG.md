@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.2.4
+
+### Patch Changes
+
+- 8cdaa27: Added Rozenite group
+- 4c462e8: Updated dependencies
+
 ## 1.2.3
 
 ### Patch Changes
