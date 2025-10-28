@@ -1,4 +1,3 @@
-import { fixupPluginRules } from '@eslint/compat';
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
 
 import { GLOB_STORIES } from '../globs';
@@ -31,7 +30,7 @@ export async function storybook(
     {
       name: '2digits:storybook/setup',
       plugins: {
-        storybook: fixupPluginRules(storybook as never),
+        storybook,
       },
     },
     {
@@ -54,6 +53,7 @@ export async function storybook(
         'storybook/use-storybook-expect': 'error',
         'storybook/use-storybook-testing-library': 'error',
         'storybook/meta-satisfies-type': 'error',
+        'storybook/no-renderer-packages': 'error',
 
         ...overrides,
       },

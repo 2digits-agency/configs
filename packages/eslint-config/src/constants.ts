@@ -34,3 +34,12 @@ export const PluginNameMap = {
   yml: 'yml',
   'zod-x': 'zod',
 } as const;
+
+export const storybookPackages = [
+  'storybook',
+  '@storybook/nextjs',
+  '@storybook/nextjs-vite',
+  '@storybook/react-vite',
+  '@storybook/react-webpack5',
+  '@storybook/react-native-web-vite',
+];

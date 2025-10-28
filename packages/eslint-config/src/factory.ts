@@ -33,7 +33,7 @@ import {
   yaml,
   zod,
 } from './configs';
-import { PluginNameMap } from './constants';
+import { PluginNameMap, storybookPackages } from './constants';
 import type {
   ConfigNames,
   OptionsCss,
@@ -152,7 +152,12 @@ export async function twoDigits(
     );
   }
 
-  if (enabled(options.storybook, isPackageExists('storybook'))) {
+  if (
+    enabled(
+      options.storybook,
+      storybookPackages.some((pkg) => isPackageExists(pkg)),
+    )
+  ) {
     composer = composer.append(
       storybook({
         ...config(options.storybook),
