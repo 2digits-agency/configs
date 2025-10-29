@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.0.21
+
+### Patch Changes
+
+- b726d7a: Updated dependencies
+
 ## 1.0.20
 
 ### Patch Changes
