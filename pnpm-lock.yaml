@@ -13,8 +13,8 @@ catalogs:
       specifier: 0.71.0
       version: 0.71.0
     '@effect/language-service':
-      specifier: 0.51.0
-      version: 0.51.0
+      specifier: 0.53.2
+      version: 0.53.2
     '@effect/platform':
       specifier: 0.92.1
       version: 0.92.1
@@ -342,7 +342,7 @@ importers:
         version: link:../tsconfig
       '@effect/language-service':
         specifier: 'catalog:'
-        version: 0.51.0
+        version: 0.53.2
       tsdown:
         specifier: 'catalog:'
         version: 0.15.11(oxc-resolver@11.12.0)(typescript@5.9.3)
@@ -1106,8 +1106,8 @@ packages:
       lmdb:
         optional: true
 
-  '@effect/language-service@0.51.0':
-    resolution: {integrity: sha512-GpuKUkxRSFtjaYF+/LysLfyIqo6SX+83AiqR3ca/N3q7Swwn49hZ3oYtjctxwadwh2PJ7mYB5KnEeVn3kpADLQ==}
+  '@effect/language-service@0.53.2':
+    resolution: {integrity: sha512-c2mEfVZQ2FojIqtDp9WgUvzlDJiYSjFWneMhT8R/EtUF/z+6wHg+h5ddZO7mihTf/ItNvq7ytVHPYX+lyN6lGw==}
     hasBin: true
 
   '@effect/platform-node-shared@0.51.6':
@@ -8359,7 +8359,7 @@ snapshots:
       effect: 3.18.4
       uuid: 11.1.0
 
-  '@effect/language-service@0.51.0': {}
+  '@effect/language-service@0.53.2': {}
 
   '@effect/platform-node-shared@0.51.6(@effect/cluster@0.48.3(@effect/platform@0.92.1(effect@3.18.4))(@effect/rpc@0.69.2(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(@effect/sql@0.44.2(@effect/experimental@0.54.6(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(@effect/workflow@0.9.3(@effect/platform@0.92.1(effect@3.18.4))(@effect/rpc@0.69.2(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(effect@3.18.4))(effect@3.18.4))(@effect/platform@0.92.1(effect@3.18.4))(@effect/rpc@0.69.2(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(@effect/sql@0.44.2(@effect/experimental@0.54.6(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(@effect/platform@0.92.1(effect@3.18.4))(effect@3.18.4))(effect@3.18.4)':
     dependencies:
