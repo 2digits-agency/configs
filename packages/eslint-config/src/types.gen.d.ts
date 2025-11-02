@@ -3179,6 +3179,11 @@ Backward pagination arguments
    */
   'react-dom/prefer-namespace-import'?: Linter.RuleEntry<[]>
   /**
+   * Prevents dollar signs from being inserted as text nodes before expressions.
+   * @see https://eslint-react.xyz/docs/rules/jsx-dollar
+   */
+  'react-extra/jsx-dollar'?: Linter.RuleEntry<[]>
+  /**
    * Enforces that the 'key' prop is placed before the spread prop in JSX elements.
    * @see https://eslint-react.xyz/docs/rules/jsx-key-before-spread
    */
@@ -7753,67 +7758,67 @@ Backward pagination arguments
   'yoda'?: Linter.RuleEntry<Yoda>
   /**
    * Enforce consistent Zod array style
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/consistent-array-style.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/consistent-array-style.md
    */
   'zod/array-style'?: Linter.RuleEntry<ZodArrayStyle>
   /**
    * Enforce consistent source from Zod imports
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/consistent-import-source.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/consistent-import-source.md
    */
   'zod/consistent-import-source'?: Linter.RuleEntry<ZodConsistentImportSource>
   /**
    * Disallow usage of `z.any()` in Zod schemas
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-any.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/no-any.md
    */
   'zod/no-any'?: Linter.RuleEntry<[]>
   /**
    * Disallow usage of `z.custom()` without arguments
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-empty-custom-schema.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/no-empty-custom-schema.md
    */
   'zod/no-empty-custom-schema'?: Linter.RuleEntry<[]>
   /**
    * Disallow usage of `z.number().int()` as it is considered legacy
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-number-schema-with-int.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/no-number-schema-with-int.md
    */
   'zod/no-number-schema-with-int'?: Linter.RuleEntry<[]>
   /**
    * Disallow using both `.optional()` and `.default()` on the same Zod schema
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-optional-and-default-together.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/no-optional-and-default-together.md
    */
   'zod/no-optional-and-default-together'?: Linter.RuleEntry<ZodNoOptionalAndDefaultTogether>
   /**
    * Disallow throwing errors directly inside Zod refine callbacks
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/no-throw-in-refine.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/no-throw-in-refine.md
    */
   'zod/no-throw-in-refine'?: Linter.RuleEntry<[]>
   /**
    * Enforce usage of `.meta()` over `.describe()`
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-meta.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/prefer-meta.md
    */
   'zod/prefer-meta'?: Linter.RuleEntry<[]>
   /**
    * Enforce `.meta()` as last method
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-meta-last.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/prefer-meta-last.md
    */
   'zod/prefer-meta-last'?: Linter.RuleEntry<[]>
   /**
    * Enforce importing zod as a namespace import (`import * as z from 'zod'`)
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-namespace-import.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/prefer-namespace-import.md
    */
   'zod/prefer-namespace-import'?: Linter.RuleEntry<[]>
   /**
    * Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()`
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/prefer-strict-object.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/prefer-strict-object.md
    */
   'zod/prefer-strict-object'?: Linter.RuleEntry<ZodPreferStrictObject>
   /**
    * Enforce that custom refinements include an error message
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/require-error-message.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/require-error-message.md
    */
   'zod/require-error-message'?: Linter.RuleEntry<[]>
   /**
    * Require schema suffix when declaring a Zod schema
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/main/docs/rules/require-schema-suffix.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/require-schema-suffix.md
    */
   'zod/require-schema-suffix'?: Linter.RuleEntry<ZodRequireSchemaSuffix>
 }
