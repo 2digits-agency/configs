@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.0.22
+
+### Patch Changes
+
+- 1df59a3: Updated dependencies
+
 ## 1.0.21
 
 ### Patch Changes
