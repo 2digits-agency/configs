@@ -6,6 +6,7 @@ import twoDigits from '@2digits/eslint-config';
 export default twoDigits(
   {
     ignores: {
+      ignores: ['.opencode'],
       gitIgnore: {
         cwd: path.dirname(fileURLToPath(import.meta.url)),
         files: ['.gitignore', '.prettierignore'],
