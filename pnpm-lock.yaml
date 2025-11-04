@@ -40,8 +40,8 @@ catalogs:
       specifier: 9.38.0
       version: 9.38.0
     '@eslint/markdown':
-      specifier: 7.5.0
-      version: 7.5.0
+      specifier: 7.5.1
+      version: 7.5.1
     '@graphql-eslint/eslint-plugin':
       specifier: 4.4.0
       version: 4.4.0
@@ -393,7 +393,7 @@ importers:
         version: 9.38.0
       '@eslint/markdown':
         specifier: 'catalog:'
-        version: 7.5.0
+        version: 7.5.1
       '@graphql-eslint/eslint-plugin':
         specifier: 'catalog:'
         version: 4.4.0(@types/node@22.18.13)(crossws@0.3.5)(eslint@9.38.0(jiti@2.6.0))(graphql@16.11.0)(typescript@5.9.3)
@@ -1445,8 +1445,8 @@ packages:
     resolution: {integrity: sha512-UZ1VpFvXf9J06YG9xQBdnzU+kthors6KjhMAl6f4gH4usHyh31rUf2DLGInT8RFYIReYXNSydgPY0V2LuWgl7A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/markdown@7.5.0':
-    resolution: {integrity: sha512-reKloVSpytg4ene3yviPJcUO7zglpNn9kWNRiSQ/8gBbBFMKW5Q042LaCi3wv2vVtbPNnLrl6WvhRAHeBd43QA==}
+  '@eslint/markdown@7.5.1':
+    resolution: {integrity: sha512-R8uZemG9dKTbru/DQRPblbJyXpObwKzo8rv1KYGGuPUPtjM4LXBYM9q5CIZAComzZupws3tWbDwam5AFpPLyJQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/object-schema@2.1.7':
@@ -8619,10 +8619,10 @@ snapshots:
 
   '@eslint/js@9.38.0': {}
 
-  '@eslint/markdown@7.5.0':
+  '@eslint/markdown@7.5.1':
     dependencies:
-      '@eslint/core': 0.16.0
-      '@eslint/plugin-kit': 0.4.0
+      '@eslint/core': 0.17.0
+      '@eslint/plugin-kit': 0.4.1
       github-slugger: 2.0.0
       mdast-util-from-markdown: 2.0.2
       mdast-util-frontmatter: 2.0.1
