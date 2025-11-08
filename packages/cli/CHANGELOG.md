@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.0.24
+
+### Patch Changes
+
+- 9a39932: Updated dependencies
+
 ## 1.0.23
 
 ### Patch Changes
