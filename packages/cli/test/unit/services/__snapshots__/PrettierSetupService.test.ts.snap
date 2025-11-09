@@ -1,0 +1,55 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PrettierSetupService > setup > adds prettier config and scripts to package.json 2`] = `
+{
+  "devDependencies": {},
+  "name": "test-single-package",
+  "packageManager": "pnpm@9.0.0",
+  "prettier": "@2digits/prettier-config",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier . --ignore-unknown --check --cache",
+    "format:fix": "prettier . --ignore-unknown --write --cache",
+    "test": "vitest",
+  },
+  "type": "module",
+  "version": "1.0.0",
+}
+`;
+
+exports[`PrettierSetupService > setup > preserves existing prettier config 1`] = `
+{
+  "devDependencies": {
+    "@company/eslint-config": "^1.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0",
+  },
+  "name": "test-existing-configs",
+  "packageManager": "pnpm@9.0.0",
+  "prettier": "@company/prettier-config",
+  "scripts": {
+    "format": "prettier --check .",
+    "format:fix": "prettier . --ignore-unknown --write --cache",
+    "lint": "eslint .",
+  },
+  "type": "module",
+  "version": "1.0.0",
+}
+`;
+
+exports[`PrettierSetupService > setup > preserves existing scripts 1`] = `
+{
+  "devDependencies": {},
+  "name": "test-single-package",
+  "packageManager": "pnpm@9.0.0",
+  "prettier": "@2digits/prettier-config",
+  "scripts": {
+    "build": "tsc",
+    "format": "custom-format-command",
+    "format:fix": "prettier . --ignore-unknown --write --cache",
+    "test": "vitest",
+  },
+  "type": "module",
+  "version": "1.0.0",
+}
+`;

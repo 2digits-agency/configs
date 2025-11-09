@@ -1,0 +1,16 @@
+{
+  "name": "test-existing-configs",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --check ."
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0",
+    "@company/eslint-config": "^1.0.0"
+  },
+  "prettier": "@company/prettier-config",
+  "packageManager": "pnpm@9.0.0"
+}

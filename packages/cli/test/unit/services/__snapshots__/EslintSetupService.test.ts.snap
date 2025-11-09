@@ -1,0 +1,85 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EslintSetupService > setup - monorepo > sets up eslint in monorepo project > eslint.config.ts 1`] = `
+"import twoDigits from '@2digits/eslint-config';
+
+export default twoDigits({
+  ignores: {
+    ignores: ['apps/**', 'packages/**'],
+  },
+});
+"
+`;
+
+exports[`EslintSetupService > setup - monorepo > sets up eslint in monorepo project > package.json 1`] = `
+{
+  "devDependencies": {
+    "turbo": "^2.0.0",
+  },
+  "name": "test-monorepo",
+  "packageManager": "pnpm@9.0.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint lint:root",
+    "lint:fix": "turbo run lint:fix lint:root:fix",
+    "lint:root": "eslint .",
+    "lint:root:fix": "eslint . --fix",
+  },
+  "type": "module",
+  "version": "1.0.0",
+}
+`;
+
+exports[`EslintSetupService > setup - monorepo > sets up eslint in monorepo project > packages/app/eslint.config.ts 1`] = `
+"import twoDigits from '@2digits/eslint-config';
+
+export default twoDigits();
+"
+`;
+
+exports[`EslintSetupService > setup - monorepo > sets up eslint in monorepo project > turbo.json 1`] = `
+{
+  "tasks": {
+    "//#lint:root": {
+      "outputLogs": "new-only",
+    },
+    "//#lint:root:fix": {},
+    "build": {
+      "dependsOn": [
+        "^build",
+      ],
+      "outputs": [
+        "dist/**",
+      ],
+    },
+    "lint": {
+      "dependsOn": [
+        "topo",
+        "^build",
+      ],
+      "outputLogs": "new-only",
+    },
+    "lint:fix": {},
+    "test": {
+      "dependsOn": [
+        "^test",
+      ],
+    },
+  },
+}
+`;
+
+exports[`EslintSetupService > setup - with existing config > backs up existing eslint config > eslint.config.js.backup 1`] = `
+"import config from "@company/eslint-config"
+
+export default config
+"
+`;
+
+exports[`EslintSetupService > setup - with existing config > backs up existing eslint config > eslint.config.ts 1`] = `
+"import twoDigits from '@2digits/eslint-config';
+
+export default twoDigits();
+"
+`;

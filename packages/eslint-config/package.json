@@ -26,7 +26,8 @@
     "types": "tsc --noEmit",
     "docs": "eslint-config-inspector build",
     "docs:dev": "eslint-config-inspector",
-    "test": "vitest --run"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [
     "eslint-config"

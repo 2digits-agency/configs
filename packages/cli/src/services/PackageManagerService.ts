@@ -9,6 +9,8 @@ import * as String from 'effect/String';
 import * as nypm from 'nypm';
 import * as pkgTypes from 'pkg-types';
 
+import { CurrentWorkingDirService } from './CurrentWorkingDirService';
+
 class PackageManagerError extends Data.TaggedError('PackageManagerError')<{
   cause: unknown;
   message?: string;
@@ -17,10 +19,13 @@ class PackageManagerError extends Data.TaggedError('PackageManagerError')<{
 export class PackageManagerService extends Effect.Service<PackageManagerService>()('PackageManagerService', {
   effect: Effect.gen(function* () {
     const path = yield* Path.Path;
+    const cwdService = yield* CurrentWorkingDirService;
 
     const resolveRoot = Effect.fn('PackageManagerService.resolveRoot')(function* () {
+      const cwd = yield* cwdService.cwd;
+
       return yield* Effect.tryPromise({
-        try: () => pkgTypes.findWorkspaceDir(),
+        try: () => pkgTypes.findWorkspaceDir(cwd),
         catch: (cause) => new PackageManagerError({ cause }),
       }).pipe(Effect.map(path.normalize));
     });
@@ -35,7 +40,8 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
         id?: string;
       } = {},
     ) {
-      const pkgPath = path.resolve(options.id ?? process.cwd(), 'package.json');
+      const cwd = yield* cwdService.cwd;
+      const pkgPath = path.resolve(options.id ?? cwd, 'package.json');
 
       return yield* Effect.tryPromise({
         try: () => pkgTypes.readPackageJSON(pkgPath),
@@ -56,7 +62,8 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
        */
       content: pkgTypes.PackageJson;
     }) {
-      const pkgPath = path.resolve(options.id ?? process.cwd(), 'package.json');
+      const cwd = yield* cwdService.cwd;
+      const pkgPath = path.resolve(options.id ?? cwd, 'package.json');
 
       return yield* Effect.tryPromise({
         try: () => pkgTypes.writePackageJSON(pkgPath, options.content),
@@ -184,5 +191,5 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
       runScriptCommand,
     };
   }),
-  dependencies: [Path.layer],
+  dependencies: [Path.layer, CurrentWorkingDirService.Default],
 }) {}

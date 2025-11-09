@@ -4,6 +4,9 @@
     "packages/eslint-config": {
       "ignore": ["fixtures/**", "_fixtures/**"],
       "ignoreDependencies": ["react", "@types/react"]
+    },
+    "packages/cli": {
+      "ignore": ["test/fixtures/**"]
     }
   },
   "ignore": [".context/**"]
