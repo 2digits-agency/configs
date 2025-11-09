@@ -6,8 +6,18 @@ import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 
 import { cli } from './Cli';
+import { EslintDetectionService } from './services/EslintDetectionService';
+import { EslintSetupService } from './services/EslintSetupService';
 import { PrettierSetupService } from './services/PrettierSetupService';
+import { ProjectDetectionService } from './services/ProjectDetectionService';
 
-const MainLive = Layer.mergeAll(CliConfig.layer(), PrettierSetupService.Default, NodeContext.layer);
+const MainLive = Layer.mergeAll(
+  CliConfig.layer(),
+  PrettierSetupService.Default,
+  EslintSetupService.Default,
+  ProjectDetectionService.Default,
+  EslintDetectionService.Default,
+  NodeContext.layer,
+);
 
 cli(process.argv).pipe(Effect.provide(MainLive), NodeRuntime.runMain);
