@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 4.13.0
+
+### Minor Changes
+
+- 0db6d35: Added new Zod validation rules:
+  - zod/require-brand-type-parameter: Enforces brand type parameters
+  - zod/schema-error-property-style: Standardizes error message format with literal and template literal support
+
+### Patch Changes
+
+- 2dec480: Updated dependencies
+
 ## 4.12.8
 
 ### Patch Changes

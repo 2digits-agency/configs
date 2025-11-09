@@ -1,5 +1,16 @@
 # @2digits/cli
 
+## 1.1.0
+
+### Minor Changes
+
+- 8903e25: Added eslint setup
+- c1b806e: Updated formatting package.json scripts
+
+### Patch Changes
+
+- 2dec480: Updated dependencies
+
 ## 1.0.24
 
 ### Patch Changes
