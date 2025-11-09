@@ -21,6 +21,9 @@ catalogs:
     '@effect/platform-node':
       specifier: 0.100.0
       version: 0.100.0
+    '@effect/vitest':
+      specifier: 0.27.0
+      version: 0.27.0
     '@eslint-community/eslint-plugin-eslint-comments':
       specifier: 4.5.0
       version: 4.5.0
@@ -343,6 +346,9 @@ importers:
       '@effect/language-service':
         specifier: 'catalog:'
         version: 0.55.2
+      '@effect/vitest':
+        specifier: 'catalog:'
+        version: 0.27.0(effect@3.19.3)(vitest@4.0.8(@types/debug@4.1.12)(@types/node@22.19.0)(jiti@2.6.0)(tsx@4.20.6)(yaml@2.8.1))
       tsdown:
         specifier: 'catalog:'
         version: 0.16.1(oxc-resolver@11.12.0)(synckit@0.11.11)(typescript@5.9.3)
@@ -355,6 +361,9 @@ importers:
       unplugin-replace:
         specifier: 'catalog:'
         version: 0.6.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.8(@types/debug@4.1.12)(@types/node@22.19.0)(jiti@2.6.0)(tsx@4.20.6)(yaml@2.8.1)
 
   packages/constants:
     devDependencies:
@@ -1162,6 +1171,12 @@ packages:
     resolution: {integrity: sha512-+8xYvX4tjD7gKwGYzOyFh90I+ptdXzoNHLQTSa8kGh/xOVZMIGYb0VgLoNHE02UsuVrB+JJJuBmKLdd5TeDTPg==}
     peerDependencies:
       effect: ^3.17.0
+
+  '@effect/vitest@0.27.0':
+    resolution: {integrity: sha512-8bM7n9xlMUYw9GqPIVgXFwFm2jf27m/R7psI64PGpwU5+26iwyxp9eAXEsfT5S6lqztYfpQQ1Ubp5o6HfNYzJQ==}
+    peerDependencies:
+      effect: ^3.19.0
+      vitest: ^3.2.0
 
   '@effect/workflow@0.9.3':
     resolution: {integrity: sha512-OGDNoQzKENKMbVIvFOTddI8qwpKf9gmHYadaOMP6gUXQ9dFnRS9/LzV+3ct7IO/roaKTmnUg1BF9hTl9KywSzw==}
@@ -8342,6 +8357,11 @@ snapshots:
   '@effect/typeclass@0.36.0(effect@3.19.3)':
     dependencies:
       effect: 3.19.3
+
+  '@effect/vitest@0.27.0(effect@3.19.3)(vitest@4.0.8(@types/debug@4.1.12)(@types/node@22.19.0)(jiti@2.6.0)(tsx@4.20.6)(yaml@2.8.1))':
+    dependencies:
+      effect: 3.19.3
+      vitest: 4.0.8(@types/debug@4.1.12)(@types/node@22.19.0)(jiti@2.6.0)(tsx@4.20.6)(yaml@2.8.1)
 
   '@effect/workflow@0.9.3(@effect/platform@0.93.0(effect@3.19.3))(@effect/rpc@0.69.2(@effect/platform@0.93.0(effect@3.19.3))(effect@3.19.3))(effect@3.19.3)':
     dependencies:

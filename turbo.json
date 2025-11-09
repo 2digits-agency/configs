@@ -11,7 +11,12 @@
       "outputs": ["tsconfig.tsbuildinfo"]
     },
     "test": {
-      "dependsOn": ["^test"]
+      "dependsOn": ["^test"],
+      "outputs": ["coverage/**", "node_modules/.vitest/**"]
+    },
+    "test:watch": {
+      "persistent": true,
+      "cache": false
     },
     "dev": {
       "persistent": true
@@ -34,6 +39,12 @@
     },
     "//#knip": {
       "dependsOn": ["@2digits/eslint-config#build", "@2digits/prettier-config#build"]
-    }
+    },
+    "lint": {
+      "dependsOn": ["topo", "^build"],
+      "outputLogs": "new-only"
+    },
+    "lint:fix": {},
+    "//#lint:root:fix": {}
   }
 }
