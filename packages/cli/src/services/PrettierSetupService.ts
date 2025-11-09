@@ -20,13 +20,11 @@ export class PrettierSetupService extends Effect.Service<PrettierSetupService>()
 
       packageJson.scripts = packageJson.scripts || {};
       if (!packageJson.scripts.format) {
-        packageJson.scripts.format =
-          'prettier "**/*" --ignore-unknown --ignore-path .gitignore --ignore-path .prettierignore --check';
+        packageJson.scripts.format = 'prettier . --ignore-unknown --check --cache';
         yield* Effect.logInfo('✅ Added format script');
       }
       if (!packageJson.scripts['format:fix']) {
-        packageJson.scripts['format:fix'] =
-          'prettier "**/*" --ignore-unknown --ignore-path .gitignore --ignore-path .prettierignore --write';
+        packageJson.scripts['format:fix'] = 'prettier . --ignore-unknown --write --cache';
         yield* Effect.logInfo('✅ Added format:fix script');
       }
 
