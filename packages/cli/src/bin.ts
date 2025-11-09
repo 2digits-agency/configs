@@ -1,7 +1,9 @@
 #!/usr/bin/env node
-import { CliConfig } from '@effect/cli';
-import { NodeContext, NodeRuntime } from '@effect/platform-node';
-import { Effect, Layer } from 'effect';
+import * as CliConfig from '@effect/cli/CliConfig';
+import * as NodeContext from '@effect/platform-node/NodeContext';
+import * as NodeRuntime from '@effect/platform-node/NodeRuntime';
+import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
 
 import { cli } from './Cli';
 import { PrettierSetupService } from './services/PrettierSetupService';

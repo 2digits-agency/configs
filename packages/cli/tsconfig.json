@@ -1,7 +1,12 @@
 {
   "extends": "@2digits/tsconfig/tsconfig.json",
   "compilerOptions": {
-    "plugins": [{ "name": "@effect/language-service" }]
+    "plugins": [
+      {
+        "name": "@effect/language-service",
+        "namespaceImportPackages": ["effect", "@effect/*"]
+      }
+    ]
   },
   "include": ["**/*.ts"],
   "exclude": ["dist", "node_modules"]

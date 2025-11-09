@@ -1,6 +1,11 @@
 /* eslint-disable unicorn/no-array-callback-reference */
-import { Command, Path } from '@effect/platform';
-import { Array, Data, Effect, Stream, String } from 'effect';
+import * as Command from '@effect/platform/Command';
+import * as Path from '@effect/platform/Path';
+import * as Array from 'effect/Array';
+import * as Data from 'effect/Data';
+import * as Effect from 'effect/Effect';
+import * as Stream from 'effect/Stream';
+import * as String from 'effect/String';
 import * as nypm from 'nypm';
 import * as pkgTypes from 'pkg-types';
 
