@@ -8,6 +8,7 @@ import * as Array from 'effect/Array';
 import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
+import * as Struct from 'effect/Struct';
 
 import { PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
@@ -120,21 +121,15 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
      */
     const detectWorkspaceTasks = Effect.fn('TurborepoSetupService.detectWorkspaceTasks')(function* () {
       const workspaces = yield* projectDetect.discoverWorkspaces();
-      const taskNames = new Set<string>();
 
-      for (const workspacePath of workspaces) {
-        const packageJson = yield* pm
-          .readPackageJson({ id: workspacePath })
-          .pipe(Effect.orElseSucceed(() => ({ scripts: {} })));
+      const tasksPerWorkspace = yield* Effect.forEach(
+        workspaces,
+        (workspacePath) =>
+          pm.readPackageJson({ id: workspacePath }).pipe(Effect.map((pkg) => Struct.keys({ ...pkg.scripts }))),
+        { concurrency: 'unbounded' },
+      ).pipe(Effect.map(Array.flatten));
 
-        if (packageJson.scripts) {
-          for (const scriptName of Object.keys(packageJson.scripts)) {
-            taskNames.add(scriptName);
-          }
-        }
-      }
-
-      return taskNames;
+      return new Set(tasksPerWorkspace);
     });
 
     /**
@@ -246,7 +241,8 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
      */
     const ensureTurboInstalled = Effect.fn('TurborepoSetupService.ensureTurboInstalled')(function* () {
       yield* Effect.logInfo('Checking turbo installation...');
-      const packageJson = yield* pm.readPackageJson();
+      const root = yield* pm.resolveRoot();
+      const packageJson = yield* pm.readPackageJson({ id: root });
       const deps = {
         ...packageJson.dependencies,
         ...packageJson.devDependencies,
@@ -269,13 +265,15 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
     const setup = Effect.fn('TurborepoSetupService.setup')(function* () {
       yield* Effect.logInfo('🚀 Setting up Turborepo...');
 
-      // Detect project type
+      // Detect project type by checking for workspaces in root package.json
       yield* Effect.logInfo('Detecting project type...');
-      const isMonorepo = yield* projectDetect.isMonorepo();
+      const root = yield* pm.resolveRoot();
+      const rootPackageJson = yield* pm.readPackageJson({ id: root });
+      const isMonorepo = !!rootPackageJson.workspaces;
 
       if (!isMonorepo) {
         yield* Effect.logInfo('⚠️  Not a monorepo project - Turborepo requires monorepo structure');
-        yield* Effect.logInfo('💡 Create turbo.json to enable monorepo features');
+        yield* Effect.logInfo('💡 Configure workspaces in package.json to enable monorepo features');
 
         return;
       }

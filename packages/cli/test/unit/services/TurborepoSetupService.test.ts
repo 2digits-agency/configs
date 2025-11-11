@@ -1,15 +1,21 @@
+/* eslint-disable sonar/no-duplicate-string */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import * as FileSystem from '@effect/platform/FileSystem';
 import { describe, expect, it } from '@effect/vitest';
 import { strictEqual } from '@effect/vitest/utils';
+import * as Array from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
 import { TurborepoSetupService, type TurboConfig } from '../../../src/services/TurborepoSetupService.js';
-import { MockCommandExecutor, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
+import {
+  getExecutedCommands,
+  MockCommandExecutor,
+  MockCommandExecutorLayer,
+} from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe('TurborepoSetupService', () => {
@@ -192,6 +198,55 @@ describe('TurborepoSetupService', () => {
     );
   });
 
+  describe('ensureTurboInstalled', () => {
+    it.scoped('installs turbo in root package.json when not present', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-no-turbo');
+
+        const service = yield* TurborepoSetupService;
+        const pm = yield* PackageManagerService;
+
+        const rootBefore = yield* pm.resolveRoot();
+        const rootPackageJsonBefore = yield* pm.readPackageJson({ id: rootBefore });
+
+        expect(rootPackageJsonBefore.devDependencies?.turbo).toBeUndefined();
+
+        yield* service.ensureTurboInstalled();
+
+        const executed = yield* getExecutedCommands.pipe(Effect.map(Array.map((e) => e.command)));
+
+        expect(executed).toHaveLength(1);
+        expect(executed).toMatchInlineSnapshot(`
+          [
+            "pnpm add --workspace-root -D turbo",
+          ]
+        `);
+      }).pipe(Effect.provide(testLayer)),
+    );
+
+    it.scoped('does not install turbo if already in root package.json', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-turborepo');
+
+        const service = yield* TurborepoSetupService;
+        const pm = yield* PackageManagerService;
+
+        const rootBefore = yield* pm.resolveRoot();
+        const rootPackageJsonBefore = yield* pm.readPackageJson({ id: rootBefore });
+
+        expect(rootPackageJsonBefore.devDependencies?.turbo).toBeDefined();
+
+        yield* service.ensureTurboInstalled();
+
+        const executed = yield* getExecutedCommands.pipe(Effect.map(Array.map((e) => e.command)));
+
+        expect(executed).toHaveLength(0);
+      }).pipe(Effect.provide(testLayer)),
+    );
+  });
+
   describe('setup', () => {
     it.scoped('skips setup for non-monorepo projects', (ctx) =>
       Effect.gen(function* () {
@@ -209,6 +264,49 @@ describe('TurborepoSetupService', () => {
         const exists = yield* fs.exists(turboPath);
 
         strictEqual(exists, false);
+      }).pipe(Effect.provide(testLayer)),
+    );
+
+    it.scoped('sets up turborepo for monorepo without turbo.json', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-no-turbo');
+
+        const service = yield* TurborepoSetupService;
+        const fs = yield* FileSystem.FileSystem;
+        const pm = yield* PackageManagerService;
+
+        // Verify initial state
+        const root = yield* pm.resolveRoot();
+        const turboPath = `${root}/turbo.json`;
+        const turboExistsBefore = yield* fs.exists(turboPath);
+        const rootPackageJsonBefore = yield* pm.readPackageJson({ id: root });
+
+        strictEqual(turboExistsBefore, false);
+        expect(rootPackageJsonBefore.devDependencies?.turbo).toBeUndefined();
+
+        yield* service.setup();
+
+        const turboExistsAfter = yield* fs.exists(turboPath);
+
+        strictEqual(turboExistsAfter, true);
+
+        const executed = yield* getExecutedCommands.pipe(Effect.map(Array.map((e) => e.command)));
+
+        expect(executed).toMatchInlineSnapshot(`
+          [
+            "pnpm add --workspace-root -D turbo",
+          ]
+        `);
+
+        // Verify scripts were added to package.json
+        const rootPackageJsonAfter = yield* pm.readPackageJson({ id: root });
+
+        expect(rootPackageJsonAfter.scripts?.build).toBe('turbo run build');
+        expect(rootPackageJsonAfter.scripts?.test).toBe('turbo run test');
+        expect(rootPackageJsonAfter.scripts?.dev).toBe('turbo run dev');
+        expect(rootPackageJsonAfter.scripts?.lint).toBe('turbo run lint');
+        expect(rootPackageJsonAfter.scripts?.typecheck).toBe('turbo run typecheck');
       }).pipe(Effect.provide(testLayer)),
     );
   });
