@@ -3321,6 +3321,7 @@ Backward pagination arguments
   /**
    * Disallow certain props on components.
    * @see https://eslint-react.xyz/docs/rules/no-forbidden-props
+   * @deprecated
    */
   'react-extra/no-forbidden-props'?: Linter.RuleEntry<ReactExtraNoForbiddenProps>
   /**
@@ -3442,7 +3443,7 @@ Backward pagination arguments
    * Prevents using referential-type values as default props in object destructuring.
    * @see https://eslint-react.xyz/docs/rules/no-unstable-default-props
    */
-  'react-extra/no-unstable-default-props'?: Linter.RuleEntry<[]>
+  'react-extra/no-unstable-default-props'?: Linter.RuleEntry<ReactExtraNoUnstableDefaultProps>
   /**
    * Warns unused class component methods and properties.
    * @see https://eslint-react.xyz/docs/rules/no-unused-class-component-members
@@ -7758,77 +7759,77 @@ Backward pagination arguments
   'yoda'?: Linter.RuleEntry<Yoda>
   /**
    * Enforce consistent Zod array style
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/consistent-array-style.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/consistent-array-style.md
    */
   'zod/array-style'?: Linter.RuleEntry<ZodArrayStyle>
   /**
    * Enforce consistent source from Zod imports
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/consistent-import-source.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/consistent-import-source.md
    */
   'zod/consistent-import-source'?: Linter.RuleEntry<ZodConsistentImportSource>
   /**
    * Disallow usage of `z.any()` in Zod schemas
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/no-any.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/no-any.md
    */
   'zod/no-any'?: Linter.RuleEntry<[]>
   /**
    * Disallow usage of `z.custom()` without arguments
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/no-empty-custom-schema.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/no-empty-custom-schema.md
    */
   'zod/no-empty-custom-schema'?: Linter.RuleEntry<[]>
   /**
    * Disallow usage of `z.number().int()` as it is considered legacy
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/no-number-schema-with-int.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/no-number-schema-with-int.md
    */
   'zod/no-number-schema-with-int'?: Linter.RuleEntry<[]>
   /**
    * Disallow using both `.optional()` and `.default()` on the same Zod schema
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/no-optional-and-default-together.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/no-optional-and-default-together.md
    */
   'zod/no-optional-and-default-together'?: Linter.RuleEntry<ZodNoOptionalAndDefaultTogether>
   /**
    * Disallow throwing errors directly inside Zod refine callbacks
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/no-throw-in-refine.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/no-throw-in-refine.md
    */
   'zod/no-throw-in-refine'?: Linter.RuleEntry<[]>
   /**
    * Enforce usage of `.meta()` over `.describe()`
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/prefer-meta.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/prefer-meta.md
    */
   'zod/prefer-meta'?: Linter.RuleEntry<[]>
   /**
    * Enforce `.meta()` as last method
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/prefer-meta-last.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/prefer-meta-last.md
    */
   'zod/prefer-meta-last'?: Linter.RuleEntry<[]>
   /**
    * Enforce importing zod as a namespace import (`import * as z from 'zod'`)
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/prefer-namespace-import.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/prefer-namespace-import.md
    */
   'zod/prefer-namespace-import'?: Linter.RuleEntry<[]>
   /**
    * Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()`
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/prefer-strict-object.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/prefer-strict-object.md
    */
   'zod/prefer-strict-object'?: Linter.RuleEntry<ZodPreferStrictObject>
   /**
    * Require type parameter on `.brand()` functions
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/require-brand-type-parameter.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/require-brand-type-parameter.md
    */
   'zod/require-brand-type-parameter'?: Linter.RuleEntry<[]>
   /**
    * Enforce that custom refinements include an error message
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/require-error-message.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/require-error-message.md
    */
   'zod/require-error-message'?: Linter.RuleEntry<[]>
   /**
    * Require schema suffix when declaring a Zod schema
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/require-schema-suffix.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/require-schema-suffix.md
    */
   'zod/require-schema-suffix'?: Linter.RuleEntry<ZodRequireSchemaSuffix>
   /**
    * Enforce consistent style for error messages in Zod schema validation (using ESQuery patterns)
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x#readme/blob/main/docs/rules/consistent-import-source.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/consistent-import-source.md
    */
   'zod/schema-error-property-style'?: Linter.RuleEntry<ZodSchemaErrorPropertyStyle>
 }
@@ -11339,6 +11340,10 @@ type ReactExtraNoForbiddenProps = []|[{
     prop: string
   })[]
 }]
+// ----- react-extra/no-unstable-default-props -----
+type ReactExtraNoUnstableDefaultProps = []|[{
+  safeDefaultProps?: string[]
+}]
 // ----- react-extra/no-useless-fragment -----
 type ReactExtraNoUselessFragment = []|[{
   
@@ -14806,7 +14811,6 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
 type ZodArrayStyle = []|[{
   
   style?: ("function" | "method")
-  [k: string]: unknown | undefined
 }]
 // ----- zod/consistent-import-source -----
 type ZodConsistentImportSource = []|[{
@@ -14822,7 +14826,6 @@ type ZodNoOptionalAndDefaultTogether = []|[{
 type ZodPreferStrictObject = []|[{
   
   allow?: ("object" | "looseObject")[]
-  [k: string]: unknown | undefined
 }]
 // ----- zod/require-schema-suffix -----
 type ZodRequireSchemaSuffix = []|[{
