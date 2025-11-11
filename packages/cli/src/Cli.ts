@@ -7,6 +7,7 @@ import * as Option from 'effect/Option';
 import { moduleVersion } from './internal/version';
 import { EslintSetupService } from './services/EslintSetupService';
 import { PrettierSetupService } from './services/PrettierSetupService';
+import { TurborepoSetupService } from './services/TurborepoSetupService';
 
 const command = Command.make('2d', {
   prettier: Options.boolean('prettier').pipe(
@@ -19,11 +20,16 @@ const command = Command.make('2d', {
     Options.withDefault(Option.none()),
     Options.withDescription('Setup ESLint with @2digits/eslint-config'),
   ),
+  turbo: Options.boolean('turbo').pipe(
+    Options.optional,
+    Options.withDefault(Option.none()),
+    Options.withDescription('Setup Turborepo configuration for monorepo'),
+  ),
 }).pipe(
   Command.withDescription('Setup the 2DIGITS configs in your project'),
   Command.withHandler(
     Effect.fn('2d')(
-      function* ({ prettier, eslint }) {
+      function* ({ prettier, eslint, turbo }) {
         if (Option.isNone(prettier) || !prettier.value) {
           yield* Effect.logDebug('Setting up Prettier...');
 
@@ -42,6 +48,16 @@ const command = Command.make('2d', {
           yield* eslintSetupService.setup();
         } else {
           yield* Effect.logDebug('Skipping ESLint setup');
+        }
+
+        if (Option.isSome(turbo) && turbo.value) {
+          yield* Effect.logDebug('Setting up Turborepo...');
+
+          const turborepoSetupService = yield* TurborepoSetupService;
+
+          yield* turborepoSetupService.setup();
+        } else {
+          yield* Effect.logDebug('Skipping Turborepo setup');
         }
       },
       Effect.tap((options) => Console.log(`Running 2DIGITS Configuration CLI ${moduleVersion} with options:`, options)),
