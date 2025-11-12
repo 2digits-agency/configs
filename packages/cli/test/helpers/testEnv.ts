@@ -39,7 +39,7 @@ export const fixturesBasePath = Effect.gen(function* () {
   return path.join(__dirname, '../fixtures/');
 });
 
-type Fixture = 'existing-configs' | 'monorepo-turborepo' | 'single-package';
+type Fixture = 'existing-configs' | 'monorepo-turborepo' | 'single-package' | 'monorepo-no-turbo';
 
 /**
  * Copies a fixture directory into the current working directory (temp dir).

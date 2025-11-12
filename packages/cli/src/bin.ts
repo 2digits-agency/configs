@@ -11,6 +11,7 @@ import { EslintDetectionService } from './services/EslintDetectionService';
 import { EslintSetupService } from './services/EslintSetupService';
 import { PrettierSetupService } from './services/PrettierSetupService';
 import { ProjectDetectionService } from './services/ProjectDetectionService';
+import { TurborepoSetupService } from './services/TurborepoSetupService';
 
 const MainLive = Layer.mergeAll(
   CliConfig.layer(),
@@ -19,6 +20,7 @@ const MainLive = Layer.mergeAll(
   EslintSetupService.Default,
   ProjectDetectionService.Default,
   EslintDetectionService.Default,
+  TurborepoSetupService.Default,
   NodeContext.layer,
 );
 
