@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 4.13.1
+
+### Patch Changes
+
+- 9eef6d8: Updated dependencies
+- 5e2b2be: Updated dependencies
+- Updated dependencies [5e2b2be]
+  - @2digits/eslint-plugin@3.2.4
+
 ## 4.13.0
 
 ### Minor Changes

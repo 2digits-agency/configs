@@ -1,5 +1,16 @@
 # @2digits/cli
 
+## 1.2.0
+
+### Minor Changes
+
+- 3d711e8: Added automatic turborepo setup
+
+### Patch Changes
+
+- 9eef6d8: Updated dependencies
+- 5e2b2be: Updated dependencies
+
 ## 1.1.0
 
 ### Minor Changes
