@@ -7759,7 +7759,7 @@ Backward pagination arguments
   'yoda'?: Linter.RuleEntry<Yoda>
   /**
    * Enforce consistent Zod array style
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/consistent-array-style.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/array-style.md
    */
   'zod/array-style'?: Linter.RuleEntry<ZodArrayStyle>
   /**
@@ -7829,7 +7829,7 @@ Backward pagination arguments
   'zod/require-schema-suffix'?: Linter.RuleEntry<ZodRequireSchemaSuffix>
   /**
    * Enforce consistent style for error messages in Zod schema validation (using ESQuery patterns)
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/consistent-import-source.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/schema-error-property-style.md
    */
   'zod/schema-error-property-style'?: Linter.RuleEntry<ZodSchemaErrorPropertyStyle>
 }
@@ -9448,6 +9448,10 @@ type JsdocSortTags = []|[{
   reportIntraTagGroupSpacing?: boolean
   
   reportTagGroupSpacing?: boolean
+  
+  tagExceptions?: {
+    [k: string]: number
+  }
   
   tagSequence?: {
     
