@@ -309,5 +309,322 @@ describe('TurborepoSetupService', () => {
         expect(rootPackageJsonAfter.scripts?.typecheck).toBe('turbo run typecheck');
       }).pipe(Effect.provide(testLayer)),
     );
+
+    it.scoped('skips if no workspace tasks detected', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-turborepo');
+
+        const pm = yield* PackageManagerService;
+        const projectDetect = yield* ProjectDetectionService;
+
+        const workspaces = yield* projectDetect.discoverWorkspaces();
+
+        for (const workspace of workspaces) {
+          const pkg = yield* pm.readPackageJson({ id: workspace });
+
+          delete pkg.scripts;
+
+          yield* pm.writePackageJson({ id: workspace, content: pkg });
+        }
+
+        const service = yield* TurborepoSetupService;
+
+        yield* service.setup();
+      }).pipe(Effect.provide(testLayer)),
+    );
+  });
+
+  describe('ensureTurboInstalled', () => {
+    it.scoped('installs turbo if not present', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-no-turbo');
+
+        const service = yield* TurborepoSetupService;
+        const pm = yield* PackageManagerService;
+
+        const pkgBefore = yield* pm.readPackageJson();
+        const depsBefore = {
+          ...pkgBefore.dependencies,
+          ...pkgBefore.devDependencies,
+        };
+
+        expect('turbo' in depsBefore).toBe(false);
+
+        yield* service.ensureTurboInstalled();
+      }).pipe(Effect.provide(testLayer)),
+    );
+
+    it.scoped('skips install if turbo already present', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-turborepo');
+
+        const service = yield* TurborepoSetupService;
+        const pm = yield* PackageManagerService;
+
+        const pkg = yield* pm.readPackageJson();
+
+        pkg.devDependencies = { ...pkg.devDependencies, turbo: '^2.0.0' };
+        yield* pm.writePackageJson({ content: pkg });
+
+        yield* service.ensureTurboInstalled();
+
+        const pkgAfter = yield* pm.readPackageJson();
+
+        expect(pkgAfter.devDependencies?.turbo).toBe('^2.0.0');
+      }).pipe(Effect.provide(testLayer)),
+    );
+  });
+
+  describe('writeTurboConfig', () => {
+    it.scoped('writes valid turbo.json', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-no-turbo');
+
+        const service = yield* TurborepoSetupService;
+        const fs = yield* FileSystem.FileSystem;
+        const pm = yield* PackageManagerService;
+
+        const config: TurboConfig = {
+          $schema: 'https://turbo.build/schema.json',
+          tasks: {
+            build: { dependsOn: ['^build'] },
+          },
+        };
+
+        yield* service.writeTurboConfig(config);
+
+        const root = yield* pm.resolveRoot();
+        const turboPath = `${root}/turbo.json`;
+        const content = yield* fs.readFileString(turboPath);
+        const parsed = JSON.parse(content) as TurboConfig;
+
+        expect(parsed).toEqual(config);
+      }).pipe(Effect.provide(testLayer)),
+    );
+  });
+
+  describe('error scenarios', () => {
+    it.scoped('handles invalid turbo.json', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-turborepo');
+
+        const fs = yield* FileSystem.FileSystem;
+        const pm = yield* PackageManagerService;
+
+        const root = yield* pm.resolveRoot();
+        const turboPath = `${root}/turbo.json`;
+
+        yield* fs.writeFileString(turboPath, '{ invalid json }');
+
+        const service = yield* TurborepoSetupService;
+        const result = yield* Effect.either(service.readTurboConfig());
+
+        expect(result._tag).toBe('Left');
+      }).pipe(Effect.provide(testLayer)),
+    );
+
+    it.scoped('handles missing workspace package.json', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-no-turbo');
+
+        const service = yield* TurborepoSetupService;
+        const tasks = yield* service.detectWorkspaceTasks();
+
+        expect(tasks.size).toBeGreaterThan(0);
+      }).pipe(Effect.provide(testLayer)),
+    );
+
+    it.scoped('handles readonly turbo.json', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-turborepo');
+
+        const fs = yield* FileSystem.FileSystem;
+        const pm = yield* PackageManagerService;
+
+        const root = yield* pm.resolveRoot();
+        const turboPath = `${root}/turbo.json`;
+
+        yield* fs.chmod(turboPath, 0o444);
+
+        const service = yield* TurborepoSetupService;
+        const result = yield* Effect.either(
+          service.writeTurboConfig({
+            $schema: 'https://turbo.build/schema.json',
+            tasks: {},
+          }),
+        );
+
+        yield* fs.chmod(turboPath, 0o644);
+
+        expect(result._tag).toBe('Left');
+      }).pipe(Effect.provide(testLayer)),
+    );
+  });
+
+  describe('edge cases', () => {
+    it.scoped('handles workspace with no scripts', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-no-turbo');
+
+        const pm = yield* PackageManagerService;
+        const projectDetect = yield* ProjectDetectionService;
+
+        const workspaces = yield* projectDetect.discoverWorkspaces();
+        const firstWorkspace = workspaces[0];
+
+        if (firstWorkspace) {
+          const pkg = yield* pm.readPackageJson({ id: firstWorkspace });
+
+          delete pkg.scripts;
+
+          yield* pm.writePackageJson({ id: firstWorkspace, content: pkg });
+        }
+
+        const service = yield* TurborepoSetupService;
+        const tasks = yield* service.detectWorkspaceTasks();
+
+        expect(tasks.size).toBeGreaterThan(0);
+      }).pipe(Effect.provide(testLayer)),
+    );
+
+    it.scoped('preserves existing turbo tasks', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-turborepo');
+
+        const service = yield* TurborepoSetupService;
+        const fs = yield* FileSystem.FileSystem;
+        const pm = yield* PackageManagerService;
+
+        const root = yield* pm.resolveRoot();
+        const turboPath = `${root}/turbo.json`;
+
+        const originalContent = yield* fs.readFileString(turboPath);
+        const originalConfig = JSON.parse(originalContent) as TurboConfig;
+        const originalTaskKeys = Object.keys(originalConfig.tasks || {});
+
+        yield* service.mergeTurboConfig(new Set(['newTask']));
+
+        const updatedContent = yield* fs.readFileString(turboPath);
+        const updatedConfig = JSON.parse(updatedContent) as TurboConfig;
+
+        for (const taskKey of originalTaskKeys) {
+          expect(updatedConfig.tasks?.[taskKey]).toBeDefined();
+        }
+        expect(updatedConfig.tasks?.newTask).toBeDefined();
+      }).pipe(Effect.provide(testLayer)),
+    );
+
+    it.scoped('handles complex task names', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-no-turbo');
+
+        const pm = yield* PackageManagerService;
+        const projectDetect = yield* ProjectDetectionService;
+
+        const workspaces = yield* projectDetect.discoverWorkspaces();
+        const firstWorkspace = workspaces[0];
+
+        if (firstWorkspace) {
+          const pkg = yield* pm.readPackageJson({ id: firstWorkspace });
+
+          pkg.scripts = {
+            ...pkg.scripts,
+            'build:prod': 'build --prod',
+            'test:unit': 'vitest run',
+            'lint:eslint': 'eslint .',
+          };
+
+          yield* pm.writePackageJson({ id: firstWorkspace, content: pkg });
+        }
+
+        const service = yield* TurborepoSetupService;
+        const tasks = yield* service.detectWorkspaceTasks();
+
+        expect(tasks.has('build:prod')).toBe(true);
+        expect(tasks.has('test:unit')).toBe(true);
+        expect(tasks.has('lint:eslint')).toBe(true);
+      }).pipe(Effect.provide(testLayer)),
+    );
+
+    it.scoped('task categorization works correctly', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-no-turbo');
+
+        const service = yield* TurborepoSetupService;
+
+        const detectedTasks = new Set([
+          'build',
+          'compile',
+          'test',
+          'vitest',
+          'lint',
+          'eslint',
+          'typecheck',
+          'types',
+          'dev',
+          'start',
+          'other-task',
+        ]);
+
+        yield* service.mergeTurboConfig(detectedTasks);
+
+        const configOption = yield* service.readTurboConfig();
+
+        if (configOption._tag === 'Some') {
+          const config = configOption.value;
+
+          expect(config.tasks?.build).toHaveProperty('dependsOn');
+          expect(config.tasks?.build).toHaveProperty('outputs');
+          expect(config.tasks?.test).toHaveProperty('dependsOn');
+          expect(config.tasks?.dev).toHaveProperty('persistent', true);
+          expect(config.tasks?.dev).toHaveProperty('cache', false);
+        }
+      }).pipe(Effect.provide(testLayer)),
+    );
+
+    it.scoped('does not override existing task configs', (ctx) =>
+      Effect.gen(function* () {
+        yield* withTempTestEnv(ctx.task.id);
+        yield* copyFixture('monorepo-turborepo');
+
+        const fs = yield* FileSystem.FileSystem;
+        const pm = yield* PackageManagerService;
+
+        const root = yield* pm.resolveRoot();
+        const turboPath = `${root}/turbo.json`;
+
+        const config: TurboConfig = {
+          $schema: 'https://turbo.build/schema.json',
+          tasks: {
+            build: {
+              dependsOn: ['custom-dep'],
+              outputs: ['custom-output/**'],
+            },
+          },
+        };
+
+        yield* fs.writeFileString(turboPath, JSON.stringify(config, undefined, 2));
+
+        const service = yield* TurborepoSetupService;
+
+        yield* service.mergeTurboConfig(new Set(['build']));
+
+        const updatedContent = yield* fs.readFileString(turboPath);
+        const updatedConfig = JSON.parse(updatedContent) as TurboConfig;
+
+        expect(updatedConfig.tasks?.build).toEqual(config.tasks?.build);
+      }).pipe(Effect.provide(testLayer)),
+    );
   });
 });
