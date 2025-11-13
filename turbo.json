@@ -11,12 +11,12 @@
       "outputs": ["tsconfig.tsbuildinfo"]
     },
     "test": {
-      "dependsOn": ["^test"],
-      "outputs": ["coverage/**", "node_modules/.vitest/**"]
+      "dependsOn": ["^test"]
     },
     "test:watch": {
       "persistent": true,
-      "cache": false
+      "cache": false,
+      "interactive": true
     },
     "dev": {
       "persistent": true
