@@ -13,8 +13,8 @@ catalogs:
       specifier: 0.72.1
       version: 0.72.1
     '@effect/language-service':
-      specifier: 0.55.3
-      version: 0.55.3
+      specifier: 0.56.0
+      version: 0.56.0
     '@effect/platform':
       specifier: 0.93.1
       version: 0.93.1
@@ -345,7 +345,7 @@ importers:
         version: link:../tsconfig
       '@effect/language-service':
         specifier: 'catalog:'
-        version: 0.55.3
+        version: 0.56.0
       '@effect/vitest':
         specifier: 'catalog:'
         version: 0.27.0(effect@3.19.3)(vitest@4.0.8(@types/debug@4.1.12)(@types/node@22.19.1)(jiti@2.6.0)(tsx@4.20.6)(yaml@2.8.1))
@@ -1115,8 +1115,8 @@ packages:
       lmdb:
         optional: true
 
-  '@effect/language-service@0.55.3':
-    resolution: {integrity: sha512-dteG8LvrQ5ClN76pFzqgEOuY5sXVqM0OrZLqFXrdtlpUF8/6/XZwk1mPdDnEVhvf5iQawVVvV+ybJoT6Hwy/DA==}
+  '@effect/language-service@0.56.0':
+    resolution: {integrity: sha512-gvJaHoeXMHAoA6+Xyj9Vdq52yDCs+ECLbKpHvxHtdJP/C0D9b3JFEfLjdVuw37zoWcYS856um4rgEYHlW2LSEQ==}
     hasBin: true
 
   '@effect/platform-node-shared@0.53.0':
@@ -8246,7 +8246,7 @@ snapshots:
       effect: 3.19.3
       uuid: 11.1.0
 
-  '@effect/language-service@0.55.3': {}
+  '@effect/language-service@0.56.0': {}
 
   '@effect/platform-node-shared@0.53.0(@effect/cluster@0.48.3(@effect/platform@0.93.1(effect@3.19.3))(@effect/rpc@0.69.2(@effect/platform@0.93.1(effect@3.19.3))(effect@3.19.3))(@effect/sql@0.44.2(@effect/experimental@0.54.6(@effect/platform@0.93.1(effect@3.19.3))(effect@3.19.3))(@effect/platform@0.93.1(effect@3.19.3))(effect@3.19.3))(@effect/workflow@0.9.3(@effect/platform@0.93.1(effect@3.19.3))(@effect/rpc@0.69.2(@effect/platform@0.93.1(effect@3.19.3))(effect@3.19.3))(effect@3.19.3))(effect@3.19.3))(@effect/platform@0.93.1(effect@3.19.3))(@effect/rpc@0.69.2(@effect/platform@0.93.1(effect@3.19.3))(effect@3.19.3))(@effect/sql@0.44.2(@effect/experimental@0.54.6(@effect/platform@0.93.1(effect@3.19.3))(effect@3.19.3))(@effect/platform@0.93.1(effect@3.19.3))(effect@3.19.3))(effect@3.19.3)':
     dependencies:
