@@ -163,8 +163,8 @@ catalogs:
       specifier: 1.19.0
       version: 1.19.0
     eslint-plugin-zod-x:
-      specifier: 1.8.2
-      version: 1.8.2
+      specifier: 1.8.3
+      version: 1.8.3
     eslint-typegen:
       specifier: 2.3.0
       version: 2.3.0
@@ -495,7 +495,7 @@ importers:
         version: 1.19.0(eslint@9.39.1(jiti@2.6.0))
       eslint-plugin-zod-x:
         specifier: 'catalog:'
-        version: 1.8.2(eslint@9.39.1(jiti@2.6.0))(typescript@5.9.3)(zod@4.1.12)
+        version: 1.8.3(eslint@9.39.1(jiti@2.6.0))(typescript@5.9.3)(zod@4.1.12)
       globals:
         specifier: 'catalog:'
         version: 16.5.0
@@ -4192,12 +4192,15 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-plugin-zod-x@1.8.2:
-    resolution: {integrity: sha512-5jUP5FNaKIjTXtVRjoQs++UNr0Hri0v6KI+2eBMRuW+S5xGNk/sJd8crt5V4htwkTPjZFrmnWDO9MprrZu0hIA==}
+  eslint-plugin-zod-x@1.8.3:
+    resolution: {integrity: sha512-NNtXpP8MLNc74jH8oQxCSPb1g4817NdsduT4LebpZtAr/Ovzp1MufFt/HMbWiou6w4Kgr3FwkRmNGdo2WObO3g==}
     engines: {node: ^20 || ^22 || >=24}
     peerDependencies:
       eslint: ^9
       zod: ^4
+    peerDependenciesMeta:
+      zod:
+        optional: true
 
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
@@ -11580,11 +11583,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-zod-x@1.8.2(eslint@9.39.1(jiti@2.6.0))(typescript@5.9.3)(zod@4.1.12):
+  eslint-plugin-zod-x@1.8.3(eslint@9.39.1(jiti@2.6.0))(typescript@5.9.3)(zod@4.1.12):
     dependencies:
       '@typescript-eslint/utils': 8.46.4(eslint@9.39.1(jiti@2.6.0))(typescript@5.9.3)
       eslint: 9.39.1(jiti@2.6.0)
       esquery: 1.6.0
+    optionalDependencies:
       zod: 4.1.12
     transitivePeerDependencies:
       - supports-color
