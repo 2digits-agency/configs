@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 4.13.5
+
+### Patch Changes
+
+- d5ad954: Updated dependencies
+
 ## 4.13.4
 
 ### Patch Changes

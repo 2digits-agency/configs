@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.14
+
+### Patch Changes
+
+- d5ad954: Updated dependencies
+
 ## 1.2.13
 
 ### Patch Changes
