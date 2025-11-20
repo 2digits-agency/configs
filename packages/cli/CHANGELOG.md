@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.2.3
+
+### Patch Changes
+
+- d5ad954: Updated dependencies
+
 ## 1.2.2
 
 ### Patch Changes
