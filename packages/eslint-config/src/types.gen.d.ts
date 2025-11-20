@@ -8825,6 +8825,8 @@ type JsdocCheckExamples = []|[{
 // ----- jsdoc/check-indentation -----
 type JsdocCheckIndentation = []|[{
   
+  allowIndentedSections?: boolean
+  
   excludeTags?: string[]
 }]
 // ----- jsdoc/check-line-alignment -----
