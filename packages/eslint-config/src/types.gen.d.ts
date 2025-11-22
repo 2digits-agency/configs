@@ -1206,6 +1206,11 @@ Backward pagination arguments
    */
   'jsdoc/require-property-type'?: Linter.RuleEntry<[]>
   /**
+   * Requires that Promise rejections are documented with `@rejects` tags.
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-rejects.md#repos-sticky-header
+   */
+  'jsdoc/require-rejects'?: Linter.RuleEntry<JsdocRequireRejects>
+  /**
    * Requires that returns are documented with `@returns`.
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-returns.md#repos-sticky-header
    */
@@ -9331,6 +9336,16 @@ type JsdocRequireParamType = []|[{
   defaultDestructuredRootType?: string
   
   setDefaultDestructuredRootType?: boolean
+}]
+// ----- jsdoc/require-rejects -----
+type JsdocRequireRejects = []|[{
+  
+  contexts?: (string | {
+    comment?: string
+    context?: string
+  })[]
+  
+  exemptedBy?: string[]
 }]
 // ----- jsdoc/require-returns -----
 type JsdocRequireReturns = []|[{
