@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 4.0.18
+
+### Patch Changes
+
+- 7679d2b: Updated dependencies
+
 ## 4.0.17
 
 ### Patch Changes
