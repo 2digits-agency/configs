@@ -1,6 +1,7 @@
-import type { PrettierConfig as ImportOrderConfig } from '@ianvs/prettier-plugin-sort-imports';
+/// <reference types="@ianvs/prettier-plugin-sort-imports" />
+
 import { getPackageInfoSync } from 'local-pkg';
-import type { Options } from 'prettier';
+import type { Config } from 'prettier';
 import type { Options as JSDocOptions } from 'prettier-plugin-jsdoc';
 import type { PluginOptions } from 'prettier-plugin-tailwindcss';
 
@@ -15,7 +16,7 @@ type NormalizeOptions<T> = {
   ? B
   : never;
 
-export type PrettierConfigWithPlugins = NormalizeOptions<Options & ImportOrderConfig & JSDocOptions & PluginOptions>;
+export type PrettierConfigWithPlugins = NormalizeOptions<Config & JSDocOptions & PluginOptions>;
 
 /**
  * Get the version of the locally installed TypeScript.
