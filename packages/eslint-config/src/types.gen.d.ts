@@ -7778,6 +7778,11 @@ Backward pagination arguments
    */
   'zod/consistent-import-source'?: Linter.RuleEntry<ZodConsistentImportSource>
   /**
+   * Enforce consistent usage of Zod schema methods
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/consistent-object-schema-type.md
+   */
+  'zod/consistent-object-schema-type'?: Linter.RuleEntry<ZodConsistentObjectSchemaType>
+  /**
    * Disallow usage of `z.any()` in Zod schemas
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/no-any.md
    */
@@ -14842,6 +14847,11 @@ type ZodArrayStyle = []|[{
 type ZodConsistentImportSource = []|[{
   
   sources?: [("zod" | "zod/mini" | "zod/v4" | "zod/v4-mini" | "zod/v3"), ...(("zod" | "zod/mini" | "zod/v4" | "zod/v4-mini" | "zod/v3"))[]]
+}]
+// ----- zod/consistent-object-schema-type -----
+type ZodConsistentObjectSchemaType = []|[{
+  
+  allow?: [("object" | "looseObject" | "strictObject"), ...(("object" | "looseObject" | "strictObject"))[]]
 }]
 // ----- zod/no-optional-and-default-together -----
 type ZodNoOptionalAndDefaultTogether = []|[{
