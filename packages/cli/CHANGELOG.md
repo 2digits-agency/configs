@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.2.6
+
+### Patch Changes
+
+- 5a4ff7d: Updated dependencies
+
 ## 1.2.5
 
 ### Patch Changes
