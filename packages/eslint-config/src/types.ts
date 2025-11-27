@@ -10,8 +10,10 @@ export type { ConfigNames } from './types.gen';
 
 export type Rules = RuleOptions;
 
-export interface TypedFlatConfigItem
-  extends Omit<Linter.Config<Linter.RulesRecord & Rules>, 'plugins' | 'languageOptions'> {
+export interface TypedFlatConfigItem extends Omit<
+  Linter.Config<Linter.RulesRecord & Rules>,
+  'plugins' | 'languageOptions'
+> {
   // Relax plugins type limitation, as most of the plugins did not have correct type info yet.
   /**
    * An object containing a name-value mapping of plugin names to plugin objects. When `files` is specified, these
