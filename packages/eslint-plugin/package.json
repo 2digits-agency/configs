@@ -4,7 +4,7 @@
   "description": "An eslint plugin that provides a set of rules to enforce best practices for 2digits projects",
   "repository": {
     "type": "git",
-    "url": "https://github.com/2digits-agency/configs.git",
+    "url": "git+https://github.com/2digits-agency/configs.git",
     "directory": "packages/eslint-plugin"
   },
   "type": "module",
@@ -39,9 +39,11 @@
   },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
+    "@arethetypeswrong/core": "catalog:",
     "@typescript-eslint/parser": "catalog:",
     "eslint-vitest-rule-tester": "catalog:",
     "magic-regexp": "catalog:",
+    "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
