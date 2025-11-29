@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 4.13.9
+
+### Patch Changes
+
+- f3fe438: Updated package.json repository.url to have the correct git+https url
+- 2bcbdd0: Updated tsdown
+- b667174: Updated dependencies
+- 92d4bcd: Enabled attw and publint during build
+- Updated dependencies [f3fe438]
+- Updated dependencies [2bcbdd0]
+- Updated dependencies [92d4bcd]
+  - @2digits/eslint-plugin@3.2.7
+  - @2digits/constants@1.1.11
+
 ## 4.13.8
 
 ### Patch Changes

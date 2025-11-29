@@ -1,5 +1,13 @@
 # @2digits/eslint-plugin
 
+## 3.2.7
+
+### Patch Changes
+
+- f3fe438: Updated package.json repository.url to have the correct git+https url
+- 2bcbdd0: Updated tsdown
+- 92d4bcd: Enabled attw and publint during build
+
 ## 3.2.6
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.2.18
+
+### Patch Changes
+
+- b667174: Updated dependencies
+- 5ed4bf3: Added Effect, Tanstack DB and Tanstack Pacer groups
+
 ## 1.2.17
 
 ### Patch Changes
