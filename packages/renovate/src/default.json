@@ -17,13 +17,19 @@
   "packageRules": [
     { "groupName": "2DIGITS Configs", "matchPackageNames": ["/^@2digits/"] },
     { "groupName": "Better Auth", "matchPackageNames": ["better-auth", "/^@better-auth//"] },
+    {
+      "groupName": "Effect",
+      "matchRepositories": ["https://github.com/Effect-TS/effect", "https://github.com/Effect-TS/language-service"]
+    },
     { "groupName": "Hey API", "matchPackageNames": ["/^@hey-api//"] },
     { "groupName": "Notificare", "matchPackageNames": ["/^react-native-notificare/"] },
     { "groupName": "Orval", "matchPackageNames": ["orval", "/^@orval/"] },
     { "groupName": "Payload", "matchPackageNames": ["payload", "/^@payloadcms//"] },
     { "groupName": "PostHog", "matchPackageNames": ["/^posthog-/"] },
-    { "groupName": "React Email", "matchPackageNames": ["react-email", "/^@react-email//"] },
-    { "groupName": "Rozenite", "matchPackageNames": ["/^@rozenite//"] },
+    { "groupName": "React Email", "matchRepositories": ["https://github.com/resend/react-email"] },
+    { "groupName": "Rozenite", "matchRepositories": ["https://github.com/callstackincubator/rozenite"] },
+    { "groupName": "Tanstack DB", "matchRepositories": ["https://github.com/tanstack/db"] },
+    { "groupName": "Tanstack Pacer", "matchRepositories": ["https://github.com/tanstack/pacer"] },
     { "groupName": "Unified & Rehype", "matchPackageNames": ["unified", "/^rehype-/"] },
     { "groupName": "nativewind", "matchPackageNames": ["nativewind", "react-native-css-interop", "react-native-css"] },
     { "groupName": "oRPC", "matchPackageNames": ["/^@orpc//"] },
