@@ -9,7 +9,7 @@ export default defineConfig({
   dts: true,
   fixedExtension: true,
   exports: true,
-  attw: { profile: 'esmOnly', level: 'error' },
+  attw: { profile: 'esm-only', level: 'error' },
   publint: { strict: true },
 
   plugins: [
