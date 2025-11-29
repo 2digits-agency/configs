@@ -6,6 +6,8 @@ export default defineConfig({
   dts: true,
   fixedExtension: true,
   exports: true,
+  attw: { profile: 'esmOnly', level: 'error' },
+  publint: { strict: true },
 
   shims: true,
 });
