@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.8.5
+
+### Patch Changes
+
+- f3fe438: Updated package.json repository.url to have the correct git+https url
+
 ## 0.8.4
 
 ### Patch Changes

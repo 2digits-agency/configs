@@ -1,5 +1,18 @@
 # @2digits/prettier-config
 
+## 4.0.20
+
+### Patch Changes
+
+- f3fe438: Updated package.json repository.url to have the correct git+https url
+- 2bcbdd0: Updated tsdown
+- b667174: Updated dependencies
+- 92d4bcd: Enabled attw and publint during build
+- Updated dependencies [f3fe438]
+- Updated dependencies [2bcbdd0]
+- Updated dependencies [92d4bcd]
+  - @2digits/constants@1.1.11
+
 ## 4.0.19
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @2digits/constants
 
+## 1.1.11
+
+### Patch Changes
+
+- f3fe438: Updated package.json repository.url to have the correct git+https url
+- 2bcbdd0: Updated tsdown
+- 92d4bcd: Enabled attw and publint during build
+
 ## 1.1.10
 
 ### Patch Changes
