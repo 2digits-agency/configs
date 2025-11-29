@@ -4,7 +4,7 @@ import type { Rule } from 'eslint';
 
 import { repository } from '../../package.json';
 
-const blobUrl = `${repository.url.replaceAll('.git', '')}/tree/main/${repository.directory}/src/rules`;
+const blobUrl = `${repository.url.replace('.git', '').replace('git+', '')}/tree/main/${repository.directory}/src/rules`;
 
 /** @public */
 export interface RuleModule<T extends ReadonlyArray<unknown>> extends Rule.RuleModule {
