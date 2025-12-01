@@ -16,8 +16,8 @@ catalogs:
       specifier: 0.72.1
       version: 0.72.1
     '@effect/language-service':
-      specifier: 0.57.1
-      version: 0.57.1
+      specifier: 0.58.0
+      version: 0.58.0
     '@effect/platform':
       specifier: 0.93.5
       version: 0.93.5
@@ -354,7 +354,7 @@ importers:
         version: 0.18.2
       '@effect/language-service':
         specifier: 'catalog:'
-        version: 0.57.1
+        version: 0.58.0
       '@effect/vitest':
         specifier: 'catalog:'
         version: 0.27.0(effect@3.19.8)(vitest@4.0.14(@opentelemetry/api@1.9.0)(@types/node@24.10.1)(jiti@2.6.0)(tsx@4.20.6)(yaml@2.8.1))
@@ -1161,8 +1161,8 @@ packages:
       lmdb:
         optional: true
 
-  '@effect/language-service@0.57.1':
-    resolution: {integrity: sha512-uWzYN+aHl4KfZHGmDxa3+OjV/mk9gMUycIyB8SYvyDiny3lXBtmRFdRVnw6TYL1P5EBfg4N09+lO/0ECRREVXQ==}
+  '@effect/language-service@0.58.0':
+    resolution: {integrity: sha512-M5T9zEEu6sLuzXOIp+bQ8B1pMcX3A9gyahTTWlv9idr+b2SlZOfydomwgXkod4vlXw7mYhLLcXgCsnHcBUz9rw==}
     hasBin: true
 
   '@effect/platform-node-shared@0.55.0':
@@ -8499,7 +8499,7 @@ snapshots:
       effect: 3.19.8
       uuid: 11.1.0
 
-  '@effect/language-service@0.57.1': {}
+  '@effect/language-service@0.58.0': {}
 
   '@effect/platform-node-shared@0.55.0(@effect/cluster@0.48.3(@effect/platform@0.93.5(effect@3.19.8))(@effect/rpc@0.69.2(@effect/platform@0.93.5(effect@3.19.8))(effect@3.19.8))(@effect/sql@0.44.2(@effect/experimental@0.54.6(@effect/platform@0.93.5(effect@3.19.8))(effect@3.19.8))(@effect/platform@0.93.5(effect@3.19.8))(effect@3.19.8))(@effect/workflow@0.9.3(@effect/platform@0.93.5(effect@3.19.8))(@effect/rpc@0.69.2(@effect/platform@0.93.5(effect@3.19.8))(effect@3.19.8))(effect@3.19.8))(effect@3.19.8))(@effect/platform@0.93.5(effect@3.19.8))(@effect/rpc@0.69.2(@effect/platform@0.93.5(effect@3.19.8))(effect@3.19.8))(@effect/sql@0.44.2(@effect/experimental@0.54.6(@effect/platform@0.93.5(effect@3.19.8))(effect@3.19.8))(@effect/platform@0.93.5(effect@3.19.8))(effect@3.19.8))(effect@3.19.8)':
     dependencies:
