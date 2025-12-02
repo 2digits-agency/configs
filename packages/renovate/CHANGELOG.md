@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.2.19
+
+### Patch Changes
+
+- 9883b06: Added next-intl and refactored github url based matching
+- 6151000: Updated dependencies
+
 ## 1.2.18
 
 ### Patch Changes
