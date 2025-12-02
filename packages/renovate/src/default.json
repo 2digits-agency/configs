@@ -15,25 +15,26 @@
   "schedule": ["after 18:00 before 07:00 every weekday", "every weekend"],
   "updateNotScheduled": false,
   "packageRules": [
-    { "groupName": "2DIGITS Configs", "matchPackageNames": ["/^@2digits/"] },
+    { "groupName": "2DIGITS Configs", "matchPackageNames": ["/^@2digits//"] },
     { "groupName": "Better Auth", "matchPackageNames": ["better-auth", "/^@better-auth//"] },
-    {
-      "groupName": "Effect",
-      "matchRepositories": ["https://github.com/Effect-TS/effect", "https://github.com/Effect-TS/language-service"]
-    },
+    { "groupName": "Effect", "matchPackageNames": ["effect", "/^@effect//"] },
     { "groupName": "Hey API", "matchPackageNames": ["/^@hey-api//"] },
     { "groupName": "Notificare", "matchPackageNames": ["/^react-native-notificare/"] },
-    { "groupName": "Orval", "matchPackageNames": ["orval", "/^@orval/"] },
+    { "groupName": "Orval", "matchPackageNames": ["orval", "/^@orval//"] },
     { "groupName": "Payload", "matchPackageNames": ["payload", "/^@payloadcms//"] },
     { "groupName": "PostHog", "matchPackageNames": ["/^posthog-/"] },
-    { "groupName": "React Email", "matchRepositories": ["https://github.com/resend/react-email"] },
-    { "groupName": "Rozenite", "matchRepositories": ["https://github.com/callstackincubator/rozenite"] },
-    { "groupName": "Tanstack DB", "matchRepositories": ["https://github.com/tanstack/db"] },
-    { "groupName": "Tanstack Pacer", "matchRepositories": ["https://github.com/tanstack/pacer"] },
+    { "groupName": "React Email", "matchPackageNames": ["react-email", "/^@react-email//"] },
+    { "groupName": "Rozenite", "matchSourceUrls": ["https://github.com/callstackincubator/rozenite"] },
+    { "groupName": "Tanstack DB", "matchSourceUrls": ["https://github.com/tanstack/db"] },
+    { "groupName": "Tanstack Pacer", "matchSourceUrls": ["https://github.com/tanstack/pacer"] },
     { "groupName": "Unified & Rehype", "matchPackageNames": ["unified", "/^rehype-/"] },
     { "groupName": "nativewind", "matchPackageNames": ["nativewind", "react-native-css-interop", "react-native-css"] },
-    { "groupName": "oRPC", "matchPackageNames": ["/^@orpc//"] },
-    { "groupName": "react-native-bottom-tabs", "matchPackageNames": ["react-native-bottom-tabs", "/^@bottom-tabs//"] },
+    { "groupName": "next-intl", "matchSourceUrls": ["https://github.com/amannn/next-intl"] },
+    { "groupName": "oRPC", "matchSourceUrls": ["https://github.com/unnoq/orpc"] },
+    {
+      "groupName": "react-native-bottom-tabs",
+      "matchSourceUrls": ["https://github.com/callstackincubator/react-native-bottom-tabs"]
+    },
     { "groupName": "react-native-firebase", "matchPackageNames": ["/^@react-native-firebase//"] }
   ],
   "pruneStaleBranches": true,
