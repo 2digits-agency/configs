@@ -33,6 +33,18 @@ export async function pnpm(): Promise<Array<TypedFlatConfigItem>> {
         'pnpm/yaml-no-duplicate-catalog-item': 'error',
         'pnpm/yaml-no-unused-catalog-item': 'error',
         'pnpm/yaml-valid-packages': 'error',
+        'pnpm/yaml-enforce-settings': [
+          'error',
+          {
+            autofix: true,
+            settings: {
+              catalogMode: 'strict',
+              savePrefix: '',
+              preferWorkspacePackages: true,
+              cleanupUnusedCatalogs: true,
+            },
+          },
+        ],
       },
     },
   ];

@@ -2982,6 +2982,11 @@ Backward pagination arguments
    */
   'pnpm/json-valid-catalog'?: Linter.RuleEntry<PnpmJsonValidCatalog>
   /**
+   * Enforce settings in `pnpm-workspace.yaml`
+   * @see https://github.com/antfu/pnpm-workspace-utils/tree/main/packages/eslint-plugin-pnpm/src/rules/yaml/yaml-enforce-settings.test.ts
+   */
+  'pnpm/yaml-enforce-settings'?: Linter.RuleEntry<PnpmYamlEnforceSettings>
+  /**
    * Disallow duplicate catalog items in `pnpm-workspace.yaml`
    * @see https://github.com/antfu/pnpm-workspace-utils/tree/main/packages/eslint-plugin-pnpm/src/rules/yaml/yaml-no-duplicate-catalog-item.test.ts
    */
@@ -7808,6 +7813,11 @@ Backward pagination arguments
    */
   'zod/no-throw-in-refine'?: Linter.RuleEntry<[]>
   /**
+   * Disallow usage of `z.unknown()` in Zod schemas
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/no-unknown-schema.md
+   */
+  'zod/no-unknown-schema'?: Linter.RuleEntry<[]>
+  /**
    * Enforce usage of `.meta()` over `.describe()`
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/prefer-meta.md
    */
@@ -11274,6 +11284,20 @@ type PnpmJsonValidCatalog = []|[{
   
   fields?: unknown[]
 }]
+// ----- pnpm/yaml-enforce-settings -----
+type PnpmYamlEnforceSettings = []|[{
+  
+  autofix?: boolean
+  
+  settings?: {
+    [k: string]: unknown | undefined
+  }
+  
+  requiredFields?: string[]
+  
+  forbiddenFields?: string[]
+  [k: string]: unknown | undefined
+}]
 // ----- pnpm/yaml-no-duplicate-catalog-item -----
 type PnpmYamlNoDuplicateCatalogItem = []|[{
   allow?: string[]
@@ -11377,6 +11401,8 @@ type ReactExtraNoUnstableDefaultProps = []|[{
 }]
 // ----- react-extra/no-useless-fragment -----
 type ReactExtraNoUselessFragment = []|[{
+  
+  allowEmptyFragment?: boolean
   
   allowExpressions?: boolean
 }]
