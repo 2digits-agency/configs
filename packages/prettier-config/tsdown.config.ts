@@ -5,7 +5,6 @@ export default defineConfig({
 
   dts: true,
   fixedExtension: true,
-  exports: true,
   attw: { profile: 'strict', level: 'error' },
   publint: { strict: true },
 
