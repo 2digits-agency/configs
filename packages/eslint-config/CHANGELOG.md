@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 4.13.11
+
+### Patch Changes
+
+- 3c188c2: Updated eslint zod to enforce consistent zod imports
+- e542a19: Updated dependencies
+- af27d74: Updated eslint config to enforce pnpm-workspace.yaml for settings
+
 ## 4.13.10
 
 ### Patch Changes

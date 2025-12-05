@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.20
+
+### Patch Changes
+
+- e542a19: Updated dependencies
+
 ## 1.2.19
 
 ### Patch Changes
