@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.2.9
+
+### Patch Changes
+
+- e542a19: Updated dependencies
+
 ## 1.2.8
 
 ### Patch Changes
