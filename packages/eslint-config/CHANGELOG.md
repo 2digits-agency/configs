@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 4.13.12
+
+### Patch Changes
+
+- 9e62e01: Removed zod/consistent-import-source rule
+- 21458cc: Updated dependencies
+- Updated dependencies [21458cc]
+  - @2digits/eslint-plugin@3.2.9
+
 ## 4.13.11
 
 ### Patch Changes
