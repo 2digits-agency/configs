@@ -7835,6 +7835,7 @@ Backward pagination arguments
   /**
    * Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()`
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/prefer-strict-object.md
+   * @deprecated
    */
   'zod/prefer-strict-object'?: Linter.RuleEntry<ZodPreferStrictObject>
   /**
