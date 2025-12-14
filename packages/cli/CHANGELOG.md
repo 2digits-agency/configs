@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.2.13
+
+### Patch Changes
+
+- e42299e: Bumped packages to force release
+
 ## 1.2.12
 
 ### Patch Changes

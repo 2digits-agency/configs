@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.24
+
+### Patch Changes
+
+- e42299e: Bumped packages to force release
+
 ## 1.2.23
 
 ### Patch Changes

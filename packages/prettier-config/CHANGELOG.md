@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 4.0.25
+
+### Patch Changes
+
+- e42299e: Bumped packages to force release
+- Updated dependencies [e42299e]
+  - @2digits/constants@1.1.12
+
 ## 4.0.24
 
 ### Patch Changes

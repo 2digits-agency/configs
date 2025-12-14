@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.8.6
+
+### Patch Changes
+
+- e42299e: Bumped packages to force release
+
 ## 0.8.5
 
 ### Patch Changes

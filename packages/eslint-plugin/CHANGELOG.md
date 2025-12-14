@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 3.2.12
+
+### Patch Changes
+
+- e42299e: Bumped packages to force release
+
 ## 3.2.11
 
 ### Patch Changes
