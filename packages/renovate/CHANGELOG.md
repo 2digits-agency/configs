@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.23
+
+### Patch Changes
+
+- be22273: Updated dependencies
+
 ## 1.2.22
 
 ### Patch Changes
