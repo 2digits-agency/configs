@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 1.1.12
+
+### Patch Changes
+
+- e42299e: Bumped packages to force release
+
 ## 1.1.11
 
 ### Patch Changes

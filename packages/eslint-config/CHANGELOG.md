@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 4.13.15
+
+### Patch Changes
+
+- e42299e: Bumped packages to force release
+- Updated dependencies [e42299e]
+  - @2digits/constants@1.1.12
+  - @2digits/eslint-plugin@3.2.12
+
 ## 4.13.14
 
 ### Patch Changes
