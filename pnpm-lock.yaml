@@ -250,8 +250,8 @@ catalogs:
       specifier: 8.49.0
       version: 8.49.0
     unplugin-replace:
-      specifier: 0.6.2
-      version: 0.6.2
+      specifier: 0.6.3
+      version: 0.6.3
     vitest:
       specifier: 4.0.15
       version: 4.0.15
@@ -372,7 +372,7 @@ importers:
         version: 5.9.3
       unplugin-replace:
         specifier: 'catalog:'
-        version: 0.6.2
+        version: 0.6.3
       vitest:
         specifier: 'catalog:'
         version: 4.0.15(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(jiti@2.6.0)(tsx@4.21.0)(yaml@2.8.2)
@@ -6371,6 +6371,10 @@ packages:
       vue-tsc:
         optional: true
 
+  rolldown-string@0.2.1:
+    resolution: {integrity: sha512-7H8oH5A8+L96pbBTPCt/rZrwayEhZY5/ejhdk9nRODH32H1v7+bfkaCr+kS15DcGQ7VC1HcWdQVNABFYgrMOzg==}
+    engines: {node: '>=20.19.0'}
+
   rolldown@1.0.0-beta.53:
     resolution: {integrity: sha512-Qd9c2p0XKZdgT5AYd+KgAMggJ8ZmCs3JnS9PTMWkyUfteKlfmKtxJbWTHkVakxwXs1Ub7jrRYVeFeF7N0sQxyw==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -6787,6 +6791,7 @@ packages:
   tsdown@0.17.4:
     resolution: {integrity: sha512-z+kNuv1rwM1POQIufDUVrdNc/uGy0ueRVafCyDH39IdHxin4JXgB8DNGSPoqdIpcOpqUoRbNreK8NxENFmlhKw==}
     engines: {node: '>=20.19.0'}
+    deprecated: Including an unexpected breaking change (copy behavior)
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
@@ -7001,12 +7006,12 @@ packages:
     resolution: {integrity: sha512-6bc58dPYhCMHHuwxldQxO3RRNZ4eCogZ/st++0+fcC1nr0jiGUtAdBJ2qzmLQWSxbtz42pWt4QQMiZ9HvZf5cg==}
     engines: {node: '>=0.10.0'}
 
-  unplugin-replace@0.6.2:
-    resolution: {integrity: sha512-02as8l4oiIG6f+VHuNBCaFW/2U8VZ95RgQOjILFq+mfwhxJcTf7FJ7CEw/mz4t46xLNtfyii0mCJZq67XC3fXw==}
-    engines: {node: '>=20.18.0'}
+  unplugin-replace@0.6.3:
+    resolution: {integrity: sha512-BBJGOu5T/R2BUKzQg9AjiCWfAKG/WCM6ph8Sh5rQ2fgdtDEhrDd2ZD3UeHZRZ689VsnmduTgnjg/BY8uZMe4Mg==}
+    engines: {node: '>=20.19.0'}
 
-  unplugin@2.3.10:
-    resolution: {integrity: sha512-6NCPkv1ClwH+/BGE9QeoTIl09nuiAt0gS28nn1PvYXsGKRwM2TCbFA2QiilmehPDTXIe684k4rZI1yl3A1PCUw==}
+  unplugin@2.3.11:
+    resolution: {integrity: sha512-5uKD0nqiYVzlmCRs01Fhs2BdkEgBS3SAVP6ndrBsuK42iC2+JHyxM05Rm9G8+5mkmRtzMZGY8Ct5+mliZxU/Ww==}
     engines: {node: '>=18.12.0'}
 
   unplugin@2.3.9:
@@ -14370,6 +14375,10 @@ snapshots:
     transitivePeerDependencies:
       - oxc-resolver
 
+  rolldown-string@0.2.1:
+    dependencies:
+      magic-string: 0.30.21
+
   rolldown@1.0.0-beta.53:
     dependencies:
       '@oxc-project/types': 0.101.0
@@ -15040,12 +15049,12 @@ snapshots:
     dependencies:
       normalize-path: 2.1.1
 
-  unplugin-replace@0.6.2:
+  unplugin-replace@0.6.3:
     dependencies:
-      magic-string: 0.30.19
-      unplugin: 2.3.10
+      rolldown-string: 0.2.1
+      unplugin: 2.3.11
 
-  unplugin@2.3.10:
+  unplugin@2.3.11:
     dependencies:
       '@jridgewell/remapping': 2.3.5
       acorn: 8.15.0
