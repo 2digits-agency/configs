@@ -30,18 +30,16 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
       }).pipe(Effect.map(path.normalize));
     });
 
-    const readPackageJson = Effect.fn('PackageManagerService.readPackageJson')(function* (
-      options: {
-        /**
-         * The root from which to resolve the package.json file. If not provided, it will be resolved automatically from the current working directory.
-         *
-         * @default `process.cwd()`
-         */
-        id?: string;
-      } = {},
-    ) {
+    const readPackageJson = Effect.fn('PackageManagerService.readPackageJson')(function* (options?: {
+      /**
+       * The root from which to resolve the package.json file. If not provided, it will be resolved automatically from the current working directory.
+       *
+       * @default `process.cwd()`
+       */
+      id?: string;
+    }) {
       const cwd = yield* cwdService.cwd;
-      const pkgPath = path.resolve(options.id ?? cwd, 'package.json');
+      const pkgPath = path.resolve(options?.id ?? cwd, 'package.json');
 
       return yield* Effect.tryPromise({
         try: () => pkgTypes.readPackageJSON(pkgPath),
