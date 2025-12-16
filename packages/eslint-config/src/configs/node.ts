@@ -1,5 +1,7 @@
 import pluginNode from 'eslint-plugin-n';
 
+import * as pkg from '../../package.json' with { type: 'json' };
+
 import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
@@ -10,7 +12,7 @@ export function node(): Array<TypedFlatConfigItem> {
       name: '2digits:node',
       settings: {
         node: {
-          version: '>= 22.0.0',
+          version: pkg.engines.node,
         },
       },
       plugins: {
