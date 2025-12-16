@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 4.14.0
+
+### Minor Changes
+
+- d8b4a50: Updated eslint-plugin-n settings to use node version synced from project
+
+### Patch Changes
+
+- 5a36102: Updated dependencies
+- Updated dependencies [5a36102]
+  - @2digits/eslint-plugin@3.2.13
+
 ## 4.13.15
 
 ### Patch Changes
