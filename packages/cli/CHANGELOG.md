@@ -1,5 +1,12 @@
 # @2digits/cli
 
+## 1.2.14
+
+### Patch Changes
+
+- 5a36102: Updated dependencies
+- bb1223d: Fixed default param in readPackageJson
+
 ## 1.2.13
 
 ### Patch Changes
