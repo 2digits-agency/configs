@@ -88,8 +88,8 @@ catalogs:
       specifier: 8.50.0
       version: 8.50.0
     dedent:
-      specifier: 1.7.0
-      version: 1.7.0
+      specifier: 1.7.1
+      version: 1.7.1
     effect:
       specifier: 3.19.12
       version: 3.19.12
@@ -553,7 +553,7 @@ importers:
         version: 19.2.7
       dedent:
         specifier: 'catalog:'
-        version: 1.7.0
+        version: 1.7.1
       eslint:
         specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.0)
@@ -4042,8 +4042,8 @@ packages:
     resolution: {integrity: sha512-aW35yZM6Bb/4oJlZncMH2LCoZtJXTRxES17vE3hoRiowU2kWHaJKFkSBDnDR+cm9J+9QhXmREyIfv0pji9ejCQ==}
     engines: {node: '>=10'}
 
-  dedent@1.7.0:
-    resolution: {integrity: sha512-HGFtf8yhuhGhqO07SV79tRp+br4MnbdjeVxotpn1QBl30pcLLCQjX5b2295ll0fv8RKDKsmWYrl05usHM9CewQ==}
+  dedent@1.7.1:
+    resolution: {integrity: sha512-9JmrhGZpOlEgOLdQgSm0zxFaYoQon408V1v49aqTWuXENVlnCuY9JBZcXZiCsZQWDjTm5Qf/nIvAy77mXDAjEg==}
     peerDependencies:
       babel-plugin-macros: ^3.1.0
     peerDependenciesMeta:
@@ -6835,6 +6835,7 @@ packages:
   tsdown@0.17.4:
     resolution: {integrity: sha512-z+kNuv1rwM1POQIufDUVrdNc/uGy0ueRVafCyDH39IdHxin4JXgB8DNGSPoqdIpcOpqUoRbNreK8NxENFmlhKw==}
     engines: {node: '>=20.19.0'}
+    deprecated: Including an unexpected breaking change (copy behavior)
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
@@ -11545,7 +11546,7 @@ snapshots:
     dependencies:
       mimic-response: 3.1.0
 
-  dedent@1.7.0: {}
+  dedent@1.7.1: {}
 
   deep-eql@5.0.2: {}
 
