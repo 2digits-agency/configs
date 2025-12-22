@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.2.27
+
+### Patch Changes
+
+- 806698a: Updated dependencies
+- 2d97a99: Added T3 env updates group
+
 ## 1.2.26
 
 ### Patch Changes
