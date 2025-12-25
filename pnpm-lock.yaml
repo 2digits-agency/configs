@@ -166,8 +166,8 @@ catalogs:
       specifier: 1.19.1
       version: 1.19.1
     eslint-plugin-zod-x:
-      specifier: 1.13.2
-      version: 1.13.2
+      specifier: 2.0.0
+      version: 2.0.0
     eslint-typegen:
       specifier: 2.3.0
       version: 2.3.0
@@ -513,7 +513,7 @@ importers:
         version: 1.19.1(eslint@9.39.2(jiti@2.6.0))
       eslint-plugin-zod-x:
         specifier: 'catalog:'
-        version: 1.13.2(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.1.12)
+        version: 2.0.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.1.12)
       globals:
         specifier: 'catalog:'
         version: 16.5.0
@@ -4473,8 +4473,8 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-plugin-zod-x@1.13.2:
-    resolution: {integrity: sha512-Zw3PkNvKDp2H3wfrSwh+ydbf6WtkKlMqFEzyAN+cxxueiZRj/AtJkdjmll2IFYnOSi+2VBVV9quqDUfZItcNLQ==}
+  eslint-plugin-zod-x@2.0.0:
+    resolution: {integrity: sha512-Lh+3neHBMD+VSibHvelTZelf0Nlqi0tzKqy+KkEdfAKsdJYj06gzyjVr+wwV64brF4gNlpJGMYxa6FKdOsjyNw==}
     engines: {node: ^20 || ^22 || >=24}
     peerDependencies:
       eslint: ^9
@@ -6835,6 +6835,7 @@ packages:
   tsdown@0.17.4:
     resolution: {integrity: sha512-z+kNuv1rwM1POQIufDUVrdNc/uGy0ueRVafCyDH39IdHxin4JXgB8DNGSPoqdIpcOpqUoRbNreK8NxENFmlhKw==}
     engines: {node: '>=20.19.0'}
+    deprecated: Including an unexpected breaking change (copy behavior)
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
@@ -12106,7 +12107,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-zod-x@1.13.2(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.1.12):
+  eslint-plugin-zod-x@2.0.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.1.12):
     dependencies:
       '@typescript-eslint/utils': 8.50.1(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
       eslint: 9.39.2(jiti@2.6.0)
