@@ -3651,7 +3651,7 @@ Backward pagination arguments
    * Enforces destructuring and symmetric naming of `useState` hook value and setter.
    * @see https://eslint-react.xyz/docs/rules/naming-convention-use-state
    */
-  'react-naming-convention/use-state'?: Linter.RuleEntry<[]>
+  'react-naming-convention/use-state'?: Linter.RuleEntry<ReactNamingConventionUseState>
   /**
    * Prevents leaked `addEventListener` in a component or custom Hook.
    * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-event-listener
@@ -7794,9 +7794,9 @@ Backward pagination arguments
   'zod/consistent-object-schema-type'?: Linter.RuleEntry<ZodConsistentObjectSchemaType>
   /**
    * Disallow usage of `z.any()` in Zod schemas
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/no-any.md
+   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/no-any-schema.md
    */
-  'zod/no-any'?: Linter.RuleEntry<[]>
+  'zod/no-any-schema'?: Linter.RuleEntry<[]>
   /**
    * Disallow usage of `z.custom()` without arguments
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/no-empty-custom-schema.md
@@ -7837,12 +7837,6 @@ Backward pagination arguments
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/prefer-namespace-import.md
    */
   'zod/prefer-namespace-import'?: Linter.RuleEntry<[]>
-  /**
-   * Enforce usage of `.strictObject()` over `.object()` and/or `.looseObject()`
-   * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/prefer-strict-object.md
-   * @deprecated
-   */
-  'zod/prefer-strict-object'?: Linter.RuleEntry<ZodPreferStrictObject>
   /**
    * Require type parameter on `.brand()` functions
    * @see https://github.com/marcalexiei/eslint-plugin-zod-x/blob/HEAD/docs/rules/require-brand-type-parameter.md
@@ -11548,6 +11542,11 @@ type ReactNamingConventionFilenameExtension = []|[(("always" | "as-needed") | {
   extensions?: string[]
   ignoreFilesWithoutCode?: boolean
 })]
+// ----- react-naming-convention/use-state -----
+type ReactNamingConventionUseState = []|[{
+  enforceAssignment?: boolean
+  enforceSetterName?: boolean
+}]
 // ----- regexp/hexadecimal-escape -----
 type RegexpHexadecimalEscape = []|[("always" | "never")]
 // ----- regexp/letter-case -----
@@ -14888,11 +14887,6 @@ type ZodConsistentObjectSchemaType = []|[{
 type ZodNoOptionalAndDefaultTogether = []|[{
   
   preferredMethod?: ("none" | "default" | "optional")
-}]
-// ----- zod/prefer-strict-object -----
-type ZodPreferStrictObject = []|[{
-  
-  allow?: ("object" | "looseObject")[]
 }]
 // ----- zod/require-schema-suffix -----
 type ZodRequireSchemaSuffix = []|[{

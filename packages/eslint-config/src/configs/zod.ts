@@ -14,7 +14,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
       plugins: { zod },
       rules: {
         'zod/array-style': ['error', { style: 'function' }],
-        'zod/no-any': 'error',
+        'zod/no-any-schema': 'error',
         'zod/no-empty-custom-schema': 'error',
         'zod/no-number-schema-with-int': 'error',
         'zod/no-optional-and-default-together': ['warn', { preferredMethod: 'default' }],
