@@ -25,6 +25,7 @@ export default twoDigits(
     pnpm: true,
     css: true,
     depend: true,
+    zod: true,
   },
   {
     files: ['packages/cli/src/**/*.ts'],

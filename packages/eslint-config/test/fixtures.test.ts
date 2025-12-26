@@ -30,21 +30,27 @@ it('should autofix', { timeout: 30_000 }, async ({ expect }) => {
       import twoDigits from '@2digits/eslint-config';
 
       export default twoDigits({
-        react: true,
-        next: true,
-        tailwind: true,
-        storybook: true,
-        graphql: true,
-        tanstack: true,
-        turbo: true,
+        css: true,
+        depend: true,
         drizzle: true,
+        graphql: true,
+        next: true,
+        pnpm: false,
+        react: true,
+        storybook: true,
+        tailwind: true,
+        tanstackQuery: false,
+        tanstackRouter: false,
         ts: true,
+        turbo: true,
+        zod: true,
       });
     `,
   );
 
   await exec('npx', ['eslint', '.', '--fix'], {
     nodeOptions: { cwd, stdio: 'pipe' },
+    throwOnError: true,
   });
 
   const files = await glob('**/*', {
