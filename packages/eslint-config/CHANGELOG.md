@@ -1,5 +1,26 @@
 # @2digits/eslint-config
 
+## 4.14.4
+
+### Patch Changes
+
+- a5113c5: Fix TypeScript linting in markdown code blocks
+  - Add `markdownDisables()` config that properly disables type-checked rules for markdown code blocks
+  - Set `project: false` and `projectService: false` to prevent TypeScript project resolution errors
+  - Move markdown-specific disables from individual TypeScript configs to dedicated markdown disables config
+  - Add test fixtures for TypeScript code in markdown
+
+- dd8dcc3: Added proper testing if embedded js is linted
+- a5113c5: Add `if-curly` rule to enforce curly braces around if statement bodies
+  - Added new `@2digits/if-curly` rule that requires curly braces on all if/else bodies
+  - Rule is auto-fixable and handles nested if statements and else-if chains
+  - Added to recommended config
+  - Removed `antfu/if-newline` from eslint-config (replaced by `if-curly`)
+
+- Updated dependencies [7e81b3c]
+- Updated dependencies [a5113c5]
+  - @2digits/eslint-plugin@3.3.0
+
 ## 4.14.3
 
 ### Patch Changes
