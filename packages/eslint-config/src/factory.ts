@@ -16,6 +16,7 @@ import {
   jsdoc,
   jsonc,
   markdown,
+  markdownDisables,
   next,
   node,
   pnpm,
@@ -206,6 +207,8 @@ export async function twoDigits(
   if (isPackageExists('prettier')) {
     composer = composer.append(prettier());
   }
+
+  composer = composer.append(markdownDisables());
 
   return composer.renamePlugins(PluginNameMap).toConfigs();
 }

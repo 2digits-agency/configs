@@ -33,3 +33,13 @@ const identity = (x) => {
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Curabitur consectetur maximus risus, sed maximus tellus tincidunt et.
+
+```ts
+export interface Something {
+  items: string[];
+}
+
+export const someFunc = ({items}: Something) => {
+    items.forEach(item => console.log(item));
+}
+```

@@ -33,3 +33,13 @@ function identity (x) {
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Curabitur consectetur maximus risus, sed maximus tellus tincidunt et.
+
+```ts
+export interface Something {
+  items: Array<string>;
+}
+
+export function someFunc ({items}: Something) {
+    for (const item of items) console.log(item);
+}
+```
