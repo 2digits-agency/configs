@@ -9,6 +9,11 @@ export interface RuleOptions {
    */
   '@2digits/if-curly'?: Linter.RuleEntry<[]>
   /**
+   * Discourage hoisting event handlers only used once in JSX; prefer inlining
+   * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/prefer-inline-handlers.ts
+   */
+  '@2digits/prefer-inline-handlers'?: Linter.RuleEntry<[]>
+  /**
    * Enforce giving proper names to type parameters when there are two or more
    * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/type-param-names.ts
    */

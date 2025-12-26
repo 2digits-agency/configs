@@ -84,6 +84,9 @@ catalogs:
     '@typescript-eslint/parser':
       specifier: 8.50.1
       version: 8.50.1
+    '@typescript-eslint/scope-manager':
+      specifier: 8.50.1
+      version: 8.50.1
     '@typescript-eslint/utils':
       specifier: 8.50.1
       version: 8.50.1
@@ -184,14 +187,11 @@ catalogs:
       specifier: 2.4.2
       version: 2.4.2
     knip:
-      specifier: 5.77.3
-      version: 5.77.3
+      specifier: 5.77.4
+      version: 5.77.4
     local-pkg:
       specifier: 1.1.2
       version: 1.1.2
-    magic-regexp:
-      specifier: 0.10.0
-      version: 0.10.0
     nolyfill:
       specifier: 1.0.44
       version: 1.0.44
@@ -231,9 +231,6 @@ catalogs:
     tinyglobby:
       specifier: 0.2.15
       version: 0.2.15
-    ts-pattern:
-      specifier: 5.9.0
-      version: 5.9.0
     tsdown:
       specifier: 0.18.3
       version: 0.18.3
@@ -265,6 +262,7 @@ overrides:
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
   array.prototype.flatmap: npm:@nolyfill/array.prototype.flatmap@1.0.44
   array.prototype.tosorted: npm:@nolyfill/array.prototype.tosorted@1.0.44
+  baseline-browser-mapping: 2.9.11
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
   globalthis: npm:@nolyfill/globalthis@1.0.44
   hasown: npm:@nolyfill/hasown@1.0.44
@@ -283,7 +281,6 @@ overrides:
   string.prototype.matchall: npm:@nolyfill/string.prototype.matchall@1.0.44
   string.prototype.repeat: npm:@nolyfill/string.prototype.repeat@1.0.44
   which-typed-array: npm:@nolyfill/which-typed-array@1.0.44
-  baseline-browser-mapping: 2.9.11
 
 importers:
 
@@ -312,7 +309,7 @@ importers:
         version: 9.39.2(jiti@2.6.0)
       knip:
         specifier: 'catalog:'
-        version: 5.77.3(@types/node@24.10.4)(typescript@5.9.3)
+        version: 5.77.4(@types/node@24.10.4)(typescript@5.9.3)
       pkg-pr-new:
         specifier: 'catalog:'
         version: 0.0.62
@@ -585,15 +582,15 @@ importers:
 
   packages/eslint-plugin:
     dependencies:
+      '@typescript-eslint/scope-manager':
+        specifier: 'catalog:'
+        version: 8.50.1
       '@typescript-eslint/utils':
         specifier: 'catalog:'
         version: 8.50.1(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
       eslint:
         specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.0)
-      ts-pattern:
-        specifier: 'catalog:'
-        version: 5.9.0
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -607,9 +604,6 @@ importers:
       eslint-vitest-rule-tester:
         specifier: 'catalog:'
         version: 3.0.1(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(jiti@2.6.0)(tsx@4.21.0)(yaml@2.8.2))
-      magic-regexp:
-        specifier: 'catalog:'
-        version: 0.10.0
       publint:
         specifier: 'catalog:'
         version: 0.3.16
@@ -3507,10 +3501,6 @@ packages:
     resolution: {integrity: sha512-nHAE6bMKsizhA2uuYZbEbmp5z2UpffNrPEqiKIeN7VsV6UY/roxanWfoRrf6x/k9+Obf+GQdkm0nPU+vnMXo9A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@typescript-eslint/types@8.48.1':
-    resolution: {integrity: sha512-+fZ3LZNeiELGmimrujsDCT4CRIbq5oXdHe7chLiW8qzqyPMnn1puNstCrMNVAqwcl2FdIxkuJ4tOs/RFDBVc/Q==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
   '@typescript-eslint/types@8.50.1':
     resolution: {integrity: sha512-v5lFIS2feTkNyMhd7AucE/9j/4V9v5iIbpVRncjk/K0sQ6Sb+Np9fgYS/63n6nwqahHQvbmujeBL7mp07Q9mlA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -5376,8 +5366,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@5.77.3:
-    resolution: {integrity: sha512-Jd990wMD1l6EdZ5g8oU4I0uCTIGfZB2dFJ2BDEDyz2yYlEiARjoCnza3YMK57dxmrfqU6qf956R7DehjSsXYNw==}
+  knip@5.77.4:
+    resolution: {integrity: sha512-CmRd3UabOBqA4lDUAMA8CJeepIoQPD2qRqq0wCnLz9Z3FTlG1iucZ7puwe+i3zV0gUaIWVYgC8cXoDMZEC+DyA==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -5480,12 +5470,6 @@ packages:
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
-
-  magic-regexp@0.10.0:
-    resolution: {integrity: sha512-Uly1Bu4lO1hwHUW0CQeSWuRtzCMNO00CmXtS8N6fyvB3B979GOEEeAkiTUDsmbYLAbvpUS/Kt5c4ibosAzVyVg==}
-
-  magic-string@0.30.19:
-    resolution: {integrity: sha512-2N21sPY9Ws53PZvsEpVtNuSW+ScYbQdp4b9qUaL+9QkHUrGFKo56Lg9Emg5s9V/qrtNBmiR01sYhUOwu3H+VOw==}
 
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
@@ -7058,9 +7042,6 @@ packages:
     resolution: {integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==}
     engines: {node: '>=8'}
 
-  type-level-regexp@0.1.17:
-    resolution: {integrity: sha512-wTk4DH3cxwk196uGLK/E9pE45aLfeKJacKmcEgEOA/q5dnPGNxXt0cfYdFxb57L+sEpf1oJH4Dnx/pnRcku9jg==}
-
   typed-rest-client@2.1.0:
     resolution: {integrity: sha512-Nel9aPbgSzRxfs1+4GoSB4wexCF+4Axlk7OSGVQCMa+4fWcyxIsN/YNmkp0xTT2iQzMD98h8yFLav/cNaULmRA==}
     engines: {node: '>= 16.0.0'}
@@ -7179,10 +7160,6 @@ packages:
 
   unplugin@2.3.11:
     resolution: {integrity: sha512-5uKD0nqiYVzlmCRs01Fhs2BdkEgBS3SAVP6ndrBsuK42iC2+JHyxM05Rm9G8+5mkmRtzMZGY8Ct5+mliZxU/Ww==}
-    engines: {node: '>=18.12.0'}
-
-  unplugin@2.3.9:
-    resolution: {integrity: sha512-2dcbZq6aprwXTkzptq3k5qm5B8cvpjG9ynPd5fyM2wDJuuF7PeUK64Sxf0d+X1ZyDOeGydbNzMqBSIVlH8GIfA==}
     engines: {node: '>=18.12.0'}
 
   unrun@0.2.21:
@@ -8835,7 +8812,7 @@ snapshots:
   '@es-joy/jsdoccomment@0.76.0':
     dependencies:
       '@types/estree': 1.0.8
-      '@typescript-eslint/types': 8.48.1
+      '@typescript-eslint/types': 8.50.1
       comment-parser: 1.4.1
       esquery: 1.6.0
       jsdoc-type-pratt-parser: 6.10.0
@@ -11019,8 +10996,6 @@ snapshots:
 
   '@typescript-eslint/types@8.47.0': {}
 
-  '@typescript-eslint/types@8.48.1': {}
-
   '@typescript-eslint/types@8.50.1': {}
 
   '@typescript-eslint/typescript-estree@8.50.1(typescript@5.9.3)':
@@ -13118,7 +13093,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@5.77.3(@types/node@24.10.4)(typescript@5.9.3):
+  knip@5.77.4(@types/node@24.10.4)(typescript@5.9.3):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@types/node': 24.10.4
@@ -13216,20 +13191,6 @@ snapshots:
   luxon@3.7.2: {}
 
   lz-string@1.5.0: {}
-
-  magic-regexp@0.10.0:
-    dependencies:
-      estree-walker: 3.0.3
-      magic-string: 0.30.19
-      mlly: 1.8.0
-      regexp-tree: 0.1.27
-      type-level-regexp: 0.1.17
-      ufo: 1.6.1
-      unplugin: 2.3.9
-
-  magic-string@0.30.19:
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.5
 
   magic-string@0.30.21:
     dependencies:
@@ -15216,8 +15177,6 @@ snapshots:
 
   type-fest@0.8.1: {}
 
-  type-level-regexp@0.1.17: {}
-
   typed-rest-client@2.1.0:
     dependencies:
       des.js: 1.1.0
@@ -15340,13 +15299,6 @@ snapshots:
       unplugin: 2.3.11
 
   unplugin@2.3.11:
-    dependencies:
-      '@jridgewell/remapping': 2.3.5
-      acorn: 8.15.0
-      picomatch: 4.0.3
-      webpack-virtual-modules: 0.6.2
-
-  unplugin@2.3.9:
     dependencies:
       '@jridgewell/remapping': 2.3.5
       acorn: 8.15.0

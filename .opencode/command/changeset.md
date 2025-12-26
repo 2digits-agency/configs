@@ -78,7 +78,7 @@ Fix TypeScript linting in markdown code blocks
 4. For each group:
    - Map changed files to package names (`packages/X/` → `@2digits/X`)
    - Determine appropriate bump type per package
-   - Generate random filename: `pnpx human-id | sed 's/\([A-Z]\)/-\1/g' | sed 's/^-//' | tr '[:upper:]' '[:lower:]'` (outputs kebab-case like `ready-cups-dream`)
+   - Generate random filename: `pnpx human-id --separator - --case lower` (outputs kebab-case like `ready-cups-dream`)
    - Write changeset to `.changeset/<random>.md`
 
 ## Guidelines
