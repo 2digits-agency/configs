@@ -59,7 +59,7 @@ function createRule<TOptions extends ReadonlyArray<Record<string, unknown>>, TMe
   } as unknown as RuleModule<TOptions>;
 }
 
-export const createEslintRule = RuleCreator((ruleName) => `${blobUrl}${ruleName}.ts`) as unknown as <
+export const createEslintRule = RuleCreator((ruleName) => `${blobUrl}/${ruleName}.ts`) as unknown as <
   TOptions extends ReadonlyArray<unknown>,
   TMessageIds extends string,
 >({

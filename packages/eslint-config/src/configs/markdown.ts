@@ -1,8 +1,11 @@
 import plugin from '@eslint/markdown';
+import { renamePluginsInRules } from 'eslint-flat-config-utils';
 import { mergeProcessors, processorPassThrough } from 'eslint-merge-processors';
 
+import { PluginNameMap } from '../constants';
 import { GLOB_MARKDOWN, GLOB_MARKDOWN_CODE, GLOB_MARKDOWN_IN_MARKDOWN } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
+import { interopDefault } from '../utils';
 
 const files = [GLOB_MARKDOWN];
 
@@ -45,17 +48,38 @@ export function markdown(): Array<TypedFlatConfigItem> {
         'markdown/no-missing-label-refs': 'error',
       },
     },
+  ];
+}
+
+export async function markdownDisables(): Promise<Array<TypedFlatConfigItem>> {
+  const tseslint = await interopDefault(import('typescript-eslint'));
+  const reactPlugin = await interopDefault(import('@eslint-react/eslint-plugin'));
+
+  const disableTypeCheckedRules = renamePluginsInRules(
+    {
+      ...tseslint.configs.disableTypeChecked.rules,
+      ...reactPlugin.configs['disable-type-checked'].rules,
+    },
+    PluginNameMap,
+  );
+
+  return [
     {
       name: '2digits:markdown/disables',
       files: [GLOB_MARKDOWN_CODE],
       languageOptions: {
+        parser: tseslint.parser,
         parserOptions: {
+          project: false,
+          projectService: false,
           ecmaFeatures: {
             impliedStrict: true,
           },
         },
       },
       rules: {
+        ...disableTypeCheckedRules,
+
         'no-alert': 'off',
         'no-console': 'off',
         'no-labels': 'off',

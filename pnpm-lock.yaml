@@ -184,8 +184,8 @@ catalogs:
       specifier: 2.4.2
       version: 2.4.2
     knip:
-      specifier: 5.77.1
-      version: 5.77.1
+      specifier: 5.77.2
+      version: 5.77.2
     local-pkg:
       specifier: 1.1.2
       version: 1.1.2
@@ -311,7 +311,7 @@ importers:
         version: 9.39.2(jiti@2.6.0)
       knip:
         specifier: 'catalog:'
-        version: 5.77.1(@types/node@24.10.4)(typescript@5.9.3)
+        version: 5.77.2(@types/node@24.10.4)(typescript@5.9.3)
       pkg-pr-new:
         specifier: 'catalog:'
         version: 0.0.62
@@ -5375,8 +5375,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@5.77.1:
-    resolution: {integrity: sha512-+yA/vfQUDEFUOcR0XRn/dOZmNEsS10pIMztS5JbKUhk9zvQiAFvr3Mcc3zC7Dn9gBG8LeImhaXA6/D3uhzwZvg==}
+  knip@5.77.2:
+    resolution: {integrity: sha512-72qngCK+RKOq0pSM82O7HH/ZCCSelT20RJn/AR24gYVN0xcbOgjIQBf6RjjHdlS1zMBZdPYP6QGX3q6bzbXcJA==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -7479,9 +7479,6 @@ packages:
 
   zod@4.1.12:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
-
-  zod@4.1.13:
-    resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
 
   zod@4.2.1:
     resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
@@ -13120,7 +13117,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@5.77.1(@types/node@24.10.4)(typescript@5.9.3):
+  knip@5.77.2(@types/node@24.10.4)(typescript@5.9.3):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@types/node': 24.10.4
@@ -13135,7 +13132,7 @@ snapshots:
       smol-toml: 1.5.2
       strip-json-comments: 5.0.3
       typescript: 5.9.3
-      zod: 4.1.13
+      zod: 4.2.1
 
   ky@1.8.1: {}
 
@@ -15598,8 +15595,6 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.1.12: {}
-
-  zod@4.1.13: {}
 
   zod@4.2.1: {}
 

@@ -12,7 +12,6 @@ export function antfu(): Array<TypedFlatConfigItem> {
         antfu: pluginAntfu,
       },
       rules: {
-        'antfu/if-newline': 'error',
         'antfu/top-level-function': 'error',
       },
     },
