@@ -4,7 +4,7 @@ _Look,_ code blocks are formatted _too!_
 
 ```js
 // This should be handled by ESLint instead of Prettier
-const identity = (x) => {
+function identity (x) {
   if (foo) {
     console.log('bar');
   }
