@@ -1,5 +1,19 @@
 # @2digits/eslint-plugin
 
+## 3.3.0
+
+### Minor Changes
+
+- a5113c5: Add `if-curly` rule to enforce curly braces around if statement bodies
+  - Added new `@2digits/if-curly` rule that requires curly braces on all if/else bodies
+  - Rule is auto-fixable and handles nested if statements and else-if chains
+  - Added to recommended config
+  - Removed `antfu/if-newline` from eslint-config (replaced by `if-curly`)
+
+### Patch Changes
+
+- 7e81b3c: Fixed incorrect docs urls
+
 ## 3.2.14
 
 ### Patch Changes
