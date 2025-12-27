@@ -184,8 +184,8 @@ catalogs:
       specifier: 2.4.2
       version: 2.4.2
     knip:
-      specifier: 5.77.2
-      version: 5.77.2
+      specifier: 5.77.3
+      version: 5.77.3
     local-pkg:
       specifier: 1.1.2
       version: 1.1.2
@@ -283,6 +283,7 @@ overrides:
   string.prototype.matchall: npm:@nolyfill/string.prototype.matchall@1.0.44
   string.prototype.repeat: npm:@nolyfill/string.prototype.repeat@1.0.44
   which-typed-array: npm:@nolyfill/which-typed-array@1.0.44
+  baseline-browser-mapping: 2.9.11
 
 importers:
 
@@ -311,7 +312,7 @@ importers:
         version: 9.39.2(jiti@2.6.0)
       knip:
         specifier: 'catalog:'
-        version: 5.77.2(@types/node@24.10.4)(typescript@5.9.3)
+        version: 5.77.3(@types/node@24.10.4)(typescript@5.9.3)
       pkg-pr-new:
         specifier: 'catalog:'
         version: 0.0.62
@@ -3762,8 +3763,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.8.20:
-    resolution: {integrity: sha512-JMWsdF+O8Orq3EMukbUN1QfbLK9mX2CkUmQBcW2T0s8OmdAUL5LLM/6wFwSrqXzlXB13yhyK9gTKS1rIizOduQ==}
+  baseline-browser-mapping@2.9.11:
+    resolution: {integrity: sha512-Sg0xJUNDU1sJNGdfGWhVHX0kkZ+HWcvmVymJbj6NSgZZmW/8S9Y2HQ5euytnIgakgxN6papOAWiwDo1ctFDcoQ==}
     hasBin: true
 
   before-after-hook@2.2.3:
@@ -5375,8 +5376,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@5.77.2:
-    resolution: {integrity: sha512-72qngCK+RKOq0pSM82O7HH/ZCCSelT20RJn/AR24gYVN0xcbOgjIQBf6RjjHdlS1zMBZdPYP6QGX3q6bzbXcJA==}
+  knip@5.77.3:
+    resolution: {integrity: sha512-Jd990wMD1l6EdZ5g8oU4I0uCTIGfZB2dFJ2BDEDyz2yYlEiARjoCnza3YMK57dxmrfqU6qf956R7DehjSsXYNw==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -11311,7 +11312,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.8.20: {}
+  baseline-browser-mapping@2.9.11: {}
 
   before-after-hook@2.2.3: {}
 
@@ -11379,7 +11380,7 @@ snapshots:
 
   browserslist@4.27.0:
     dependencies:
-      baseline-browser-mapping: 2.8.20
+      baseline-browser-mapping: 2.9.11
       caniuse-lite: 1.0.30001751
       electron-to-chromium: 1.5.240
       node-releases: 2.0.26
@@ -13117,7 +13118,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@5.77.2(@types/node@24.10.4)(typescript@5.9.3):
+  knip@5.77.3(@types/node@24.10.4)(typescript@5.9.3):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@types/node': 24.10.4
