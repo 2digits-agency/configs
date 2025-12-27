@@ -1,6 +1,6 @@
-import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester';
+import parser from '@typescript-eslint/parser';
+import { run, type InvalidTestCase, type ValidTestCase } from 'eslint-vitest-rule-tester';
 
-import { run } from '../_test';
 import { RULE_NAME, typeParamNames } from '../../src/rules/type-param-names';
 
 const typescript = String.raw;
@@ -96,6 +96,7 @@ const invalids: Array<InvalidTestCase> = [
 ];
 
 await run({
+  parser,
   name: RULE_NAME,
   rule: typeParamNames,
   valid: valids,
