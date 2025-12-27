@@ -1,5 +1,25 @@
 # @2digits/eslint-plugin
 
+## 3.5.0
+
+### Minor Changes
+
+- ebd662d: Add `prefer-inline-array-callbacks` rule
+  - Added new ESLint rule that disallows passing function references to array methods (map, filter, reduce, etc.)
+  - Rule auto-fixes by wrapping callbacks: `arr.map(fn)` → `arr.map((element) => fn(element))`
+  - Prevents bugs from extra arguments (index, array) being passed unexpectedly
+  - Allows `Boolean`, `String`, `Number` etc. as callbacks where safe
+  - Disabled `unicorn/no-array-callback-reference` in favor of new rule with better auto-fix support
+  - Removed lint-disable comments from CLI services
+
+### Patch Changes
+
+- ebd662d: Improve `prefer-inline-array-callbacks` rule accuracy and performance
+  - Fixed shadowed builtin detection using scope analysis - rule now correctly reports when local variables shadow `Boolean`, `String`, etc.
+  - Added support for `sort` and `toSorted` methods with `(a, b)` parameter names
+  - Improved performance with array type caching and AST selector filtering
+  - Refactored type checking to use `esTreeNodeToTSNodeMap` directly
+
 ## 3.4.0
 
 ### Minor Changes
