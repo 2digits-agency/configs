@@ -27,7 +27,9 @@
     "docs": "eslint-config-inspector build",
     "docs:dev": "eslint-config-inspector",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "bench": "vitest bench",
+    "bench:run": "vitest bench --run"
   },
   "keywords": [
     "eslint-config"

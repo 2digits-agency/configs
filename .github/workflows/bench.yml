@@ -1,0 +1,92 @@
+name: 📊 Benchmarks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - synchronize
+      - opened
+      - reopened
+    branches:
+      - '**'
+
+jobs:
+  benchmark:
+    name: 📈 Run benchmarks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FORCE_COLOR: 1
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
+    steps:
+      - name: 🗃️ Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+
+      - name: 🛸 Setup PNPM
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
+
+      - name: 🏭 Setup Node
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+        with:
+          node-version: 24.12.0
+          cache: pnpm
+
+      - name: 📂 Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> "$GITHUB_ENV"
+
+      - name: 🧩 Setup pnpm cache
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 📥 Download baseline (main branch)
+        if: github.event_name == 'pull_request'
+        uses: dawidd6/action-download-artifact@80620a5d27ce0ae443f0c8b4a5e8d2e1bc94e267 # v11
+        with:
+          workflow: bench.yml
+          branch: main
+          name: benchmark-results
+          path: baseline
+        continue-on-error: true
+
+      - name: 📊 Run benchmarks
+        run: pnpm turbo run bench:run
+
+      - name: 📈 Compare with baseline (PR only)
+        if: github.event_name == 'pull_request' && hashFiles('baseline/eslint-plugin-bench-results.json') != ''
+        run: |
+          echo "### eslint-plugin benchmark comparison" >> "$GITHUB_STEP_SUMMARY"
+          echo "\`\`\`" >> "$GITHUB_STEP_SUMMARY"
+          cd packages/eslint-plugin && pnpm vitest bench --run --compare ../../baseline/eslint-plugin-bench-results.json 2>&1 | tail -50 >> "$GITHUB_STEP_SUMMARY" || true
+          echo "\`\`\`" >> "$GITHUB_STEP_SUMMARY"
+
+          echo "### eslint-config benchmark comparison" >> "$GITHUB_STEP_SUMMARY"
+          echo "\`\`\`" >> "$GITHUB_STEP_SUMMARY"
+          cd ../eslint-config && pnpm vitest bench --run --compare ../../baseline/eslint-config-bench-results.json 2>&1 | tail -50 >> "$GITHUB_STEP_SUMMARY" || true
+          echo "\`\`\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 📤 Prepare artifacts for upload
+        if: github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p benchmark-artifacts
+          cp packages/eslint-plugin/bench-results.json benchmark-artifacts/eslint-plugin-bench-results.json || true
+          cp packages/eslint-config/bench-results.json benchmark-artifacts/eslint-config-bench-results.json || true
+
+      - name: 📤 Upload benchmark results (main branch only)
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@b4f3747bd30e1e67d4a78ccce7f9a7fe7e5c0c9c # v5
+        with:
+          name: benchmark-results
+          path: benchmark-artifacts/
+          retention-days: 90
