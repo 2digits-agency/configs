@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/no-array-callback-reference */
-
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import * as FileSystem from '@effect/platform/FileSystem';
