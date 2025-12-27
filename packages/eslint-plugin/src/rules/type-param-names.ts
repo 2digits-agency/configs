@@ -1,41 +1,34 @@
-import { anyOf, createRegExp, digit, letter, oneOrMore } from 'magic-regexp';
-import { match, P } from 'ts-pattern';
+import { createRule } from '../utils';
 
-import { createEslintRule } from '../utils';
-
-const PrefixRegex = createRegExp(anyOf('T', '$').at.lineStart());
-const InitialRegex = createRegExp(anyOf('T', '$').at.lineStart(), letter.uppercase);
-const RemainderRegex = createRegExp(anyOf('T', '$').at.lineStart(), letter.uppercase, oneOrMore(letter));
-const TypeParamRegex = createRegExp(
-  anyOf('T', '$').at.lineStart(),
-  letter.uppercase,
-  oneOrMore(letter),
-  digit.times.any().at.lineEnd(),
-);
+const VALID_TYPE_PARAM = /^[T$][A-Z][a-z]+\d*$/;
+const HAS_PREFIX = /^[T$]/;
+const HAS_INITIAL = /^[T$][A-Z]/;
+const HAS_REMAINDER = /^[T$][A-Z][a-z]/;
 
 type MessageId = (typeof MessageId)[keyof typeof MessageId];
 const MessageId = {
   prefix: 'prefix',
   initial: 'initial',
   remainder: 'remainder',
-  regex: 'regex',
+  suggestRename: 'suggestRename',
 } as const;
 
 export const RULE_NAME = 'type-param-names';
 
-export const typeParamNames = createEslintRule<[], MessageId>({
+export const typeParamNames = createRule<[], MessageId>({
   name: RULE_NAME,
   meta: {
     type: 'suggestion',
     docs: {
       description: 'Enforce giving proper names to type parameters when there are two or more',
     },
+    hasSuggestions: true,
     schema: [],
     messages: {
       prefix: 'Type parameter {{name}} should have a prefix of "T" or "$"',
       initial: "Type parameter {{name}}'s name should start with an uppercase letter",
       remainder: "Type parameter {{name}}'s name should contain at least one lowercase letter",
-      regex: 'Type parameter {{name}} should match the regex {{regex}}',
+      suggestRename: 'Rename to {{suggestion}}',
     },
   },
   defaultOptions: [],
@@ -50,14 +43,24 @@ export const typeParamNames = createEslintRule<[], MessageId>({
 
         for (const param of params) {
           const { name } = param.name;
-
           const messageId = getMessageId(name);
 
           if (messageId) {
+            const suggestion = getSuggestion(name);
+
             context.report({
               node: param,
               messageId,
               data: { name },
+              suggest: [
+                {
+                  messageId: 'suggestRename',
+                  data: { suggestion },
+                  fix(fixer) {
+                    return fixer.replaceText(param.name, suggestion);
+                  },
+                },
+              ],
             });
           }
         }
@@ -66,16 +69,41 @@ export const typeParamNames = createEslintRule<[], MessageId>({
   },
 });
 
-const typeParamSelect = P.string.regex(TypeParamRegex);
-const prefixSelect = P.not(P.string.regex(PrefixRegex));
-const initialSelect = P.not(P.string.regex(InitialRegex));
-const remainderSelect = P.not(P.string.regex(RemainderRegex));
+function getMessageId(name: string): MessageId | undefined {
+  if (VALID_TYPE_PARAM.test(name)) {
+    return undefined;
+  }
 
-function getMessageId(name: string) {
-  return match(name)
-    .with(typeParamSelect, () => false as const)
-    .with(prefixSelect, () => MessageId.prefix)
-    .with(initialSelect, () => MessageId.initial)
-    .with(remainderSelect, () => MessageId.remainder)
-    .otherwise(() => false as const);
+  if (!HAS_PREFIX.test(name)) {
+    return MessageId.prefix;
+  }
+
+  if (!HAS_INITIAL.test(name)) {
+    return MessageId.initial;
+  }
+
+  if (!HAS_REMAINDER.test(name)) {
+    return MessageId.remainder;
+  }
+
+  return undefined;
+}
+
+function getSuggestion(name: string): string {
+  if (!HAS_PREFIX.test(name)) {
+    const capitalized = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
+    return `T${capitalized}`;
+  }
+
+  const prefix = name.charAt(0);
+  const rest = name.slice(1);
+
+  if (rest.length === 0) {
+    return `${prefix}Value`;
+  }
+
+  const fixed = rest.charAt(0).toUpperCase() + (rest.length > 1 ? rest.slice(1).toLowerCase() : 'a');
+
+  return `${prefix}${fixed}`;
 }

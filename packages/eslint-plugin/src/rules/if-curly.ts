@@ -1,15 +1,15 @@
 import { AST_NODE_TYPES, AST_TOKEN_TYPES, type TSESTree } from '@typescript-eslint/utils';
 
-import { createEslintRule } from '../utils';
+import { createRule } from '../utils';
 
 type MessageId = 'missingCurly';
 
 export const RULE_NAME = 'if-curly';
 
-export const ifCurly = createEslintRule<[], MessageId>({
+export const ifCurly = createRule<[], MessageId>({
   name: RULE_NAME,
   meta: {
-    type: 'layout',
+    type: 'suggestion',
     docs: {
       description: 'Require curly braces around if statement bodies',
     },

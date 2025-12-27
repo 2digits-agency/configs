@@ -3,7 +3,6 @@ import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester';
 import { run } from '../_test';
 import { RULE_NAME, typeParamNames } from '../../src/rules/type-param-names';
 
-/** Gives nice syntax highlighting */
 const typescript = String.raw;
 
 const valids: Array<ValidTestCase> = [

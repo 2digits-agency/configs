@@ -33,16 +33,15 @@
   "license": "MIT",
   "public": true,
   "dependencies": {
+    "@typescript-eslint/scope-manager": "catalog:",
     "@typescript-eslint/utils": "catalog:",
-    "eslint": "catalog:",
-    "ts-pattern": "catalog:"
+    "eslint": "catalog:"
   },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
     "@typescript-eslint/parser": "catalog:",
     "eslint-vitest-rule-tester": "catalog:",
-    "magic-regexp": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
