@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 4.14.5
+
+### Patch Changes
+
+- 43faead: Fix outdated baseline-browser-mapping warning
+  - Added `baseline-browser-mapping@2.9.11` override to silence "data is over two months old" warning during linting
+
+- Updated dependencies [bd8396a]
+- Updated dependencies [bd8396a]
+  - @2digits/eslint-plugin@3.4.0
+
 ## 4.14.4
 
 ### Patch Changes
