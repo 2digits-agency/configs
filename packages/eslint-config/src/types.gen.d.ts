@@ -9,6 +9,11 @@ export interface RuleOptions {
    */
   '@2digits/if-curly'?: Linter.RuleEntry<[]>
   /**
+   * Disallow passing function references to array methods
+   * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/prefer-inline-array-callbacks.ts
+   */
+  '@2digits/prefer-inline-array-callbacks'?: Linter.RuleEntry<[]>
+  /**
    * Discourage hoisting event handlers only used once in JSX; prefer inlining
    * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/prefer-inline-handlers.ts
    */

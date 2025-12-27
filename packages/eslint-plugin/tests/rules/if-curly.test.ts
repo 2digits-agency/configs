@@ -1,6 +1,6 @@
-import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester';
+import parser from '@typescript-eslint/parser';
+import { run, type InvalidTestCase, type ValidTestCase } from 'eslint-vitest-rule-tester';
 
-import { run } from '../_test';
 import { ifCurly, RULE_NAME } from '../../src/rules/if-curly';
 
 const javascript = String.raw;
@@ -88,6 +88,7 @@ else {
 ];
 
 await run({
+  parser,
   name: RULE_NAME,
   rule: ifCurly,
   valid: valids,

@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-array-callback-reference */
 import * as Command from '@effect/platform/Command';
 import * as Path from '@effect/platform/Path';
 import * as Array from 'effect/Array';

@@ -1,23 +1,7 @@
-import tsParser from '@typescript-eslint/parser';
-import {
-  run as _run,
-  type InvalidTestCase,
-  type RuleTesterInitOptions,
-  type TestCasesOptions,
-  type ValidTestCase,
-} from 'eslint-vitest-rule-tester';
+import parser from '@typescript-eslint/parser';
+import { run, type InvalidTestCase, type ValidTestCase } from 'eslint-vitest-rule-tester';
 
 import { preferInlineHandlers, RULE_NAME } from '../../src/rules/prefer-inline-handlers';
-
-function run(options: TestCasesOptions & RuleTesterInitOptions) {
-  return _run({
-    parser: tsParser as never,
-    parserOptions: {
-      ecmaFeatures: { jsx: true },
-    },
-    ...options,
-  });
-}
 
 const tsx = String.raw;
 
@@ -259,6 +243,10 @@ const invalids: Array<InvalidTestCase> = [
 ];
 
 await run({
+  parser,
+  parserOptions: {
+    ecmaFeatures: { jsx: true },
+  },
   name: RULE_NAME,
   rule: preferInlineHandlers,
   valid: valids,

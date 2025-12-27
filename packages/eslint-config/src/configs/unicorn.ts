@@ -14,9 +14,10 @@ export function unicorn(): Array<TypedFlatConfigItem> {
       rules: {
         ...pluginUnicorn.configs.recommended.rules,
 
-        'unicorn/filename-case': ['off'],
-        'unicorn/prefer-module': ['off'],
-        'unicorn/prevent-abbreviations': ['off'],
+        'unicorn/no-array-callback-reference': 'off',
+        'unicorn/filename-case': 'off',
+        'unicorn/prefer-module': 'off',
+        'unicorn/prevent-abbreviations': 'off',
         'unicorn/prefer-ternary': ['error', 'only-single-line'],
         'unicorn/no-useless-undefined': [
           'error',
@@ -25,7 +26,7 @@ export function unicorn(): Array<TypedFlatConfigItem> {
             checkArrowFunctionBody: false,
           },
         ],
-        'unicorn/prefer-top-level-await': ['off'],
+        'unicorn/prefer-top-level-await': 'off',
       },
     },
   ];
