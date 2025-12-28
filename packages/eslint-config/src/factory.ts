@@ -71,7 +71,7 @@ interface ESLint2DigitsOptions {
   zod?: SharedOptions | boolean;
 }
 
-function enabled<T extends SharedOptions>(options: T | boolean | undefined, defaults?: boolean): options is T {
+export function enabled<T extends SharedOptions>(options: T | boolean | undefined, defaults?: boolean): options is T {
   if (typeof options === 'boolean') {
     return options;
   }
@@ -79,12 +79,12 @@ function enabled<T extends SharedOptions>(options: T | boolean | undefined, defa
   return options?.enable ?? defaults ?? false;
 }
 
-function config<T>(options: SharedOptions<T> | undefined | boolean): T {
+export function extractConfig<T>(options: SharedOptions<T> | undefined | boolean): T {
   if (typeof options === 'boolean' || options === undefined) {
     return {} as T;
   }
 
-  const { enable, ...rest } = options;
+  const { enable: _, ...rest } = options;
 
   return rest as T;
 }
@@ -118,7 +118,7 @@ export async function twoDigits(
   );
 
   if (enabled(options.css)) {
-    composer = composer.append(css(config(options.css)));
+    composer = composer.append(css(extractConfig(options.css)));
   }
 
   if (enabled(options.depend, true)) {
@@ -126,19 +126,19 @@ export async function twoDigits(
   }
 
   if (enabled(options.turbo, isPackageExists('turbo'))) {
-    composer = composer.append(turbo(config(options.turbo)));
+    composer = composer.append(turbo(extractConfig(options.turbo)));
   }
 
-  const { overrides, ...typescriptOptions } = config(options.ts);
+  const { overrides, ...typescriptOptions } = extractConfig(options.ts);
 
   if (enabled(options.ts, isPackageExists('typescript'))) {
-    composer = composer.append(typescript(config(options.ts)));
+    composer = composer.append(typescript(extractConfig(options.ts)));
   }
 
   if (enabled(options.react, isPackageExists('react'))) {
     composer = composer.append(
       react({
-        ...config(options.react),
+        ...extractConfig(options.react),
         ...typescriptOptions,
       }),
     );
@@ -147,7 +147,7 @@ export async function twoDigits(
   if (enabled(options.next, isPackageExists('next'))) {
     composer = composer.append(
       next({
-        ...config(options.next),
+        ...extractConfig(options.next),
         ...typescriptOptions,
       }),
     );
@@ -161,14 +161,14 @@ export async function twoDigits(
   ) {
     composer = composer.append(
       storybook({
-        ...config(options.storybook),
+        ...extractConfig(options.storybook),
         ...typescriptOptions,
       }),
     );
   }
 
   if (enabled(options.tailwind, isPackageExists('tailwindcss'))) {
-    composer = composer.append(tailwind(config(options.tailwind)));
+    composer = composer.append(tailwind(extractConfig(options.tailwind)));
   }
 
   if (
@@ -179,23 +179,23 @@ export async function twoDigits(
         || isPackageExists('@tanstack/react-query-devtools'),
     )
   ) {
-    composer = composer.append(tanstackQuery(config(options.tanstackQuery)));
+    composer = composer.append(tanstackQuery(extractConfig(options.tanstackQuery)));
   }
 
   if (enabled(options.tanstackRouter, isPackageExists('@tanstack/react-router'))) {
-    composer = composer.append(tanstackRouter(config(options.tanstackRouter)));
+    composer = composer.append(tanstackRouter(extractConfig(options.tanstackRouter)));
   }
 
   if (enabled(options.drizzle, isPackageExists('drizzle-kit') || isPackageExists('drizzle-orm'))) {
-    composer = composer.append(drizzle(config(options.drizzle)));
+    composer = composer.append(drizzle(extractConfig(options.drizzle)));
   }
 
   if (enabled(options.zod, isPackageExists('zod'))) {
-    composer = composer.append(zod(config(options.zod)));
+    composer = composer.append(zod(extractConfig(options.zod)));
   }
 
   if (enabled(options.graphql, isPackageExists('graphql'))) {
-    composer = composer.append(graphql(config(options.graphql)));
+    composer = composer.append(graphql(extractConfig(options.graphql)));
   }
 
   if (enabled(options.pnpm, !!(await pnpmPromise))) {
