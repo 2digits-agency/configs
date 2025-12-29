@@ -1374,6 +1374,29 @@
     ]
   },
   {
+    "name": "2digits:zod",
+    "files": [
+      "**/*.?([cm])[jt]s?(x)"
+    ],
+    "plugins": [
+      "zod"
+    ],
+    "rules": [
+      "zod/array-style",
+      "zod/no-any-schema",
+      "zod/no-empty-custom-schema",
+      "zod/no-number-schema-with-int",
+      "zod/no-optional-and-default-together",
+      "zod/no-throw-in-refine",
+      "zod/prefer-meta",
+      "zod/prefer-meta-last",
+      "zod/prefer-namespace-import",
+      "zod/require-brand-type-parameter",
+      "zod/require-schema-suffix",
+      "zod/schema-error-property-style"
+    ]
+  },
+  {
     "name": "2digits:pnpm/package-json",
     "files": [
       "package.json",
