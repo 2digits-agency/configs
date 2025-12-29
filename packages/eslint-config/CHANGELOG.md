@@ -1,5 +1,23 @@
 # @2digits/eslint-config
 
+## 4.15.2
+
+### Patch Changes
+
+- 9c1b08e: Update dependencies
+  - Updated `typescript-eslint` to 8.51.0
+  - Updated `@typescript-eslint/parser`, `@typescript-eslint/scope-manager`, `@typescript-eslint/utils` to 8.51.0
+  - Updated `eslint-plugin-storybook` to 10.1.11
+  - Updated `@effect/language-service` to 0.63.2
+  - Updated `renovate` to 42.66.12
+
+- 9c1b08e: Bundle `eslint-plugin-react-hooks`, `zod-validation-error`, and `zod` to fix ESM resolution issues
+  - Bundled `eslint-plugin-react-hooks`, `zod-validation-error`, and `zod` to fix ESM resolution issues
+  - Moved `eslint-plugin-react-hooks` from dependencies to devDependencies
+
+- Updated dependencies [9c1b08e]
+  - @2digits/eslint-plugin@3.5.1
+
 ## 4.15.1
 
 ### Patch Changes
