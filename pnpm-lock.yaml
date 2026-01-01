@@ -178,8 +178,8 @@ catalogs:
       specifier: 3.0.1
       version: 3.0.1
     globals:
-      specifier: 16.5.0
-      version: 16.5.0
+      specifier: 17.0.0
+      version: 17.0.0
     graphql-config:
       specifier: 5.1.5
       version: 5.1.5
@@ -517,7 +517,7 @@ importers:
         version: 2.0.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.2.1)
       globals:
         specifier: 'catalog:'
-        version: 16.5.0
+        version: 17.0.0
       graphql-config:
         specifier: 'catalog:'
         version: 5.1.5(@types/node@24.10.4)(crossws@0.3.5)(graphql@16.11.0)(typescript@5.9.3)
@@ -4970,6 +4970,10 @@ packages:
 
   globals@16.5.0:
     resolution: {integrity: sha512-c/c15i26VrJ4IRt5Z89DnIzCGDn9EcebibhAOjw5ibqEHsE1wLUgkPn9RDmNcUKyU87GeaL633nyJ+pplFR2ZQ==}
+    engines: {node: '>=18'}
+
+  globals@17.0.0:
+    resolution: {integrity: sha512-gv5BeD2EssA793rlFWVPMMCqefTlpusw6/2TbAVMy0FzcG8wKJn4O+NqJ4+XWmmwrayJgw5TzrmWjFgmz1XPqw==}
     engines: {node: '>=18'}
 
   globby@11.1.0:
@@ -12728,6 +12732,8 @@ snapshots:
   globals@15.15.0: {}
 
   globals@16.5.0: {}
+
+  globals@17.0.0: {}
 
   globby@11.1.0:
     dependencies:
