@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 4.15.3
+
+### Patch Changes
+
+- bf25506: Update `tsdown` to 0.18.4
+- 2a0bc02: Update `@eslint-react` plugin with improved rule descriptions
+  - Added new `react-naming-convention/ref-name` rule enforcing `Ref` suffix on useRef variables
+  - Updated rule descriptions to use clearer language (single quotes, consistent phrasing)
+  - Reduced globals count from 1239 to 1234
+
+- Updated dependencies [bf25506]
+  - @2digits/constants@1.1.13
+  - @2digits/eslint-plugin@3.5.2
+
 ## 4.15.2
 
 ### Patch Changes

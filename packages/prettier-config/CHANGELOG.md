@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 4.0.26
+
+### Patch Changes
+
+- bf25506: Update `tsdown` to 0.18.4
+- Updated dependencies [bf25506]
+  - @2digits/constants@1.1.13
+
 ## 4.0.25
 
 ### Patch Changes

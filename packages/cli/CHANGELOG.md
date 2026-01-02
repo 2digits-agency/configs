@@ -1,5 +1,12 @@
 # @2digits/cli
 
+## 1.2.17
+
+### Patch Changes
+
+- bf25506: Update `tsdown` to 0.18.4
+- bf25506: Updated dependencies
+
 ## 1.2.16
 
 ### Patch Changes
