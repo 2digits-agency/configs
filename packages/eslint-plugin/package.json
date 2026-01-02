@@ -23,7 +23,9 @@
     "build": "tsdown --minify --config-loader unconfig",
     "dev": "tsdown --watch --config-loader unconfig",
     "types": "tsc --noEmit",
-    "test": "vitest --run"
+    "test": "vitest --run",
+    "bench": "vitest bench",
+    "bench:run": "vitest bench --run"
   },
   "keywords": [
     "eslint",

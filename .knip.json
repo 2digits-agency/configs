@@ -1,9 +1,13 @@
 {
   "$schema": "./node_modules/knip/schema.json",
+  "ignoreBinaries": ["vitest"],
   "workspaces": {
     "packages/eslint-config": {
-      "ignore": ["fixtures/**", "_fixtures/**"],
+      "ignore": ["fixtures/**", "_fixtures/**", "bench/**"],
       "ignoreDependencies": ["react", "@types/react"]
+    },
+    "packages/eslint-plugin": {
+      "ignore": ["bench/**"]
     },
     "packages/cli": {
       "ignore": ["test/fixtures/**"]

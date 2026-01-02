@@ -13,6 +13,14 @@
     "test": {
       "dependsOn": ["^test"]
     },
+    "bench": {
+      "dependsOn": ["build"],
+      "outputs": ["bench-results.json"]
+    },
+    "bench:run": {
+      "dependsOn": ["build"],
+      "outputs": ["bench-results.json"]
+    },
     "test:watch": {
       "persistent": true,
       "cache": false,
