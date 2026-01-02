@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.30
+
+### Patch Changes
+
+- bf25506: Updated dependencies
+
 ## 1.2.29
 
 ### Patch Changes

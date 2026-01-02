@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 3.5.2
+
+### Patch Changes
+
+- bf25506: Update `tsdown` to 0.18.4
+
 ## 3.5.1
 
 ### Patch Changes

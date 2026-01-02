@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 1.1.13
+
+### Patch Changes
+
+- bf25506: Update `tsdown` to 0.18.4
+
 ## 1.1.12
 
 ### Patch Changes
