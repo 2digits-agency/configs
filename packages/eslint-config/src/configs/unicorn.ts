@@ -15,6 +15,7 @@ export function unicorn(): Array<TypedFlatConfigItem> {
         ...pluginUnicorn.configs.recommended.rules,
 
         'unicorn/no-array-callback-reference': 'off',
+        'unicorn/no-null': 'off',
         'unicorn/filename-case': 'off',
         'unicorn/prefer-module': 'off',
         'unicorn/prevent-abbreviations': 'off',

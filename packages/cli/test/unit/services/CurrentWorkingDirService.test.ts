@@ -21,7 +21,7 @@ describe('CurrentWorkingDirService', () => {
       const service = yield* CurrentWorkingDirService;
       const cwd = yield* service.cwd;
 
-      assertTrue(cwd.startsWith('/') || cwd.match(/^[a-z]:\\/i) !== null);
+      assertTrue(cwd.startsWith('/') || /^[a-z]:\\/i.test(cwd));
     }).pipe(Effect.provide(testLayer)));
 
   it('returns a non-empty string', () =>
