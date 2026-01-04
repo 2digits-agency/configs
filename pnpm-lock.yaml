@@ -16,8 +16,8 @@ catalogs:
       specifier: 0.73.0
       version: 0.73.0
     '@effect/language-service':
-      specifier: 0.63.2
-      version: 0.63.2
+      specifier: 0.64.0
+      version: 0.64.0
     '@effect/platform':
       specifier: 0.94.1
       version: 0.94.1
@@ -220,8 +220,8 @@ catalogs:
       specifier: 19.2.3
       version: 19.2.3
     renovate:
-      specifier: 42.69.2
-      version: 42.69.2
+      specifier: 42.71.0
+      version: 42.71.0
     tailwind-csstree:
       specifier: 0.1.4
       version: 0.1.4
@@ -232,8 +232,8 @@ catalogs:
       specifier: 0.2.15
       version: 0.2.15
     ts-api-utils:
-      specifier: 2.3.0
-      version: 2.3.0
+      specifier: 2.4.0
+      version: 2.4.0
     tsdown:
       specifier: 0.18.4
       version: 0.18.4
@@ -259,8 +259,8 @@ catalogs:
       specifier: 1.3.2
       version: 1.3.2
     zod:
-      specifier: 4.3.4
-      version: 4.3.4
+      specifier: 4.3.5
+      version: 4.3.5
 
 overrides:
   array-includes: npm:@nolyfill/array-includes@1.0.44
@@ -358,7 +358,7 @@ importers:
         version: 0.18.2
       '@effect/language-service':
         specifier: 'catalog:'
-        version: 0.63.2
+        version: 0.64.0
       '@effect/vitest':
         specifier: 'catalog:'
         version: 0.27.0(effect@3.19.14)(vitest@4.0.16(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(jiti@2.6.0)(tsx@4.21.0)(yaml@2.8.2))
@@ -514,7 +514,7 @@ importers:
         version: 1.19.1(eslint@9.39.2(jiti@2.6.0))
       eslint-plugin-zod-x:
         specifier: 'catalog:'
-        version: 2.0.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.4)
+        version: 2.0.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.5)
       globals:
         specifier: 'catalog:'
         version: 17.0.0
@@ -587,7 +587,7 @@ importers:
         version: 4.0.16(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(jiti@2.6.0)(tsx@4.21.0)(yaml@2.8.2)
       zod:
         specifier: 'catalog:'
-        version: 4.3.4
+        version: 4.3.5
 
   packages/eslint-plugin:
     dependencies:
@@ -602,7 +602,7 @@ importers:
         version: 9.39.2(jiti@2.6.0)
       ts-api-utils:
         specifier: 'catalog:'
-        version: 2.3.0(typescript@5.9.3)
+        version: 2.4.0(typescript@5.9.3)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -682,7 +682,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 42.69.2(encoding@0.1.13)(typanion@3.14.0)
+        version: 42.71.0(encoding@0.1.13)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -1180,8 +1180,8 @@ packages:
       lmdb:
         optional: true
 
-  '@effect/language-service@0.63.2':
-    resolution: {integrity: sha512-/y33gKaZiG+kWKbs2kogmUAItFta5VVzBChdNCqzQ0E9SFfBf7TapwtN5OgTMNJMcyv41R4zaTGVM4Iqtv7hZQ==}
+  '@effect/language-service@0.64.0':
+    resolution: {integrity: sha512-Ch6s0aAcrdaOWKmsXw0ys/MvYzz2DD5wf6qALnuyb8Tq1LO8livCUf2ax2cIWzPuEitRyvmIFb0byxKAYi1kcw==}
     hasBin: true
 
   '@effect/platform-node-shared@0.57.0':
@@ -3086,8 +3086,8 @@ packages:
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
     engines: {node: '>=10'}
 
-  '@sindresorhus/is@7.1.1':
-    resolution: {integrity: sha512-rO92VvpgMc3kfiTjGT52LEtJ8Yc5kCWhZjLQ3LwlA4pSgPpQO7bVpYXParOD8Jwf+cVQECJo3yP/4I8aZtUQTQ==}
+  '@sindresorhus/is@7.2.0':
+    resolution: {integrity: sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw==}
     engines: {node: '>=18'}
 
   '@smithy/abort-controller@4.2.7':
@@ -5293,10 +5293,6 @@ packages:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
     hasBin: true
 
-  js-yaml@4.1.0:
-    resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
-    hasBin: true
-
   js-yaml@4.1.1:
     resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
     hasBin: true
@@ -6482,8 +6478,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@42.69.2:
-    resolution: {integrity: sha512-Cw3/r8kmQ5888Evd+DEPNMQ0eKqvY6uODGBLVKCZOW6GeXWXgm5kQdjJuKXIQ9jI18KpGkgPv0KQh2EvgcfG5A==}
+  renovate@42.71.0:
+    resolution: {integrity: sha512-TQcPwhYGO+PUghLQEjnP/co51RCBdlSvOMLhTlEnigoc1Dzth+UeD/B9UvRP0uZikVzvDX9e7yJnVXuqlexaig==}
     engines: {node: ^22.13.0 || ^24.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -6955,6 +6951,12 @@ packages:
 
   ts-api-utils@2.3.0:
     resolution: {integrity: sha512-6eg3Y9SF7SsAvGzRHQvvc1skDAhwI4YQ32ui1scxD1Ccr0G5qIIbUBT3pFTKX8kmWIQClHobtUdNuaBgwdfdWg==}
+    engines: {node: '>=18.12'}
+    peerDependencies:
+      typescript: '>=4.8.4'
+
+  ts-api-utils@2.4.0:
+    resolution: {integrity: sha512-3TaVTaAv2gTiMB35i3FiGJaRfwb3Pyn/j3m/bfAvGe8FB7CF6u+LMYqYlDh7reQf7UNvoTvdfAqHGmPGOSsPmA==}
     engines: {node: '>=18.12'}
     peerDependencies:
       typescript: '>=4.8.4'
@@ -7479,8 +7481,8 @@ packages:
   zod@4.2.1:
     resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
 
-  zod@4.3.4:
-    resolution: {integrity: sha512-Zw/uYiiyF6pUT1qmKbZziChgNPRu+ZRneAsMUDU6IwmXdWt5JwcUfy2bvLOCUtz5UniaN/Zx5aFttZYbYc7O/A==}
+  zod@4.3.5:
+    resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -8716,7 +8718,7 @@ snapshots:
       effect: 3.19.14
       uuid: 11.1.0
 
-  '@effect/language-service@0.63.2': {}
+  '@effect/language-service@0.64.0': {}
 
   '@effect/platform-node-shared@0.57.0(@effect/cluster@0.48.3(@effect/platform@0.94.1(effect@3.19.14))(@effect/rpc@0.69.2(@effect/platform@0.94.1(effect@3.19.14))(effect@3.19.14))(@effect/sql@0.44.2(@effect/experimental@0.54.6(@effect/platform@0.94.1(effect@3.19.14))(effect@3.19.14))(@effect/platform@0.94.1(effect@3.19.14))(effect@3.19.14))(@effect/workflow@0.9.3(@effect/platform@0.94.1(effect@3.19.14))(@effect/rpc@0.69.2(@effect/platform@0.94.1(effect@3.19.14))(effect@3.19.14))(effect@3.19.14))(effect@3.19.14))(@effect/platform@0.94.1(effect@3.19.14))(@effect/rpc@0.69.2(@effect/platform@0.94.1(effect@3.19.14))(effect@3.19.14))(@effect/sql@0.44.2(@effect/experimental@0.54.6(@effect/platform@0.94.1(effect@3.19.14))(effect@3.19.14))(@effect/platform@0.94.1(effect@3.19.14))(effect@3.19.14))(effect@3.19.14)':
     dependencies:
@@ -9149,7 +9151,7 @@ snapshots:
       eslint: 9.39.2(jiti@2.6.0)
       ts-pattern: 5.9.0
       typescript: 5.9.3
-      zod: 4.3.4
+      zod: 4.3.5
     transitivePeerDependencies:
       - supports-color
 
@@ -10416,7 +10418,7 @@ snapshots:
 
   '@sindresorhus/is@4.6.0': {}
 
-  '@sindresorhus/is@7.1.1': {}
+  '@sindresorhus/is@7.2.0': {}
 
   '@smithy/abort-controller@4.2.7':
     dependencies:
@@ -11596,7 +11598,7 @@ snapshots:
   cosmiconfig@8.3.6(typescript@5.9.3):
     dependencies:
       import-fresh: 3.3.1
-      js-yaml: 4.1.0
+      js-yaml: 4.1.1
       parse-json: 5.2.0
       path-type: 4.0.0
     optionalDependencies:
@@ -12116,8 +12118,8 @@ snapshots:
       '@babel/parser': 7.28.4
       eslint: 9.39.2(jiti@2.6.0)
       hermes-parser: 0.25.1
-      zod: 4.3.4
-      zod-validation-error: 3.5.2(zod@4.3.4)
+      zod: 4.3.5
+      zod-validation-error: 3.5.2(zod@4.3.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -12257,13 +12259,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-zod-x@2.0.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.4):
+  eslint-plugin-zod-x@2.0.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.5):
     dependencies:
       '@typescript-eslint/utils': 8.51.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
       eslint: 9.39.2(jiti@2.6.0)
       esquery: 1.6.0
     optionalDependencies:
-      zod: 4.3.4
+      zod: 4.3.5
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -13013,10 +13015,6 @@ snapshots:
     dependencies:
       argparse: 1.0.10
       esprima: 4.0.1
-
-  js-yaml@4.1.0:
-    dependencies:
-      argparse: 2.0.1
 
   js-yaml@4.1.1:
     dependencies:
@@ -14435,7 +14433,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@42.69.2(encoding@0.1.13)(typanion@3.14.0):
+  renovate@42.71.0(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.958.0
       '@aws-sdk/client-ec2': 3.958.0
@@ -14469,7 +14467,7 @@ snapshots:
       '@renovatebot/pep440': 4.2.1
       '@renovatebot/pgp': 1.2.2
       '@renovatebot/ruby-semver': 4.1.2
-      '@sindresorhus/is': 7.1.1
+      '@sindresorhus/is': 7.2.0
       '@yarnpkg/core': 4.5.0(typanion@3.14.0)
       '@yarnpkg/parsers': 3.0.3
       ae-cvss-calculator: 1.0.9
@@ -15085,6 +15083,10 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
+  ts-api-utils@2.4.0(typescript@5.9.3):
+    dependencies:
+      typescript: 5.9.3
+
   ts-declaration-location@1.0.7(typescript@5.9.3):
     dependencies:
       picomatch: 4.0.3
@@ -15536,14 +15538,14 @@ snapshots:
     dependencies:
       zod: 3.25.76
 
-  zod-validation-error@3.5.2(zod@4.3.4):
+  zod-validation-error@3.5.2(zod@4.3.5):
     dependencies:
-      zod: 4.3.4
+      zod: 4.3.5
 
   zod@3.25.76: {}
 
   zod@4.2.1: {}
 
-  zod@4.3.4: {}
+  zod@4.3.5: {}
 
   zwitch@2.0.4: {}
