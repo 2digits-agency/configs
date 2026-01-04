@@ -416,7 +416,7 @@
       "unicorn/no-nested-ternary",
       "unicorn/no-new-array",
       "unicorn/no-new-buffer",
-      "unicorn/no-null",
+      "- unicorn/no-null",
       "unicorn/no-object-as-default-parameter",
       "unicorn/no-process-exit",
       "unicorn/no-single-promise-in-promise-methods",
@@ -1093,6 +1093,7 @@
     },
     "rules": [
       "@2digits/if-curly",
+      "@2digits/no-null",
       "@2digits/prefer-inline-array-callbacks",
       "@2digits/prefer-inline-handlers",
       "@2digits/type-param-names",

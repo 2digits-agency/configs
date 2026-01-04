@@ -9,6 +9,11 @@ export interface RuleOptions {
    */
   '@2digits/if-curly'?: Linter.RuleEntry<[]>
   /**
+   * Disallow the use of `null` except when required by external types
+   * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/no-null.ts
+   */
+  '@2digits/no-null'?: Linter.RuleEntry<[]>
+  /**
    * Disallow passing function references to array methods
    * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/prefer-inline-array-callbacks.ts
    */
