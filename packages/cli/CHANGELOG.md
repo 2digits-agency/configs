@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.2.18
+
+### Patch Changes
+
+- 3bbd30d: Updated dependencies
+
 ## 1.2.17
 
 ### Patch Changes

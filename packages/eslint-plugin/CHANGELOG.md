@@ -1,5 +1,22 @@
 # @2digits/eslint-plugin
 
+## 3.6.0
+
+### Minor Changes
+
+- 92a4d08: Add type-aware `@2digits/no-null` rule to replace `unicorn/no-null`
+  - Added `no-null` rule that allows `null` when external TypeScript types require it (types with `null` but not `undefined`)
+  - Enhanced auto-fixes: `let x = null` → `let x`, `return null` → `return`, loose equality auto-fixes `== null` → `== undefined`
+  - Provides suggestions (not auto-fix) for strict equality (`===`/`!==`) comparisons
+  - Allows common patterns: `Object.create(null)`, `useRef(null)`, `insertBefore(x, null)`
+  - Disabled `unicorn/no-null` in favor of the new type-aware rule
+
+### Patch Changes
+
+- 5d736fe: Update dependencies
+  - Updated `ts-api-utils` to 2.4.0
+  - Updated `zod` to 4.3.5
+
 ## 3.5.2
 
 ### Patch Changes
