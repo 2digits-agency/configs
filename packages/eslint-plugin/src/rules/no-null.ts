@@ -7,7 +7,6 @@ type MessageId = (typeof MessageId)[keyof typeof MessageId];
 const MessageId = {
   noNull: 'noNull',
   suggestUndefined: 'suggestUndefined',
-  suggestRemove: 'suggestRemove',
 } as const;
 
 export const RULE_NAME = 'no-null';
@@ -215,29 +214,29 @@ function isStrictEquality(node: TSESTree.Literal): boolean {
   return parent.type === AST_NODE_TYPES.BinaryExpression && (parent.operator === '===' || parent.operator === '!==');
 }
 
-function canRemoveReturnValue(node: TSESTree.Literal): boolean {
+function canRemoveReturnValue(node: TSESTree.Literal): node is TSESTree.Literal & { parent: TSESTree.ReturnStatement } {
   const parent = node.parent;
 
   return parent.type === AST_NODE_TYPES.ReturnStatement && parent.argument === node;
 }
 
-function canRemoveInitializer(node: TSESTree.Literal): TSESTree.VariableDeclarator | undefined {
+function canRemoveInitializer(node: TSESTree.Literal): TSESTree.VariableDeclaratorMaybeInit | undefined {
   const parent = node.parent;
 
   if (parent.type !== AST_NODE_TYPES.VariableDeclarator || parent.init !== node) {
-    return undefined;
+    return;
   }
 
   const grandparent = parent.parent;
 
   if (grandparent.kind === 'const') {
-    return undefined;
+    return;
   }
 
   return parent;
 }
 
-function isNullLiteral(node: TSESTree.Literal): boolean {
+function isNullLiteral(node: TSESTree.Literal): node is TSESTree.NullLiteral {
   return node.raw === 'null';
 }
 
@@ -254,7 +253,6 @@ export const noNull = createRule<[], MessageId>({
     messages: {
       noNull: 'Prefer `undefined` over `null`. Use `null` only when required by external APIs.',
       suggestUndefined: 'Replace `null` with `undefined`',
-      suggestRemove: 'Remove the `null`',
     },
   },
   defaultOptions: [],
@@ -287,84 +285,76 @@ export const noNull = createRule<[], MessageId>({
         }
 
         if (isLooseEquality(node)) {
-          context.report({
+          return context.report({
             node,
-            messageId: 'noNull',
+            messageId: MessageId.noNull,
             fix(fixer) {
               return fixer.replaceText(node, 'undefined');
             },
           });
-
-          return;
         }
 
         if (isStrictEquality(node)) {
-          context.report({
+          return context.report({
             node,
-            messageId: 'noNull',
+            messageId: MessageId.noNull,
             suggest: [
               {
-                messageId: 'suggestUndefined',
+                messageId: MessageId.suggestUndefined,
                 fix(fixer) {
                   return fixer.replaceText(node, 'undefined');
                 },
               },
             ],
           });
-
-          return;
         }
 
         if (canRemoveReturnValue(node)) {
-          const parent = node.parent as TSESTree.ReturnStatement;
+          const parent = node.parent;
 
-          context.report({
+          return context.report({
             node,
-            messageId: 'noNull',
+            messageId: MessageId.noNull,
             fix(fixer) {
               return fixer.removeRange([parent.range[0] + 'return'.length, node.range[1]]);
             },
             suggest: [
               {
-                messageId: 'suggestUndefined',
+                messageId: MessageId.suggestUndefined,
                 fix(fixer) {
                   return fixer.replaceText(node, 'undefined');
                 },
               },
             ],
           });
-
-          return;
         }
 
         const variableDeclarator = canRemoveInitializer(node);
 
         if (variableDeclarator) {
-          context.report({
+          return context.report({
             node,
-            messageId: 'noNull',
+            messageId: MessageId.noNull,
             fix(fixer) {
               return fixer.removeRange([variableDeclarator.id.range[1], node.range[1]]);
             },
             suggest: [
               {
-                messageId: 'suggestUndefined',
+                messageId: MessageId.suggestUndefined,
                 fix(fixer) {
                   return fixer.replaceText(node, 'undefined');
                 },
               },
             ],
           });
-
-          return;
         }
 
-        context.report({
+        return context.report({
           node,
           messageId: 'noNull',
           suggest: [
             {
-              messageId: 'suggestUndefined',
+              messageId: MessageId.suggestUndefined,
               fix(fixer) {
                 return fixer.replaceText(node, 'undefined');
               },
