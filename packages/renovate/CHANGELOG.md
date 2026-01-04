@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.31
+
+### Patch Changes
+
+- 3bbd30d: Updated dependencies
+
 ## 1.2.30
 
 ### Patch Changes

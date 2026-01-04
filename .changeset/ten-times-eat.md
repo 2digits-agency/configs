@@ -1,6 +1,0 @@
----
-'@2digits/cli': patch
-'@2digits/renovate-config': patch
----
-
-Updated dependencies
