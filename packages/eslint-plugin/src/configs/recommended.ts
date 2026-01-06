@@ -5,7 +5,6 @@ import type { rules } from '../rules';
 export const recommended = {
   rules: {
     '@2digits/if-curly': 'error' as const,
-    '@2digits/no-null': 'error' as const,
     '@2digits/prefer-inline-array-callbacks': 'error' as const,
     '@2digits/prefer-inline-handlers': 'error' as const,
     '@2digits/type-param-names': 'error' as const,

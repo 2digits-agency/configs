@@ -117,7 +117,7 @@ const parserPlain = {
       tokens: [],
       type: 'Program',
     },
-    // eslint-disable-next-line @2digits/no-null
+    // eslint-disable-next-line unicorn/no-null
     scopeManager: null,
     services: { isPlain: true },
     visitorKeys: {
