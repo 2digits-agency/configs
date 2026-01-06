@@ -1,5 +1,28 @@
 # @2digits/eslint-config
 
+## 5.0.0
+
+### Major Changes
+
+- 3278efb: Remove `@2digits/no-null` rule in favor of `unicorn/no-null`
+  - Removed `@2digits/no-null` rule from `@2digits/eslint-plugin`
+  - Removed `@2digits/no-null` from recommended config
+  - Re-enabled `unicorn/no-null` in `@2digits/eslint-config`
+
+### Patch Changes
+
+- 5aa0814: Update dependencies
+  - Updated `@eslint-react/eslint-plugin` to 2.5.1
+  - Updated `@typescript-eslint/*` packages to 8.52.0
+  - Updated `typescript-eslint` to 8.52.0
+  - Updated `eslint-plugin-turbo` to 2.7.3
+  - Updated `renovate` to 42.71.2
+  - Updated `@effect/language-service` to 0.64.1
+
+- Updated dependencies [5aa0814]
+- Updated dependencies [3278efb]
+  - @2digits/eslint-plugin@4.0.0
+
 ## 4.15.4
 
 ### Patch Changes
