@@ -1,5 +1,17 @@
 # @2digits/renovate-config
 
+## 1.2.32
+
+### Patch Changes
+
+- 5aa0814: Update dependencies
+  - Updated `@eslint-react/eslint-plugin` to 2.5.1
+  - Updated `@typescript-eslint/*` packages to 8.52.0
+  - Updated `typescript-eslint` to 8.52.0
+  - Updated `eslint-plugin-turbo` to 2.7.3
+  - Updated `renovate` to 42.71.2
+  - Updated `@effect/language-service` to 0.64.1
+
 ## 1.2.31
 
 ### Patch Changes
