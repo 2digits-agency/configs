@@ -3114,12 +3114,12 @@ Backward pagination arguments
    */
   'react-compiler/react-compiler'?: Linter.RuleEntry<ReactCompilerReactCompiler>
   /**
-   * Disallows 'dangerouslySetInnerHTML'.
+   * Disallows DOM elements from using 'dangerouslySetInnerHTML'.
    * @see https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml
    */
   'react-dom/no-dangerously-set-innerhtml'?: Linter.RuleEntry<[]>
   /**
-   * Disallows 'dangerouslySetInnerHTML' and 'children' at the same time.
+   * Disallows DOM elements from using 'dangerouslySetInnerHTML' and 'children' at the same time.
    * @see https://eslint-react.xyz/docs/rules/dom-no-dangerously-set-innerhtml-with-children
    */
   'react-dom/no-dangerously-set-innerhtml-with-children'?: Linter.RuleEntry<[]>
@@ -3134,17 +3134,17 @@ Backward pagination arguments
    */
   'react-dom/no-flush-sync'?: Linter.RuleEntry<[]>
   /**
-   * Replaces usage of 'ReactDom.hydrate()' with 'hydrateRoot()'.
+   * Replaces usage of 'ReactDOM.hydrate()' with 'hydrateRoot()'.
    * @see https://eslint-react.xyz/docs/rules/dom-no-hydrate
    */
   'react-dom/no-hydrate'?: Linter.RuleEntry<[]>
   /**
-   * Enforces explicit 'type' attribute for 'button' elements.
+   * Enforces an explicit 'type' attribute for 'button' elements.
    * @see https://eslint-react.xyz/docs/rules/dom-no-missing-button-type
    */
   'react-dom/no-missing-button-type'?: Linter.RuleEntry<[]>
   /**
-   * Enforces explicit 'sandbox' attribute for 'iframe' elements.
+   * Enforces an explicit 'sandbox' attribute for 'iframe' elements.
    * @see https://eslint-react.xyz/docs/rules/dom-no-missing-iframe-sandbox
    */
   'react-dom/no-missing-iframe-sandbox'?: Linter.RuleEntry<[]>
@@ -3154,7 +3154,7 @@ Backward pagination arguments
    */
   'react-dom/no-namespace'?: Linter.RuleEntry<[]>
   /**
-   * Replaces usage of 'ReactDom.render()' with 'createRoot(node).render()'.
+   * Replaces usage of 'ReactDOM.render()' with 'createRoot(node).render()'.
    * @see https://eslint-react.xyz/docs/rules/dom-no-render
    */
   'react-dom/no-render'?: Linter.RuleEntry<[]>
@@ -3174,7 +3174,7 @@ Backward pagination arguments
    */
   'react-dom/no-string-style-prop'?: Linter.RuleEntry<[]>
   /**
-   * Disallows unknown 'DOM' property.
+   * Disallows unknown 'DOM' properties.
    * @see https://eslint-react.xyz/docs/rules/dom-no-unknown-property
    */
   'react-dom/no-unknown-property'?: Linter.RuleEntry<ReactDomNoUnknownProperty>
@@ -3199,7 +3199,7 @@ Backward pagination arguments
    */
   'react-dom/no-void-elements-with-children'?: Linter.RuleEntry<[]>
   /**
-   * Enforces React DOM is imported via a namespace import.
+   * Enforces importing React DOM via a namespace import.
    * @see https://eslint-react.xyz/docs/rules/dom-prefer-namespace-import
    */
   'react-dom/prefer-namespace-import'?: Linter.RuleEntry<[]>
@@ -3209,7 +3209,7 @@ Backward pagination arguments
    */
   'react-extra/jsx-dollar'?: Linter.RuleEntry<[]>
   /**
-   * Enforces that the 'key' prop is placed before the spread prop in JSX elements.
+   * Enforces that the 'key' prop is placed before the spread prop in JSX elements when using the new JSX transform.
    * @see https://eslint-react.xyz/docs/rules/jsx-key-before-spread
    */
   'react-extra/jsx-key-before-spread'?: Linter.RuleEntry<[]>
@@ -3520,7 +3520,7 @@ Backward pagination arguments
    */
   'react-extra/prefer-use-state-lazy-initialization'?: Linter.RuleEntry<[]>
   /**
-   * Disallows **direct** calls to the 'set' function of 'useState' in 'useEffect'.
+   * Disallows direct calls to the ['set' function](https://react.dev/reference/react/useState#setstate) of 'useState' in 'useEffect'.
    * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-effect
    */
   'react-hooks-extra/no-direct-set-state-in-use-effect'?: Linter.RuleEntry<[]>
@@ -3653,7 +3653,7 @@ Backward pagination arguments
    */
   'react-naming-convention/context-name'?: Linter.RuleEntry<[]>
   /**
-   * Enforces consistent file naming conventions.
+   * Enforces consistent file-naming conventions.
    * @see https://eslint-react.xyz/docs/rules/naming-convention-filename
    */
   'react-naming-convention/filename'?: Linter.RuleEntry<ReactNamingConventionFilename>
@@ -3663,7 +3663,7 @@ Backward pagination arguments
    */
   'react-naming-convention/filename-extension'?: Linter.RuleEntry<ReactNamingConventionFilenameExtension>
   /**
-   * Enforces that variables assigned from 'useRef' calls have names ending with 'Ref'.
+   * Enforces variable names assigned from 'useRef' calls to be either 'ref' or end with 'Ref'.
    * @see https://eslint-react.xyz/docs/rules/naming-convention-ref-name
    */
   'react-naming-convention/ref-name'?: Linter.RuleEntry<[]>
@@ -5834,6 +5834,7 @@ Backward pagination arguments
   /**
    * Enforce props alphabetical sorting
    * @see https://eslint.style/rules/jsx-sort-props
+   * @deprecated
    */
   'stylistic/jsx-sort-props'?: Linter.RuleEntry<StylisticJsxSortProps>
   /**
@@ -9251,6 +9252,8 @@ type JsdocRequireHyphenBeforeParamDescription = []|[("always" | "never")]|[("alw
 }]
 // ----- jsdoc/require-jsdoc -----
 type JsdocRequireJsdoc = []|[{
+  
+  checkAllFunctionExpressions?: boolean
   
   checkConstructors?: boolean
   
@@ -13119,7 +13122,7 @@ type StylisticTypeAnnotationSpacing = []|[{
   after?: boolean
   overrides?: {
     colon?: _StylisticTypeAnnotationSpacing_SpacingConfig
-    arrow?: _StylisticTypeAnnotationSpacing_SpacingConfig
+    arrow?: ("ignore" | _StylisticTypeAnnotationSpacing_SpacingConfig)
     variable?: _StylisticTypeAnnotationSpacing_SpacingConfig
     parameter?: _StylisticTypeAnnotationSpacing_SpacingConfig
     property?: _StylisticTypeAnnotationSpacing_SpacingConfig
