@@ -1,5 +1,27 @@
 # @2digits/eslint-config
 
+## 5.0.1
+
+### Patch Changes
+
+- a97ee7c: Updated tsdown and remove redundant main/module fields
+  - Updated tsdown to 0.19.0
+  - Removed `main` and `module` fields that duplicate the `exports` configuration
+  - These fields are unnecessary for ESM-only packages with proper `exports` definitions
+
+- a97ee7c: Update ESLint plugin dependencies
+  - Updated `@eslint-react/eslint-plugin` to 2.5.4
+    - Removed `react-extra/no-duplicate-key` rule (no longer exists in plugin)
+  - Updated `@eslint/compat` to 2.0.1
+  - Updated `@stylistic/eslint-plugin` to 5.7.0
+    - Deprecated `stylistic/jsx-sort-props` rule
+  - Updated `eslint-plugin-antfu` to 3.1.3
+  - Updated `eslint-plugin-jsdoc` to 62.0.0
+
+- Updated dependencies [a97ee7c]
+  - @2digits/constants@1.1.14
+  - @2digits/eslint-plugin@4.0.1
+
 ## 5.0.0
 
 ### Major Changes

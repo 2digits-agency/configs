@@ -1,5 +1,14 @@
 # @2digits/cli
 
+## 1.2.20
+
+### Patch Changes
+
+- a97ee7c: Updated tsdown and remove redundant main/module fields
+  - Updated tsdown to 0.19.0
+  - Removed `main` and `module` fields that duplicate the `exports` configuration
+  - These fields are unnecessary for ESM-only packages with proper `exports` definitions
+
 ## 1.2.19
 
 ### Patch Changes
