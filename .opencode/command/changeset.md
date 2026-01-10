@@ -88,3 +88,9 @@ Fix TypeScript linting in markdown code blocks
 - Multi-package: list each affected package with appropriate bump type
 - Skip packages with only test/internal changes unless user-facing
 - When in doubt about grouping, prefer fewer changesets with clear scope
+
+## User Input
+
+<UserRequest>
+  $ARGUMENTS
+</UserRequest>

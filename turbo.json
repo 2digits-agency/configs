@@ -1,17 +1,35 @@
 {
+  "globalDependencies": ["pnpm-lock.yaml"],
   "globalPassThroughEnv": ["FORCE_COLOR", "COREPACK_HOME", "ENABLE_EXPERIMENTAL_COREPACK"],
   "ui": "tui",
   "tasks": {
+    "topo": {
+      "dependsOn": ["^topo"]
+    },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "tsdown.config.ts",
+        "!test/**",
+        "!tests/**",
+        "!**/*.test.ts",
+        "!**/*.spec.ts",
+        "!vitest.config.ts"
+      ],
+      "outputs": ["dist/**"],
+      "outputLogs": "new-only"
     },
     "types": {
-      "dependsOn": ["^types", "build", "^build"],
-      "outputs": ["tsconfig.tsbuildinfo"]
+      "dependsOn": ["^types", "build"],
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig.json"],
+      "outputs": ["tsconfig.tsbuildinfo"],
+      "outputLogs": "new-only"
     },
     "test": {
-      "dependsOn": ["^test"]
+      "dependsOn": ["^test"],
+      "inputs": ["$TURBO_DEFAULT$", "vitest.config.ts"],
+      "outputLogs": "new-only"
     },
     "test:watch": {
       "persistent": true,
@@ -22,7 +40,30 @@
       "persistent": true
     },
     "//#lint:root": {
-      "dependsOn": ["@2digits/eslint-config#build"]
+      "dependsOn": ["@2digits/eslint-config#build"],
+      "inputs": [
+        "eslint.config.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.mjs",
+        "**/*.cjs",
+        "**/*.json",
+        "**/*.yaml",
+        "**/*.yml",
+        "**/*.md",
+        "**/*.css",
+        "!**/CHANGELOG.md",
+        "!**/fixtures/**",
+        "!openspec/**",
+        "!.changeset/*-*-*.md",
+        "!.claude/**",
+        "!.cursor/**",
+        "!.opencode/**",
+        "!**/__snapshots__/**",
+        "!**/dist/**",
+        "!**/.turbo/**"
+      ]
     },
     "//#lint:pkg": {
       "inputs": ["**/package.json"]
@@ -31,14 +72,47 @@
       "cache": false
     },
     "//#format": {
-      "dependsOn": ["@2digits/prettier-config#build"]
+      "dependsOn": ["@2digits/prettier-config#build"],
+      "inputs": [
+        ".prettierignore",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.mjs",
+        "**/*.cjs",
+        "**/*.json",
+        "**/*.yaml",
+        "**/*.yml",
+        "**/*.md",
+        "**/*.css",
+        "!**/CHANGELOG.md",
+        "!**/fixtures/**",
+        "!openspec/**",
+        "!.changeset/*-*-*.md",
+        "!.claude/**",
+        "!.cursor/**",
+        "!.opencode/**",
+        "!**/__snapshots__/**",
+        "!**/dist/**",
+        "!**/.turbo/**"
+      ]
     },
     "//#format:fix": {
       "cache": false,
       "dependsOn": ["@2digits/prettier-config#build"]
     },
     "//#knip": {
-      "dependsOn": ["@2digits/eslint-config#build", "@2digits/prettier-config#build"]
+      "dependsOn": ["@2digits/eslint-config#build", "@2digits/prettier-config#build"],
+      "inputs": [
+        ".knip.json",
+        "**/package.json",
+        "**/*.ts",
+        "**/*.tsx",
+        "!**/fixtures/**",
+        "!**/__snapshots__/**",
+        "!**/dist/**",
+        "!**/.turbo/**"
+      ]
     },
     "lint": {
       "dependsOn": ["topo", "^build"],
