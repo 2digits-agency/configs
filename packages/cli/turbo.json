@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "inputs": ["$TURBO_DEFAULT$", "tsdown.config.ts", "!test/**", "!vitest.config.ts"]
+    },
+    "test": {
+      "inputs": ["$TURBO_DEFAULT$", "vitest.config.ts"]
+    }
+  }
+}

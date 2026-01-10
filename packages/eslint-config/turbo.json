@@ -1,6 +1,9 @@
 {
   "extends": ["//"],
   "tasks": {
+    "build": {
+      "inputs": ["$TURBO_DEFAULT$", "tsdown.config.ts", "!test/**", "!fixtures/**", "!vitest.config.ts"]
+    },
     "docs": {
       "outputs": ["./.eslint-config-inspector/**"],
       "dependsOn": ["build", "^build"],
@@ -13,7 +16,8 @@
       "interactive": true
     },
     "test": {
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "inputs": ["$TURBO_DEFAULT$", "vitest.config.ts"]
     }
   }
 }

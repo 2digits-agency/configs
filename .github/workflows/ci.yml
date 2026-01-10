@@ -57,5 +57,5 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
-      - name: 🧪 Test, lint, format, build, build and type-check
-        run: pnpm turbo run build test lint:root format types knip
+      - name: 🧪 Test, lint, format, build and type-check
+        run: pnpm turbo run build test lint:root format types knip --summarize

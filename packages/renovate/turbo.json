@@ -5,6 +5,7 @@
       "dependsOn": ["^test", "build"]
     },
     "build": {
+      "inputs": ["$TURBO_DEFAULT$", "build.ts"],
       "outputs": ["./src/nolyfill.json"]
     }
   }
