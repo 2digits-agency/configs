@@ -13,6 +13,7 @@ First, understand the current state:
 3. If no staged changes, check `git diff` for unstaged changes
 4. If no local changes, check `git log main..HEAD` for unpushed commits
 5. Review existing `.changeset/*.md` files for style reference
+6. Scan `packages/*/CHANGELOG.md` files for recent entry style/tone
 
 ## Analysis
 
@@ -68,6 +69,25 @@ Fix TypeScript linting in markdown code blocks
 - Set `project: false` and `projectService: false` to prevent TypeScript project resolution errors
 - Move markdown-specific disables from individual TypeScript configs to dedicated markdown disables config
 - Add test fixtures for TypeScript code in markdown
+```
+
+```
+---
+'@2digits/eslint-config': patch
+---
+
+Update @eslint-react/eslint-plugin to 2.5.5
+
+- Removed `react-extra/no-implicit-key` rule (dropped upstream)
+- Updated generated types with minor doc improvements
+```
+
+```
+---
+'@2digits/renovate-config': patch
+---
+
+Update renovate to 42.78.1
 ```
 
 ## Steps
