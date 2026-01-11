@@ -1,0 +1,38 @@
+{
+  "name": "@2digits/oxlint-config",
+  "version": "0.0.1",
+  "description": "Oxlint configuration matching @2digits/eslint-config rules for fast linting.",
+  "homepage": "https://2d-configs.vercel.app/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2digits-agency/configs.git",
+    "directory": "packages/oxlint-config"
+  },
+  "type": "module",
+  "files": [
+    "oxlint.json"
+  ],
+  "exports": {
+    ".": "./oxlint.json",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "oxlint",
+    "oxlint-config",
+    "linter"
+  ],
+  "license": "MIT",
+  "public": true,
+  "devDependencies": {
+    "oxlint": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": "24.12.0"
+  }
+}
