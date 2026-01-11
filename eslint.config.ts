@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import twoDigits from '@2digits/eslint-config';
+import { twoDigits } from '@2digits/eslint-config';
 
 export default twoDigits(
   {

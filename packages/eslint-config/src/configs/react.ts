@@ -15,7 +15,7 @@ export async function react(
     interopDefault(import('@eslint-react/eslint-plugin')),
     interopDefault(import('eslint-plugin-react-hooks')),
     interopDefault(import('@typescript-eslint/parser')),
-    reactCompiler ? interopDefault(import('eslint-plugin-react-compiler')) : Promise.resolve(undefined),
+    reactCompiler ? interopDefault(import('eslint-plugin-react-compiler')) : undefined,
     interopDefault(import('@stylistic/eslint-plugin')),
   ]);
 

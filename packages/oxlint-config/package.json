@@ -17,10 +17,6 @@
     "./package.json": "./package.json"
   },
   "sideEffects": false,
-  "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
   "keywords": [
     "oxlint",
     "oxlint-config",
@@ -29,8 +25,7 @@
   "license": "MIT",
   "public": true,
   "devDependencies": {
-    "oxlint": "catalog:",
-    "vitest": "catalog:"
+    "oxlint": "catalog:"
   },
   "engines": {
     "node": "24.12.0"

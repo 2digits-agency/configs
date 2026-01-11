@@ -7,6 +7,10 @@
     },
     "packages/cli": {
       "ignore": ["test/fixtures/**"]
+    },
+    "packages/oxlint-config": {
+      "ignoreDependencies": ["oxlint"]
     }
-  }
+  },
+  "ignoreDependencies": ["@2digits/oxlint-config"]
 }
