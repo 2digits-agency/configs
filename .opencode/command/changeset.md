@@ -13,7 +13,7 @@ First, understand the current state:
 3. If no staged changes, check `git diff` for unstaged changes
 4. If no local changes, check `git log main..HEAD` for unpushed commits
 5. Review existing `.changeset/*.md` files for style reference
-6. Scan `packages/*/CHANGELOG.md` files for recent entry style/tone
+6. Scan all `packages/*/CHANGELOG.md` files for recent entry style/tone
 
 ## Analysis
 

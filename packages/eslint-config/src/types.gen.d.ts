@@ -3425,7 +3425,7 @@ Backward pagination arguments
    */
   'react-extra/no-string-refs'?: Linter.RuleEntry<[]>
   /**
-   * Prevents 'key' from being placed on non-top-level elements in list rendering.
+   * Disallows unnecessary `key` props on elements.
    * @see https://eslint-react.xyz/docs/rules/no-unnecessary-key
    */
   'react-extra/no-unnecessary-key'?: Linter.RuleEntry<[]>
@@ -6856,6 +6856,11 @@ Backward pagination arguments
    * @see https://typescript-eslint.io/rules/strict-boolean-expressions
    */
   'ts/strict-boolean-expressions'?: Linter.RuleEntry<TsStrictBooleanExpressions>
+  /**
+   * Disallow passing a value-returning function in a position accepting a void function
+   * @see https://typescript-eslint.io/rules/strict-void-return
+   */
+  'ts/strict-void-return'?: Linter.RuleEntry<TsStrictVoidReturn>
   /**
    * Require switch-case statements to be exhaustive
    * @see https://typescript-eslint.io/rules/switch-exhaustiveness-check
@@ -14095,6 +14100,11 @@ type TsNoUnusedVars = []|[(("all" | "local") | {
   
   destructuredArrayIgnorePattern?: string
   
+  enableAutofixRemoval?: {
+    
+    imports?: boolean
+  }
+  
   ignoreClassWithStaticInitBlock?: boolean
   
   ignoreRestSiblings?: boolean
@@ -14378,6 +14388,11 @@ type TsStrictBooleanExpressions = []|[{
   allowRuleToRunWithoutStrictNullChecksIKnowWhatIAmDoing?: boolean
   
   allowString?: boolean
+}]
+// ----- ts/strict-void-return -----
+type TsStrictVoidReturn = []|[{
+  
+  allowReturnAny?: boolean
 }]
 // ----- ts/switch-exhaustiveness-check -----
 type TsSwitchExhaustivenessCheck = []|[{
