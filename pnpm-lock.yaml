@@ -136,8 +136,8 @@ catalogs:
       specifier: 2.21.0
       version: 2.21.0
     eslint-plugin-n:
-      specifier: 17.23.1
-      version: 17.23.1
+      specifier: 17.23.2
+      version: 17.23.2
     eslint-plugin-pnpm:
       specifier: 1.4.3
       version: 1.4.3
@@ -484,7 +484,7 @@ importers:
         version: 2.21.0(eslint@9.39.2(jiti@2.6.0))
       eslint-plugin-n:
         specifier: 'catalog:'
-        version: 17.23.1(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
+        version: 17.23.2(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
       eslint-plugin-pnpm:
         specifier: 'catalog:'
         version: 1.4.3(eslint@9.39.2(jiti@2.6.0))
@@ -4342,8 +4342,8 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-plugin-n@17.23.1:
-    resolution: {integrity: sha512-68PealUpYoHOBh332JLLD9Sj7OQUDkFpmcfqt8R9sySfFSeuGJjMTJQvCRRB96zO3A/PELRLkPrzsHmzEFQQ5A==}
+  eslint-plugin-n@17.23.2:
+    resolution: {integrity: sha512-RhWBeb7YVPmNa2eggvJooiuehdL76/bbfj/OJewyoGT80qn5PXdz8zMOTO6YHOsI7byPt7+Ighh/i/4a5/v7hw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: '>=8.23.0'
@@ -4740,9 +4740,6 @@ packages:
   get-stream@8.0.1:
     resolution: {integrity: sha512-VaUJspBffn/LMCJVoMvSAdmscJyS1auj5Zulnn5UoYcY531UWmdwhRWkcGKnGU93m5HSXP9LP2usOryrBtQowA==}
     engines: {node: '>=16'}
-
-  get-tsconfig@4.10.1:
-    resolution: {integrity: sha512-auHyJ4AgMz7vgS8Hp3N6HXSmlMdUyhSUrfBF16w153rxtLIEOE+HGqaBppczZvnHLqQJfiHotCYpNhl0lUROFQ==}
 
   get-tsconfig@4.13.0:
     resolution: {integrity: sha512-1VKTZJCwBrvbd+Wn3AOgQP/2Av+TfTCOlE4AcRJE72W1ksZXbAx8PPBR9RzgTeSPzlPMHrbANMH3LbltH73wxQ==}
@@ -11747,7 +11744,7 @@ snapshots:
   eslint-plugin-es-x@7.8.0(eslint@9.39.2(jiti@2.6.0)):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.2(jiti@2.6.0))
-      '@eslint-community/regexpp': 4.12.1
+      '@eslint-community/regexpp': 4.12.2
       eslint: 9.39.2(jiti@2.6.0)
       eslint-compat-utils: 0.5.1(eslint@9.39.2(jiti@2.6.0))
 
@@ -11794,13 +11791,13 @@ snapshots:
     transitivePeerDependencies:
       - '@eslint/json'
 
-  eslint-plugin-n@17.23.1(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3):
+  eslint-plugin-n@17.23.2(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3):
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.0(eslint@9.39.2(jiti@2.6.0))
+      '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.2(jiti@2.6.0))
       enhanced-resolve: 5.18.3
       eslint: 9.39.2(jiti@2.6.0)
       eslint-plugin-es-x: 7.8.0(eslint@9.39.2(jiti@2.6.0))
-      get-tsconfig: 4.10.1
+      get-tsconfig: 4.13.0
       globals: 15.15.0
       globrex: 0.1.2
       ignore: 5.3.2
@@ -12377,10 +12374,6 @@ snapshots:
       pump: 3.0.3
 
   get-stream@8.0.1: {}
-
-  get-tsconfig@4.10.1:
-    dependencies:
-      resolve-pkg-maps: 1.0.0
 
   get-tsconfig@4.13.0:
     dependencies:
