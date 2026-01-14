@@ -3425,7 +3425,7 @@ Backward pagination arguments
    */
   'react-extra/no-string-refs'?: Linter.RuleEntry<[]>
   /**
-   * Disallows unnecessary `key` props on elements.
+   * Disallows unnecessary 'key' props on elements.
    * @see https://eslint-react.xyz/docs/rules/no-unnecessary-key
    */
   'react-extra/no-unnecessary-key'?: Linter.RuleEntry<[]>
@@ -3444,6 +3444,11 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/no-unnecessary-use-prefix
    */
   'react-extra/no-unnecessary-use-prefix'?: Linter.RuleEntry<[]>
+  /**
+   * Disallows unnecessary usage of 'useRef'.
+   * @see https://eslint-react.xyz/docs/rules/no-unnecessary-use-ref
+   */
+  'react-extra/no-unnecessary-use-ref'?: Linter.RuleEntry<[]>
   /**
    * Warns about the use of 'UNSAFE_componentWillMount' in class components.
    * @see https://eslint-react.xyz/docs/rules/no-unsafe-component-will-mount

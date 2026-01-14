@@ -72,6 +72,7 @@ export async function react(
         'react-extra/prefer-use-state-lazy-initialization': 'error',
         'react-extra/no-unnecessary-use-prefix': 'error',
         'react-extra/no-unnecessary-use-memo': 'error',
+        'react-extra/no-unnecessary-use-ref': 'error',
         'react-hooks-extra/no-direct-set-state-in-use-effect': 'error',
 
         'react-extra/no-useless-fragment': 'off',
