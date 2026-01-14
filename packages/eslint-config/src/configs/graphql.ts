@@ -9,9 +9,11 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<Array<Typ
 
   const [gql, gqlSchema] = await Promise.all([
     interopDefault(import('@graphql-eslint/eslint-plugin')),
-    import('graphql-config').then(({ loadConfig }) =>
-      loadConfig({ throwOnEmpty: false, throwOnMissing: false }).then((g) => g?.getDefault().schema),
-    ),
+    import('graphql-config').then(async ({ loadConfig }) => {
+      const g = await loadConfig({ throwOnEmpty: false, throwOnMissing: false });
+
+      return g?.getDefault().schema;
+    }),
   ]);
 
   const flatRecommended = gql.configs['flat/operations-recommended'].rules;

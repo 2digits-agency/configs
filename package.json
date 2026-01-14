@@ -19,6 +19,7 @@
     "lint:root": "eslint .",
     "lint:pkg": "manypkg check",
     "lint:pkg:fix": "manypkg fix",
+    "oxlint": "oxlint",
     "publish": "changeset publish",
     "release": "turbo run build && changeset publish",
     "test": "turbo test",
@@ -30,6 +31,7 @@
   "license": "MIT",
   "devDependencies": {
     "@2digits/eslint-config": "workspace:*",
+    "@2digits/oxlint-config": "workspace:*",
     "@2digits/prettier-config": "workspace:*",
     "@2digits/tsconfig": "workspace:*",
     "@changesets/cli": "catalog:",
@@ -37,6 +39,7 @@
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "knip": "catalog:",
+    "oxlint": "catalog:",
     "pkg-pr-new": "catalog:",
     "prettier": "catalog:",
     "turbo": "catalog:",

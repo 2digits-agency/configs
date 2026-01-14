@@ -94,7 +94,7 @@ export class EslintDetectionService extends Effect.Service<EslintDetectionServic
     });
 
     /**
-     * Check if the project uses @2digits/eslint-config
+     * Check if the project uses `@2digits/eslint-config`
      */
     const uses2DigitsConfig = Effect.fn('EslintDetectionService.uses2DigitsConfig')(function* (configPath?: string) {
       const root = yield* pm.resolveRoot();
