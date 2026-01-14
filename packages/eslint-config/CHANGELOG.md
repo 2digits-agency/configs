@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 5.0.5
+
+### Patch Changes
+
+- 1e1f247: Switch from `eslint-plugin-zod-x` to `eslint-plugin-zod` 3.0.0
+  - Migrated to renamed package `eslint-plugin-zod` (previously `eslint-plugin-zod-x`)
+  - Added `zod/prefer-enum-over-literal-union` rule
+  - Updated `@eslint-react/eslint-plugin` to 2.6.4
+
 ## 5.0.4
 
 ### Patch Changes
