@@ -5,7 +5,7 @@ import { interopDefault } from '../utils';
 export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFlatConfigItem>> {
   const { overrides = {} } = options;
 
-  const zod = await interopDefault(import('eslint-plugin-zod-x'));
+  const zod = await interopDefault(import('eslint-plugin-zod'));
 
   return [
     {
@@ -19,6 +19,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/no-number-schema-with-int': 'error',
         'zod/no-optional-and-default-together': ['warn', { preferredMethod: 'default' }],
         'zod/no-throw-in-refine': 'error',
+        'zod/prefer-enum-over-literal-union': 'error',
         'zod/prefer-meta': 'error',
         'zod/prefer-meta-last': 'error',
         'zod/prefer-namespace-import': 'error',
