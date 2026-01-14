@@ -109,6 +109,11 @@ Update renovate to 42.78.1
 - Skip packages with only test/internal changes unless user-facing
 - When in doubt about grouping, prefer fewer changesets with clear scope
 
+## Package-Specific Reminders
+
+- **renovate updates**: Always create a changeset for `@2digits/renovate-config` when `renovate` version changes in catalog
+- **@effect/language-service updates**: Always create a changeset for `@2digits/cli` when `@effect/language-service` version changes in catalog
+
 ## User Input
 
 <UserRequest>
