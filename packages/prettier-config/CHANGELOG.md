@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 4.0.28
+
+### Patch Changes
+
+- af910c8: Update prettier to 3.8.0
+
 ## 4.0.27
 
 ### Patch Changes
