@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 5.0.6
+
+### Patch Changes
+
+- af910c8: Update ESLint plugin dependencies
+  - Updated `@eslint-react/eslint-plugin` to 2.7.0
+  - Updated `@next/eslint-plugin-next` to 16.1.2
+  - Updated `eslint-plugin-zod` to 3.0.2
+
 ## 5.0.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.37
+
+### Patch Changes
+
+- af910c8: Update renovate to 42.82.3
+
 ## 1.2.36
 
 ### Patch Changes
