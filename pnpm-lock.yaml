@@ -169,8 +169,8 @@ catalogs:
       specifier: 1.19.1
       version: 1.19.1
     eslint-plugin-zod:
-      specifier: 3.0.0
-      version: 3.0.0
+      specifier: 3.0.2
+      version: 3.0.2
     eslint-typegen:
       specifier: 2.3.0
       version: 2.3.0
@@ -514,7 +514,7 @@ importers:
         version: 1.19.1(eslint@9.39.2(jiti@2.6.0))
       eslint-plugin-zod:
         specifier: 'catalog:'
-        version: 3.0.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.5)
+        version: 3.0.2(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.5)
       globals:
         specifier: 'catalog:'
         version: 17.0.0
@@ -4438,8 +4438,8 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-plugin-zod@3.0.0:
-    resolution: {integrity: sha512-fDwb5KRRTXFE1aSyiBQ7kHwB+t9fyiO89UBGH4wNDGxxmKOt/TEFCRUXaluHd+uiOEaC6OtflJ3resKHmeAFhg==}
+  eslint-plugin-zod@3.0.2:
+    resolution: {integrity: sha512-7kSjTV31ThWfosyVqi4n1dcd2Egle6oO9Vntql0EXCytbSFPF4K1id2+E+e0sb/EZIAI4OznLHLzj/v9a1yW/g==}
     engines: {node: ^20 || ^22 || >=24}
     peerDependencies:
       eslint: ^9
@@ -11706,7 +11706,7 @@ snapshots:
   eslint-json-compat-utils@0.2.1(eslint@9.39.2(jiti@2.6.0))(jsonc-eslint-parser@2.4.2):
     dependencies:
       eslint: 9.39.2(jiti@2.6.0)
-      esquery: 1.6.0
+      esquery: 1.7.0
       jsonc-eslint-parser: 2.4.2
 
   eslint-merge-processors@2.0.0(eslint@9.39.2(jiti@2.6.0)):
@@ -12003,7 +12003,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-zod@3.0.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.5):
+  eslint-plugin-zod@3.0.2(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.5):
     dependencies:
       '@typescript-eslint/utils': 8.53.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
       eslint: 9.39.2(jiti@2.6.0)
