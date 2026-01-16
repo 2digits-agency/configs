@@ -1,0 +1,34 @@
+{
+  "name": "@2digits/opencode-plugin",
+  "version": "0.0.0",
+  "description": "OpenCode plugin for 2digits team - shared rules and feedback system",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2digits-agency/configs.git",
+    "directory": "packages/opencode-plugin"
+  },
+  "type": "module",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsdown --minify --config-loader unconfig",
+    "dev": "tsdown --watch --config-loader unconfig",
+    "types": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@opencode-ai/plugin": "1.1.23"
+  },
+  "devDependencies": {
+    "@2digits/tsconfig": "workspace:*",
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
+  }
+}
