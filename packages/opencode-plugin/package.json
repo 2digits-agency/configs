@@ -8,18 +8,24 @@
     "directory": "packages/opencode-plugin"
   },
   "type": "module",
-  "types": "./dist/index.d.mts",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
-    ".": "./dist/index.mjs",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsdown --minify --config-loader unconfig",
-    "dev": "tsdown --watch --config-loader unconfig",
+    "build": "bunup",
+    "dev": "bunup --watch",
     "types": "tsc --noEmit"
   },
   "license": "MIT",
@@ -29,7 +35,7 @@
   },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
-    "tsdown": "catalog:",
+    "bunup": "catalog:",
     "typescript": "catalog:"
   }
 }

@@ -79,7 +79,7 @@ function getProjectLabel(ctx: PluginInput): string {
 }
 
 // eslint-disable-next-line ts/require-await
-async function plugin(ctx: PluginInput): Promise<Hooks> {
+export default async function plugin(ctx: PluginInput): Promise<Hooks> {
   const projectLabel = getProjectLabel(ctx);
 
   return {
@@ -126,5 +126,3 @@ async function plugin(ctx: PluginInput): Promise<Hooks> {
     },
   };
 }
-
-export default plugin;
