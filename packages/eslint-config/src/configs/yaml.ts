@@ -1,5 +1,5 @@
 import yml from 'eslint-plugin-yml';
-import parser from 'yaml-eslint-parser';
+import * as parser from 'yaml-eslint-parser';
 
 import { GLOB_YAML } from '../globs';
 import type { TypedFlatConfigItem } from '../types';

@@ -3339,7 +3339,7 @@ Backward pagination arguments
    */
   'react-extra/no-direct-mutation-state'?: Linter.RuleEntry<[]>
   /**
-   * Disallows duplicate 'key' on elements in the same array or a list of 'children'.
+   * Prevents duplicate 'key' props on sibling elements when rendering lists.
    * @see https://eslint-react.xyz/docs/rules/no-duplicate-key
    */
   'react-extra/no-duplicate-key'?: Linter.RuleEntry<[]>
