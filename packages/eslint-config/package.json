@@ -21,7 +21,7 @@
   "scripts": {
     "build": "tsdown --minify --config-loader unconfig",
     "dev": "tsdown --watch --config-loader unconfig",
-    "types": "tsc --noEmit",
+    "types": "tsgo --noEmit",
     "docs": "eslint-config-inspector build",
     "docs:dev": "eslint-config-inspector",
     "test": "vitest run",
@@ -85,6 +85,7 @@
     "@arethetypeswrong/core": "catalog:",
     "@eslint/config-inspector": "catalog:",
     "@types/react": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "dedent": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-react-hooks": "catalog:",

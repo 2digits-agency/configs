@@ -19,13 +19,14 @@
   "scripts": {
     "build": "tsdown --minify --config-loader unconfig",
     "dev": "tsdown --watch --config-loader unconfig",
-    "types": "tsc --noEmit"
+    "types": "tsgo --noEmit"
   },
   "license": "MIT",
   "public": true,
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:"

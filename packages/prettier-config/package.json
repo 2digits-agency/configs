@@ -24,7 +24,7 @@
   "scripts": {
     "build": "tsdown --minify --config-loader unconfig",
     "dev": "tsdown --watch --config-loader unconfig",
-    "types": "tsc --noEmit"
+    "types": "tsgo --noEmit"
   },
   "keywords": [
     "prettier-config"
@@ -43,6 +43,7 @@
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "prettier": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
