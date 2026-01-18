@@ -1,5 +1,13 @@
 # @2digits/cli
 
+## 1.2.22
+
+### Patch Changes
+
+- 4fb94d8: Migrate type checking from tsc to tsgo
+  - Replaced `tsc --noEmit` with `tsgo --noEmit` in all package `types` scripts
+  - Added `@typescript/native-preview` to devDependencies for tsgo binary
+
 ## 1.2.21
 
 ### Patch Changes
