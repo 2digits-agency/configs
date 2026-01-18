@@ -26,7 +26,7 @@
   "scripts": {
     "build": "bunup",
     "dev": "bunup --watch",
-    "types": "tsc --noEmit"
+    "types": "tsgo --noEmit"
   },
   "license": "MIT",
   "dependencies": {
@@ -36,6 +36,7 @@
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
     "@types/bun": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "bunup": "catalog:",
     "typescript": "catalog:"
   }

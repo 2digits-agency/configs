@@ -5,4 +5,4 @@
 - Use Suspense boundaries for loading states
 - Prefer controlled components with explicit state management
 - Extract complex logic into custom hooks
-- Name useState pairs as [value, setValue]
+- Name useState pairs as `[value, setValue]`

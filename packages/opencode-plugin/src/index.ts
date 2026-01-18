@@ -68,20 +68,8 @@ const FIX_COMMAND_TEMPLATE = markdown`
   </Feedback>
 `;
 
-function getProjectLabel(ctx: PluginInput): string {
-  const project = ctx.project as { name?: string };
-
-  if (project.name) {
-    return project.name;
-  }
-
-  return ctx.directory.split('/').findLast(Boolean) ?? 'unknown-project';
-}
-
 // eslint-disable-next-line ts/require-await
 export default async function plugin(ctx: PluginInput): Promise<Hooks> {
-  const projectLabel = getProjectLabel(ctx);
-
   return {
     // eslint-disable-next-line ts/require-await
     config: async (config) => {
@@ -89,7 +77,6 @@ export default async function plugin(ctx: PluginInput): Promise<Hooks> {
       config.command.fix = {
         description: 'Submit feedback about agent behavior to improve shared rules',
         template: FIX_COMMAND_TEMPLATE,
-        subtask: true,
       };
     },
 
@@ -112,13 +99,12 @@ export default async function plugin(ctx: PluginInput): Promise<Hooks> {
         async execute(args) {
           const body = formatIssueBody(args);
           const title = `[Agent Feedback] ${args.title}`;
-          const labels = `agent-feedback,project:${projectLabel}`;
 
           const result = await ctx.$`gh issue create \
             --repo 2digits-agency/configs \
             --title ${title} \
             --body ${body} \
-            --label ${labels}`.text();
+            --label agent-feedback`.text();
 
           return `Created issue: ${result.trim()}`;
         },

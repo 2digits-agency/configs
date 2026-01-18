@@ -5,6 +5,8 @@ export default defineConfig({
   format: 'esm',
   target: 'bun',
   minify: true,
-  dts: true,
+  dts: {
+    tsgo: true,
+  },
   preferredTsconfig: 'tsconfig.build.json',
 });
