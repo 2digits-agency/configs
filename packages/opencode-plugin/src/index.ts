@@ -1,4 +1,4 @@
-import { tool, type Hooks, type Plugin, type PluginInput } from '@opencode-ai/plugin';
+import { tool, type Hooks, type PluginInput } from '@opencode-ai/plugin';
 
 import { loadRules } from './rules';
 
@@ -18,6 +18,7 @@ function formatIssueBody(args: FeedbackArgs): string {
     args.suggestedRule ? `\n## Suggested Rule\n\n${args.suggestedRule}` : '',
     '\n---\n\n_Created via `/fix` command in OpenCode_',
   ];
+
   return sections.filter(Boolean).join('\n');
 }
 
@@ -43,16 +44,23 @@ const FIX_COMMAND_TEMPLATE = `Submit feedback about something the agent did wron
 <Feedback>
   $ARGUMENTS
 </Feedback>`;
+
 function getProjectLabel(ctx: PluginInput): string {
   const project = ctx.project as { name?: string };
-  if (project.name) return project.name;
-  return ctx.directory.split('/').filter(Boolean).pop() ?? 'unknown-project';
+
+  if (project.name) {
+    return project.name;
+  }
+
+  return ctx.directory.split('/').findLast(Boolean) ?? 'unknown-project';
 }
 
-const plugin: Plugin = async (ctx: PluginInput): Promise<Hooks> => {
+// eslint-disable-next-line ts/require-await
+async function plugin(ctx: PluginInput): Promise<Hooks> {
   const projectLabel = getProjectLabel(ctx);
 
   return {
+    // eslint-disable-next-line ts/require-await
     config: async (config) => {
       config.command = config.command ?? {};
       config.command.fix = {
@@ -62,8 +70,10 @@ const plugin: Plugin = async (ctx: PluginInput): Promise<Hooks> => {
       };
     },
 
+    // eslint-disable-next-line ts/require-await
     'experimental.chat.system.transform': async (_input, output) => {
       const rules = loadRules();
+
       output.system.push(`Instructions from: @2digits/opencode-plugin\n${rules}`);
     },
 
@@ -92,6 +102,6 @@ const plugin: Plugin = async (ctx: PluginInput): Promise<Hooks> => {
       }),
     },
   };
-};
+}
 
 export default plugin;
