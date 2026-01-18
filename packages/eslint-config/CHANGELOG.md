@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 5.0.8
+
+### Patch Changes
+
+- 4fb94d8: Migrate type checking from tsc to tsgo
+  - Replaced `tsc --noEmit` with `tsgo --noEmit` in all package `types` scripts
+  - Added `@typescript/native-preview` to devDependencies for tsgo binary
+
+- Updated dependencies [4fb94d8]
+  - @2digits/constants@1.1.15
+  - @2digits/eslint-plugin@4.0.2
+
 ## 5.0.7
 
 ### Patch Changes

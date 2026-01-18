@@ -1,5 +1,13 @@
 # @2digits/renovate-config
 
+## 1.2.39
+
+### Patch Changes
+
+- 4fb94d8: Migrate type checking from tsc to tsgo
+  - Replaced `tsc --noEmit` with `tsgo --noEmit` in all package `types` scripts
+  - Added `@typescript/native-preview` to devDependencies for tsgo binary
+
 ## 1.2.38
 
 ### Patch Changes
