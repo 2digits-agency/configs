@@ -1,7 +1,7 @@
 import { tool, type Hooks, type PluginInput } from '@opencode-ai/plugin';
 import markdown from 'dedent';
 
-import { loadRules } from './rules';
+import { loadRules } from './rules' with { type: 'macro' };
 
 interface FeedbackArgs {
   title: string;
