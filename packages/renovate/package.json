@@ -11,12 +11,13 @@
   "scripts": {
     "build": "node --experimental-strip-types build.ts",
     "test": "renovate-config-validator ./default.json ./src/*.json --strict",
-    "types": "tsc --noEmit"
+    "types": "tsgo --noEmit"
   },
   "license": "MIT",
   "public": false,
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
+    "@typescript/native-preview": "catalog:",
     "nolyfill": "catalog:",
     "renovate": "catalog:",
     "typescript": "catalog:"

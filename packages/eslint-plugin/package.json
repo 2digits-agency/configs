@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsdown --minify --config-loader unconfig",
     "dev": "tsdown --watch --config-loader unconfig",
-    "types": "tsc --noEmit",
+    "types": "tsgo --noEmit",
     "test": "vitest --run"
   },
   "keywords": [
@@ -40,6 +40,7 @@
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
     "@typescript-eslint/parser": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "eslint-vitest-rule-tester": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
