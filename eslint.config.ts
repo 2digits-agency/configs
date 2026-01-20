@@ -28,10 +28,11 @@ export default twoDigits(
     zod: true,
   },
   {
-    files: ['packages/cli/src/**/*.ts'],
+    files: ['packages/cli/src/**/*.ts', 'packages/tlo-mcp/src/**/*.ts'],
     rules: {
       'unicorn/throw-new-error': 'off',
       'ts/no-misused-spread': 'off',
+      '@2digits/type-param-names': 'off',
     },
   },
 );

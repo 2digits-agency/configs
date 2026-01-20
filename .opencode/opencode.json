@@ -8,6 +8,15 @@
     "context7": {
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
+    },
+    "tlo": {
+      "type": "local",
+      "command": ["node", "./packages/tlo-mcp/dist/bin.mjs"],
+      "environment": {
+        "TLO_SESSION_TOKEN": "SlFAH6R-cUuIylpkdnSbz2h6L0i1MKbTdZj2AmA83DKXU9b4oWO9CawQiSmwi8fb",
+        "TLO_BASE_URL": "https://socialbrothers.orbit.teamleader.eu",
+        "TLO_COOKIES": "did=66971770c29c453e9eee39bd1d16c7c8bcf24e899c954554a803f856ff920640;dskauthlogin=hnci4V53kvJSMrmrYQfq/ppuzcAL8Mfq9buvVNcimYU"
+      }
     }
   }
 }
