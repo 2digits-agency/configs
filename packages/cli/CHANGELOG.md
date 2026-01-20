@@ -1,5 +1,12 @@
 # @2digits/cli
 
+## 1.2.24
+
+### Patch Changes
+
+- ba8d11a: Update nypm to 0.6.4
+- ba8d11a: Update @effect/language-service to 0.71.1
+
 ## 1.2.23
 
 ### Patch Changes

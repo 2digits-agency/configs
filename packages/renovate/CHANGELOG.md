@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.2.41
+
+### Patch Changes
+
+- ba8d11a: Update renovate to 42.85.6
+- ba8d11a: Update renovate to 42.85.7
+
 ## 1.2.40
 
 ### Patch Changes
