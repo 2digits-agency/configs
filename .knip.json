@@ -10,6 +10,9 @@
     },
     "packages/opencode-plugin": {
       "entry": ["src/index.ts", "bunup.config.ts"]
+    },
+    "packages/tlo-mcp": {
+      "ignoreDependencies": ["@typescript/native-preview"]
     }
   }
 }
