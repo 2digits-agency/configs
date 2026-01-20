@@ -74,6 +74,43 @@ describe('Integration', () => {
           console.log(`Page 1: ${page1.length} projects, Page 2: ${page2.length} projects`);
         }),
       );
+
+      it.effect('getBoardTodos returns todos from a board', () =>
+        Effect.gen(function* () {
+          const service = yield* BoardService;
+          const boardId = 97_763;
+
+          const todos = yield* service.getBoardTodos({ boardId });
+
+          expect(Array.isArray(todos)).toBe(true);
+          console.log(`Found ${todos.length} todos on board ${boardId}`);
+
+          // Board may be empty - that's valid. Just verify shape if we have todos.
+          if (todos.length > 0) {
+            const first = todos[0];
+
+            expect(first?.id).toBeDefined();
+            expect(first?.name).toBeDefined();
+            console.log('First todo:', first?.name);
+          }
+        }),
+      );
+
+      it.effect('getBoardTodos filters by query', () =>
+        Effect.gen(function* () {
+          const service = yield* BoardService;
+          const boardId = 97_763;
+
+          const todos = yield* service.getBoardTodos({ boardId, query: 'links' });
+
+          expect(Array.isArray(todos)).toBe(true);
+          console.log(`Found ${todos.length} todos matching "links"`);
+
+          for (const todo of todos) {
+            expect(todo.name?.toLowerCase()).toContain('links');
+          }
+        }),
+      );
     });
   });
 

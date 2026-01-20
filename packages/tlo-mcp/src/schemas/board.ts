@@ -251,6 +251,58 @@ export function taskForUserFromRaw(raw: TaskForUserRaw): typeof TaskForUser.Type
 export const TodoDetail = Schema.Record({ key: Schema.String, value: Schema.Unknown });
 export type TodoDetail = typeof TodoDetail.Type;
 
+export const TodoSummaryRaw = Schema.Struct({
+  ID: Schema.Number,
+  NAME: Schema.optional(Schema.String),
+  BOARDLISTID: Schema.optional(Schema.Number),
+  BOARDID: Schema.optional(Schema.Number),
+  OWNERID: Schema.optional(Schema.Number),
+  EXTID: Schema.optional(Schema.String),
+  STATE: Schema.optional(Schema.NullOr(Schema.String)),
+  DUE_DT: Schema.optional(Schema.NullOr(Schema.String)),
+  DESCRIPTION: Schema.optional(Schema.NullOr(Schema.String)),
+});
+export type TodoSummaryRaw = typeof TodoSummaryRaw.Type;
+
+export const GetBoardTodosResponse = Schema.Struct({
+  Records: Schema.Array(TodoSummaryRaw),
+  RecordCount: Schema.optional(Schema.Number),
+});
+export type GetBoardTodosResponse = typeof GetBoardTodosResponse.Type;
+
+export class TodoSummary extends Schema.Class<TodoSummary>('TodoSummary')({
+  id: Schema.Number,
+  name: Schema.optional(Schema.String),
+  boardListId: Schema.optional(Schema.Number),
+  boardId: Schema.optional(Schema.Number),
+  ownerId: Schema.optional(Schema.Number),
+  extId: Schema.optional(Schema.String),
+  state: Schema.optional(Schema.NullOr(Schema.String)),
+  dueDate: Schema.optional(Schema.NullOr(Schema.String)),
+  description: Schema.optional(Schema.NullOr(Schema.String)),
+}) {}
+
+export function todoSummaryFromRaw(raw: TodoSummaryRaw): typeof TodoSummary.Type {
+  return new TodoSummary({
+    id: raw.ID,
+    name: raw.NAME,
+    boardListId: raw.BOARDLISTID,
+    boardId: raw.BOARDID,
+    ownerId: raw.OWNERID,
+    extId: raw.EXTID,
+    state: raw.STATE,
+    dueDate: raw.DUE_DT,
+    description: raw.DESCRIPTION,
+  });
+}
+
+export interface GetBoardTodosParams {
+  readonly boardId: number;
+  readonly boardListId?: number;
+  readonly query?: string;
+  readonly limit?: number;
+}
+
 export interface GetTasksParams {
   readonly projectId: number;
   readonly states?: ReadonlyArray<TaskState>;

@@ -1,7 +1,7 @@
 import * as Tool from '@effect/ai/Tool';
 import * as Schema from 'effect/Schema';
 
-import { Message, Project, Task, TaskForUser, TodoDetail } from '../schemas/board.js';
+import { Message, Project, Task, TaskForUser, TodoDetail, TodoSummary } from '../schemas/board.js';
 import { TloErrorSchema } from '../schemas/errors.js';
 import { Activity } from '../schemas/time.js';
 import { BoardService } from '../services/BoardService.js';
@@ -127,6 +127,29 @@ export const GetTodoDetail = Tool.make('get_todo_detail', {
     id: Schema.Number.annotations({ description: 'Todo/card ID to retrieve' }),
   },
   success: Schema.Struct({ todo: TodoDetail }),
+  failure: TloErrorSchema,
+  failureMode: 'return',
+  dependencies: [BoardService],
+});
+
+export const GetBoardTodos = Tool.make('get_board_todos', {
+  description:
+    'List todos/cards from a kanban board. Use to find todo IDs by name for use with get_todo_detail. Get boardId from get_todo_detail BOARDID field or project board URL.',
+  parameters: {
+    boardId: Schema.Number.annotations({
+      description: 'Board ID (from get_todo_detail TODO.BOARDID field or URL)',
+    }),
+    query: Schema.optional(Schema.String).annotations({
+      description: 'Filter todos by name (case-insensitive partial match)',
+    }),
+    boardListId: Schema.optional(Schema.Number).annotations({
+      description: 'Filter by column ID (from BOARDLISTS in get_todo_detail)',
+    }),
+    limit: Schema.optional(Schema.Number).annotations({
+      description: 'Maximum results. Defaults to 100',
+    }),
+  },
+  success: Schema.Struct({ todos: Schema.Array(TodoSummary) }),
   failure: TloErrorSchema,
   failureMode: 'return',
   dependencies: [BoardService],

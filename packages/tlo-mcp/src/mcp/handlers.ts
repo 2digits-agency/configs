@@ -6,6 +6,7 @@ import { TimeService } from '../services/TimeService.js';
 import {
   CreateActivity,
   DeleteActivity,
+  GetBoardTodos,
   GetMessages,
   GetProjectDetails,
   GetProjects,
@@ -26,6 +27,7 @@ export const TloToolkit = Toolkit.make(
   GetTasks,
   GetTasksForUser,
   GetTodoDetail,
+  GetBoardTodos,
   MoveTodo,
   PostMessage,
   SetTaskState,
@@ -108,6 +110,17 @@ export const TloToolkitHandlers = TloToolkit.toLayer({
     const todo = yield* boardService.getTodoDetail(params);
 
     return { todo };
+  }),
+
+  get_board_todos: Effect.fn('TloToolkitHandlers.get_board_todos')(function* (params) {
+    const boardService = yield* BoardService;
+
+    const todos = yield* boardService.getBoardTodos({
+      ...params,
+      limit: params.limit ?? DEFAULT_LIMIT,
+    });
+
+    return { todos };
   }),
 
   move_todo: Effect.fn('TloToolkitHandlers.move_todo')(function* (params) {

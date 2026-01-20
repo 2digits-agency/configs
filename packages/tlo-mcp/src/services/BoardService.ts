@@ -4,6 +4,7 @@ import * as Layer from 'effect/Layer';
 import * as Schema from 'effect/Schema';
 
 import {
+  GetBoardTodosResponse,
   GetMessagesResponse,
   GetProjectDetailsResponse,
   GetProjectsResponse,
@@ -14,6 +15,8 @@ import {
   taskForUserFromRaw,
   taskFromRaw,
   TodoDetail as TodoDetailSchema,
+  todoSummaryFromRaw,
+  type GetBoardTodosParams,
   type GetMessagesParams,
   type GetProjectDetailsParams,
   type GetProjectsParams,
@@ -29,6 +32,7 @@ import {
   type TaskForUser,
   type TaskForUserRaw,
   type TodoDetail,
+  type TodoSummary,
 } from '../schemas/board.js';
 import type { TloError } from '../schemas/errors.js';
 import { TeamLeaderClient } from './TeamLeaderClient.js';
@@ -47,6 +51,10 @@ export interface BoardServiceShape {
   ) => Effect.Effect<ReadonlyArray<typeof TaskForUser.Type>, TloError>;
 
   readonly getTodoDetail: (params: GetTodoDetailParams) => Effect.Effect<TodoDetail, TloError>;
+
+  readonly getBoardTodos: (
+    params: GetBoardTodosParams,
+  ) => Effect.Effect<ReadonlyArray<typeof TodoSummary.Type>, TloError>;
 
   readonly moveTodo: (params: MoveTodoParams) => Effect.Effect<void, TloError>;
 
@@ -160,6 +168,31 @@ export const BoardServiceLive = Layer.effect(
 
       getTodoDetail: Effect.fn('BoardService.getTodoDetail')(function* (params) {
         return yield* client.post('/ajax/board/GetTodoDetail', { ID: params.id }, TodoDetailSchema);
+      }),
+
+      getBoardTodos: Effect.fn('BoardService.getBoardTodos')(function* (params) {
+        return yield* client
+          .post(
+            '/ajax/board/GetTodos',
+            {
+              BOARDID: params.boardId,
+              BOARDLISTID: params.boardListId,
+              limit: params.limit ?? 100,
+            },
+            GetBoardTodosResponse,
+          )
+          .pipe(
+            Effect.map((response) => response.Records.map((raw) => todoSummaryFromRaw(raw))),
+            Effect.map((todos) => {
+              if (params.query) {
+                const query = params.query.toLowerCase();
+
+                return todos.filter((t) => t.name?.toLowerCase().includes(query));
+              }
+
+              return todos;
+            }),
+          );
       }),
 
       moveTodo: Effect.fn('BoardService.moveTodo')(function* (params) {

@@ -26,8 +26,19 @@ export type {
   UpdateActivityParams,
 } from './schemas/time.js';
 
-export { Message, Project, Task, TaskForUser, TodoDetail, messageFromRaw, projectFromRaw } from './schemas/board.js';
+export {
+  Message,
+  Project,
+  Task,
+  TaskForUser,
+  TodoDetail,
+  TodoSummary,
+  messageFromRaw,
+  projectFromRaw,
+  todoSummaryFromRaw,
+} from './schemas/board.js';
 export type {
+  GetBoardTodosParams,
   GetMessagesParams,
   GetProjectDetailsParams,
   GetProjectsParams,
