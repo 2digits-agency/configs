@@ -1,5 +1,11 @@
 # @2digits/opencode-plugin
 
+## 0.0.4
+
+### Patch Changes
+
+- ba8d11a: Update @opencode-ai/plugin to 1.1.27
+
 ## 0.0.3
 
 ### Patch Changes

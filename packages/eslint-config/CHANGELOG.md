@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 5.0.10
+
+### Patch Changes
+
+- ba8d11a: Ignore `opensrc/` directories from linting
+  - Added `**/opensrc/` to global ignores pattern
+
 ## 5.0.9
 
 ### Patch Changes
