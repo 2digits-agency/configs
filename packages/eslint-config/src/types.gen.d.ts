@@ -9620,6 +9620,8 @@ type JsdocTypeFormatting = []|[{
   
   objectFieldSeparatorTrailingPunctuation?: boolean
   
+  objectTypeBracketSpacing?: string
+  
   parameterDefaultValueSpacing?: string
   
   postMethodNameSpacing?: string
