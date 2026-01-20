@@ -8,7 +8,9 @@ import { defineConfig } from 'tsdown';
 export default defineConfig({
   entry: ['src/index.ts'],
 
-  dts: true,
+  dts: {
+    tsgo: true,
+  },
   fixedExtension: true,
   exports: true,
   attw: { profile: 'esm-only', level: 'error' },

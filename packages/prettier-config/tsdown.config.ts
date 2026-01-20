@@ -3,7 +3,9 @@ import { defineConfig } from 'tsdown';
 export default defineConfig({
   entry: ['src/index.ts'],
 
-  dts: true,
+  dts: {
+    tsgo: true,
+  },
   fixedExtension: true,
   attw: { profile: 'strict', level: 'error' },
   publint: { strict: true },
