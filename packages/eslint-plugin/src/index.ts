@@ -27,7 +27,7 @@ export default plugin;
 type RuleDefinitions = (typeof plugin)['rules'];
 
 export type RuleOptions = {
-  [K in keyof RuleDefinitions]: RuleDefinitions[K]['defaultOptions'];
+  [K in keyof RuleDefinitions]: Exclude<RuleDefinitions[K]['defaultOptions'], undefined>;
 };
 
 export type Rules = {
