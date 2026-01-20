@@ -1,5 +1,12 @@
 # @2digits/eslint-config
 
+## 5.0.11
+
+### Patch Changes
+
+- 91ee064: Update eslint-plugin-jsdoc to 62.3.0
+  - Added `objectTypeBracketSpacing` option in jsdoc type formatting rules
+
 ## 5.0.10
 
 ### Patch Changes
