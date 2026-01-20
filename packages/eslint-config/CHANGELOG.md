@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 5.0.9
+
+### Patch Changes
+
+- 730b63f: Update ESLint plugin dependencies
+  - Updated `@next/eslint-plugin-next` to 16.1.4
+  - Updated `@typescript-eslint/*` packages to 8.53.1
+  - Updated `eslint-plugin-jsdoc` to 62.2.0
+  - Updated `eslint-plugin-pnpm` to 1.5.0
+  - Updated `eslint-plugin-yml` to 3.0.0
+
+- Updated dependencies [730b63f]
+  - @2digits/eslint-plugin@4.0.3
+
 ## 5.0.8
 
 ### Patch Changes

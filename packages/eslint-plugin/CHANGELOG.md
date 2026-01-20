@@ -1,5 +1,12 @@
 # @2digits/eslint-plugin
 
+## 4.0.3
+
+### Patch Changes
+
+- 730b63f: Fix `RuleOptions` type to exclude undefined default options
+  - Wrapped `defaultOptions` accessor with `Exclude<..., undefined>` to ensure proper type inference
+
 ## 4.0.2
 
 ### Patch Changes
