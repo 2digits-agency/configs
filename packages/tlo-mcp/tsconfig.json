@@ -1,0 +1,35 @@
+{
+  "extends": "@2digits/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@effect/language-service",
+        "refactors": true,
+        "diagnostics": true,
+        "quickinfo": true,
+        "completions": true,
+        "goto": true,
+        "inlays": true,
+        "namespaceImportPackages": ["effect", "@effect/*"],
+        "topLevelNamedReexports": "follow",
+        "diagnosticSeverity": {
+          "deterministicKeys": "error"
+        },
+        "keyPatterns": [
+          {
+            "target": "service",
+            "pattern": "default",
+            "skipLeadingPath": ["src/"]
+          },
+          {
+            "target": "error",
+            "pattern": "default",
+            "skipLeadingPath": ["src/"]
+          }
+        ]
+      }
+    ]
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["dist", "node_modules"]
+}
