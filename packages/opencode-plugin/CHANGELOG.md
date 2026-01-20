@@ -1,5 +1,11 @@
 # @2digits/opencode-plugin
 
+## 0.0.3
+
+### Patch Changes
+
+- 7625383: Update @typescript/native-preview to 7.0.0-dev.20260120.1
+
 ## 0.0.2
 
 ### Patch Changes
