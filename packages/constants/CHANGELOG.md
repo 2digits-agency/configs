@@ -1,5 +1,12 @@
 # @2digits/constants
 
+## 1.1.16
+
+### Patch Changes
+
+- 74fbec6: Enable tsgo for declaration file generation
+  - Updated tsdown configs to use `dts: { tsgo: true }` for faster .d.ts generation
+
 ## 1.1.15
 
 ### Patch Changes

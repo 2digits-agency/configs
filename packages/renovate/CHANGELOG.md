@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.43
+
+### Patch Changes
+
+- 7b6ba6d: Update renovate to 42.87.0
+
 ## 1.2.42
 
 ### Patch Changes

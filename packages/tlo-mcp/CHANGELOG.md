@@ -1,5 +1,12 @@
 # @2digits/tlo-mcp
 
+## 0.1.1
+
+### Patch Changes
+
+- 74fbec6: Enable tsgo for declaration file generation
+  - Updated tsdown configs to use `dts: { tsgo: true }` for faster .d.ts generation
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,15 @@
 # @2digits/prettier-config
 
+## 4.0.30
+
+### Patch Changes
+
+- 74fbec6: Enable tsgo for declaration file generation
+  - Updated tsdown configs to use `dts: { tsgo: true }` for faster .d.ts generation
+
+- Updated dependencies [74fbec6]
+  - @2digits/constants@1.1.16
+
 ## 4.0.29
 
 ### Patch Changes
