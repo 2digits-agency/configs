@@ -1,5 +1,29 @@
 # @2digits/eslint-config
 
+## 5.1.0
+
+### Minor Changes
+
+- 26bf5ef: Add TOML linting support
+  - Added `eslint-plugin-toml` with standard rules plus custom indent/spacing config
+  - Created `toml()` config and `GLOB_TOML` pattern for `**/*.toml` files
+  - Added TOML test fixtures for all config scenarios
+  - Fixed `zod-x` → `zod` in PluginNameMap
+
+### Patch Changes
+
+- 7b6ba6d: Add Next.js proxy config and update ESLint plugin dependencies
+  - Added `2digits:next/proxy` config that disables `unicorn/prefer-string-raw` for `middleware.ts` and `proxy.ts` files
+  - Updated `eslint-flat-config-utils` to 3.0.0
+  - Updated `eslint-plugin-storybook` to 10.2.0
+
+- 74fbec6: Enable tsgo for declaration file generation
+  - Updated tsdown configs to use `dts: { tsgo: true }` for faster .d.ts generation
+
+- Updated dependencies [74fbec6]
+  - @2digits/constants@1.1.16
+  - @2digits/eslint-plugin@4.0.4
+
 ## 5.0.11
 
 ### Patch Changes

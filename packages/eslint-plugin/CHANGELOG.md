@@ -1,5 +1,12 @@
 # @2digits/eslint-plugin
 
+## 4.0.4
+
+### Patch Changes
+
+- 74fbec6: Enable tsgo for declaration file generation
+  - Updated tsdown configs to use `dts: { tsgo: true }` for faster .d.ts generation
+
 ## 4.0.3
 
 ### Patch Changes
