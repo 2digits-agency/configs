@@ -1,0 +1,60 @@
+min_version = "2024.11.0"
+ignored_config_paths = [
+  "**/fixtures/**",
+  "**/node_modules/**"
+]
+
+[tools]
+  "npm:@fission-ai/openspec" = "0.23.0"
+  bun = "1.3.6"
+  node = "24.13.0"
+  pnpm = "10.28.1"
+  python = [
+    "3.12",
+    "3.11"
+  ]
+
+[env]
+  FORCE_COLOR = "1"
+  NODE_OPTIONS = "--no-deprecation"
+  DATABASE_URL = "postgresql://localhost:5432/dev"
+
+[settings]
+  pin = true
+  experimental = true
+  jobs = 4
+  verbose = false
+  task_output = "prefix"
+
+[plugins]
+  elixir = "https://github.com/asdf-vm/asdf-elixir.git"
+
+[tool_alias.node.versions]
+  lts = "22"
+  current = "24"
+
+[shell_alias]
+  dev = "pnpm dev"
+  build = "pnpm build"
+  test = "pnpm test"
+
+[tasks.dev]
+  description = "Start development server"
+  run = "pnpm dev"
+
+[tasks.build]
+  description = "Build for production"
+  run = "pnpm build"
+  depends = ["test"]
+
+[tasks.test]
+  description = "Run tests"
+  run = "pnpm test"
+  env = { CI = "true" }
+
+[tasks.lint]
+  description = "Run linting"
+  run = [
+    "pnpm lint",
+    "pnpm format:check"
+  ]

@@ -12,6 +12,7 @@ export const GLOB_JSONC = '**/*.jsonc';
 export const GLOB_CSS = '**/*.css';
 
 export const GLOB_YAML = '**/*.y?(a)ml';
+export const GLOB_TOML = '**/*.toml';
 
 export const GLOB_GITHUB_ACTIONS = '.github/workflows/*.y?(a)ml';
 

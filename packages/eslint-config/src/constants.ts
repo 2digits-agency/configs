@@ -32,7 +32,8 @@ export const PluginNameMap = {
   pnpm: 'pnpm',
   regexp: 'regexp',
   yml: 'yml',
-  'zod-x': 'zod',
+  zod: 'zod',
+  toml: 'toml',
 } as const;
 
 export const storybookPackages = [

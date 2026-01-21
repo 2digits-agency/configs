@@ -888,6 +888,38 @@
     ]
   },
   {
+    "name": "2digits:toml",
+    "files": [
+      "**/*.toml"
+    ],
+    "plugins": [
+      "toml"
+    ],
+    "rules": [
+      "- no-irregular-whitespace",
+      "- spaced-comment",
+      "toml/array-bracket-newline",
+      "toml/array-bracket-spacing",
+      "toml/array-element-newline",
+      "toml/comma-style",
+      "toml/indent",
+      "toml/inline-table-curly-spacing",
+      "toml/key-spacing",
+      "toml/keys-order",
+      "toml/no-space-dots",
+      "toml/no-unreadable-number-separator",
+      "toml/padding-line-between-pairs",
+      "toml/padding-line-between-tables",
+      "toml/precision-of-fractional-seconds",
+      "toml/precision-of-integer",
+      "toml/quoted-keys",
+      "toml/spaced-comment",
+      "toml/table-bracket-spacing",
+      "toml/tables-order",
+      "toml/vue-custom-block/no-parsing-error"
+    ]
+  },
+  {
     "name": "2digits:yaml/setup",
     "plugins": [
       "yml"
@@ -1441,6 +1473,16 @@
       "next/no-title-in-document-head",
       "next/no-typos",
       "next/no-unwanted-polyfillio"
+    ]
+  },
+  {
+    "name": "2digits:next/proxy",
+    "files": [
+      "**/middleware.ts",
+      "**/proxy.ts"
+    ],
+    "rules": [
+      "- unicorn/prefer-string-raw"
     ]
   },
   {
