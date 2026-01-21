@@ -6221,6 +6221,117 @@ Backward pagination arguments
    */
   'template-tag-spacing'?: Linter.RuleEntry<TemplateTagSpacing>
   /**
+   * enforce linebreaks after opening and before closing array brackets
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/array-bracket-newline.html
+   */
+  'toml/array-bracket-newline'?: Linter.RuleEntry<TomlArrayBracketNewline>
+  /**
+   * enforce consistent spacing inside array brackets
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/array-bracket-spacing.html
+   */
+  'toml/array-bracket-spacing'?: Linter.RuleEntry<TomlArrayBracketSpacing>
+  /**
+   * enforce line breaks between array elements
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/array-element-newline.html
+   */
+  'toml/array-element-newline'?: Linter.RuleEntry<TomlArrayElementNewline>
+  /**
+   * enforce consistent comma style in array
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/comma-style.html
+   */
+  'toml/comma-style'?: Linter.RuleEntry<TomlCommaStyle>
+  /**
+   * enforce consistent indentation
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/indent.html
+   */
+  'toml/indent'?: Linter.RuleEntry<TomlIndent>
+  /**
+   * enforce consistent spacing inside braces
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/inline-table-curly-spacing.html
+   */
+  'toml/inline-table-curly-spacing'?: Linter.RuleEntry<TomlInlineTableCurlySpacing>
+  /**
+   * enforce consistent spacing between keys and values in key/value pairs
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/key-spacing.html
+   */
+  'toml/key-spacing'?: Linter.RuleEntry<TomlKeySpacing>
+  /**
+   * disallow defining pair keys out-of-order
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/keys-order.html
+   */
+  'toml/keys-order'?: Linter.RuleEntry<[]>
+  /**
+   * disallow mixed data types in array
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/no-mixed-type-in-array.html
+   */
+  'toml/no-mixed-type-in-array'?: Linter.RuleEntry<TomlNoMixedTypeInArray>
+  /**
+   * disallow hexadecimal, octal and binary integer
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/no-non-decimal-integer.html
+   */
+  'toml/no-non-decimal-integer'?: Linter.RuleEntry<TomlNoNonDecimalInteger>
+  /**
+   * disallow spacing around infix operators
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/no-space-dots.html
+   */
+  'toml/no-space-dots'?: Linter.RuleEntry<[]>
+  /**
+   * disallow number separators that to not enhance readability.
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/no-unreadable-number-separator.html
+   */
+  'toml/no-unreadable-number-separator'?: Linter.RuleEntry<[]>
+  /**
+   * require or disallow padding lines between pairs
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/padding-line-between-pairs.html
+   */
+  'toml/padding-line-between-pairs'?: Linter.RuleEntry<[]>
+  /**
+   * require or disallow padding lines between tables
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/padding-line-between-tables.html
+   */
+  'toml/padding-line-between-tables'?: Linter.RuleEntry<[]>
+  /**
+   * disallow precision of fractional seconds greater than the specified value.
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/precision-of-fractional-seconds.html
+   */
+  'toml/precision-of-fractional-seconds'?: Linter.RuleEntry<TomlPrecisionOfFractionalSeconds>
+  /**
+   * disallow precision of integer greater than the specified value.
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/precision-of-integer.html
+   */
+  'toml/precision-of-integer'?: Linter.RuleEntry<TomlPrecisionOfInteger>
+  /**
+   * require or disallow quotes around keys
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/quoted-keys.html
+   */
+  'toml/quoted-keys'?: Linter.RuleEntry<TomlQuotedKeys>
+  /**
+   * require spacing around equals sign
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/space-eq-sign.html
+   * @deprecated
+   */
+  'toml/space-eq-sign'?: Linter.RuleEntry<[]>
+  /**
+   * enforce consistent spacing after the `#` in a comment
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/spaced-comment.html
+   */
+  'toml/spaced-comment'?: Linter.RuleEntry<TomlSpacedComment>
+  /**
+   * enforce consistent spacing inside table brackets
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/table-bracket-spacing.html
+   */
+  'toml/table-bracket-spacing'?: Linter.RuleEntry<TomlTableBracketSpacing>
+  /**
+   * disallow defining tables out-of-order
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/tables-order.html
+   */
+  'toml/tables-order'?: Linter.RuleEntry<[]>
+  /**
+   * disallow parsing errors in Vue custom blocks
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/vue-custom-block/no-parsing-error.html
+   */
+  'toml/vue-custom-block/no-parsing-error'?: Linter.RuleEntry<[]>
+  /**
    * Require that function overload signatures be consecutive
    * @see https://typescript-eslint.io/rules/adjacent-overload-signatures
    */
@@ -13252,6 +13363,130 @@ type TailwindcssNoUnnecessaryArbitraryValue = []|[{
 type TemplateCurlySpacing = []|[("always" | "never")]
 // ----- template-tag-spacing -----
 type TemplateTagSpacing = []|[("always" | "never")]
+// ----- toml/array-bracket-newline -----
+type TomlArrayBracketNewline = []|[(("always" | "never" | "consistent") | {
+  multiline?: boolean
+  minItems?: (number | null)
+})]
+// ----- toml/array-bracket-spacing -----
+type TomlArrayBracketSpacing = []|[("always" | "never")]|[("always" | "never"), {
+  singleValue?: boolean
+  objectsInArrays?: boolean
+  arraysInArrays?: boolean
+}]
+// ----- toml/array-element-newline -----
+type TomlArrayElementNewline = []|[(_TomlArrayElementNewlineBasicConfig | {
+  ArrayExpression?: _TomlArrayElementNewlineBasicConfig
+  ArrayPattern?: _TomlArrayElementNewlineBasicConfig
+  TOMLArray?: _TomlArrayElementNewlineBasicConfig
+})]
+type _TomlArrayElementNewlineBasicConfig = (("always" | "never" | "consistent") | {
+  multiline?: boolean
+  minItems?: (number | null)
+})
+// ----- toml/comma-style -----
+type TomlCommaStyle = []|[("first" | "last")]|[("first" | "last"), {
+  exceptions?: {
+    [k: string]: boolean | undefined
+  }
+}]
+// ----- toml/indent -----
+type TomlIndent = []|[("tab" | number)]|[("tab" | number), {
+  subTables?: number
+  keyValuePairs?: number
+}]
+// ----- toml/inline-table-curly-spacing -----
+type TomlInlineTableCurlySpacing = []|[("always" | "never")]|[("always" | "never"), {
+  arraysInObjects?: boolean
+  objectsInObjects?: boolean
+}]
+// ----- toml/key-spacing -----
+type TomlKeySpacing = []|[({
+  align?: (("equal" | "value") | {
+    on?: ("equal" | "value")
+    mode?: ("strict" | "minimum")
+    beforeEqual?: boolean
+    afterEqual?: boolean
+  })
+  mode?: ("strict" | "minimum")
+  beforeEqual?: boolean
+  afterEqual?: boolean
+} | {
+  singleLine?: {
+    mode?: ("strict" | "minimum")
+    beforeEqual?: boolean
+    afterEqual?: boolean
+  }
+  multiLine?: {
+    align?: (("equal" | "value") | {
+      on?: ("equal" | "value")
+      mode?: ("strict" | "minimum")
+      beforeEqual?: boolean
+      afterEqual?: boolean
+    })
+    mode?: ("strict" | "minimum")
+    beforeEqual?: boolean
+    afterEqual?: boolean
+  }
+} | {
+  singleLine?: {
+    mode?: ("strict" | "minimum")
+    beforeEqual?: boolean
+    afterEqual?: boolean
+  }
+  multiLine?: {
+    mode?: ("strict" | "minimum")
+    beforeEqual?: boolean
+    afterEqual?: boolean
+  }
+  align?: {
+    on?: ("equal" | "value")
+    mode?: ("strict" | "minimum")
+    beforeEqual?: boolean
+    afterEqual?: boolean
+  }
+})]
+// ----- toml/no-mixed-type-in-array -----
+type TomlNoMixedTypeInArray = []|[{
+  typeMap?: {
+    string?: string
+    boolean?: string
+    integer?: string
+    float?: string
+    offsetDateTime?: string
+    localDateTime?: string
+    localDate?: string
+    localTime?: string
+    array?: string
+    inlineTable?: string
+  }
+}]
+// ----- toml/no-non-decimal-integer -----
+type TomlNoNonDecimalInteger = []|[{
+  allowHexadecimal?: boolean
+  allowOctal?: boolean
+  allowBinary?: boolean
+}]
+// ----- toml/precision-of-fractional-seconds -----
+type TomlPrecisionOfFractionalSeconds = []|[{
+  max?: number
+}]
+// ----- toml/precision-of-integer -----
+type TomlPrecisionOfInteger = []|[{
+  maxBit?: number
+}]
+// ----- toml/quoted-keys -----
+type TomlQuotedKeys = []|[{
+  prefer?: ("as-needed" | "always")
+  numbers?: boolean
+}]
+// ----- toml/spaced-comment -----
+type TomlSpacedComment = []|[("always" | "never")]|[("always" | "never"), {
+  exceptions?: string[]
+  markers?: string[]
+}]
+// ----- toml/table-bracket-spacing -----
+type TomlTableBracketSpacing = []|[("always" | "never")]
 // ----- ts/array-type -----
 type TsArrayType = []|[{
   
@@ -14951,4 +15186,4 @@ type ZodSchemaErrorPropertyStyle = []|[{
   example?: string
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:depend' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:next/proxy' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack-query' | '2digits:tanstack-router' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier' | '2digits:zod'
+export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:depend' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:next/proxy' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack-query' | '2digits:tanstack-router' | '2digits:toml' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier' | '2digits:zod'

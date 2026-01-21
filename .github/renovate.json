@@ -3,5 +3,6 @@
   "extends": ["local>2digits-agency/configs//packages/renovate/default"],
   "rebaseWhen": "auto",
   "schedule": ["at any time"],
-  "updateNotScheduled": true
+  "updateNotScheduled": true,
+  "ignorePaths": ["**/node_modules/**", "**/fixtures/**"]
 }

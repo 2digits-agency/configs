@@ -17,8 +17,8 @@ Submit feedback about something the agent did wrong or could improve.
 2. Use the \`create_feedback_issue\` tool with:
    - **title**: Concise description of the issue
    - **feedback**: Detailed explanation of what went wrong
-   - **context**: Relevant code/conversation snippets (optional)
-   - **suggestedRule**: If obvious, propose a rule to prevent this (optional)
+   - **context**: Relevant code/conversation snippets
+   - **suggestedRule**: Propose a rule to prevent this
 
 3. Return the issue URL so user can track/discuss
 

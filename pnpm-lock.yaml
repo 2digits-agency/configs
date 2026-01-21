@@ -180,6 +180,9 @@ catalogs:
     eslint-plugin-tailwindcss:
       specifier: 3.18.2
       version: 3.18.2
+    eslint-plugin-toml:
+      specifier: 1.0.3
+      version: 1.0.3
     eslint-plugin-turbo:
       specifier: 2.7.5
       version: 2.7.5
@@ -530,6 +533,9 @@ importers:
       eslint-plugin-tailwindcss:
         specifier: 'catalog:'
         version: 3.18.2(tailwindcss@3.4.17)
+      eslint-plugin-toml:
+        specifier: 'catalog:'
+        version: 1.0.3(eslint@9.39.2(jiti@2.6.0))
       eslint-plugin-turbo:
         specifier: 'catalog:'
         version: 2.7.5(eslint@9.39.2(jiti@2.6.0))(turbo@2.7.5)
@@ -4801,6 +4807,12 @@ packages:
     peerDependencies:
       tailwindcss: ^3.4.0
 
+  eslint-plugin-toml@1.0.3:
+    resolution: {integrity: sha512-GlCBX+R313RvFY2Tj0ZmvzCEv8FDp1z2itvTFTV4bW/Bkbl3xEp9inWNsRWH3SiDUlxo8Pew31ILEp/3J0WxaA==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+    peerDependencies:
+      eslint: '>=9.38.0'
+
   eslint-plugin-turbo@2.7.5:
     resolution: {integrity: sha512-dHUEEZyoUriaYqaqu6nlnkj0W+iDPYFhuMjLYGxn7p767kLCYTZgjR42urW56VLiRQUqDL+foOXufFM6+kXCEQ==}
     peerDependencies:
@@ -7241,6 +7253,10 @@ packages:
   toml-eslint-parser@0.12.0:
     resolution: {integrity: sha512-4qHgkGXl0LyFp/3aNoi6dKWuPuxFsCiDtBl5IbJljeYR57+5l3pJHJEW9xPSOu2U1drGlG82tpGqkJz/uJZ2Fw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+
+  toml-eslint-parser@1.0.3:
+    resolution: {integrity: sha512-A5F0cM6+mDleacLIEUkmfpkBbnHJFV1d2rprHU2MXNk7mlxHq2zGojA+SRvQD1RoMo9gqjZPWEaKG4v1BQ48lw==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   toml@3.0.0:
     resolution: {integrity: sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==}
@@ -12634,6 +12650,16 @@ snapshots:
       postcss: 8.5.6
       tailwindcss: 3.4.17
 
+  eslint-plugin-toml@1.0.3(eslint@9.39.2(jiti@2.6.0)):
+    dependencies:
+      '@eslint/core': 1.0.1
+      '@eslint/plugin-kit': 0.5.1
+      debug: 4.4.3
+      eslint: 9.39.2(jiti@2.6.0)
+      toml-eslint-parser: 1.0.3
+    transitivePeerDependencies:
+      - supports-color
+
   eslint-plugin-turbo@2.7.5(eslint@9.39.2(jiti@2.6.0))(turbo@2.7.5):
     dependencies:
       dotenv: 16.0.3
@@ -15586,6 +15612,10 @@ snapshots:
   toml-eslint-parser@0.12.0:
     dependencies:
       eslint-visitor-keys: 3.4.3
+
+  toml-eslint-parser@1.0.3:
+    dependencies:
+      eslint-visitor-keys: 5.0.0
 
   toml@3.0.0: {}
 
