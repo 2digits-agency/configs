@@ -1410,6 +1410,16 @@
     ]
   },
   {
+    "name": "2digits:next/proxy",
+    "files": [
+      "**/middleware.ts",
+      "**/proxy.ts"
+    ],
+    "rules": [
+      "- unicorn/prefer-string-raw"
+    ]
+  },
+  {
     "name": "2digits:tailwind",
     "files": [
       "**/*.?([cm])[jt]s?(x)"

@@ -53,5 +53,12 @@ export async function next(
         ...overrides,
       },
     },
+    {
+      files: ['**/middleware.ts', '**/proxy.ts'],
+      name: '2digits:next/proxy',
+      rules: {
+        'unicorn/prefer-string-raw': 'off',
+      },
+    },
   ];
 }

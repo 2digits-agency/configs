@@ -12,6 +12,55 @@
 - Nested ternaries beyond 2 levels
 - Barrel files (index.ts re-exports) in large modules
 
+## Method Notation in Object Literals
+
+Prefer method notation (`name() {}`) over arrow functions (`name: () => {}`) in object literals with function properties:
+
+```ts
+// ❌ Arrow function syntax
+Effect.tryPromise({
+  try: () => someAsyncOperation(),
+  catch: () => new SomeError({ message: 'failed' }),
+});
+
+// ✅ Method notation
+Effect.tryPromise({
+  try(abortSignal) {
+    return someAsyncOperation(abortSignal);
+  },
+  catch(cause) {
+    return new SomeError({ cause });
+  },
+});
+```
+
+Benefits:
+
+- More concise (no `=>` needed)
+- More readable for multi-line function bodies
+- Exposes API-provided parameters (e.g., `abortSignal` in Effect.tryPromise, `cause` in catch)
+
+## Embedded Language Strings
+
+Use `dedent` for multi-line template literals containing embedded languages. Alias the import to the language name for IDE syntax highlighting:
+
+```ts
+import markdown from 'dedent';
+import sql from 'dedent';
+import html from 'dedent';
+
+const readme = markdown`
+  # My Package
+
+  A description of the package.
+`;
+
+const query = sql`
+  SELECT * FROM users
+  WHERE id = ${userId}
+`;
+```
+
 ## ENTROPY REMINDER
 
 This codebase will outlive you. Every shortcut you take becomes someone else's burden. Every hack compounds into technical debt that slows the whole team down.
