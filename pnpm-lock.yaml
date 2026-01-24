@@ -283,8 +283,8 @@ catalogs:
       specifier: 2.0.0
       version: 2.0.0
     zod:
-      specifier: 4.3.5
-      version: 4.3.5
+      specifier: 4.3.6
+      version: 4.3.6
 
 overrides:
   array-includes: npm:@nolyfill/array-includes@1.0.44
@@ -547,7 +547,7 @@ importers:
         version: 3.0.0(eslint@9.39.2(jiti@2.6.0))
       eslint-plugin-zod:
         specifier: 'catalog:'
-        version: 3.0.2(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.5)
+        version: 3.0.2(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.6)
       globals:
         specifier: 'catalog:'
         version: 17.0.0
@@ -623,7 +623,7 @@ importers:
         version: 4.0.17(@opentelemetry/api@1.9.0)(@types/node@24.10.9)(jiti@2.6.0)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
       zod:
         specifier: 'catalog:'
-        version: 4.3.5
+        version: 4.3.6
 
   packages/eslint-plugin:
     dependencies:
@@ -7817,6 +7817,9 @@ packages:
   zod@4.3.5:
     resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
 
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -9402,7 +9405,7 @@ snapshots:
       eslint: 9.39.2(jiti@2.6.0)
       ts-pattern: 5.9.0
       typescript: 5.9.3
-      zod: 4.3.5
+      zod: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
@@ -12548,8 +12551,8 @@ snapshots:
       '@babel/parser': 7.28.6
       eslint: 9.39.2(jiti@2.6.0)
       hermes-parser: 0.25.1
-      zod: 4.3.5
-      zod-validation-error: 3.5.2(zod@4.3.5)
+      zod: 4.3.6
+      zod-validation-error: 3.5.2(zod@4.3.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -12701,13 +12704,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-zod@3.0.2(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.5):
+  eslint-plugin-zod@3.0.2(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.6):
     dependencies:
       '@typescript-eslint/utils': 8.53.1(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
       eslint: 9.39.2(jiti@2.6.0)
       esquery: 1.7.0
     optionalDependencies:
-      zod: 4.3.5
+      zod: 4.3.6
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -16092,14 +16095,16 @@ snapshots:
     dependencies:
       zod: 3.25.76
 
-  zod-validation-error@3.5.2(zod@4.3.5):
+  zod-validation-error@3.5.2(zod@4.3.6):
     dependencies:
-      zod: 4.3.5
+      zod: 4.3.6
 
   zod@3.25.76: {}
 
   zod@4.1.8: {}
 
   zod@4.3.5: {}
+
+  zod@4.3.6: {}
 
   zwitch@2.0.4: {}
