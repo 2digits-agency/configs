@@ -3204,12 +3204,12 @@ Backward pagination arguments
    */
   'react-dom/prefer-namespace-import'?: Linter.RuleEntry<[]>
   /**
-   * Prevents unnecessary dollar signs ('$') from being inserted before an expression in JSX.
+   * Prevents unnecessary '$' symbols before JSX expressions.
    * @see https://eslint-react.xyz/docs/rules/jsx-dollar
    */
   'react-extra/jsx-dollar'?: Linter.RuleEntry<[]>
   /**
-   * Enforces that the 'key' prop is placed before the spread prop in JSX elements when using the new JSX transform.
+   * Enforces 'key' prop placement before spread props.
    * @see https://eslint-react.xyz/docs/rules/jsx-key-before-spread
    */
   'react-extra/jsx-key-before-spread'?: Linter.RuleEntry<[]>
@@ -3224,7 +3224,7 @@ Backward pagination arguments
    */
   'react-extra/jsx-no-duplicate-props'?: Linter.RuleEntry<[]>
   /**
-   * Disallows 'IIFE' in JSX.
+   * Disallows immediately-invoked function expressions in JSX.
    * @see https://eslint-react.xyz/docs/rules/jsx-no-iife
    */
   'react-extra/jsx-no-iife'?: Linter.RuleEntry<[]>
@@ -3234,12 +3234,12 @@ Backward pagination arguments
    */
   'react-extra/jsx-no-undef'?: Linter.RuleEntry<[]>
   /**
-   * Enforces the use of shorthand syntax for boolean attributes.
+   * Enforces shorthand syntax for boolean props.
    * @see https://eslint-react.xyz/docs/rules/jsx-shorthand-boolean
    */
   'react-extra/jsx-shorthand-boolean'?: Linter.RuleEntry<ReactExtraJsxShorthandBoolean>
   /**
-   * Enforces the use of shorthand syntax for fragments.
+   * Enforces shorthand syntax for fragment elements.
    * @see https://eslint-react.xyz/docs/rules/jsx-shorthand-fragment
    */
   'react-extra/jsx-shorthand-fragment'?: Linter.RuleEntry<ReactExtraJsxShorthandFragment>
@@ -3249,7 +3249,7 @@ Backward pagination arguments
    */
   'react-extra/jsx-uses-react'?: Linter.RuleEntry<[]>
   /**
-   * Marks variables used in JSX elements as used.
+   * Marks JSX element variables as used.
    * @see https://eslint-react.xyz/docs/rules/jsx-uses-vars
    */
   'react-extra/jsx-uses-vars'?: Linter.RuleEntry<[]>
@@ -6208,6 +6208,11 @@ Backward pagination arguments
    * @see https://tanstack.com/router/latest/docs/eslint/create-route-property-order
    */
   'tanstack-router/create-route-property-order'?: Linter.RuleEntry<[]>
+  /**
+   * Ensure route param names are valid JavaScript identifiers
+   * @see https://tanstack.com/router/latest/docs/eslint/route-param-names
+   */
+  'tanstack-router/route-param-names'?: Linter.RuleEntry<[]>
   /**
    * Require or disallow spacing around embedded expressions of template strings
    * @see https://eslint.org/docs/latest/rules/template-curly-spacing
@@ -9742,6 +9747,8 @@ type JsdocTypeFormatting = []|[{
   separatorForSingleObjectField?: boolean
   
   stringQuotes?: ("double" | "single")
+  
+  trailingPunctuationMultilineOnly?: boolean
   
   typeBracketSpacing?: string
   

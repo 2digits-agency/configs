@@ -113,6 +113,14 @@ Update renovate to 42.78.1
 
 - **renovate updates**: Always create a changeset for `@2digits/renovate-config` when `renovate` version changes in catalog
 - **@effect/language-service updates**: Always create a changeset for `@2digits/cli` when `@effect/language-service` version changes in catalog
+- **Effect dependency updates**: When `effect`, `@effect/cli`, `@effect/platform`, or `@effect/platform-node` change, create a changeset for `@2digits/cli` and `@2digits/tlo-mcp` (both use Effect)
+- **prettier updates**: Always create a changeset for `@2digits/prettier-config` when `prettier` version changes in catalog
+- **@opencode-ai/plugin updates**: Always create a changeset for `@2digits/opencode-plugin` when `@opencode-ai/plugin` version changes in catalog
+- **ESLint plugin updates**: Create a changeset for `@2digits/eslint-config` when any ESLint-related plugin changes (e.g., `@eslint-react/*`, `@stylistic/*`, `@tanstack/eslint-plugin-*`, `eslint-plugin-*`, `globals`)
+
+## Catalog Change Detection
+
+When `pnpm-workspace.yaml` is modified, always run `git diff --cached pnpm-workspace.yaml` (or `git diff` if unstaged) to see the full list of catalog version changes. Cross-reference each changed dependency with the packages that consume it to ensure no changeset is missed.
 
 ## User Input
 
