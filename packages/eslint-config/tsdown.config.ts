@@ -19,6 +19,7 @@ export default defineConfig({
   shims: true,
 
   noExternal: ['eslint-plugin-react-hooks', 'zod-validation-error', 'zod'],
+  inlineOnly: false,
 
   hooks(ctx) {
     ctx.hook('build:prepare', async () => {
