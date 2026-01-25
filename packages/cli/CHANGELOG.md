@@ -1,5 +1,15 @@
 # @2digits/cli
 
+## 1.2.27
+
+### Patch Changes
+
+- 6aec756: Update Effect dependencies
+  - Updated `@effect/cli` to 0.73.1
+  - Updated `@effect/platform` to 0.94.2
+  - Updated `@effect/platform-node` to 0.104.1
+  - Updated `effect` to 3.19.15
+
 ## 1.2.26
 
 ### Patch Changes
