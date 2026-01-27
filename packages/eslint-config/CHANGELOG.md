@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 5.1.2
+
+### Patch Changes
+
+- 71c96f8: Update ESLint dependencies
+  - Updated `typescript-eslint` monorepo to 8.54.0
+  - Updated `@next/eslint-plugin-next` to 16.1.5
+
 ## 5.1.1
 
 ### Patch Changes
