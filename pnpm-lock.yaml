@@ -67,8 +67,8 @@ catalogs:
       specifier: 0.25.1
       version: 0.25.1
     '@next/eslint-plugin-next':
-      specifier: 16.1.5
-      version: 16.1.5
+      specifier: 16.1.6
+      version: 16.1.6
     '@opencode-ai/plugin':
       specifier: 1.1.36
       version: 1.1.36
@@ -460,7 +460,7 @@ importers:
         version: 4.4.0(@types/node@24.10.9)(crossws@0.3.5)(eslint@9.39.2(jiti@2.6.0))(graphql@16.11.0)(typescript@5.9.3)
       '@next/eslint-plugin-next':
         specifier: 'catalog:'
-        version: 16.1.5
+        version: 16.1.6
       '@stylistic/eslint-plugin':
         specifier: 'catalog:'
         version: 5.7.1(eslint@9.39.2(jiti@2.6.0))
@@ -2164,8 +2164,8 @@ packages:
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
 
-  '@next/eslint-plugin-next@16.1.5':
-    resolution: {integrity: sha512-gUWcEsOl+1W7XakmouClcJ0TNFCkblvDUho31wulbDY9na0C6mGtBTSXGRU5GXJY65GjGj0zNaCD/GaBp888Mg==}
+  '@next/eslint-plugin-next@16.1.6':
+    resolution: {integrity: sha512-/Qq3PTagA6+nYVfryAtQ7/9FEr/6YVyvOtl6rZnGsbReGLf0jZU6gkpr1FuChAQpvV46a78p4cmHOVP8mbfSMQ==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -9933,7 +9933,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@next/eslint-plugin-next@16.1.5':
+  '@next/eslint-plugin-next@16.1.6':
     dependencies:
       fast-glob: 3.3.1
 
