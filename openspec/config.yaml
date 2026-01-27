@@ -1,0 +1,43 @@
+schema: spec-driven
+
+context: |
+  ## Purpose
+  @2digits/config-monorepo provides curated, opinionated default configurations for development tooling (ESLint, Prettier, TypeScript) used across the 2digits-agency ecosystem.
+  Goals: streamline developer workflow with zero-config defaults, maintain consistency across projects, support React/Next.js/Tailwind/GraphQL/modern TypeScript, minimize setup overhead via feature-flag factory functions.
+
+  ## Tech Stack
+  - TypeScript 5.9.3, pnpm 10.20.0 (strict catalog mode), Turbo 2.6.0
+  - Vitest 4.0.8, ESLint 9.39.1 (flat config), Prettier 3.6.2
+  - Effect 3.19.3 (CLI package), tsdown (bundler), Changesets
+
+  ## Architecture
+  - Monorepo: eslint-config, prettier-config, tsconfig, eslint-plugin, constants, cli, renovate packages
+  - Factory functions: feature-flag config builders (e.g., `twoDigits({ react: true, next: true })`)
+  - Dual exports: ESM primary, CommonJS for prettier-config compatibility
+  - Catalog dependencies: centralized version management via pnpm catalog
+  - Effect-based CLI: dependency injection and error handling
+
+  ## Code Style
+  - Prettier: 120 print width, single quotes, trailing commas, semicolons
+  - Import order: builtins → React → Next → Expo → third-party → @2digits → @mod → aliases → relative
+  - ESLint: flat config with 30+ plugins (typescript-eslint, react, unicorn, sonarjs, perfectionist)
+  - Type parameters: enforce single uppercase letter or descriptive PascalCase names (custom rule)
+
+  ## Testing
+  - Vitest with coverage, fixture testing (input → eslint --fix → output vs expected)
+  - Custom ESLint rules use eslint-vitest-rule-tester
+  - Config packages validated through usage, no unit tests
+
+  ## Git Workflow
+  - Feature branches → main, all changes require changeset files before PR merge
+  - `pnpm release` builds and publishes all packages
+
+  ## Constraints
+  - ESLint 9+ only (flat config), strict catalog mode, pnpm required
+  - TypeScript strict mode, no native polyfills (uses nolyfill)
+  - Public packages: eslint-config, prettier-config, tsconfig, eslint-plugin, constants
+
+  ## Domain
+  - Frontend ecosystem: React, Next.js, Tailwind CSS, Storybook, GraphQL, TanStack, Drizzle ORM
+  - 2digits-Agency conventions: @2digits scoped packages, @mod namespace
+  - React Server Components support, GraphQL integration
