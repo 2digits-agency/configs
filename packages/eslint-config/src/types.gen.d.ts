@@ -4232,7 +4232,7 @@ Backward pagination arguments
    */
   'sonar/aws-iam-public-access'?: Linter.RuleEntry<[]>
   /**
-   * Using unencrypted Elasticsearch domains is security-sensitive
+   * Using unencrypted Opensearch domains is security-sensitive
    * @see https://sonarsource.github.io/rspec/#/rspec/S6308/javascript
    */
   'sonar/aws-opensearchservice-domain'?: Linter.RuleEntry<[]>
@@ -4452,6 +4452,11 @@ Backward pagination arguments
    */
   'sonar/duplicates-in-character-class'?: Linter.RuleEntry<[]>
   /**
+   * Templates should not be constructed dynamically
+   * @see https://sonarsource.github.io/rspec/#/rspec/S7790/javascript
+   */
+  'sonar/dynamically-constructed-templates'?: Linter.RuleEntry<[]>
+  /**
    * "if ... else if" constructs should end with "else" clauses
    * @see https://sonarsource.github.io/rspec/#/rspec/S126/javascript
    */
@@ -4553,6 +4558,11 @@ Backward pagination arguments
    * @see https://sonarsource.github.io/rspec/#/rspec/S3531/javascript
    */
   'sonar/generator-without-yield'?: Linter.RuleEntry<[]>
+  /**
+   * Credentials should not be hard-coded
+   * @see https://sonarsource.github.io/rspec/#/rspec/S6437/javascript
+   */
+  'sonar/hardcoded-secret-signatures'?: Linter.RuleEntry<[]>
   /**
    * Using weak hashing algorithms is security-sensitive
    * @see https://sonarsource.github.io/rspec/#/rspec/S4790/javascript
@@ -5318,6 +5328,11 @@ Backward pagination arguments
    * @deprecated
    */
   'sonar/regular-expr'?: Linter.RuleEntry<[]>
+  /**
+   * Wallet phrases should not be hard-coded
+   * @see https://sonarsource.github.io/rspec/#/rspec/S7639/javascript
+   */
+  'sonar/review-blockchain-mnemonic'?: Linter.RuleEntry<[]>
   /**
    * A new session should be created during user authentication
    * @see https://sonarsource.github.io/rspec/#/rspec/S5876/javascript
