@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.46
+
+### Patch Changes
+
+- efadf20: Update renovate to 42.94.2
+
 ## 1.2.45
 
 ### Patch Changes
