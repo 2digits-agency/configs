@@ -1,0 +1,38 @@
+{
+  "name": "@2digits/design-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "types": "./dist/index.d.mts",
+  "bin": {
+    "design-tokens": "./dist/bin.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./bin": "./dist/bin.mjs",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsdown --minify --config-loader unconfig",
+    "dev": "tsdown --watch --config-loader unconfig",
+    "types": "tsgo --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "style-dictionary": "catalog:"
+  },
+  "devDependencies": {
+    "@2digits/tsconfig": "workspace:*",
+    "@arethetypeswrong/core": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
