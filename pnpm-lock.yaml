@@ -82,8 +82,8 @@ catalogs:
       specifier: 5.7.1
       version: 5.7.1
     '@tanstack/eslint-plugin-query':
-      specifier: 5.91.3
-      version: 5.91.3
+      specifier: 5.91.4
+      version: 5.91.4
     '@tanstack/eslint-plugin-router':
       specifier: 1.155.0
       version: 1.155.0
@@ -466,7 +466,7 @@ importers:
         version: 5.7.1(eslint@9.39.2(jiti@2.6.0))
       '@tanstack/eslint-plugin-query':
         specifier: 'catalog:'
-        version: 5.91.3(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
+        version: 5.91.4(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
       '@tanstack/eslint-plugin-router':
         specifier: 'catalog:'
         version: 1.155.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
@@ -3534,10 +3534,14 @@ packages:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
 
-  '@tanstack/eslint-plugin-query@5.91.3':
-    resolution: {integrity: sha512-5GMGZMYFK9dOvjpdedjJs4hU40EdPuO2AjzObQzP7eOSsikunCfrXaU3oNGXSsvoU9ve1Z1xQZZuDyPi0C1M7Q==}
+  '@tanstack/eslint-plugin-query@5.91.4':
+    resolution: {integrity: sha512-8a+GAeR7oxJ5laNyYBQ6miPK09Hi18o5Oie/jx8zioXODv/AUFLZQecKabPdpQSLmuDXEBPKFh+W5DKbWlahjQ==}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
+      typescript: ^5.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   '@tanstack/eslint-plugin-router@1.155.0':
     resolution: {integrity: sha512-Qq6uYYtcu1aMzFImEIz0Azcd9iCAbpkA3SBAGjwavFEyptafwnmtANKrjTqq09ej/CNTrTjEQBH72yvbqqTMqw==}
@@ -11134,13 +11138,14 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@tanstack/eslint-plugin-query@5.91.3(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)':
+  '@tanstack/eslint-plugin-query@5.91.4(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)':
     dependencies:
       '@typescript-eslint/utils': 8.54.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
       eslint: 9.39.2(jiti@2.6.0)
+    optionalDependencies:
+      typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
-      - typescript
 
   '@tanstack/eslint-plugin-router@1.155.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)':
     dependencies:
