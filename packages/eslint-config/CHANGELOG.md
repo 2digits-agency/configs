@@ -1,5 +1,30 @@
 # @2digits/eslint-config
 
+## 5.1.3
+
+### Patch Changes
+
+- 8be246e: Update ESLint plugin dependencies
+  - Updated `@eslint/compat` to 2.0.2
+  - Updated `@tanstack/eslint-plugin-query` to 5.91.4
+  - Updated `eslint-plugin-storybook` to 10.2.3
+  - Updated `eslint-plugin-turbo` to 2.8.1
+
+- efadf20: Update ESLint plugin dependencies
+  - Updated `eslint-plugin-sonarjs` to 3.0.6
+    - Added `sonar/dynamically-constructed-templates` rule
+    - Added `sonar/hardcoded-secret-signatures` rule
+    - Added `sonar/review-blockchain-mnemonic` rule
+    - Updated rule description for `sonar/aws-opensearchservice-domain`
+  - Updated `@next/eslint-plugin-next` to 16.1.6
+  - Updated `eslint-plugin-storybook` to 10.2.1
+  - Updated `globals` to 17.2.0
+
+- 7fa2e59: Update ESLint plugin dependencies
+  - Updated `@eslint-react/eslint-plugin` to 2.8.1 with improved rule documentation
+  - Updated `eslint-plugin-jsdoc` to 62.5.0
+  - Updated `eslint-plugin-turbo` to 2.8.0
+
 ## 5.1.2
 
 ### Patch Changes
