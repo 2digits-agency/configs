@@ -3179,7 +3179,7 @@ Backward pagination arguments
    */
   'react-dom/no-unknown-property'?: Linter.RuleEntry<ReactDomNoUnknownProperty>
   /**
-   * Enforces 'sandbox' attribute for 'iframe' elements is not set to unsafe combinations.
+   * Enforces that the 'sandbox' attribute for 'iframe' elements is not set to unsafe combinations.
    * @see https://eslint-react.xyz/docs/rules/dom-no-unsafe-iframe-sandbox
    */
   'react-dom/no-unsafe-iframe-sandbox'?: Linter.RuleEntry<[]>
@@ -3365,12 +3365,12 @@ Backward pagination arguments
    */
   'react-extra/no-leaked-conditional-rendering'?: Linter.RuleEntry<[]>
   /**
-   * Enforces that all components have a 'displayName' that can be used in devtools.
+   * Enforces that all components have a 'displayName' that can be used in DevTools.
    * @see https://eslint-react.xyz/docs/rules/no-missing-component-display-name
    */
   'react-extra/no-missing-component-display-name'?: Linter.RuleEntry<[]>
   /**
-   * Enforces that all contexts have a 'displayName' that can be used in devtools.
+   * Enforces that all contexts have a 'displayName' that can be used in DevTools.
    * @see https://eslint-react.xyz/docs/rules/no-missing-context-display-name
    */
   'react-extra/no-missing-context-display-name'?: Linter.RuleEntry<[]>
@@ -3425,7 +3425,7 @@ Backward pagination arguments
    */
   'react-extra/no-string-refs'?: Linter.RuleEntry<[]>
   /**
-   * Disallows unnecessary 'key' props on elements.
+   * Disallows unnecessary 'key' props on nested child elements when rendering lists.
    * @see https://eslint-react.xyz/docs/rules/no-unnecessary-key
    */
   'react-extra/no-unnecessary-key'?: Linter.RuleEntry<[]>
