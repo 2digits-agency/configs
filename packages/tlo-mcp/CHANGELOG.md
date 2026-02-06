@@ -1,5 +1,14 @@
 # @2digits/tlo-mcp
 
+## 0.1.3
+
+### Patch Changes
+
+- 0877a3c: Update Effect dependencies
+  - Updated `effect` to 3.19.16
+  - Updated `@effect/cli` to 0.73.2
+  - Updated `@effect/platform` to 0.94.3
+
 ## 0.1.2
 
 ### Patch Changes

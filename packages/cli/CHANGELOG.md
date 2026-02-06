@@ -1,5 +1,15 @@
 # @2digits/cli
 
+## 1.2.28
+
+### Patch Changes
+
+- 0877a3c: Update @effect/language-service to 0.73.0
+- 0877a3c: Update Effect dependencies
+  - Updated `effect` to 3.19.16
+  - Updated `@effect/cli` to 0.73.2
+  - Updated `@effect/platform` to 0.94.3
+
 ## 1.2.27
 
 ### Patch Changes
