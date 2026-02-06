@@ -40,6 +40,7 @@ export async function react(
         'react-hooks': pluginReactHooks,
         'react-hooks-extra': plugins['@eslint-react/hooks-extra'],
         'react-naming-convention': plugins['@eslint-react/naming-convention'],
+        'react-rsc': plugins['@eslint-react/rsc'],
         ...(reactCompiler ? { 'react-compiler': pluginReactCompiler } : {}),
       },
       settings: {

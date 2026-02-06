@@ -3355,7 +3355,7 @@ Backward pagination arguments
    */
   'react-extra/no-forward-ref'?: Linter.RuleEntry<[]>
   /**
-   * Prevents 'key' from not being explicitly specified (e.g., spreading 'key' from objects).
+   * Prevents implicitly passing the 'key' prop to components.
    * @see https://eslint-react.xyz/docs/rules/no-implicit-key
    */
   'react-extra/no-implicit-key'?: Linter.RuleEntry<[]>
@@ -3677,6 +3677,11 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/naming-convention-use-state
    */
   'react-naming-convention/use-state'?: Linter.RuleEntry<ReactNamingConventionUseState>
+  /**
+   * Validate and transform React Client/Server Function definitions.
+   * @see https://eslint-react.xyz/docs/rules/function-definition
+   */
+  'react-rsc/function-definition'?: Linter.RuleEntry<[]>
   /**
    * Enforces that every 'addEventListener' in a component or custom hook has a corresponding 'removeEventListener'.
    * @see https://eslint-react.xyz/docs/rules/web-api-no-leaked-event-listener
