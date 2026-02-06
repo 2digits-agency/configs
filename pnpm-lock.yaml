@@ -70,8 +70,8 @@ catalogs:
       specifier: 16.1.6
       version: 16.1.6
     '@opencode-ai/plugin':
-      specifier: 1.1.49
-      version: 1.1.49
+      specifier: 1.1.53
+      version: 1.1.53
     '@prettier/plugin-oxc':
       specifier: 0.1.3
       version: 0.1.3
@@ -672,7 +672,7 @@ importers:
     dependencies:
       '@opencode-ai/plugin':
         specifier: 'catalog:'
-        version: 1.1.49
+        version: 1.1.53
       dedent:
         specifier: 'catalog:'
         version: 1.7.1
@@ -2289,11 +2289,11 @@ packages:
   '@one-ini/wasm@0.2.0':
     resolution: {integrity: sha512-n+L/BvrwKUn7q5O3wHGo+CJZAqfewh38+37sk+eBzv/39lM9pPgPRd4sOZRvSRzo0ukLxzyXso4WlGj2oKZ5hA==}
 
-  '@opencode-ai/plugin@1.1.49':
-    resolution: {integrity: sha512-+FEE730fLJtoHCta5MXixOIzI9Cjos700QDNnAx6mA8YjFzO+kABnyqLQrCgZ9wUPJgiKH9bnHxT7AdRjWsNPw==}
+  '@opencode-ai/plugin@1.1.53':
+    resolution: {integrity: sha512-9ye7Wz2kESgt02AUDaMea4hXxj6XhWwKAG8NwFhrw09Ux54bGaMJFt1eIS8QQGIMaD+Lp11X4QdyEg96etEBJw==}
 
-  '@opencode-ai/sdk@1.1.49':
-    resolution: {integrity: sha512-F5ZkgiqOiV+z3U4zeBLvrmNZv5MwNFMTWM+HWhChD+/UEswIebQKk9UMz9lPX4fswexIJdFPwFI/TBdNyZfKMg==}
+  '@opencode-ai/sdk@1.1.53':
+    resolution: {integrity: sha512-RUIVnPOP1CyyU32FrOOYuE7Ge51lOBuhaFp2NSX98ncApT7ffoNetmwzqrhOiJQgZB1KrbCHLYOCK6AZfacxag==}
 
   '@opentelemetry/api-logs@0.211.0':
     resolution: {integrity: sha512-swFdZq8MCdmdR22jTVGQDhwqDzcI4M10nhjXkLr1EsIzXgZBqm4ZlmmcWsg3TSNf+3mzgOiqveXmBLZuDi2Lgg==}
@@ -10032,12 +10032,12 @@ snapshots:
 
   '@one-ini/wasm@0.2.0': {}
 
-  '@opencode-ai/plugin@1.1.49':
+  '@opencode-ai/plugin@1.1.53':
     dependencies:
-      '@opencode-ai/sdk': 1.1.49
+      '@opencode-ai/sdk': 1.1.53
       zod: 4.1.8
 
-  '@opencode-ai/sdk@1.1.49': {}
+  '@opencode-ai/sdk@1.1.53': {}
 
   '@opentelemetry/api-logs@0.211.0':
     dependencies:
