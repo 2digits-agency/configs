@@ -109,8 +109,8 @@ catalogs:
       specifier: 7.0.0-dev.20260207.1
       version: 7.0.0-dev.20260207.1
     bunup:
-      specifier: 0.16.22
-      version: 0.16.22
+      specifier: 0.16.23
+      version: 0.16.23
     dedent:
       specifier: 1.7.1
       version: 1.7.1
@@ -693,7 +693,7 @@ importers:
         version: 7.0.0-dev.20260207.1
       bunup:
         specifier: 'catalog:'
-        version: 0.16.22(typescript@5.9.3)
+        version: 0.16.23(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -4106,8 +4106,8 @@ packages:
     peerDependencies:
       esbuild: '>=0.18'
 
-  bunup@0.16.22:
-    resolution: {integrity: sha512-R1ARiGA396bP/PYDA3dB6SwpB5zsypEt1KJtG34HvuoJBZJTP7NK2k9GUALXyhB/2V2v62GMh356IAJInCJ7vA==}
+  bunup@0.16.23:
+    resolution: {integrity: sha512-d1cAzueJQM7UVHq0hEN25Cg/510k2xynQJiokS03WpIettH6i9mDM+uh0S1VLGM9RTZRXGHjHUsQvBlFNL1qdA==}
     hasBin: true
     peerDependencies:
       typescript: latest
@@ -11741,7 +11741,7 @@ snapshots:
       esbuild: 0.27.0
       load-tsconfig: 0.2.5
 
-  bunup@0.16.22(typescript@5.9.3):
+  bunup@0.16.23(typescript@5.9.3):
     dependencies:
       '@bunup/dts': 0.14.50(typescript@5.9.3)
       '@bunup/shared': 0.16.20(typescript@5.9.3)
