@@ -6,9 +6,7 @@ import pkg from './package.json';
 export default defineConfig({
   entry: ['src/bin.ts'],
 
-  dts: {
-    tsgo: true,
-  },
+  dts: true,
   fixedExtension: true,
   exports: true,
   attw: { profile: 'esm-only', level: 'error' },
