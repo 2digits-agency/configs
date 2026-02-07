@@ -244,8 +244,8 @@ catalogs:
       specifier: 19.2.4
       version: 19.2.4
     renovate:
-      specifier: 43.4.0
-      version: 43.4.0
+      specifier: 43.4.2
+      version: 43.4.2
     tailwind-csstree:
       specifier: 0.1.4
       version: 0.1.4
@@ -752,7 +752,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 43.4.0(encoding@0.1.13)(typanion@3.14.0)
+        version: 43.4.2(encoding@0.1.13)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -4257,8 +4257,8 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
-  commander@14.0.2:
-    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
+  commander@14.0.3:
+    resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
     engines: {node: '>=20'}
 
   commander@4.1.1:
@@ -6769,8 +6769,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@43.4.0:
-    resolution: {integrity: sha512-S0u3YqXYbHf5p5OZt9+9zZP+r/mVjTHikwnuHEW2syNPNRmvsJXoIZlDh8szaw+j+Mjg+BwSHfHP+1etgUb2Zw==}
+  renovate@43.4.2:
+    resolution: {integrity: sha512-h6P5SAbwj7GXJ442wMA6R0WcQuP3AA/FppHQO071D+xXU2hNazieQ4hlSMUbNKO7/ojT6vlAye8AT7JPdug5jA==}
     engines: {node: ^24.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -11180,13 +11180,13 @@ snapshots:
 
   '@types/bunyan@1.8.11':
     dependencies:
-      '@types/node': 24.10.9
+      '@types/node': 24.10.11
 
   '@types/cacheable-request@6.0.3':
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 24.10.9
+      '@types/node': 24.10.11
       '@types/responselike': 1.0.3
 
   '@types/chai@5.2.3':
@@ -11212,7 +11212,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 24.10.9
+      '@types/node': 24.10.11
 
   '@types/mdast@4.0.4':
     dependencies:
@@ -11246,7 +11246,7 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 24.10.9
+      '@types/node': 24.10.11
 
   '@types/semver@7.7.0': {}
 
@@ -11256,11 +11256,11 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 24.10.9
+      '@types/node': 24.10.11
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 24.10.9
+      '@types/node': 24.10.11
     optional: true
 
   '@typescript-eslint/eslint-plugin@8.54.0(@typescript-eslint/parser@8.54.0(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)':
@@ -11896,7 +11896,7 @@ snapshots:
 
   color-name@1.1.4: {}
 
-  commander@14.0.2: {}
+  commander@14.0.3: {}
 
   commander@4.1.1: {}
 
@@ -12115,7 +12115,7 @@ snapshots:
   editorconfig@3.0.1:
     dependencies:
       '@one-ini/wasm': 0.2.0
-      commander: 14.0.2
+      commander: 14.0.3
       minimatch: 10.0.1
       semver: 7.7.3
 
@@ -14593,7 +14593,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 24.10.9
+      '@types/node': 24.10.11
       long: 5.3.2
 
   protocols@2.0.2: {}
@@ -14814,7 +14814,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@43.4.0(encoding@0.1.13)(typanion@3.14.0):
+  renovate@43.4.2(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.980.0
       '@aws-sdk/client-ec2': 3.980.0
@@ -14862,7 +14862,7 @@ snapshots:
       cacache: 20.0.3
       changelog-filename-regex: 2.0.1
       clean-git-ref: 2.0.1
-      commander: 14.0.2
+      commander: 14.0.3
       conventional-commits-detector: 1.0.3
       croner: 9.1.0
       cronstrue: 3.11.0
