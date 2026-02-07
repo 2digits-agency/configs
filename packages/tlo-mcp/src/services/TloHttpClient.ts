@@ -6,7 +6,7 @@ import * as Layer from 'effect/Layer';
 
 import { TloConfig } from './TloConfig.js';
 
-export interface TloHttpClientShape {
+interface TloHttpClientShape {
   readonly client: HttpClient.HttpClient;
 }
 

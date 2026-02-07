@@ -6,7 +6,7 @@ import * as Logger from 'effect/Logger';
 
 import { TloToolkit, TloToolkitHandlers } from './handlers.js';
 
-export interface McpServerOptions {
+interface McpServerOptions {
   readonly name: string;
   readonly version: string;
 }
