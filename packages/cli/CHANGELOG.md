@@ -1,5 +1,12 @@
 # @2digits/cli
 
+## 1.2.29
+
+### Patch Changes
+
+- 1fcaa08: Disable tsgo for declaration file generation
+  - Reverted to standard dts generation due to tsgo compatibility issues
+
 ## 1.2.28
 
 ### Patch Changes
