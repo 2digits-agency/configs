@@ -1,5 +1,12 @@
 # @2digits/tlo-mcp
 
+## 0.1.4
+
+### Patch Changes
+
+- 6cf78c5: Update Effect dependencies
+  - Updated `@effect/platform` to 0.94.4
+
 ## 0.1.3
 
 ### Patch Changes

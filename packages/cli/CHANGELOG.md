@@ -1,5 +1,12 @@
 # @2digits/cli
 
+## 1.2.30
+
+### Patch Changes
+
+- 6cf78c5: Update Effect dependencies
+  - Updated `@effect/platform` to 0.94.4
+
 ## 1.2.29
 
 ### Patch Changes
