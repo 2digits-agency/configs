@@ -79,8 +79,8 @@ catalogs:
       specifier: 3.4.2
       version: 3.4.2
     '@stylistic/eslint-plugin':
-      specifier: 5.7.1
-      version: 5.7.1
+      specifier: 5.8.0
+      version: 5.8.0
     '@tanstack/eslint-plugin-query':
       specifier: 5.91.4
       version: 5.91.4
@@ -468,7 +468,7 @@ importers:
         version: 16.1.6
       '@stylistic/eslint-plugin':
         specifier: 'catalog:'
-        version: 5.7.1(eslint@9.39.2(jiti@2.6.0))
+        version: 5.8.0(eslint@9.39.2(jiti@2.6.0))
       '@tanstack/eslint-plugin-query':
         specifier: 'catalog:'
         version: 5.91.4(eslint@9.39.2(jiti@2.6.0))(typescript@5.9.3)
@@ -3525,8 +3525,8 @@ packages:
   '@storybook/global@5.0.0':
     resolution: {integrity: sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==}
 
-  '@stylistic/eslint-plugin@5.7.1':
-    resolution: {integrity: sha512-zjTUwIsEfT+k9BmXwq1QEFYsb4afBlsI1AXFyWQBgggMzwBFOuu92pGrE5OFx90IOjNl+lUbQoTG7f8S0PkOdg==}
+  '@stylistic/eslint-plugin@5.8.0':
+    resolution: {integrity: sha512-WNPVF/FfBAjyi3OA7gok8swRiImNLKI4dmV3iK/GC/0xSJR7eCzBFsw9hLZVgb1+MYNLy7aDsjohxN1hA/FIfQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: '>=9.0.0'
@@ -11070,7 +11070,7 @@ snapshots:
 
   '@storybook/global@5.0.0': {}
 
-  '@stylistic/eslint-plugin@5.7.1(eslint@9.39.2(jiti@2.6.0))':
+  '@stylistic/eslint-plugin@5.8.0(eslint@9.39.2(jiti@2.6.0))':
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.2(jiti@2.6.0))
       '@typescript-eslint/types': 8.54.0
