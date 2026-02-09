@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 5.1.7
+
+### Patch Changes
+
+- 6cf78c5: Update ESLint plugin dependencies
+  - Updated `@eslint-react/eslint-plugin` to 2.12.2
+  - Updated `eslint-plugin-zod` to 3.1.0
+    - Renamed `zod/prefer-namespace-import` rule to `zod/consistent-import`
+
 ## 5.1.6
 
 ### Patch Changes
