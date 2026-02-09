@@ -7950,6 +7950,11 @@ Backward pagination arguments
    */
   'zod/array-style'?: Linter.RuleEntry<ZodArrayStyle>
   /**
+   * Enforce a consistent import style for Zod
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/consistent-import.md
+   */
+  'zod/consistent-import'?: Linter.RuleEntry<ZodConsistentImport>
+  /**
    * Enforce consistent source from Zod imports
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/consistent-import-source.md
    */
@@ -8007,6 +8012,7 @@ Backward pagination arguments
   /**
    * Enforce importing zod as a namespace import (`import * as z from 'zod'`)
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/prefer-namespace-import.md
+   * @deprecated
    */
   'zod/prefer-namespace-import'?: Linter.RuleEntry<[]>
   /**
@@ -15185,6 +15191,11 @@ type Yoda = []|[("always" | "never")]|[("always" | "never"), {
 type ZodArrayStyle = []|[{
   
   style?: ("function" | "method")
+}]
+// ----- zod/consistent-import -----
+type ZodConsistentImport = []|[{
+  
+  syntax?: ("namespace" | "named")
 }]
 // ----- zod/consistent-import-source -----
 type ZodConsistentImportSource = []|[{
