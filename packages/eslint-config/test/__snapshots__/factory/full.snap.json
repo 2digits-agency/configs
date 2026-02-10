@@ -297,7 +297,7 @@
     ],
     "settings": {
       "node": {
-        "version": "24.13.0"
+        "version": "24.13.1"
       }
     },
     "rules": [
@@ -387,6 +387,7 @@
       "unicorn/explicit-length-check",
       "- unicorn/filename-case",
       "unicorn/import-style",
+      "unicorn/isolated-functions",
       "unicorn/new-for-builtins",
       "unicorn/no-abusive-eslint-disable",
       "unicorn/no-accessor-recursion",
