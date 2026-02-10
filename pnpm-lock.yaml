@@ -109,8 +109,8 @@ catalogs:
       specifier: 7.0.0-dev.20260208.1
       version: 7.0.0-dev.20260208.1
     bunup:
-      specifier: 0.16.23
-      version: 0.16.23
+      specifier: 0.16.26
+      version: 0.16.26
     dedent:
       specifier: 1.7.1
       version: 1.7.1
@@ -693,7 +693,7 @@ importers:
         version: 7.0.0-dev.20260208.1
       bunup:
         specifier: 'catalog:'
-        version: 0.16.23(typescript@5.9.3)
+        version: 0.16.26(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -1219,16 +1219,16 @@ packages:
     resolution: {integrity: sha512-EVMD0SgJtOuFeg0lAVbCwa+qeTKILb87jqvLyUtQswGD9+ce2nB52Y5zbTF1Hc0MDFfbydcMcxb47jSdhikVHA==}
     engines: {node: '>= 10'}
 
-  '@bunup/dts@0.14.50':
-    resolution: {integrity: sha512-EGQOLwdX5Am8z5CEPupGm7Hx/e+QTwhpnFSGolSJ4HdkjHjtMvLpdevbttnYpKzRZET4M7tDoH7hP1HwJKCl3A==}
+  '@bunup/dts@0.14.52':
+    resolution: {integrity: sha512-k4cIT4m3teOBxcQ+Ch3zK86AsAaa3/XAZCSqCTvJSIyT8LfSyx2wYZJu5Sl12DeMf0VtgLgvAbdYqR7wstdbig==}
     peerDependencies:
       typescript: '>=4.5.0'
     peerDependenciesMeta:
       typescript:
         optional: true
 
-  '@bunup/shared@0.16.20':
-    resolution: {integrity: sha512-2VyH6lF/jm30dYycRaUBYiejw/nGj8RGLuMxbQNpVK7ZlkobiQ7Vzzke2RYCfpHZZ07+/ZmqYw94nkdIeUh/sQ==}
+  '@bunup/shared@0.16.23':
+    resolution: {integrity: sha512-R2dXtYIfXETY63s1iu9u1or0rKexFNHtd+4nlE4/nhjcW41wGFfR2Q9ZowbykzuxBRA5GzSlhB6Wk9UgXf6GCQ==}
     peerDependencies:
       typescript: latest
     peerDependenciesMeta:
@@ -4106,8 +4106,8 @@ packages:
     peerDependencies:
       esbuild: '>=0.18'
 
-  bunup@0.16.23:
-    resolution: {integrity: sha512-d1cAzueJQM7UVHq0hEN25Cg/510k2xynQJiokS03WpIettH6i9mDM+uh0S1VLGM9RTZRXGHjHUsQvBlFNL1qdA==}
+  bunup@0.16.26:
+    resolution: {integrity: sha512-UJtys5YVPj+qmJxcaMXV40z/OeOkYxUWDn/JA+Uh830tds6nbueIHtG1dLW1rVsH2+XkHHTDnYuXYY14+uivbQ==}
     hasBin: true
     peerDependencies:
       typescript: latest
@@ -8826,7 +8826,7 @@ snapshots:
 
   '@breejs/later@4.2.0': {}
 
-  '@bunup/dts@0.14.50(typescript@5.9.3)':
+  '@bunup/dts@0.14.52(typescript@5.9.3)':
     dependencies:
       '@babel/parser': 7.28.6
       coffi: 0.1.37
@@ -8839,7 +8839,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  '@bunup/shared@0.16.20(typescript@5.9.3)':
+  '@bunup/shared@0.16.23(typescript@5.9.3)':
     optionalDependencies:
       typescript: 5.9.3
 
@@ -11741,10 +11741,10 @@ snapshots:
       esbuild: 0.27.0
       load-tsconfig: 0.2.5
 
-  bunup@0.16.23(typescript@5.9.3):
+  bunup@0.16.26(typescript@5.9.3):
     dependencies:
-      '@bunup/dts': 0.14.50(typescript@5.9.3)
-      '@bunup/shared': 0.16.20(typescript@5.9.3)
+      '@bunup/dts': 0.14.52(typescript@5.9.3)
+      '@bunup/shared': 0.16.23(typescript@5.9.3)
       chokidar: 5.0.0
       coffi: 0.1.37
       lightningcss: 1.30.2
