@@ -4839,12 +4839,12 @@ Backward pagination arguments
    */
   'sonar/no-hardcoded-ip'?: Linter.RuleEntry<[]>
   /**
-   * Hard-coded passwords are security-sensitive
+   * Credentials should not be hard-coded
    * @see https://sonarsource.github.io/rspec/#/rspec/S2068/javascript
    */
   'sonar/no-hardcoded-passwords'?: Linter.RuleEntry<SonarNoHardcodedPasswords>
   /**
-   * Hard-coded secrets are security-sensitive
+   * Secrets should not be hard-coded
    * @see https://sonarsource.github.io/rspec/#/rspec/S6418/javascript
    */
   'sonar/no-hardcoded-secrets'?: Linter.RuleEntry<SonarNoHardcodedSecrets>
