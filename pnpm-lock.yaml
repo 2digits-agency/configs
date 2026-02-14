@@ -136,8 +136,8 @@ catalogs:
       specifier: 2.0.0
       version: 2.0.0
     eslint-plugin-antfu:
-      specifier: 3.2.1
-      version: 3.2.1
+      specifier: 3.2.2
+      version: 3.2.2
     eslint-plugin-de-morgan:
       specifier: 2.0.0
       version: 2.0.0
@@ -498,7 +498,7 @@ importers:
         version: 2.0.0(eslint@9.39.2(jiti@2.6.0))
       eslint-plugin-antfu:
         specifier: 'catalog:'
-        version: 3.2.1(eslint@9.39.2(jiti@2.6.0))
+        version: 3.2.2(eslint@9.39.2(jiti@2.6.0))
       eslint-plugin-de-morgan:
         specifier: 'catalog:'
         version: 2.0.0(eslint@9.39.2(jiti@2.6.0))
@@ -4691,8 +4691,8 @@ packages:
     peerDependencies:
       eslint: '*'
 
-  eslint-plugin-antfu@3.2.1:
-    resolution: {integrity: sha512-QVSpLoUnUfKE9FjFG4FQ5/zu/O+u8ejk1bIA0sir3KF+tHfaHJ/8o/Mg/rWy2vRPj7TEZG/zvib6lHEU4aSJ4A==}
+  eslint-plugin-antfu@3.2.2:
+    resolution: {integrity: sha512-Qzixht2Dmd/pMbb5EnKqw2V8TiWHbotPlsORO8a+IzCLFwE0RxK8a9k4DCTFPzBwyxJzH+0m2Mn8IUGeGQkyUw==}
     peerDependencies:
       eslint: '*'
 
@@ -12291,7 +12291,7 @@ snapshots:
     dependencies:
       eslint: 9.39.2(jiti@2.6.0)
 
-  eslint-plugin-antfu@3.2.1(eslint@9.39.2(jiti@2.6.0)):
+  eslint-plugin-antfu@3.2.2(eslint@9.39.2(jiti@2.6.0)):
     dependencies:
       eslint: 9.39.2(jiti@2.6.0)
 
@@ -15234,7 +15234,7 @@ snapshots:
       esbuild: 0.25.12
       esbuild-register: 3.6.0(esbuild@0.25.12)
       recast: 0.23.11
-      semver: 7.7.3
+      semver: 7.7.4
       ws: 8.18.3
     optionalDependencies:
       prettier: 3.8.1
