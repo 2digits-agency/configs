@@ -1,5 +1,14 @@
 # @2digits/tlo-mcp
 
+## 0.1.5
+
+### Patch Changes
+
+- 590eea0: Update Effect dependencies to latest versions
+  - Updated `effect` to 3.19.17
+  - Updated `@effect/platform` to 0.94.5
+  - Updated `@effect/rpc` to 0.73.1
+
 ## 0.1.4
 
 ### Patch Changes
