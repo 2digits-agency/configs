@@ -64,7 +64,11 @@ setTimeout(() => {
   log('This code runs after a delay of 2 seconds.');
 }, 2000);
 
-let a, b, c, d, foo;
+let a = false;
+let b = false;
+let c = false;
+let d = false;
+const foo = () => {};
 
 if (a || b || !(!c && !d) || (d && b)) {
   // @ts-ignore - Ignoring for the sake of example
