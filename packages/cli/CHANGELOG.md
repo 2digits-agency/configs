@@ -1,5 +1,14 @@
 # @2digits/cli
 
+## 1.2.33
+
+### Patch Changes
+
+- f7712d5: Update @effect/language-service to 0.74.0
+- a33b04c: Update Effect dependencies to latest patch versions
+  - Updated `effect` to `3.19.18`
+  - Updated `@effect/rpc` to `0.73.2`
+
 ## 1.2.32
 
 ### Patch Changes
