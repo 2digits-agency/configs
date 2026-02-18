@@ -3115,7 +3115,7 @@ Backward pagination arguments
    */
   'quotes'?: Linter.RuleEntry<Quotes>
   /**
-   * Enforce the consistent use of the radix argument when using `parseInt()`
+   * Enforce the use of the radix argument when using `parseInt()`
    * @see https://eslint.org/docs/latest/rules/radix
    */
   'radix'?: Linter.RuleEntry<Radix>
@@ -9714,6 +9714,8 @@ type JsdocTagLines = []|[("always" | "any" | "never")]|[("always" | "any" | "nev
   
   startLines?: (number | null)
   
+  startLinesWithNoTags?: number
+  
   tags?: {
     [k: string]: {
       count?: number
@@ -10625,6 +10627,8 @@ type MaxParams = []|[(number | {
   max?: number
   
   countVoidThis?: boolean
+  
+  countThis?: ("never" | "except-void" | "always")
 })]
 // ----- max-statements -----
 type MaxStatements = []|[(number | {
