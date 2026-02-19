@@ -246,7 +246,7 @@
       "no-unused-labels",
       "no-unused-private-class-members",
       "no-unused-vars",
-      "no-useless-assignment",
+      "- no-useless-assignment",
       "no-useless-backreference",
       "no-useless-call",
       "no-useless-catch",
@@ -527,7 +527,6 @@
       "sonar"
     ],
     "rules": [
-      "sonar/code-eval",
       "sonar/cognitive-complexity",
       "sonar/comma-or-logical-or-case",
       "sonar/concise-regex",

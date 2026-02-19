@@ -1,3 +1,5 @@
+import * as parser from 'jsonc-eslint-parser';
+
 import type { TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
@@ -9,7 +11,7 @@ export async function pnpm(): Promise<Array<TypedFlatConfigItem>> {
       name: '2digits:pnpm/package-json',
       files: ['package.json', '**/package.json'],
       languageOptions: {
-        parser: await interopDefault(import('jsonc-eslint-parser')),
+        parser,
       },
       plugins: {
         pnpm,

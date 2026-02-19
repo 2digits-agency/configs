@@ -1,5 +1,5 @@
 import plugin, { configs } from 'eslint-plugin-jsonc';
-import parser from 'jsonc-eslint-parser';
+import * as parser from 'jsonc-eslint-parser';
 
 import { GLOB_JSON, GLOB_JSON5, GLOB_JSONC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
