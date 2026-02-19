@@ -103,26 +103,11 @@ export function javascript(options: OptionsOverrides = {}): Array<TypedFlatConfi
         ],
         'no-restricted-properties': [
           'error',
-          {
-            message: 'Use `Object.getPrototypeOf` or `Object.setPrototypeOf` instead.',
-            property: '__proto__',
-          },
-          {
-            message: 'Use `Object.defineProperty` instead.',
-            property: '__defineGetter__',
-          },
-          {
-            message: 'Use `Object.defineProperty` instead.',
-            property: '__defineSetter__',
-          },
-          {
-            message: 'Use `Object.getOwnPropertyDescriptor` instead.',
-            property: '__lookupGetter__',
-          },
-          {
-            message: 'Use `Object.getOwnPropertyDescriptor` instead.',
-            property: '__lookupSetter__',
-          },
+          { message: 'Use `Object.getPrototypeOf` or `Object.setPrototypeOf` instead.', property: '__proto__' },
+          { message: 'Use `Object.defineProperty` instead.', property: '__defineGetter__' },
+          { message: 'Use `Object.defineProperty` instead.', property: '__defineSetter__' },
+          { message: 'Use `Object.getOwnPropertyDescriptor` instead.', property: '__lookupGetter__' },
+          { message: 'Use `Object.getOwnPropertyDescriptor` instead.', property: '__lookupSetter__' },
         ],
         'no-restricted-syntax': [
           'error',
@@ -149,23 +134,9 @@ export function javascript(options: OptionsOverrides = {}): Array<TypedFlatConfi
         'no-unreachable-loop': 'error',
         'no-unsafe-finally': 'error',
         'no-unsafe-negation': 'error',
-        'no-unused-expressions': [
-          'error',
-          {
-            allowShortCircuit: true,
-            allowTaggedTemplates: true,
-            allowTernary: true,
-          },
-        ],
-        'no-unused-vars': [
-          'error',
-          {
-            args: 'none',
-            caughtErrors: 'none',
-            ignoreRestSiblings: true,
-            vars: 'all',
-          },
-        ],
+        'no-unused-expressions': ['error', { allowShortCircuit: true, allowTaggedTemplates: true, allowTernary: true }],
+        'no-unused-vars': ['error', { args: 'none', caughtErrors: 'none', ignoreRestSiblings: true, vars: 'all' }],
+        'no-useless-assignment': 'off',
         'no-useless-backreference': 'error',
         'no-useless-call': 'error',
         'no-useless-catch': 'error',

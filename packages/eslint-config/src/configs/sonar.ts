@@ -12,7 +12,6 @@ export function sonar(): Array<TypedFlatConfigItem> {
         sonar: pluginSonar,
       },
       rules: {
-        'sonar/code-eval': 'error',
         'sonar/cognitive-complexity': 'error',
         'sonar/comma-or-logical-or-case': 'error',
         'sonar/concise-regex': 'error',
