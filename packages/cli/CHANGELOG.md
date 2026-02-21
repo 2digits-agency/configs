@@ -1,5 +1,13 @@
 # @2digits/cli
 
+## 1.2.35
+
+### Patch Changes
+
+- d643f5d: Update effect to 3.19.19 and @effect/language-service to 0.75.1
+  - Updated `effect` to 3.19.19
+  - Updated `@effect/language-service` to 0.75.1
+
 ## 1.2.34
 
 ### Patch Changes
