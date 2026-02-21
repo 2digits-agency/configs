@@ -85,8 +85,8 @@ catalogs:
       specifier: 5.91.4
       version: 5.91.4
     '@tanstack/eslint-plugin-router':
-      specifier: 1.161.2
-      version: 1.161.2
+      specifier: 1.161.4
+      version: 1.161.4
     '@types/bun':
       specifier: 1.3.9
       version: 1.3.9
@@ -474,7 +474,7 @@ importers:
         version: 5.91.4(eslint@10.0.0(jiti@2.6.0))(typescript@5.9.3)
       '@tanstack/eslint-plugin-router':
         specifier: 'catalog:'
-        version: 1.161.2(eslint@10.0.0(jiti@2.6.0))(typescript@5.9.3)
+        version: 1.161.4(eslint@10.0.0(jiti@2.6.0))(typescript@5.9.3)
       '@typescript-eslint/parser':
         specifier: 'catalog:'
         version: 8.56.0(eslint@10.0.0(jiti@2.6.0))(typescript@5.9.3)
@@ -3582,8 +3582,8 @@ packages:
       typescript:
         optional: true
 
-  '@tanstack/eslint-plugin-router@1.161.2':
-    resolution: {integrity: sha512-YgQGpz3csD5CYhj350xtiGCtYQ/B0UPrmQ/ER1NIjsprsKGruQKX+iHyciIVOCpZbjDqjAcKzBi9GgVL4YbHvQ==}
+  '@tanstack/eslint-plugin-router@1.161.4':
+    resolution: {integrity: sha512-Cw6naM1QII0DEpjQvs1VDCa8f0hNhCQ0DehdAeVqHfovwUSWw+5F7WhgSlUrZAQN2RodzehWkRm6K/BqtQYnyA==}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
 
@@ -6647,6 +6647,7 @@ packages:
   prebuild-install@7.1.3:
     resolution: {integrity: sha512-8Mf2cbV7x1cXPUILADGI3wuhfqWvtiLA1iclTDbFRZkgRQS0NqsPZphna9V+HyTEadheuPmjaJMsbzKQFOzLug==}
     engines: {node: '>=10'}
+    deprecated: No longer maintained. Please contact the author of the relevant native addon; alternatives are available.
     hasBin: true
 
   prelude-ls@1.2.1:
@@ -11342,7 +11343,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@tanstack/eslint-plugin-router@1.161.2(eslint@10.0.0(jiti@2.6.0))(typescript@5.9.3)':
+  '@tanstack/eslint-plugin-router@1.161.4(eslint@10.0.0(jiti@2.6.0))(typescript@5.9.3)':
     dependencies:
       '@typescript-eslint/utils': 8.56.0(eslint@10.0.0(jiti@2.6.0))(typescript@5.9.3)
       eslint: 10.0.0(jiti@2.6.0)
