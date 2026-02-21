@@ -676,9 +676,6 @@
       "*.jsonc",
       "**/*.jsonc"
     ],
-    "languageOptions": {
-      "parser": "jsonc-eslint-parser"
-    },
     "rules": [
       "- no-unused-expressions",
       "- no-unused-vars",
@@ -707,6 +704,7 @@
       "jsonc/no-floating-decimal",
       "jsonc/no-hexadecimal-numeric-literals",
       "jsonc/no-infinity",
+      "jsonc/no-irregular-whitespace",
       "jsonc/no-multi-str",
       "jsonc/no-nan",
       "jsonc/no-number-props",
@@ -751,6 +749,7 @@
       "jsonc/no-floating-decimal",
       "jsonc/no-hexadecimal-numeric-literals",
       "jsonc/no-infinity",
+      "jsonc/no-irregular-whitespace",
       "jsonc/no-multi-str",
       "jsonc/no-nan",
       "jsonc/no-number-props",
@@ -792,6 +791,7 @@
       "jsonc/no-binary-numeric-literals",
       "jsonc/no-dupe-keys",
       "jsonc/no-escape-sequence-in-identifier",
+      "jsonc/no-irregular-whitespace",
       "jsonc/no-number-props",
       "jsonc/no-numeric-separators",
       "jsonc/no-octal",
@@ -862,9 +862,6 @@
       "*.jsonc",
       "**/*.jsonc"
     ],
-    "languageOptions": {
-      "parser": "jsonc-eslint-parser"
-    },
     "rules": [
       "- no-unused-expressions",
       "- no-unused-vars",
