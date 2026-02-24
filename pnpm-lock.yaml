@@ -151,8 +151,8 @@ catalogs:
       specifier: 0.1.0
       version: 0.1.0
     eslint-plugin-jsdoc:
-      specifier: 62.7.0
-      version: 62.7.0
+      specifier: 62.7.1
+      version: 62.7.1
     eslint-plugin-jsonc:
       specifier: 3.0.0
       version: 3.0.0
@@ -513,7 +513,7 @@ importers:
         version: 0.1.0(eslint@10.0.1(jiti@2.6.0))
       eslint-plugin-jsdoc:
         specifier: 'catalog:'
-        version: 62.7.0(eslint@10.0.1(jiti@2.6.0))
+        version: 62.7.1(eslint@10.0.1(jiti@2.6.0))
       eslint-plugin-jsonc:
         specifier: 'catalog:'
         version: 3.0.0(@eslint/markdown@7.5.1)(eslint@10.0.1(jiti@2.6.0))
@@ -4783,8 +4783,8 @@ packages:
     peerDependencies:
       eslint: ^9.5.0
 
-  eslint-plugin-jsdoc@62.7.0:
-    resolution: {integrity: sha512-jootujJOIGMkCLN+/WgDFKtaclCt2MEEy9cZ1RyK19Az1JvVI3awbeMXNlJ6y4h8RWIJpcXqmxsu4t9NThYbNw==}
+  eslint-plugin-jsdoc@62.7.1:
+    resolution: {integrity: sha512-4Zvx99Q7d1uggYBUX/AIjvoyqXhluGbbKrRmG8SQTLprPFg6fa293tVJH1o1GQwNe3lUydd8ZHzn37OaSncgSQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -4961,10 +4961,6 @@ packages:
   espree@10.4.0:
     resolution: {integrity: sha512-j6PAQ2uUr79PZhBjP5C5fhl8e39FmRnOjsD5lGnWrFU8i2G776tBK7+nP8KuQUTTyAZUwfQqXAgrVH5MbH9CYQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  espree@11.1.0:
-    resolution: {integrity: sha512-WFWYhO1fV4iYkqOOvq8FbqIhr2pYfoDY0kCotMkDeNtGpiGGkZ1iov2u8ydjtgM8yF8rzK7oaTbw2NAzbAbehw==}
-    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   espree@11.1.1:
     resolution: {integrity: sha512-AVHPqQoZYc+RUM4/3Ly5udlZY/U4LS8pIG05jEjWM2lQMU/oaZ7qshzAl2YP1tfNmXfftH3ohurfwNAug+MnsQ==}
@@ -11489,7 +11485,7 @@ snapshots:
   '@typescript-eslint/project-service@8.55.0(typescript@5.9.3)':
     dependencies:
       '@typescript-eslint/tsconfig-utils': 8.55.0(typescript@5.9.3)
-      '@typescript-eslint/types': 8.55.0
+      '@typescript-eslint/types': 8.56.0
       debug: 4.4.3
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -11799,9 +11795,9 @@ snapshots:
   abbrev@4.0.0:
     optional: true
 
-  acorn-import-attributes@1.9.5(acorn@8.15.0):
+  acorn-import-attributes@1.9.5(acorn@8.16.0):
     dependencies:
-      acorn: 8.15.0
+      acorn: 8.16.0
 
   acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:
@@ -12598,7 +12594,7 @@ snapshots:
       uncase: 0.2.0
       yaml-eslint-parser: 1.3.2
 
-  eslint-plugin-jsdoc@62.7.0(eslint@10.0.1(jiti@2.6.0)):
+  eslint-plugin-jsdoc@62.7.1(eslint@10.0.1(jiti@2.6.0)):
     dependencies:
       '@es-joy/jsdoccomment': 0.84.0
       '@es-joy/resolve.exports': 1.2.0
@@ -12607,7 +12603,7 @@ snapshots:
       debug: 4.4.3
       escape-string-regexp: 4.0.0
       eslint: 10.0.1(jiti@2.6.0)
-      espree: 11.1.0
+      espree: 11.1.1
       esquery: 1.7.0
       html-entities: 2.6.0
       object-deep-merge: 2.0.0
@@ -12965,12 +12961,6 @@ snapshots:
       acorn-jsx: 5.3.2(acorn@8.15.0)
       eslint-visitor-keys: 4.2.1
 
-  espree@11.1.0:
-    dependencies:
-      acorn: 8.15.0
-      acorn-jsx: 5.3.2(acorn@8.15.0)
-      eslint-visitor-keys: 5.0.0
-
   espree@11.1.1:
     dependencies:
       acorn: 8.16.0
@@ -12979,8 +12969,8 @@ snapshots:
 
   espree@9.6.1:
     dependencies:
-      acorn: 8.15.0
-      acorn-jsx: 5.3.2(acorn@8.15.0)
+      acorn: 8.16.0
+      acorn-jsx: 5.3.2(acorn@8.16.0)
       eslint-visitor-keys: 3.4.3
 
   esprima@4.0.1: {}
@@ -13526,8 +13516,8 @@ snapshots:
 
   import-in-the-middle@2.0.6:
     dependencies:
-      acorn: 8.15.0
-      acorn-import-attributes: 1.9.5(acorn@8.15.0)
+      acorn: 8.16.0
+      acorn-import-attributes: 1.9.5(acorn@8.16.0)
       cjs-module-lexer: 2.2.0
       module-details-from-path: 1.0.4
 
@@ -13687,7 +13677,7 @@ snapshots:
       acorn: 8.15.0
       eslint-visitor-keys: 3.4.3
       espree: 9.6.1
-      semver: 7.7.3
+      semver: 7.7.4
 
   jsonc-eslint-parser@3.1.0:
     dependencies:
