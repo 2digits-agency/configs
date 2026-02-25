@@ -6280,10 +6280,20 @@ Backward pagination arguments
    */
   'toml/indent'?: Linter.RuleEntry<TomlIndent>
   /**
+   * enforce linebreaks after opening and before closing braces
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/inline-table-curly-newline.html
+   */
+  'toml/inline-table-curly-newline'?: Linter.RuleEntry<TomlInlineTableCurlyNewline>
+  /**
    * enforce consistent spacing inside braces
    * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/inline-table-curly-spacing.html
    */
   'toml/inline-table-curly-spacing'?: Linter.RuleEntry<TomlInlineTableCurlySpacing>
+  /**
+   * enforce placing inline table key-value pairs on separate lines
+   * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/inline-table-key-value-newline.html
+   */
+  'toml/inline-table-key-value-newline'?: Linter.RuleEntry<TomlInlineTableKeyValueNewline>
   /**
    * enforce consistent spacing between keys and values in key/value pairs
    * @see https://ota-meshi.github.io/eslint-plugin-toml/rules/key-spacing.html
@@ -9969,6 +9979,7 @@ type JsoncObjectCurlyNewline = []|[((("always" | "never") | {
 type JsoncObjectCurlySpacing = []|[("always" | "never")]|[("always" | "never"), {
   arraysInObjects?: boolean
   objectsInObjects?: boolean
+  emptyObjects?: ("ignore" | "always" | "never")
 }]
 // ----- jsonc/object-property-newline -----
 type JsoncObjectPropertyNewline = []|[{
@@ -13456,10 +13467,21 @@ type TomlIndent = []|[("tab" | number)]|[("tab" | number), {
   subTables?: number
   keyValuePairs?: number
 }]
+// ----- toml/inline-table-curly-newline -----
+type TomlInlineTableCurlyNewline = []|[(("always" | "never") | {
+  multiline?: boolean
+  minProperties?: number
+  consistent?: boolean
+})]
 // ----- toml/inline-table-curly-spacing -----
 type TomlInlineTableCurlySpacing = []|[("always" | "never")]|[("always" | "never"), {
   arraysInObjects?: boolean
   objectsInObjects?: boolean
+  emptyObjects?: ("ignore" | "always" | "never")
+}]
+// ----- toml/inline-table-key-value-newline -----
+type TomlInlineTableKeyValueNewline = []|[{
+  allowAllPropertiesOnSameLine?: boolean
 }]
 // ----- toml/key-spacing -----
 type TomlKeySpacing = []|[({
@@ -15049,6 +15071,7 @@ type YmlFlowMappingCurlyNewline = []|[(("always" | "never") | {
 type YmlFlowMappingCurlySpacing = []|[("always" | "never")]|[("always" | "never"), {
   arraysInObjects?: boolean
   objectsInObjects?: boolean
+  emptyObjects?: ("ignore" | "always" | "never")
 }]
 // ----- yml/flow-sequence-bracket-newline -----
 type YmlFlowSequenceBracketNewline = []|[(("always" | "never" | "consistent") | {
