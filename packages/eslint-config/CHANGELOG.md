@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 5.1.14
+
+### Patch Changes
+
+- 007a0e9: Update ESLint plugins (zod, jsonc, turbo)
+  - Updated `eslint-plugin-zod` to 3.2.0 and enabled new `zod/no-string-schema-with-uuid` rule
+  - Updated `eslint-plugin-jsonc` to 3.1.1
+  - Updated `eslint-plugin-turbo` to 2.8.11
+
 ## 5.1.13
 
 ### Patch Changes
