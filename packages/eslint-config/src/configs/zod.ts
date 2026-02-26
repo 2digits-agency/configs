@@ -18,6 +18,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/no-empty-custom-schema': 'error',
         'zod/no-number-schema-with-int': 'error',
         'zod/no-optional-and-default-together': ['warn', { preferredMethod: 'default' }],
+        'zod/no-string-schema-with-uuid': 'error',
         'zod/no-throw-in-refine': 'error',
         'zod/prefer-enum-over-literal-union': 'error',
         'zod/prefer-meta': 'error',

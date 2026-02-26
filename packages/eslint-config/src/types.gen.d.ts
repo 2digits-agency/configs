@@ -8009,6 +8009,11 @@ Backward pagination arguments
    */
   'zod/no-optional-and-default-together'?: Linter.RuleEntry<ZodNoOptionalAndDefaultTogether>
   /**
+   * Disallow usage of `z.string().uuid()` in favor of the dedicated `z.uuid()` schema
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-string-schema-with-uuid.md
+   */
+  'zod/no-string-schema-with-uuid'?: Linter.RuleEntry<[]>
+  /**
    * Disallow throwing errors directly inside Zod refine callbacks
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-throw-in-refine.md
    */
