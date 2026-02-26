@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 5.1.15
+
+### Patch Changes
+
+- 706014f: Update eslint-plugin-storybook to 10.2.13
+
 ## 5.1.14
 
 ### Patch Changes
