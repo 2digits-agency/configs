@@ -23,6 +23,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/prefer-enum-over-literal-union': 'error',
         'zod/prefer-meta': 'error',
         'zod/prefer-meta-last': 'error',
+        'zod/prefer-string-schema-with-trim': 'error',
         'zod/consistent-import': ['error', { syntax: 'namespace' }],
         'zod/require-brand-type-parameter': 'error',
         'zod/require-schema-suffix': ['warn', { suffix: 'Schema' }],
