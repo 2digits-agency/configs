@@ -109,8 +109,8 @@ catalogs:
       specifier: 7.0.0-dev.20260226.1
       version: 7.0.0-dev.20260226.1
     bunup:
-      specifier: 0.16.29
-      version: 0.16.29
+      specifier: 0.16.31
+      version: 0.16.31
     dedent:
       specifier: 1.7.1
       version: 1.7.1
@@ -693,7 +693,7 @@ importers:
         version: 7.0.0-dev.20260226.1
       bunup:
         specifier: 'catalog:'
-        version: 0.16.29(typescript@5.9.3)
+        version: 0.16.31(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -4198,8 +4198,8 @@ packages:
     peerDependencies:
       esbuild: '>=0.18'
 
-  bunup@0.16.29:
-    resolution: {integrity: sha512-ouS+rnfQwXM3LSWVbttCQQCqTNBF8fqYkONhONs409hQNMbfgvb7B+B37aac72RBPWEAeyLp9b7FvAuDh+s4PA==}
+  bunup@0.16.31:
+    resolution: {integrity: sha512-gWspdmLyso6DQwuNCbUL+hUrHST+8B/vl6woLryJfndjfRpdSKRKtS9wNbKCRPztY1VcubUjcIh6sCM8F3MYlQ==}
     hasBin: true
     peerDependencies:
       typescript: '>=4.5.0'
@@ -5241,6 +5241,7 @@ packages:
   git-raw-commits@2.0.11:
     resolution: {integrity: sha512-VnctFhw+xfj8Va1xtfEqCUD2XDrbAPSJx+hSrE5K7fGdjZruW7XV+QOrN7LF/RJyvspRiD2I0asWsxFp0ya26A==}
     engines: {node: '>=10'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-up@8.1.1:
@@ -12043,7 +12044,7 @@ snapshots:
       esbuild: 0.27.0
       load-tsconfig: 0.2.5
 
-  bunup@0.16.29(typescript@5.9.3):
+  bunup@0.16.31(typescript@5.9.3):
     dependencies:
       '@bunup/dts': 0.14.53(typescript@5.9.3)
       '@bunup/shared': 0.16.28(typescript@5.9.3)
