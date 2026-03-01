@@ -217,6 +217,7 @@ export interface RuleOptions {
   /**
    * disallow unused `eslint-disable` comments
    * @see https://eslint-community.github.io/eslint-plugin-eslint-comments/rules/no-unused-disable.html
+   * @deprecated
    */
   'comments/no-unused-disable'?: Linter.RuleEntry<[]>
   /**
@@ -442,22 +443,22 @@ export interface RuleOptions {
    */
   'getter-return'?: Linter.RuleEntry<GetterReturn>
   /**
-   * enforce naming convention to action name.
+   * enforce naming convention for workflow name.
    * @see https://eslint-plugin-github-action.ntnyq.com/rules/action-name-casing.html
    */
   'github-action/action-name-casing'?: Linter.RuleEntry<GithubActionActionNameCasing>
   /**
-   * enforce naming convention to job id.
+   * enforce naming convention for job IDs.
    * @see https://eslint-plugin-github-action.ntnyq.com/rules/job-id-casing.html
    */
   'github-action/job-id-casing'?: Linter.RuleEntry<GithubActionJobIdCasing>
   /**
-   * enforce maximum jobs per action file.
+   * enforce maximum jobs per workflow file.
    * @see https://eslint-plugin-github-action.ntnyq.com/rules/max-jobs-per-action.html
    */
   'github-action/max-jobs-per-action'?: Linter.RuleEntry<GithubActionMaxJobsPerAction>
   /**
-   * disallow using external job.
+   * disallow using external jobs.
    * @see https://eslint-plugin-github-action.ntnyq.com/rules/no-external-job.html
    */
   'github-action/no-external-job'?: Linter.RuleEntry<[]>
@@ -467,32 +468,32 @@ export interface RuleOptions {
    */
   'github-action/no-invalid-key'?: Linter.RuleEntry<[]>
   /**
-   * disallow using top level env.
+   * disallow using top-level env.
    * @see https://eslint-plugin-github-action.ntnyq.com/rules/no-top-level-env.html
    */
   'github-action/no-top-level-env'?: Linter.RuleEntry<[]>
   /**
-   * disallow using top level permissions.
+   * disallow using top-level permissions.
    * @see https://eslint-plugin-github-action.ntnyq.com/rules/no-top-level-permissions.html
    */
   'github-action/no-top-level-permissions'?: Linter.RuleEntry<[]>
   /**
-   * enforce action file extension.
+   * enforce workflow file extension.
    * @see https://eslint-plugin-github-action.ntnyq.com/rules/prefer-file-extension.html
    */
   'github-action/prefer-file-extension'?: Linter.RuleEntry<GithubActionPreferFileExtension>
   /**
-   * enforce the style of job step uses.
+   * enforce the style of job step `uses`.
    * @see https://eslint-plugin-github-action.ntnyq.com/rules/prefer-step-uses-style.html
    */
   'github-action/prefer-step-uses-style'?: Linter.RuleEntry<GithubActionPreferStepUsesStyle>
   /**
-   * require a string action name.
+   * require a string workflow name.
    * @see https://eslint-plugin-github-action.ntnyq.com/rules/require-action-name.html
    */
   'github-action/require-action-name'?: Linter.RuleEntry<[]>
   /**
-   * require a string action run-name.
+   * require a string workflow run-name.
    * @see https://eslint-plugin-github-action.ntnyq.com/rules/require-action-run-name.html
    */
   'github-action/require-action-run-name'?: Linter.RuleEntry<[]>
@@ -8044,6 +8045,11 @@ Backward pagination arguments
    * @deprecated
    */
   'zod/prefer-namespace-import'?: Linter.RuleEntry<[]>
+  /**
+   * Enforce `z.string().trim()` to prevent accidental leading/trailing whitespace
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/prefer-string-schema-with-trim.md
+   */
+  'zod/prefer-string-schema-with-trim'?: Linter.RuleEntry<[]>
   /**
    * Require type parameter on `.brand()` functions
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/require-brand-type-parameter.md
