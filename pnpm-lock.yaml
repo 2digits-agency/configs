@@ -112,8 +112,8 @@ catalogs:
       specifier: 0.16.29
       version: 0.16.29
     dedent:
-      specifier: 1.7.1
-      version: 1.7.1
+      specifier: 1.7.2
+      version: 1.7.2
     effect:
       specifier: 3.19.19
       version: 3.19.19
@@ -595,7 +595,7 @@ importers:
         version: 7.0.0-dev.20260226.1
       dedent:
         specifier: 'catalog:'
-        version: 1.7.1
+        version: 1.7.2
       eslint:
         specifier: 'catalog:'
         version: 10.0.2(jiti@2.6.0)
@@ -680,7 +680,7 @@ importers:
         version: 1.2.15
       dedent:
         specifier: 'catalog:'
-        version: 1.7.1
+        version: 1.7.2
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -4517,8 +4517,8 @@ packages:
     resolution: {integrity: sha512-aW35yZM6Bb/4oJlZncMH2LCoZtJXTRxES17vE3hoRiowU2kWHaJKFkSBDnDR+cm9J+9QhXmREyIfv0pji9ejCQ==}
     engines: {node: '>=10'}
 
-  dedent@1.7.1:
-    resolution: {integrity: sha512-9JmrhGZpOlEgOLdQgSm0zxFaYoQon408V1v49aqTWuXENVlnCuY9JBZcXZiCsZQWDjTm5Qf/nIvAy77mXDAjEg==}
+  dedent@1.7.2:
+    resolution: {integrity: sha512-WzMx3mW98SN+zn3hgemf4OzdmyNhhhKz5Ay0pUfQiMQ3e1g+xmTJWp/pKdwKVXhdSkAEGIIzqeuWrL3mV/AXbA==}
     peerDependencies:
       babel-plugin-macros: ^3.1.0
     peerDependenciesMeta:
@@ -5241,6 +5241,7 @@ packages:
   git-raw-commits@2.0.11:
     resolution: {integrity: sha512-VnctFhw+xfj8Va1xtfEqCUD2XDrbAPSJx+hSrE5K7fGdjZruW7XV+QOrN7LF/RJyvspRiD2I0asWsxFp0ya26A==}
     engines: {node: '>=10'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-up@8.1.1:
@@ -12342,7 +12343,7 @@ snapshots:
     dependencies:
       mimic-response: 3.1.0
 
-  dedent@1.7.1: {}
+  dedent@1.7.2: {}
 
   deep-eql@5.0.2: {}
 
