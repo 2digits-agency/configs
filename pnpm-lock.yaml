@@ -193,8 +193,8 @@ catalogs:
       specifier: 3.3.0
       version: 3.3.0
     eslint-plugin-zod:
-      specifier: 3.2.0
-      version: 3.2.0
+      specifier: 3.3.0
+      version: 3.3.0
     eslint-typegen:
       specifier: 2.3.1
       version: 2.3.1
@@ -552,7 +552,7 @@ importers:
         version: 3.3.0(eslint@10.0.2(jiti@2.6.0))
       eslint-plugin-zod:
         specifier: 'catalog:'
-        version: 3.2.0(eslint@10.0.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.6)
+        version: 3.3.0(eslint@10.0.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.6)
       globals:
         specifier: 'catalog:'
         version: 17.3.0
@@ -4943,8 +4943,8 @@ packages:
     peerDependencies:
       eslint: '>=9.38.0'
 
-  eslint-plugin-zod@3.2.0:
-    resolution: {integrity: sha512-Sio3fi3gekel62CsNnSOESaxZN8a6G78GqyGIIhg3ekjgRBxErNGCbGsL2Me67PWyF77TseI8kFrWQFQHwfEIQ==}
+  eslint-plugin-zod@3.3.0:
+    resolution: {integrity: sha512-r+togyS94xGc45ulYWsrGWF4Dqi/34a+oLia6cfpX6C6zUaxFXqVDV0AEokW0MNuqXuatIv+0F5qKFPv1RBNQw==}
     engines: {node: ^20 || ^22 || >=24}
     peerDependencies:
       eslint: ^9
@@ -5241,6 +5241,7 @@ packages:
   git-raw-commits@2.0.11:
     resolution: {integrity: sha512-VnctFhw+xfj8Va1xtfEqCUD2XDrbAPSJx+hSrE5K7fGdjZruW7XV+QOrN7LF/RJyvspRiD2I0asWsxFp0ya26A==}
     engines: {node: '>=10'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-up@8.1.1:
@@ -12914,7 +12915,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-zod@3.2.0(eslint@10.0.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.6):
+  eslint-plugin-zod@3.3.0(eslint@10.0.2(jiti@2.6.0))(typescript@5.9.3)(zod@4.3.6):
     dependencies:
       '@typescript-eslint/utils': 8.56.1(eslint@10.0.2(jiti@2.6.0))(typescript@5.9.3)
       eslint: 10.0.2(jiti@2.6.0)
