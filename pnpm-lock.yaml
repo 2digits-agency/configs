@@ -274,8 +274,8 @@ catalogs:
       specifier: 8.56.1
       version: 8.56.1
     unplugin-replace:
-      specifier: 0.6.3
-      version: 0.6.3
+      specifier: 0.7.0
+      version: 0.7.0
     vitest:
       specifier: 4.0.18
       version: 4.0.18
@@ -408,7 +408,7 @@ importers:
         version: 5.9.3
       unplugin-replace:
         specifier: 'catalog:'
-        version: 0.6.3
+        version: 0.7.0
       vitest:
         specifier: 'catalog:'
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.11.0)(jiti@2.6.0)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
@@ -5602,6 +5602,9 @@ packages:
   js-md4@0.3.2:
     resolution: {integrity: sha512-/GDnfQYsltsjRswQhN9fhv3EMw2sCpUdrdxyWDOUK7eyD++r3gRhzgiQgc/x4MAv2i1iuQ4lxO5mvqM3vj4bwA==}
 
+  js-tokens@10.0.0:
+    resolution: {integrity: sha512-lM/UBzQmfJRo9ABXbPWemivdCW8V2G8FHaHdypQaIy523snUjog0W71ayWXTjiR+ixeMyVHN2XcpnTd/liPg/Q==}
+
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -7556,13 +7559,13 @@ packages:
     resolution: {integrity: sha512-6bc58dPYhCMHHuwxldQxO3RRNZ4eCogZ/st++0+fcC1nr0jiGUtAdBJ2qzmLQWSxbtz42pWt4QQMiZ9HvZf5cg==}
     engines: {node: '>=0.10.0'}
 
-  unplugin-replace@0.6.3:
-    resolution: {integrity: sha512-BBJGOu5T/R2BUKzQg9AjiCWfAKG/WCM6ph8Sh5rQ2fgdtDEhrDd2ZD3UeHZRZ689VsnmduTgnjg/BY8uZMe4Mg==}
+  unplugin-replace@0.7.0:
+    resolution: {integrity: sha512-Cpygt9g701xxcm+R3AWMgqptXHnELCpOBG6wGAsP8muDFZ5kxtE9IQFvNavlQAn7Z+qKaahwbsoVV45Ol+Olog==}
     engines: {node: '>=20.19.0'}
 
-  unplugin@2.3.11:
-    resolution: {integrity: sha512-5uKD0nqiYVzlmCRs01Fhs2BdkEgBS3SAVP6ndrBsuK42iC2+JHyxM05Rm9G8+5mkmRtzMZGY8Ct5+mliZxU/Ww==}
-    engines: {node: '>=18.12.0'}
+  unplugin@3.0.0:
+    resolution: {integrity: sha512-0Mqk3AT2TZCXWKdcoaufeXNukv2mTrEZExeXlHIOZXdqYoHHr4n51pymnwV8x2BOVxwXbK2HLlI7usrqMpycdg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
 
   unrun@0.2.27:
     resolution: {integrity: sha512-Mmur1UJpIbfxasLOhPRvox/QS4xBiDii71hMP7smfRthGcwFL2OAmYRgduLANOAU4LUkvVamuP+02U+c90jlrw==}
@@ -13477,6 +13480,8 @@ snapshots:
 
   js-md4@0.3.2: {}
 
+  js-tokens@10.0.0: {}
+
   js-tokens@4.0.0: {}
 
   js-yaml@3.14.1:
@@ -15817,15 +15822,15 @@ snapshots:
     dependencies:
       normalize-path: 2.1.1
 
-  unplugin-replace@0.6.3:
+  unplugin-replace@0.7.0:
     dependencies:
+      js-tokens: 10.0.0
       rolldown-string: 0.2.1
-      unplugin: 2.3.11
+      unplugin: 3.0.0
 
-  unplugin@2.3.11:
+  unplugin@3.0.0:
     dependencies:
       '@jridgewell/remapping': 2.3.5
-      acorn: 8.15.0
       picomatch: 4.0.3
       webpack-virtual-modules: 0.6.2
 
