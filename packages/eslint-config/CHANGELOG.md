@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 5.1.17
+
+### Patch Changes
+
+- 0eaa299: Update eslint-community and storybook ESLint plugins
+  - Updated `@eslint-community/eslint-plugin-eslint-comments` to 4.7.1
+  - Updated `eslint-plugin-storybook` to 10.2.14
+
 ## 5.1.16
 
 ### Patch Changes
