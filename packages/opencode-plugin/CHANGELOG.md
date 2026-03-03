@@ -1,5 +1,11 @@
 # @2digits/opencode-plugin
 
+## 0.1.5
+
+### Patch Changes
+
+- 0eaa299: Update `@types/bun` to 1.3.10
+
 ## 0.1.4
 
 ### Patch Changes

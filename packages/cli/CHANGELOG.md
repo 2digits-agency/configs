@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.2.38
+
+### Patch Changes
+
+- 0eaa299: Update `unplugin-replace` to 0.7.0
+
 ## 1.2.37
 
 ### Patch Changes
