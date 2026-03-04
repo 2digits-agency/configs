@@ -8597,8 +8597,11 @@ type DefaultCase = []|[{
 }]
 // ----- depend/ban-dependencies -----
 type DependBanDependencies = []|[{
+  
   presets?: string[]
+  
   modules?: string[]
+  
   allowed?: string[]
 }]
 // ----- dot-location -----
