@@ -142,8 +142,8 @@ catalogs:
       specifier: 2.1.1
       version: 2.1.1
     eslint-plugin-depend:
-      specifier: 1.4.0
-      version: 1.4.0
+      specifier: 1.5.0
+      version: 1.5.0
     eslint-plugin-drizzle:
       specifier: 0.2.3
       version: 0.2.3
@@ -504,7 +504,7 @@ importers:
         version: 2.1.1(eslint@10.0.2(jiti@2.6.0))
       eslint-plugin-depend:
         specifier: 'catalog:'
-        version: 1.4.0
+        version: 1.5.0(eslint@10.0.2(jiti@2.6.0))
       eslint-plugin-drizzle:
         specifier: 'catalog:'
         version: 0.2.3(eslint@10.0.2(jiti@2.6.0))
@@ -4779,8 +4779,10 @@ packages:
     peerDependencies:
       eslint: ^8.45.0 || ^9.0.0 || ^10.0.0
 
-  eslint-plugin-depend@1.4.0:
-    resolution: {integrity: sha512-MQs+m4nHSfgAO9bJDsBzqw0ofK/AOA0vfeY/6ahofqcUMLeM6/D1sTYs21fOhc17kNU/gn58YCtj20XaAssh2A==}
+  eslint-plugin-depend@1.5.0:
+    resolution: {integrity: sha512-i3UeLYmclf1Icp35+6W7CR4Bp2PIpDgBuf/mpmXK5UeLkZlvYJ21VuQKKHHAIBKRTPivPGX/gZl5JGno1o9Y0A==}
+    peerDependencies:
+      eslint: '>=8.40.0'
 
   eslint-plugin-drizzle@0.2.3:
     resolution: {integrity: sha512-BO+ymHo33IUNoJlC0rbd7HP9EwwpW4VIp49R/tWQF/d2E1K2kgTf0tCXT0v9MSiBr6gGR1LtPwMLapTKEWSg9A==}
@@ -12447,11 +12449,12 @@ snapshots:
     dependencies:
       eslint: 10.0.2(jiti@2.6.0)
 
-  eslint-plugin-depend@1.4.0:
+  eslint-plugin-depend@1.5.0(eslint@10.0.2(jiti@2.6.0)):
     dependencies:
       empathic: 2.0.0
+      eslint: 10.0.2(jiti@2.6.0)
       module-replacements: 2.10.1
-      semver: 7.7.3
+      semver: 7.7.4
 
   eslint-plugin-drizzle@0.2.3(eslint@10.0.2(jiti@2.6.0)):
     dependencies:
@@ -14550,7 +14553,7 @@ snapshots:
       ky: 1.8.1
       registry-auth-token: 5.1.0
       registry-url: 6.0.1
-      semver: 7.7.3
+      semver: 7.7.4
 
   package-manager-detector@0.2.11:
     dependencies:
@@ -15245,7 +15248,7 @@ snapshots:
 
   sembear@0.7.0:
     dependencies:
-      semver: 7.7.3
+      semver: 7.7.4
 
   semver-compare@1.0.0: {}
 
