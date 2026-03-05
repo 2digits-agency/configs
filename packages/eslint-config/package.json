@@ -63,6 +63,7 @@
     "eslint-plugin-n": "catalog:",
     "eslint-plugin-pnpm": "catalog:",
     "eslint-plugin-react-compiler": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
     "eslint-plugin-regexp": "catalog:",
     "eslint-plugin-sonarjs": "catalog:",
     "eslint-plugin-storybook": "catalog:",
@@ -89,7 +90,6 @@
     "@typescript/native-preview": "catalog:",
     "dedent": "catalog:",
     "eslint": "catalog:",
-    "eslint-plugin-react-hooks": "catalog:",
     "eslint-typegen": "catalog:",
     "publint": "catalog:",
     "react": "catalog:",
@@ -99,6 +99,9 @@
     "typescript": "catalog:",
     "vitest": "catalog:",
     "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": "catalog:"
   },
   "engines": {
     "node": "24.14.0"
