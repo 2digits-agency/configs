@@ -130,8 +130,8 @@ catalogs:
       specifier: 10.1.8
       version: 10.1.8
     eslint-flat-config-utils:
-      specifier: 3.0.1
-      version: 3.0.1
+      specifier: 3.0.2
+      version: 3.0.2
     eslint-merge-processors:
       specifier: 2.0.0
       version: 2.0.0
@@ -492,7 +492,7 @@ importers:
         version: 10.1.8(eslint@10.0.3(jiti@2.6.0))
       eslint-flat-config-utils:
         specifier: 'catalog:'
-        version: 3.0.1
+        version: 3.0.2
       eslint-merge-processors:
         specifier: 'catalog:'
         version: 2.0.0(eslint@10.0.3(jiti@2.6.0))
@@ -1964,6 +1964,10 @@ packages:
 
   '@eslint/config-helpers@0.5.2':
     resolution: {integrity: sha512-a5MxrdDXEvqnIq+LisyCX6tQMPF/dSJpCfBgBauY+pNZ28yCtSsTvyTYrMhaI+LK26bVyCJfJkT0u8KIj2i1dQ==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+
+  '@eslint/config-helpers@0.5.3':
+    resolution: {integrity: sha512-lzGN0onllOZCGroKJmRwY6QcEHxbjBw1gwB8SgRSqK8YbbtEXMvKynsXc3553ckIEBxsbMBU7oOZXKIPGZNeZw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@eslint/config-inspector@1.5.0':
@@ -5066,8 +5070,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-flat-config-utils@3.0.1:
-    resolution: {integrity: sha512-VMA3u86bLzNAwD/7DkLtQ9lolgIOx2Sj0kTMMnBvrvEz7w0rQj4aGCR+lqsqtld63gKiLyT4BnQZ3gmGDXtvjg==}
+  eslint-flat-config-utils@3.0.2:
+    resolution: {integrity: sha512-mPvevWSDQFwgABvyCurwIu6ZdKxGI5NW22/BGDwA1T49NO6bXuxbV9VfJK/tkQoNyPogT6Yu1d57iM0jnZVWmg==}
 
   eslint-json-compat-utils@0.2.1:
     resolution: {integrity: sha512-YzEodbDyW8DX8bImKhAcCeu/L31Dd/70Bidx2Qex9OFUtgzXLqtfWL4Hr5fM/aCCB8QUZLuJur0S9k6UfgFkfg==}
@@ -5288,7 +5292,7 @@ packages:
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     hasBin: true
     peerDependencies:
-      jiti: 2.6.0
+      jiti: '*'
     peerDependenciesMeta:
       jiti:
         optional: true
@@ -9905,6 +9909,10 @@ snapshots:
     dependencies:
       '@eslint/core': 1.1.0
 
+  '@eslint/config-helpers@0.5.3':
+    dependencies:
+      '@eslint/core': 1.1.1
+
   '@eslint/config-inspector@1.5.0(eslint@10.0.3(jiti@2.6.0))':
     dependencies:
       ansis: 4.2.0
@@ -13018,9 +13026,9 @@ snapshots:
     dependencies:
       eslint: 10.0.3(jiti@2.6.0)
 
-  eslint-flat-config-utils@3.0.1:
+  eslint-flat-config-utils@3.0.2:
     dependencies:
-      '@eslint/config-helpers': 0.5.2
+      '@eslint/config-helpers': 0.5.3
       pathe: 2.0.3
 
   eslint-json-compat-utils@0.2.1(eslint@10.0.3(jiti@2.6.0))(jsonc-eslint-parser@3.1.0):
