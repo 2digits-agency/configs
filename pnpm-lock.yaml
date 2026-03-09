@@ -169,8 +169,8 @@ catalogs:
       specifier: 7.0.1
       version: 7.0.1
     eslint-plugin-regexp:
-      specifier: 3.0.0
-      version: 3.0.0
+      specifier: 3.1.0
+      version: 3.1.0
     eslint-plugin-sonarjs:
       specifier: 4.0.1
       version: 4.0.1
@@ -531,7 +531,7 @@ importers:
         version: 7.0.1(eslint@10.0.3(jiti@2.6.0))
       eslint-plugin-regexp:
         specifier: 'catalog:'
-        version: 3.0.0(eslint@10.0.3(jiti@2.6.0))
+        version: 3.1.0(eslint@10.0.3(jiti@2.6.0))
       eslint-plugin-sonarjs:
         specifier: 'catalog:'
         version: 4.0.1(eslint@10.0.3(jiti@2.6.0))
@@ -5195,8 +5195,8 @@ packages:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
       typescript: '>=4.8.4 <6.0.0'
 
-  eslint-plugin-regexp@3.0.0:
-    resolution: {integrity: sha512-iW7hgAV8NOG6E2dz+VeKpq67YLQ9jaajOKYpoOSic2/q8y9BMdXBKkSR9gcMtbqEhNQzdW41E3wWzvhp8ExYwQ==}
+  eslint-plugin-regexp@3.1.0:
+    resolution: {integrity: sha512-qGXIC3DIKZHcK1H9A9+Byz9gmndY6TTSRkSMTZpNXdyCw2ObSehRgccJv35n9AdUakEjQp5VFNLas6BMXizCZg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -5288,7 +5288,7 @@ packages:
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     hasBin: true
     peerDependencies:
-      jiti: 2.6.0
+      jiti: '*'
     peerDependenciesMeta:
       jiti:
         optional: true
@@ -13255,7 +13255,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-regexp@3.0.0(eslint@10.0.3(jiti@2.6.0)):
+  eslint-plugin-regexp@3.1.0(eslint@10.0.3(jiti@2.6.0)):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.0.3(jiti@2.6.0))
       '@eslint-community/regexpp': 4.12.2
