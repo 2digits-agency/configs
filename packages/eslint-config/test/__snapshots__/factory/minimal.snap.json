@@ -130,7 +130,10 @@
       "**/tsup.config.bundled_*.mjs",
       "**/.eslint-config-inspector",
       "**/_fixtures",
-      "**/opensrc/"
+      "**/opensrc/",
+      "**/*.db",
+      "**/*.db-wal",
+      "**/*.db-shm"
     ]
   },
   {
