@@ -274,8 +274,8 @@ catalogs:
       specifier: 8.57.0
       version: 8.57.0
     unplugin-replace:
-      specifier: 0.7.0
-      version: 0.7.0
+      specifier: 0.8.0
+      version: 0.8.0
     vitest:
       specifier: 4.1.0
       version: 4.1.0
@@ -408,7 +408,7 @@ importers:
         version: 5.9.3
       unplugin-replace:
         specifier: 'catalog:'
-        version: 0.7.0
+        version: 0.8.0(rolldown@1.0.0-rc.9)
       vitest:
         specifier: 'catalog:'
         version: 4.1.0(@opentelemetry/api@1.9.0)(@types/node@24.12.0)(vite@7.1.3(@types/node@24.12.0)(jiti@2.6.0)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))
@@ -7292,9 +7292,14 @@ packages:
       vue-tsc:
         optional: true
 
-  rolldown-string@0.2.1:
-    resolution: {integrity: sha512-7H8oH5A8+L96pbBTPCt/rZrwayEhZY5/ejhdk9nRODH32H1v7+bfkaCr+kS15DcGQ7VC1HcWdQVNABFYgrMOzg==}
+  rolldown-string@0.3.0:
+    resolution: {integrity: sha512-qGhBPNSv/27uzFBQdO+Cs4YAXC/1PKznD7Jz5Fl7NIAIlteuTPBTBWBhCpJ2AFTqLsoKvvUr7wSjqSUip0Fkpg==}
     engines: {node: '>=20.19.0'}
+    peerDependencies:
+      rolldown: '*'
+    peerDependenciesMeta:
+      rolldown:
+        optional: true
 
   rolldown@1.0.0-rc.9:
     resolution: {integrity: sha512-9EbgWge7ZH+yqb4d2EnELAntgPTWbfL8ajiTW+SyhJEC4qhBbkCKbqFV4Ge4zmu5ziQuVbWxb/XwLZ+RIO7E8Q==}
@@ -7931,8 +7936,8 @@ packages:
     resolution: {integrity: sha512-6bc58dPYhCMHHuwxldQxO3RRNZ4eCogZ/st++0+fcC1nr0jiGUtAdBJ2qzmLQWSxbtz42pWt4QQMiZ9HvZf5cg==}
     engines: {node: '>=0.10.0'}
 
-  unplugin-replace@0.7.0:
-    resolution: {integrity: sha512-Cpygt9g701xxcm+R3AWMgqptXHnELCpOBG6wGAsP8muDFZ5kxtE9IQFvNavlQAn7Z+qKaahwbsoVV45Ol+Olog==}
+  unplugin-replace@0.8.0:
+    resolution: {integrity: sha512-/qhj6nsRIJB1WxWessn/nMp29yusnkpYZa6D9OgAxrPinzK+cvrKVsbBNWChCkuQUsEr/3JIW86tX4iOYs51uw==}
     engines: {node: '>=20.19.0'}
 
   unplugin@3.0.0:
@@ -15834,9 +15839,11 @@ snapshots:
     transitivePeerDependencies:
       - oxc-resolver
 
-  rolldown-string@0.2.1:
+  rolldown-string@0.3.0(rolldown@1.0.0-rc.9):
     dependencies:
       magic-string: 0.30.21
+    optionalDependencies:
+      rolldown: 1.0.0-rc.9
 
   rolldown@1.0.0-rc.9:
     dependencies:
@@ -16501,11 +16508,13 @@ snapshots:
     dependencies:
       normalize-path: 2.1.1
 
-  unplugin-replace@0.7.0:
+  unplugin-replace@0.8.0(rolldown@1.0.0-rc.9):
     dependencies:
       js-tokens: 10.0.0
-      rolldown-string: 0.2.1
+      rolldown-string: 0.3.0(rolldown@1.0.0-rc.9)
       unplugin: 3.0.0
+    transitivePeerDependencies:
+      - rolldown
 
   unplugin@3.0.0:
     dependencies:
