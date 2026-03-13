@@ -4519,7 +4519,7 @@ Backward pagination arguments
    */
   'sonar/file-name-differ-from-class'?: Linter.RuleEntry<[]>
   /**
-   * Setting loose POSIX file permissions is security-sensitive
+   * File permissions should not be set to world-accessible values
    * @see https://sonarsource.github.io/rspec/#/rspec/S2612/javascript
    */
   'sonar/file-permissions'?: Linter.RuleEntry<[]>
