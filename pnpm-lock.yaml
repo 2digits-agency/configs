@@ -250,8 +250,8 @@ catalogs:
       specifier: 0.1.4
       version: 0.1.4
     tinyexec:
-      specifier: 1.0.2
-      version: 1.0.2
+      specifier: 1.0.4
+      version: 1.0.4
     tinyglobby:
       specifier: 0.2.15
       version: 0.2.15
@@ -613,7 +613,7 @@ importers:
         version: 19.2.4
       tinyexec:
         specifier: 'catalog:'
-        version: 1.0.2
+        version: 1.0.4
       tinyglobby:
         specifier: 'catalog:'
         version: 0.2.15
@@ -7633,6 +7633,10 @@ packages:
 
   tinyexec@1.0.2:
     resolution: {integrity: sha512-W/KYk+NFhkmsYpuHq5JykngiOCnxeVL8v8dFnqxSD8qEEdRfXk1SDM6JzNqcERbcGYj9tMrDQBYV9cjgnunFIg==}
+    engines: {node: '>=18'}
+
+  tinyexec@1.0.4:
+    resolution: {integrity: sha512-u9r3uZC0bdpGOXtlxUIdwf9pkmvhqJdrVCH9fapQtgy/OeTTMZ1nqH7agtvEfmGui6e1XxjcdrlxvxJvc3sMqw==}
     engines: {node: '>=18'}
 
   tinyglobby@0.2.15:
@@ -16243,6 +16247,8 @@ snapshots:
   tinybench@2.9.0: {}
 
   tinyexec@1.0.2: {}
+
+  tinyexec@1.0.4: {}
 
   tinyglobby@0.2.15:
     dependencies:
