@@ -244,8 +244,8 @@ catalogs:
       specifier: 19.2.4
       version: 19.2.4
     renovate:
-      specifier: 43.66.4
-      version: 43.66.4
+      specifier: 43.75.0
+      version: 43.75.0
     tailwind-csstree:
       specifier: 0.1.4
       version: 0.1.4
@@ -763,7 +763,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 43.66.4(typanion@3.14.0)
+        version: 43.75.0(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -2459,12 +2459,6 @@ packages:
 
   '@opentelemetry/context-async-hooks@2.6.0':
     resolution: {integrity: sha512-L8UyDwqpTcbkIK5cgwDRDYDoEhQoj8wp8BwsO19w3LB1Z41yEQm2VJyNfAi9DrLP/YTqXqWpKHyZfR9/tFYo1Q==}
-    engines: {node: ^18.19.0 || >=20.6.0}
-    peerDependencies:
-      '@opentelemetry/api': '>=1.0.0 <1.10.0'
-
-  '@opentelemetry/core@2.5.1':
-    resolution: {integrity: sha512-Dwlc+3HAZqpgTYq0MUyZABjFkcrKTePwuiFVLjahGD8cx3enqihmpAmdgNFO1R4m/sIe5afjJrA25Prqy4NXlA==}
     engines: {node: ^18.19.0 || >=20.6.0}
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
@@ -6010,8 +6004,11 @@ packages:
     resolution: {integrity: sha512-75EA7EWZExL/j+MDKQrRbdzcRI2HOkRlmUw8fZJc1ioqFEOvBsq7Rt+A6yCxOt9w/TYNpkt52gC6nm/g5tFIng==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  jsonc-parser@3.3.1:
-    resolution: {integrity: sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ==}
+  jsonc-morph@0.3.1:
+    resolution: {integrity: sha512-bMphxB0fv2g7QX6tQQZDWJ/WGUoyLZNNXAjds9LlnOGCGHMcyy2DGzECwfTxpSM/V9Ru2mrA4Ra+3bNbwrVmRw==}
+
+  jsonc-weaver@0.2.2:
+    resolution: {integrity: sha512-fDO1+8cpEFGlw42kvEqh/HAnXd47Lv19mWQaR30p2k6wOwfL4Dx/B2f8reaQepBc1aupBIOTwWmhThFUgv9zLQ==}
 
   jsonfile@4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
@@ -7213,8 +7210,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@43.66.4:
-    resolution: {integrity: sha512-/H5H5pO7ryJ8rZUciB6r6tqk6BycUFA/aiV5ARLrIxW11i3D4Sw5/zIkecSARJM4m0u5SoDdJ36UukjEU6cq8Q==}
+  renovate@43.75.0:
+    resolution: {integrity: sha512-kNAjwpEkPUEtijRUS+C9iodJ6M2ug/AITHeztAtfvn0+IvzXjd6CzMSidySxnFR0EZxIRVVyuwunMCSSSDj17w==}
     engines: {node: ^24.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -10533,11 +10530,6 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
 
-  '@opentelemetry/core@2.5.1(@opentelemetry/api@1.9.0)':
-    dependencies:
-      '@opentelemetry/api': 1.9.0
-      '@opentelemetry/semantic-conventions': 1.40.0
-
   '@opentelemetry/core@2.6.0(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
@@ -10611,21 +10603,21 @@ snapshots:
   '@opentelemetry/resource-detector-aws@2.13.0(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
-      '@opentelemetry/core': 2.5.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/core': 2.6.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources': 2.6.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.40.0
 
   '@opentelemetry/resource-detector-azure@0.21.0(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
-      '@opentelemetry/core': 2.5.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/core': 2.6.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources': 2.6.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.40.0
 
   '@opentelemetry/resource-detector-gcp@0.48.0(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
-      '@opentelemetry/core': 2.5.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/core': 2.6.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources': 2.6.0(@opentelemetry/api@1.9.0)
       gcp-metadata: 8.1.2
     transitivePeerDependencies:
@@ -14154,7 +14146,11 @@ snapshots:
       eslint-visitor-keys: 5.0.0
       semver: 7.7.4
 
-  jsonc-parser@3.3.1: {}
+  jsonc-morph@0.3.1: {}
+
+  jsonc-weaver@0.2.2:
+    dependencies:
+      jsonc-morph: 0.3.1
 
   jsonfile@4.0.0:
     optionalDependencies:
@@ -15633,7 +15629,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@43.66.4(typanion@3.14.0):
+  renovate@43.75.0(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1000.0
       '@aws-sdk/client-ec2': 3.1000.0
@@ -15713,7 +15709,7 @@ snapshots:
       json-stringify-pretty-compact: 4.0.0
       json5: 2.2.3
       jsonata: 2.1.0
-      jsonc-parser: 3.3.1
+      jsonc-weaver: 0.2.2
       klona: 2.0.6
       luxon: 3.7.2
       markdown-it: 14.1.1
