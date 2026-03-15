@@ -1,5 +1,13 @@
 # @2digits/cli
 
+## 1.2.41
+
+### Patch Changes
+
+- b6625c2: Update dependencies
+  - Updated `tinyexec` to 1.0.4
+  - Updated `unplugin-replace` to 0.8.0
+
 ## 1.2.40
 
 ### Patch Changes
