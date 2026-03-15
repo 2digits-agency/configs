@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 5.1.23
+
+### Patch Changes
+
+- b6625c2: Update ESLint plugins
+  - Updated `@tanstack/eslint-plugin-router` to 1.161.5
+  - Updated `eslint-plugin-storybook` to 10.2.19
+  - Updated `eslint-plugin-turbo` to 2.8.17
+
 ## 5.1.22
 
 ### Patch Changes
