@@ -3215,6 +3215,26 @@ Backward pagination arguments
    */
   'react-dom/prefer-namespace-import'?: Linter.RuleEntry<[]>
   /**
+   * Disallows higher order functions that define components or hooks inside them.
+   * @see https://eslint-react.xyz/docs/rules/component-hook-factories
+   */
+  'react-extra/component-hook-factories'?: Linter.RuleEntry<[]>
+  /**
+   * Validates usage of Error Boundaries instead of try/catch for errors in child components.
+   * @see https://eslint-react.xyz/docs/rules/error-boundaries
+   */
+  'react-extra/error-boundaries'?: Linter.RuleEntry<[]>
+  /**
+   * Verifies the list of dependencies for Hooks like 'useEffect' and similar.
+   * @see https://github.com/facebook/react/issues/14920
+   */
+  'react-extra/exhaustive-deps'?: Linter.RuleEntry<ReactExtraExhaustiveDeps>
+  /**
+   * Validates against mutating props, state, and other values that are immutable.
+   * @see https://eslint-react.xyz/docs/rules/immutability
+   */
+  'react-extra/immutability'?: Linter.RuleEntry<[]>
+  /**
    * Prevents unintentional '$' sign before expression.
    * @see https://eslint-react.xyz/docs/rules/jsx-dollar
    */
@@ -3225,25 +3245,10 @@ Backward pagination arguments
    */
   'react-extra/jsx-key-before-spread'?: Linter.RuleEntry<[]>
   /**
-   * Prevents comment strings (e.g., beginning with '//' or '/*') from being accidentally inserted into a JSX element's text nodes.
+   * Prevents comment strings (ex: beginning with '//' or '/*') from being accidentally inserted into a JSX element's text nodes.
    * @see https://eslint-react.xyz/docs/rules/jsx-no-comment-textnodes
    */
   'react-extra/jsx-no-comment-textnodes'?: Linter.RuleEntry<[]>
-  /**
-   * Disallows duplicate props in JSX elements.
-   * @see https://eslint-react.xyz/docs/rules/jsx-no-duplicate-props
-   */
-  'react-extra/jsx-no-duplicate-props'?: Linter.RuleEntry<[]>
-  /**
-   * Disallows immediately-invoked function expressions in JSX.
-   * @see https://eslint-react.xyz/docs/rules/jsx-no-iife
-   */
-  'react-extra/jsx-no-iife'?: Linter.RuleEntry<[]>
-  /**
-   * Prevents using variables in JSX that are not defined in the scope.
-   * @see https://eslint-react.xyz/docs/rules/jsx-no-undef
-   */
-  'react-extra/jsx-no-undef'?: Linter.RuleEntry<[]>
   /**
    * Enforces shorthand syntax for boolean props.
    * @see https://eslint-react.xyz/docs/rules/jsx-shorthand-boolean
@@ -3254,16 +3259,6 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/jsx-shorthand-fragment
    */
   'react-extra/jsx-shorthand-fragment'?: Linter.RuleEntry<ReactExtraJsxShorthandFragment>
-  /**
-   * Marks React variables as used when JSX is present.
-   * @see https://eslint-react.xyz/docs/rules/jsx-uses-react
-   */
-  'react-extra/jsx-uses-react'?: Linter.RuleEntry<[]>
-  /**
-   * Marks JSX element variables as used.
-   * @see https://eslint-react.xyz/docs/rules/jsx-uses-vars
-   */
-  'react-extra/jsx-uses-vars'?: Linter.RuleEntry<[]>
   /**
    * Disallows accessing 'this.state' inside 'setState' calls.
    * @see https://eslint-react.xyz/docs/rules/no-access-state-in-setstate
@@ -3340,11 +3335,6 @@ Backward pagination arguments
    */
   'react-extra/no-create-ref'?: Linter.RuleEntry<[]>
   /**
-   * Disallows the 'defaultProps' property in favor of ES6 default parameters.
-   * @see https://eslint-react.xyz/docs/rules/no-default-props
-   */
-  'react-extra/no-default-props'?: Linter.RuleEntry<[]>
-  /**
    * Disallows direct mutation of 'this.state'.
    * @see https://eslint-react.xyz/docs/rules/no-direct-mutation-state
    */
@@ -3355,21 +3345,25 @@ Backward pagination arguments
    */
   'react-extra/no-duplicate-key'?: Linter.RuleEntry<[]>
   /**
-   * Disallows certain props on components.
-   * @see https://eslint-react.xyz/docs/rules/no-forbidden-props
-   * @deprecated
-   */
-  'react-extra/no-forbidden-props'?: Linter.RuleEntry<ReactExtraNoForbiddenProps>
-  /**
    * Replaces usage of 'forwardRef' with passing 'ref' as a prop.
    * @see https://eslint-react.xyz/docs/rules/no-forward-ref
    */
   'react-extra/no-forward-ref'?: Linter.RuleEntry<[]>
   /**
+   * Prevents implicitly passing the 'children' prop to components.
+   * @see https://eslint-react.xyz/docs/rules/no-implicit-children
+   */
+  'react-extra/no-implicit-children'?: Linter.RuleEntry<[]>
+  /**
    * Prevents implicitly passing the 'key' prop to components.
    * @see https://eslint-react.xyz/docs/rules/no-implicit-key
    */
   'react-extra/no-implicit-key'?: Linter.RuleEntry<[]>
+  /**
+   * Prevents implicitly passing the 'ref' prop to components.
+   * @see https://eslint-react.xyz/docs/rules/no-implicit-ref
+   */
+  'react-extra/no-implicit-ref'?: Linter.RuleEntry<[]>
   /**
    * Prevents problematic leaked values from being rendered.
    * @see https://eslint-react.xyz/docs/rules/no-leaked-conditional-rendering
@@ -3406,11 +3400,6 @@ Backward pagination arguments
    */
   'react-extra/no-nested-lazy-component-declarations'?: Linter.RuleEntry<[]>
   /**
-   * Disallows 'propTypes' in favor of TypeScript or another type-checking solution.
-   * @see https://eslint-react.xyz/docs/rules/no-prop-types
-   */
-  'react-extra/no-prop-types'?: Linter.RuleEntry<[]>
-  /**
    * Disallows 'shouldComponentUpdate' when extending 'React.PureComponent'.
    * @see https://eslint-react.xyz/docs/rules/no-redundant-should-component-update
    */
@@ -3431,16 +3420,6 @@ Backward pagination arguments
    */
   'react-extra/no-set-state-in-component-will-update'?: Linter.RuleEntry<[]>
   /**
-   * Replaces string refs with callback refs.
-   * @see https://eslint-react.xyz/docs/rules/no-string-refs
-   */
-  'react-extra/no-string-refs'?: Linter.RuleEntry<[]>
-  /**
-   * Disallows unnecessary 'key' props on nested child elements when rendering lists.
-   * @see https://eslint-react.xyz/docs/rules/no-unnecessary-key
-   */
-  'react-extra/no-unnecessary-key'?: Linter.RuleEntry<[]>
-  /**
    * Disallows unnecessary usage of 'useCallback'.
    * @see https://eslint-react.xyz/docs/rules/no-unnecessary-use-callback
    */
@@ -3455,11 +3434,6 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/no-unnecessary-use-prefix
    */
   'react-extra/no-unnecessary-use-prefix'?: Linter.RuleEntry<[]>
-  /**
-   * Disallows unnecessary usage of 'useRef'.
-   * @see https://eslint-react.xyz/docs/rules/no-unnecessary-use-ref
-   */
-  'react-extra/no-unnecessary-use-ref'?: Linter.RuleEntry<[]>
   /**
    * Warns about the use of 'UNSAFE_componentWillMount' in class components.
    * @see https://eslint-react.xyz/docs/rules/no-unsafe-component-will-mount
@@ -3506,11 +3480,6 @@ Backward pagination arguments
    */
   'react-extra/no-use-context'?: Linter.RuleEntry<[]>
   /**
-   * Disallows useless 'forwardRef' calls on components that don't use 'ref's.
-   * @see https://eslint-react.xyz/docs/rules/no-useless-forward-ref
-   */
-  'react-extra/no-useless-forward-ref'?: Linter.RuleEntry<[]>
-  /**
    * Disallows useless fragment elements.
    * @see https://eslint-react.xyz/docs/rules/no-useless-fragment
    */
@@ -3526,158 +3495,60 @@ Backward pagination arguments
    */
   'react-extra/prefer-namespace-import'?: Linter.RuleEntry<[]>
   /**
-   * Enforces read-only props in components.
-   * @see https://eslint-react.xyz/docs/rules/prefer-read-only-props
+   * Validates that components and hooks are pure by checking that they do not call known-impure functions during render.
+   * @see https://eslint-react.xyz/docs/rules/purity
    */
-  'react-extra/prefer-read-only-props'?: Linter.RuleEntry<[]>
+  'react-extra/purity'?: Linter.RuleEntry<[]>
   /**
-   * Enforces wrapping function calls made inside 'useState' in an 'initializer function'.
-   * @see https://eslint-react.xyz/docs/rules/prefer-use-state-lazy-initialization
+   * Validates correct usage of refs by checking that 'ref.current' is not read or written during render.
+   * @see https://eslint-react.xyz/docs/rules/refs
    */
-  'react-extra/prefer-use-state-lazy-initialization'?: Linter.RuleEntry<[]>
+  'react-extra/refs'?: Linter.RuleEntry<[]>
   /**
-   * Disallows direct calls to the ['set' function](https://react.dev/reference/react/useState#setstate) of 'useState' in 'useEffect'.
-   * @see https://eslint-react.xyz/docs/rules/hooks-extra-no-direct-set-state-in-use-effect
-   */
-  'react-hooks-extra/no-direct-set-state-in-use-effect'?: Linter.RuleEntry<[]>
-  /**
-   * Verifies that automatic effect dependencies are compiled if opted-in
-   */
-  'react-hooks/automatic-effect-dependencies'?: Linter.RuleEntry<ReactHooksAutomaticEffectDependencies>
-  /**
-   * Validates against calling capitalized functions/methods instead of using JSX
-   */
-  'react-hooks/capitalized-calls'?: Linter.RuleEntry<ReactHooksCapitalizedCalls>
-  /**
-   * Validates against higher order functions defining nested components or hooks. Components and hooks should be defined at the module level
-   */
-  'react-hooks/component-hook-factories'?: Linter.RuleEntry<ReactHooksComponentHookFactories>
-  /**
-   * Validates the compiler configuration options
-   */
-  'react-hooks/config'?: Linter.RuleEntry<ReactHooksConfig>
-  /**
-   * Validates usage of error boundaries instead of try/catch for errors in child components
-   */
-  'react-hooks/error-boundaries'?: Linter.RuleEntry<ReactHooksErrorBoundaries>
-  /**
-   * verifies the list of dependencies for Hooks like useEffect and similar
-   * @see https://github.com/facebook/react/issues/14920
-   */
-  'react-hooks/exhaustive-deps'?: Linter.RuleEntry<ReactHooksExhaustiveDeps>
-  /**
-   * Validates usage of fbt
-   */
-  'react-hooks/fbt'?: Linter.RuleEntry<ReactHooksFbt>
-  /**
-   * Validates usage of `fire`
-   */
-  'react-hooks/fire'?: Linter.RuleEntry<ReactHooksFire>
-  /**
-   * Validates configuration of [gating mode](https://react.dev/reference/react-compiler/gating)
-   */
-  'react-hooks/gating'?: Linter.RuleEntry<ReactHooksGating>
-  /**
-   * Validates against assignment/mutation of globals during render, part of ensuring that [side effects must render outside of render](https://react.dev/reference/rules/components-and-hooks-must-be-pure#side-effects-must-run-outside-of-render)
-   */
-  'react-hooks/globals'?: Linter.RuleEntry<ReactHooksGlobals>
-  /**
-   * Validates the rules of hooks
-   */
-  'react-hooks/hooks'?: Linter.RuleEntry<ReactHooksHooks>
-  /**
-   * Validates against mutating props, state, and other values that [are immutable](https://react.dev/reference/rules/components-and-hooks-must-be-pure#props-and-state-are-immutable)
-   */
-  'react-hooks/immutability'?: Linter.RuleEntry<ReactHooksImmutability>
-  /**
-   * Validates against usage of libraries which are incompatible with memoization (manual or automatic)
-   */
-  'react-hooks/incompatible-library'?: Linter.RuleEntry<ReactHooksIncompatibleLibrary>
-  /**
-   * Internal invariants
-   */
-  'react-hooks/invariant'?: Linter.RuleEntry<ReactHooksInvariant>
-  /**
-   * Validates that effect dependencies are memoized
-   */
-  'react-hooks/memoized-effect-dependencies'?: Linter.RuleEntry<ReactHooksMemoizedEffectDependencies>
-  /**
-   * Validates against deriving values from state in an effect
-   */
-  'react-hooks/no-deriving-state-in-effects'?: Linter.RuleEntry<ReactHooksNoDerivingStateInEffects>
-  /**
-   * Validates that existing manual memoized is preserved by the compiler. React Compiler will only compile components and hooks if its inference [matches or exceeds the existing manual memoization](https://react.dev/learn/react-compiler/introduction#what-should-i-do-about-usememo-usecallback-and-reactmemo)
-   */
-  'react-hooks/preserve-manual-memoization'?: Linter.RuleEntry<ReactHooksPreserveManualMemoization>
-  /**
-   * Validates that [components/hooks are pure](https://react.dev/reference/rules/components-and-hooks-must-be-pure) by checking that they do not call known-impure functions
-   */
-  'react-hooks/purity'?: Linter.RuleEntry<ReactHooksPurity>
-  /**
-   * Validates correct usage of refs, not reading/writing during render. See the "pitfalls" section in [`useRef()` usage](https://react.dev/reference/react/useRef#usage)
-   */
-  'react-hooks/refs'?: Linter.RuleEntry<ReactHooksRefs>
-  /**
-   * Validates against suppression of other rules
-   */
-  'react-hooks/rule-suppression'?: Linter.RuleEntry<ReactHooksRuleSuppression>
-  /**
-   * enforces the Rules of Hooks
+   * Enforces the Rules of Hooks.
    * @see https://react.dev/reference/rules/rules-of-hooks
    */
-  'react-hooks/rules-of-hooks'?: Linter.RuleEntry<ReactHooksRulesOfHooks>
+  'react-extra/rules-of-hooks'?: Linter.RuleEntry<ReactExtraRulesOfHooks>
   /**
-   * Validates against calling setState synchronously in an effect, which can lead to re-renders that degrade performance
+   * Validates against setting state synchronously in an effect, which can lead to re-renders that degrade performance.
+   * @see https://eslint-react.xyz/docs/rules/set-state-in-effect
    */
-  'react-hooks/set-state-in-effect'?: Linter.RuleEntry<ReactHooksSetStateInEffect>
+  'react-extra/set-state-in-effect'?: Linter.RuleEntry<[]>
   /**
-   * Validates against setting state during render, which can trigger additional renders and potential infinite render loops
+   * Validates against unconditionally setting state during render, which can trigger additional renders and potential infinite render loops.
+   * @see https://eslint-react.xyz/docs/rules/set-state-in-render
    */
-  'react-hooks/set-state-in-render'?: Linter.RuleEntry<ReactHooksSetStateInRender>
+  'react-extra/set-state-in-render'?: Linter.RuleEntry<[]>
   /**
-   * Validates that components are static, not recreated every render. Components that are recreated dynamically can reset state and trigger excessive re-rendering
+   * Enforces the Rules of Props.
+   * @see https://eslint-react.xyz/docs/rules/unstable-rules-of-props
    */
-  'react-hooks/static-components'?: Linter.RuleEntry<ReactHooksStaticComponents>
+  'react-extra/unstable-rules-of-props'?: Linter.RuleEntry<[]>
   /**
-   * Validates against invalid syntax
+   * Enforces the Rules of State.
+   * @see https://eslint-react.xyz/docs/rules/unstable-rules-of-state
    */
-  'react-hooks/syntax'?: Linter.RuleEntry<ReactHooksSyntax>
+  'react-extra/unstable-rules-of-state'?: Linter.RuleEntry<[]>
   /**
-   * Unimplemented features
+   * Validates against syntax that React Compiler does not support.
+   * @see https://eslint-react.xyz/docs/rules/unsupported-syntax
    */
-  'react-hooks/todo'?: Linter.RuleEntry<ReactHooksTodo>
+  'react-extra/unsupported-syntax'?: Linter.RuleEntry<[]>
   /**
-   * Validates against syntax that we do not plan to support in React Compiler
+   * Validates that 'useMemo' is called with a callback that returns a value.
+   * @see https://eslint-react.xyz/docs/rules/use-memo
    */
-  'react-hooks/unsupported-syntax'?: Linter.RuleEntry<ReactHooksUnsupportedSyntax>
+  'react-extra/use-memo'?: Linter.RuleEntry<[]>
   /**
-   * Validates usage of the useMemo() hook against common mistakes. See [`useMemo()` docs](https://react.dev/reference/react/useMemo) for more information.
+   * Enforces correct usage of 'useState', including destructuring, symmetric naming of the value and setter, and wrapping expensive initializers in a lazy initializer function.
+   * @see https://eslint-react.xyz/docs/rules/use-state
    */
-  'react-hooks/use-memo'?: Linter.RuleEntry<ReactHooksUseMemo>
-  /**
-   * Validates that useMemos always return a value and that the result of the useMemo is used by the component/hook. See [`useMemo()` docs](https://react.dev/reference/react/useMemo) for more information.
-   */
-  'react-hooks/void-use-memo'?: Linter.RuleEntry<ReactHooksVoidUseMemo>
-  /**
-   * Enforces naming conventions for components.
-   * @see https://eslint-react.xyz/docs/rules/naming-convention-component-name
-   */
-  'react-naming-convention/component-name'?: Linter.RuleEntry<ReactNamingConventionComponentName>
+  'react-extra/use-state'?: Linter.RuleEntry<ReactExtraUseState>
   /**
    * Enforces the context name to be a valid component name with the suffix 'Context'.
    * @see https://eslint-react.xyz/docs/rules/naming-convention-context-name
    */
   'react-naming-convention/context-name'?: Linter.RuleEntry<[]>
-  /**
-   * Enforces consistent file-naming conventions.
-   * @see https://eslint-react.xyz/docs/rules/naming-convention-filename
-   */
-  'react-naming-convention/filename'?: Linter.RuleEntry<ReactNamingConventionFilename>
-  /**
-   * Enforces consistent use of the JSX file extension.
-   * @see https://eslint-react.xyz/docs/rules/naming-convention-filename-extension
-   */
-  'react-naming-convention/filename-extension'?: Linter.RuleEntry<ReactNamingConventionFilenameExtension>
   /**
    * Enforces identifier names assigned from 'useId' calls to be either 'id' or end with 'Id'.
    * @see https://eslint-react.xyz/docs/rules/naming-convention-id-name
@@ -3689,12 +3560,7 @@ Backward pagination arguments
    */
   'react-naming-convention/ref-name'?: Linter.RuleEntry<[]>
   /**
-   * Enforces destructuring and symmetric naming of the 'useState' hook value and setter.
-   * @see https://eslint-react.xyz/docs/rules/naming-convention-use-state
-   */
-  'react-naming-convention/use-state'?: Linter.RuleEntry<ReactNamingConventionUseState>
-  /**
-   * Validate and transform React Client/Server Function definitions.
+   * Validates and transforms React Client/Server Function definitions.
    * @see https://eslint-react.xyz/docs/rules/function-definition
    */
   'react-rsc/function-definition'?: Linter.RuleEntry<[]>
@@ -11658,20 +11524,17 @@ type ReactDomNoUnknownProperty = []|[{
   ignore?: string[]
   requireDataLowercase?: boolean
 }]
+// ----- react-extra/exhaustive-deps -----
+type ReactExtraExhaustiveDeps = []|[{
+  additionalHooks?: string
+  enableDangerousAutofixThisMayCauseInfiniteLoops?: boolean
+  experimental_autoDependenciesHooks?: string[]
+  requireExplicitEffectDeps?: boolean
+}]
 // ----- react-extra/jsx-shorthand-boolean -----
 type ReactExtraJsxShorthandBoolean = []|[(-1 | 1)]
 // ----- react-extra/jsx-shorthand-fragment -----
 type ReactExtraJsxShorthandFragment = []|[(-1 | 1)]
-// ----- react-extra/no-forbidden-props -----
-type ReactExtraNoForbiddenProps = []|[{
-  forbid?: (string | {
-    excludedNodes?: string[]
-    prop: string
-  } | {
-    includedNodes?: string[]
-    prop: string
-  })[]
-}]
 // ----- react-extra/no-unstable-default-props -----
 type ReactExtraNoUnstableDefaultProps = []|[{
   safeDefaultProps?: string[]
@@ -11683,146 +11546,14 @@ type ReactExtraNoUselessFragment = []|[{
   
   allowExpressions?: boolean
 }]
-// ----- react-hooks/automatic-effect-dependencies -----
-type ReactHooksAutomaticEffectDependencies = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/capitalized-calls -----
-type ReactHooksCapitalizedCalls = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/component-hook-factories -----
-type ReactHooksComponentHookFactories = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/config -----
-type ReactHooksConfig = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/error-boundaries -----
-type ReactHooksErrorBoundaries = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/exhaustive-deps -----
-type ReactHooksExhaustiveDeps = []|[{
-  additionalHooks?: string
-  enableDangerousAutofixThisMayCauseInfiniteLoops?: boolean
-  experimental_autoDependenciesHooks?: string[]
-  requireExplicitEffectDeps?: boolean
-}]
-// ----- react-hooks/fbt -----
-type ReactHooksFbt = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/fire -----
-type ReactHooksFire = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/gating -----
-type ReactHooksGating = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/globals -----
-type ReactHooksGlobals = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/hooks -----
-type ReactHooksHooks = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/immutability -----
-type ReactHooksImmutability = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/incompatible-library -----
-type ReactHooksIncompatibleLibrary = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/invariant -----
-type ReactHooksInvariant = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/memoized-effect-dependencies -----
-type ReactHooksMemoizedEffectDependencies = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/no-deriving-state-in-effects -----
-type ReactHooksNoDerivingStateInEffects = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/preserve-manual-memoization -----
-type ReactHooksPreserveManualMemoization = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/purity -----
-type ReactHooksPurity = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/refs -----
-type ReactHooksRefs = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/rule-suppression -----
-type ReactHooksRuleSuppression = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/rules-of-hooks -----
-type ReactHooksRulesOfHooks = []|[{
+// ----- react-extra/rules-of-hooks -----
+type ReactExtraRulesOfHooks = []|[{
   additionalHooks?: string
 }]
-// ----- react-hooks/set-state-in-effect -----
-type ReactHooksSetStateInEffect = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/set-state-in-render -----
-type ReactHooksSetStateInRender = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/static-components -----
-type ReactHooksStaticComponents = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/syntax -----
-type ReactHooksSyntax = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/todo -----
-type ReactHooksTodo = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/unsupported-syntax -----
-type ReactHooksUnsupportedSyntax = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/use-memo -----
-type ReactHooksUseMemo = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-hooks/void-use-memo -----
-type ReactHooksVoidUseMemo = []|[{
-  [k: string]: unknown | undefined
-}]
-// ----- react-naming-convention/component-name -----
-type ReactNamingConventionComponentName = []|[(("PascalCase" | "CONSTANT_CASE") | {
-  allowAllCaps?: boolean
-  excepts?: string[]
-  rule?: ("PascalCase" | "CONSTANT_CASE")
-})]
-// ----- react-naming-convention/filename -----
-type ReactNamingConventionFilename = []|[(("PascalCase" | "camelCase" | "kebab-case" | "snake_case") | {
-  excepts?: string[]
-  extensions?: string[]
-  rule?: ("PascalCase" | "camelCase" | "kebab-case" | "snake_case")
-})]
-// ----- react-naming-convention/filename-extension -----
-type ReactNamingConventionFilenameExtension = []|[(("always" | "as-needed") | {
-  allow?: ("always" | "as-needed")
-  extensions?: string[]
-  ignoreFilesWithoutCode?: boolean
-})]
-// ----- react-naming-convention/use-state -----
-type ReactNamingConventionUseState = []|[{
+// ----- react-extra/use-state -----
+type ReactExtraUseState = []|[{
   enforceAssignment?: boolean
+  enforceLazyInitialization?: boolean
   enforceSetterName?: boolean
 }]
 // ----- regexp/hexadecimal-escape -----

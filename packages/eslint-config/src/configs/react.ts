@@ -11,9 +11,8 @@ export async function react(
 ): Promise<Array<TypedFlatConfigItem>> {
   const { files = [GLOB_TS, GLOB_TSX], overrides = {}, parserOptions, tsconfigRootDir, reactCompiler = true } = options;
 
-  const [pluginReact, pluginReactHooks, parser, pluginReactCompiler, stylistic] = await Promise.all([
+  const [pluginReact, parser, pluginReactCompiler, stylistic] = await Promise.all([
     interopDefault(import('@eslint-react/eslint-plugin')),
-    interopDefault(import('eslint-plugin-react-hooks')),
     interopDefault(import('@typescript-eslint/parser')),
     reactCompiler ? interopDefault(import('eslint-plugin-react-compiler')) : Promise.resolve(undefined),
     interopDefault(import('@stylistic/eslint-plugin')),
@@ -24,7 +23,8 @@ export async function react(
   const recommended = renamePluginsInRules(
     {
       ...pluginReact.configs['disable-conflict-eslint-plugin-react'].rules,
-      ...pluginReact.configs['recommended-type-checked'].rules,
+      ...pluginReact.configs['disable-conflict-eslint-plugin-react-hooks'].rules,
+      ...pluginReact.configs['strict-type-checked'].rules,
     },
     PluginNameMap,
   );
@@ -37,8 +37,6 @@ export async function react(
         'react-dom': plugins['@eslint-react/dom'],
         'react-web-api': plugins['@eslint-react/web-api'],
         'react-extra': plugins['@eslint-react'],
-        'react-hooks': pluginReactHooks,
-        'react-hooks-extra': plugins['@eslint-react/hooks-extra'],
         'react-naming-convention': plugins['@eslint-react/naming-convention'],
         'react-rsc': plugins['@eslint-react/rsc'],
         ...(reactCompiler ? { 'react-compiler': pluginReactCompiler } : {}),
@@ -69,27 +67,44 @@ export async function react(
 
         ...(reactCompiler ? { 'react-compiler/react-compiler': 'error' } : {}),
 
+        'react-extra/exhaustive-deps': 'error',
+        'react-extra/purity': 'error',
+        'react-extra/no-unused-class-component-members': 'error',
         'react-extra/no-unnecessary-use-callback': 'error',
-        'react-extra/prefer-use-state-lazy-initialization': 'error',
         'react-extra/no-unnecessary-use-prefix': 'error',
         'react-extra/no-unnecessary-use-memo': 'error',
-        'react-extra/no-unnecessary-use-ref': 'error',
-        'react-hooks-extra/no-direct-set-state-in-use-effect': 'error',
+        'react-extra/set-state-in-effect': 'error',
+        'react-extra/use-state': 'error',
 
-        'react-extra/no-useless-fragment': 'off',
-        'react-extra/prefer-read-only-props': 'off',
+        'react-extra/no-unstable-context-value': 'error',
+        'react-extra/no-unstable-default-props': 'error',
+        'react-extra/no-unused-props': 'error',
+
+        'react-extra/no-context-provider': 'error',
+        'react-extra/no-forward-ref': 'error',
+        'react-extra/no-use-context': 'error',
+
+        'react-extra/immutability': 'error',
+        'react-extra/refs': 'error',
+        'react-extra/no-duplicate-key': 'error',
+
+        'react-dom/no-missing-button-type': 'error',
+        'react-dom/no-missing-iframe-sandbox': 'error',
+        'react-dom/no-unsafe-target-blank': 'error',
+
+        'react-naming-convention/context-name': 'error',
+        'react-naming-convention/id-name': 'error',
+        'react-naming-convention/ref-name': 'error',
+
         'react-extra/jsx-shorthand-boolean': 'error',
         'react-extra/jsx-shorthand-fragment': 'error',
         'react-extra/prefer-namespace-import': 'error',
 
-        'react-naming-convention/use-state': 'error',
+        'react-extra/no-useless-fragment': 'off',
 
         'stylistic/jsx-curly-newline': 'off',
         'stylistic/jsx-newline': ['error', { prevent: false }],
         'stylistic/jsx-self-closing-comp': 'error',
-
-        'react-hooks/rules-of-hooks': 'error',
-        'react-hooks/exhaustive-deps': 'warn',
 
         ...overrides,
       },
