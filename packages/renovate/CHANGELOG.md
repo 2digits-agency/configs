@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.68
+
+### Patch Changes
+
+- cddb192: Update renovate to 43.78.0
+
 ## 1.2.67
 
 ### Patch Changes
