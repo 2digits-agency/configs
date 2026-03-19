@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 4.0.6
+
+### Patch Changes
+
+- cddb192: Update ts-api-utils to 2.5.0
+
 ## 4.0.5
 
 ### Patch Changes

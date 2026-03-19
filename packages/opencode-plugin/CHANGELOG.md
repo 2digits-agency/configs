@@ -1,5 +1,11 @@
 # @2digits/opencode-plugin
 
+## 0.1.13
+
+### Patch Changes
+
+- cddb192: Update @types/bun to 1.3.11
+
 ## 0.1.12
 
 ### Patch Changes
