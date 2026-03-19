@@ -11870,7 +11870,6 @@ type StorybookMetaInlineProperties = []|[{
 type StorybookNoUninstalledAddons = []|[{
   packageJsonLocation?: string
   ignore?: string[]
-  [k: string]: unknown | undefined
 }]
 // ----- strict -----
 type Strict = []|[("never" | "global" | "function" | "safe")]
