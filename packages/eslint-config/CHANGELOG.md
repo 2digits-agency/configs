@@ -1,5 +1,13 @@
 # @2digits/eslint-config
 
+## 5.2.2
+
+### Patch Changes
+
+- 48fa6c3: Update ESLint plugins
+  - Updated `eslint-plugin-storybook` to 10.3.1
+  - Updated `eslint-plugin-turbo` to 2.8.20
+
 ## 5.2.1
 
 ### Patch Changes
