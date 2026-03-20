@@ -1,5 +1,15 @@
 # @2digits/cli
 
+## 1.2.43
+
+### Patch Changes
+
+- 48fa6c3: Update Effect ecosystem dependencies
+  - Updated `effect` to 3.21.0
+  - Updated `@effect/cli` to 0.75.0, `@effect/platform` to 0.96.0, `@effect/platform-node` to 0.106.0
+  - Updated `@effect/ai` to 0.35.0, `@effect/experimental` to 0.60.0, `@effect/rpc` to 0.75.0
+  - Updated `@effect/vitest` to 0.29.0
+
 ## 1.2.42
 
 ### Patch Changes
