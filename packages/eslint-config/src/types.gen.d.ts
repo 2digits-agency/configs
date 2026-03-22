@@ -6073,7 +6073,7 @@ Backward pagination arguments
    * Exhaustive deps rule for useQuery
    * @see https://tanstack.com/query/latest/docs/eslint/exhaustive-deps
    */
-  'tanstack-query/exhaustive-deps'?: Linter.RuleEntry<[]>
+  'tanstack-query/exhaustive-deps'?: Linter.RuleEntry<TanstackQueryExhaustiveDeps>
   /**
    * Ensure correct order of inference sensitive properties for infinite queries
    * @see https://tanstack.com/query/latest/docs/eslint/infinite-query-property-order
@@ -13221,6 +13221,13 @@ type TailwindcssNoUnnecessaryArbitraryValue = []|[{
   })
   tags?: string[]
   [k: string]: unknown | undefined
+}]
+// ----- tanstack-query/exhaustive-deps -----
+type TanstackQueryExhaustiveDeps = []|[{
+  allowlist?: {
+    variables?: string[]
+    types?: string[]
+  }
 }]
 // ----- template-curly-spacing -----
 type TemplateCurlySpacing = []|[("always" | "never")]
