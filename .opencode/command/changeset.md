@@ -108,6 +108,8 @@ Update renovate to 42.78.1
 - Multi-package: list each affected package with appropriate bump type
 - Skip packages with only test/internal changes unless user-facing
 - When in doubt about grouping, prefer fewer changesets with clear scope
+- Dependency-only changesets should usually use short, specific summaries like `Update renovate to 43.84.0`
+- Use bullets for dependency updates only when grouping multiple related packages or when upstream changes affect exposed behavior/rules
 
 ## Package-Specific Reminders
 
@@ -117,10 +119,59 @@ Update renovate to 42.78.1
 - **prettier updates**: Always create a changeset for `@2digits/prettier-config` when `prettier` version changes in catalog
 - **@opencode-ai/plugin updates**: Always create a changeset for `@2digits/opencode-plugin` when `@opencode-ai/plugin` version changes in catalog
 - **ESLint plugin updates**: Create a changeset for `@2digits/eslint-config` when any ESLint-related plugin changes (e.g., `@eslint-react/*`, `@stylistic/*`, `@tanstack/eslint-plugin-*`, `eslint-plugin-*`, `globals`)
+- **`ts-api-utils` updates**: Create a changeset for `@2digits/eslint-plugin` when `ts-api-utils` changes in catalog
+
+### Patterns from existing changelogs
+
+- **`@2digits/renovate-config`**: Use a one-line patch summary like `Update renovate to x.y.z`
+- **`@2digits/opencode-plugin`**: Use a one-line patch summary like `Update @opencode-ai/plugin to x.y.z`
+- **`@2digits/prettier-config`**: Use a one-line patch summary like `Update prettier to x.y.z`
+- **`@2digits/eslint-plugin`**: Use a one-line patch summary for isolated dependency bumps like `Update ts-api-utils to x.y.z`
+- **`@2digits/cli` and `@2digits/tlo-mcp`**: Group related Effect runtime updates under `Update Effect ecosystem dependencies` and list version bumps in bullets when multiple packages changed together
+- **`@2digits/cli` and `@2digits/tlo-mcp`**: `@effect/language-service` still gets a patch changeset even though it is usually a dev-only dependency
+- **`@2digits/eslint-config`**: Prefer `Update ESLint plugins` or `Update ESLint core and plugins`; add bullets when upstream rule changes or generated types changed
 
 ## Catalog Change Detection
 
-When `pnpm-workspace.yaml` is modified, always run `git diff --cached pnpm-workspace.yaml` (or `git diff` if unstaged) to see the full list of catalog version changes. Cross-reference each changed dependency with the packages that consume it to ensure no changeset is missed.
+When `pnpm-workspace.yaml` is modified, always run `git diff --cached pnpm-workspace.yaml` (or `git diff` if unstaged) to see the full list of catalog version changes. For each changed dependency, run the catalog consumer helper below, auto-include `runtime` consumers, apply package-specific reminders and changelog patterns, and treat uncovered `devOnly` consumers as candidates that require a follow-up question before generating a changeset.
+
+### Catalog Consumer Helper
+
+Use this helper for each changed catalog dependency:
+
+```bash
+DEP='effect'
+pnpm -r --filter './packages/*' why "$DEP" --json | jq --arg dep "$DEP" '
+  {
+    dependency: $dep,
+    runtime: [
+      .[] | .dependents[]?
+      | select(.name | startswith("@2digits/"))
+      | select(.depField == "dependencies" or .depField == "peerDependencies")
+      | .name
+    ] | unique | sort,
+    devOnly: [
+      .[] | .dependents[]?
+      | select(.name | startswith("@2digits/"))
+      | select(.depField == "devDependencies")
+      | .name
+    ] | unique | sort
+  }
+'
+```
+
+Interpretation:
+
+- `runtime`: default changeset targets
+- `devOnly`: possible changeset targets; first check package-specific reminders and changelog patterns
+- empty `runtime` and `devOnly`: root/tooling only, no package changeset needed
+
+### Catalog Decision Rules
+
+1. Use `runtime` consumers as the default package set for the dependency change.
+2. If a dependency matches a package-specific reminder or changelog pattern, follow that guidance even when the consumer is only in `devOnly`.
+3. If `devOnly` consumers remain uncovered after applying known guidance, use the question tool to ask whether they should get a changeset.
+4. If multiple related catalog dependencies changed together for the same packages, prefer one grouped changeset with a shared why.
 
 ## User Input
 
