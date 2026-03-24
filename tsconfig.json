@@ -1,5 +1,5 @@
 {
   "extends": "@2digits/tsconfig/tsconfig.json",
-  "include": ["packages", "./eslint.config.ts"],
+  "include": ["packages", "./oxlint.config.ts", "./eslint.config.ts"],
   "exclude": ["opensrc"]
 }
