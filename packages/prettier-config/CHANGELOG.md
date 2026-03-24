@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 4.0.33
+
+### Patch Changes
+
+- 85ba774: Update TypeScript to 6.0.2
+- Updated dependencies [85ba774]
+  - @2digits/constants@1.1.17
+
 ## 4.0.32
 
 ### Patch Changes

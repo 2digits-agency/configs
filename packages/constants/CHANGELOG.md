@@ -1,5 +1,11 @@
 # @2digits/constants
 
+## 1.1.17
+
+### Patch Changes
+
+- 85ba774: Update TypeScript to 6.0.2
+
 ## 1.1.16
 
 ### Patch Changes

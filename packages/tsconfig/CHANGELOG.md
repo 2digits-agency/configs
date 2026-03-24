@@ -1,5 +1,11 @@
 # @2digits/tsconfig
 
+## 0.8.7
+
+### Patch Changes
+
+- 85ba774: Update TypeScript to 6.0.2
+
 ## 0.8.6
 
 ### Patch Changes

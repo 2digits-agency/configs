@@ -1,5 +1,12 @@
 # @2digits/tlo-mcp
 
+## 0.1.13
+
+### Patch Changes
+
+- 85ba774: Update @effect/language-service to 0.83.0
+- 85ba774: Update TypeScript to 6.0.2
+
 ## 0.1.12
 
 ### Patch Changes
