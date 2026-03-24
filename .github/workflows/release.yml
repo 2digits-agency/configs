@@ -55,7 +55,7 @@ jobs:
         run: pnpm install
 
       - name: 🧪 Test, lint, format, build, build and type-check
-        run: pnpm turbo run build test lint:root format types
+        run: pnpm turbo run build test lint:root lint:oxlint format types
 
       - name: 🏗️ Build packages
         run: pnpm build --force

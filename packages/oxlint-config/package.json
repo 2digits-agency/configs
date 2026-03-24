@@ -30,6 +30,9 @@
   ],
   "license": "MIT",
   "public": true,
+  "dependencies": {
+    "defu": "catalog:"
+  },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
@@ -53,8 +56,5 @@
       "./typescript": "./dist/typescript.mjs",
       "./package.json": "./package.json"
     }
-  },
-  "dependencies": {
-    "defu": "catalog:"
   }
 }

@@ -6,6 +6,10 @@ import { unicornConfig } from './configs/unicorn';
 import { ignorePatterns } from './globs';
 
 export const baseConfig = defineConfig({
+  options: {
+    denyWarnings: true,
+    reportUnusedDisableDirectives: 'deny',
+  },
   categories: {
     nursery: 'off',
     pedantic: 'off',
