@@ -16,5 +16,6 @@ export const unicornConfig = defineConfig({
     'unicorn/prefer-node-protocol': 'error',
     'unicorn/prefer-set-size': 'error',
     'unicorn/prefer-string-starts-ends-with': 'error',
+    'unicorn/prefer-modern-dom-apis': 'error',
   },
 });
