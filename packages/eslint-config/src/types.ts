@@ -1,6 +1,5 @@
 import type { ParserOptions } from '@typescript-eslint/parser';
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
-import type { Linter } from 'eslint';
 import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore';
 
 import type { PluginNameMap } from './constants';
@@ -10,10 +9,7 @@ export type { ConfigNames } from './types.gen';
 
 export type Rules = RuleOptions;
 
-export interface TypedFlatConfigItem extends Omit<
-  Linter.Config<Linter.RulesRecord & Rules>,
-  'plugins' | 'languageOptions'
-> {
+export interface TypedFlatConfigItem extends Omit<FlatConfig.Config, 'plugins' | 'languageOptions' | 'rules'> {
   // Relax plugins type limitation, as most of the plugins did not have correct type info yet.
   /**
    * An object containing a name-value mapping of plugin names to plugin objects. When `files` is specified, these
@@ -25,6 +21,12 @@ export interface TypedFlatConfigItem extends Omit<
   plugins?: Partial<Record<(typeof PluginNameMap)[keyof typeof PluginNameMap], any>>;
 
   languageOptions?: FlatConfig.LanguageOptions & Record<string, unknown>;
+
+  /**
+   * An object containing the configured rules.
+   * When `files` or `ignores` are specified, these rule configurations are only available to the matching files.
+   */
+  rules?: Rules;
 }
 
 export interface OptionsOverrides {
