@@ -62,8 +62,6 @@ export async function storybook(
       name: '2digits:storybook/disables',
       files,
       rules: {
-        'react-hooks/rules-of-hooks': 'off',
-        'react/display-name': 'off',
         'sonar/no-duplicate-string': 'off',
       },
     },
