@@ -1,5 +1,12 @@
 # @2digits/cli
 
+## 1.2.45
+
+### Patch Changes
+
+- 85ba774: Update @effect/language-service to 0.83.0
+- 85ba774: Update TypeScript to 6.0.2
+
 ## 1.2.44
 
 ### Patch Changes

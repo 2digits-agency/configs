@@ -1,5 +1,12 @@
 # @2digits/opencode-plugin
 
+## 0.1.14
+
+### Patch Changes
+
+- 85ba774: Update TypeScript to 6.0.2
+- 85ba774: Update @opencode-ai/plugin to 1.3.0
+
 ## 0.1.13
 
 ### Patch Changes

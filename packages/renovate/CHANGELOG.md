@@ -1,5 +1,12 @@
 # @2digits/renovate-config
 
+## 1.2.71
+
+### Patch Changes
+
+- 85ba774: Update TypeScript to 6.0.2
+- 85ba774: Update renovate to 43.88.0
+
 ## 1.2.70
 
 ### Patch Changes
