@@ -17,6 +17,7 @@
     "lint": "turbo run lint:root lint:pkg --continue",
     "lint:fix": "turbo run lint:pkg:fix lint:root --continue -- --fix",
     "lint:root": "eslint .",
+    "oxlint": "oxlint . --ignore-pattern 'packages/*/fixtures/**' --ignore-pattern 'packages/*/_fixtures/**' --ignore-pattern 'packages/*/__snapshots__/**'",
     "lint:pkg": "manypkg check",
     "lint:pkg:fix": "manypkg fix",
     "publish": "changeset publish",
