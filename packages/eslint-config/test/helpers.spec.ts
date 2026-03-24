@@ -2,42 +2,42 @@ import { describe, expect, it } from 'vitest';
 
 import { enabled, extractConfig } from '../src/factory';
 
-describe('enabled', () => {
+describe(enabled, () => {
   it('returns true when passed true', () => {
-    expect(enabled(true)).toBe(true);
+    expect(enabled(true)).toBeTruthy();
   });
 
   it('returns false when passed false', () => {
-    expect(enabled(false)).toBe(false);
+    expect(enabled(false)).toBeFalsy();
   });
 
   it('returns false when passed undefined without default', () => {
-    expect(enabled(undefined)).toBe(false);
+    expect(enabled(undefined)).toBeFalsy();
   });
 
   it('returns default value when passed undefined', () => {
-    expect(enabled(undefined, true)).toBe(true);
-    expect(enabled(undefined, false)).toBe(false);
+    expect(enabled(undefined, true)).toBeTruthy();
+    expect(enabled(undefined, false)).toBeFalsy();
   });
 
   it('returns enable property from object', () => {
-    expect(enabled({ enable: true })).toBe(true);
-    expect(enabled({ enable: false })).toBe(false);
+    expect(enabled({ enable: true })).toBeTruthy();
+    expect(enabled({ enable: false })).toBeFalsy();
   });
 
   it('uses default when object has no enable property', () => {
-    expect(enabled({}, true)).toBe(true);
-    expect(enabled({}, false)).toBe(false);
-    expect(enabled({})).toBe(false);
+    expect(enabled({}, true)).toBeTruthy();
+    expect(enabled({}, false)).toBeFalsy();
+    expect(enabled({})).toBeFalsy();
   });
 
   it('object enable property takes precedence over default', () => {
-    expect(enabled({ enable: true }, false)).toBe(true);
-    expect(enabled({ enable: false }, true)).toBe(false);
+    expect(enabled({ enable: true }, false)).toBeTruthy();
+    expect(enabled({ enable: false }, true)).toBeFalsy();
   });
 });
 
-describe('extractConfig', () => {
+describe(extractConfig, () => {
   it('returns empty object for true', () => {
     expect(extractConfig(true)).toEqual({});
   });

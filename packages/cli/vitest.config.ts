@@ -8,7 +8,7 @@ export default defineConfig({
   },
   test: {
     setupFiles: [path.join(__dirname, 'test/vitest.setup.ts')],
-    include: ['test/**/*.test.ts'],
+    include: ['test/**/*.spec.ts'],
     fakeTimers: {
       toFake: undefined,
     },

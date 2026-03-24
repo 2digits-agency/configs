@@ -5,7 +5,7 @@ export default defineConfig({
     target: 'es2020',
   },
   test: {
-    include: ['test/**/*.test.ts'],
+    include: ['test/**/*.spec.ts'],
     fakeTimers: {
       toFake: undefined,
     },
