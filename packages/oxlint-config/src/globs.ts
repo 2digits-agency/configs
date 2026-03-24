@@ -1,0 +1,35 @@
+export const ignorePatterns = [
+  '**/node_modules',
+  '**/dist',
+  '**/package-lock.json',
+  '**/yarn.lock',
+  '**/pnpm-lock.yaml',
+  '**/bun.lockb',
+  '**/bun.lock',
+  '**/output',
+  '**/coverage',
+  '**/temp',
+  '**/.temp',
+  '**/tmp',
+  '**/.tmp',
+  '**/.history',
+  '**/.nuxt',
+  '**/.next',
+  '**/.vercel',
+  '**/.changeset',
+  '**/.idea',
+  '**/.cache',
+  '**/.output',
+  '**/.yarn',
+  '**/CHANGELOG*.md',
+  '**/*.min.*',
+  '**/LICENSE*',
+  '**/__snapshots__',
+  '**/__snapshots__/**',
+  '**/auto-import?(s).d.ts',
+  '**/components.d.ts',
+] as const;
+
+export const dtsFiles = ['**/*.d.ts'] as const;
+export const testFiles = ['**/*.{test,spec}.ts?(x)'] as const;
+export const commonJsFiles = ['**/*.js', '**/*.cjs', '**/*.cts'] as const;

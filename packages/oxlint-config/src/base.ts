@@ -1,88 +1,11 @@
+import { defu } from 'defu';
 import { defineConfig } from 'oxlint';
 
-const ignorePatterns = [
-  '**/node_modules',
-  '**/dist',
-  '**/coverage',
-  '**/output',
-  '**/temp',
-  '**/.temp',
-  '**/tmp',
-  '**/.tmp',
-  '**/.turbo',
-  '**/.history',
-  '**/.next',
-  '**/.vercel',
-  '**/.changeset',
-  '**/.idea',
-  '**/.cache',
-  '**/.output',
-  '**/.yarn',
-  '**/__snapshots__',
-  '**/__snapshots__/**',
-  '**/fixtures/**',
-  '**/_fixtures/**',
-  '**/package-lock.json',
-  '**/yarn.lock',
-  '**/pnpm-lock.yaml',
-  '**/bun.lock',
-  '**/bun.lockb',
-  '**/CHANGELOG*.md',
-  '**/LICENSE*',
-  '**/*.min.*',
-] as const;
+import { importConfig } from './configs/import';
+import { javascriptConfig } from './configs/javascript';
+import { unicornConfig } from './configs/unicorn';
+import { ignorePatterns } from './globs';
 
-export const baseConfig = defineConfig({
-  ignorePatterns: [...ignorePatterns],
-  plugins: ['eslint', 'import', 'unicorn'],
-  rules: {
-    'no-array-constructor': 'error',
-    'no-async-promise-executor': 'error',
-    eqeqeq: ['error', 'smart'],
-    'no-alert': 'error',
-    'no-case-declarations': 'error',
-    'no-const-assign': 'error',
-    'no-debugger': 'error',
-    'no-dupe-class-members': 'error',
-    'no-dupe-keys': 'error',
-    'no-duplicate-case': 'error',
-    'no-duplicate-imports': ['error', { allowSeparateTypeImports: true }],
-    'no-empty-pattern': 'error',
-    'no-ex-assign': 'error',
-    'no-import-assign': 'error',
-    'no-irregular-whitespace': 'error',
-    'no-loss-of-precision': 'error',
-    'no-new-native-nonconstructor': 'error',
-    'no-obj-calls': 'error',
-    'no-self-assign': ['error', { props: true }],
-    'no-shadow-restricted-names': 'error',
-    'no-sparse-arrays': 'error',
-    'no-unsafe-finally': 'error',
-    'no-unsafe-negation': 'error',
-    'no-unused-private-class-members': 'error',
-    'no-unused-vars': [
-      'error',
-      {
-        args: 'none',
-        caughtErrors: 'none',
-        vars: 'all',
-        argsIgnorePattern: '^_',
-        ignoreRestSiblings: true,
-        varsIgnorePattern: '^_',
-      },
-    ],
-    'no-useless-catch': 'error',
-    'no-useless-escape': 'error',
-    'no-var': 'error',
-    'prefer-const': ['error', { destructuring: 'all', ignoreReadBeforeAssign: true }],
-    'symbol-description': 'error',
-    'use-isnan': ['error', { enforceForIndexOf: true, enforceForSwitchCase: true }],
-    'valid-typeof': ['error', { requireStringLiterals: true }],
-
-    'import/first': 'error',
-    'import/no-duplicates': 'error',
-
-    'unicorn/error-message': 'error',
-    'unicorn/prefer-node-protocol': 'error',
-  },
-});
+export const baseConfig = defineConfig(
+  defu(javascriptConfig, importConfig, unicornConfig, { ignorePatterns: [...ignorePatterns] }),
+);

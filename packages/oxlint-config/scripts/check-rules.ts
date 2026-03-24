@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 
 import { baseConfig } from '../src/base';
+import { twoDigits } from '../src/index';
 import { typescriptConfig } from '../src/typescript';
 
 interface OxlintRule {
@@ -11,6 +12,7 @@ interface OxlintRule {
 const configs = [
   { config: baseConfig, name: 'base' },
   { config: typescriptConfig, name: 'typescript' },
+  { config: twoDigits, name: 'twoDigits' },
 ] as const;
 
 const output = execFileSync('pnpm', ['exec', 'oxlint', '--rules', '--format=json'], {
@@ -26,7 +28,12 @@ const availableBareRuleNames = new Set(rules.filter((rule) => rule.scope === 'es
 let hasInvalidRules = false;
 
 for (const { config, name } of configs) {
-  const invalidRules = Object.keys(config.rules ?? {}).filter((ruleName) => {
+  const ruleNames = [
+    ...Object.keys(config.rules ?? {}),
+    ...(config.overrides ?? []).flatMap((override) => Object.keys(override.rules ?? {})),
+  ];
+
+  const invalidRules = ruleNames.filter((ruleName) => {
     if (availableRuleNames.has(ruleName)) {
       return false;
     }

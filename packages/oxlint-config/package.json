@@ -36,13 +36,15 @@
     "@types/node": "catalog:",
     "@typescript/native-preview": "catalog:",
     "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "oxlint": "catalog:"
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:"
   },
   "publishConfig": {
     "exports": {
@@ -51,5 +53,8 @@
       "./typescript": "./dist/typescript.mjs",
       "./package.json": "./package.json"
     }
+  },
+  "dependencies": {
+    "defu": "catalog:"
   }
 }
