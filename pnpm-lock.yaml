@@ -70,8 +70,8 @@ catalogs:
       specifier: 16.2.1
       version: 16.2.1
     '@opencode-ai/plugin':
-      specifier: 1.3.0
-      version: 1.3.0
+      specifier: 1.3.2
+      version: 1.3.2
     '@prettier/plugin-oxc':
       specifier: 0.1.3
       version: 0.1.3
@@ -211,8 +211,8 @@ catalogs:
       specifier: 3.1.0
       version: 3.1.0
     knip:
-      specifier: 6.0.4
-      version: 6.0.4
+      specifier: 6.0.5
+      version: 6.0.5
     local-pkg:
       specifier: 1.1.2
       version: 1.1.2
@@ -250,11 +250,11 @@ catalogs:
       specifier: 19.2.4
       version: 19.2.4
     renovate:
-      specifier: 43.89.0
-      version: 43.89.0
+      specifier: 43.89.4
+      version: 43.89.4
     tailwind-csstree:
-      specifier: 0.2.0
-      version: 0.2.0
+      specifier: 0.3.0
+      version: 0.3.0
     tinyexec:
       specifier: 1.0.4
       version: 1.0.4
@@ -353,7 +353,7 @@ importers:
         version: 10.1.0(jiti@2.6.0)
       knip:
         specifier: 'catalog:'
-        version: 6.0.4
+        version: 6.0.5
       oxlint:
         specifier: 'catalog:'
         version: 1.57.0(oxlint-tsgolint@0.17.3)
@@ -585,7 +585,7 @@ importers:
         version: 2.3.0
       tailwind-csstree:
         specifier: 'catalog:'
-        version: 0.2.0(@eslint/css@1.0.0)
+        version: 0.3.0(@eslint/css@1.0.0)
       typescript-eslint:
         specifier: 'catalog:'
         version: 8.57.2(eslint@10.1.0(jiti@2.6.0))(typescript@6.0.2)
@@ -689,7 +689,7 @@ importers:
     dependencies:
       '@opencode-ai/plugin':
         specifier: 'catalog:'
-        version: 1.3.0
+        version: 1.3.2
       dedent:
         specifier: 'catalog:'
         version: 1.7.2
@@ -812,7 +812,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 43.89.0(typanion@3.14.0)
+        version: 43.89.4(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
@@ -2324,11 +2324,11 @@ packages:
   '@one-ini/wasm@0.2.1':
     resolution: {integrity: sha512-TUqERXGNTifZ9y2g3wPxQrw3HpHv/02DsW3D90T9x0hhonrL1ZqpSmNrU2XkoIq0fP1N6gZfVQzy2Fw1ZvGBNg==}
 
-  '@opencode-ai/plugin@1.3.0':
-    resolution: {integrity: sha512-mR1Kdcpr3Iv+KS7cL2DRFB6QAcSoR6/DojmwuxYF/pMCahMtaCLiqZGQjoSNl12+gQ6RsIJJyUh/jX3JVlOx8A==}
+  '@opencode-ai/plugin@1.3.2':
+    resolution: {integrity: sha512-eT0ZovMCOQlfTdAnfbEWgW343mJ9SHgEVfdiOSX1NMIVXac6hxE2xwUsRVTV3wLvfA6dKZhN800f8wLUEyPlyg==}
 
-  '@opencode-ai/sdk@1.3.0':
-    resolution: {integrity: sha512-5WyYEpcV6Zk9otXOMIrvZRbJm1yxt/c8EXSBn1p6Sw1yagz8HRljkoUTJFxzD0x2+/6vAZItr3OrXDZfE+oA2g==}
+  '@opencode-ai/sdk@1.3.2':
+    resolution: {integrity: sha512-u7sXVKn0kyAA5vVVHuHQfq3+3UGWOU1Sh6d/e+aS4zO8AwriTSWNQ9r8Qy5yxBH+PoeOGl5WIVdp+s2Ea2zuAg==}
 
   '@opentelemetry/api-logs@0.213.0':
     resolution: {integrity: sha512-zRM5/Qj6G84Ej3F1yt33xBVY/3tnMxtL1fiDIxYbDWYaZ/eudVw3/PBiZ8G7JwUxXxjW8gU4g6LnOyfGKYHYgw==}
@@ -6124,8 +6124,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@6.0.4:
-    resolution: {integrity: sha512-r/9F7wcxiFM71WgDFQiToE2hQHwZ/UkGmr74o8eiNFPIg80f7rlQHVrZiRX46Tj2yE3s96wUVNGMnsDMylgInw==}
+  knip@6.0.5:
+    resolution: {integrity: sha512-+i9e/ZKuYlECB5iIK82NQwnYso4oNLBhzsTbXhSqCG1qfGi6D84GNtRENafmS3C0lABX8Wf3BKM434nPXi2AbQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -7295,8 +7295,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@43.89.0:
-    resolution: {integrity: sha512-JXl9w4VszoNTxpyZBIFd/pSj/QUsVt0OD18bcfHjo2Jn76CdvgdpNQo0yZdoA4No6rBzyEetxUH5z9Uk2tFUdQ==}
+  renovate@43.89.4:
+    resolution: {integrity: sha512-xQQNytg5jvuRFFnZtuYM+v+EdBq4PN/t8L5fyPYM4aSkund1zXcU6epsZQzRVi1/92JwTdhHIyYgIX0fUufGMg==}
     engines: {node: ^24.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -7643,8 +7643,8 @@ packages:
     resolution: {integrity: sha512-Bh7QjT8/SuKUIfObSXNHNSK6WHo6J1tHCqJsuaFDP7gP0fkzSfTxI8y85JrppZ0h8l0maIgc2tfuZQ6/t3GtnQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
-  tailwind-csstree@0.2.0:
-    resolution: {integrity: sha512-tE/abGkPAAwd+p8F3VJgYOKFgGOOhsByKr8aDjKahAcESUDROCRe05LFMM7jFAkms+S+f254Wgzjb7SZF9c/Tg==}
+  tailwind-csstree@0.3.0:
+    resolution: {integrity: sha512-FJmLCkH1ZDTEqJRVxMVhdiEbk/W67exqvDYrIQ759jsfv3mp3Gp/rrlgtr7dD5q7BK/t8LfaNqXM+BN6BrTKGA==}
     engines: {node: '>=18.18'}
     peerDependencies:
       '@eslint/css': '>=1.0.0'
@@ -10453,12 +10453,12 @@ snapshots:
 
   '@one-ini/wasm@0.2.1': {}
 
-  '@opencode-ai/plugin@1.3.0':
+  '@opencode-ai/plugin@1.3.2':
     dependencies:
-      '@opencode-ai/sdk': 1.3.0
+      '@opencode-ai/sdk': 1.3.2
       zod: 4.1.8
 
-  '@opencode-ai/sdk@1.3.0': {}
+  '@opencode-ai/sdk@1.3.2': {}
 
   '@opentelemetry/api-logs@0.213.0':
     dependencies:
@@ -14115,7 +14115,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.0.4:
+  knip@6.0.5:
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       fast-glob: 3.3.3
@@ -15601,7 +15601,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@43.89.0(typanion@3.14.0):
+  renovate@43.89.4(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1000.0
       '@aws-sdk/client-ec2': 3.1000.0
@@ -16097,7 +16097,7 @@ snapshots:
     dependencies:
       '@pkgr/core': 0.2.9
 
-  tailwind-csstree@0.2.0(@eslint/css@1.0.0):
+  tailwind-csstree@0.3.0(@eslint/css@1.0.0):
     optionalDependencies:
       '@eslint/css': 1.0.0
 
