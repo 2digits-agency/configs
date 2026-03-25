@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 5.2.5
+
+### Patch Changes
+
+- d26a02d: Update tailwind-csstree to 0.3.0
+
 ## 5.2.4
 
 ### Patch Changes
