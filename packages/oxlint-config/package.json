@@ -1,0 +1,62 @@
+{
+  "name": "@2digits/oxlint-config",
+  "version": "0.0.1",
+  "description": "Minimal Oxlint config for 2digits projects.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2digits-agency/configs.git",
+    "directory": "packages/oxlint-config"
+  },
+  "type": "module",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./base": "./dist/base.mjs",
+    "./typescript": "./dist/typescript.mjs",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsdown --minify --config-loader unconfig",
+    "dev": "tsdown --watch --config-loader unconfig",
+    "rules:check": "tsx ./scripts/check-rules.ts",
+    "types:generate": "tsx ./scripts/generate-types.ts",
+    "types": "tsgo --noEmit"
+  },
+  "keywords": [
+    "oxlint-config"
+  ],
+  "license": "MIT",
+  "public": true,
+  "dependencies": {
+    "defu": "catalog:"
+  },
+  "devDependencies": {
+    "@2digits/tsconfig": "workspace:*",
+    "@arethetypeswrong/core": "catalog:",
+    "@types/node": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "dedent": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./base": "./dist/base.mjs",
+      "./typescript": "./dist/typescript.mjs",
+      "./package.json": "./package.json"
+    }
+  }
+}

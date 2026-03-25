@@ -1,0 +1,28 @@
+import { importConfig } from './configs/import';
+import { javascriptConfig } from './configs/javascript';
+import { nodeConfig } from './configs/node';
+import { unicornConfig } from './configs/unicorn';
+import { ignorePatterns } from './globs';
+import { defineTypedConfig } from './types';
+
+export const baseConfig = defineTypedConfig({
+  env: {
+    browser: true,
+    node: true,
+  },
+  options: {
+    denyWarnings: true,
+    reportUnusedDisableDirectives: 'deny',
+  },
+  categories: {
+    nursery: 'off',
+    pedantic: 'off',
+    correctness: 'off',
+    perf: 'off',
+    style: 'off',
+    restriction: 'off',
+    suspicious: 'off',
+  },
+  extends: [javascriptConfig, unicornConfig, importConfig, nodeConfig],
+  ignorePatterns: [...ignorePatterns],
+});

@@ -68,6 +68,30 @@
     "//#lint:pkg": {
       "inputs": ["**/package.json"]
     },
+    "//#lint:oxlint": {
+      "dependsOn": ["@2digits/oxlint-config#build"],
+      "inputs": [
+        "oxlint.config.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.mjs",
+        "**/*.cjs",
+        "**/*.json",
+        "!**/CHANGELOG.md",
+        "!**/fixtures/**",
+        "!**/_fixtures/**",
+        "!openspec/**",
+        "!.changeset/*-*-*.md",
+        "!.claude/**",
+        "!.cursor/**",
+        "!.opencode/**",
+        "!**/__snapshots__/**",
+        "!**/dist/**",
+        "!**/.turbo/**"
+      ],
+      "outputLogs": "new-only"
+    },
     "//#lint:pkg:fix": {
       "cache": false
     },

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
-    "check": "turbo run test lint:root types format lint:pkg knip --continue",
+    "check": "turbo run test lint:root types format lint:pkg lint:oxlint knip --continue",
     "check:watch": "turbo watch test lint:root types format lint:pkg",
     "clean": "find . -name node_modules -o -name .turbo -o -name dist -type d -prune | xargs rm -rf",
     "dev": "turbo run dev docs:dev",
@@ -14,9 +14,12 @@
     "fix": "pnpm '/(lint|format):fix$/'",
     "format": "prettier . --ignore-unknown --check --cache",
     "format:fix": "prettier . --ignore-unknown --write --cache",
-    "lint": "turbo run lint:root lint:pkg --continue",
+    "lint": "turbo run lint:root lint:pkg lint:oxlint --continue",
     "lint:fix": "turbo run lint:pkg:fix lint:root --continue -- --fix",
     "lint:root": "eslint .",
+    "oxlint": "oxlint .",
+    "lint:oxlint": "oxlint .",
+    "lint:oxlint:fix": "oxlint . --fix",
     "lint:pkg": "manypkg check",
     "lint:pkg:fix": "manypkg fix",
     "publish": "changeset publish",
@@ -30,6 +33,7 @@
   "license": "MIT",
   "devDependencies": {
     "@2digits/eslint-config": "workspace:*",
+    "@2digits/oxlint-config": "workspace:*",
     "@2digits/prettier-config": "workspace:*",
     "@2digits/tsconfig": "workspace:*",
     "@changesets/cli": "catalog:",
@@ -37,12 +41,14 @@
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "knip": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
     "pkg-pr-new": "catalog:",
     "prettier": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:"
   },
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@10.33.0",
   "engines": {
     "node": "24.14.0",
     "bun": "1.3.6"
