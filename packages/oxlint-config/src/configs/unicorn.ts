@@ -1,8 +1,9 @@
-import { defineConfig } from 'oxlint';
+import { defineTypedConfig } from '../types';
 
-export const unicornConfig = defineConfig({
+export const unicornConfig = defineTypedConfig({
   plugins: ['unicorn'],
   rules: {
+    'unicorn/no-abusive-eslint-disable': 'error',
     'unicorn/error-message': 'error',
     'unicorn/no-empty-file': 'error',
     'unicorn/no-invalid-fetch-options': 'error',
@@ -14,6 +15,7 @@ export const unicornConfig = defineConfig({
     'unicorn/no-useless-length-check': 'error',
     'unicorn/no-useless-spread': 'error',
     'unicorn/prefer-node-protocol': 'error',
+    'unicorn/prefer-ternary': ['error', 'only-single-line'],
     'unicorn/prefer-set-size': 'error',
     'unicorn/prefer-string-starts-ends-with': 'error',
     'unicorn/prefer-modern-dom-apis': 'error',

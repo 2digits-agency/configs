@@ -23,6 +23,7 @@
     "build": "tsdown --minify --config-loader unconfig",
     "dev": "tsdown --watch --config-loader unconfig",
     "rules:check": "tsx ./scripts/check-rules.ts",
+    "types:generate": "tsx ./scripts/generate-types.ts",
     "types": "tsgo --noEmit"
   },
   "keywords": [
@@ -38,6 +39,7 @@
     "@arethetypeswrong/core": "catalog:",
     "@types/node": "catalog:",
     "@typescript/native-preview": "catalog:",
+    "dedent": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
     "publint": "catalog:",

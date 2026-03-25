@@ -1,13 +1,13 @@
 import { defu } from 'defu';
-import { defineConfig, type OxlintConfig } from 'oxlint';
 
 import { baseConfig } from './base';
+import { defineTypedConfig, type TypedOxlintConfig } from './types';
 import { typescriptConfig } from './typescript';
 
-export const twoDigits = defineConfig(defu(baseConfig, typescriptConfig));
+export const twoDigits = defineTypedConfig(defu(baseConfig, typescriptConfig));
 
-export function withTwoDigits(...configs: Array<OxlintConfig>) {
+export function withTwoDigits(...configs: Array<TypedOxlintConfig>): TypedOxlintConfig {
   const [config, ...rest] = configs;
 
-  return defineConfig(defu(config, ...rest, twoDigits));
+  return defineTypedConfig(defu(config, ...rest, twoDigits));
 }

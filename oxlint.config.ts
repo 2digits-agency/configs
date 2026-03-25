@@ -4,5 +4,10 @@ export default withTwoDigits({
   options: {
     reportUnusedDisableDirectives: 'allow',
   },
-  ignorePatterns: ['packages/*/fixtures/**', 'packages/*/_fixtures/**', 'packages/*/__snapshots__/**'],
+  ignorePatterns: [
+    'packages/*/fixtures/**',
+    'packages/*/_fixtures/**',
+    'packages/*/__snapshots__/**',
+    'packages/*/src/types.gen.d.ts',
+  ],
 });

@@ -1,11 +1,15 @@
-import { defineConfig } from 'oxlint';
-
 import { importConfig } from './configs/import';
 import { javascriptConfig } from './configs/javascript';
+import { nodeConfig } from './configs/node';
 import { unicornConfig } from './configs/unicorn';
 import { ignorePatterns } from './globs';
+import { defineTypedConfig } from './types';
 
-export const baseConfig = defineConfig({
+export const baseConfig = defineTypedConfig({
+  env: {
+    browser: true,
+    node: true,
+  },
   options: {
     denyWarnings: true,
     reportUnusedDisableDirectives: 'deny',
@@ -19,6 +23,6 @@ export const baseConfig = defineConfig({
     restriction: 'off',
     suspicious: 'off',
   },
-  extends: [javascriptConfig, unicornConfig, importConfig],
+  extends: [javascriptConfig, unicornConfig, importConfig, nodeConfig],
   ignorePatterns: [...ignorePatterns],
 });

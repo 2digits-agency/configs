@@ -1,6 +1,6 @@
-import { defineConfig } from 'oxlint';
+import { defineTypedConfig } from '../types';
 
-export const typeAwareConfig = defineConfig({
+export const typeAwareConfig = defineTypedConfig({
   options: {
     typeAware: true,
   },

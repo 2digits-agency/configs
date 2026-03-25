@@ -1,6 +1,6 @@
-import { defineConfig } from 'oxlint';
+import { defineTypedConfig } from '../types';
 
-export const vitestConfig = defineConfig({
+export const vitestConfig = defineTypedConfig({
   plugins: ['vitest'],
 
   settings: {
@@ -35,7 +35,6 @@ export const vitestConfig = defineConfig({
     'vitest/no-conditional-tests': 'error',
     'vitest/no-import-node-test': 'error',
 
-    // https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-importing-vitest-globals
     'vitest/no-importing-vitest-globals': 'off',
 
     // prefer-called-times is enabled
