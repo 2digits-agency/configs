@@ -1,0 +1,17 @@
+type Props = { description: string; title: string; onSelect: (value: string) => void };
+
+export function FeatureCard({ description, title, onSelect }: Props) {
+  return (
+    <article aria-label={title} className="grid gap-4 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <header>
+        <h2 className="text-lg font-semibold text-slate-950">{title}</h2>
+        <p className="text-sm leading-6 text-slate-600">{description}</p>
+      </header>
+      <button
+        onClick={() => onSelect(title)}
+        className="inline-flex items-center justify-center rounded-md bg-slate-950 px-4 py-2 text-sm font-medium text-white">
+        Select
+      </button>
+    </article>
+  );
+}

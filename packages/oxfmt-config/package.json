@@ -25,6 +25,8 @@
   "scripts": {
     "build": "tsdown --minify --config-loader unconfig",
     "dev": "tsdown --watch --config-loader unconfig",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "types": "tsgo --noEmit"
   },
   "keywords": [
@@ -38,11 +40,14 @@
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
+    "@types/node": "catalog:",
     "@typescript/native-preview": "catalog:",
     "oxfmt": "catalog:",
+    "prettier": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "oxfmt": "catalog:"

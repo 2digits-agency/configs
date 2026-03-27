@@ -9,3 +9,5 @@ Add `@2digits/oxfmt-config` package
 - Sets shared formatting defaults: `printWidth: 120`, `singleQuote`, `trailingComma: 'all'`, `bracketSameLine`
 - Integrates Tailwind CSS class sorting via `sortTailwindcss` using `tailwindFunctions` from `@2digits/constants`
 - Exports `twoDigits` config as default and re-exports `OxfmtConfig` type
+- Added Prettier-parity fixture test suite verifying oxfmt output matches prettier across TypeScript, JSX, import ordering, Tailwind, and JSDoc fixtures
+- Documents known differences (embedded language formatting, import attribute spacing, operator position) with `reason` snapshots

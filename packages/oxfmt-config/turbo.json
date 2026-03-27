@@ -1,0 +1,12 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "inputs": ["$TURBO_DEFAULT$", "tsdown.config.ts", "!test/**", "!vitest.config.ts"]
+    },
+    "test": {
+      "dependsOn": ["build", "@2digits/prettier-config#build"],
+      "inputs": ["$TURBO_DEFAULT$", "vitest.config.ts"]
+    }
+  }
+}
