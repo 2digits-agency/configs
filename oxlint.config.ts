@@ -6,6 +6,7 @@ export default withTwoDigits({
   },
   ignorePatterns: [
     'packages/*/fixtures/**',
+    'packages/*/test/fixtures/**',
     'packages/*/_fixtures/**',
     'packages/*/__snapshots__/**',
     'packages/*/src/types.gen.d.ts',

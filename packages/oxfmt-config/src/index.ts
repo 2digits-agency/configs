@@ -70,7 +70,7 @@ const sortImports: SortImportsConfig = {
   groups,
 };
 
-export const twoDigits = defineConfig({
+export default defineConfig({
   printWidth: 120,
   trailingComma: 'all',
   bracketSameLine: true,
@@ -82,6 +82,3 @@ export const twoDigits = defineConfig({
     functions: tailwindFunctions,
   },
 } satisfies OxfmtConfig);
-
-export default twoDigits;
-export type { OxfmtConfig } from 'oxfmt';

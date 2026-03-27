@@ -96,10 +96,12 @@ describe('prettier parity fixtures', () => {
 
       if (fixture.expectation === 'match') {
         expect(oxfmtOutput).toBe(prettierOutput);
+
         return;
       }
 
       expect(oxfmtOutput).not.toBe(prettierOutput);
+
       await expect(
         [
           `fixture: ${fixture.name}`,
