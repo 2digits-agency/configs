@@ -1,0 +1,3 @@
+export function shouldEnableFeature(input:{hasAccessToPrivateBeta:boolean;isEnabledForCurrentEnvironment:boolean;hasCompletedRequiredOnboarding:boolean;isUsingSupportedBrowser:boolean}){
+  return input.hasAccessToPrivateBeta && input.isEnabledForCurrentEnvironment && input.hasCompletedRequiredOnboarding && input.isUsingSupportedBrowser
+}

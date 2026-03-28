@@ -1,0 +1,3 @@
+const buttonStyles=css`color:red;background-color:blue;display:flex;align-items:center;justify-content:space-between;`
+
+export function render(){return buttonStyles}

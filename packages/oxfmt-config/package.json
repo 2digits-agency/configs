@@ -1,0 +1,55 @@
+{
+  "name": "@2digits/oxfmt-config",
+  "version": "0.1.0",
+  "description": "Opinionated Oxfmt config for 2digits projects.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2digits-agency/configs.git",
+    "directory": "packages/oxfmt-config"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsdown --minify --config-loader unconfig",
+    "dev": "tsdown --watch --config-loader unconfig",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "types": "tsgo --noEmit"
+  },
+  "keywords": [
+    "oxfmt-config"
+  ],
+  "license": "MIT",
+  "public": true,
+  "dependencies": {
+    "@2digits/constants": "workspace:*"
+  },
+  "devDependencies": {
+    "@2digits/tsconfig": "workspace:*",
+    "@arethetypeswrong/core": "catalog:",
+    "@types/node": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "oxfmt": "catalog:",
+    "prettier": "catalog:",
+    "publint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "oxfmt": "catalog:"
+  }
+}

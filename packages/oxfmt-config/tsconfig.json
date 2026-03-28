@@ -1,0 +1,8 @@
+{
+  "extends": "@2digits/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts", "test/**/*.spec.ts", "vitest.config.ts"],
+  "exclude": ["dist", "node_modules", "test/fixtures"]
+}

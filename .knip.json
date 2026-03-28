@@ -1,8 +1,9 @@
 {
   "$schema": "./node_modules/knip/schema.json",
+  "ignoreDependencies": ["oxfmt"],
   "workspaces": {
     "packages/eslint-config": {
-      "ignore": ["fixtures/**", "_fixtures/**"],
+      "ignore": ["fixtures/**"],
       "ignoreDependencies": ["react", "@types/react"]
     },
     "packages/cli": {
@@ -10,6 +11,9 @@
     },
     "packages/opencode-plugin": {
       "entry": ["src/index.ts", "bunup.config.ts"]
+    },
+    "packages/oxfmt-config": {
+      "ignore": ["test/fixtures/**"]
     },
     "packages/tlo-mcp": {
       "ignoreDependencies": ["@typescript/native-preview"]
