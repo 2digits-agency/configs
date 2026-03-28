@@ -1,4 +1,4 @@
-import pluginRegexp from 'eslint-plugin-regexp';
+import pluginRegexp, { configs } from 'eslint-plugin-regexp';
 
 import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
@@ -12,7 +12,7 @@ export function regexp(): Array<TypedFlatConfigItem> {
         regexp: pluginRegexp,
       },
       rules: {
-        ...pluginRegexp.configs['flat/recommended'].rules,
+        ...configs['flat/recommended'].rules,
       },
     },
   ];

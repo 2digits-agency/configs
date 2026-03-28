@@ -21,9 +21,9 @@ function getComponentBoundary(node: TSESTree.Node): TSESTree.Node | undefined {
 
   while (current) {
     if (
-      current.type === AST_NODE_TYPES.FunctionDeclaration
-      || current.type === AST_NODE_TYPES.FunctionExpression
-      || current.type === AST_NODE_TYPES.ArrowFunctionExpression
+      current.type === AST_NODE_TYPES.FunctionDeclaration ||
+      current.type === AST_NODE_TYPES.FunctionExpression ||
+      current.type === AST_NODE_TYPES.ArrowFunctionExpression
     ) {
       result = current;
       break;
@@ -186,24 +186,6 @@ export const preferInlineHandlers = createRule<[], MessageId>({
 
           reportIfSingleUse(node.id, node, handlerNode);
         },
-
-      'VariableDeclarator[init.type=CallExpression]': function (node: TSESTree.VariableDeclarator) {
-        if (node.id.type !== AST_NODE_TYPES.Identifier) {
-          return;
-        }
-
-        if (!node.init || node.init.type !== AST_NODE_TYPES.CallExpression) {
-          return;
-        }
-
-        if (!getComponentBoundary(node)) {
-          return;
-        }
-
-        if (isWrappedInMemoHook(node.init)) {
-          return;
-        }
-      },
 
       FunctionDeclaration(node: TSESTree.FunctionDeclaration) {
         if (!node.id) {

@@ -1,11 +1,9 @@
-import eslintPluginToml from 'eslint-plugin-toml';
+import eslintPluginToml, { configs } from 'eslint-plugin-toml';
 
 import { GLOB_TOML } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
-const standard = Object.fromEntries(
-  eslintPluginToml.configs.standard.flatMap(({ rules }) => Object.entries({ ...rules })),
-);
+const standard = Object.fromEntries(configs.standard.flatMap(({ rules }) => Object.entries({ ...rules })));
 
 export function toml(): Array<TypedFlatConfigItem> {
   return [
@@ -20,7 +18,8 @@ export function toml(): Array<TypedFlatConfigItem> {
         ...standard,
 
         'toml/array-bracket-spacing': ['error', 'never'],
-        'toml/indent': ['error', 2, { keyValuePairs: 1, subTables: 1 }],
+        'toml/array-element-newline': ['error', 'consistent'],
+        'toml/indent': ['error', 2, { keyValuePairs: 0, subTables: 0 }],
       },
     },
   ];

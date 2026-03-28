@@ -1,7 +1,9 @@
 /* eslint-disable unicorn/no-null */
 import * as Schema from 'effect/Schema';
 
-/** Raw activity from TLO API response. Field names match the API exactly. */
+/**
+ * Raw activity from TLO API response. Field names match the API exactly.
+ */
 export const ActivityRaw = Schema.Struct({
   ID: Schema.Number,
   FOLDERID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),

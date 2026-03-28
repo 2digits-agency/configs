@@ -1,12 +1,12 @@
 [tools]
-  bun = "1.3.11"
-  node = "24.14.1"
-  pnpm = "10.33.0"
+bun = "1.3.11"
+node = "24.14.1"
+pnpm = "10.33.0"
 
 [env]
-  FORCE_COLOR = "1"
-  NODE_OPTIONS = "--no-deprecation"
+FORCE_COLOR = "1"
+NODE_OPTIONS = "--no-deprecation"
 
 [settings]
-  pin = true
-  ignored_config_paths = ["**/fixtures/**"]
+pin = true
+ignored_config_paths = ["**/fixtures/**"]

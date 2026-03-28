@@ -4,10 +4,10 @@ import { fileURLToPath } from 'node:url';
 
 import { format as formatOxfmt } from 'oxfmt';
 import { format as formatPrettier } from 'prettier';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 
 import prettierConfig from '../../prettier-config/dist/index.mjs';
-import oxfmtConfig from '../dist/index.mjs';
+import { twoDigits } from '../src';
 
 type Expectation = 'match' | 'known-difference';
 
@@ -25,7 +25,8 @@ const fixtureCases: Array<FixtureCase> = [
   { name: 'import-order', fileName: 'input.ts', expectation: 'match' },
   { name: 'tailwind-tsx', fileName: 'input.tsx', expectation: 'match' },
   { name: 'multiline-jsx', fileName: 'input.tsx', expectation: 'match' },
-  { name: 'jsdoc', fileName: 'input.ts', expectation: 'match' },
+  { name: 'jsdoc', fileName: 'input.ts', expectation: 'known-difference', reason: 'Oxfmt has better jsdoc support.' },
+  { name: 'embedded-language', fileName: 'input.ts', expectation: 'match' },
   {
     name: 'operator-position',
     fileName: 'input.ts',
@@ -37,12 +38,6 @@ const fixtureCases: Array<FixtureCase> = [
     fileName: 'input.ts',
     expectation: 'known-difference',
     reason: 'Oxfmt currently formats import attribute spacing differently.',
-  },
-  {
-    name: 'embedded-language',
-    fileName: 'input.ts',
-    expectation: 'known-difference',
-    reason: 'Oxfmt has embeddedLanguageFormatting disabled to avoid churn in unsupported embedded syntaxes.',
   },
 ];
 
@@ -62,7 +57,7 @@ async function formatFixtureWithPrettier(source: string, fixture: FixtureCase): 
 }
 
 async function formatFixtureWithOxfmt(source: string, fixture: FixtureCase): Promise<string> {
-  const result = await formatOxfmt(path.join(fixture.name, fixture.fileName), source, oxfmtConfig);
+  const result = await formatOxfmt(path.join(fixture.name, fixture.fileName), source, twoDigits);
 
   expect(result.errors).toStrictEqual([]);
 

@@ -2,36 +2,35 @@
   "name": "@2digits/eslint-config",
   "version": "5.2.6",
   "description": "Effortlessly enforce best practices and catch errors with this comprehensive ESLint configuration for TypeScript, featuring popular plugins like @typescript-eslint, eslint-plugin-react, and eslint-plugin-unicorn.",
+  "keywords": [
+    "eslint-config"
+  ],
   "homepage": "https://2d-configs.vercel.app/",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/2digits-agency/configs.git",
     "directory": "packages/eslint-config"
   },
-  "type": "module",
-  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
   "scripts": {
-    "build": "tsdown --minify --config-loader unconfig",
-    "dev": "tsdown --watch --config-loader unconfig",
-    "types": "tsgo --noEmit",
+    "build": "vp pack --minify --config-loader unconfig",
+    "dev": "vp pack --watch --config-loader unconfig",
     "docs": "eslint-config-inspector build",
     "docs:dev": "eslint-config-inspector",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vp test run",
+    "test:watch": "vp test",
+    "types": "tsgo --noEmit"
   },
-  "keywords": [
-    "eslint-config"
-  ],
-  "license": "MIT",
-  "public": true,
   "dependencies": {
     "@2digits/constants": "workspace:*",
     "@2digits/eslint-plugin": "workspace:*",
@@ -94,8 +93,8 @@
     "react": "catalog:",
     "tinyexec": "catalog:",
     "tinyglobby": "catalog:",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite-plus": "catalog:",
     "vitest": "catalog:",
     "zod": "catalog:"
   },
@@ -104,5 +103,6 @@
   },
   "engines": {
     "node": "24.14.1"
-  }
+  },
+  "public": true
 }

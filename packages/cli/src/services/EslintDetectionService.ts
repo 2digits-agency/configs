@@ -16,7 +16,7 @@ export class EslintDetectionService extends Effect.Service<EslintDetectionServic
     const pm = yield* PackageManagerService;
 
     /**
-     * Check if ESLint is installed in the project dependencies
+     * Check if ESLint is installed in the project dependencies.
      */
     const isEslintInstalled = Effect.fn('EslintDetectionService.isEslintInstalled')(function* (
       packageJsonPath?: string,
@@ -35,7 +35,7 @@ export class EslintDetectionService extends Effect.Service<EslintDetectionServic
     });
 
     /**
-     * Check if any ESLint configuration file exists
+     * Check if any ESLint configuration file exists.
      */
     const hasEslintConfig = Effect.fn('EslintDetectionService.hasEslintConfig')(function* (dir?: string) {
       const root = yield* pm.resolveRoot();
@@ -65,7 +65,7 @@ export class EslintDetectionService extends Effect.Service<EslintDetectionServic
     });
 
     /**
-     * Detect all existing ESLint configuration files
+     * Detect all existing ESLint configuration files.
      */
     const detectExistingConfigs = Effect.fn('EslintDetectionService.detectExistingConfigs')(function* (dir?: string) {
       const root = yield* pm.resolveRoot();
@@ -94,7 +94,7 @@ export class EslintDetectionService extends Effect.Service<EslintDetectionServic
     });
 
     /**
-     * Check if the project uses @2digits/eslint-config
+     * Check if the project uses @2digits/eslint-config.
      */
     const uses2DigitsConfig = Effect.fn('EslintDetectionService.uses2DigitsConfig')(function* (configPath?: string) {
       const root = yield* pm.resolveRoot();

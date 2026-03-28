@@ -1,15 +1,30 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import twoDigits from '@2digits/eslint-config';
+import { twoDigits } from '@2digits/eslint-config';
 
 export default twoDigits(
   {
     ignores: {
-      ignores: ['.opencode'],
+      ignores: [
+        '.opencode',
+        'fixtures/',
+        'packages/*/test/fixtures/**',
+        '.changeset/*-*-*.md',
+        '.claude/commands/',
+        '.cursor/commands/',
+        '.claude/skills/openspec-*/',
+        '.opencode/command/opsx-*.md',
+        '.opencode/skills/openspec-*/',
+        'openspec/',
+        '__snapshots__/',
+        '.agents/skills/',
+        'packages/*/src/types.gen.d.ts',
+        '**/fixtures/**',
+      ],
       gitIgnore: {
         cwd: path.dirname(fileURLToPath(import.meta.url)),
-        files: ['.gitignore', '.prettierignore'],
+        files: ['.gitignore'],
       },
     },
     react: true,

@@ -23,8 +23,8 @@ export interface TypedFlatConfigItem extends Omit<FlatConfig.Config, 'plugins' |
   languageOptions?: FlatConfig.LanguageOptions & Record<string, unknown>;
 
   /**
-   * An object containing the configured rules.
-   * When `files` or `ignores` are specified, these rule configurations are only available to the matching files.
+   * An object containing the configured rules. When `files` or `ignores` are specified, these rule configurations are
+   * only available to the matching files.
    */
   rules?: Rules;
 }
@@ -50,18 +50,22 @@ export interface OptionsTypeScriptWithTypes extends OptionsOverrides {
    */
   tsconfigRootDir?: string;
 
-  /** Additional parser options for TypeScript. */
+  /**
+   * Additional parser options for TypeScript.
+   */
   parserOptions?: Partial<ParserOptions>;
 }
 
 export interface OptionsWithFiles extends OptionsOverrides {
-  /** An array of glob patterns to match the files to which this configuration applies. */
+  /**
+   * An array of glob patterns to match the files to which this configuration applies.
+   */
   files?: Array<string>;
 }
 
 export interface OptionsWithStorybook extends OptionsWithFiles {
   /**
-   * The storybook configuration directory
+   * The storybook configuration directory.
    *
    * @default '.storybook'
    */
@@ -78,17 +82,21 @@ export interface OptionsWithReact extends OptionsWithFiles {
 }
 
 export interface OptionsWithIgnores {
-  /** Options to pass to eslint-config-flat-gitignore */
+  /**
+   * Options to pass to eslint-config-flat-gitignore.
+   */
   gitIgnore?: Omit<FlatGitignoreOptions, 'name' | 'root'>;
 
-  /** An array of glob patterns to ignore in addition to the default ignores. */
+  /**
+   * An array of glob patterns to ignore in addition to the default ignores.
+   */
   ignores?: Array<string>;
 }
 
 export interface OptionsCss extends OptionsOverrides {
   /**
-   * Force Tailwind custom syntax major version.
-   * When omitted, auto-detects installed Tailwind major and falls back to v3.
+   * Force Tailwind custom syntax major version. When omitted, auto-detects installed Tailwind major and falls back to
+   * v3.
    */
   tailwindMajor?: 3 | 4;
 

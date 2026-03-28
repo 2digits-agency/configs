@@ -26,45 +26,27 @@ jobs:
       - name: 🗃️ Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: 🛸 Setup PNPM
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
-
-      - name: 🏭 Setup Node
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+      - name: ⚡Setup Vite+
+        uses: voidzero-dev/setup-vp@v1
         with:
-          node-version: 24.14.0
-          cache: pnpm
+          node-version-file: package.json
+          cache: true
           registry-url: 'https://registry.npmjs.org'
 
       - name: 🐰 Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
 
-      - name: 📂 Get pnpm store directory
-        shell: bash
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> "$GITHUB_ENV"
-
-      - name: 🧩 Setup pnpm cache
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: 📦 Install dependencies
-        run: pnpm install
-
       - name: 🧪 Test, lint, format, build, build and type-check
-        run: pnpm turbo run build test lint:root lint:oxlint format types
+        run: vp exec turbo run build test lint:root lint:oxlint format types
 
       - name: 🏗️ Build packages
-        run: pnpm build --force
+        run: vp exec turbo run build --force
 
       - name: 🪄 Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm run release
+          publish: vp run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

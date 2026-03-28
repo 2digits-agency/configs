@@ -1,8 +1,9 @@
+import { ignorePatterns } from '@2digits/constants';
+
 import { importConfig } from './configs/import';
 import { javascriptConfig } from './configs/javascript';
 import { nodeConfig } from './configs/node';
 import { unicornConfig } from './configs/unicorn';
-import { ignorePatterns } from './globs';
 import { defineTypedConfig } from './types';
 
 export const baseConfig = defineTypedConfig({
@@ -24,5 +25,5 @@ export const baseConfig = defineTypedConfig({
     suspicious: 'off',
   },
   extends: [javascriptConfig, unicornConfig, importConfig, nodeConfig],
-  ignorePatterns: [...ignorePatterns],
+  ignorePatterns,
 });

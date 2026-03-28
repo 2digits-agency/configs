@@ -2,34 +2,33 @@
   "name": "@2digits/eslint-plugin",
   "version": "4.0.7",
   "description": "An eslint plugin that provides a set of rules to enforce best practices for 2digits projects",
+  "keywords": [
+    "2digits",
+    "eslint",
+    "eslint-plugin"
+  ],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/2digits-agency/configs.git",
     "directory": "packages/eslint-plugin"
   },
-  "type": "module",
-  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
   "scripts": {
-    "build": "tsdown --minify --config-loader unconfig",
-    "dev": "tsdown --watch --config-loader unconfig",
-    "types": "tsgo --noEmit",
-    "test": "vitest --run"
+    "build": "vp pack --minify --config-loader unconfig",
+    "dev": "vp pack --watch --config-loader unconfig",
+    "test": "vp test --run",
+    "types": "tsgo --noEmit"
   },
-  "keywords": [
-    "eslint",
-    "eslint-plugin",
-    "2digits"
-  ],
-  "license": "MIT",
-  "public": true,
   "dependencies": {
     "@typescript-eslint/scope-manager": "catalog:",
     "@typescript-eslint/utils": "catalog:",
@@ -43,8 +42,9 @@
     "@typescript/native-preview": "catalog:",
     "eslint-vitest-rule-tester": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite-plus": "catalog:",
     "vitest": "catalog:"
-  }
+  },
+  "public": true
 }

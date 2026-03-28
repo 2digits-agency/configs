@@ -5,10 +5,11 @@ import * as Effect from 'effect/Effect';
 import * as Either from 'effect/Either';
 
 /**
- * Creates a scoped temp directory and switches cwd to it.
- * Automatically cleans up temp dir and restores cwd when scope ends.
+ * Creates a scoped temp directory and switches cwd to it. Automatically cleans up temp dir and restores cwd when scope
+ * ends.
  *
- * @param prefix - Prefix for temp directory name
+ * @param prefix - Prefix for temp directory name.
+ *
  * @returns Effect that yields the temp directory path
  */
 export const withTempTestEnv = Effect.fn('withTempTestEnv')(function* (prefix: string) {
@@ -42,10 +43,10 @@ export const fixturesBasePath = Effect.gen(function* () {
 type Fixture = 'existing-configs' | 'monorepo-turborepo' | 'single-package' | 'monorepo-no-turbo';
 
 /**
- * Copies a fixture directory into the current working directory (temp dir).
- * Should be called after withTempTestEnv.
+ * Copies a fixture directory into the current working directory (temp dir). Should be called after withTempTestEnv.
  *
  * @param fixtureName - Name of fixture directory in test/fixtures/
+ *
  * @returns Effect with void
  */
 export const copyFixture = Effect.fn('copyFixture')(function* (fixtureName: Fixture) {

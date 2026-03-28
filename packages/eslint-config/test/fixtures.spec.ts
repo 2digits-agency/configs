@@ -1,17 +1,18 @@
 import fs from 'node:fs/promises';
 import nodePath from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import ts from 'dedent';
 import { exec } from 'tinyexec';
 import { glob } from 'tinyglobby';
-import { afterAll, beforeAll, describe, it, type ExpectStatic } from 'vitest';
+import { afterAll, beforeAll, describe, it } from 'vite-plus/test';
 
 interface ConfigPreset {
   name: string;
   options: Record<string, boolean | undefined>;
 }
 
-const CONFIG_PRESETS: Array<ConfigPreset> = [
+const CONFIG_PRESETS = [
   {
     name: 'full',
     options: {
@@ -88,14 +89,26 @@ const CONFIG_PRESETS: Array<ConfigPreset> = [
       zod: false,
     },
   },
-];
+] as const satisfies ReadonlyArray<ConfigPreset>;
+
+const fixturesDir = fileURLToPath(new URL('../fixtures/', import.meta.url));
+const fixturesInputDir = nodePath.resolve(fixturesDir, 'input');
+const fixturesOutputDir = nodePath.resolve(fixturesDir, 'output');
+const tmpDir = fileURLToPath(new URL('../_fixtures/', import.meta.url));
+
+console.log({
+  fixturesDir,
+  fixturesInputDir,
+  fixturesOutputDir,
+  tmpDir,
+});
 
 beforeAll(async () => {
-  await fs.rm('_fixtures', { recursive: true, force: true });
+  await fs.rm(tmpDir, { recursive: true, force: true });
 });
 
 afterAll(async () => {
-  await fs.rm('_fixtures', { recursive: true, force: true });
+  await fs.rm(tmpDir, { recursive: true, force: true });
 });
 
 function generateConfigContent(options: Record<string, boolean | undefined>): string {
@@ -104,57 +117,60 @@ function generateConfigContent(options: Record<string, boolean | undefined>): st
     .join('\n');
 
   return ts`
-    import twoDigits from '@2digits/eslint-config';
+    import { twoDigits } from '@2digits/eslint-config';
 
     export default twoDigits({
+      ignores: {
+        gitIgnore: {
+          cwd: '.',
+        },
+      },
     ${optionsStr}
     });
   `;
 }
 
-async function runFixtureTest(preset: ConfigPreset, expect: ExpectStatic): Promise<void> {
-  const from = nodePath.resolve('fixtures/input');
-  const output = nodePath.resolve(`fixtures/output/${preset.name}`);
-  const cwd = nodePath.resolve(`_fixtures/${preset.name}`);
+describe('fixtures', ({ describe }) => {
+  describe.concurrent.for(CONFIG_PRESETS)('autofix: $name', { timeout: 30_000 }, ({ options, name }) => {
+    it('should match snapshot', async ({ expect, annotate }) => {
+      const from = nodePath.resolve(fixturesInputDir);
+      const output = nodePath.resolve(fixturesOutputDir, name);
+      const cwd = nodePath.resolve(tmpDir, name);
 
-  await fs.cp(from, cwd, {
-    recursive: true,
-    filter: (src) => !src.includes('node_modules'),
-  });
+      await fs.cp(from, cwd, {
+        recursive: true,
+        filter: (src) => !src.includes('node_modules'),
+      });
 
-  await fs.writeFile(nodePath.join(cwd, 'eslint.config.ts'), generateConfigContent(preset.options));
+      await fs.writeFile(nodePath.join(cwd, 'eslint.config.ts'), generateConfigContent(options));
 
-  await exec('npx', ['eslint', '.', '--fix'], {
-    nodeOptions: { cwd, stdio: 'pipe' },
-    throwOnError: true,
-  });
+      await annotate(generateConfigContent(options));
 
-  const files = await glob('**/*', {
-    ignore: ['node_modules', 'eslint.config.ts'],
-    cwd,
-  });
+      await exec('npx', ['eslint', cwd, '--fix'], {
+        nodeOptions: { cwd, stdio: 'pipe' },
+        throwOnError: true,
+      });
 
-  await Promise.all(
-    files.map(async (file) => {
-      const content = await fs.readFile(nodePath.join(cwd, file), 'utf8');
-      const source = await fs.readFile(nodePath.join(from, file), 'utf8');
-      const outputPath = nodePath.join(output, file);
+      const files = await glob('**/*', {
+        ignore: ['node_modules', 'eslint.config.ts'],
+        cwd,
+      });
 
-      if (content === source) {
-        await fs.rm(outputPath, { force: true });
+      await Promise.all(
+        files.map(async (file) => {
+          const content = await fs.readFile(nodePath.join(cwd, file), 'utf8');
+          const source = await fs.readFile(nodePath.join(from, file), 'utf8');
+          const outputPath = nodePath.join(output, file);
 
-        return;
-      }
+          if (content === source) {
+            await fs.rm(outputPath, { force: true });
 
-      await expect.soft(content).toMatchFileSnapshot(outputPath);
-    }),
-  );
-}
+            return;
+          }
 
-describe('fixtures', () => {
-  for (const preset of CONFIG_PRESETS) {
-    it.concurrent(`autofix: ${preset.name}`, { timeout: 30_000 }, async ({ expect }) => {
-      await runFixtureTest(preset, expect);
+          await expect.soft(content).toMatchFileSnapshot(outputPath);
+        }),
+      );
     });
-  }
+  });
 });

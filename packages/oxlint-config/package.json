@@ -2,35 +2,43 @@
   "name": "@2digits/oxlint-config",
   "version": "0.1.1",
   "description": "Minimal Oxlint config for 2digits projects.",
+  "keywords": [
+    "oxlint-config"
+  ],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/2digits-agency/configs.git",
     "directory": "packages/oxlint-config"
   },
-  "type": "module",
-  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": "./dist/index.mjs",
     "./base": "./dist/base.mjs",
     "./typescript": "./dist/typescript.mjs",
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./base": "./dist/base.mjs",
+      "./typescript": "./dist/typescript.mjs",
+      "./package.json": "./package.json"
+    }
+  },
   "scripts": {
-    "build": "tsdown --minify",
-    "dev": "tsdown --watch",
+    "build": "vp pack --minify",
+    "dev": "vp pack --watch",
     "rules:check": "tsx ./scripts/check-rules.ts",
     "types": "tsgo --noEmit"
   },
-  "keywords": [
-    "oxlint-config"
-  ],
-  "license": "MIT",
-  "public": true,
   "dependencies": {
+    "@2digits/constants": "workspace:*",
     "defu": "catalog:"
   },
   "devDependencies": {
@@ -42,20 +50,13 @@
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "tsx": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
   },
   "peerDependencies": {
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:"
   },
-  "publishConfig": {
-    "exports": {
-      ".": "./dist/index.mjs",
-      "./base": "./dist/base.mjs",
-      "./typescript": "./dist/typescript.mjs",
-      "./package.json": "./package.json"
-    }
-  }
+  "public": true
 }

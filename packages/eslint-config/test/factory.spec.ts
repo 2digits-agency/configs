@@ -1,8 +1,28 @@
-import type { Linter } from 'eslint';
-import { describe, it } from 'vitest';
+import { fileURLToPath } from 'node:url';
 
-import { twoDigits } from '../src';
+import type { Linter } from 'eslint';
+import { describe, it, vi } from 'vite-plus/test';
+
 import type { TypedFlatConfigItem } from '../src/types';
+
+const workspaceRoot = fileURLToPath(new URL('../../..', import.meta.url));
+const detectedPackages = new Set(['turbo', 'typescript']);
+
+vi.mock('local-pkg', () => ({
+  isPackageExists(name: string) {
+    return detectedPackages.has(name);
+  },
+}));
+
+vi.mock('pkg-types', () => ({
+  async findWorkspaceDir() {
+    await Promise.resolve();
+
+    return workspaceRoot;
+  },
+}));
+
+const { twoDigits } = await import('../src');
 
 interface SerializedConfig {
   name?: string;
@@ -181,10 +201,22 @@ const CONFIG_PRESETS = {
   },
 } as const;
 
+function withDeterministicOptions(options: Record<string, boolean>): Record<string, unknown> {
+  return {
+    ...options,
+    ignores: {
+      gitIgnore: {
+        cwd: workspaceRoot,
+        files: ['.gitignore'],
+      },
+    },
+  };
+}
+
 describe('factory', () => {
   for (const [name, options] of Object.entries(CONFIG_PRESETS)) {
     it.concurrent(`preset: ${name}`, { timeout: 30_000 }, async ({ expect }) => {
-      const config = await twoDigits(options);
+      const config = await twoDigits(withDeterministicOptions(options));
       const serialized = serializeConfigs(config);
 
       await expect(JSON.stringify(serialized, undefined, 2)).toMatchFileSnapshot(

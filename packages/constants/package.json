@@ -1,34 +1,34 @@
 {
   "name": "@2digits/constants",
   "version": "1.1.17",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/2digits-agency/configs.git",
     "directory": "packages/constants"
   },
-  "type": "module",
-  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
   "scripts": {
-    "build": "tsdown --minify --config-loader unconfig",
-    "dev": "tsdown --watch --config-loader unconfig",
+    "build": "vp pack --minify --config-loader unconfig",
+    "dev": "vp pack --watch --config-loader unconfig",
     "types": "tsgo --noEmit"
   },
-  "license": "MIT",
-  "public": true,
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
     "@typescript/native-preview": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
-  }
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "public": true
 }

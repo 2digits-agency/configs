@@ -1,8 +1,7 @@
 import * as Schema from 'effect/Schema';
 
 /**
- * Error returned when the TLO API indicates failure.
- * This occurs when success: false in the response envelope.
+ * Error returned when the TLO API indicates failure. This occurs when success: false in the response envelope.
  */
 export class TloApiError extends Schema.TaggedError<TloApiError>()('TloApiError', {
   message: Schema.String,
@@ -11,16 +10,14 @@ export class TloApiError extends Schema.TaggedError<TloApiError>()('TloApiError'
 }) {}
 
 /**
- * Error for authentication failures.
- * Session token expired or invalid credentials.
+ * Error for authentication failures. Session token expired or invalid credentials.
  */
 export class TloAuthError extends Schema.TaggedError<TloAuthError>()('TloAuthError', {
   message: Schema.String,
 }) {}
 
 /**
- * Error for network/transport failures.
- * Connection refused, timeout, etc.
+ * Error for network/transport failures. Connection refused, timeout, etc.
  */
 export class TloNetworkError extends Schema.TaggedError<TloNetworkError>()('TloNetworkError', {
   message: Schema.String,
@@ -29,8 +26,7 @@ export class TloNetworkError extends Schema.TaggedError<TloNetworkError>()('TloN
 }) {}
 
 /**
- * Error when response parsing fails.
- * Unexpected response format from TLO.
+ * Error when response parsing fails. Unexpected response format from TLO.
  */
 export class TloParseError extends Schema.TaggedError<TloParseError>()('TloParseError', {
   message: Schema.String,

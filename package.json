@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "description": "Streamline your workflow with a bunch of default configs for things like eslint, tsconfig and prettier!",
+  "keywords": [],
+  "license": "MIT",
+  "author": "",
   "type": "module",
   "scripts": {
     "build": "turbo run build",
@@ -12,47 +15,41 @@
     "dev": "turbo run dev docs:dev",
     "docs": "turbo run docs",
     "fix": "pnpm '/(lint|format):fix$/'",
-    "format": "prettier . --ignore-unknown --check --cache",
-    "format:fix": "prettier . --ignore-unknown --write --cache",
+    "format": "vp fmt . --check",
+    "format:fix": "vp fmt .",
+    "knip": "knip",
     "lint": "turbo run lint:root lint:pkg lint:oxlint --continue",
     "lint:fix": "turbo run lint:pkg:fix lint:root --continue -- --fix",
-    "lint:root": "eslint .",
-    "oxlint": "oxlint .",
-    "lint:oxlint": "oxlint .",
-    "lint:oxlint:fix": "oxlint . --fix",
+    "lint:oxlint": "vp lint .",
+    "lint:oxlint:fix": "vp lint . --fix",
     "lint:pkg": "manypkg check",
     "lint:pkg:fix": "manypkg fix",
+    "lint:root": "eslint .",
+    "oxlint": "vp lint .",
     "publish": "changeset publish",
     "release": "turbo run build && changeset publish",
     "test": "turbo test",
-    "types": "turbo types",
-    "knip": "knip"
+    "types": "turbo types"
   },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
     "@2digits/eslint-config": "workspace:*",
+    "@2digits/oxfmt-config": "workspace:*",
     "@2digits/oxlint-config": "workspace:*",
-    "@2digits/prettier-config": "workspace:*",
     "@2digits/tsconfig": "workspace:*",
     "@changesets/cli": "catalog:",
     "@manypkg/cli": "catalog:",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "knip": "catalog:",
-    "oxfmt": "catalog:",
-    "oxlint": "catalog:",
-    "oxlint-tsgolint": "catalog:",
     "pkg-pr-new": "catalog:",
-    "prettier": "catalog:",
     "turbo": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
   },
-  "packageManager": "pnpm@10.33.0",
   "engines": {
-    "node": "24.14.1",
-    "bun": "1.3.6"
+    "bun": "1.3.6",
+    "node": "24.14.1"
   },
-  "prettier": "@2digits/prettier-config"
+  "packageManager": "pnpm@10.33.0"
 }

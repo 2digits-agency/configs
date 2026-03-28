@@ -4,34 +4,35 @@ import { fileURLToPath } from 'node:url';
 
 import ts from 'dedent';
 import type { OxlintConfig } from 'oxlint';
-import { defineConfig } from 'tsdown';
+import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/base.ts', 'src/typescript.ts'],
-  dts: {
-    tsgo: true,
-  },
-  fixedExtension: true,
-  exports: true,
-  attw: { profile: 'esm-only', level: 'error' },
-  publint: { strict: true },
-  shims: true,
-  hooks(ctx) {
-    ctx.hook('build:prepare', async () => {
-      const output = execFileSync(
-        fileURLToPath(new URL('node_modules/oxlint/bin/oxlint', import.meta.url)),
-        ['--rules', '--format', 'json'],
-        {
-          cwd: new URL('..', import.meta.url),
-          encoding: 'utf8',
-        },
-      );
+  pack: {
+    entry: ['src/index.ts', 'src/base.ts', 'src/typescript.ts'],
+    dts: {
+      tsgo: true,
+    },
+    fixedExtension: true,
+    exports: true,
+    attw: { profile: 'esm-only', level: 'error' },
+    publint: { strict: true },
+    shims: true,
+    hooks(ctx) {
+      ctx.hook('build:prepare', async () => {
+        const output = execFileSync(
+          fileURLToPath(new URL('node_modules/oxlint/bin/oxlint', import.meta.url)),
+          ['--rules', '--format', 'json'],
+          {
+            cwd: new URL('..', import.meta.url),
+            encoding: 'utf8',
+          },
+        );
 
-      const rules = JSON.parse(output) as Array<OxlintRule>;
+        const rules = JSON.parse(output) as Array<OxlintRule>;
 
-      const ruleDefinitions = rules.map((element) => toDefinition(element));
+        const ruleDefinitions = rules.map((element) => toDefinition(element));
 
-      const dts = ts`
+        const dts = ts`
 /* eslint-disable */
 /* prettier-ignore */
 import type { DummyRule } from 'oxlint';
@@ -43,8 +44,9 @@ ${ruleDefinitions.join('\n')}
 export type RuleName = keyof RuleOptions;
 `;
 
-      await writeFile(new URL('src/types.gen.d.ts', import.meta.url), dts);
-    });
+        await writeFile(new URL('src/types.gen.d.ts', import.meta.url), dts);
+      });
+    },
   },
 });
 

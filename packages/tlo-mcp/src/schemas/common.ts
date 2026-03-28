@@ -2,8 +2,7 @@ import * as Brand from 'effect/Brand';
 import * as Schema from 'effect/Schema';
 
 /**
- * TeamLeader Orbit uses YYYYMMDDHHMMSS format for dates.
- * Example: "20251117143000" = Nov 17, 2025 14:30:00
+ * TeamLeader Orbit uses YYYYMMDDHHMMSS format for dates. Example: "20251117143000" = Nov 17, 2025 14:30:00.
  */
 export const TloDateString = Schema.String.pipe(Schema.pattern(/^\d{14}$/), Schema.brand('TloDateString'));
 export type TloDateString = typeof TloDateString.Type;
@@ -57,9 +56,8 @@ export const TloId = Brand.nominal<TloId>();
 export const TloIdSchema = Schema.String.pipe(Schema.fromBrand(TloId));
 
 /**
- * Standard TLO API response envelope schema.
- * Note: Most endpoints return data directly without this wrapper.
- * Kept for potential use with endpoints that do use the envelope pattern.
+ * Standard TLO API response envelope schema. Note: Most endpoints return data directly without this wrapper. Kept for
+ * potential use with endpoints that do use the envelope pattern.
  */
 export function TloResponse<$A, $I, $R>(dataSchema: Schema.Schema<$A, $I, $R>) {
   return Schema.Struct({
