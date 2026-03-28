@@ -23,7 +23,6 @@
     "build": "tsdown --minify",
     "dev": "tsdown --watch",
     "rules:check": "tsx ./scripts/check-rules.ts",
-    "types:generate": "tsx ./scripts/generate-types.ts",
     "types": "tsgo --noEmit"
   },
   "keywords": [
