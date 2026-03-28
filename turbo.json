@@ -126,7 +126,12 @@
       "dependsOn": ["@2digits/prettier-config#build"]
     },
     "//#knip": {
-      "dependsOn": ["@2digits/eslint-config#build", "@2digits/prettier-config#build"],
+      "dependsOn": [
+        "@2digits/eslint-config#build",
+        "@2digits/prettier-config#build",
+        "@2digits/oxlint-config#build",
+        "@2digits/oxfmt-config#build"
+      ],
       "inputs": [
         ".knip.json",
         "**/package.json",
