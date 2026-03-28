@@ -1,5 +1,15 @@
 # @2digits/eslint-config
 
+## 5.2.6
+
+### Patch Changes
+
+- cd7f884: Update @eslint/markdown to 8.0.0
+  - Added `markdown/fenced-code-meta` rule type definition
+  - Updated `markdown/no-duplicate-definitions` and `markdown/no-unused-definitions` option schema with new `checkFootnoteDefinitions` option
+
+- 841c323: Update eslint-plugin-jsdoc to 62.8.1
+
 ## 5.2.5
 
 ### Patch Changes
