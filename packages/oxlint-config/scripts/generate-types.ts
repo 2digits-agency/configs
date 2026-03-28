@@ -64,7 +64,7 @@ export type RuleName = keyof RuleOptions;
 }
 
 export async function generateTypes(): Promise<void> {
-  const output = execFileSync('pnpm', ['oxlint', '--rules', '--format', 'json'], {
+  const output = execFileSync('../node_modules/oxlint/bin/oxlint', ['--rules', '--format', 'json'], {
     cwd: new URL('..', import.meta.url),
     encoding: 'utf8',
   });
