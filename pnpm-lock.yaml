@@ -70,8 +70,8 @@ catalogs:
       specifier: 16.2.1
       version: 16.2.1
     '@opencode-ai/plugin':
-      specifier: 1.3.3
-      version: 1.3.3
+      specifier: 1.3.5
+      version: 1.3.5
     '@prettier/plugin-oxc':
       specifier: 0.1.3
       version: 0.1.3
@@ -695,7 +695,7 @@ importers:
     dependencies:
       '@opencode-ai/plugin':
         specifier: 'catalog:'
-        version: 1.3.3
+        version: 1.3.5
       dedent:
         specifier: 'catalog:'
         version: 1.7.2
@@ -2381,11 +2381,19 @@ packages:
   '@one-ini/wasm@0.2.1':
     resolution: {integrity: sha512-TUqERXGNTifZ9y2g3wPxQrw3HpHv/02DsW3D90T9x0hhonrL1ZqpSmNrU2XkoIq0fP1N6gZfVQzy2Fw1ZvGBNg==}
 
-  '@opencode-ai/plugin@1.3.3':
-    resolution: {integrity: sha512-pxI4LanjnQb8sUd/zfQilzlGHyrdjmZuQ1XsUFbm+rij4yq0mUPtXcPGfuZJBEcGchKn57tA3/LB6RmipLQpXg==}
+  '@opencode-ai/plugin@1.3.5':
+    resolution: {integrity: sha512-hsFrE6mm+/BMZyYF/+VJPueMDW+UKzGV2zv10TlNchBnO/Wf5WwZLB7lFDqtJmVHsZakPbFGEFCE5+GThPJfWw==}
+    peerDependencies:
+      '@opentui/core': '>=0.1.92'
+      '@opentui/solid': '>=0.1.92'
+    peerDependenciesMeta:
+      '@opentui/core':
+        optional: true
+      '@opentui/solid':
+        optional: true
 
-  '@opencode-ai/sdk@1.3.3':
-    resolution: {integrity: sha512-qg7DwEVUpZArsYajs0DcaHqmIYB3EfHCuuTdMJir7Yc976DUWDfLR/5y9h8fKb9HAMJXe4TZkAIEr0/3OmK67g==}
+  '@opencode-ai/sdk@1.3.5':
+    resolution: {integrity: sha512-ckKedqONnigSejAm/UVlBuQP0U1Ozn9uC54zLxz/EqQZPWE8y7V+8PT048zC7q6gqI+puj2jns65/+enJSkTEQ==}
 
   '@opentelemetry/api-logs@0.213.0':
     resolution: {integrity: sha512-zRM5/Qj6G84Ej3F1yt33xBVY/3tnMxtL1fiDIxYbDWYaZ/eudVw3/PBiZ8G7JwUxXxjW8gU4g6LnOyfGKYHYgw==}
@@ -10723,12 +10731,12 @@ snapshots:
 
   '@one-ini/wasm@0.2.1': {}
 
-  '@opencode-ai/plugin@1.3.3':
+  '@opencode-ai/plugin@1.3.5':
     dependencies:
-      '@opencode-ai/sdk': 1.3.3
+      '@opencode-ai/sdk': 1.3.5
       zod: 4.1.8
 
-  '@opencode-ai/sdk@1.3.3': {}
+  '@opencode-ai/sdk@1.3.5': {}
 
   '@opentelemetry/api-logs@0.213.0':
     dependencies:
