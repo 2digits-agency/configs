@@ -22,8 +22,8 @@ catalogs:
       specifier: 0.60.0
       version: 0.60.0
     '@effect/language-service':
-      specifier: 0.84.1
-      version: 0.84.1
+      specifier: 0.84.2
+      version: 0.84.2
     '@effect/platform':
       specifier: 0.96.0
       version: 0.96.0
@@ -408,7 +408,7 @@ importers:
         version: 0.18.2
       '@effect/language-service':
         specifier: 'catalog:'
-        version: 0.84.1
+        version: 0.84.2
       '@effect/vitest':
         specifier: 'catalog:'
         version: 0.29.0(effect@3.21.0)(vitest@4.1.2(@opentelemetry/api@1.9.0)(@types/node@24.12.0)(vite@7.1.3(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.3)))
@@ -895,7 +895,7 @@ importers:
         version: 0.18.2
       '@effect/language-service':
         specifier: 'catalog:'
-        version: 0.84.1
+        version: 0.84.2
       '@effect/vitest':
         specifier: 'catalog:'
         version: 0.29.0(effect@3.21.0)(vitest@4.1.2(@opentelemetry/api@1.9.0)(@types/node@24.12.0)(vite@7.1.3(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.3)))
@@ -1436,8 +1436,8 @@ packages:
       lmdb:
         optional: true
 
-  '@effect/language-service@0.84.1':
-    resolution: {integrity: sha512-YUqjJU24HeYgPV453cR2fDqkZ+zZKMuxGnmxWAPscWJ6gt6FB7JZohMCOczRTIOGPrQMcloJX7BjCaPu+RNhpw==}
+  '@effect/language-service@0.84.2':
+    resolution: {integrity: sha512-l04qNxpiA8rY5yXWckRPJ7Mk5MNerXuNymSFf+IdflfI5i8jgL1bpBNLuP6ijg7wgjdHc/KmTnCj2kT0SCntuA==}
     hasBin: true
 
   '@effect/platform-node-shared@0.59.0':
@@ -9754,7 +9754,7 @@ snapshots:
       effect: 3.21.0
       uuid: 11.1.0
 
-  '@effect/language-service@0.84.1': {}
+  '@effect/language-service@0.84.2': {}
 
   '@effect/platform-node-shared@0.59.0(@effect/cluster@0.48.3(@effect/platform@0.96.0(effect@3.21.0))(@effect/rpc@0.75.0(@effect/platform@0.96.0(effect@3.21.0))(effect@3.21.0))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.0(effect@3.21.0))(effect@3.21.0))(@effect/platform@0.96.0(effect@3.21.0))(effect@3.21.0))(@effect/workflow@0.9.3(@effect/platform@0.96.0(effect@3.21.0))(@effect/rpc@0.75.0(@effect/platform@0.96.0(effect@3.21.0))(effect@3.21.0))(effect@3.21.0))(effect@3.21.0))(@effect/platform@0.96.0(effect@3.21.0))(@effect/rpc@0.75.0(@effect/platform@0.96.0(effect@3.21.0))(effect@3.21.0))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.0(effect@3.21.0))(effect@3.21.0))(@effect/platform@0.96.0(effect@3.21.0))(effect@3.21.0))(effect@3.21.0)':
     dependencies:
