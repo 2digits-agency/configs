@@ -1,0 +1,4 @@
+{
+  "prettier": "export function shouldEnableFeature(input: {\n  hasAccessToPrivateBeta: boolean;\n  isEnabledForCurrentEnvironment: boolean;\n  hasCompletedRequiredOnboarding: boolean;\n  isUsingSupportedBrowser: boolean;\n}) {\n  return (\n    input.hasAccessToPrivateBeta\n    && input.isEnabledForCurrentEnvironment\n    && input.hasCompletedRequiredOnboarding\n    && input.isUsingSupportedBrowser\n  );\n}\n",
+  "oxfmt": "export function shouldEnableFeature(input: {\n  hasAccessToPrivateBeta: boolean;\n  isEnabledForCurrentEnvironment: boolean;\n  hasCompletedRequiredOnboarding: boolean;\n  isUsingSupportedBrowser: boolean;\n}) {\n  return (\n    input.hasAccessToPrivateBeta &&\n    input.isEnabledForCurrentEnvironment &&\n    input.hasCompletedRequiredOnboarding &&\n    input.isUsingSupportedBrowser\n  );\n}\n"
+}

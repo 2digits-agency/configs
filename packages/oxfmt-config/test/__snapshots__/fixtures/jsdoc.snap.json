@@ -1,0 +1,4 @@
+{
+  "prettier": "/**\n * formats a user label\n * @param {string} [value='guest'] user label text\n * @returns {string} normalized label text\n */\nexport function formatLabel(value: string = 'guest') {\n  return value.trim().toUpperCase();\n}\n",
+  "oxfmt": "/**\n * Formats a user label.\n *\n * @param {string} [value='guest'] User label text. Default is `'guest'`\n *\n * @returns {string} Normalized label text\n */\nexport function formatLabel(value: string = 'guest') {\n  return value.trim().toUpperCase();\n}\n"
+}

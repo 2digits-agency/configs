@@ -2,22 +2,9 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { format as formatOxfmt } from 'oxfmt';
-import { format as formatPrettier } from 'prettier';
-import { describe, expect, it } from 'vite-plus/test';
+import { describe, it } from 'vite-plus/test';
 
-import prettierConfig from '@2digits/prettier-config';
-
-import { twoDigits } from '../src';
-
-type Expectation = 'match' | 'known-difference';
-
-interface FixtureCase {
-  readonly name: string;
-  readonly fileName: string;
-  readonly expectation: Expectation;
-  readonly reason?: string;
-}
+import { expectFormatterIdempotence, type FixtureCase, formatFixture, getSnapshotPath, snapshotJson } from './helpers';
 
 const testDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -42,65 +29,37 @@ const fixtureCases: Array<FixtureCase> = [
   },
 ];
 
-function getFixturePath(fixture: FixtureCase): string {
-  return path.join(testDir, 'fixtures', fixture.name, fixture.fileName);
-}
-
 async function readFixture(fixture: FixtureCase): Promise<string> {
-  return fs.readFile(getFixturePath(fixture), 'utf8');
+  return fs.readFile(path.join(testDir, 'fixtures', fixture.name, fixture.fileName), 'utf8');
 }
 
-async function formatFixtureWithPrettier(source: string, fixture: FixtureCase): Promise<string> {
-  return formatPrettier(source, {
-    ...prettierConfig,
-    filepath: path.join(fixture.name, fixture.fileName),
-  });
-}
-
-async function formatFixtureWithOxfmt(source: string, fixture: FixtureCase): Promise<string> {
-  const result = await formatOxfmt(path.join(fixture.name, fixture.fileName), source, twoDigits);
-
-  expect(result.errors).toStrictEqual([]);
-
-  return result.code;
-}
-
-async function expectFormatterIdempotence(
-  prettierOutput: string,
-  oxfmtOutput: string,
-  fixture: FixtureCase,
-): Promise<void> {
-  await expect(formatFixtureWithPrettier(prettierOutput, fixture)).resolves.toBe(prettierOutput);
-  await expect(formatFixtureWithOxfmt(oxfmtOutput, fixture)).resolves.toBe(oxfmtOutput);
-}
-
-describe('prettier parity fixtures', () => {
+describe('formatted output snapshots', () => {
   it.for(fixtureCases)('$name', async (fixture, { expect }) => {
-    const source = await readFixture(fixture);
-    const prettierOutput = await formatFixtureWithPrettier(source, fixture);
-    const oxfmtOutput = await formatFixtureWithOxfmt(source, fixture);
+    const outputs = await formatFixture(await readFixture(fixture), fixture);
 
-    await expectFormatterIdempotence(prettierOutput, oxfmtOutput, fixture);
+    await expect(snapshotJson(outputs)).toMatchFileSnapshot(getSnapshotPath(testDir, fixture.name));
+  });
+});
 
-    await expect(prettierOutput).toMatchFileSnapshot(
-      path.join(testDir, '__snapshots__', 'fixtures', `${fixture.name}.prettier.snap`),
-    );
-    await expect(oxfmtOutput).toMatchFileSnapshot(
-      path.join(testDir, '__snapshots__', 'fixtures', `${fixture.name}.oxfmt.snap`),
-    );
+describe('idempotence', () => {
+  it.for(fixtureCases)('$name', async (fixture) => {
+    const outputs = await formatFixture(await readFixture(fixture), fixture);
+
+    await expectFormatterIdempotence(outputs, fixture);
+  });
+});
+
+describe('prettier parity', () => {
+  it.for(fixtureCases)('$name', async (fixture, { expect }) => {
+    const outputs = await formatFixture(await readFixture(fixture), fixture);
 
     if (fixture.expectation === 'match') {
-      expect(oxfmtOutput).toBe(prettierOutput);
+      expect(outputs.oxfmt).toBe(outputs.prettier);
 
       return;
     }
 
-    expect(oxfmtOutput).not.toBe(prettierOutput);
-
-    await expect(
-      [`fixture: ${fixture.name}`, `reason: ${fixture.reason ?? 'known difference'}`, 'status: known-difference'].join(
-        '\n',
-      ),
-    ).toMatchFileSnapshot(path.join(testDir, '__snapshots__', 'fixtures', `${fixture.name}.reason.snap`));
+    expect(fixture.reason).toBeDefined();
+    expect(outputs.oxfmt).not.toBe(outputs.prettier);
   });
 });

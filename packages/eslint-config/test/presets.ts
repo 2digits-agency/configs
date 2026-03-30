@@ -1,4 +1,4 @@
-export interface ConfigPreset {
+interface ConfigPreset {
   readonly name: string;
   readonly options: Record<string, boolean | undefined>;
 }
