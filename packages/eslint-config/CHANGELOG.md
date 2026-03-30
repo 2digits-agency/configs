@@ -1,5 +1,22 @@
 # @2digits/eslint-config
 
+## 5.2.6
+
+### Patch Changes
+
+- cd7f884: Update @eslint/markdown to 8.0.0
+  - Added `markdown/fenced-code-meta` rule type definition
+  - Updated `markdown/no-duplicate-definitions` and `markdown/no-unused-definitions` option schema with new `checkFootnoteDefinitions` option
+
+- 1b758b7: Update ESLint plugins
+  - Updated `eslint-plugin-unicorn` to 64.0.0
+  - Added `unicorn/consistent-template-literal-escape` rule (enforce consistent escaping of `${` in template literals)
+  - Added `unicorn/no-useless-iterator-to-array` rule (disallow unnecessary `.toArray()` on iterators)
+  - Updated generated types with doc URL changes to v64 references
+  - Updated `eslint-plugin-turbo` to 2.8.21
+
+- 841c323: Update eslint-plugin-jsdoc to 62.8.1
+
 ## 5.2.5
 
 ### Patch Changes

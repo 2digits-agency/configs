@@ -1,5 +1,17 @@
 # @2digits/oxlint-config
 
+## 0.1.1
+
+### Patch Changes
+
+- cd7f884: Reorganize TypeScript rules between type-aware and non-type-aware configs
+  - Moved `consistent-type-exports`, `no-array-delete`, `no-deprecated`, and `no-unnecessary-condition` to `typeAwareConfig` (require type information)
+  - Moved `no-non-null-asserted-optional-chain`, `no-this-alias`, `no-unnecessary-parameter-property-assignment`, `no-unsafe-declaration-merging`, `no-useless-empty-export`, and `triple-slash-reference` to `typescriptRulesConfig` (do not require type information)
+  - Added `typescript/no-deprecated` and `typescript/no-unnecessary-condition` rules to type-aware config
+
+- 1b758b7: Update oxlint-tsgolint to 0.18.1
+- 841c323: Update oxlint-tsgolint to 0.17.4
+
 ## 0.1.0
 
 ### Minor Changes
