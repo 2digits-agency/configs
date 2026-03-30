@@ -6,7 +6,8 @@ import { format as formatOxfmt } from 'oxfmt';
 import { format as formatPrettier } from 'prettier';
 import { describe, expect, it } from 'vite-plus/test';
 
-import prettierConfig from '../../prettier-config/dist/index.mjs';
+import prettierConfig from '@2digits/prettier-config';
+
 import { twoDigits } from '../src';
 
 type Expectation = 'match' | 'known-difference';

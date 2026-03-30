@@ -35,4 +35,4 @@ jobs:
         run: vp run build
 
       - name: 🚀 Publish with pkg.pr.new
-        run: vp exec pkg-pr-new publish './packages/*' --packageManager pnpm --pnpm
+        run: pnpm pkg-pr-new publish './packages/*' --packageManager pnpm --pnpm

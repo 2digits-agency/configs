@@ -47,4 +47,10 @@ export type ConfigNames = ${configNames.map((i) => `'${i}'`).join(' | ')}
       });
     },
   },
+  test: {
+    include: ['test/**/*.spec.ts'],
+    sequence: {
+      concurrent: false,
+    },
+  },
 });

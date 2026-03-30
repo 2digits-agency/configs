@@ -96,9 +96,9 @@
       "cache": false
     },
     "//#format": {
-      "dependsOn": ["@2digits/prettier-config#build"],
+      "dependsOn": ["@2digits/oxfmt-config#build"],
       "inputs": [
-        ".prettierignore",
+        "vite.config.ts",
         "**/*.ts",
         "**/*.tsx",
         "**/*.js",
