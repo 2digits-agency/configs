@@ -75,36 +75,32 @@ async function expectFormatterIdempotence(
 }
 
 describe('prettier parity fixtures', () => {
-  for (const fixture of fixtureCases) {
-    it(fixture.name, async ({ expect }) => {
-      const source = await readFixture(fixture);
-      const prettierOutput = await formatFixtureWithPrettier(source, fixture);
-      const oxfmtOutput = await formatFixtureWithOxfmt(source, fixture);
+  it.for(fixtureCases)('$name', async (fixture, { expect }) => {
+    const source = await readFixture(fixture);
+    const prettierOutput = await formatFixtureWithPrettier(source, fixture);
+    const oxfmtOutput = await formatFixtureWithOxfmt(source, fixture);
 
-      await expectFormatterIdempotence(prettierOutput, oxfmtOutput, fixture);
+    await expectFormatterIdempotence(prettierOutput, oxfmtOutput, fixture);
 
-      await expect(prettierOutput).toMatchFileSnapshot(
-        path.join(testDir, '__snapshots__', 'fixtures', `${fixture.name}.prettier.snap`),
-      );
-      await expect(oxfmtOutput).toMatchFileSnapshot(
-        path.join(testDir, '__snapshots__', 'fixtures', `${fixture.name}.oxfmt.snap`),
-      );
+    await expect(prettierOutput).toMatchFileSnapshot(
+      path.join(testDir, '__snapshots__', 'fixtures', `${fixture.name}.prettier.snap`),
+    );
+    await expect(oxfmtOutput).toMatchFileSnapshot(
+      path.join(testDir, '__snapshots__', 'fixtures', `${fixture.name}.oxfmt.snap`),
+    );
 
-      if (fixture.expectation === 'match') {
-        expect(oxfmtOutput).toBe(prettierOutput);
+    if (fixture.expectation === 'match') {
+      expect(oxfmtOutput).toBe(prettierOutput);
 
-        return;
-      }
+      return;
+    }
 
-      expect(oxfmtOutput).not.toBe(prettierOutput);
+    expect(oxfmtOutput).not.toBe(prettierOutput);
 
-      await expect(
-        [
-          `fixture: ${fixture.name}`,
-          `reason: ${fixture.reason ?? 'known difference'}`,
-          'status: known-difference',
-        ].join('\n'),
-      ).toMatchFileSnapshot(path.join(testDir, '__snapshots__', 'fixtures', `${fixture.name}.reason.snap`));
-    });
-  }
+    await expect(
+      [`fixture: ${fixture.name}`, `reason: ${fixture.reason ?? 'known difference'}`, 'status: known-difference'].join(
+        '\n',
+      ),
+    ).toMatchFileSnapshot(path.join(testDir, '__snapshots__', 'fixtures', `${fixture.name}.reason.snap`));
+  });
 });

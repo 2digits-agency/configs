@@ -4,6 +4,7 @@ import type { Linter } from 'eslint';
 import { describe, it, vi } from 'vite-plus/test';
 
 import type { TypedFlatConfigItem } from '../src/types';
+import { factoryConfigPresets } from './presets';
 
 const workspaceRoot = fileURLToPath(new URL('../../..', import.meta.url));
 const detectedPackages = new Set(['turbo', 'typescript']);
@@ -133,75 +134,7 @@ function serializeConfigs(configs: Array<TypedFlatConfigItem>): Array<Serialized
   });
 }
 
-const CONFIG_PRESETS = {
-  default: {},
-  minimal: {
-    css: false,
-    depend: false,
-    drizzle: false,
-    graphql: false,
-    next: false,
-    pnpm: false,
-    react: false,
-    storybook: false,
-    tailwind: false,
-    tanstackQuery: false,
-    tanstackRouter: false,
-    ts: true,
-    turbo: false,
-    zod: false,
-  },
-  full: {
-    css: true,
-    depend: true,
-    drizzle: true,
-    graphql: true,
-    next: true,
-    pnpm: false,
-    react: true,
-    storybook: true,
-    tailwind: true,
-    tanstackQuery: true,
-    tanstackRouter: true,
-    ts: true,
-    turbo: true,
-    zod: true,
-  },
-  'react-only': {
-    css: false,
-    depend: true,
-    drizzle: false,
-    graphql: false,
-    next: false,
-    pnpm: false,
-    react: true,
-    storybook: false,
-    tailwind: false,
-    tanstackQuery: false,
-    tanstackRouter: false,
-    ts: true,
-    turbo: false,
-    zod: false,
-  },
-  'next-stack': {
-    css: false,
-    depend: true,
-    drizzle: false,
-    graphql: false,
-    next: true,
-    pnpm: false,
-    react: true,
-    storybook: false,
-    tailwind: true,
-    tanstackQuery: true,
-    tanstackRouter: false,
-    ts: true,
-    turbo: false,
-    zod: false,
-  },
-} as const;
-
-function withDeterministicOptions(options: Record<string, boolean>): Record<string, unknown> {
+function withDeterministicOptions(options: Record<string, boolean | undefined>): Record<string, unknown> {
   return {
     ...options,
     ignores: {
@@ -214,14 +147,16 @@ function withDeterministicOptions(options: Record<string, boolean>): Record<stri
 }
 
 describe('factory', () => {
-  for (const [name, options] of Object.entries(CONFIG_PRESETS)) {
-    it.concurrent(`preset: ${name}`, { timeout: 30_000 }, async ({ expect }) => {
+  it.concurrent.for(factoryConfigPresets)(
+    'preset: $name',
+    { timeout: 30_000 },
+    async ({ name, options }, { expect }) => {
       const config = await twoDigits(withDeterministicOptions(options));
       const serialized = serializeConfigs(config);
 
       await expect(JSON.stringify(serialized, undefined, 2)).toMatchFileSnapshot(
         `./__snapshots__/factory/${name}.snap.json`,
       );
-    });
-  }
+    },
+  );
 });
