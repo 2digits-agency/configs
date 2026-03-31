@@ -1,12 +1,10 @@
-import pluginGitHubAction from 'eslint-plugin-github-action';
+import pluginGitHubAction, { configs } from 'eslint-plugin-github-action';
 import * as parser from 'yaml-eslint-parser';
 
 import { GLOB_GITHUB_ACTIONS } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
-const recommendedRules = Object.fromEntries(
-  pluginGitHubAction.configs.recommended.flatMap(({ rules }) => Object.entries({ ...rules })),
-);
+const recommendedRules = Object.fromEntries(configs.recommended.flatMap(({ rules }) => Object.entries({ ...rules })));
 
 export function githubActions(): Array<TypedFlatConfigItem> {
   return [

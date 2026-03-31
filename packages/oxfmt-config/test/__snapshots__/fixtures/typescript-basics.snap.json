@@ -1,0 +1,4 @@
+{
+  "prettier": "const data = { alpha: 1, beta: [1, 2, 3], gamma: { delta: 'value', epsilon: true } };\n\nexport function formatThings(input: { items: Array<string>; flag: boolean }) {\n  return input.flag ? data.gamma.delta : input.items.map((item) => ({ item, length: item.length }));\n}\n",
+  "oxfmt": "const data = { alpha: 1, beta: [1, 2, 3], gamma: { delta: 'value', epsilon: true } };\n\nexport function formatThings(input: { items: Array<string>; flag: boolean }) {\n  return input.flag ? data.gamma.delta : input.items.map((item) => ({ item, length: item.length }));\n}\n"
+}

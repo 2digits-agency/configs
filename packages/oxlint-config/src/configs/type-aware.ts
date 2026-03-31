@@ -22,5 +22,6 @@ export const typeAwareConfig = defineTypedConfig({
     'typescript/require-array-sort-compare': 'error',
     'typescript/restrict-template-expressions': ['error', { allowNumber: true }],
     'typescript/unbound-method': 'error',
+    'typescript/dot-notation': ['error', { allowKeywords: true }],
   },
 });

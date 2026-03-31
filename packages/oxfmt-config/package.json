@@ -2,42 +2,37 @@
   "name": "@2digits/oxfmt-config",
   "version": "0.2.0",
   "description": "Opinionated Oxfmt config for 2digits projects.",
+  "keywords": [
+    "oxfmt-config"
+  ],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/2digits-agency/configs.git",
     "directory": "packages/oxfmt-config"
   },
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.cts",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "sideEffects": false,
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    },
+    ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
   "scripts": {
-    "build": "tsdown --minify --config-loader unconfig",
-    "dev": "tsdown --watch --config-loader unconfig",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "build": "vp pack --minify --config-loader unconfig",
+    "dev": "vp pack --watch --config-loader unconfig",
+    "test": "vp test run",
+    "test:watch": "vp test",
     "types": "tsgo --noEmit"
   },
-  "keywords": [
-    "oxfmt-config"
-  ],
-  "license": "MIT",
-  "public": true,
   "dependencies": {
-    "@2digits/constants": "workspace:*"
+    "@2digits/constants": "workspace:*",
+    "defu": "catalog:"
   },
   "devDependencies": {
+    "@2digits/prettier-config": "workspace:*",
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
     "@types/node": "catalog:",
@@ -45,11 +40,12 @@
     "oxfmt": "catalog:",
     "prettier": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite-plus": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {
     "oxfmt": "catalog:"
-  }
+  },
+  "public": true
 }

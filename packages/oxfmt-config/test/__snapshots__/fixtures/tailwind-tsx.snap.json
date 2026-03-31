@@ -1,0 +1,4 @@
+{
+  "prettier": "import { cn } from '@/lib/cn';\n\ntype Props = { isActive: boolean; className?: string; title: string };\n\nexport function Card({ isActive, className, title }: Props) {\n  return (\n    <div\n      className={cn('rounded bg-blue-500 px-4 font-bold text-white', isActive && 'hover:bg-blue-600', className)}\n      data-title={title}>\n      <span className=\"rounded bg-white px-2 py-1 text-sm font-semibold text-black\">{title}</span>\n    </div>\n  );\n}\n",
+  "oxfmt": "import { cn } from '@/lib/cn';\n\ntype Props = { isActive: boolean; className?: string; title: string };\n\nexport function Card({ isActive, className, title }: Props) {\n  return (\n    <div\n      className={cn('rounded bg-blue-500 px-4 font-bold text-white', isActive && 'hover:bg-blue-600', className)}\n      data-title={title}>\n      <span className=\"rounded bg-white px-2 py-1 text-sm font-semibold text-black\">{title}</span>\n    </div>\n  );\n}\n"
+}

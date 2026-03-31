@@ -13,7 +13,7 @@ export class ProjectDetectionService extends Effect.Service<ProjectDetectionServ
     const pm = yield* PackageManagerService;
 
     /**
-     * Check if the project is a monorepo with Turborepo
+     * Check if the project is a monorepo with Turborepo.
      */
     const isMonorepo = Effect.fn('ProjectDetectionService.isMonorepo')(function* () {
       const root = yield* pm.resolveRoot();
@@ -77,7 +77,7 @@ export class ProjectDetectionService extends Effect.Service<ProjectDetectionServ
     });
 
     /**
-     * Get the package.json path for a workspace
+     * Get the package.json path for a workspace.
      */
     const getWorkspacePackageJsonPath = (workspacePath: string) => path.join(workspacePath, 'package.json');
 

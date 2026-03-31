@@ -44,17 +44,17 @@ function mapParseError(error: ParseResult.ParseError): TloParseError {
 
 function isErrorResponse(json: unknown): json is { MSG: string; err: number } {
   return (
-    typeof json === 'object'
-    && json !== null
-    && 'err' in json
-    && typeof (json as Record<string, unknown>).err === 'number'
-    && (json as Record<string, unknown>).err !== 0
+    typeof json === 'object' &&
+    json !== null &&
+    'err' in json &&
+    typeof (json as Record<string, unknown>).err === 'number' &&
+    (json as Record<string, unknown>).err !== 0
   );
 }
 
 /**
- * TLO sometimes returns malformed "JSON" with single quotes: {MSG:'...', err:1}
- * This regex detects and extracts the error message from such responses.
+ * TLO sometimes returns malformed "JSON" with single quotes: {MSG:'...', err:1} This regex detects and extracts the
+ * error message from such responses.
  */
 const MALFORMED_ERROR_REGEX = /\{MSG:'([^']*)',\s*err:(\d+)\}/;
 

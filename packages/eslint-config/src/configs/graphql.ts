@@ -25,8 +25,8 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<Array<Typ
       const ruleName = rule.replace('@graphql-eslint/', '') as keyof typeof gql.rules;
 
       if (
-        ruleName in gql.rules
-        && (gql.rules[ruleName].meta.docs?.requiresSchema || gql.rules[ruleName].meta.docs?.requiresSiblings)
+        ruleName in gql.rules &&
+        (gql.rules[ruleName].meta.docs?.requiresSchema || gql.rules[ruleName].meta.docs?.requiresSiblings)
       ) {
         continue;
       }

@@ -2,17 +2,19 @@
   "name": "@2digits/opencode-plugin",
   "version": "0.1.16",
   "description": "OpenCode plugin for 2digits team - shared rules and feedback system",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/2digits-agency/configs.git",
     "directory": "packages/opencode-plugin"
   },
-  "type": "module",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "sideEffects": false,
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
@@ -22,13 +24,11 @@
     },
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
   "scripts": {
     "build": "bunup",
     "dev": "bunup --watch",
     "types": "tsgo --noEmit"
   },
-  "license": "MIT",
   "dependencies": {
     "@opencode-ai/plugin": "catalog:",
     "dedent": "catalog:"

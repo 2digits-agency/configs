@@ -1,6 +1,8 @@
 {
   "$schema": "./node_modules/knip/schema.json",
-  "ignoreDependencies": ["oxfmt"],
+  "ignoreDependencies": ["vite", "@arethetypeswrong/core", "publint", "vitest", "pkg-pr-new"],
+  "tsdown": { "config": "vite.config.ts" },
+  "vitest": { "config": ["vite.config.ts"] },
   "workspaces": {
     "packages/eslint-config": {
       "ignore": ["fixtures/**"],

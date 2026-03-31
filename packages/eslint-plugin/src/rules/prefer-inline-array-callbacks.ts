@@ -68,9 +68,9 @@ function isInlineFunction(node: TSESTree.Node): boolean {
 
 function isBindCall(node: TSESTree.Node): boolean {
   return (
-    node.type === AST_NODE_TYPES.CallExpression
-    && node.callee.type === AST_NODE_TYPES.MemberExpression
-    && isGlobalIdentifier(node.callee.property, 'bind')
+    node.type === AST_NODE_TYPES.CallExpression &&
+    node.callee.type === AST_NODE_TYPES.MemberExpression &&
+    isGlobalIdentifier(node.callee.property, 'bind')
   );
 }
 

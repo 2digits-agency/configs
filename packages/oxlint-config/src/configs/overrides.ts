@@ -9,6 +9,7 @@ export const overridesConfig = defineTypedConfig({
         'eslint/no-duplicate-imports': 'off',
         'eslint/no-undef': 'off',
         'eslint/no-unused-vars': 'off',
+        'import/unambiguous': 'off',
       },
     },
     {

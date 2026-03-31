@@ -26,7 +26,7 @@ export interface TurboConfig {
 type TaskCategory = 'build' | 'test' | 'lint' | 'typecheck' | 'dev' | 'other';
 
 /**
- * Categorize a task name into a known category
+ * Categorize a task name into a known category.
  */
 function categorizeTask(taskName: string): TaskCategory {
   const lower = taskName.toLowerCase();
@@ -55,7 +55,7 @@ function categorizeTask(taskName: string): TaskCategory {
 }
 
 /**
- * Generate turbo task configuration based on category
+ * Generate turbo task configuration based on category.
  */
 function generateTaskConfig(category: TaskCategory): Record<string, unknown> {
   switch (category) {
@@ -85,7 +85,7 @@ function generateTaskConfig(category: TaskCategory): Record<string, unknown> {
 }
 
 /**
- * Merge tasks into turbo.json config
+ * Merge tasks into turbo.json config.
  */
 function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): TurboConfig {
   const tasks = existingConfig.tasks || {};
@@ -115,7 +115,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
     const projectDetect = yield* ProjectDetectionService;
 
     /**
-     * Detect tasks from workspace package.json files
+     * Detect tasks from workspace package.json files.
      */
     const detectWorkspaceTasks = Effect.fn('TurborepoSetupService.detectWorkspaceTasks')(function* () {
       const workspaces = yield* projectDetect.discoverWorkspaces();
@@ -131,7 +131,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
     });
 
     /**
-     * Read existing turbo.json configuration
+     * Read existing turbo.json configuration.
      */
     const readTurboConfig = Effect.fn('TurborepoSetupService.readTurboConfig')(function* () {
       const root = yield* pm.resolveRoot();
@@ -160,7 +160,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
     });
 
     /**
-     * Write turbo.json configuration
+     * Write turbo.json configuration.
      */
     const writeTurboConfig = Effect.fn('TurborepoSetupService.writeTurboConfig')(function* (config: TurboConfig) {
       const root = yield* pm.resolveRoot();
@@ -176,7 +176,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
     });
 
     /**
-     * Merge detected tasks into turbo.json
+     * Merge detected tasks into turbo.json.
      */
     const mergeTurboConfig = Effect.fn('TurborepoSetupService.mergeTurboConfig')(function* (
       detectedTasks: Set<string>,
@@ -198,7 +198,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
     });
 
     /**
-     * Update root package.json scripts to use turbo run
+     * Update root package.json scripts to use turbo run.
      */
     const updateRootScripts = Effect.fn('TurborepoSetupService.updateRootScripts')(function* (
       detectedTasks: Set<string>,
@@ -235,7 +235,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
     });
 
     /**
-     * Ensure turbo is installed as devDependency
+     * Ensure turbo is installed as devDependency.
      */
     const ensureTurboInstalled = Effect.fn('TurborepoSetupService.ensureTurboInstalled')(function* () {
       yield* Effect.logInfo('Checking turbo installation...');
@@ -258,7 +258,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
     });
 
     /**
-     * Main setup orchestration workflow
+     * Main setup orchestration workflow.
      */
     const setup = Effect.fn('TurborepoSetupService.setup')(function* () {
       yield* Effect.logInfo('🚀 Setting up Turborepo...');

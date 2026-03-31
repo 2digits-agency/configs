@@ -1,4 +1,4 @@
-import pluginDeMorgan from 'eslint-plugin-de-morgan';
+import pluginDeMorgan, { configs } from 'eslint-plugin-de-morgan';
 
 import { GLOB_SRC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
@@ -12,7 +12,7 @@ export function boolean(): Array<TypedFlatConfigItem> {
         boolean: pluginDeMorgan,
       },
       rules: {
-        ...pluginDeMorgan.configs.recommended.rules,
+        ...configs.recommended.rules,
       },
     },
   ];

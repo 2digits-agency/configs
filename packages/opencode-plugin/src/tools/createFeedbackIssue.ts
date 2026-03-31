@@ -24,7 +24,7 @@ export function createFeedbackIssue(ctx: PluginInput) {
       context: tool.schema.string().meta({
         title: 'Relevant code or conversation snippets',
         description: markdown`
-Show the before and after code or conversation snippets that triggered the issue.
+          Show the before and after code or conversation snippets that triggered the issue.
         `,
       }),
       suggestedRule: tool.schema.string().meta({

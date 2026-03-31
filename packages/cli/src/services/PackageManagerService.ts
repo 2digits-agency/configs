@@ -31,7 +31,8 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
 
     const readPackageJson = Effect.fn('PackageManagerService.readPackageJson')(function* (options?: {
       /**
-       * The root from which to resolve the package.json file. If not provided, it will be resolved automatically from the current working directory.
+       * The root from which to resolve the package.json file. If not provided, it will be resolved automatically from
+       * the current working directory.
        *
        * @default `process.cwd()`
        */
@@ -48,7 +49,8 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
 
     const writePackageJson = Effect.fn('PackageManagerService.writePackageJson')(function* (options: {
       /**
-       * The root from which to resolve the package.json file. If not provided, it will be resolved automatically from the current working directory.
+       * The root from which to resolve the package.json file. If not provided, it will be resolved automatically from
+       * the current working directory.
        *
        * @default `process.cwd()`
        */
@@ -70,7 +72,8 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
 
     interface AddDependenciesOptions {
       /**
-       * The workspace to which the dependency should be added. If not provided, the dependency will be added to the root workspace.
+       * The workspace to which the dependency should be added. If not provided, the dependency will be added to the
+       * root workspace.
        */
       workspace?: string;
       dependencies?: Array<string>;

@@ -5,28 +5,28 @@ import { loadRules } from './rules' with { type: 'macro' };
 import { createFeedbackIssue } from './tools/createFeedbackIssue';
 
 const FIX_COMMAND_TEMPLATE = markdown`
-Submit feedback about something the agent did wrong or could improve.
+  Submit feedback about something the agent did wrong or could improve.
 
-## Instructions
+  ## Instructions
 
-1. Ask clarifying questions to understand:
-   - What specifically went wrong?
-   - What should have happened instead?
-   - Is this a recurring pattern or one-off?
+  1. Ask clarifying questions to understand:
+     - What specifically went wrong?
+     - What should have happened instead?
+     - Is this a recurring pattern or one-off?
 
-2. Use the \`create_feedback_issue\` tool with:
-   - **title**: Concise description of the issue
-   - **feedback**: Detailed explanation of what went wrong
-   - **context**: Relevant code/conversation snippets
-   - **suggestedRule**: Propose a rule to prevent this
+  2. Use the \`create_feedback_issue\` tool with:
+     - **title**: Concise description of the issue
+     - **feedback**: Detailed explanation of what went wrong
+     - **context**: Relevant code/conversation snippets
+     - **suggestedRule**: Propose a rule to prevent this
 
-3. Return the issue URL so user can track/discuss
+  3. Return the issue URL so user can track/discuss
 
-## User Input
+  ## User Input
 
-<Feedback>
-  $ARGUMENTS
-</Feedback>
+  <Feedback>
+    $ARGUMENTS
+  </Feedback>
 `;
 
 // eslint-disable-next-line ts/require-await

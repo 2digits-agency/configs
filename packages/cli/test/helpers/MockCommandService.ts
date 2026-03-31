@@ -9,7 +9,7 @@ import * as Sink from 'effect/Sink';
 import * as Stream from 'effect/Stream';
 
 /**
- * Represents a command that was executed during a test
+ * Represents a command that was executed during a test.
  */
 interface ExecutedCommand {
   readonly command: string;
@@ -18,8 +18,8 @@ interface ExecutedCommand {
 }
 
 /**
- * A spy/intercept implementation of CommandExecutor for testing.
- * Records all commands that would be executed and returns fake successful results.
+ * A spy/intercept implementation of CommandExecutor for testing. Records all commands that would be executed and
+ * returns fake successful results.
  */
 export class MockCommandExecutor extends Effect.Service<MockCommandExecutor>()('MockCommandExecutor', {
   effect: Effect.gen(function* () {
@@ -84,22 +84,19 @@ export class MockCommandExecutor extends Effect.Service<MockCommandExecutor>()('
 
           return [];
         }),
-      stream: (command) => {
-        return Stream.fromEffect(recordCommand(command)).pipe(Stream.flatMap(() => Stream.empty));
-      },
-      streamLines: (command, _encoding) => {
-        return Stream.fromEffect(recordCommand(command)).pipe(Stream.flatMap(() => Stream.empty));
-      },
+      stream: (command) => Stream.fromEffect(recordCommand(command)).pipe(Stream.flatMap(() => Stream.empty)),
+      streamLines: (command, _encoding) =>
+        Stream.fromEffect(recordCommand(command)).pipe(Stream.flatMap(() => Stream.empty)),
     };
 
     return {
       executor,
       /**
-       * Get all commands that were executed
+       * Get all commands that were executed.
        */
       getExecuted: Ref.get(executed),
       /**
-       * Clear the list of executed commands
+       * Clear the list of executed commands.
        */
       clear: Ref.set(executed, []),
     } as const;
@@ -108,7 +105,7 @@ export class MockCommandExecutor extends Effect.Service<MockCommandExecutor>()('
 }) {}
 
 /**
- * Layer that provides the mock CommandExecutor
+ * Layer that provides the mock CommandExecutor.
  */
 export const MockCommandExecutorLayer = Layer.effect(
   CommandExecutor.CommandExecutor,
@@ -120,11 +117,11 @@ export const MockCommandExecutorLayer = Layer.effect(
 ).pipe(Layer.provide(MockCommandExecutor.Default));
 
 /**
- * Helper to get the executed commands in tests
+ * Helper to get the executed commands in tests.
  */
 export const getExecutedCommands = MockCommandExecutor.pipe(Effect.flatMap((mock) => mock.getExecuted));
 
 /**
- * Helper to clear executed commands in tests
+ * Helper to clear executed commands in tests.
  */
 export const clearExecutedCommands = MockCommandExecutor.pipe(Effect.flatMap((mock) => mock.clear));

@@ -1,8 +1,0 @@
-/**
- * formats a user label
- * @param {string} [value='guest'] user label text
- * @returns {string} normalized label text
- */
-export function formatLabel(value: string = 'guest') {
-  return value.trim().toUpperCase();
-}

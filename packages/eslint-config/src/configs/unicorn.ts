@@ -27,6 +27,7 @@ export function unicorn(): Array<TypedFlatConfigItem> {
           },
         ],
         'unicorn/prefer-top-level-await': 'off',
+        'unicorn/no-nested-ternary': 'off',
       },
     },
   ];

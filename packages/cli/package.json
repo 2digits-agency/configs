@@ -2,33 +2,33 @@
   "name": "@2digits/cli",
   "version": "1.2.47",
   "private": true,
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/2digits-agency/configs.git",
     "directory": "packages/cli"
   },
-  "type": "module",
-  "types": "./dist/bin.d.mts",
   "bin": {
     "2d": "./dist/bin.mjs"
   },
   "files": [
     "dist"
   ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/bin.d.mts",
   "exports": {
     ".": "./dist/bin.mjs",
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
   "scripts": {
     "bin": "tsx ./src/bin.ts",
-    "build": "tsdown --minify --config-loader unconfig",
-    "dev": "tsdown --watch --config-loader unconfig",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "build": "vp pack --minify --config-loader unconfig",
+    "dev": "vp pack --watch --config-loader unconfig",
+    "test": "vp test run",
+    "test:watch": "vp test",
     "types": "tsgo --noEmit"
   },
-  "license": "MIT",
   "dependencies": {
     "@effect/cli": "catalog:",
     "@effect/platform": "catalog:",
@@ -44,10 +44,10 @@
     "@effect/vitest": "catalog:",
     "@typescript/native-preview": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "unplugin-replace": "catalog:",
+    "vite-plus": "catalog:",
     "vitest": "catalog:"
   }
 }

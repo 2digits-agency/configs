@@ -1,35 +1,33 @@
 {
   "name": "@2digits/tlo-mcp",
   "version": "0.1.15",
-  "public": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/2digits-agency/configs.git",
     "directory": "packages/tlo-mcp"
   },
-  "type": "module",
-  "types": "./dist/index.d.mts",
   "bin": {
     "tlo-mcp": "./dist/bin.mjs"
   },
   "files": [
     "dist"
   ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": "./dist/index.mjs",
     "./bin": "./dist/bin.mjs",
     "./package.json": "./package.json"
   },
-  "sideEffects": false,
   "scripts": {
+    "build": "vp pack --minify --config-loader unconfig",
+    "dev": "vp pack --watch --config-loader unconfig",
     "prepare": "effect-language-service patch",
-    "build": "tsdown --minify --config-loader unconfig",
-    "dev": "tsdown --watch --config-loader unconfig",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vp test run",
+    "test:watch": "vp test",
     "types": "tsc --noEmit"
   },
-  "license": "MIT",
   "dependencies": {
     "@effect/ai": "catalog:",
     "@effect/cli": "catalog:",
@@ -46,8 +44,9 @@
     "@effect/vitest": "catalog:",
     "@typescript/native-preview": "catalog:",
     "publint": "catalog:",
-    "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite-plus": "catalog:",
     "vitest": "catalog:"
-  }
+  },
+  "public": true
 }
