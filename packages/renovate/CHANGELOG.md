@@ -1,5 +1,14 @@
 # @2digits/renovate-config
 
+## 1.2.75
+
+### Patch Changes
+
+- e5934bc: Update @opencode-ai/plugin to 1.3.10 and renovate to 43.101.5
+
+  - Update @opencode-ai/plugin to 1.3.10
+  - Update renovate to 43.101.5
+
 ## 1.2.74
 
 ### Patch Changes
