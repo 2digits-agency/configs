@@ -1,14 +1,43 @@
 # @2digits/eslint-config
 
+## 5.2.7
+
+### Patch Changes
+
+- 2d85163: Update TOML, JSONC, and Unicorn linting rules
+
+  - Added `toml/array-element-newline` rule with `consistent` option for consistent array formatting
+  - Changed `toml/indent` to use `keyValuePairs: 0` and `subTables: 0` for cleaner TOML output
+  - Removed custom `package.json` field ordering from `jsonc/sort-keys` rule
+  - Disabled `unicorn/no-nested-ternary` rule to allow nested ternary expressions
+
+- 2d85163: Refactor ESLint plugin imports to use named exports
+
+  - Updated imports in `boolean.ts`, `github-actions.ts`, `regexp.ts`, and `toml.ts` configs to use named `configs` exports from ESLint plugins
+  - Changed root `eslint.config.ts` to use named import `{ twoDigits }` from `@2digits/eslint-config`
+
+- 0fc6b85: Update ESLint plugins
+
+  - Update `@eslint/css` to 1.1.0
+  - Update `@eslint/markdown` to 8.0.1
+  - Update `typescript-eslint` to 8.58.0
+  - Update `eslint-plugin-turbo` to 2.9.1
+  - Regenerate types with new CSS use-baseline function additions and `allowUnits` property
+
+- Updated dependencies [2d85163]
+  - @2digits/constants@1.1.18
+
 ## 5.2.6
 
 ### Patch Changes
 
 - cd7f884: Update @eslint/markdown to 8.0.0
+
   - Added `markdown/fenced-code-meta` rule type definition
   - Updated `markdown/no-duplicate-definitions` and `markdown/no-unused-definitions` option schema with new `checkFootnoteDefinitions` option
 
 - 1b758b7: Update ESLint plugins
+
   - Updated `eslint-plugin-unicorn` to 64.0.0
   - Added `unicorn/consistent-template-literal-escape` rule (enforce consistent escaping of `${` in template literals)
   - Added `unicorn/no-useless-iterator-to-array` rule (disallow unnecessary `.toArray()` on iterators)
@@ -28,6 +57,7 @@
 ### Patch Changes
 
 - 85ba774: Update ESLint plugins and fix storybook config
+
   - Updated `typescript-eslint` to 8.57.2
   - Updated `eslint-plugin-storybook` to 10.3.3; removed now-unnecessary `react-hooks/rules-of-hooks` and `react/display-name` disables from storybook config
   - Updated `@tanstack/eslint-plugin-query` to 5.95.2
@@ -63,6 +93,7 @@
 ### Patch Changes
 
 - cddb192: Update ESLint plugins
+
   - Updated `@next/eslint-plugin-next` to 16.2.0
   - Updated `@tanstack/eslint-plugin-query` to 5.91.5
   - Updated `eslint-plugin-storybook` to 10.3.0
@@ -112,6 +143,7 @@
 ### Patch Changes
 
 - 2ea465f: Update ESLint plugins and typescript-eslint
+
   - Updated `@eslint/css` to 1.0.0
   - Updated `typescript-eslint` and `@typescript-eslint/*` packages to 8.57.0
   - Updated `eslint-plugin-regexp` to 3.1.0
@@ -251,6 +283,7 @@
 ### Patch Changes
 
 - 590eea0: Update ESLint plugins to latest versions
+
   - Added `react-naming-convention/id-name` rule for enforcing `useId` identifier names
   - Added `node/prefer-global/crypto` rule for enforcing global crypto usage
   - Added `node/prefer-global/timers` rule for enforcing global timer functions
@@ -333,12 +366,14 @@
 ### Patch Changes
 
 - 8be246e: Update ESLint plugin dependencies
+
   - Updated `@eslint/compat` to 2.0.2
   - Updated `@tanstack/eslint-plugin-query` to 5.91.4
   - Updated `eslint-plugin-storybook` to 10.2.3
   - Updated `eslint-plugin-turbo` to 2.8.1
 
 - efadf20: Update ESLint plugin dependencies
+
   - Updated `eslint-plugin-sonarjs` to 3.0.6
     - Added `sonar/dynamically-constructed-templates` rule
     - Added `sonar/hardcoded-secret-signatures` rule
@@ -366,6 +401,7 @@
 ### Patch Changes
 
 - 6aec756: Suppress tsdown inlineOnly warning
+
   - Added `inlineOnly: false` to tsdown config to acknowledge intentional bundling of `eslint-plugin-react-hooks` and its transitive dependencies
 
 - 6aec756: Update ESLint plugin dependencies
@@ -390,11 +426,13 @@
 ### Patch Changes
 
 - 7b6ba6d: Add Next.js proxy config and update ESLint plugin dependencies
+
   - Added `2digits:next/proxy` config that disables `unicorn/prefer-string-raw` for `middleware.ts` and `proxy.ts` files
   - Updated `eslint-flat-config-utils` to 3.0.0
   - Updated `eslint-plugin-storybook` to 10.2.0
 
 - 74fbec6: Enable tsgo for declaration file generation
+
   - Updated tsdown configs to use `dts: { tsgo: true }` for faster .d.ts generation
 
 - Updated dependencies [74fbec6]
@@ -420,6 +458,7 @@
 ### Patch Changes
 
 - 730b63f: Update ESLint plugin dependencies
+
   - Updated `@next/eslint-plugin-next` to 16.1.4
   - Updated `@typescript-eslint/*` packages to 8.53.1
   - Updated `eslint-plugin-jsdoc` to 62.2.0
@@ -434,6 +473,7 @@
 ### Patch Changes
 
 - 4fb94d8: Migrate type checking from tsc to tsgo
+
   - Replaced `tsc --noEmit` with `tsgo --noEmit` in all package `types` scripts
   - Added `@typescript/native-preview` to devDependencies for tsgo binary
 
@@ -508,11 +548,13 @@
 ### Patch Changes
 
 - a97ee7c: Updated tsdown and remove redundant main/module fields
+
   - Updated tsdown to 0.19.0
   - Removed `main` and `module` fields that duplicate the `exports` configuration
   - These fields are unnecessary for ESM-only packages with proper `exports` definitions
 
 - a97ee7c: Update ESLint plugin dependencies
+
   - Updated `@eslint-react/eslint-plugin` to 2.5.4
     - Removed `react-extra/no-duplicate-key` rule (no longer exists in plugin)
   - Updated `@eslint/compat` to 2.0.1
@@ -537,6 +579,7 @@
 ### Patch Changes
 
 - 5aa0814: Update dependencies
+
   - Updated `@eslint-react/eslint-plugin` to 2.5.1
   - Updated `@typescript-eslint/*` packages to 8.52.0
   - Updated `typescript-eslint` to 8.52.0
@@ -553,10 +596,12 @@
 ### Patch Changes
 
 - 5d736fe: Update dependencies
+
   - Updated `ts-api-utils` to 2.4.0
   - Updated `zod` to 4.3.5
 
 - 92a4d08: Add type-aware `@2digits/no-null` rule to replace `unicorn/no-null`
+
   - Added `no-null` rule that allows `null` when external TypeScript types require it (types with `null` but not `undefined`)
   - Enhanced auto-fixes: `let x = null` → `let x`, `return null` → `return`, loose equality auto-fixes `== null` → `== undefined`
   - Provides suggestions (not auto-fix) for strict equality (`===`/`!==`) comparisons
@@ -573,6 +618,7 @@
 
 - bf25506: Update `tsdown` to 0.18.4
 - 2a0bc02: Update `@eslint-react` plugin with improved rule descriptions
+
   - Added new `react-naming-convention/ref-name` rule enforcing `Ref` suffix on useRef variables
   - Updated rule descriptions to use clearer language (single quotes, consistent phrasing)
   - Reduced globals count from 1239 to 1234
@@ -586,6 +632,7 @@
 ### Patch Changes
 
 - 9c1b08e: Update dependencies
+
   - Updated `typescript-eslint` to 8.51.0
   - Updated `@typescript-eslint/parser`, `@typescript-eslint/scope-manager`, `@typescript-eslint/utils` to 8.51.0
   - Updated `eslint-plugin-storybook` to 10.1.11
@@ -593,6 +640,7 @@
   - Updated `renovate` to 42.66.12
 
 - 9c1b08e: Bundle `eslint-plugin-react-hooks`, `zod-validation-error`, and `zod` to fix ESM resolution issues
+
   - Bundled `eslint-plugin-react-hooks`, `zod-validation-error`, and `zod` to fix ESM resolution issues
   - Moved `eslint-plugin-react-hooks` from dependencies to devDependencies
 
@@ -633,6 +681,7 @@
 ### Patch Changes
 
 - 43faead: Fix outdated baseline-browser-mapping warning
+
   - Added `baseline-browser-mapping@2.9.11` override to silence "data is over two months old" warning during linting
 
 - Updated dependencies [bd8396a]
@@ -644,6 +693,7 @@
 ### Patch Changes
 
 - a5113c5: Fix TypeScript linting in markdown code blocks
+
   - Add `markdownDisables()` config that properly disables type-checked rules for markdown code blocks
   - Set `project: false` and `projectService: false` to prevent TypeScript project resolution errors
   - Move markdown-specific disables from individual TypeScript configs to dedicated markdown disables config
@@ -651,6 +701,7 @@
 
 - dd8dcc3: Added proper testing if embedded js is linted
 - a5113c5: Add `if-curly` rule to enforce curly braces around if statement bodies
+
   - Added new `@2digits/if-curly` rule that requires curly braces on all if/else bodies
   - Rule is auto-fixable and handles nested if statements and else-if chains
   - Added to recommended config
@@ -1084,6 +1135,7 @@
 ### Minor Changes
 
 - 359b35c: CSS parser now supports Tailwind v4 and auto-detects Tailwind major version.
+
   - Default: Detect installed `tailwindcss` version and select `tailwind4` (v4+) or `tailwind3` (v3). Falls back to v3 if not found.
   - Fix: Resolves CSS parsing errors (e.g., CSSTree "parse.prelude" / invalid regex flags) when linting Tailwind v4 files like `@import 'tailwindcss';`.
   - New options: Override detection via `css` options passed to the factory:
@@ -1091,6 +1143,7 @@
     - `css: { customSyntax }` to provide a custom CSS syntax parser.
 
   Notes
+
   - The previous config always used `tailwind3` grammar. This change makes v4 projects parse correctly without manual config.
 
 ### Patch Changes

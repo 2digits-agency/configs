@@ -1,5 +1,12 @@
 # @2digits/prettier-config
 
+## 4.0.34
+
+### Patch Changes
+
+- Updated dependencies [2d85163]
+  - @2digits/constants@1.1.18
+
 ## 4.0.33
 
 ### Patch Changes
@@ -25,6 +32,7 @@
 ### Patch Changes
 
 - 74fbec6: Enable tsgo for declaration file generation
+
   - Updated tsdown configs to use `dts: { tsgo: true }` for faster .d.ts generation
 
 - Updated dependencies [74fbec6]
@@ -35,6 +43,7 @@
 ### Patch Changes
 
 - 4fb94d8: Migrate type checking from tsc to tsgo
+
   - Replaced `tsc --noEmit` with `tsgo --noEmit` in all package `types` scripts
   - Added `@typescript/native-preview` to devDependencies for tsgo binary
 
