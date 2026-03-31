@@ -20,6 +20,8 @@ export async function tanstackQuery(options: OptionsOverrides = {}): Promise<Arr
       rules: {
         ...recommended,
 
+        'tanstack-query/prefer-query-options': 'error',
+
         ...overrides,
       },
     },

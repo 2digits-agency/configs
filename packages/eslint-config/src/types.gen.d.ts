@@ -6105,6 +6105,11 @@ Backward pagination arguments
    */
   'tanstack-query/no-void-query-fn'?: Linter.RuleEntry<[]>
   /**
+   * Prefer using queryOptions() to co-locate queryKey and queryFn
+   * @see https://tanstack.com/query/latest/docs/eslint/prefer-query-options
+   */
+  'tanstack-query/prefer-query-options'?: Linter.RuleEntry<[]>
+  /**
    * Makes sure that QueryClient is stable
    * @see https://tanstack.com/query/latest/docs/eslint/stable-query-client
    */
