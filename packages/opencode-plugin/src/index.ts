@@ -24,9 +24,7 @@ const FIX_COMMAND_TEMPLATE = markdown`
 
   ## User Input
 
-  <Feedback>
-    $ARGUMENTS
-  </Feedback>
+  <Feedback>$ARGUMENTS</Feedback>
 `;
 
 // eslint-disable-next-line ts/require-await
