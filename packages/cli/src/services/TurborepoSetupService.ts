@@ -120,6 +120,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
     const detectWorkspaceTasks = Effect.fn('TurborepoSetupService.detectWorkspaceTasks')(function* () {
       const workspaces = yield* projectDetect.discoverWorkspaces();
 
+      // oxlint-disable-next-line unicorn/no-array-for-each
       const tasksPerWorkspace = yield* Effect.forEach(
         workspaces,
         (workspacePath) =>
