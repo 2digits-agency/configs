@@ -5629,7 +5629,7 @@ export interface RuleOptions {
  * Prefer find
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Style
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-find.html
@@ -5728,7 +5728,7 @@ export interface RuleOptions {
  * Prefer readonly
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Style
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-readonly.html
@@ -5761,7 +5761,7 @@ export interface RuleOptions {
  * Prefer regexp exec
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Style
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-regexp-exec.html
@@ -5783,7 +5783,7 @@ export interface RuleOptions {
  * Prefer string starts ends with
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Style
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-string-starts-ends-with.html
@@ -7408,6 +7408,17 @@ export interface RuleOptions {
 'vitest/no-importing-vitest-globals'?: DummyRule;
 
 /**
+ * Prefer called exactly once with
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-called-exactly-once-with.html
+ */
+'vitest/prefer-called-exactly-once-with'?: DummyRule;
+
+/**
  * Prefer called once
  *
  * plugin: Vitest
@@ -7507,6 +7518,17 @@ export interface RuleOptions {
 'vitest/prefer-to-be-truthy'?: DummyRule;
 
 /**
+ * Require awaited expect poll
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-awaited-expect-poll.html
+ */
+'vitest/require-awaited-expect-poll'?: DummyRule;
+
+/**
  * Require local test context for concurrent snapshots
  *
  * plugin: Vitest
@@ -7516,6 +7538,28 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-local-test-context-for-concurrent-snapshots.html
  */
 'vitest/require-local-test-context-for-concurrent-snapshots'?: DummyRule;
+
+/**
+ * Require mock type parameters
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-mock-type-parameters.html
+ */
+'vitest/require-mock-type-parameters'?: DummyRule;
+
+/**
+ * Require test timeout
+ *
+ * plugin: Vitest
+ * category: Restriction
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-test-timeout.html
+ */
+'vitest/require-test-timeout'?: DummyRule;
 
 /**
  * Warn todo
