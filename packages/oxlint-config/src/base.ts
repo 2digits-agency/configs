@@ -3,6 +3,7 @@ import { ignorePatterns } from '@2digits/constants';
 import { importConfig } from './configs/import';
 import { javascriptConfig } from './configs/javascript';
 import { nodeConfig } from './configs/node';
+import { oxcConfig } from './configs/oxc';
 import { unicornConfig } from './configs/unicorn';
 import { defineTypedConfig } from './types';
 
@@ -24,6 +25,6 @@ export const baseConfig = defineTypedConfig({
     restriction: 'off',
     suspicious: 'off',
   },
-  extends: [javascriptConfig, unicornConfig, importConfig, nodeConfig],
+  extends: [javascriptConfig, unicornConfig, importConfig, nodeConfig, oxcConfig],
   ignorePatterns,
 });

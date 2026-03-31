@@ -1,7 +1,6 @@
 import { ignorePatterns } from '@2digits/constants';
 
 import { overridesConfig } from './configs/overrides';
-import { typeAwareConfig } from './configs/type-aware';
 import { typescriptRulesConfig } from './configs/typescript';
 import { vitestConfig } from './configs/vitest';
 import { defineTypedConfig } from './types';
@@ -20,6 +19,6 @@ export const typescriptConfig = defineTypedConfig({
     restriction: 'off',
     suspicious: 'off',
   },
-  extends: [typescriptRulesConfig, typeAwareConfig, vitestConfig, overridesConfig],
+  extends: [typescriptRulesConfig, vitestConfig, overridesConfig],
   ignorePatterns,
 });
