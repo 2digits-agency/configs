@@ -47,7 +47,7 @@ describe(extractConfig, () => {
   });
 
   it('returns empty object for undefined', () => {
-    expect(extractConfig(undefined)).toEqual({});
+    expect(extractConfig<unknown>(undefined)).toEqual({});
   });
 
   it('strips enable property from object', () => {
