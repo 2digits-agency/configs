@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 5.3.0
+
+### Minor Changes
+
+- 8748d72: Add tanstack-query/prefer-query-options rule
+
+  - Enabled `tanstack-query/prefer-query-options` rule to enforce using `queryOptions()` for co-locating queryKey and queryFn
+  - Updated generated types with the new rule definition
+
 ## 5.2.7
 
 ### Patch Changes
