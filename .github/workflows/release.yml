@@ -36,11 +36,26 @@ jobs:
       - name: 🐰 Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
 
-      - name: 🧪 Test, lint, format, build, build and type-check
-        run: vp exec turbo run build test lint:root lint:oxlint format types
+      - name: 🏷️ Type-check
+        run: vp run types
+
+      - name: ⚗️ Check
+        run: vp check
+
+      - name: 🧪 Test
+        run: vp test run
+
+      - name: 🔍 Lint
+        run: vp run lint
+
+      - name: 🪄 Format
+        run: vp run format
+
+      - name: ✂️ Knip
+        run: vp run knip
 
       - name: 🏗️ Build packages
-        run: vp exec turbo run build --force
+        run: vp run build --force
 
       - name: 🪄 Create Release Pull Request or Publish
         id: changesets
