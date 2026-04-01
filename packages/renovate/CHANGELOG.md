@@ -1,5 +1,19 @@
 # @2digits/renovate-config
 
+## 1.2.76
+
+### Patch Changes
+
+- 2cef142: Update @opencode-ai/plugin to 1.3.11, eslint-plugin-turbo to 2.9.2, and renovate to 43.102.0
+
+  - Update @opencode-ai/plugin to 1.3.11
+  - Update eslint-plugin-turbo to 2.9.2
+  - Update renovate to 43.102.0
+
+- b826d9d: Update renovate to 43.102.4
+- b826d9d: Update renovate to 43.102.3
+- 43d3071: Update renovate to 43.102.2
+
 ## 1.2.75
 
 ### Patch Changes

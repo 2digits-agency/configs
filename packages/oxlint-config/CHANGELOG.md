@@ -1,5 +1,52 @@
 # @2digits/oxlint-config
 
+## 0.4.0
+
+### Minor Changes
+
+- 43d3071: Enhance TypeScript linting rules
+
+  - Change `consistent-type-assertions` from `angle-bracket` to `as` style
+  - Add `interface` option to `consistent-type-definitions`
+  - Add `fixMixedExportsWithInlineTypeSpecifier` option to `consistent-type-exports`
+  - Add `prefer`, `disallowTypeAnnotations` options to `consistent-type-imports`
+  - Add `fixToUnknown` and `ignoreRestArgs` options to `no-explicit-any`
+  - Add `allowSingleExtends` option to `no-empty-interface`
+  - Add `allowStaticOnly` option to `no-extraneous-class`
+  - Add `ignoreArrowShorthand` option to `no-confusing-void-expression`
+  - Add new rules: `no-confusing-non-null-assertion`, `no-dynamic-delete`, `no-extra-non-null-assertion`, `no-inferrable-types`, `no-invalid-void-type`, `no-misused-promises`, `no-mixed-enums`, `no-namespace`, `no-non-null-asserted-nullish-coalescing`, `no-unnecessary-boolean-literal-compare`, `no-unnecessary-qualifier`, `no-unnecessary-template-expression`, `no-unnecessary-type-arguments`, `no-unnecessary-type-assertion`, `no-unnecessary-type-constraint`, `no-unnecessary-type-conversion`, `no-unnecessary-type-parameters`, `no-unsafe-argument`
+
+- 2cef142: Add oxc plugin rules and consolidate type-aware configuration
+
+  - Added new `oxcConfig` with 20+ rules for catching common bugs and anti-patterns
+  - New rules include: `approx-constant`, `bad-array-method-on-arguments`, `bad-bitwise-operator`, `bad-char-at-comparison`, `bad-comparison-sequence`, `bad-min-max-func`, `bad-object-literal-comparison`, `bad-replace-all-arg`, `branches-sharing-code`, `const-comparisons`, `double-comparisons`, `erasing-op`, `misrefactored-assign-op`, `missing-throw`, `no-accumulating-spread`, `no-barrel-file`, `no-const-enum`, `no-this-in-exported-function`, `number-arg-out-of-range`, `only-used-in-recursion`, `uninvoked-array-callback`
+  - Consolidated type-aware rules into `typescriptRulesConfig` by enabling `typeAware: true` option
+  - Removed separate `typeAwareConfig` file - all TypeScript rules now in one config
+  - Added `node/handle-callback-err` rule to enforce error handling in callbacks
+  - Added 20+ new TypeScript rules including `adjacent-overload-signatures`, `await-thenable`, `ban-tslint-comment`, `class-literal-property-style`, `consistent-indexed-object-style`, `consistent-type-assertions`, `no-array-delete`, `no-base-to-string`, `no-deprecated`, `no-duplicate-type-constituents`, `no-floating-promises`, `no-for-in-array`, `no-implied-eval`, `no-meaningless-void-operator`, `no-misused-spread`, `no-redundant-type-constituents`, `no-unnecessary-condition`, `no-unsafe-unary-minus`, `require-array-sort-compare`, `restrict-template-expressions`, `unbound-method`, and `dot-notation`
+
+- b826d9d: Add more TypeScript linting rules
+
+  - Added `typescript/prefer-reduce-type-parameter` rule
+  - Added `typescript/prefer-regexp-exec` rule
+  - Added `typescript/prefer-return-this-type` rule
+  - Added `typescript/prefer-string-starts-ends-with` rule
+  - Added `typescript/related-getter-setter-pairs` rule
+  - Added `typescript/require-await` rule
+  - Added `typescript/restrict-plus-operands` rule
+  - Added `typescript/return-await` rule with `error-handling-correctness-only` option
+  - Added `typescript/unified-signatures` rule
+  - Added `typescript/use-unknown-in-catch-callback-variable` rule
+
+### Patch Changes
+
+- 64d6ea1: Add JSDoc linting rules and configuration
+
+  - Added `jsdoc/check-tag-names` rule with typed option enabled
+  - Added `jsdoc/require-param` rule to enforce parameter documentation
+  - Added `jsdoc/require-yields` rule to enforce yield documentation
+  - Added new JSDoc configuration to oxlint-config with equivalent rules
+
 ## 0.3.0
 
 ### Minor Changes

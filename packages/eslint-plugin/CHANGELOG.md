@@ -1,10 +1,19 @@
 # @2digits/eslint-plugin
 
+## 4.0.8
+
+### Patch Changes
+
+- b826d9d: Refactor `if-curly` rule to use `RegExp.exec()` instead of `String.match()`
+
+  - Changed `line.match(/^(*)/)` to `/^(\s*)/.exec(line)` for consistency
+
 ## 4.0.7
 
 ### Patch Changes
 
 - 85ba774: Update ESLint plugins and fix storybook config
+
   - Updated `typescript-eslint` to 8.57.2
   - Updated `eslint-plugin-storybook` to 10.3.3; removed now-unnecessary `react-hooks/rules-of-hooks` and `react/display-name` disables from storybook config
   - Updated `@tanstack/eslint-plugin-query` to 5.95.2
@@ -141,6 +150,7 @@
 ### Minor Changes
 
 - bd8396a: Add `prefer-inline-handlers` rule
+
   - Added new rule that discourages hoisting event handlers only used once in JSX
   - Rule reports on arrow functions, function expressions, and function declarations inside components
   - Correctly ignores handlers used multiple times, module-level functions, and non-JSX usage

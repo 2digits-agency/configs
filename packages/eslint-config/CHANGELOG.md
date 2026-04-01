@@ -1,5 +1,36 @@
 # @2digits/eslint-config
 
+## 5.3.1
+
+### Patch Changes
+
+- 64d6ea1: Add JSDoc linting rules and configuration
+
+  - Added `jsdoc/check-tag-names` rule with typed option enabled
+  - Added `jsdoc/require-param` rule to enforce parameter documentation
+  - Added `jsdoc/require-yields` rule to enforce yield documentation
+  - Added new JSDoc configuration to oxlint-config with equivalent rules
+
+- 43d3071: Update ESLint plugins
+
+  - Update `@next/eslint-plugin-next` to 16.2.2
+  - Update `eslint-flat-config-utils` to 3.1.0
+  - Update `eslint-plugin-turbo` to 2.9.3
+
+- 2cef142: Update @opencode-ai/plugin to 1.3.11, eslint-plugin-turbo to 2.9.2, and renovate to 43.102.0
+
+  - Update @opencode-ai/plugin to 1.3.11
+  - Update eslint-plugin-turbo to 2.9.2
+  - Update renovate to 43.102.0
+
+- b826d9d: Update ESLint plugins
+
+  - Update `@tanstack/eslint-plugin-query` to 5.96.1
+  - Update `eslint-plugin-jsdoc` to 62.9.0
+
+- Updated dependencies [b826d9d]
+  - @2digits/eslint-plugin@4.0.8
+
 ## 5.3.0
 
 ### Minor Changes
