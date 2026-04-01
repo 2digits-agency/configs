@@ -25,6 +25,8 @@ interface TurboConfig {
 
 /**
  * Generate root ESLint configuration content.
+ *
+ * @param isMonorepo - Whether the project is a monorepo.
  */
 function generateRootConfig(isMonorepo: boolean): string {
   if (isMonorepo) {
@@ -56,6 +58,8 @@ export default twoDigits();
 
 /**
  * Merge lint tasks into turbo.json.
+ *
+ * @param config - The base turbo config object.
  */
 function mergeLintTasks(config: TurboConfig): TurboConfig {
   const tasks = config.tasks ?? {};
