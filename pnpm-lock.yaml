@@ -82,8 +82,8 @@ catalogs:
       specifier: 5.10.0
       version: 5.10.0
     '@tanstack/eslint-plugin-query':
-      specifier: 5.96.0
-      version: 5.96.0
+      specifier: 5.96.1
+      version: 5.96.1
     '@tanstack/eslint-plugin-router':
       specifier: 1.161.6
       version: 1.161.6
@@ -106,8 +106,8 @@ catalogs:
       specifier: 8.58.0
       version: 8.58.0
     '@typescript/native-preview':
-      specifier: 7.0.0-dev.20260331.1
-      version: 7.0.0-dev.20260331.1
+      specifier: 7.0.0-dev.20260401.1
+      version: 7.0.0-dev.20260401.1
     bunup:
       specifier: 0.16.31
       version: 0.16.31
@@ -154,8 +154,8 @@ catalogs:
       specifier: 0.2.0
       version: 0.2.0
     eslint-plugin-jsdoc:
-      specifier: 62.8.1
-      version: 62.8.1
+      specifier: 62.9.0
+      version: 62.9.0
     eslint-plugin-jsonc:
       specifier: 3.1.2
       version: 3.1.2
@@ -253,8 +253,8 @@ catalogs:
       specifier: 19.2.4
       version: 19.2.4
     renovate:
-      specifier: 43.102.2
-      version: 43.102.2
+      specifier: 43.102.4
+      version: 43.102.4
     tailwind-csstree:
       specifier: 0.3.0
       version: 0.3.0
@@ -407,7 +407,7 @@ importers:
         version: 0.29.0(@voidzero-dev/vite-plus-test@0.1.15(@arethetypeswrong/core@0.18.2)(@opentelemetry/api@1.9.0)(@types/node@24.12.0)(esbuild@0.27.3)(jiti@2.6.1)(publint@0.3.18)(tsx@4.21.0)(typescript@6.0.2)(vite@8.0.3(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)(@types/node@24.12.0)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))(yaml@2.8.3))(effect@3.21.0)
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260331.1
+        version: 7.0.0-dev.20260401.1
       publint:
         specifier: 'catalog:'
         version: 0.3.18
@@ -437,7 +437,7 @@ importers:
         version: 0.18.2
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260331.1
+        version: 7.0.0-dev.20260401.1
       publint:
         specifier: 'catalog:'
         version: 0.3.18
@@ -485,7 +485,7 @@ importers:
         version: 5.10.0(eslint@10.1.0(jiti@2.6.1))
       '@tanstack/eslint-plugin-query':
         specifier: 'catalog:'
-        version: 5.96.0(eslint@10.1.0(jiti@2.6.1))(typescript@6.0.2)
+        version: 5.96.1(eslint@10.1.0(jiti@2.6.1))(typescript@6.0.2)
       '@tanstack/eslint-plugin-router':
         specifier: 'catalog:'
         version: 1.161.6(eslint@10.1.0(jiti@2.6.1))(typescript@6.0.2)
@@ -527,7 +527,7 @@ importers:
         version: 0.2.0(eslint@10.1.0(jiti@2.6.1))
       eslint-plugin-jsdoc:
         specifier: 'catalog:'
-        version: 62.8.1(eslint@10.1.0(jiti@2.6.1))
+        version: 62.9.0(eslint@10.1.0(jiti@2.6.1))
       eslint-plugin-jsonc:
         specifier: 'catalog:'
         version: 3.1.2(eslint@10.1.0(jiti@2.6.1))
@@ -606,7 +606,7 @@ importers:
         version: 19.2.14
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260331.1
+        version: 7.0.0-dev.20260401.1
       dedent:
         specifier: 'catalog:'
         version: 1.7.2
@@ -667,7 +667,7 @@ importers:
         version: 8.58.0(eslint@10.1.0(jiti@2.6.1))(typescript@6.0.2)
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260331.1
+        version: 7.0.0-dev.20260401.1
       eslint-vitest-rule-tester:
         specifier: 'catalog:'
         version: 3.1.0(@voidzero-dev/vite-plus-test@0.1.15(@arethetypeswrong/core@0.18.2)(@opentelemetry/api@1.9.0)(@types/node@24.12.0)(esbuild@0.27.3)(jiti@2.6.1)(publint@0.3.18)(tsx@4.21.0)(typescript@6.0.2)(vite@8.0.3(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)(@types/node@24.12.0)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))(yaml@2.8.3))(eslint@10.1.0(jiti@2.6.1))(typescript@6.0.2)
@@ -701,7 +701,7 @@ importers:
         version: 1.3.11
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260331.1
+        version: 7.0.0-dev.20260401.1
       bunup:
         specifier: 'catalog:'
         version: 0.16.31(typescript@6.0.2)
@@ -732,7 +732,7 @@ importers:
         version: 24.12.0
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260331.1
+        version: 7.0.0-dev.20260401.1
       oxfmt:
         specifier: 'catalog:'
         version: 0.43.0
@@ -772,7 +772,7 @@ importers:
         version: 24.12.0
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260331.1
+        version: 7.0.0-dev.20260401.1
       dedent:
         specifier: 'catalog:'
         version: 1.7.2
@@ -830,7 +830,7 @@ importers:
         version: 24.12.0
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260331.1
+        version: 7.0.0-dev.20260401.1
       prettier:
         specifier: 'catalog:'
         version: 3.8.1
@@ -854,13 +854,13 @@ importers:
         version: 24.12.0
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260331.1
+        version: 7.0.0-dev.20260401.1
       nolyfill:
         specifier: 'catalog:'
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 43.102.2(typanion@3.14.0)
+        version: 43.102.4(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
@@ -903,7 +903,7 @@ importers:
         version: 0.29.0(@voidzero-dev/vite-plus-test@0.1.15(@arethetypeswrong/core@0.18.2)(@opentelemetry/api@1.9.0)(@types/node@24.12.0)(esbuild@0.27.3)(jiti@2.6.1)(publint@0.3.18)(tsx@4.21.0)(typescript@6.0.2)(vite@8.0.3(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)(@types/node@24.12.0)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))(yaml@2.8.3))(effect@3.21.0)
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260331.1
+        version: 7.0.0-dev.20260401.1
       publint:
         specifier: 'catalog:'
         version: 0.3.18
@@ -1508,8 +1508,8 @@ packages:
     resolution: {integrity: sha512-CsFmA3u3c2QoLDTfEpGr4t25fjMU31nyvse7IzWTvb0ZycuPjMjb0fjlheh+PbhBYb9YLugnT2uY6Mwcg1o+Zg==}
     engines: {node: '>=18.0.0'}
 
-  '@es-joy/jsdoccomment@0.84.0':
-    resolution: {integrity: sha512-0xew1CxOam0gV5OMjh2KjFQZsKL2bByX1+q4j3E73MpYIdyUxcZb/xQct9ccUb+ve5KGUYbCUxyPnYB7RbuP+w==}
+  '@es-joy/jsdoccomment@0.86.0':
+    resolution: {integrity: sha512-ukZmRQ81WiTpDWO6D/cTBM7XbrNtutHKvAVnZN/8pldAwLoJArGOvkNyxPTBGsPjsoaQBJxlH+tE2TNA/92Qgw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@es-joy/resolve.exports@1.2.0':
@@ -3680,8 +3680,8 @@ packages:
       '@node-rs/xxhash':
         optional: true
 
-  '@renovatebot/detect-tools@2.0.0':
-    resolution: {integrity: sha512-bdf6QcWyfXqBl4/8l96XCzyR+u28tIgKFnR+sJFeGht8u+e9fOWf5ZAZ+Mkq3qSXT4xBRwbYYE3udZC0wU2UIw==}
+  '@renovatebot/detect-tools@2.0.1':
+    resolution: {integrity: sha512-9cvKD85YA0h8UGeI/hPaHT2xqg/DrWtHhFE7FMIov9+sg67PwqUmr5Gtl6e8FE6ZZTQWeCawJCAqNRoSU8kX8A==}
     engines: {node: '>=22.12.0'}
 
   '@renovatebot/good-enough-parser@2.0.0':
@@ -4052,8 +4052,8 @@ packages:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
 
-  '@tanstack/eslint-plugin-query@5.96.0':
-    resolution: {integrity: sha512-iPxSM1lNBzz63scYaudGeJk4yqb51MpvnX2GUmBjEvoLLwcaCTZg+OQmjmaoe5o3TApQZK8INYnmYhN4p4uxuQ==}
+  '@tanstack/eslint-plugin-query@5.96.1':
+    resolution: {integrity: sha512-BDJU+Q+zESjarSSFmbzpCBh+1wDxwW+DyQlvwIukF24MHYOoRPH4ouJRTlDdbp3BnIkeylZaHHSgIvxY9lgI/g==}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
       typescript: ^5.4.0
@@ -4356,43 +4356,43 @@ packages:
     resolution: {integrity: sha512-XJ9UD9+bbDo4a4epraTwG3TsNPeiB9aShrUneAVXy8q4LuwowN+qu89/6ByLMINqvIMeI9H9hOHQtg/ijrYXzQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260331.1':
-    resolution: {integrity: sha512-1PRnBCN2csiCzj76YaSBtP4jPLEGBUmVhXHplC+yHOKaxx9nf3HFiFCg/19raInvN/lJ8+Bp1fZ/qIsWAAHiBw==}
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260401.1':
+    resolution: {integrity: sha512-9PCc1D4/zLic30g1upOw6ZmUl98fnrXYRv5wIZ6fxm1zZAObieRKUX3Jbr8M9N8iQQFxPIZPniIScsxAbmbJvw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260331.1':
-    resolution: {integrity: sha512-llXnfLGjl+gXsANLD7UI/gSb3lj7aZW13Rf8sVXQnHJ3/dkJRAm/MgLqdjuuyvYq3pFaleiep+zoLd96rLRqUw==}
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260401.1':
+    resolution: {integrity: sha512-wwzca1KrjSVC6ApXfITsg/wF4GGbhVYebc7zChpuyi+phrHfw6ThTPB5XFUH4nA32vqw0Hn/6KACipMgzg8GPA==}
     cpu: [x64]
     os: [darwin]
 
-  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260331.1':
-    resolution: {integrity: sha512-sH5gALi89jl5ZjAL/UsLDPsjT/nCLRfHl/pw86ablRX10tYsJhJ/RD6J/cl3g39kJ18tIISSbsuIBn+ncanfSA==}
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260401.1':
+    resolution: {integrity: sha512-1hgKibGi4QZF1J0hKltgY4nj4yKDmI4Ang5ar80I+YeUdGxV/fP2kU3bJang7QtHuSso6W+a52SF62zgqbzdow==}
     cpu: [arm64]
     os: [linux]
 
-  '@typescript/native-preview-linux-arm@7.0.0-dev.20260331.1':
-    resolution: {integrity: sha512-+8AZzA0BRjMkLDvdQKZOMuheRxNGpSWn7sOtoKqo70R915D0TyEynEXX6B7/aw3+Jfn1H5hLRiBjxoVsmdKENw==}
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20260401.1':
+    resolution: {integrity: sha512-bbIkRZYjtyoyCJ3wFES7qn3EwYO5Go1hxArL5X5oWiBmUHq5gMIxTZDv5mpWxopVf9Eyh4ErHefXjf1s4J+6Ag==}
     cpu: [arm]
     os: [linux]
 
-  '@typescript/native-preview-linux-x64@7.0.0-dev.20260331.1':
-    resolution: {integrity: sha512-Yic6MYfX7Uit5jLLENzWFIi6tjp4LTLF37KBiVaHZSvEFyX1kqVwu4j9WNeaz81O6fcB/1dZ1MrILgfcqalNBg==}
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20260401.1':
+    resolution: {integrity: sha512-1ysZ4c/Wa3RYIlrwVceYlhb1m1hxQ4P2x92valZXH0bNWEPb+oiQ4Yf35O/vi5h8zDdX/ZQ59vivYl27cF1VVA==}
     cpu: [x64]
     os: [linux]
 
-  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260331.1':
-    resolution: {integrity: sha512-vGxK6gtGF97zSx9wOpiVME3h9v0tbZbrHHdKA+fLFNvDV0Df8ud89DEePL7l2yKnVVmf0OnjJy6sYoVyj+LIPA==}
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260401.1':
+    resolution: {integrity: sha512-fZYLCRe36y1BuzRFFpU2/RQ212l6Y1dccRMh8oTB8HlAVAAwtbkb6cjEn0Ablj4Dy16+Ih8R9uHsxPLNhtKw1Q==}
     cpu: [arm64]
     os: [win32]
 
-  '@typescript/native-preview-win32-x64@7.0.0-dev.20260331.1':
-    resolution: {integrity: sha512-oJnNiU9UTDPJp6dOmOUW+/Wzt3MQZXIHsDaU4qM0RiAjFE6S+PIX8s5z/ID0orr4MMroUMiLdolL4OVZolNDSw==}
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20260401.1':
+    resolution: {integrity: sha512-I6ses4SjWvpbvSpm1BPFRrDeqrzu7JTchJG/a26iwwmTLv4fAGLc5/o6Kv9Naygozop1W3KOcVM5i3A9oxiIjQ==}
     cpu: [x64]
     os: [win32]
 
-  '@typescript/native-preview@7.0.0-dev.20260331.1':
-    resolution: {integrity: sha512-Gfy2J/LhydkOHOw+ZWRw0M8Xl3O2bzQXLXIYITdMz2N4GpMm8misAvvCzhqMacOGvazKr1FsL9LIIW2kxk6kzw==}
+  '@typescript/native-preview@7.0.0-dev.20260401.1':
+    resolution: {integrity: sha512-xJcN9WlY/P6xKjCMH4+DTzZSj/EKR6H9avuqUKs4eKyPEvaQ4bX+9Ys3Vl2qhlUaD7IRWY7HN7db0LHAGlWRSA==}
     hasBin: true
 
   '@vitest/expect@3.2.4':
@@ -5004,6 +5004,10 @@ packages:
     resolution: {integrity: sha512-aRDkn3uyIlCFfk5NUA+VdwMmMsh8JGhc4hapfV4yxymHGQ3BVskMQfoXGpCo5IoBuQ9tS5iiVKhCpTcB4pW4qw==}
     engines: {node: '>= 12.0.0'}
 
+  comment-parser@1.4.6:
+    resolution: {integrity: sha512-ObxuY6vnbWTN6Od72xfwN9DbzC7Y2vv8u1Soi9ahRKL37gb6y1qk6/dgjs+3JWuXJHWvsg3BXIwzd/rkmAwavg==}
+    engines: {node: '>= 12.0.0'}
+
   compare-versions@6.1.1:
     resolution: {integrity: sha512-4hm4VPpIecmlg59CHXnRDnqGplJFrbLG4aFEl5vl6cK1u76ws3LLvX7ikFnTDl5vo39sjWD6AaDPYodJp/NNHg==}
 
@@ -5436,8 +5440,8 @@ packages:
     peerDependencies:
       eslint: ^9.5.0 || ^10.0.0
 
-  eslint-plugin-jsdoc@62.8.1:
-    resolution: {integrity: sha512-e9358PdHgvcMF98foNd3L7hVCw70Lt+YcSL7JzlJebB8eT5oRJtW6bHMQKoAwJtw6q0q0w/fRIr2kwnHdFDI6A==}
+  eslint-plugin-jsdoc@62.9.0:
+    resolution: {integrity: sha512-PY7/X4jrVgoIDncUmITlUqK546Ltmx/Pd4Hdsu4CvSjryQZJI2mEV4vrdMufyTetMiZ5taNSqvK//BTgVUlNkA==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -6226,6 +6230,10 @@ packages:
 
   jsdoc-type-pratt-parser@7.1.1:
     resolution: {integrity: sha512-/2uqY7x6bsrpi3i9LVU6J89352C0rpMk0as8trXxCtvd4kPk1ke/Eyif6wqfSLvoNJqcDG9Vk4UsXgygzCt2xA==}
+    engines: {node: '>=20.0.0'}
+
+  jsdoc-type-pratt-parser@7.2.0:
+    resolution: {integrity: sha512-dh140MMgjyg3JhJZY/+iEzW+NO5xR2gpbDFKHqotCmexElVntw7GjWjt511+C/Ef02RU5TKYrJo/Xlzk+OLaTw==}
     engines: {node: '>=20.0.0'}
 
   jsesc@3.1.0:
@@ -7580,8 +7588,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@43.102.2:
-    resolution: {integrity: sha512-J4ZvS7uQ6g02cmtM9T+5lFOZ6cmoK0gaTgBm8AgX3isAcPHXWZsNnsXvM425BzaLyQd6qCeciI0CeL+tm84Gwg==}
+  renovate@43.102.4:
+    resolution: {integrity: sha512-ERlj0kyprQjGCmoSnz7hASR0owrbz9TT+fcgv/mQIkNmkezCBsKZe1CVQOMGUfcldYATe9BxVKHF88ZiaMR4tw==}
     engines: {node: ^24.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -7787,9 +7795,6 @@ packages:
 
   spdx-expression-parse@4.0.0:
     resolution: {integrity: sha512-Clya5JIij/7C6bRR22+tnGXbc4VKlibKSVj2iHvVeX5iMW7s1SIQlqu699JkODJJIhh/pUu8L0/VLh8xflD+LQ==}
-
-  spdx-license-ids@3.0.22:
-    resolution: {integrity: sha512-4PRT4nh1EImPbt2jASOKHX7PB7I+e4IWNLvkKFDxNhJlfjbYlleYQh285Z/3mPTHSAK/AvdMmw5BNNuYH8ShgQ==}
 
   spdx-license-ids@3.0.23:
     resolution: {integrity: sha512-CWLcCCH7VLu13TgOH+r8p1O/Znwhqv/dbb6lqWy67G+pT1kHmeD/+V36AVb/vq8QMIQwVShJ6Ssl5FPh0fuSdw==}
@@ -9791,13 +9796,13 @@ snapshots:
       '@whatwg-node/promise-helpers': 1.3.2
       tslib: 2.8.1
 
-  '@es-joy/jsdoccomment@0.84.0':
+  '@es-joy/jsdoccomment@0.86.0':
     dependencies:
       '@types/estree': 1.0.8
-      '@typescript-eslint/types': 8.57.2
-      comment-parser: 1.4.5
+      '@typescript-eslint/types': 8.58.0
+      comment-parser: 1.4.6
       esquery: 1.7.0
-      jsdoc-type-pratt-parser: 7.1.1
+      jsdoc-type-pratt-parser: 7.2.0
 
   '@es-joy/resolve.exports@1.2.0': {}
 
@@ -11487,7 +11492,7 @@ snapshots:
     dependencies:
       cluster-key-slot: 1.1.2
 
-  '@renovatebot/detect-tools@2.0.0':
+  '@renovatebot/detect-tools@2.0.1':
     dependencies:
       fs-extra: 11.3.4
       toml-eslint-parser: 0.12.0
@@ -11936,7 +11941,7 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@tanstack/eslint-plugin-query@5.96.0(eslint@10.1.0(jiti@2.6.1))(typescript@6.0.2)':
+  '@tanstack/eslint-plugin-query@5.96.1(eslint@10.1.0(jiti@2.6.1))(typescript@6.0.2)':
     dependencies:
       '@typescript-eslint/utils': 8.58.0(eslint@10.1.0(jiti@2.6.1))(typescript@6.0.2)
       eslint: 10.1.0(jiti@2.6.1)
@@ -12308,36 +12313,36 @@ snapshots:
       '@typescript-eslint/types': 8.58.0
       eslint-visitor-keys: 5.0.1
 
-  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260331.1':
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260401.1':
     optional: true
 
-  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260331.1':
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260401.1':
     optional: true
 
-  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260331.1':
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260401.1':
     optional: true
 
-  '@typescript/native-preview-linux-arm@7.0.0-dev.20260331.1':
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20260401.1':
     optional: true
 
-  '@typescript/native-preview-linux-x64@7.0.0-dev.20260331.1':
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20260401.1':
     optional: true
 
-  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260331.1':
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260401.1':
     optional: true
 
-  '@typescript/native-preview-win32-x64@7.0.0-dev.20260331.1':
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20260401.1':
     optional: true
 
-  '@typescript/native-preview@7.0.0-dev.20260331.1':
+  '@typescript/native-preview@7.0.0-dev.20260401.1':
     optionalDependencies:
-      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20260331.1
-      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20260331.1
-      '@typescript/native-preview-linux-arm': 7.0.0-dev.20260331.1
-      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20260331.1
-      '@typescript/native-preview-linux-x64': 7.0.0-dev.20260331.1
-      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260331.1
-      '@typescript/native-preview-win32-x64': 7.0.0-dev.20260331.1
+      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20260401.1
+      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20260401.1
+      '@typescript/native-preview-linux-arm': 7.0.0-dev.20260401.1
+      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20260401.1
+      '@typescript/native-preview-linux-x64': 7.0.0-dev.20260401.1
+      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260401.1
+      '@typescript/native-preview-win32-x64': 7.0.0-dev.20260401.1
 
   '@vitest/expect@3.2.4':
     dependencies:
@@ -12910,6 +12915,8 @@ snapshots:
 
   comment-parser@1.4.5: {}
 
+  comment-parser@1.4.6: {}
+
   compare-versions@6.1.1: {}
 
   concat-map@0.0.1:
@@ -13313,12 +13320,12 @@ snapshots:
       uncase: 0.2.0
       yaml-eslint-parser: 2.0.0
 
-  eslint-plugin-jsdoc@62.8.1(eslint@10.1.0(jiti@2.6.1)):
+  eslint-plugin-jsdoc@62.9.0(eslint@10.1.0(jiti@2.6.1)):
     dependencies:
-      '@es-joy/jsdoccomment': 0.84.0
+      '@es-joy/jsdoccomment': 0.86.0
       '@es-joy/resolve.exports': 1.2.0
       are-docs-informative: 0.0.2
-      comment-parser: 1.4.5
+      comment-parser: 1.4.6
       debug: 4.4.3
       escape-string-regexp: 4.0.0
       eslint: 10.1.0(jiti@2.6.1)
@@ -14291,6 +14298,8 @@ snapshots:
       argparse: 2.0.1
 
   jsdoc-type-pratt-parser@7.1.1: {}
+
+  jsdoc-type-pratt-parser@7.2.0: {}
 
   jsesc@3.1.0: {}
 
@@ -15999,7 +16008,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@43.102.2(typanion@3.14.0):
+  renovate@43.102.4(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1021.0
       '@aws-sdk/client-ec2': 3.1021.0
@@ -16029,7 +16038,7 @@ snapshots:
       '@pnpm/parse-overrides': 1001.0.4
       '@qnighy/marshal': 0.1.3
       '@redis/client': 5.11.0
-      '@renovatebot/detect-tools': 2.0.0
+      '@renovatebot/detect-tools': 2.0.1
       '@renovatebot/good-enough-parser': 2.0.0
       '@renovatebot/osv-offline': 2.4.0
       '@renovatebot/pep440': 4.2.2
@@ -16341,9 +16350,7 @@ snapshots:
   spdx-expression-parse@4.0.0:
     dependencies:
       spdx-exceptions: 2.5.0
-      spdx-license-ids: 3.0.22
-
-  spdx-license-ids@3.0.22: {}
+      spdx-license-ids: 3.0.23
 
   spdx-license-ids@3.0.23: {}
 

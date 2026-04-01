@@ -129,7 +129,7 @@ describe('TurborepoSetupService', () => {
         // Read existing config first
         const configOptionBefore = yield* service.readTurboConfig();
         const existingTasks =
-          configOptionBefore._tag === 'Some' ? Object.keys(configOptionBefore.value.tasks || {}) : [];
+          configOptionBefore._tag === 'Some' ? Object.keys(configOptionBefore.value.tasks ?? {}) : [];
 
         const detectedTasks = new Set(['build', 'typecheck']);
 
@@ -184,7 +184,7 @@ describe('TurborepoSetupService', () => {
         const root = yield* pm.resolveRoot();
         const packageJson = yield* pm.readPackageJson({ id: root });
 
-        packageJson.scripts = packageJson.scripts || {};
+        packageJson.scripts = packageJson.scripts ?? {};
         packageJson.scripts.build = 'turbo run build';
         yield* pm.writePackageJson({ id: root, content: packageJson });
 
@@ -510,7 +510,7 @@ describe('TurborepoSetupService', () => {
 
         const originalContent = yield* fs.readFileString(turboPath);
         const originalConfig = JSON.parse(originalContent) as TurboConfig;
-        const originalTaskKeys = Object.keys(originalConfig.tasks || {});
+        const originalTaskKeys = Object.keys(originalConfig.tasks ?? {});
 
         yield* service.mergeTurboConfig(new Set(['newTask']));
 

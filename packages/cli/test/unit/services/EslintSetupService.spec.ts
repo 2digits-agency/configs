@@ -158,7 +158,7 @@ describe('EslintSetupService', () => {
 
         const pkg = yield* pm.readPackageJson();
 
-        pkg.scripts = pkg.scripts || {};
+        pkg.scripts = pkg.scripts ?? {};
         pkg.scripts.lint = 'eslint .';
         pkg.scripts['lint:fix'] = 'eslint . --fix';
         yield* pm.writePackageJson({ content: pkg });
@@ -180,7 +180,7 @@ describe('EslintSetupService', () => {
 
         const pkg = yield* pm.readPackageJson();
 
-        pkg.scripts = pkg.scripts || {};
+        pkg.scripts = pkg.scripts ?? {};
         pkg.scripts.lint = 'turbo run lint lint:root';
         pkg.scripts['lint:fix'] = 'turbo run lint:fix lint:root:fix';
         pkg.scripts['lint:root'] = 'eslint .';
@@ -412,7 +412,7 @@ export default twoDigits({
         const originalContent = yield* fs.readFileString(turboPath);
         const originalConfig = JSON.parse(originalContent) as TurboConfig;
 
-        originalConfig.tasks = originalConfig.tasks || {};
+        originalConfig.tasks = originalConfig.tasks ?? {};
         originalConfig.tasks.lint = {
           dependsOn: ['topo', '^build'],
           outputLogs: 'new-only',

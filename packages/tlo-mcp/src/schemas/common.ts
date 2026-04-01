@@ -9,28 +9,32 @@ export type TloDateString = typeof TloDateString.Type;
 
 /**
  * Parse YYYYMMDDHHMMSS string to Date.
+ *
+ * @param dateString - String to parse.
  */
-function parseTloDate(s: string): Date {
-  const year = Number.parseInt(s.slice(0, 4), 10);
-  const month = Number.parseInt(s.slice(4, 6), 10) - 1;
-  const day = Number.parseInt(s.slice(6, 8), 10);
-  const hour = Number.parseInt(s.slice(8, 10), 10);
-  const minute = Number.parseInt(s.slice(10, 12), 10);
-  const second = Number.parseInt(s.slice(12, 14), 10);
+function parseTloDate(dateString: string): Date {
+  const year = Number.parseInt(dateString.slice(0, 4), 10);
+  const month = Number.parseInt(dateString.slice(4, 6), 10) - 1;
+  const day = Number.parseInt(dateString.slice(6, 8), 10);
+  const hour = Number.parseInt(dateString.slice(8, 10), 10);
+  const minute = Number.parseInt(dateString.slice(10, 12), 10);
+  const second = Number.parseInt(dateString.slice(12, 14), 10);
 
   return new Date(year, month, day, hour, minute, second);
 }
 
 /**
  * Format Date to YYYYMMDDHHMMSS string.
+ *
+ * @param date - Date to format.
  */
-function formatTloDate(d: Date): TloDateString {
-  const year = d.getFullYear().toString().padStart(4, '0');
-  const month = (d.getMonth() + 1).toString().padStart(2, '0');
-  const day = d.getDate().toString().padStart(2, '0');
-  const hour = d.getHours().toString().padStart(2, '0');
-  const minute = d.getMinutes().toString().padStart(2, '0');
-  const second = d.getSeconds().toString().padStart(2, '0');
+function formatTloDate(date: Date): TloDateString {
+  const year = date.getFullYear().toString().padStart(4, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hour = date.getHours().toString().padStart(2, '0');
+  const minute = date.getMinutes().toString().padStart(2, '0');
+  const second = date.getSeconds().toString().padStart(2, '0');
 
   return `${year}${month}${day}${hour}${minute}${second}` as TloDateString;
 }
@@ -58,6 +62,8 @@ export const TloIdSchema = Schema.String.pipe(Schema.fromBrand(TloId));
 /**
  * Standard TLO API response envelope schema. Note: Most endpoints return data directly without this wrapper. Kept for
  * potential use with endpoints that do use the envelope pattern.
+ *
+ * @param dataSchema - Data schema to wrap.
  */
 export function TloResponse<$A, $I, $R>(dataSchema: Schema.Schema<$A, $I, $R>) {
   return Schema.Struct({

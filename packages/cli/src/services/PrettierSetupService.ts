@@ -18,7 +18,7 @@ export class PrettierSetupService extends Effect.Service<PrettierSetupService>()
         yield* Effect.logInfo('✅ Added prettier config to package.json');
       }
 
-      packageJson.scripts = packageJson.scripts || {};
+      packageJson.scripts = packageJson.scripts ?? {};
       if (!packageJson.scripts.format) {
         packageJson.scripts.format = 'prettier . --ignore-unknown --check --cache';
         yield* Effect.logInfo('✅ Added format script');

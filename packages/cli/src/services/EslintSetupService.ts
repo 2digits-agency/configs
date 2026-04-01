@@ -25,6 +25,8 @@ interface TurboConfig {
 
 /**
  * Generate root ESLint configuration content.
+ *
+ * @param isMonorepo - Whether the project is a monorepo.
  */
 function generateRootConfig(isMonorepo: boolean): string {
   if (isMonorepo) {
@@ -56,31 +58,25 @@ export default twoDigits();
 
 /**
  * Merge lint tasks into turbo.json.
+ *
+ * @param config - The base turbo config object.
  */
 function mergeLintTasks(config: TurboConfig): TurboConfig {
-  const tasks = config.tasks || {};
+  const tasks = config.tasks ?? {};
 
   // Only add tasks if they don't already exist
-  if (!tasks.lint) {
-    tasks.lint = {
-      dependsOn: ['topo', '^build'],
-      outputLogs: 'new-only',
-    };
-  }
+  tasks.lint ??= {
+    dependsOn: ['topo', '^build'],
+    outputLogs: 'new-only',
+  };
 
-  if (!tasks['lint:fix']) {
-    tasks['lint:fix'] = {};
-  }
+  tasks['lint:fix'] ??= {};
 
-  if (!tasks['//#lint:root']) {
-    tasks['//#lint:root'] = {
-      outputLogs: 'new-only',
-    };
-  }
+  tasks['//#lint:root'] ??= {
+    outputLogs: 'new-only',
+  };
 
-  if (!tasks['//#lint:root:fix']) {
-    tasks['//#lint:root:fix'] = {};
-  }
+  tasks['//#lint:root:fix'] ??= {};
 
   return {
     ...config,
@@ -346,7 +342,7 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()('Es
       const root = yield* pm.resolveRoot();
       const packageJson = yield* pm.readPackageJson({ id: root });
 
-      packageJson.scripts = packageJson.scripts || {};
+      packageJson.scripts = packageJson.scripts ?? {};
 
       if (!packageJson.scripts.lint) {
         packageJson.scripts.lint = isMonorepo ? 'turbo run lint lint:root' : 'eslint .';

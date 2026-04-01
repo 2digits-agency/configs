@@ -25,7 +25,7 @@ export const ifCurly = createRule<[], MessageId>({
 
     function getIndent(node: TSESTree.Node): string {
       const line = sourceCode.lines[node.loc.start.line - 1] ?? '';
-      const match = line.match(/^(\s*)/);
+      const match = /^(\s*)/.exec(line);
 
       return match?.[1] ?? '';
     }

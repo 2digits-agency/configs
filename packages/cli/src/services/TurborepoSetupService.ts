@@ -27,6 +27,8 @@ type TaskCategory = 'build' | 'test' | 'lint' | 'typecheck' | 'dev' | 'other';
 
 /**
  * Categorize a task name into a known category.
+ *
+ * @param taskName - The task name to categorize.
  */
 function categorizeTask(taskName: string): TaskCategory {
   const lower = taskName.toLowerCase();
@@ -56,6 +58,8 @@ function categorizeTask(taskName: string): TaskCategory {
 
 /**
  * Generate turbo task configuration based on category.
+ *
+ * @param category - The task category to generate a task configuration for.
  */
 function generateTaskConfig(category: TaskCategory): Record<string, unknown> {
   switch (category) {
@@ -86,9 +90,12 @@ function generateTaskConfig(category: TaskCategory): Record<string, unknown> {
 
 /**
  * Merge tasks into turbo.json config.
+ *
+ * @param existingConfig - The existing turbo.json config.
+ * @param detectedTasks - The set of detected tasks.
  */
 function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): TurboConfig {
-  const tasks = existingConfig.tasks || {};
+  const tasks = existingConfig.tasks ?? {};
 
   for (const taskName of detectedTasks) {
     if (!tasks[taskName]) {
@@ -207,7 +214,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
       const root = yield* pm.resolveRoot();
       const packageJson = yield* pm.readPackageJson({ id: root });
 
-      packageJson.scripts = packageJson.scripts || {};
+      packageJson.scripts = packageJson.scripts ?? {};
 
       let updated = false;
 
