@@ -1,5 +1,18 @@
 # @2digits/opencode-plugin
 
+## 0.1.19
+
+### Patch Changes
+
+- 43d3071: Update @opencode-ai/plugin to 1.3.12
+- 2cef142: Update @opencode-ai/plugin to 1.3.11, eslint-plugin-turbo to 2.9.2, and renovate to 43.102.0
+
+  - Update @opencode-ai/plugin to 1.3.11
+  - Update eslint-plugin-turbo to 2.9.2
+  - Update renovate to 43.102.0
+
+- 43d3071: Update @opencode-ai/plugin to 1.3.13
+
 ## 0.1.18
 
 ### Patch Changes
