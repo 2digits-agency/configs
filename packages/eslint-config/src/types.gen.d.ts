@@ -3255,6 +3255,16 @@ Backward pagination arguments
    */
   'react-extra/jsx-no-key-after-spread'?: Linter.RuleEntry<[]>
   /**
+   * Catches `$` before `{expr}` in JSX — typically from template literal `${expr}` being copy-pasted into JSX without removing the `$`. The `$` "leaks" into the rendered output.
+   * @see https://eslint-react.xyz/docs/rules/no-leaked-dollar
+   */
+  'react-extra/jsx-no-leaked-dollar'?: Linter.RuleEntry<[]>
+  /**
+   * Catches `;` at the start of JSX text nodes — typically from accidentally placing a statement-ending `;` inside JSX. The `;` "leaks" into the rendered output.
+   * @see https://eslint-react.xyz/docs/rules/no-leaked-semicolon
+   */
+  'react-extra/jsx-no-leaked-semicolon'?: Linter.RuleEntry<[]>
+  /**
    * Disallow JSX namespace syntax, as React does not support them.
    * @see https://eslint-react.xyz/docs/rules/no-namespace
    */
