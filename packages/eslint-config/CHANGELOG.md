@@ -1,5 +1,24 @@
 # @2digits/eslint-config
 
+## 5.3.2
+
+### Patch Changes
+
+- 64ca9d5: Update ESLint plugins
+
+  - Update `@eslint-react/eslint-plugin` to 4.2.3
+    - Added `react-extra/jsx-no-leaked-dollar` rule to catch `$` before `{expr}` in JSX
+    - Added `react-extra/jsx-no-leaked-semicolon` rule to catch `;` at the start of JSX text nodes
+  - Update `eslint-plugin-storybook` to 10.3.4
+  - Update `eslint-plugin-zod` to 3.5.1
+
+- 3a61988: Update @eslint-react/eslint-plugin to 4.2.1
+
+  - Consolidated plugin namespaces: `react-dom`, `react-web-api`, `react-naming-convention`, and `react-rsc` rules now use the `react-extra` prefix
+  - Updated rule names: `react-extra/no-useless-fragment` renamed to `react-extra/jsx-no-useless-fragment`
+  - Removed rules: `react-extra/jsx-shorthand-boolean`, `react-extra/jsx-shorthand-fragment` (dropped upstream)
+  - Updated generated types with new rule definitions
+
 ## 5.3.1
 
 ### Patch Changes

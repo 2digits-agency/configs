@@ -1,5 +1,21 @@
 # @2digits/oxlint-config
 
+## 0.5.0
+
+### Minor Changes
+
+- 64ca9d5: Add React configuration support
+
+  - Added new `reactConfig` with comprehensive React linting rules
+  - Integrated React Perf plugin rules for performance optimization
+  - Added React Compiler plugin support via `eslint-plugin-react-compiler`
+  - Added Stylistic plugin support via `@stylistic/eslint-plugin` for JSX formatting
+  - Exported React configuration in TypeScript preset
+
+### Patch Changes
+
+- 3a61988: Update defu to 6.1.6
+
 ## 0.4.0
 
 ### Minor Changes

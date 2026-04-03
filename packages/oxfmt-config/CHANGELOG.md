@@ -1,5 +1,11 @@
 # @2digits/oxfmt-config
 
+## 0.3.1
+
+### Patch Changes
+
+- 3a61988: Update defu to 6.1.6
+
 ## 0.3.0
 
 ### Minor Changes

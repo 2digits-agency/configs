@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.2.48
+
+### Patch Changes
+
+- 64ca9d5: Update @effect/language-service to 0.84.3
+
 ## 1.2.47
 
 ### Patch Changes
@@ -161,6 +167,7 @@
 ### Patch Changes
 
 - 74fbec6: Enable tsgo for declaration file generation
+
   - Updated tsdown configs to use `dts: { tsgo: true }` for faster .d.ts generation
 
 - 7b6ba6d: Update @effect/language-service to 0.72.0
