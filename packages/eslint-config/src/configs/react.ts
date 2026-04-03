@@ -34,11 +34,7 @@ export async function react(
       name: '2digits:react/setup',
       plugins: {
         stylistic,
-        'react-dom': plugins['@eslint-react/dom'],
-        'react-web-api': plugins['@eslint-react/web-api'],
         'react-extra': plugins['@eslint-react'],
-        'react-naming-convention': plugins['@eslint-react/naming-convention'],
-        'react-rsc': plugins['@eslint-react/rsc'],
         ...(reactCompiler ? { 'react-compiler': pluginReactCompiler } : {}),
       },
       settings: {
@@ -88,19 +84,17 @@ export async function react(
         'react-extra/refs': 'error',
         'react-extra/no-duplicate-key': 'error',
 
-        'react-dom/no-missing-button-type': 'error',
-        'react-dom/no-missing-iframe-sandbox': 'error',
-        'react-dom/no-unsafe-target-blank': 'error',
+        'react-extra/dom-no-missing-button-type': 'error',
+        'react-extra/dom-no-missing-iframe-sandbox': 'error',
+        'react-extra/dom-no-unsafe-target-blank': 'error',
 
-        'react-naming-convention/context-name': 'error',
-        'react-naming-convention/id-name': 'error',
-        'react-naming-convention/ref-name': 'error',
+        'react-extra/naming-convention-context-name': 'error',
+        'react-extra/naming-convention-id-name': 'error',
+        'react-extra/naming-convention-ref-name': 'error',
 
-        'react-extra/jsx-shorthand-boolean': 'error',
-        'react-extra/jsx-shorthand-fragment': 'error',
         'react-extra/prefer-namespace-import': 'error',
 
-        'react-extra/no-useless-fragment': 'off',
+        'react-extra/jsx-no-useless-fragment': 'off',
 
         'stylistic/jsx-curly-newline': 'off',
         'stylistic/jsx-newline': ['error', { prevent: false }],

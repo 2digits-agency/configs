@@ -1,9 +1,5 @@
 export const PluginNameMap = {
   '@next/next': 'next',
-  '@eslint-react/naming-convention': 'react-naming-convention',
-  '@eslint-react/dom': 'react-dom',
-  '@eslint-react/web-api': 'react-web-api',
-  '@eslint-react/rsc': 'react-rsc',
   '@eslint-react': 'react-extra',
   'react-hooks': 'react-hooks',
   'react-compiler': 'react-compiler',
