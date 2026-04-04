@@ -1,5 +1,15 @@
 # @2digits/eslint-plugin
 
+## 4.0.9
+
+### Patch Changes
+
+- a0f148e: Update ESLint core and plugins
+
+  - Update eslint to 10.2.0
+  - Update @eslint/compat to 2.0.4
+  - Update @tanstack/eslint-plugin-query to 5.96.2
+
 ## 4.0.8
 
 ### Patch Changes
