@@ -115,8 +115,8 @@ catalogs:
       specifier: 1.7.2
       version: 1.7.2
     defu:
-      specifier: 6.1.6
-      version: 6.1.6
+      specifier: 6.1.7
+      version: 6.1.7
     effect:
       specifier: 3.21.0
       version: 3.21.0
@@ -716,7 +716,7 @@ importers:
         version: link:../constants
       defu:
         specifier: 'catalog:'
-        version: 6.1.6
+        version: 6.1.7
     devDependencies:
       '@2digits/prettier-config':
         specifier: workspace:*
@@ -762,7 +762,7 @@ importers:
         version: 5.10.0(eslint@10.2.0(jiti@2.6.1))
       defu:
         specifier: 'catalog:'
-        version: 6.1.6
+        version: 6.1.7
       eslint-plugin-react-compiler:
         specifier: 'catalog:'
         version: 19.1.0-rc.2(eslint@10.2.0(jiti@2.6.1))
@@ -5215,11 +5215,11 @@ packages:
     resolution: {integrity: sha512-Ds09qNh8yw3khSjiJjiUInaGX9xlqZDY7JVryGxdxV7NPeuqQfplOpQ66yJFZut3jLa5zOwkXw1g9EI2uKh4Og==}
     engines: {node: '>=8'}
 
-  defu@6.1.4:
-    resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
-
   defu@6.1.6:
     resolution: {integrity: sha512-f8mefEW4WIVg4LckePx3mALjQSPQgFlg9U8yaPdlsbdYcHQyj9n2zL2LJEA52smeYxOvmd/nB7TpMtHGMTHcug==}
+
+  defu@6.1.7:
+    resolution: {integrity: sha512-7z22QmUWiQ/2d0KkdYmANbRUVABpZ9SNYyH5vx6PZ+nE5bcC0l7uFvEfHlyld/HcGBFTL536ClDt3DEcSlEJAQ==}
 
   deprecation@2.3.1:
     resolution: {integrity: sha512-xmHIy4F3scKVwMsQ4WnVaS8bHOx0DmVwRywosKhaILI0ywMDWPtBSku2HNxRvF7jtwDRsoEwYQSfbxj8b7RlJQ==}
@@ -12881,9 +12881,9 @@ snapshots:
 
   define-lazy-prop@2.0.0: {}
 
-  defu@6.1.4: {}
-
   defu@6.1.6: {}
+
+  defu@6.1.7: {}
 
   deprecation@2.3.1: {}
 
@@ -13918,7 +13918,7 @@ snapshots:
     dependencies:
       cookie-es: 1.2.2
       crossws: 0.3.5
-      defu: 6.1.4
+      defu: 6.1.6
       destr: 2.0.5
       iron-webcrypto: 1.2.1
       node-mock-http: 1.0.4
