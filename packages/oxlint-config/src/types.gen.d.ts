@@ -1138,6 +1138,17 @@ export interface RuleOptions {
 'eslint/no-regex-spaces'?: DummyRule;
 
 /**
+ * No restricted exports
+ *
+ * plugin: Eslint
+ * category: Nursery
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-restricted-exports.html
+ */
+'eslint/no-restricted-exports'?: DummyRule;
+
+/**
  * No restricted globals
  *
  * plugin: Eslint
@@ -1468,6 +1479,17 @@ export interface RuleOptions {
 'eslint/no-use-before-define'?: DummyRule;
 
 /**
+ * No useless assignment
+ *
+ * plugin: Eslint
+ * category: Nursery
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-useless-assignment.html
+ */
+'eslint/no-useless-assignment'?: DummyRule;
+
+/**
  * No useless backreference
  *
  * plugin: Eslint
@@ -1609,6 +1631,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-with.html
  */
 'eslint/no-with'?: DummyRule;
+
+/**
+ * Object shorthand
+ *
+ * plugin: Eslint
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/object-shorthand.html
+ */
+'eslint/object-shorthand'?: DummyRule;
 
 /**
  * Operator assignment
@@ -2535,6 +2568,17 @@ export interface RuleOptions {
 'jest/no-untyped-mock-factory'?: DummyRule;
 
 /**
+ * Padding around after all blocks
+ *
+ * plugin: Jest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jest/padding-around-after-all-blocks.html
+ */
+'jest/padding-around-after-all-blocks'?: DummyRule;
+
+/**
  * Padding around test blocks
  *
  * plugin: Jest
@@ -2665,6 +2709,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-mock-return-shorthand.html
  */
 'jest/prefer-mock-return-shorthand'?: DummyRule;
+
+/**
+ * Prefer snapshot hint
+ *
+ * plugin: Jest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-snapshot-hint.html
+ */
+'jest/prefer-snapshot-hint'?: DummyRule;
 
 /**
  * Prefer spy on
@@ -4196,6 +4251,17 @@ export interface RuleOptions {
 'react/forward-ref-uses-ref'?: DummyRule;
 
 /**
+ * Hook use state
+ *
+ * plugin: React
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/react/hook-use-state.html
+ */
+'react/hook-use-state'?: DummyRule;
+
+/**
  * Iframe missing sandbox
  *
  * plugin: React
@@ -4647,6 +4713,17 @@ export interface RuleOptions {
 'react/prefer-es6-class'?: DummyRule;
 
 /**
+ * Prefer function component
+ *
+ * plugin: React
+ * category: Restriction
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/react/prefer-function-component.html
+ */
+'react/prefer-function-component'?: DummyRule;
+
+/**
  * React in jsx scope
  *
  * plugin: React
@@ -4870,7 +4947,7 @@ export interface RuleOptions {
  * Consistent return
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Suspicious
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-return.html
@@ -4903,7 +4980,7 @@ export interface RuleOptions {
  * Consistent type exports
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Style
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-type-exports.html
@@ -4925,7 +5002,7 @@ export interface RuleOptions {
  * Dot notation
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Style
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/dot-notation.html
@@ -5398,7 +5475,7 @@ export interface RuleOptions {
  * No unnecessary type conversion
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Suspicious
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-type-conversion.html
@@ -6583,6 +6660,17 @@ export interface RuleOptions {
 'unicorn/no-useless-fallback-in-spread'?: DummyRule;
 
 /**
+ * No useless iterator to array
+ *
+ * plugin: Unicorn
+ * category: Nursery
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-useless-iterator-to-array.html
+ */
+'unicorn/no-useless-iterator-to-array'?: DummyRule;
+
+/**
  * No useless length check
  *
  * plugin: Unicorn
@@ -6889,6 +6977,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-global-this.html
  */
 'unicorn/prefer-global-this'?: DummyRule;
+
+/**
+ * Prefer import meta properties
+ *
+ * plugin: Unicorn
+ * category: Pedantic
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-import-meta-properties.html
+ */
+'unicorn/prefer-import-meta-properties'?: DummyRule;
 
 /**
  * Prefer includes
@@ -7309,6 +7408,17 @@ export interface RuleOptions {
 'unicorn/switch-case-braces'?: DummyRule;
 
 /**
+ * Switch case break position
+ *
+ * plugin: Unicorn
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/switch-case-break-position.html
+ */
+'unicorn/switch-case-break-position'?: DummyRule;
+
+/**
  * Text encoding identifier case
  *
  * plugin: Unicorn
@@ -7472,6 +7582,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-import-in-mock.html
  */
 'vitest/prefer-import-in-mock'?: DummyRule;
+
+/**
+ * Prefer importing vitest globals
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-importing-vitest-globals.html
+ */
+'vitest/prefer-importing-vitest-globals'?: DummyRule;
 
 /**
  * Prefer strict boolean matchers

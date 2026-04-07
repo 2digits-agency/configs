@@ -47,9 +47,6 @@ export const reactConfig = defineTypedConfig({
     'react/self-closing-comp': 'error',
     'react/void-dom-elements-no-children': 'error',
     'react_perf/jsx-no-jsx-as-prop': 'error',
-    'react_perf/jsx-no-new-array-as-prop': 'error',
-    'react_perf/jsx-no-new-function-as-prop': 'error',
-    'react_perf/jsx-no-new-object-as-prop': 'error',
     ...({
       'react-compiler/react-compiler': 'error',
       'stylistic/jsx-curly-newline': 'off',
