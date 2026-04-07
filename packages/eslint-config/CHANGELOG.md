@@ -1,5 +1,16 @@
 # @2digits/eslint-config
 
+## 5.3.4
+
+### Patch Changes
+
+- 00e6c97: Update ESLint plugins
+
+  - Update eslint-plugin-turbo to 2.9.4
+  - Update oxfmt to 0.44.0
+  - Update oxlint to 1.59.0
+  - Update oxlint-tsgolint to 0.20.0
+
 ## 5.3.3
 
 ### Patch Changes
