@@ -15,8 +15,6 @@ export const importConfig = defineTypedConfig({
     'import/no-named-as-default': 'error',
     'import/no-named-as-default-member': 'error',
     'import/no-self-import': 'error',
-    'import/no-unassigned-import': 'error',
     'import/no-webpack-loader-syntax': 'error',
-    'import/unambiguous': 'error',
   },
 });
