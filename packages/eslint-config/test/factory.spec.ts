@@ -6,7 +6,7 @@ import { fixtureSnapshotPath, serializeConfigs, snapshotJson, withDeterministicO
 import { factoryConfigPresets } from './presets';
 
 const workspaceRoot = fileURLToPath(new URL('../../..', import.meta.url));
-const detectedPackages = new Set(['turbo', 'typescript']);
+const detectedPackages = new Set(['turbo', 'typescript', 'vitest']);
 
 const optionalConfigNames: Record<string, string> = {
   next: '2digits:next/setup',
@@ -14,9 +14,14 @@ const optionalConfigNames: Record<string, string> = {
   tailwind: '2digits:tailwind',
   tanstackQuery: '2digits:tanstack-query',
   tanstackRouter: '2digits:tanstack-router',
+  vitest: '2digits:vitest/setup',
 };
 
 function isOptionEnabled(options: Record<string, boolean | undefined>, optionName: string): boolean {
+  if (optionName === 'vitest' && options[optionName] === undefined) {
+    return detectedPackages.has('vitest');
+  }
+
   return options[optionName] === true;
 }
 

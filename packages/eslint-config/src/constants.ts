@@ -5,6 +5,7 @@ export const PluginNameMap = {
   'react-compiler': 'react-compiler',
   '@stylistic/eslint-plugin': 'stylistic',
   '@typescript-eslint': 'ts',
+  vitest: 'vitest',
   node: 'node',
   '@eslint-community/eslint-comments': 'comments',
   storybook: 'storybook',

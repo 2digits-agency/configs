@@ -32,6 +32,7 @@ import {
   turbo,
   typescript,
   unicorn,
+  vitest,
   yaml,
   zod,
 } from './configs';
@@ -46,6 +47,7 @@ import type {
   OptionsWithIgnores,
   OptionsWithReact,
   OptionsWithStorybook,
+  OptionsWithVitest,
   TypedFlatConfigItem,
 } from './types';
 
@@ -65,6 +67,7 @@ interface ESLint2DigitsOptions {
   next?: SharedOptions<OptionsWithFiles> | boolean;
   tailwind?: SharedOptions<OptionsOverrides> | boolean;
   storybook?: SharedOptions<OptionsWithStorybook> | boolean;
+  vitest?: SharedOptions<OptionsWithVitest> | boolean;
   tanstackQuery?: SharedOptions<OptionsOverrides> | boolean;
   tanstackRouter?: SharedOptions<OptionsOverrides> | boolean;
   drizzle?: SharedOptions<OptionsWithDrizzle> | boolean;
@@ -167,6 +170,10 @@ export async function twoDigits(
         ...typescriptOptions,
       }),
     );
+  }
+
+  if (enabled(options.vitest, isPackageExists('vitest'))) {
+    composer = composer.append(vitest(extractConfig(options.vitest)));
   }
 
   if (enabled(options.tailwind, isPackageExists('tailwindcss'))) {

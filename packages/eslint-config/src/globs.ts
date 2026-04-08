@@ -4,6 +4,7 @@ export const GLOB_TS = '**/*.?([cm])ts';
 export const GLOB_TSX = '**/*.?([cm])tsx';
 
 export const GLOB_STORIES = '**/*.stories.tsx';
+export const GLOB_TESTS = '**/*.{test,spec}.ts?(x)';
 
 export const GLOB_JSON = '**/*.json';
 export const GLOB_JSON5 = '**/*.json5';

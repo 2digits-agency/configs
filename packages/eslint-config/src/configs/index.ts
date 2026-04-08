@@ -26,5 +26,6 @@ export * from './toml';
 export * from './turbo';
 export * from './typescript';
 export * from './unicorn';
+export * from './vitest';
 export * from './yaml';
 export * from './zod';
