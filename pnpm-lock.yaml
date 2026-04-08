@@ -43,8 +43,8 @@ catalogs:
       specifier: 4.2.3
       version: 4.2.3
     '@eslint/compat':
-      specifier: 2.0.4
-      version: 2.0.4
+      specifier: 2.0.5
+      version: 2.0.5
     '@eslint/config-inspector':
       specifier: 1.5.0
       version: 1.5.0
@@ -464,7 +464,7 @@ importers:
         version: 4.2.3(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)
       '@eslint/compat':
         specifier: 'catalog:'
-        version: 2.0.4(eslint@10.2.0(jiti@2.6.1))
+        version: 2.0.5(eslint@10.2.0(jiti@2.6.1))
       '@eslint/css':
         specifier: 'catalog:'
         version: 1.1.0
@@ -1892,8 +1892,8 @@ packages:
       eslint: ^10.0.0
       typescript: '*'
 
-  '@eslint/compat@2.0.4':
-    resolution: {integrity: sha512-o598tCGstJv9Kk4XapwP+oDij9HD9Qr3V37ABzTfdzVvbFciV+sfg9zSW6olj6G/IXj7p89SwSzPnZ+JUEPIPg==}
+  '@eslint/compat@2.0.5':
+    resolution: {integrity: sha512-IbHDbHJfkVNv6xjlET8AIVo/K1NQt7YT4Rp6ok/clyBGcpRx1l6gv0Rq3vBvYfPJIZt6ODf66Zq08FJNDpnzgg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: ^8.40 || 9 || 10
@@ -1929,6 +1929,10 @@ packages:
 
   '@eslint/core@1.2.0':
     resolution: {integrity: sha512-8FTGbNzTvmSlc4cZBaShkC6YvFMG0riksYWRFKXztqVdXaQbcZLXlFbSpC05s70sGEsXAw0qwhx69JiW7hQS7A==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+
+  '@eslint/core@1.2.1':
+    resolution: {integrity: sha512-MwcE1P+AZ4C6DWlpin/OmOA54mmIZ/+xZuJiQd4SyB29oAJjN30UW9wkKNptW2ctp4cEsvhlLY/CsQ1uoHDloQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@eslint/css-tree@3.6.9':
@@ -9929,9 +9933,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/compat@2.0.4(eslint@10.2.0(jiti@2.6.1))':
+  '@eslint/compat@2.0.5(eslint@10.2.0(jiti@2.6.1))':
     dependencies:
-      '@eslint/core': 1.2.0
+      '@eslint/core': 1.2.1
     optionalDependencies:
       eslint: 10.2.0(jiti@2.6.1)
 
@@ -9945,7 +9949,7 @@ snapshots:
 
   '@eslint/config-helpers@0.5.3':
     dependencies:
-      '@eslint/core': 1.1.1
+      '@eslint/core': 1.2.0
 
   '@eslint/config-helpers@0.5.4':
     dependencies:
@@ -9975,6 +9979,10 @@ snapshots:
       '@types/json-schema': 7.0.15
 
   '@eslint/core@1.2.0':
+    dependencies:
+      '@types/json-schema': 7.0.15
+
+  '@eslint/core@1.2.1':
     dependencies:
       '@types/json-schema': 7.0.15
 
@@ -10013,12 +10021,12 @@ snapshots:
 
   '@eslint/plugin-kit@0.6.0(patch_hash=c9c5f1e48363ce3f8a4fae7cf0229bb54da3894d3524eb9e6f5fe82c8c793c55)':
     dependencies:
-      '@eslint/core': 1.1.1
+      '@eslint/core': 1.2.0
       levn: 0.4.1
 
   '@eslint/plugin-kit@0.6.1':
     dependencies:
-      '@eslint/core': 1.1.1
+      '@eslint/core': 1.2.0
       levn: 0.4.1
 
   '@eslint/plugin-kit@0.7.0':
@@ -13096,7 +13104,7 @@ snapshots:
 
   eslint-config-flat-gitignore@2.3.0(eslint@10.2.0(jiti@2.6.1)):
     dependencies:
-      '@eslint/compat': 2.0.4(eslint@10.2.0(jiti@2.6.1))
+      '@eslint/compat': 2.0.5(eslint@10.2.0(jiti@2.6.1))
       eslint: 10.2.0(jiti@2.6.1)
 
   eslint-config-prettier@10.1.8(eslint@10.2.0(jiti@2.6.1)):
