@@ -1,5 +1,15 @@
 # @2digits/renovate-config
 
+## 1.2.80
+
+### Patch Changes
+
+- 692a9b0: Update renovate to 43.110.5
+- e64972b: Expand PostHog package grouping to include scoped packages
+
+  - Updated PostHog group matcher to include `/^@posthog//` pattern
+  - Now groups both `posthog-*` and `@posthog/*` packages together
+
 ## 1.2.79
 
 ### Patch Changes

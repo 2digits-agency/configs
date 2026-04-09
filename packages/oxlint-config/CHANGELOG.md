@@ -1,5 +1,13 @@
 # @2digits/oxlint-config
 
+## 0.6.1
+
+### Patch Changes
+
+- 692a9b0: Update defu to 6.1.7
+
+  - Updated `defu` to 6.1.7 in `@2digits/oxfmt-config` and `@2digits/oxlint-config`
+
 ## 0.6.0
 
 ### Minor Changes
