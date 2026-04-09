@@ -72,6 +72,20 @@ export interface OptionsWithStorybook extends OptionsWithFiles {
   storybookDirectory?: string;
 }
 
+export interface OptionsWithVitest extends OptionsWithFiles {
+  /**
+   * Enable type-aware Vitest lint rules for `expectTypeOf` and related APIs.
+   *
+   * @default true
+   */
+  typecheck?: boolean;
+
+  /**
+   * Additional modules that export custom Vitest fixtures.
+   */
+  vitestImports?: Array<RegExp | string>;
+}
+
 export interface OptionsWithReact extends OptionsWithFiles {
   /**
    * Enable the react-compiler plugin.

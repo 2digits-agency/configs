@@ -108,6 +108,9 @@ catalogs:
     '@typescript/native-preview':
       specifier: 7.0.0-dev.20260408.1
       version: 7.0.0-dev.20260408.1
+    '@vitest/eslint-plugin':
+      specifier: 1.6.15
+      version: 1.6.15
     bunup:
       specifier: 0.16.31
       version: 0.16.31
@@ -253,8 +256,8 @@ catalogs:
       specifier: 19.2.5
       version: 19.2.5
     renovate:
-      specifier: 43.110.5
-      version: 43.110.5
+      specifier: 43.110.8
+      version: 43.110.8
     tailwind-csstree:
       specifier: 0.3.0
       version: 0.3.0
@@ -355,7 +358,7 @@ importers:
         version: 10.2.0(jiti@2.6.1)
       knip:
         specifier: 'catalog:'
-        version: 6.3.1(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)
+        version: 6.3.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
       pkg-pr-new:
         specifier: 'catalog:'
         version: 0.0.66
@@ -495,6 +498,9 @@ importers:
       '@typescript-eslint/utils':
         specifier: 'catalog:'
         version: 8.58.1(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)
+      '@vitest/eslint-plugin':
+        specifier: 'catalog:'
+        version: 1.6.15(@typescript-eslint/eslint-plugin@8.58.1(@typescript-eslint/parser@8.58.1(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2))(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2))(@voidzero-dev/vite-plus-test@0.1.16(@arethetypeswrong/core@0.18.2)(@opentelemetry/api@1.9.1)(@types/node@24.12.2)(esbuild@0.27.3)(jiti@2.6.1)(publint@0.3.18)(tsx@4.21.0)(typescript@6.0.2)(vite@8.0.7(@types/node@24.12.2)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))(yaml@2.8.3))(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)
       empathic:
         specifier: 'catalog:'
         version: 2.0.0
@@ -866,7 +872,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 43.110.5(typanion@3.14.0)
+        version: 43.110.8(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
@@ -4618,6 +4624,22 @@ packages:
     resolution: {integrity: sha512-N0MZLEUnAoP/aRVk7MY119LDsESkbtEwIw+YeXi/jjx2XCqf7ni3GxIVsUYtf/troyuSedq3V/OUrkoCh5A9gA==}
     hasBin: true
 
+  '@vitest/eslint-plugin@1.6.15':
+    resolution: {integrity: sha512-dTMjrdngmcB+DxomlKQ+SUubCTvd0m2hQQFpv5sx+GRodmeoxr2PVbphk57SVp250vpxphk9Ccwyv6fQ6+2gkA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': '*'
+      eslint: '>=8.57.0'
+      typescript: '>=5.0.0'
+      vitest: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/eslint-plugin':
+        optional: true
+      typescript:
+        optional: true
+      vitest:
+        optional: true
+
   '@vitest/expect@3.2.4':
     resolution: {integrity: sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig==}
 
@@ -7722,8 +7744,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@43.110.5:
-    resolution: {integrity: sha512-KQWQmGeG9N3BuIUMvuq0ILjZbwS6HPUOOMyLxr+X6BM7vmPgzF24/FYfB3pxYxeghgJPX2+iIyUiP8iwX/qjLw==}
+  renovate@43.110.8:
+    resolution: {integrity: sha512-ONxDLetonV4yKdBm2MXjrvf+73ybsRMEmK4UYcZQpj8vvTAfI54uBfBBgonLGN6pHPVfwaSQZtKDQ0d6wg73FA==}
     engines: {node: ^24.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -7876,8 +7898,8 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
 
-  slugify@1.6.8:
-    resolution: {integrity: sha512-HVk9X1E0gz3mSpoi60h/saazLKXKaZThMLU3u/aNwoYn8/xQyX2MGxL0ui2eaokkD7tF+Zo+cKTHUbe1mmmGzA==}
+  slugify@1.6.9:
+    resolution: {integrity: sha512-vZ7rfeehZui7wQs438JXBckYLkIIdfHOXsaVEUMyS5fHo1483l1bMdo0EDSWYclY0yZKFOipDy4KHuKs6ssvdg==}
     engines: {node: '>=8.0.0'}
 
   smart-buffer@4.2.0:
@@ -10656,13 +10678,6 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@napi-rs/wasm-runtime@1.1.2(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)':
-    dependencies:
-      '@emnapi/core': 1.7.1
-      '@emnapi/runtime': 1.7.1
-      '@tybys/wasm-util': 0.10.1
-    optional: true
-
   '@napi-rs/wasm-runtime@1.1.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)':
     dependencies:
       '@emnapi/core': 1.9.1
@@ -11080,9 +11095,9 @@ snapshots:
   '@oxc-parser/binding-openharmony-arm64@0.121.0':
     optional: true
 
-  '@oxc-parser/binding-wasm32-wasi@0.121.0(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)':
+  '@oxc-parser/binding-wasm32-wasi@0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)':
     dependencies:
-      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)
+      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -11217,9 +11232,9 @@ snapshots:
       '@napi-rs/wasm-runtime': 1.1.1
     optional: true
 
-  '@oxc-resolver/binding-wasm32-wasi@11.19.1(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)':
+  '@oxc-resolver/binding-wasm32-wasi@11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)':
     dependencies:
-      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)
+      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -12473,7 +12488,7 @@ snapshots:
       '@typescript-eslint/types': 8.58.0
       '@typescript-eslint/visitor-keys': 8.58.0
       debug: 4.4.3
-      minimatch: 10.2.4
+      minimatch: 10.2.5
       semver: 7.7.4
       tinyglobby: 0.2.16
       ts-api-utils: 2.5.0(typescript@6.0.2)
@@ -12558,6 +12573,18 @@ snapshots:
       '@typescript/native-preview-linux-x64': 7.0.0-dev.20260408.1
       '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260408.1
       '@typescript/native-preview-win32-x64': 7.0.0-dev.20260408.1
+
+  '@vitest/eslint-plugin@1.6.15(@typescript-eslint/eslint-plugin@8.58.1(@typescript-eslint/parser@8.58.1(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2))(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2))(@voidzero-dev/vite-plus-test@0.1.16(@arethetypeswrong/core@0.18.2)(@opentelemetry/api@1.9.1)(@types/node@24.12.2)(esbuild@0.27.3)(jiti@2.6.1)(publint@0.3.18)(tsx@4.21.0)(typescript@6.0.2)(vite@8.0.7(@types/node@24.12.2)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))(yaml@2.8.3))(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)':
+    dependencies:
+      '@typescript-eslint/scope-manager': 8.58.1
+      '@typescript-eslint/utils': 8.58.1(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)
+      eslint: 10.2.0(jiti@2.6.1)
+    optionalDependencies:
+      '@typescript-eslint/eslint-plugin': 8.58.1(@typescript-eslint/parser@8.58.1(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2))(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)
+      typescript: 6.0.2
+      vitest: '@voidzero-dev/vite-plus-test@0.1.16(@arethetypeswrong/core@0.18.2)(@opentelemetry/api@1.9.1)(@types/node@24.12.2)(esbuild@0.27.3)(jiti@2.6.1)(publint@0.3.18)(tsx@4.21.0)(typescript@6.0.2)(vite@8.0.7(@types/node@24.12.2)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))(yaml@2.8.3)'
+    transitivePeerDependencies:
+      - supports-color
 
   '@vitest/expect@3.2.4':
     dependencies:
@@ -14571,7 +14598,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.3.1(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1):
+  knip@6.3.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       fast-glob: 3.3.3
@@ -14579,8 +14606,8 @@ snapshots:
       get-tsconfig: 4.13.7
       jiti: 2.6.1
       minimist: 1.2.8
-      oxc-parser: 0.121.0(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)
-      oxc-resolver: 11.19.1(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)
+      oxc-parser: 0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
+      oxc-resolver: 11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
       picocolors: 1.1.1
       picomatch: 4.0.4
       smol-toml: 1.6.1
@@ -15325,7 +15352,7 @@ snapshots:
       proc-log: 6.1.0
       semver: 7.7.4
       tar: 7.5.13
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       which: 6.0.1
     transitivePeerDependencies:
       - supports-color
@@ -15427,7 +15454,7 @@ snapshots:
       '@oxc-minify/binding-win32-arm64-msvc': 0.93.0
       '@oxc-minify/binding-win32-x64-msvc': 0.93.0
 
-  oxc-parser@0.121.0(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1):
+  oxc-parser@0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1):
     dependencies:
       '@oxc-project/types': 0.121.0
     optionalDependencies:
@@ -15447,7 +15474,7 @@ snapshots:
       '@oxc-parser/binding-linux-x64-gnu': 0.121.0
       '@oxc-parser/binding-linux-x64-musl': 0.121.0
       '@oxc-parser/binding-openharmony-arm64': 0.121.0
-      '@oxc-parser/binding-wasm32-wasi': 0.121.0(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)
+      '@oxc-parser/binding-wasm32-wasi': 0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
       '@oxc-parser/binding-win32-arm64-msvc': 0.121.0
       '@oxc-parser/binding-win32-ia32-msvc': 0.121.0
       '@oxc-parser/binding-win32-x64-msvc': 0.121.0
@@ -15498,7 +15525,7 @@ snapshots:
       '@oxc-resolver/binding-win32-ia32-msvc': 11.16.3
       '@oxc-resolver/binding-win32-x64-msvc': 11.16.3
 
-  oxc-resolver@11.19.1(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1):
+  oxc-resolver@11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1):
     optionalDependencies:
       '@oxc-resolver/binding-android-arm-eabi': 11.19.1
       '@oxc-resolver/binding-android-arm64': 11.19.1
@@ -15516,7 +15543,7 @@ snapshots:
       '@oxc-resolver/binding-linux-x64-gnu': 11.19.1
       '@oxc-resolver/binding-linux-x64-musl': 11.19.1
       '@oxc-resolver/binding-openharmony-arm64': 11.19.1
-      '@oxc-resolver/binding-wasm32-wasi': 11.19.1(@emnapi/core@1.7.1)(@emnapi/runtime@1.7.1)
+      '@oxc-resolver/binding-wasm32-wasi': 11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
       '@oxc-resolver/binding-win32-arm64-msvc': 11.19.1
       '@oxc-resolver/binding-win32-ia32-msvc': 11.19.1
       '@oxc-resolver/binding-win32-x64-msvc': 11.19.1
@@ -16127,7 +16154,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@43.110.5(typanion@3.14.0):
+  renovate@43.110.8(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1021.0
       '@aws-sdk/client-ec2': 3.1021.0
@@ -16234,7 +16261,7 @@ snapshots:
       semver-utils: 1.1.4
       shlex: 3.0.0
       simple-git: 3.33.0
-      slugify: 1.6.8
+      slugify: 1.6.9
       source-map-support: 0.5.21
       strip-json-comments: 5.0.3
       toml-eslint-parser: 1.0.3
@@ -16408,7 +16435,7 @@ snapshots:
 
   slash@3.0.0: {}
 
-  slugify@1.6.8: {}
+  slugify@1.6.9: {}
 
   smart-buffer@4.2.0:
     optional: true
@@ -16537,7 +16564,7 @@ snapshots:
       lines-and-columns: 1.2.4
       mz: 2.7.0
       pirates: 4.0.7
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       ts-interface-checker: 0.1.13
 
   supports-color@7.2.0:
@@ -16950,7 +16977,7 @@ snapshots:
       picomatch: 4.0.4
       postcss: 8.5.8
       rolldown: 1.0.0-rc.13
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
     optionalDependencies:
       '@types/node': 24.12.2
       esbuild: 0.27.3

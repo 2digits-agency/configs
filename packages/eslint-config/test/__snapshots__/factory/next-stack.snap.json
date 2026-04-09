@@ -1487,6 +1487,50 @@
     ]
   },
   {
+    "name": "2digits:vitest/setup",
+    "plugins": [
+      "vitest"
+    ]
+  },
+  {
+    "name": "2digits:vitest/rules",
+    "files": [
+      "**/*.{test,spec}.ts?(x)"
+    ],
+    "languageOptions": {
+      "globals": {
+        "_count": 17
+      }
+    },
+    "settings": {
+      "vitest": {
+        "typecheck": true
+      }
+    },
+    "rules": [
+      "vitest/consistent-each-for",
+      "vitest/consistent-test-filename",
+      "vitest/consistent-test-it",
+      "vitest/consistent-vitest-vi",
+      "vitest/hoisted-apis-on-top",
+      "vitest/no-conditional-tests",
+      "vitest/no-import-node-test",
+      "vitest/prefer-called-exactly-once-with",
+      "vitest/prefer-called-once",
+      "vitest/prefer-describe-function-title",
+      "vitest/prefer-each",
+      "vitest/prefer-expect-type-of",
+      "vitest/prefer-import-in-mock",
+      "vitest/prefer-to-be-falsy",
+      "vitest/prefer-to-be-object",
+      "vitest/prefer-to-be-truthy",
+      "vitest/require-awaited-expect-poll",
+      "vitest/require-local-test-context-for-concurrent-snapshots",
+      "vitest/require-mock-type-parameters",
+      "vitest/warn-todo"
+    ]
+  },
+  {
     "name": "2digits:tailwind",
     "files": [
       "**/*.?([cm])[jt]s?(x)"
