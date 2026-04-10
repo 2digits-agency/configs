@@ -1,5 +1,6 @@
 ---
 description: Generate changeset(s) from code changes
+model: opencode-go/kimi-k2.5
 ---
 
 Analyze code changes and create changeset entries for this monorepo.
@@ -98,7 +99,7 @@ Update renovate to 42.78.1
 4. For each group:
    - Map changed files to package names (`packages/X/` → `@2digits/X`)
    - Determine appropriate bump type per package
-   - Generate random filename: `pnpx human-id --separator - --case lower` (outputs kebab-case like `ready-cups-dream`)
+   - Generate random filename: `vpx human-id --separator - --case lower` (outputs kebab-case like `ready-cups-dream`)
    - Write changeset to `.changeset/<random>.md`
 
 ## Guidelines
