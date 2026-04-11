@@ -1,5 +1,20 @@
 # @2digits/eslint-config
 
+## 5.4.1
+
+### Patch Changes
+
+- aab85d6: Update ESLint plugins
+
+  - Updated `eslint-plugin-turbo` to 2.9.6
+  - Updated `eslint-plugin-zod` to 3.5.3
+  - Updated `tailwind-csstree` to 0.3.1
+
+- 8be7864: Update ESLint plugins
+
+  - Updated `@tanstack/eslint-plugin-query` to 5.97.0
+  - Updated `eslint-plugin-zod` to 3.5.2
+
 ## 5.4.0
 
 ### Minor Changes
