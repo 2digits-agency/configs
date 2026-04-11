@@ -1,5 +1,11 @@
 # @2digits/tlo-mcp
 
+## 0.1.16
+
+### Patch Changes
+
+- 8be7864: Update @effect/language-service to 0.85.1
+
 ## 0.1.15
 
 ### Patch Changes
@@ -121,6 +127,7 @@
 ### Minor Changes
 
 - bc95b2e: Add `get_board_todos` tool to search kanban board todos
+
   - Added `getBoardTodos` method to `BoardService` calling `/ajax/board/GetTodos` endpoint
   - New MCP tool `get_board_todos` with `boardId` (required), `query`, `boardListId`, and `limit` parameters
   - Query filter performs case-insensitive partial match on todo name (client-side)
@@ -128,6 +135,7 @@
   - Exported `TodoSummary`, `todoSummaryFromRaw`, and `GetBoardTodosParams` from package index
 
 - ba8d11a: Add MCP server binary for Claude Desktop integration
+
   - Added `tlo-mcp` CLI binary using `@effect/cli` with stdio transport
   - Created 7 MCP tools: `get_projects`, `get_messages`, `set_task_state`, `get_week_activities`, `create_activity`, `update_activity`, `delete_activity`
   - Configuration via environment variables: `TLO_SESSION_TOKEN`, `TLO_BASE_URL`, `TLO_COOKIES`
@@ -135,6 +143,7 @@
   - Added `@effect/experimental` and `@effect/rpc` dependencies for MCP server support
 
 - ba8d11a: Refactor architecture and enable @effect/language-service build-time diagnostics
+
   - Extracted `TloConfig` and `TloHttpClient` into dedicated service modules
   - Added `TloConfigLive` layer with `TloConfigFromEnv` for configuration
   - Converted all imports to namespace style (`import * as Effect from 'effect/Effect'`)
@@ -154,6 +163,7 @@
 ### Patch Changes
 
 - ba8d11a: Add TeamLeader Orbit API client package
+
   - Added Effect-based HTTP client for TLO's private AJAX API
   - Implemented `TimeService` with `getWeek`, `createActivity`, `updateActivity`, `deleteActivity`
   - Implemented `BoardService` with `getProjects`, `getMessages`, `setTaskState`
@@ -162,6 +172,7 @@
   - Provided `TloLive` layer for easy service composition
 
 - ba8d11a: Refactor internal implementation and simplify build config
+
   - Replaced custom `toUrlParams()` helper with `@effect/platform/UrlParams.fromInput()`
   - Fixed ternary expressions to follow preferred `x === undefined ? undefined : value` pattern
   - Simplified package.json exports to ESM-only shorthand
@@ -170,12 +181,14 @@
   - Removed unused vitest setup file reference
 
 - ba8d11a: Fix date parameter validation for MCP tools
+
   - Replaced `IsoDateString` (plain string) with `IsoDate` (`Schema.Date`) to validate ISO 8601 format at schema boundary
   - Invalid date strings like `"not-a-date"` now fail with clear error instead of producing `"NaN-NaN-NaN"` API requests
   - Removed redundant `new Date()` conversions in handlers since schema now provides `Date` objects
   - Affected tools: `get_tasks_for_user`, `get_week_activities`, `create_activity`, `update_activity`
 
 - ba8d11a: Fix MCP server schema compatibility with @effect/ai
+
   - Replaced `Schema.optionalWith` with `Schema.optional` in tool definitions to avoid unsupported transformations
   - Added plain struct versions of error schemas for MCP tool failure responses
   - Applied defaults manually in handlers instead of schema layer

@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.2.49
+
+### Patch Changes
+
+- 8be7864: Update @effect/language-service to 0.85.1
+
 ## 1.2.48
 
 ### Patch Changes
