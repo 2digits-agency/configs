@@ -1,5 +1,14 @@
 # @2digits/eslint-config
 
+## 5.4.2
+
+### Patch Changes
+
+- b7b73df: Update ESLint plugins
+
+  - Updated `@tanstack/eslint-plugin-query` to 5.99.0
+  - Updated `globals` to 17.5.0
+
 ## 5.4.1
 
 ### Patch Changes
