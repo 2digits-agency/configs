@@ -1,5 +1,12 @@
 # @2digits/oxfmt-config
 
+## 0.3.3
+
+### Patch Changes
+
+- 9e37180: Update oxfmt to 0.45.0
+- 9e37180: Update prettier to 3.8.3
+
 ## 0.3.2
 
 ### Patch Changes

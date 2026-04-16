@@ -1,5 +1,11 @@
 # @2digits/oxlint-config
 
+## 0.6.2
+
+### Patch Changes
+
+- 9e37180: Update oxlint to 1.60.0
+
 ## 0.6.1
 
 ### Patch Changes
