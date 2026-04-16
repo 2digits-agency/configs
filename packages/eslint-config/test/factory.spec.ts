@@ -25,13 +25,13 @@ function isOptionEnabled(options: Record<string, boolean | undefined>, optionNam
   return options[optionName] === true;
 }
 
-vi.mock('local-pkg', () => ({
+vi.mock(import('local-pkg'), () => ({
   isPackageExists(name: string) {
     return detectedPackages.has(name);
   },
 }));
 
-vi.mock('pkg-types', () => ({
+vi.mock(import('pkg-types'), () => ({
   async findWorkspaceDir() {
     await Promise.resolve();
 

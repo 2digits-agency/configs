@@ -2623,6 +2623,17 @@ export interface RuleOptions {
 'jest/prefer-each'?: DummyRule;
 
 /**
+ * Prefer ending with an expect
+ *
+ * plugin: Jest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-ending-with-an-expect.html
+ */
+'jest/prefer-ending-with-an-expect'?: DummyRule;
+
+/**
  * Prefer equality matcher
  *
  * plugin: Jest
@@ -2665,6 +2676,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-hooks-on-top.html
  */
 'jest/prefer-hooks-on-top'?: DummyRule;
+
+/**
+ * Prefer importing jest globals
+ *
+ * plugin: Jest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-importing-jest-globals.html
+ */
+'jest/prefer-importing-jest-globals'?: DummyRule;
 
 /**
  * Prefer jest mocked
@@ -2863,6 +2885,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/jest/valid-expect.html
  */
 'jest/valid-expect'?: DummyRule;
+
+/**
+ * Valid expect in promise
+ *
+ * plugin: Jest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jest/valid-expect-in-promise.html
+ */
+'jest/valid-expect-in-promise'?: DummyRule;
 
 /**
  * Valid title
@@ -5420,7 +5453,7 @@ export interface RuleOptions {
  * No unnecessary qualifier
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Style
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-qualifier.html
@@ -5486,7 +5519,7 @@ export interface RuleOptions {
  * No unnecessary type parameters
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Suspicious
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-type-parameters.html
@@ -5607,7 +5640,7 @@ export interface RuleOptions {
  * No useless default assignment
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Correctness
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-useless-default-assignment.html
@@ -5816,7 +5849,7 @@ export interface RuleOptions {
  * Prefer readonly parameter types
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Pedantic
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-readonly-parameter-types.html
@@ -5970,7 +6003,7 @@ export interface RuleOptions {
  * Strict void return
  *
  * plugin: Typescript
- * category: Nursery
+ * category: Pedantic
  * type-aware: true
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/strict-void-return.html
@@ -6097,6 +6130,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/consistent-function-scoping.html
  */
 'unicorn/consistent-function-scoping'?: DummyRule;
+
+/**
+ * Consistent template literal escape
+ *
+ * plugin: Unicorn
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/consistent-template-literal-escape.html
+ */
+'unicorn/consistent-template-literal-escape'?: DummyRule;
 
 /**
  * Custom error definition
