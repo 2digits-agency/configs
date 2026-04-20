@@ -4369,7 +4369,7 @@ Backward pagination arguments
    */
   'sonar/aws-ec2-rds-dms-public'?: Linter.RuleEntry<[]>
   /**
-   * Using unencrypted EBS volumes is security-sensitive
+   * EBS volumes should be encrypted
    * @see https://sonarsource.github.io/rspec/#/rspec/S6275/javascript
    */
   'sonar/aws-ec2-unencrypted-ebs-volume'?: Linter.RuleEntry<[]>
@@ -4379,7 +4379,7 @@ Backward pagination arguments
    */
   'sonar/aws-efs-unencrypted'?: Linter.RuleEntry<[]>
   /**
-   * Policies granting all privileges are security-sensitive
+   * Policies should not grant all privileges
    * @see https://sonarsource.github.io/rspec/#/rspec/S6302/javascript
    */
   'sonar/aws-iam-all-privileges'?: Linter.RuleEntry<[]>
@@ -4394,17 +4394,17 @@ Backward pagination arguments
    */
   'sonar/aws-iam-privilege-escalation'?: Linter.RuleEntry<[]>
   /**
-   * Policies authorizing public access to resources are security-sensitive
+   * AWS resource-based policies should not grant public access
    * @see https://sonarsource.github.io/rspec/#/rspec/S6270/javascript
    */
   'sonar/aws-iam-public-access'?: Linter.RuleEntry<[]>
   /**
-   * Using unencrypted Opensearch domains is security-sensitive
+   * OpenSearch domains should have encryption at rest enabled
    * @see https://sonarsource.github.io/rspec/#/rspec/S6308/javascript
    */
   'sonar/aws-opensearchservice-domain'?: Linter.RuleEntry<[]>
   /**
-   * Using unencrypted RDS DB resources is security-sensitive
+   * Amazon RDS resources should be encrypted at rest
    * @see https://sonarsource.github.io/rspec/#/rspec/S6303/javascript
    */
   'sonar/aws-rds-unencrypted-databases'?: Linter.RuleEntry<[]>
@@ -4414,7 +4414,7 @@ Backward pagination arguments
    */
   'sonar/aws-restricted-ip-admin-access'?: Linter.RuleEntry<[]>
   /**
-   * Granting access to S3 buckets to all or authenticated users is security-sensitive
+   * S3 buckets should not grant access to all users or authenticated users
    * @see https://sonarsource.github.io/rspec/#/rspec/S6265/javascript
    */
   'sonar/aws-s3-bucket-granted-access'?: Linter.RuleEntry<[]>
@@ -4450,7 +4450,7 @@ Backward pagination arguments
    */
   'sonar/aws-sns-unencrypted-topics'?: Linter.RuleEntry<[]>
   /**
-   * Using unencrypted SQS queues is security-sensitive
+   * SQS queues should be encrypted
    * @see https://sonarsource.github.io/rspec/#/rspec/S6330/javascript
    */
   'sonar/aws-sqs-unencrypted-queue'?: Linter.RuleEntry<[]>
@@ -4537,7 +4537,7 @@ Backward pagination arguments
    */
   'sonar/constructor-for-side-effects'?: Linter.RuleEntry<[]>
   /**
-   * Allowing requests with excessive content length is security-sensitive
+   * HTTP request content length should be limited
    * @see https://sonarsource.github.io/rspec/#/rspec/S5693/javascript
    */
   'sonar/content-length'?: Linter.RuleEntry<SonarContentLength>
@@ -4558,7 +4558,7 @@ Backward pagination arguments
    */
   'sonar/cookies'?: Linter.RuleEntry<[]>
   /**
-   * Having a permissive Cross-Origin Resource Sharing policy is security-sensitive
+   * Cross-Origin Resource Sharing (CORS) policy should be restricted to trusted origins
    * @see https://sonarsource.github.io/rspec/#/rspec/S5122/javascript
    */
   'sonar/cors'?: Linter.RuleEntry<[]>
@@ -4613,6 +4613,11 @@ Backward pagination arguments
    * @deprecated
    */
   'sonar/dns-prefetching'?: Linter.RuleEntry<[]>
+  /**
+   * DOMPurify configuration should not be bypassable
+   * @see https://sonarsource.github.io/rspec/#/rspec/S8479/javascript
+   */
+  'sonar/dompurify-unsafe-config'?: Linter.RuleEntry<[]>
   /**
    * Character classes in regular expressions should not contain the same character twice
    * @see https://sonarsource.github.io/rspec/#/rspec/S5869/javascript
@@ -4750,7 +4755,7 @@ Backward pagination arguments
    */
   'sonar/index-of-compare-to-positive-number'?: Linter.RuleEntry<[]>
   /**
-   * Creating cookies without the "secure" flag is security-sensitive
+   * Cookies should have the "secure" flag
    * @see https://sonarsource.github.io/rspec/#/rspec/S2092/javascript
    */
   'sonar/insecure-cookie'?: Linter.RuleEntry<[]>
@@ -4775,7 +4780,7 @@ Backward pagination arguments
    */
   'sonar/label-position'?: Linter.RuleEntry<[]>
   /**
-   * Authorizing an opened window to access back to the originating window is security-sensitive
+   * Opened windows should not have access to the originating page
    * @see https://sonarsource.github.io/rspec/#/rspec/S5148/javascript
    */
   'sonar/link-with-target-blank'?: Linter.RuleEntry<[]>
@@ -4990,7 +4995,7 @@ Backward pagination arguments
    */
   'sonar/no-gratuitous-expressions'?: Linter.RuleEntry<[]>
   /**
-   * Using hardcoded IP addresses is security-sensitive
+   * IP addresses should not be hardcoded
    * @see https://sonarsource.github.io/rspec/#/rspec/S1313/javascript
    */
   'sonar/no-hardcoded-ip'?: Linter.RuleEntry<[]>
@@ -5292,8 +5297,9 @@ Backward pagination arguments
    */
   'sonar/no-uniq-key'?: Linter.RuleEntry<[]>
   /**
-   * Expanding archive files without controlling resource consumption is security-sensitive
+   * Expanding archive files should not be done without controlling resource consumption
    * @see https://sonarsource.github.io/rspec/#/rspec/S5042/javascript
+   * @deprecated
    */
   'sonar/no-unsafe-unzip'?: Linter.RuleEntry<[]>
   /**
@@ -5469,7 +5475,7 @@ Backward pagination arguments
    */
   'sonar/public-static-readonly'?: Linter.RuleEntry<[]>
   /**
-   * Using publicly writable directories is security-sensitive
+   * Temporary files should not be created in publicly writable directories
    * @see https://sonarsource.github.io/rspec/#/rspec/S5443/javascript
    */
   'sonar/publicly-writable-directories'?: Linter.RuleEntry<[]>
@@ -5659,7 +5665,7 @@ Backward pagination arguments
    */
   'sonar/web-sql-database'?: Linter.RuleEntry<[]>
   /**
-   * Disclosing fingerprints from web application technologies is security-sensitive
+   * Web application technologies should not disclose version information
    * @see https://sonarsource.github.io/rspec/#/rspec/S5689/javascript
    */
   'sonar/x-powered-by'?: Linter.RuleEntry<[]>
@@ -8606,6 +8612,11 @@ Backward pagination arguments
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-throw-in-refine.md
    */
   'zod/no-throw-in-refine'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow transforms in z.record() key schemas, which can cause silent key mutations and data loss through key collisions
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-transform-in-record-key.md
+   */
+  'zod/no-transform-in-record-key'?: Linter.RuleEntry<[]>
   /**
    * Disallow usage of `z.unknown()` in Zod schemas
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-unknown-schema.md
@@ -12449,7 +12460,7 @@ type SonarClassName = []|[{
   format?: string
 }]
 // ----- sonar/cognitive-complexity -----
-type SonarCognitiveComplexity = []|[(number | string)]|[(number | string), string]
+type SonarCognitiveComplexity = []|[(number | "silence-issues")]|[(number | "silence-issues"), "silence-issues"]
 // ----- sonar/comment-regex -----
 type SonarCommentRegex = []|[{
   regularExpression?: string
