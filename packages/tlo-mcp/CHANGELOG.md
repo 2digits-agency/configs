@@ -1,5 +1,14 @@
 # @2digits/tlo-mcp
 
+## 0.1.17
+
+### Patch Changes
+
+- 211e03f: Update Effect ecosystem dependencies
+
+  - Updated `effect` to 3.21.1
+  - Updated `@effect/cli` to 0.75.1
+
 ## 0.1.16
 
 ### Patch Changes
