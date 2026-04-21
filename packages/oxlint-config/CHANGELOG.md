@@ -1,5 +1,13 @@
 # @2digits/oxlint-config
 
+## 0.6.3
+
+### Patch Changes
+
+- 8837219: Update oxlint to 1.61.0
+
+  - Added `typescript/explicit-member-accessibility` rule to generated types
+
 ## 0.6.2
 
 ### Patch Changes
