@@ -7,6 +7,7 @@ import type { OptionsCss, TypedFlatConfigItem } from '../types';
 
 async function resolveTailwindSyntax(options?: OptionsCss) {
   if (options?.customSyntax) {
+    // eslint-disable-next-line ts/no-unnecessary-type-assertion
     return options.customSyntax as Exclude<CSSLanguageOptions['customSyntax'], undefined>;
   }
 

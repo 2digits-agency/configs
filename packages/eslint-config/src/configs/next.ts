@@ -28,7 +28,7 @@ export async function next(
     {
       name: '2digits:next/setup',
       plugins: {
-        next: fixupPluginRules(next as never),
+        next: fixupPluginRules(next),
       },
     },
     {

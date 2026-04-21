@@ -5054,6 +5054,17 @@ export interface RuleOptions {
 'typescript/explicit-function-return-type'?: DummyRule;
 
 /**
+ * Explicit member accessibility
+ *
+ * plugin: Typescript
+ * category: Restriction
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/explicit-member-accessibility.html
+ */
+'typescript/explicit-member-accessibility'?: DummyRule;
+
+/**
  * Explicit module boundary types
  *
  * plugin: Typescript
