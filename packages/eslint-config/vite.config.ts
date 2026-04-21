@@ -23,7 +23,7 @@ export default defineConfig({
             plugins: {
               '': {
                 // eslint-disable-next-line ts/no-deprecated
-                rules: Object.fromEntries(builtinRules.entries()) as Record<never, never>,
+                rules: Object.fromEntries(builtinRules.entries()),
               },
             },
           },
@@ -32,7 +32,7 @@ export default defineConfig({
 
         const configNames = configs.map((i) => i.name).filter(Boolean) as Array<string>;
 
-        let dts = await flatConfigsToRulesDTS(configs as never, {
+        let dts = await flatConfigsToRulesDTS(configs, {
           includeAugmentation: false,
         });
 

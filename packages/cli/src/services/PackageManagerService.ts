@@ -170,7 +170,7 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
         return yield* new PackageManagerError({ cause: 'Could not detect package manager' });
       }
 
-      return pm as nypm.PackageManager;
+      return pm;
     });
 
     const runScriptCommand = Effect.fn('PackageManagerService.runScriptCommand')(function* (options: {
