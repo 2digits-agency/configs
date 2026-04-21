@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.2.51
+
+### Patch Changes
+
+- 8837219: Remove unnecessary type assertion in package manager detection
+
 ## 1.2.50
 
 ### Patch Changes
