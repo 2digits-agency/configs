@@ -8583,6 +8583,11 @@ Backward pagination arguments
    */
   'zod/consistent-object-schema-type'?: Linter.RuleEntry<ZodConsistentObjectSchemaType>
   /**
+   * Enforce consistent use of z.infer or z.output for schema type inference
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/consistent-schema-output-type-style.md
+   */
+  'zod/consistent-schema-output-type-style'?: Linter.RuleEntry<ZodConsistentSchemaOutputTypeStyle>
+  /**
    * Disallow usage of `z.any()` in Zod schemas
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-any-schema.md
    */
@@ -16068,6 +16073,11 @@ type ZodConsistentImportSource = []|[{
 type ZodConsistentObjectSchemaType = []|[{
   
   allow?: [("object" | "looseObject" | "strictObject"), ...(("object" | "looseObject" | "strictObject"))[]]
+}]
+// ----- zod/consistent-schema-output-type-style -----
+type ZodConsistentSchemaOutputTypeStyle = []|[{
+  
+  style?: ("infer" | "output")
 }]
 // ----- zod/no-optional-and-default-together -----
 type ZodNoOptionalAndDefaultTogether = []|[{
