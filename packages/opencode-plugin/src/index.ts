@@ -2,7 +2,7 @@
 import { randomUUID } from 'node:crypto';
 import nodePath from 'node:path';
 
-import type { Hooks, Plugin } from '@opencode-ai/plugin';
+import type { Hooks, Plugin, PluginInput } from '@opencode-ai/plugin';
 
 const DEFAULT_HOST = 'https://eu.i.posthog.com';
 const DEFAULT_MAX_ATTRIBUTE_LENGTH = 12_000;
@@ -22,7 +22,8 @@ interface Config {
   traceGrouping: TraceGrouping;
   sessionWindowMinutes: number;
   maxAttributeLength: number;
-  distinctId: string;
+  distinctId?: string;
+  gitEmail?: string;
   projectName: string;
   customProperties: Record<string, unknown>;
 }
@@ -48,6 +49,7 @@ interface TraceState {
   totalInputTokens: number;
   totalOutputTokens: number;
   traceID: string;
+  traceName?: string;
 }
 
 interface ToolCallState {
@@ -61,6 +63,14 @@ interface ToolCallState {
 interface AssistantOutputState {
   order: Array<string>;
   parts: Map<string, string>;
+}
+
+interface GenerationState {
+  assistantMessageID: string;
+  pendingKey: string;
+  sessionID: string;
+  spanID: string;
+  traceID: string;
 }
 
 interface PostHogClient {
@@ -172,14 +182,46 @@ function parseCustomProperties(value: string | undefined): Record<string, unknow
   }
 }
 
+function parseDistinctId(value: string | undefined): string | undefined {
+  const distinctId = value?.trim();
+
+  if (!distinctId) {
+    return undefined;
+  }
+
+  return distinctId;
+}
+
+async function readGitEmail(ctx: PluginInput): Promise<string | undefined> {
+  try {
+    return parseDistinctId(await ctx.$`git config --get user.email`.text());
+  } catch {
+    return undefined;
+  }
+}
+
 function getProjectName(directory: string): string {
   const value = nodePath.basename(directory);
 
   return value.length > 0 ? value : 'opencode-project';
 }
 
-function getDistinctId(config: Config): string {
-  return config.distinctId.length > 0 ? config.distinctId : config.projectName;
+function getTraceName(prompt: string | undefined): string | undefined {
+  if (!prompt) {
+    return undefined;
+  }
+
+  const traceName = prompt.replaceAll(/\s+/g, ' ').trim();
+
+  if (!traceName) {
+    return undefined;
+  }
+
+  return traceName.slice(0, 120);
+}
+
+function getDistinctId(config: Config, sessionID: string): string {
+  return config.distinctId ?? config.gitEmail ?? sessionID;
 }
 
 function getPendingKey(sessionID: string, messageID: string): string {
@@ -275,7 +317,7 @@ function buildOutputChoices(
   return undefined;
 }
 
-const plugin: Plugin = (ctx) => {
+const plugin: Plugin = async (ctx) => {
   const projectName = getProjectName(ctx.worktree || ctx.directory);
   const config: Config = {
     apiKey: process.env.POSTHOG_API_KEY ?? '',
@@ -285,19 +327,20 @@ const plugin: Plugin = (ctx) => {
     traceGrouping: parseTraceGrouping(process.env.POSTHOG_LLMA_TRACE_GROUPING),
     sessionWindowMinutes: parseNumber(process.env.POSTHOG_LLMA_SESSION_WINDOW_MINUTES, DEFAULT_SESSION_WINDOW_MINUTES),
     maxAttributeLength: parseNumber(process.env.POSTHOG_MAX_ATTRIBUTE_LENGTH, DEFAULT_MAX_ATTRIBUTE_LENGTH),
-    distinctId: process.env.POSTHOG_LLMA_DISTINCT_ID ?? '',
+    distinctId: parseDistinctId(process.env.POSTHOG_LLMA_DISTINCT_ID),
+    gitEmail: await readGitEmail(ctx),
     projectName,
     customProperties: parseCustomProperties(process.env.POSTHOG_LLMA_CUSTOM_PROPERTIES),
   };
 
   if (!config.enabled) {
-    return Promise.resolve({});
+    return {};
   }
 
   if (!config.apiKey) {
     console.warn(`${LIB_NAME}: missing POSTHOG_API_KEY, analytics disabled`);
 
-    return Promise.resolve({});
+    return {};
   }
 
   const pendingMessages = new Map<string, PendingMessage>();
@@ -305,6 +348,8 @@ const plugin: Plugin = (ctx) => {
   const traceStates = new Map<string, TraceState>();
   const toolCalls = new Map<string, ToolCallState>();
   const assistantOutputs = new Map<string, AssistantOutputState>();
+  const generationStates = new Map<string, GenerationState>();
+  const currentGenerationIDs = new Map<string, string>();
   const completedAssistantMessages = new Set<string>();
 
   let client: PostHogClient | undefined;
@@ -332,7 +377,7 @@ const plugin: Plugin = (ctx) => {
     }
   }
 
-  async function capture(event: string, properties: Record<string, unknown>): Promise<void> {
+  async function capture(event: string, sessionID: string, properties: Record<string, unknown>): Promise<void> {
     const posthog = await ensureClient();
 
     if (!posthog) {
@@ -340,7 +385,7 @@ const plugin: Plugin = (ctx) => {
     }
 
     posthog.capture({
-      distinctId: getDistinctId(config),
+      distinctId: getDistinctId(config, sessionID),
       event,
       properties,
     });
@@ -355,7 +400,7 @@ const plugin: Plugin = (ctx) => {
 
     const latency = Math.max(0, state.lastActivityAt - state.startedAt) / 1000;
 
-    await capture('$ai_trace', {
+    await capture('$ai_trace', state.sessionID, {
       $ai_trace_id: state.traceID,
       $ai_session_id: state.sessionID,
       $ai_latency: latency,
@@ -363,6 +408,7 @@ const plugin: Plugin = (ctx) => {
       $ai_total_output_tokens: state.totalOutputTokens,
       $ai_is_error: state.hasError,
       $ai_error: state.errorMessage,
+      $ai_span_name: state.traceName,
       $ai_lib: LIB_NAME,
       $ai_framework: FRAMEWORK,
       $ai_project_name: config.projectName,
@@ -370,7 +416,7 @@ const plugin: Plugin = (ctx) => {
       ...config.customProperties,
     });
 
-    traceStates.delete(sessionID);
+    clearSessionState(sessionID);
   }
 
   async function shutdown(): Promise<void> {
@@ -404,6 +450,78 @@ const plugin: Plugin = (ctx) => {
   }
 
   registerShutdown();
+
+  function clearSessionState(sessionID: string): void {
+    traceStates.delete(sessionID);
+    activeMessages.delete(sessionID);
+    currentGenerationIDs.delete(sessionID);
+
+    for (const [pendingKey, pending] of pendingMessages.entries()) {
+      if (pending.sessionID === sessionID) {
+        pendingMessages.delete(pendingKey);
+      }
+    }
+
+    for (const [assistantMessageID, generation] of generationStates.entries()) {
+      if (generation.sessionID === sessionID) {
+        generationStates.delete(assistantMessageID);
+        assistantOutputs.delete(assistantMessageID);
+        completedAssistantMessages.delete(assistantMessageID);
+      }
+    }
+
+    for (const [toolKey, toolCall] of toolCalls.entries()) {
+      if (toolCall.sessionID === sessionID) {
+        toolCalls.delete(toolKey);
+      }
+    }
+  }
+
+  function getOrCreateTraceState(sessionID: string, agentName: string | undefined, startedAt: number): TraceState {
+    const traceState = traceStates.get(sessionID) ?? {
+      agentName: agentName ?? config.projectName,
+      errorMessage: undefined,
+      hasError: false,
+      lastActivityAt: startedAt,
+      sessionID,
+      startedAt,
+      totalCostUsd: 0,
+      totalInputTokens: 0,
+      totalOutputTokens: 0,
+      traceID: randomUUID(),
+      traceName: undefined,
+    };
+
+    traceState.agentName = agentName ?? traceState.agentName;
+    traceState.lastActivityAt = startedAt;
+    traceStates.set(sessionID, traceState);
+
+    return traceState;
+  }
+
+  function beginPrompt(
+    input: Parameters<NonNullable<Hooks['chat.message']>>[0],
+    output: Parameters<NonNullable<Hooks['chat.message']>>[1],
+  ): void {
+    const startedAt = now();
+    const traceState = getOrCreateTraceState(input.sessionID, input.agent, startedAt);
+    const prompt = getPrompt(output.parts);
+    const pending: PendingMessage = {
+      agentName: input.agent ?? config.projectName,
+      prompt,
+      sessionID: input.sessionID,
+      traceID: traceState.traceID,
+      spanID: randomUUID(),
+      startedAt,
+      userMessageID: output.message.id,
+    };
+
+    traceState.traceName ??= getTraceName(prompt);
+
+    pendingMessages.set(getPendingKey(input.sessionID, output.message.id), pending);
+    activeMessages.set(input.sessionID, pending);
+    currentGenerationIDs.delete(input.sessionID);
+  }
 
   function storeAssistantOutput(part: { id: string; messageID: string; text: string }): void {
     const state = assistantOutputs.get(part.messageID) ?? { order: [], parts: new Map<string, string>() };
@@ -443,6 +561,40 @@ const plugin: Plugin = (ctx) => {
     return { pending, pendingKey, traceState };
   }
 
+  function getOrCreateGenerationState(info: {
+    id: string;
+    parentID: string;
+    sessionID: string;
+  }): { generation: GenerationState; pending: PendingMessage; pendingKey: string; traceState: TraceState } | undefined {
+    const resolved = getPendingAssistantMessage(info);
+
+    if (!resolved) {
+      return undefined;
+    }
+
+    const existing = generationStates.get(info.id);
+
+    if (existing) {
+      return { generation: existing, ...resolved };
+    }
+
+    const currentGenerationID = currentGenerationIDs.get(info.sessionID);
+    const spanID = currentGenerationID && currentGenerationID !== info.id ? randomUUID() : resolved.pending.spanID;
+    const generation: GenerationState = {
+      assistantMessageID: info.id,
+      pendingKey: resolved.pendingKey,
+      sessionID: info.sessionID,
+      spanID,
+      traceID: resolved.pending.traceID,
+    };
+
+    resolved.pending.spanID = spanID;
+    generationStates.set(info.id, generation);
+    currentGenerationIDs.set(info.sessionID, info.id);
+
+    return { generation, ...resolved };
+  }
+
   function updateTraceStateFromAssistantMessage(
     traceState: TraceState,
     pending: PendingMessage,
@@ -472,6 +624,7 @@ const plugin: Plugin = (ctx) => {
 
   async function captureAssistantGeneration(
     pending: PendingMessage,
+    generation: GenerationState,
     traceState: TraceState,
     info: {
       id: string;
@@ -494,10 +647,10 @@ const plugin: Plugin = (ctx) => {
     const output = getAssistantOutput(assistantOutputs.get(info.id));
     const generationLatency = Math.max(0, info.time.completed - info.time.created) / 1000;
 
-    await capture('$ai_generation', {
-      $ai_trace_id: pending.traceID,
+    await capture('$ai_generation', info.sessionID, {
+      $ai_trace_id: generation.traceID,
       $ai_session_id: info.sessionID,
-      $ai_span_id: pending.spanID,
+      $ai_span_id: generation.spanID,
       $ai_model: info.modelID,
       $ai_provider: info.providerID,
       $ai_input: buildInputMessages(pending.prompt, config.privacyMode),
@@ -551,13 +704,13 @@ const plugin: Plugin = (ctx) => {
 
     completedAssistantMessages.add(info.id);
 
-    const resolved = getPendingAssistantMessage(info);
+    const resolved = getOrCreateGenerationState(info);
 
     if (!resolved) {
       return;
     }
 
-    const { pending, pendingKey, traceState } = resolved;
+    const { generation, pending, traceState } = resolved;
     const errorMessage = updateTraceStateFromAssistantMessage(traceState, pending, {
       mode: info.mode,
       time: { completed: info.time.completed },
@@ -571,6 +724,7 @@ const plugin: Plugin = (ctx) => {
 
     await captureAssistantGeneration(
       pending,
+      generation,
       traceState,
       {
         id: info.id,
@@ -585,18 +739,7 @@ const plugin: Plugin = (ctx) => {
       },
       errorMessage,
     );
-
-    pendingMessages.delete(pendingKey);
-    activeMessages.delete(info.sessionID);
     assistantOutputs.delete(info.id);
-
-    if (config.traceGrouping === 'message') {
-      await flushTrace(info.sessionID, {
-        ...traceState,
-        lastActivityAt: info.time.completed,
-        startedAt: pending.startedAt,
-      });
-    }
   }
 
   async function onEvent(event: Parameters<NonNullable<Hooks['event']>>[0]['event']): Promise<void> {
@@ -630,12 +773,16 @@ const plugin: Plugin = (ctx) => {
       const { info } = event.properties;
 
       if (info.role === 'assistant') {
-        await completeAssistantMessage(info);
+        getOrCreateGenerationState(info);
+
+        if (info.time.completed) {
+          await completeAssistantMessage(info);
+        }
       }
     }
   }
 
-  return Promise.resolve({
+  return {
     'chat.message': async (input, output) => {
       const startedAt = now();
       const existingTrace = traceStates.get(input.sessionID);
@@ -653,35 +800,7 @@ const plugin: Plugin = (ctx) => {
         await flushTrace(input.sessionID, existingTrace);
       }
 
-      const traceState = traceStates.get(input.sessionID) ?? {
-        agentName: input.agent ?? config.projectName,
-        errorMessage: undefined,
-        hasError: false,
-        lastActivityAt: startedAt,
-        sessionID: input.sessionID,
-        startedAt,
-        totalCostUsd: 0,
-        totalInputTokens: 0,
-        totalOutputTokens: 0,
-        traceID: randomUUID(),
-      };
-
-      traceState.agentName = input.agent ?? traceState.agentName;
-      traceState.lastActivityAt = startedAt;
-      traceStates.set(input.sessionID, traceState);
-
-      const pending: PendingMessage = {
-        agentName: input.agent ?? config.projectName,
-        prompt: getPrompt(output.parts),
-        sessionID: input.sessionID,
-        traceID: traceState.traceID,
-        spanID: randomUUID(),
-        startedAt,
-        userMessageID: output.message.id,
-      };
-
-      pendingMessages.set(getPendingKey(input.sessionID, output.message.id), pending);
-      activeMessages.set(input.sessionID, pending);
+      beginPrompt(input, output);
     },
 
     'tool.execute.before': (input, output) => {
@@ -717,7 +836,7 @@ const plugin: Plugin = (ctx) => {
         traceState.lastActivityAt = now();
       }
 
-      await capture('$ai_span', {
+      await capture('$ai_span', toolCall.sessionID, {
         $ai_trace_id: toolCall.traceID,
         $ai_session_id: toolCall.sessionID,
         $ai_span_id: randomUUID(),
@@ -737,7 +856,7 @@ const plugin: Plugin = (ctx) => {
     },
 
     event: async ({ event }) => onEvent(event),
-  } satisfies Hooks);
+  } satisfies Hooks;
 };
 
 export default plugin;
