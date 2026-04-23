@@ -1,7 +1,7 @@
 {
   "name": "@2digits/opencode-plugin",
   "version": "0.1.26",
-  "description": "OpenCode plugin for 2digits team - shared rules and feedback system",
+  "description": "OpenCode plugin for PostHog LLM analytics integration",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@opencode-ai/plugin": "catalog:",
-    "dedent": "catalog:"
+    "posthog-node": "^5.10.0"
   },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
