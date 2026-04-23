@@ -347,6 +347,7 @@ const plugin: Plugin = async (ctx) => {
   const activeMessages = new Map<string, PendingMessage>();
   const traceStates = new Map<string, TraceState>();
   const toolCalls = new Map<string, ToolCallState>();
+  const generationTools = new Map<string, Array<string>>();
   const assistantOutputs = new Map<string, AssistantOutputState>();
   const generationStates = new Map<string, GenerationState>();
   const currentGenerationIDs = new Map<string, string>();
@@ -475,6 +476,14 @@ const plugin: Plugin = async (ctx) => {
         toolCalls.delete(toolKey);
       }
     }
+
+    for (const [spanID] of generationTools.entries()) {
+      const generation = [...generationStates.values()].find((item) => item.spanID === spanID);
+
+      if (generation?.sessionID === sessionID) {
+        generationTools.delete(spanID);
+      }
+    }
   }
 
   function getOrCreateTraceState(sessionID: string, agentName: string | undefined, startedAt: number): TraceState {
@@ -595,6 +604,29 @@ const plugin: Plugin = async (ctx) => {
     return { generation, ...resolved };
   }
 
+  function recordGenerationToolCall(spanID: string, tool: string): void {
+    const tools = generationTools.get(spanID) ?? [];
+
+    tools.push(tool);
+    generationTools.set(spanID, tools);
+  }
+
+  function getGenerationToolProperties(spanID: string): {
+    toolsCalled?: Array<string>;
+    toolCallCount?: number;
+  } {
+    const tools = generationTools.get(spanID);
+
+    if (!tools || tools.length === 0) {
+      return {};
+    }
+
+    return {
+      toolsCalled: [...new Set(tools)],
+      toolCallCount: tools.length,
+    };
+  }
+
   function updateTraceStateFromAssistantMessage(
     traceState: TraceState,
     pending: PendingMessage,
@@ -646,6 +678,7 @@ const plugin: Plugin = async (ctx) => {
   ): Promise<void> {
     const output = getAssistantOutput(assistantOutputs.get(info.id));
     const generationLatency = Math.max(0, info.time.completed - info.time.created) / 1000;
+    const { toolsCalled, toolCallCount } = getGenerationToolProperties(generation.spanID);
 
     await capture('$ai_generation', info.sessionID, {
       $ai_trace_id: generation.traceID,
@@ -669,6 +702,8 @@ const plugin: Plugin = async (ctx) => {
       $ai_stop_reason: mapStopReason(info.finish, Boolean(info.error)),
       $ai_is_error: Boolean(info.error),
       $ai_error: errorMessage,
+      $ai_tools_called: toolsCalled,
+      $ai_tool_call_count: toolCallCount,
       cache_read_input_tokens: info.tokens.cache.read,
       cache_creation_input_tokens: info.tokens.cache.write,
       $ai_lib: LIB_NAME,
@@ -740,6 +775,7 @@ const plugin: Plugin = async (ctx) => {
       errorMessage,
     );
     assistantOutputs.delete(info.id);
+    generationTools.delete(generation.spanID);
   }
 
   async function onEvent(event: Parameters<NonNullable<Hooks['event']>>[0]['event']): Promise<void> {
@@ -817,6 +853,7 @@ const plugin: Plugin = async (ctx) => {
         startedAt: now(),
         traceID: pending.traceID,
       });
+      recordGenerationToolCall(pending.spanID, input.tool);
 
       return Promise.resolve();
     },
