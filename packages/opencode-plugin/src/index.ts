@@ -405,6 +405,236 @@ const plugin: Plugin = (ctx) => {
 
   registerShutdown();
 
+  function storeAssistantOutput(part: { id: string; messageID: string; text: string }): void {
+    const state = assistantOutputs.get(part.messageID) ?? { order: [], parts: new Map<string, string>() };
+
+    if (!state.parts.has(part.id)) {
+      state.order.push(part.id);
+    }
+    state.parts.set(part.id, part.text);
+    assistantOutputs.set(part.messageID, state);
+  }
+
+  function markSessionError(sessionID: string, error: unknown): void {
+    const traceState = traceStates.get(sessionID);
+
+    if (!traceState) {
+      return;
+    }
+
+    traceState.hasError = true;
+    traceState.errorMessage = getErrorMessage(error);
+    traceState.lastActivityAt = now();
+  }
+
+  function getPendingAssistantMessage(info: {
+    id: string;
+    parentID: string;
+    sessionID: string;
+  }): { pending: PendingMessage; pendingKey: string; traceState: TraceState } | undefined {
+    const pendingKey = getPendingKey(info.sessionID, info.parentID);
+    const pending = pendingMessages.get(pendingKey) ?? activeMessages.get(info.sessionID);
+    const traceState = traceStates.get(info.sessionID);
+
+    if (!pending || !traceState) {
+      return undefined;
+    }
+
+    return { pending, pendingKey, traceState };
+  }
+
+  function updateTraceStateFromAssistantMessage(
+    traceState: TraceState,
+    pending: PendingMessage,
+    info: {
+      mode: string;
+      time: { completed: number };
+      cost: number;
+      tokens: { input: number; output: number };
+      error?: unknown;
+    },
+  ): string | undefined {
+    traceState.agentName = info.mode || pending.agentName;
+    traceState.lastActivityAt = info.time.completed;
+    traceState.totalCostUsd += info.cost;
+    traceState.totalInputTokens += info.tokens.input;
+    traceState.totalOutputTokens += info.tokens.output;
+
+    const errorMessage = getErrorMessage(info.error);
+
+    if (errorMessage) {
+      traceState.hasError = true;
+      traceState.errorMessage = errorMessage;
+    }
+
+    return errorMessage;
+  }
+
+  async function captureAssistantGeneration(
+    pending: PendingMessage,
+    traceState: TraceState,
+    info: {
+      id: string;
+      sessionID: string;
+      modelID: string;
+      providerID: string;
+      finish?: string;
+      error?: unknown;
+      cost: number;
+      time: { created: number; completed: number };
+      tokens: {
+        input: number;
+        output: number;
+        reasoning: number;
+        cache: { read: number; write: number };
+      };
+    },
+    errorMessage: string | undefined,
+  ): Promise<void> {
+    const output = getAssistantOutput(assistantOutputs.get(info.id));
+    const generationLatency = Math.max(0, info.time.completed - info.time.created) / 1000;
+
+    await capture('$ai_generation', {
+      $ai_trace_id: pending.traceID,
+      $ai_session_id: info.sessionID,
+      $ai_span_id: pending.spanID,
+      $ai_model: info.modelID,
+      $ai_provider: info.providerID,
+      $ai_input: buildInputMessages(pending.prompt, config.privacyMode),
+      $ai_output_choices: buildOutputChoices(output, errorMessage, config.privacyMode),
+      $ai_user_prompt: config.privacyMode ? undefined : pending.prompt,
+      $ai_input_tokens: info.tokens.input,
+      $ai_output_tokens: info.tokens.output,
+      $ai_total_tokens:
+        info.tokens.input +
+        info.tokens.output +
+        info.tokens.reasoning +
+        info.tokens.cache.read +
+        info.tokens.cache.write,
+      $ai_latency: generationLatency,
+      $ai_total_cost_usd: info.cost,
+      $ai_stop_reason: mapStopReason(info.finish, Boolean(info.error)),
+      $ai_is_error: Boolean(info.error),
+      $ai_error: errorMessage,
+      cache_read_input_tokens: info.tokens.cache.read,
+      cache_creation_input_tokens: info.tokens.cache.write,
+      $ai_lib: LIB_NAME,
+      $ai_framework: FRAMEWORK,
+      $ai_project_name: config.projectName,
+      $ai_agent_name: traceState.agentName,
+      ...config.customProperties,
+    });
+  }
+
+  async function completeAssistantMessage(info: {
+    id: string;
+    role: string;
+    parentID: string;
+    sessionID: string;
+    modelID: string;
+    providerID: string;
+    mode: string;
+    finish?: string;
+    error?: unknown;
+    cost: number;
+    time: { created: number; completed?: number };
+    tokens: {
+      input: number;
+      output: number;
+      reasoning: number;
+      cache: { read: number; write: number };
+    };
+  }): Promise<void> {
+    if (info.role !== 'assistant' || !info.time.completed || completedAssistantMessages.has(info.id)) {
+      return;
+    }
+
+    completedAssistantMessages.add(info.id);
+
+    const resolved = getPendingAssistantMessage(info);
+
+    if (!resolved) {
+      return;
+    }
+
+    const { pending, pendingKey, traceState } = resolved;
+    const errorMessage = updateTraceStateFromAssistantMessage(traceState, pending, {
+      mode: info.mode,
+      time: { completed: info.time.completed },
+      cost: info.cost,
+      tokens: {
+        input: info.tokens.input,
+        output: info.tokens.output,
+      },
+      error: info.error,
+    });
+
+    await captureAssistantGeneration(
+      pending,
+      traceState,
+      {
+        id: info.id,
+        sessionID: info.sessionID,
+        modelID: info.modelID,
+        providerID: info.providerID,
+        finish: info.finish,
+        error: info.error,
+        cost: info.cost,
+        time: { created: info.time.created, completed: info.time.completed },
+        tokens: info.tokens,
+      },
+      errorMessage,
+    );
+
+    pendingMessages.delete(pendingKey);
+    activeMessages.delete(info.sessionID);
+    assistantOutputs.delete(info.id);
+
+    if (config.traceGrouping === 'message') {
+      await flushTrace(info.sessionID, {
+        ...traceState,
+        lastActivityAt: info.time.completed,
+        startedAt: pending.startedAt,
+      });
+    }
+  }
+
+  async function onEvent(event: Parameters<NonNullable<Hooks['event']>>[0]['event']): Promise<void> {
+    if (event.type === 'message.part.updated') {
+      const { part } = event.properties;
+
+      if (part.type === 'text') {
+        storeAssistantOutput(part);
+      }
+
+      return;
+    }
+
+    if (event.type === 'session.deleted') {
+      await flushTrace(event.properties.info.id);
+
+      return;
+    }
+
+    if (event.type === 'session.error') {
+      const { sessionID, error } = event.properties;
+
+      if (sessionID) {
+        markSessionError(sessionID, error);
+      }
+
+      return;
+    }
+
+    if (event.type === 'message.updated') {
+      const { info } = event.properties;
+
+      if (info.role === 'assistant') {
+        await completeAssistantMessage(info);
+      }
+    }
+  }
+
   return Promise.resolve({
     'chat.message': async (input, output) => {
       const startedAt = now();
@@ -506,130 +736,7 @@ const plugin: Plugin = (ctx) => {
       });
     },
 
-    event: async ({ event }) => {
-      if (event.type === 'message.part.updated') {
-        const { part } = event.properties;
-
-        if (part.type !== 'text') {
-          return;
-        }
-
-        const state = assistantOutputs.get(part.messageID) ?? { order: [], parts: new Map<string, string>() };
-
-        if (!state.parts.has(part.id)) {
-          state.order.push(part.id);
-        }
-        state.parts.set(part.id, part.text);
-        assistantOutputs.set(part.messageID, state);
-
-        return;
-      }
-
-      if (event.type === 'session.deleted') {
-        await flushTrace(event.properties.info.id);
-
-        return;
-      }
-
-      if (event.type === 'session.error') {
-        const sessionID = event.properties.sessionID;
-
-        if (!sessionID) {
-          return;
-        }
-
-        const traceState = traceStates.get(sessionID);
-
-        if (!traceState) {
-          return;
-        }
-
-        traceState.hasError = true;
-        traceState.errorMessage = getErrorMessage(event.properties.error);
-        traceState.lastActivityAt = now();
-
-        return;
-      }
-
-      if (event.type !== 'message.updated') {
-        return;
-      }
-
-      const { info } = event.properties;
-
-      if (info.role !== 'assistant' || !info.time.completed || completedAssistantMessages.has(info.id)) {
-        return;
-      }
-
-      completedAssistantMessages.add(info.id);
-
-      const pendingKey = getPendingKey(info.sessionID, info.parentID);
-      const pending = pendingMessages.get(pendingKey) ?? activeMessages.get(info.sessionID);
-      const traceState = traceStates.get(info.sessionID);
-
-      if (!pending || !traceState) {
-        return;
-      }
-
-      traceState.agentName = info.mode || pending.agentName;
-      traceState.lastActivityAt = info.time.completed;
-      traceState.totalCostUsd += info.cost;
-      traceState.totalInputTokens += info.tokens.input;
-      traceState.totalOutputTokens += info.tokens.output;
-
-      const errorMessage = getErrorMessage(info.error);
-
-      if (errorMessage) {
-        traceState.hasError = true;
-        traceState.errorMessage = errorMessage;
-      }
-
-      const output = getAssistantOutput(assistantOutputs.get(info.id));
-      const generationLatency = Math.max(0, info.time.completed - info.time.created) / 1000;
-
-      await capture('$ai_generation', {
-        $ai_trace_id: pending.traceID,
-        $ai_session_id: info.sessionID,
-        $ai_span_id: pending.spanID,
-        $ai_model: info.modelID,
-        $ai_provider: info.providerID,
-        $ai_input: buildInputMessages(pending.prompt, config.privacyMode),
-        $ai_output_choices: buildOutputChoices(output, errorMessage, config.privacyMode),
-        $ai_user_prompt: config.privacyMode ? undefined : pending.prompt,
-        $ai_input_tokens: info.tokens.input,
-        $ai_output_tokens: info.tokens.output,
-        $ai_total_tokens:
-          info.tokens.input +
-          info.tokens.output +
-          info.tokens.reasoning +
-          info.tokens.cache.read +
-          info.tokens.cache.write,
-        $ai_latency: generationLatency,
-        $ai_total_cost_usd: info.cost,
-        $ai_stop_reason: mapStopReason(info.finish, Boolean(info.error)),
-        $ai_is_error: Boolean(info.error),
-        $ai_error: errorMessage,
-        cache_read_input_tokens: info.tokens.cache.read,
-        cache_creation_input_tokens: info.tokens.cache.write,
-        $ai_lib: LIB_NAME,
-        $ai_framework: FRAMEWORK,
-        $ai_project_name: config.projectName,
-        $ai_agent_name: traceState.agentName,
-        ...config.customProperties,
-      });
-
-      pendingMessages.delete(pendingKey);
-      activeMessages.delete(info.sessionID);
-      assistantOutputs.delete(info.id);
-
-      if (config.traceGrouping === 'message') {
-        await flushTrace(info.sessionID, {
-          ...traceState,
-          lastActivityAt: info.time.completed,
-          startedAt: pending.startedAt,
-        });
-      }
-    },
+    event: async ({ event }) => onEvent(event),
   } satisfies Hooks);
 };
 
