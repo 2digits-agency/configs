@@ -1,5 +1,6 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { randomUUID } from 'node:crypto';
-import { basename } from 'node:path';
+import nodePath from 'node:path';
 
 import type { Hooks, Plugin } from '@opencode-ai/plugin';
 
@@ -9,7 +10,7 @@ const DEFAULT_SESSION_WINDOW_MINUTES = 60;
 const LIB_NAME = '@2digits/opencode-plugin';
 const FRAMEWORK = 'opencode';
 const SENSITIVE_KEY_PATTERN =
-  /(api[-_]?key|token|secret|password|authorization|cookie|session|bearer|x-api-key|credential)/i;
+  /api[-_]?key|token|secret|password|authorization|cookie|session|bearer|x-api-key|credential/i;
 
 type TraceGrouping = 'message' | 'session';
 
@@ -28,7 +29,7 @@ interface Config {
 
 interface PendingMessage {
   agentName: string;
-  prompt: string | null;
+  prompt?: string;
   sessionID: string;
   traceID: string;
   spanID: string;
@@ -38,7 +39,7 @@ interface PendingMessage {
 
 interface TraceState {
   agentName: string;
-  errorMessage: string | null;
+  errorMessage?: string;
   hasError: boolean;
   lastActivityAt: number;
   sessionID: string;
@@ -51,7 +52,7 @@ interface TraceState {
 
 interface ToolCallState {
   args: unknown;
-  parentSpanID: string | null;
+  parentSpanID?: string;
   sessionID: string;
   startedAt: number;
   traceID: string;
@@ -76,28 +77,43 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function safeStringify(value: unknown): string | undefined {
-  if (value === undefined || value === null) return undefined;
+  if (value === undefined || value === null) {
+    return undefined;
+  }
 
   try {
     return JSON.stringify(value);
   } catch {
-    return String(value);
+    return undefined;
   }
 }
 
 function truncate(value: string, maxLength: number): string {
-  if (maxLength <= 0) return '';
-  if (value.length <= maxLength) return value;
+  if (maxLength <= 0) {
+    return '';
+  }
+  if (value.length <= maxLength) {
+    return value;
+  }
 
   const omitted = value.length - maxLength;
+
   return `${value.slice(0, maxLength)}...[truncated ${omitted} chars]`;
 }
 
 function redactSensitive(value: unknown, seen: WeakSet<object>, depth: number): unknown {
-  if (depth > 8) return '[DepthLimit]';
-  if (value === null || value === undefined) return value;
-  if (typeof value !== 'object') return value;
-  if (seen.has(value)) return '[Circular]';
+  if (depth > 8) {
+    return '[DepthLimit]';
+  }
+  if (value === null || value === undefined) {
+    return value;
+  }
+  if (typeof value !== 'object') {
+    return value;
+  }
+  if (seen.has(value)) {
+    return '[Circular]';
+  }
 
   seen.add(value);
 
@@ -106,6 +122,7 @@ function redactSensitive(value: unknown, seen: WeakSet<object>, depth: number): 
   }
 
   const output: Record<string, unknown> = {};
+
   for (const [key, nested] of Object.entries(value)) {
     output[key] = SENSITIVE_KEY_PATTERN.test(key) ? '[REDACTED]' : redactSensitive(nested, seen, depth + 1);
   }
@@ -113,14 +130,20 @@ function redactSensitive(value: unknown, seen: WeakSet<object>, depth: number): 
   return output;
 }
 
-function serializeAttribute(value: unknown, maxLength: number): string | null {
-  if (value === undefined || value === null) return null;
+function serializeAttribute(value: unknown, maxLength: number): string | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
 
   const redacted = redactSensitive(value, new WeakSet<object>(), 0);
-  if (typeof redacted === 'string') return truncate(redacted, maxLength);
+
+  if (typeof redacted === 'string') {
+    return truncate(redacted, maxLength);
+  }
 
   const json = safeStringify(redacted);
-  return json ? truncate(json, maxLength) : null;
+
+  return json ? truncate(json, maxLength) : undefined;
 }
 
 function parseTraceGrouping(value: string | undefined): TraceGrouping {
@@ -129,23 +152,29 @@ function parseTraceGrouping(value: string | undefined): TraceGrouping {
 
 function parseNumber(value: string | undefined, fallback: number): number {
   const parsed = Number.parseInt(value ?? '', 10);
+
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
 function parseCustomProperties(value: string | undefined): Record<string, unknown> {
-  if (!value) return {};
+  if (!value) {
+    return {};
+  }
 
   try {
-    const parsed = JSON.parse(value);
+    const parsed: unknown = JSON.parse(value);
+
     return isRecord(parsed) ? parsed : {};
   } catch {
     console.warn(`${LIB_NAME}: ignoring invalid POSTHOG_LLMA_CUSTOM_PROPERTIES JSON`);
+
     return {};
   }
 }
 
 function getProjectName(directory: string): string {
-  const value = basename(directory);
+  const value = nodePath.basename(directory);
+
   return value.length > 0 ? value : 'opencode-project';
 }
 
@@ -161,65 +190,92 @@ function getToolKey(sessionID: string, callID: string): string {
   return `${sessionID}:${callID}`;
 }
 
-function mapStopReason(finish: string | undefined, hasError: boolean): string | null {
-  if (hasError) return 'error';
-  if (!finish) return null;
-  if (finish === 'tool-calls') return 'tool_calls';
+function mapStopReason(finish: string | undefined, hasError: boolean): string | undefined {
+  if (hasError) {
+    return 'error';
+  }
+  if (!finish) {
+    return undefined;
+  }
+  if (finish === 'tool-calls') {
+    return 'tool_calls';
+  }
+
   return finish;
 }
 
-function getErrorMessage(error: unknown): string | null {
-  if (!error) return null;
+function getErrorMessage(error: unknown): string | undefined {
+  if (!error) {
+    return undefined;
+  }
   if (isRecord(error)) {
-    if (typeof error.message === 'string') return error.message;
-    if (isRecord(error.data) && typeof error.data.message === 'string') return error.data.message;
-    if (typeof error.name === 'string') return error.name;
+    if (typeof error.message === 'string') {
+      return error.message;
+    }
+    if (isRecord(error.data) && typeof error.data.message === 'string') {
+      return error.data.message;
+    }
+    if (typeof error.name === 'string') {
+      return error.name;
+    }
   }
 
-  return safeStringify(error) ?? null;
+  return safeStringify(error);
 }
 
-function getPrompt(parts: Array<{ type: string; text?: string; synthetic?: boolean }>): string | null {
+function getPrompt(parts: Array<{ type: string; text?: string; synthetic?: boolean }>): string | undefined {
   const prompt = parts
     .filter((part) => part.type === 'text' && !part.synthetic && typeof part.text === 'string')
     .map((part) => part.text ?? '')
     .join('\n')
     .trim();
 
-  return prompt.length > 0 ? prompt : null;
+  return prompt.length > 0 ? prompt : undefined;
 }
 
-function getAssistantOutput(state: AssistantOutputState | undefined): string | null {
-  if (!state) return null;
+function getAssistantOutput(state: AssistantOutputState | undefined): string | undefined {
+  if (!state) {
+    return undefined;
+  }
 
   const output = state.order
     .map((partID) => state.parts.get(partID) ?? '')
     .join('\n')
     .trim();
 
-  return output.length > 0 ? output : null;
+  return output.length > 0 ? output : undefined;
 }
 
 function buildInputMessages(
-  prompt: string | null,
+  prompt: string | undefined,
   privacyMode: boolean,
-): Array<{ role: 'user'; content: string }> | null {
-  if (privacyMode || !prompt) return null;
+): Array<{ role: 'user'; content: string }> | undefined {
+  if (privacyMode || !prompt) {
+    return undefined;
+  }
+
   return [{ role: 'user', content: prompt }];
 }
 
 function buildOutputChoices(
-  output: string | null,
-  errorMessage: string | null,
+  output: string | undefined,
+  errorMessage: string | undefined,
   privacyMode: boolean,
-): Array<{ role: 'assistant'; content: string }> | null {
-  if (privacyMode) return null;
-  if (output) return [{ role: 'assistant', content: output }];
-  if (errorMessage) return [{ role: 'assistant', content: errorMessage }];
-  return null;
+): Array<{ role: 'assistant'; content: string }> | undefined {
+  if (privacyMode) {
+    return undefined;
+  }
+  if (output) {
+    return [{ role: 'assistant', content: output }];
+  }
+  if (errorMessage) {
+    return [{ role: 'assistant', content: errorMessage }];
+  }
+
+  return undefined;
 }
 
-export const plugin: Plugin = async (ctx) => {
+const plugin: Plugin = (ctx) => {
   const projectName = getProjectName(ctx.worktree || ctx.directory);
   const config: Config = {
     apiKey: process.env.POSTHOG_API_KEY ?? '',
@@ -234,11 +290,14 @@ export const plugin: Plugin = async (ctx) => {
     customProperties: parseCustomProperties(process.env.POSTHOG_LLMA_CUSTOM_PROPERTIES),
   };
 
-  if (!config.enabled) return {};
+  if (!config.enabled) {
+    return Promise.resolve({});
+  }
 
   if (!config.apiKey) {
     console.warn(`${LIB_NAME}: missing POSTHOG_API_KEY, analytics disabled`);
-    return {};
+
+    return Promise.resolve({});
   }
 
   const pendingMessages = new Map<string, PendingMessage>();
@@ -248,29 +307,37 @@ export const plugin: Plugin = async (ctx) => {
   const assistantOutputs = new Map<string, AssistantOutputState>();
   const completedAssistantMessages = new Set<string>();
 
-  let client: PostHogClient | null = null;
+  let client: PostHogClient | undefined;
   let shutdownRegistered = false;
 
-  async function ensureClient(): Promise<PostHogClient | null> {
-    if (client) return client;
+  async function ensureClient(): Promise<PostHogClient | undefined> {
+    if (client) {
+      return client;
+    }
 
     try {
       const posthog = await import('posthog-node');
+
       client = new posthog.PostHog(config.apiKey, {
         host: config.host,
         flushAt: 20,
         flushInterval: 10_000,
       });
+
       return client;
     } catch (error) {
       console.error(`${LIB_NAME}: failed to initialize PostHog client`, error);
-      return null;
+
+      return undefined;
     }
   }
 
   async function capture(event: string, properties: Record<string, unknown>): Promise<void> {
     const posthog = await ensureClient();
-    if (!posthog) return;
+
+    if (!posthog) {
+      return;
+    }
 
     posthog.capture({
       distinctId: getDistinctId(config),
@@ -281,7 +348,10 @@ export const plugin: Plugin = async (ctx) => {
 
   async function flushTrace(sessionID: string, traceState?: TraceState): Promise<void> {
     const state = traceState ?? traceStates.get(sessionID);
-    if (!state) return;
+
+    if (!state) {
+      return;
+    }
 
     const latency = Math.max(0, state.lastActivityAt - state.startedAt) / 1000;
 
@@ -305,18 +375,21 @@ export const plugin: Plugin = async (ctx) => {
 
   async function shutdown(): Promise<void> {
     const traceEntries = [...traceStates.entries()];
+
     for (const [sessionID, traceState] of traceEntries) {
       await flushTrace(sessionID, traceState);
     }
 
     if (client) {
       await client.shutdown();
-      client = null;
+      client = undefined;
     }
   }
 
   function registerShutdown(): void {
-    if (shutdownRegistered) return;
+    if (shutdownRegistered) {
+      return;
+    }
     shutdownRegistered = true;
 
     process.once('beforeExit', () => {
@@ -332,7 +405,7 @@ export const plugin: Plugin = async (ctx) => {
 
   registerShutdown();
 
-  return {
+  return Promise.resolve({
     'chat.message': async (input, output) => {
       const startedAt = now();
       const existingTrace = traceStates.get(input.sessionID);
@@ -352,7 +425,7 @@ export const plugin: Plugin = async (ctx) => {
 
       const traceState = traceStates.get(input.sessionID) ?? {
         agentName: input.agent ?? config.projectName,
-        errorMessage: null,
+        errorMessage: undefined,
         hasError: false,
         lastActivityAt: startedAt,
         sessionID: input.sessionID,
@@ -381,9 +454,12 @@ export const plugin: Plugin = async (ctx) => {
       activeMessages.set(input.sessionID, pending);
     },
 
-    'tool.execute.before': async (input, output) => {
+    'tool.execute.before': (input, output) => {
       const pending = activeMessages.get(input.sessionID);
-      if (!pending) return;
+
+      if (!pending) {
+        return Promise.resolve();
+      }
 
       toolCalls.set(getToolKey(input.sessionID, input.callID), {
         args: output.args,
@@ -392,16 +468,24 @@ export const plugin: Plugin = async (ctx) => {
         startedAt: now(),
         traceID: pending.traceID,
       });
+
+      return Promise.resolve();
     },
 
     'tool.execute.after': async (input, output) => {
       const toolCall = toolCalls.get(getToolKey(input.sessionID, input.callID));
-      if (!toolCall) return;
+
+      if (!toolCall) {
+        return;
+      }
 
       toolCalls.delete(getToolKey(input.sessionID, input.callID));
 
       const traceState = traceStates.get(toolCall.sessionID);
-      if (traceState) traceState.lastActivityAt = now();
+
+      if (traceState) {
+        traceState.lastActivityAt = now();
+      }
 
       await capture('$ai_span', {
         $ai_trace_id: toolCall.traceID,
@@ -409,11 +493,11 @@ export const plugin: Plugin = async (ctx) => {
         $ai_span_id: randomUUID(),
         $ai_parent_id: toolCall.parentSpanID,
         $ai_span_name: input.tool,
-        $ai_input_state: config.privacyMode ? null : serializeAttribute(toolCall.args, config.maxAttributeLength),
-        $ai_output_state: config.privacyMode ? null : serializeAttribute(output, config.maxAttributeLength),
+        $ai_input_state: config.privacyMode ? undefined : serializeAttribute(toolCall.args, config.maxAttributeLength),
+        $ai_output_state: config.privacyMode ? undefined : serializeAttribute(output, config.maxAttributeLength),
         $ai_latency: Math.max(0, now() - toolCall.startedAt) / 1000,
         $ai_is_error: false,
-        $ai_error: null,
+        $ai_error: undefined,
         $ai_lib: LIB_NAME,
         $ai_framework: FRAMEWORK,
         $ai_project_name: config.projectName,
@@ -425,44 +509,67 @@ export const plugin: Plugin = async (ctx) => {
     event: async ({ event }) => {
       if (event.type === 'message.part.updated') {
         const { part } = event.properties;
-        if (part.type !== 'text') return;
+
+        if (part.type !== 'text') {
+          return;
+        }
 
         const state = assistantOutputs.get(part.messageID) ?? { order: [], parts: new Map<string, string>() };
-        if (!state.parts.has(part.id)) state.order.push(part.id);
+
+        if (!state.parts.has(part.id)) {
+          state.order.push(part.id);
+        }
         state.parts.set(part.id, part.text);
         assistantOutputs.set(part.messageID, state);
+
         return;
       }
 
       if (event.type === 'session.deleted') {
         await flushTrace(event.properties.info.id);
+
         return;
       }
 
       if (event.type === 'session.error') {
         const sessionID = event.properties.sessionID;
-        if (!sessionID) return;
+
+        if (!sessionID) {
+          return;
+        }
 
         const traceState = traceStates.get(sessionID);
-        if (!traceState) return;
+
+        if (!traceState) {
+          return;
+        }
 
         traceState.hasError = true;
         traceState.errorMessage = getErrorMessage(event.properties.error);
         traceState.lastActivityAt = now();
+
         return;
       }
 
-      if (event.type !== 'message.updated') return;
+      if (event.type !== 'message.updated') {
+        return;
+      }
 
       const { info } = event.properties;
-      if (info.role !== 'assistant' || !info.time.completed || completedAssistantMessages.has(info.id)) return;
+
+      if (info.role !== 'assistant' || !info.time.completed || completedAssistantMessages.has(info.id)) {
+        return;
+      }
 
       completedAssistantMessages.add(info.id);
 
       const pendingKey = getPendingKey(info.sessionID, info.parentID);
       const pending = pendingMessages.get(pendingKey) ?? activeMessages.get(info.sessionID);
       const traceState = traceStates.get(info.sessionID);
-      if (!pending || !traceState) return;
+
+      if (!pending || !traceState) {
+        return;
+      }
 
       traceState.agentName = info.mode || pending.agentName;
       traceState.lastActivityAt = info.time.completed;
@@ -471,6 +578,7 @@ export const plugin: Plugin = async (ctx) => {
       traceState.totalOutputTokens += info.tokens.output;
 
       const errorMessage = getErrorMessage(info.error);
+
       if (errorMessage) {
         traceState.hasError = true;
         traceState.errorMessage = errorMessage;
@@ -487,7 +595,7 @@ export const plugin: Plugin = async (ctx) => {
         $ai_provider: info.providerID,
         $ai_input: buildInputMessages(pending.prompt, config.privacyMode),
         $ai_output_choices: buildOutputChoices(output, errorMessage, config.privacyMode),
-        $ai_user_prompt: config.privacyMode ? null : pending.prompt,
+        $ai_user_prompt: config.privacyMode ? undefined : pending.prompt,
         $ai_input_tokens: info.tokens.input,
         $ai_output_tokens: info.tokens.output,
         $ai_total_tokens:
@@ -522,7 +630,7 @@ export const plugin: Plugin = async (ctx) => {
         });
       }
     },
-  } satisfies Hooks;
+  } satisfies Hooks);
 };
 
 export default plugin;
