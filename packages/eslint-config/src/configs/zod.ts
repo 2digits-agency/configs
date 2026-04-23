@@ -15,6 +15,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
       rules: {
         'zod/array-style': ['error', { style: 'function' }],
         'zod/consistent-import': ['error', { syntax: 'namespace' }],
+        'zod/consistent-schema-output-type-style': ['error', { style: 'infer' }],
         'zod/no-any-schema': 'error',
         'zod/no-empty-custom-schema': 'error',
         'zod/no-number-schema-with-int': 'error',
