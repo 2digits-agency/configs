@@ -1,5 +1,15 @@
 # @2digits/cli
 
+## 1.2.52
+
+### Patch Changes
+
+- 44b9d5a: Update Effect ecosystem dependencies
+
+  - Updated `effect` to 3.21.2
+  - Updated `@effect/platform` to 0.96.1
+  - Updated `@effect/rpc` to 0.75.1
+
 ## 1.2.51
 
 ### Patch Changes
