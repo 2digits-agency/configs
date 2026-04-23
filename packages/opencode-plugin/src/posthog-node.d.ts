@@ -9,11 +9,7 @@ declare module 'posthog-node' {
       },
     );
 
-    capture(input: {
-      distinctId: string;
-      event: string;
-      properties?: Record<string, unknown>;
-    }): void;
+    capture(input: { distinctId: string; event: string; properties?: Record<string, unknown> }): void;
 
     shutdown(): Promise<void>;
   }

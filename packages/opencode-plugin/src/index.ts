@@ -13,7 +13,7 @@ const SENSITIVE_KEY_PATTERN =
 
 type TraceGrouping = 'message' | 'session';
 
-type Config = {
+interface Config {
   apiKey: string;
   host: string;
   enabled: boolean;
@@ -24,9 +24,9 @@ type Config = {
   distinctId: string;
   projectName: string;
   customProperties: Record<string, unknown>;
-};
+}
 
-type PendingMessage = {
+interface PendingMessage {
   agentName: string;
   prompt: string | null;
   sessionID: string;
@@ -34,9 +34,9 @@ type PendingMessage = {
   spanID: string;
   startedAt: number;
   userMessageID: string;
-};
+}
 
-type TraceState = {
+interface TraceState {
   agentName: string;
   errorMessage: string | null;
   hasError: boolean;
@@ -47,25 +47,25 @@ type TraceState = {
   totalInputTokens: number;
   totalOutputTokens: number;
   traceID: string;
-};
+}
 
-type ToolCallState = {
+interface ToolCallState {
   args: unknown;
   parentSpanID: string | null;
   sessionID: string;
   startedAt: number;
   traceID: string;
-};
+}
 
-type AssistantOutputState = {
+interface AssistantOutputState {
   order: Array<string>;
   parts: Map<string, string>;
-};
+}
 
-type PostHogClient = {
+interface PostHogClient {
   capture(input: { distinctId: string; event: string; properties: Record<string, unknown> }): void;
   shutdown(): Promise<void>;
-};
+}
 
 function now(): number {
   return Date.now();
@@ -200,7 +200,10 @@ function getAssistantOutput(state: AssistantOutputState | undefined): string | n
   return output.length > 0 ? output : null;
 }
 
-function buildInputMessages(prompt: string | null, privacyMode: boolean): Array<{ role: 'user'; content: string }> | null {
+function buildInputMessages(
+  prompt: string | null,
+  privacyMode: boolean,
+): Array<{ role: 'user'; content: string }> | null {
   if (privacyMode || !prompt) return null;
   return [{ role: 'user', content: prompt }];
 }
@@ -301,7 +304,7 @@ export const plugin: Plugin = async (ctx) => {
   }
 
   async function shutdown(): Promise<void> {
-    const traceEntries = Array.from(traceStates.entries());
+    const traceEntries = [...traceStates.entries()];
     for (const [sessionID, traceState] of traceEntries) {
       await flushTrace(sessionID, traceState);
     }
