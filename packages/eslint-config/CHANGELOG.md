@@ -1,5 +1,11 @@
 # @2digits/eslint-config
 
+## 5.4.7
+
+### Patch Changes
+
+- ba7d21a: Update @tanstack/eslint-plugin-query to 5.100.1
+
 ## 5.4.6
 
 ### Patch Changes

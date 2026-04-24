@@ -1,5 +1,18 @@
 # @2digits/opencode-plugin
 
+## 0.2.0
+
+### Minor Changes
+
+- ba7d21a: Refactor plugin to PostHog LLM analytics integration
+
+  - Replaced rules-based feedback system with PostHog LLM trace and generation capture
+  - Added `capture.ts`, `config.ts`, `state.ts`, `types.ts`, and `utilities.ts` for analytics pipeline
+  - Removed `/fix` command, `create_feedback_issue` tool, and markdown rule injection
+  - Removed `dedent` dependency and added `posthog-node` for analytics ingestion
+  - Added test coverage for capture, config, state, and utilities modules
+  - Updated `@opencode-ai/plugin` to 1.14.22
+
 ## 0.1.26
 
 ### Patch Changes
