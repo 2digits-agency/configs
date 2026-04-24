@@ -1,5 +1,11 @@
 # @2digits/opencode-plugin
 
+## 0.2.1
+
+### Patch Changes
+
+- 042aade: Fixed package.json main entrypoint
+
 ## 0.2.0
 
 ### Minor Changes
