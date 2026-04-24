@@ -1,57 +1,220 @@
-import type { Hooks, PluginInput } from '@opencode-ai/plugin';
-import markdown from 'dedent';
+import type { Hooks, Plugin } from '@opencode-ai/plugin';
 
-import { loadRules } from './rules' with { type: 'macro' };
-import { createFeedbackIssue } from './tools/createFeedbackIssue';
+import {
+  buildGenerationProperties,
+  buildToolSpanProperties,
+  buildTraceProperties,
+  createCaptureManager,
+} from './capture.js';
+import { buildConfig } from './config.js';
+import { LIB_NAME } from './constants.js';
+import { createSessionState } from './state.js';
+import type { CompletedAssistantMessageInfo } from './types.js';
 
-const FIX_COMMAND_TEMPLATE = markdown`
-  Submit feedback about something the agent did wrong or could improve.
+const plugin: Plugin = async (ctx) => {
+  const config = await buildConfig(ctx);
 
-  ## Instructions
+  if (!config.enabled) {
+    return {};
+  }
 
-  1. Ask clarifying questions to understand:
-     - What specifically went wrong?
-     - What should have happened instead?
-     - Is this a recurring pattern or one-off?
+  if (!config.apiKey) {
+    console.warn(`${LIB_NAME}: missing POSTHOG_API_KEY, analytics disabled`);
 
-  2. Use the \`create_feedback_issue\` tool with:
-     - **title**: Concise description of the issue
-     - **feedback**: Detailed explanation of what went wrong
-     - **context**: Relevant code/conversation snippets
-     - **suggestedRule**: Propose a rule to prevent this
+    return {};
+  }
 
-  3. Return the issue URL so user can track/discuss
+  const state = createSessionState(config);
+  const capture = createCaptureManager(config);
 
-  ## User Input
+  function flushTrace(sessionID: string) {
+    const traceState = state.getTraceState(sessionID);
 
-  <Feedback>$ARGUMENTS</Feedback>
-`;
+    if (!traceState) {
+      return;
+    }
 
-// eslint-disable-next-line ts/require-await
-export default async function plugin(ctx: PluginInput): Promise<Hooks> {
+    const latency = Math.max(0, traceState.lastActivityAt - traceState.startedAt) / 1000;
+
+    capture.capture('$ai_trace', traceState.sessionID, buildTraceProperties(config, traceState, latency));
+    state.clearSessionState(sessionID);
+  }
+
+  async function shutdown(): Promise<void> {
+    for (const sessionID of state.getTraceSessionIDs()) {
+      flushTrace(sessionID);
+    }
+
+    await capture.shutdown();
+  }
+
+  capture.registerShutdown(shutdown);
+
+  function completeAssistantMessage(info: CompletedAssistantMessageInfo) {
+    const resolved = state.getOrCreateGenerationState(info);
+
+    if (!resolved) {
+      return;
+    }
+
+    const { generation, pending, traceState } = resolved;
+    const errorMessage = state.updateTraceStateFromAssistantMessage(traceState, pending, {
+      mode: info.mode,
+      time: { completed: info.time.completed },
+      cost: info.cost,
+      tokens: {
+        input: info.tokens.input,
+        output: info.tokens.output,
+      },
+      error: info.error,
+    });
+    const { toolsCalled, toolCallCount } = state.getGenerationToolProperties(generation.spanID);
+
+    capture.capture(
+      '$ai_generation',
+      info.sessionID,
+      buildGenerationProperties({
+        config,
+        pending,
+        generation,
+        traceState,
+        info,
+        errorMessage,
+        output: state.getAssistantOutputForMessage(info.id),
+        toolsCalled,
+        toolCallCount,
+      }),
+    );
+
+    state.cleanupAssistantMessage(info.id, generation.spanID);
+  }
+
+  async function onEvent(event: Parameters<NonNullable<Hooks['event']>>[0]['event']) {
+    if (event.type === 'message.part.updated') {
+      const { part } = event.properties;
+
+      if (part.type === 'text') {
+        state.storeAssistantOutput(part);
+      }
+
+      return;
+    }
+
+    if (event.type === 'session.deleted') {
+      flushTrace(event.properties.info.id);
+
+      return;
+    }
+
+    if (event.type === 'session.error') {
+      const { error, sessionID } = event.properties;
+
+      if (sessionID) {
+        state.markSessionError(sessionID, error);
+      }
+
+      return;
+    }
+
+    if (event.type !== 'message.updated') {
+      return;
+    }
+
+    const { info } = event.properties;
+
+    if (info.role !== 'assistant') {
+      return;
+    }
+
+    state.getOrCreateGenerationState(info);
+
+    if (state.shouldCompleteAssistantMessage(info)) {
+      state.markAssistantMessageCompleted(info.id);
+      completeAssistantMessage(info);
+    }
+
+    if (false as boolean) {
+      await Promise.resolve();
+    }
+  }
+
   return {
-    // eslint-disable-next-line ts/require-await
-    config: async (config) => {
-      config.command = config.command ?? {};
-      config.command.fix = {
-        description: 'Submit feedback about agent behavior to improve shared rules',
-        template: FIX_COMMAND_TEMPLATE,
-      };
+    'chat.message': async (input, output) => {
+      const startedAt = Date.now();
+      const existingTrace = state.getTraceState(input.sessionID);
+      const sessionWindowMs = config.sessionWindowMinutes * 60_000;
+
+      if (existingTrace && config.traceGrouping === 'message') {
+        flushTrace(input.sessionID);
+      }
+
+      if (
+        existingTrace &&
+        config.traceGrouping === 'session' &&
+        startedAt - existingTrace.lastActivityAt >= sessionWindowMs
+      ) {
+        flushTrace(input.sessionID);
+      }
+
+      state.beginPrompt(input, output);
+
+      if (false as boolean) {
+        await Promise.resolve();
+      }
     },
 
-    // eslint-disable-next-line ts/require-await
-    'experimental.chat.system.transform': async (_input, output) => {
-      const rules = loadRules();
+    'tool.execute.before': (input, output) => {
+      const pending = state.getActiveMessage(input.sessionID);
 
-      output.system.push(markdown`
-Instructions from: @2digits/opencode-plugin
+      if (!pending) {
+        return Promise.resolve();
+      }
 
-${rules}
-`);
+      state.setToolCall(input.sessionID, input.callID, {
+        args: output.args,
+        parentSpanID: pending.spanID,
+        sessionID: input.sessionID,
+        startedAt: Date.now(),
+        traceID: pending.traceID,
+      });
+      state.recordGenerationToolCall(pending.spanID, input.tool);
+
+      return Promise.resolve();
     },
 
-    tool: {
-      create_feedback_issue: createFeedbackIssue(ctx),
+    'tool.execute.after': async (input, output) => {
+      const toolCall = state.takeToolCall(input.sessionID, input.callID);
+
+      if (!toolCall) {
+        return;
+      }
+
+      const traceState = state.getTraceState(toolCall.sessionID);
+
+      if (traceState) {
+        traceState.lastActivityAt = Date.now();
+      }
+
+      capture.capture(
+        '$ai_span',
+        toolCall.sessionID,
+        buildToolSpanProperties({
+          config,
+          toolCall,
+          traceState,
+          toolName: input.tool,
+          output,
+          latency: Math.max(0, Date.now() - toolCall.startedAt) / 1000,
+        }),
+      );
+
+      if (false as boolean) {
+        await Promise.resolve();
+      }
     },
-  };
-}
+
+    event: async ({ event }) => onEvent(event),
+  } satisfies Hooks;
+};
+
+export default plugin;
