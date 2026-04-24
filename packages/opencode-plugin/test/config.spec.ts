@@ -4,14 +4,14 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { buildConfig } from '../src/config.js';
 
 const ENV_KEYS = [
-  'POSTHOG_API_KEY',
-  'POSTHOG_HOST',
+  'POSTHOG_OPENCODE_API_KEY',
+  'POSTHOG_OPENCODE_HOST',
   'POSTHOG_OPENCODE_ENABLED',
-  'POSTHOG_LLMA_PRIVACY_MODE',
-  'POSTHOG_LLMA_TRACE_GROUPING',
-  'POSTHOG_LLMA_SESSION_WINDOW_MINUTES',
-  'POSTHOG_MAX_ATTRIBUTE_LENGTH',
-  'POSTHOG_LLMA_DISTINCT_ID',
+  'POSTHOG_OPENCODE_LLMA_PRIVACY_MODE',
+  'POSTHOG_OPENCODE_LLMA_TRACE_GROUPING',
+  'POSTHOG_OPENCODE_LLMA_SESSION_WINDOW_MINUTES',
+  'POSTHOG_OPENCODE_MAX_ATTRIBUTE_LENGTH',
+  'POSTHOG_OPENCODE_LLMA_DISTINCT_ID',
   'POSTHOG_LLMA_CUSTOM_PROPERTIES',
 ] as const;
 
@@ -36,13 +36,13 @@ function createCtx(gitEmail: string) {
 
 describe(buildConfig, () => {
   it('builds config from env and git email', async () => {
-    process.env.POSTHOG_API_KEY = 'key';
+    process.env.POSTHOG_OPENCODE_API_KEY = 'key';
     process.env.POSTHOG_OPENCODE_ENABLED = 'true';
-    process.env.POSTHOG_LLMA_PRIVACY_MODE = 'true';
-    process.env.POSTHOG_LLMA_TRACE_GROUPING = 'session';
-    process.env.POSTHOG_LLMA_SESSION_WINDOW_MINUTES = '30';
-    process.env.POSTHOG_MAX_ATTRIBUTE_LENGTH = '500';
-    process.env.POSTHOG_LLMA_DISTINCT_ID = 'custom-id';
+    process.env.POSTHOG_OPENCODE_LLMA_PRIVACY_MODE = 'true';
+    process.env.POSTHOG_OPENCODE_LLMA_TRACE_GROUPING = 'session';
+    process.env.POSTHOG_OPENCODE_LLMA_SESSION_WINDOW_MINUTES = '30';
+    process.env.POSTHOG_OPENCODE_MAX_ATTRIBUTE_LENGTH = '500';
+    process.env.POSTHOG_OPENCODE_LLMA_DISTINCT_ID = 'custom-id';
     process.env.POSTHOG_LLMA_CUSTOM_PROPERTIES = '{"team":"core"}';
 
     const config = await buildConfig(createCtx('user@example.com\n'));
