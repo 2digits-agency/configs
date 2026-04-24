@@ -27,6 +27,7 @@
   "scripts": {
     "build": "bunup",
     "dev": "bunup --watch",
+    "test": "vp test run",
     "types": "tsgo --noEmit"
   },
   "dependencies": {
@@ -38,6 +39,8 @@
     "@types/bun": "catalog:",
     "@typescript/native-preview": "catalog:",
     "bunup": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   }
 }
