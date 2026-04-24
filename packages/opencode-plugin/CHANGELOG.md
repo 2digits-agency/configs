@@ -1,5 +1,12 @@
 # @2digits/opencode-plugin
 
+## 0.2.2
+
+### Patch Changes
+
+- 36cc737: Fixed posthog api key issues
+- e139dc7: Update posthog-node to 5.30.1
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 4.0.37
+
+### Patch Changes
+
+- e139dc7: Update prettier-plugin-tailwindcss to 0.7.3
+
 ## 4.0.36
 
 ### Patch Changes
