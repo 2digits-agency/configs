@@ -1,6 +1,31 @@
 import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
+  pack: {
+    entry: ['src/index.ts'],
+    dts: {
+      tsgo: true,
+    },
+    exports: {
+      legacy: true,
+      customExports: {
+        '.': {
+          import: {
+            types: './dist/index.d.mts',
+            default: './dist/index.mjs',
+          },
+        },
+        './server': {
+          import: {
+            types: './dist/index.d.mts',
+            default: './dist/index.mjs',
+          },
+        },
+      },
+    },
+    attw: { profile: 'esm-only', level: 'error' },
+    publint: { strict: true },
+  },
   test: {
     include: ['test/**/*.spec.ts'],
     sequence: {

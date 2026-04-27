@@ -31,9 +31,6 @@ jobs:
       - name: 🛸 Setup PNPM
         uses: pnpm/action-setup@903f9c1a6ebcba6cf41d87230be49611ac97822e # v6.0.3
 
-      - name: 🐰 Setup Bun
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-
       - name: Build
         run: vp run build
 
