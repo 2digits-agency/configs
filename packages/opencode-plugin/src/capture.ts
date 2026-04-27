@@ -22,8 +22,15 @@ export function buildTraceProperties(config: Config, traceState: TraceState, lat
     $ai_trace_id: traceState.traceID,
     $ai_session_id: traceState.sessionID,
     $ai_latency: latency,
+    $ai_input_state: config.privacyMode
+      ? undefined
+      : serializeAttribute(traceState.inputState, config.maxAttributeLength),
+    $ai_output_state: config.privacyMode
+      ? undefined
+      : serializeAttribute(traceState.outputState, config.maxAttributeLength),
     $ai_total_input_tokens: traceState.totalInputTokens,
     $ai_total_output_tokens: traceState.totalOutputTokens,
+    $ai_total_cost_usd: traceState.totalCostUsd,
     $ai_is_error: traceState.hasError,
     $ai_error: traceState.errorMessage,
     $ai_span_name: traceState.traceName,
@@ -146,6 +153,24 @@ export function createCaptureManager(config: Config) {
     });
   }
 
+  async function captureImmediate(
+    event: string,
+    sessionID: string,
+    properties: Record<string, unknown>,
+  ): Promise<void> {
+    const posthog = ensureClient();
+
+    if (!posthog) {
+      return;
+    }
+
+    await posthog.captureImmediate({
+      distinctId: getDistinctId(config, sessionID),
+      event,
+      properties,
+    });
+  }
+
   async function shutdown(): Promise<void> {
     if (!client) {
       return;
@@ -174,6 +199,7 @@ export function createCaptureManager(config: Config) {
 
   return {
     capture,
+    captureImmediate,
     registerShutdown,
     shutdown,
   };

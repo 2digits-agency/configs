@@ -27,22 +27,35 @@ const plugin: Plugin = async (ctx) => {
   const state = createSessionState(config);
   const capture = createCaptureManager(config);
 
-  function flushTrace(sessionID: string) {
+  async function captureTrace(traceState: NonNullable<ReturnType<typeof state.getTraceState>>): Promise<void> {
+    if (traceState.lastTraceCapturedAt === traceState.lastActivityAt) {
+      return;
+    }
+
+    const latency = Math.max(0, traceState.lastActivityAt - traceState.startedAt) / 1000;
+
+    await capture.captureImmediate(
+      '$ai_trace',
+      traceState.sessionID,
+      buildTraceProperties(config, traceState, latency),
+    );
+    traceState.lastTraceCapturedAt = traceState.lastActivityAt;
+  }
+
+  async function flushTrace(sessionID: string) {
     const traceState = state.getTraceState(sessionID);
 
     if (!traceState) {
       return;
     }
 
-    const latency = Math.max(0, traceState.lastActivityAt - traceState.startedAt) / 1000;
-
-    capture.capture('$ai_trace', traceState.sessionID, buildTraceProperties(config, traceState, latency));
+    await captureTrace(traceState);
     state.clearSessionState(sessionID);
   }
 
   async function shutdown(): Promise<void> {
     for (const sessionID of state.getTraceSessionIDs()) {
-      flushTrace(sessionID);
+      await flushTrace(sessionID);
     }
 
     await capture.shutdown();
@@ -50,7 +63,7 @@ const plugin: Plugin = async (ctx) => {
 
   capture.registerShutdown(shutdown);
 
-  function completeAssistantMessage(info: CompletedAssistantMessageInfo) {
+  async function completeAssistantMessage(info: CompletedAssistantMessageInfo) {
     const resolved = state.getOrCreateGenerationState(info);
 
     if (!resolved) {
@@ -58,6 +71,7 @@ const plugin: Plugin = async (ctx) => {
     }
 
     const { generation, pending, traceState } = resolved;
+    const output = state.getAssistantOutputForMessage(info.id);
     const errorMessage = state.updateTraceStateFromAssistantMessage(traceState, pending, {
       mode: info.mode,
       time: { completed: info.time.completed },
@@ -66,6 +80,7 @@ const plugin: Plugin = async (ctx) => {
         input: info.tokens.input,
         output: info.tokens.output,
       },
+      output,
       error: info.error,
     });
     const { toolsCalled, toolCallCount } = state.getGenerationToolProperties(generation.spanID);
@@ -80,11 +95,12 @@ const plugin: Plugin = async (ctx) => {
         traceState,
         info,
         errorMessage,
-        output: state.getAssistantOutputForMessage(info.id),
+        output,
         toolsCalled,
         toolCallCount,
       }),
     );
+    await captureTrace(traceState);
 
     state.cleanupAssistantMessage(info.id, generation.spanID);
   }
@@ -101,7 +117,7 @@ const plugin: Plugin = async (ctx) => {
     }
 
     if (event.type === 'session.deleted') {
-      flushTrace(event.properties.info.id);
+      await flushTrace(event.properties.info.id);
 
       return;
     }
@@ -130,7 +146,7 @@ const plugin: Plugin = async (ctx) => {
 
     if (state.shouldCompleteAssistantMessage(info)) {
       state.markAssistantMessageCompleted(info.id);
-      completeAssistantMessage(info);
+      await completeAssistantMessage(info);
     }
 
     if (false as boolean) {
@@ -145,7 +161,7 @@ const plugin: Plugin = async (ctx) => {
       const sessionWindowMs = config.sessionWindowMinutes * 60_000;
 
       if (existingTrace && config.traceGrouping === 'message') {
-        flushTrace(input.sessionID);
+        await flushTrace(input.sessionID);
       }
 
       if (
@@ -153,7 +169,7 @@ const plugin: Plugin = async (ctx) => {
         config.traceGrouping === 'session' &&
         startedAt - existingTrace.lastActivityAt >= sessionWindowMs
       ) {
-        flushTrace(input.sessionID);
+        await flushTrace(input.sessionID);
       }
 
       state.beginPrompt(input, output);

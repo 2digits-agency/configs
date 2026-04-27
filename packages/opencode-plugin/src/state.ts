@@ -78,7 +78,10 @@ export function createSessionState(config: Config) {
       agentName: agentName ?? config.projectName,
       errorMessage: undefined,
       hasError: false,
+      inputState: undefined,
       lastActivityAt: startedAt,
+      lastTraceCapturedAt: undefined,
+      outputState: undefined,
       sessionID,
       startedAt,
       totalCostUsd: 0,
@@ -112,6 +115,7 @@ export function createSessionState(config: Config) {
       userMessageID: output.message.id,
     };
 
+    traceState.inputState ??= prompt;
     traceState.traceName ??= getTraceName(prompt);
 
     pendingMessages.set(getPendingKey(input.sessionID, output.message.id), pending);
@@ -203,6 +207,7 @@ export function createSessionState(config: Config) {
       time: { completed: number };
       cost: number;
       tokens: { input: number; output: number };
+      output?: string;
       error?: unknown;
     },
   ): string | undefined {
@@ -213,6 +218,8 @@ export function createSessionState(config: Config) {
     traceState.totalOutputTokens += info.tokens.output;
 
     const errorMessage = getErrorMessage(info.error);
+
+    traceState.outputState = info.output ?? errorMessage ?? traceState.outputState;
 
     if (errorMessage) {
       traceState.hasError = true;
