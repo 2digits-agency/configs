@@ -159,6 +159,17 @@ export interface RuleOptions {
 'eslint/for-direction'?: DummyRule;
 
 /**
+ * Func name matching
+ *
+ * plugin: Eslint
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/func-name-matching.html
+ */
+'eslint/func-name-matching'?: DummyRule;
+
+/**
  * Func names
  *
  * plugin: Eslint
@@ -184,7 +195,7 @@ export interface RuleOptions {
  * Getter return
  *
  * plugin: Eslint
- * category: Nursery
+ * category: Correctness
  * type-aware: false
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/getter-return.html
@@ -1347,6 +1358,17 @@ export interface RuleOptions {
 'eslint/no-undefined'?: DummyRule;
 
 /**
+ * No underscore dangle
+ *
+ * plugin: Eslint
+ * category: Suspicious
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-underscore-dangle.html
+ */
+'eslint/no-underscore-dangle'?: DummyRule;
+
+/**
  * No unexpected multiline
  *
  * plugin: Eslint
@@ -1383,7 +1405,7 @@ export interface RuleOptions {
  * No unreachable
  *
  * plugin: Eslint
- * category: Nursery
+ * category: Correctness
  * type-aware: false
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unreachable.html
@@ -2645,6 +2667,17 @@ export interface RuleOptions {
 'jest/prefer-equality-matcher'?: DummyRule;
 
 /**
+ * Prefer expect assertions
+ *
+ * plugin: Jest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-expect-assertions.html
+ */
+'jest/prefer-expect-assertions'?: DummyRule;
+
+/**
  * Prefer expect resolves
  *
  * plugin: Jest
@@ -3836,7 +3869,7 @@ export interface RuleOptions {
  * Branches sharing code
  *
  * plugin: Oxc
- * category: Nursery
+ * category: Pedantic
  * type-aware: false
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/oxc/branches-sharing-code.html
@@ -4251,6 +4284,17 @@ export interface RuleOptions {
 'react/exhaustive-deps'?: DummyRule;
 
 /**
+ * Forbid component props
+ *
+ * plugin: React
+ * category: Restriction
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/react/forbid-component-props.html
+ */
+'react/forbid-component-props'?: DummyRule;
+
+/**
  * Forbid dom props
  *
  * plugin: React
@@ -4557,6 +4601,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/react/no-did-mount-set-state.html
  */
 'react/no-did-mount-set-state'?: DummyRule;
+
+/**
+ * No did update set state
+ *
+ * plugin: React
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/react/no-did-update-set-state.html
+ */
+'react/no-did-update-set-state'?: DummyRule;
 
 /**
  * No direct mutation state
@@ -7518,6 +7573,17 @@ export interface RuleOptions {
 'vitest/consistent-test-filename'?: DummyRule;
 
 /**
+ * Consistent test it
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/consistent-test-it.html
+ */
+'vitest/consistent-test-it'?: DummyRule;
+
+/**
  * Consistent vitest vi
  *
  * plugin: Vitest
@@ -7527,6 +7593,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/consistent-vitest-vi.html
  */
 'vitest/consistent-vitest-vi'?: DummyRule;
+
+/**
+ * Expect expect
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/expect-expect.html
+ */
+'vitest/expect-expect'?: DummyRule;
 
 /**
  * Hoisted apis on top
@@ -7540,6 +7617,72 @@ export interface RuleOptions {
 'vitest/hoisted-apis-on-top'?: DummyRule;
 
 /**
+ * Max expects
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/max-expects.html
+ */
+'vitest/max-expects'?: DummyRule;
+
+/**
+ * Max nested describe
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/max-nested-describe.html
+ */
+'vitest/max-nested-describe'?: DummyRule;
+
+/**
+ * No alias methods
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-alias-methods.html
+ */
+'vitest/no-alias-methods'?: DummyRule;
+
+/**
+ * No commented out tests
+ *
+ * plugin: Vitest
+ * category: Suspicious
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-commented-out-tests.html
+ */
+'vitest/no-commented-out-tests'?: DummyRule;
+
+/**
+ * No conditional expect
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-conditional-expect.html
+ */
+'vitest/no-conditional-expect'?: DummyRule;
+
+/**
+ * No conditional in test
+ *
+ * plugin: Vitest
+ * category: Pedantic
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-conditional-in-test.html
+ */
+'vitest/no-conditional-in-test'?: DummyRule;
+
+/**
  * No conditional tests
  *
  * plugin: Vitest
@@ -7549,6 +7692,61 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-conditional-tests.html
  */
 'vitest/no-conditional-tests'?: DummyRule;
+
+/**
+ * No disabled tests
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-disabled-tests.html
+ */
+'vitest/no-disabled-tests'?: DummyRule;
+
+/**
+ * No duplicate hooks
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-duplicate-hooks.html
+ */
+'vitest/no-duplicate-hooks'?: DummyRule;
+
+/**
+ * No focused tests
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-focused-tests.html
+ */
+'vitest/no-focused-tests'?: DummyRule;
+
+/**
+ * No hooks
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-hooks.html
+ */
+'vitest/no-hooks'?: DummyRule;
+
+/**
+ * No identical title
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-identical-title.html
+ */
+'vitest/no-identical-title'?: DummyRule;
 
 /**
  * No import node test
@@ -7571,6 +7769,39 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-importing-vitest-globals.html
  */
 'vitest/no-importing-vitest-globals'?: DummyRule;
+
+/**
+ * No interpolation in snapshots
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-interpolation-in-snapshots.html
+ */
+'vitest/no-interpolation-in-snapshots'?: DummyRule;
+
+/**
+ * No large snapshots
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-large-snapshots.html
+ */
+'vitest/no-large-snapshots'?: DummyRule;
+
+/**
+ * No mocks import
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-mocks-import.html
+ */
+'vitest/no-mocks-import'?: DummyRule;
 
 /**
  * Prefer called exactly once with
@@ -7615,6 +7846,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-describe-function-title.html
  */
 'vitest/prefer-describe-function-title'?: DummyRule;
+
+/**
+ * Prefer expect assertions
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-expect-assertions.html
+ */
+'vitest/prefer-expect-assertions'?: DummyRule;
 
 /**
  * Prefer expect type of
@@ -7694,6 +7936,28 @@ export interface RuleOptions {
 'vitest/prefer-to-be-truthy'?: DummyRule;
 
 /**
+ * Prefer to contain
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-contain.html
+ */
+'vitest/prefer-to-contain'?: DummyRule;
+
+/**
+ * Prefer todo
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-todo.html
+ */
+'vitest/prefer-todo'?: DummyRule;
+
+/**
  * Require awaited expect poll
  *
  * plugin: Vitest
@@ -7736,6 +8000,39 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-test-timeout.html
  */
 'vitest/require-test-timeout'?: DummyRule;
+
+/**
+ * Require top level describe
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-top-level-describe.html
+ */
+'vitest/require-top-level-describe'?: DummyRule;
+
+/**
+ * Valid expect
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-expect.html
+ */
+'vitest/valid-expect'?: DummyRule;
+
+/**
+ * Valid title
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-title.html
+ */
+'vitest/valid-title'?: DummyRule;
 
 /**
  * Warn todo
@@ -7804,6 +8101,28 @@ export interface RuleOptions {
 'vue/no-arrow-functions-in-watch'?: DummyRule;
 
 /**
+ * No deprecated data object declaration
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-data-object-declaration.html
+ */
+'vue/no-deprecated-data-object-declaration'?: DummyRule;
+
+/**
+ * No deprecated delete set
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-delete-set.html
+ */
+'vue/no-deprecated-delete-set'?: DummyRule;
+
+/**
  * No deprecated destroyed lifecycle
  *
  * plugin: Vue
@@ -7813,6 +8132,28 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-destroyed-lifecycle.html
  */
 'vue/no-deprecated-destroyed-lifecycle'?: DummyRule;
+
+/**
+ * No deprecated events api
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-events-api.html
+ */
+'vue/no-deprecated-events-api'?: DummyRule;
+
+/**
+ * No deprecated vue config keycodes
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-vue-config-keycodes.html
+ */
+'vue/no-deprecated-vue-config-keycodes'?: DummyRule;
 
 /**
  * No export in script setup
