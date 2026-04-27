@@ -1,5 +1,28 @@
 # @2digits/eslint-config
 
+## 5.4.8
+
+### Patch Changes
+
+- e1f712a: Update ESLint dependencies
+
+  - Updated `@tanstack/eslint-plugin-query` to 5.100.5
+  - Updated `typescript-eslint` to 8.59.1
+  - Updated `@typescript-eslint/parser` to 8.59.1
+  - Updated `@typescript-eslint/utils` to 8.59.1
+  - Updated `pkg-types` to 2.3.1
+
+- e1f712a: Update eslint-plugin-zod to 3.9.0
+
+  - Added `zod/no-number-schema-with-finite` rule
+  - Added `zod/no-number-schema-with-is-finite` rule
+  - Added `zod/no-number-schema-with-is-int` rule
+  - Added `zod/no-number-schema-with-safe` rule
+  - Added `zod/no-number-schema-with-step` rule
+
+- Updated dependencies [e1f712a]
+  - @2digits/eslint-plugin@4.0.12
+
 ## 5.4.7
 
 ### Patch Changes

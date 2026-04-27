@@ -1,5 +1,13 @@
 # @2digits/oxlint-config
 
+## 0.6.4
+
+### Patch Changes
+
+- e1f712a: Update oxlint to 1.62.0
+
+  - Updated generated rule types with new rules from `eslint`, `jest`, `react`, `vitest`, and `vue` plugins
+
 ## 0.6.3
 
 ### Patch Changes

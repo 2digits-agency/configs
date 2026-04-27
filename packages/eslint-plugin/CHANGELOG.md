@@ -1,5 +1,14 @@
 # @2digits/eslint-plugin
 
+## 4.0.12
+
+### Patch Changes
+
+- e1f712a: Update ESLint dependencies
+
+  - Updated `@typescript-eslint/utils` to 8.59.1
+  - Updated `@typescript-eslint/scope-manager` to 8.59.1
+
 ## 4.0.11
 
 ### Patch Changes
