@@ -1,5 +1,24 @@
 # @2digits/opencode-plugin
 
+## 0.2.3
+
+### Patch Changes
+
+- e1f712a: Update posthog-node to 5.30.6
+- 18cf38c: Fix PostHog LLM trace capture
+
+  - Sent `$ai_trace` snapshots immediately when assistant generations complete
+  - Added trace input, output, and cost properties for PostHog trace summaries
+  - Avoided duplicate trace snapshots when trace state has not changed
+
+- e1f712a: Update @opencode-ai/plugin to 1.14.28
+- 5e40cb5: Switch build tooling from bunup to vp pack
+
+  - Replaced `bunup` with `vp pack` for builds
+  - Removed Bun-specific dev dependencies (`@types/bun`, `bunup`)
+  - Added `pack` configuration to `vite.config.ts` with export metadata generation
+  - Updated dist output paths to use `.mjs` and `.d.mts` extensions
+
 ## 0.2.2
 
 ### Patch Changes

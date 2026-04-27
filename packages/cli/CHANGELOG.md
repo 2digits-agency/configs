@@ -1,5 +1,12 @@
 # @2digits/cli
 
+## 1.2.53
+
+### Patch Changes
+
+- e1f712a: Update pkg-types to 2.3.1
+- e1f712a: Update nypm to 0.6.6
+
 ## 1.2.52
 
 ### Patch Changes
