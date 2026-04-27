@@ -28,7 +28,10 @@ export interface TraceState {
   agentName: string;
   errorMessage?: string;
   hasError: boolean;
+  inputState?: string;
   lastActivityAt: number;
+  lastTraceCapturedAt?: number;
+  outputState?: string;
   sessionID: string;
   startedAt: number;
   totalCostUsd: number;

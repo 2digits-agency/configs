@@ -18,7 +18,9 @@ const config: Config = {
 const traceState: TraceState = {
   agentName: 'build',
   hasError: false,
+  inputState: 'hello',
   lastActivityAt: 20,
+  outputState: 'done',
   sessionID: 'session-1',
   startedAt: 10,
   totalCostUsd: 2,
@@ -34,6 +36,9 @@ describe('property builders', () => {
       $ai_trace_id: 'trace-1',
       $ai_session_id: 'session-1',
       $ai_latency: 12,
+      $ai_input_state: 'hello',
+      $ai_output_state: 'done',
+      $ai_total_cost_usd: 2,
       $ai_agent_name: 'build',
       env: 'test',
     });
