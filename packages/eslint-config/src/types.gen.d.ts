@@ -8598,10 +8598,35 @@ Backward pagination arguments
    */
   'zod/no-empty-custom-schema'?: Linter.RuleEntry<[]>
   /**
+   * Disallow deprecated `z.number().finite()`. In Zod 4+ number schemas do not allow infinite values by default, so it is a no-op.
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-number-schema-with-finite.md
+   */
+  'zod/no-number-schema-with-finite'?: Linter.RuleEntry<[]>
+  /**
    * Disallow usage of `z.number().int()` as it is considered legacy
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-number-schema-with-int.md
    */
   'zod/no-number-schema-with-int'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow using deprecated `isFinite` on a Zod number schema; in v4+ it is always `true`.
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-number-schema-with-is-finite.md
+   */
+  'zod/no-number-schema-with-is-finite'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow using deprecated `isInt` on a Zod number schema; check the `format` property instead.
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-number-schema-with-is-int.md
+   */
+  'zod/no-number-schema-with-is-int'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow deprecated `z.number().safe()`. Use `z.int()`; `.safe()` is now identical to `.int()`.
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-number-schema-with-safe.md
+   */
+  'zod/no-number-schema-with-safe'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow deprecated `z.number().step()`. Use `.multipleOf()` instead.
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-number-schema-with-step.md
+   */
+  'zod/no-number-schema-with-step'?: Linter.RuleEntry<[]>
   /**
    * Disallow using both `.optional()` and `.default()` on the same Zod schema
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-optional-and-default-together.md
