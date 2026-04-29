@@ -8588,6 +8588,11 @@ Backward pagination arguments
    */
   'zod/consistent-schema-output-type-style'?: Linter.RuleEntry<ZodConsistentSchemaOutputTypeStyle>
   /**
+   * Enforce a consistent naming convention for Zod schema variables
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/consistent-schema-var-name.md
+   */
+  'zod/consistent-schema-var-name'?: Linter.RuleEntry<ZodConsistentSchemaVarName>
+  /**
    * Disallow usage of `z.any()` in Zod schemas
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/no-any-schema.md
    */
@@ -8691,6 +8696,7 @@ Backward pagination arguments
   /**
    * Require schema suffix when declaring a Zod schema
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/require-schema-suffix.md
+   * @deprecated
    */
   'zod/require-schema-suffix'?: Linter.RuleEntry<ZodRequireSchemaSuffix>
   /**
@@ -16103,6 +16109,13 @@ type ZodConsistentObjectSchemaType = []|[{
 type ZodConsistentSchemaOutputTypeStyle = []|[{
   
   style?: ("infer" | "output")
+}]
+// ----- zod/consistent-schema-var-name -----
+type ZodConsistentSchemaVarName = []|[{
+  
+  before?: string
+  
+  after?: string
 }]
 // ----- zod/no-optional-and-default-together -----
 type ZodNoOptionalAndDefaultTogether = []|[{
