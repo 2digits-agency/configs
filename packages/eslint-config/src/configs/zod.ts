@@ -16,6 +16,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/array-style': ['error', { style: 'function' }],
         'zod/consistent-import': ['error', { syntax: 'namespace' }],
         'zod/consistent-schema-output-type-style': ['error', { style: 'infer' }],
+        'zod/consistent-schema-var-name': ['warn', { after: 'Schema' }],
         'zod/no-any-schema': 'error',
         'zod/no-empty-custom-schema': 'error',
         'zod/no-number-schema-with-finite': 'error',
@@ -33,7 +34,6 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/prefer-meta-last': 'error',
         'zod/prefer-string-schema-with-trim': 'error',
         'zod/require-brand-type-parameter': 'error',
-        'zod/require-schema-suffix': ['warn', { suffix: 'Schema' }],
         'zod/schema-error-property-style': [
           'error',
           { selector: 'Literal,TemplateLiteral', example: `"This is an error message"` },
