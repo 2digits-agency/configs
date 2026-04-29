@@ -1,5 +1,20 @@
 # @2digits/eslint-config
 
+## 5.4.9
+
+### Patch Changes
+
+- 1e6b41a: Update eslint-plugin-zod to 3.11.0
+
+  - Added `zod/consistent-schema-var-name` rule to enforce consistent naming for Zod schema variables
+  - Removed `zod/require-schema-suffix` rule (deprecated upstream, replaced by `consistent-schema-var-name`)
+  - Updated generated types for new and deprecated rules
+
+- 1e6b41a: Update ESLint plugins
+
+  - Updated `@tanstack/eslint-plugin-query` to 5.100.6
+  - Updated `eslint-plugin-storybook` to 10.3.6
+
 ## 5.4.8
 
 ### Patch Changes
