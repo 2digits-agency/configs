@@ -1,5 +1,17 @@
 # @2digits/eslint-config
 
+## 5.4.10
+
+### Patch Changes
+
+- 3aa665b: Update ESLint plugins
+
+  - Updated `@eslint/css` to 1.2.0 with new CSS function and property support
+  - Updated `eslint-flat-config-utils` to 3.2.0
+  - Updated `eslint-plugin-turbo` to 2.9.7
+  - Updated `eslint-plugin-yml` to 3.3.2
+  - Regenerated type definitions for updated CSS rule options
+
 ## 5.4.9
 
 ### Patch Changes
