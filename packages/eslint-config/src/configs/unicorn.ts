@@ -19,13 +19,7 @@ export function unicorn(): Array<TypedFlatConfigItem> {
         'unicorn/prefer-module': 'off',
         'unicorn/prevent-abbreviations': 'off',
         'unicorn/prefer-ternary': ['error', 'only-single-line'],
-        'unicorn/no-useless-undefined': [
-          'error',
-          {
-            checkArguments: false,
-            checkArrowFunctionBody: false,
-          },
-        ],
+        'unicorn/no-useless-undefined': ['error', { checkArguments: false, checkArrowFunctionBody: false }],
         'unicorn/prefer-top-level-await': 'off',
         'unicorn/no-nested-ternary': 'off',
       },

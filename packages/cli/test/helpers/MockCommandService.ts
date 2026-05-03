@@ -25,38 +25,39 @@ export class MockCommandExecutor extends Effect.Service<MockCommandExecutor>()('
   effect: Effect.gen(function* () {
     const executed = yield* Ref.make<Array<ExecutedCommand>>([]);
 
-    const recordCommand = (command: Command.Command): Effect.Effect<void> =>
-      Effect.gen(function* () {
-        if (command._tag === 'StandardCommand') {
-          yield* Ref.update(executed, (cmds) =>
-            Array.append(cmds, {
-              command: command.command,
-              args: command.args,
-              shell: command.shell,
-            }),
-          );
-        }
-      });
-
-    const createMockProcess = (_command: Command.Command): CommandExecutor.Process => ({
-      [CommandExecutor.ProcessTypeId]: CommandExecutor.ProcessTypeId,
-      pid: 12_345 as CommandExecutor.ProcessId,
-      exitCode: Effect.succeed(0 as CommandExecutor.ExitCode),
-      isRunning: Effect.succeed(false),
-      kill: () => Effect.void,
-      stderr: Stream.empty,
-      stdin: Sink.drain,
-      stdout: Stream.empty,
-      [Symbol.for('nodejs.util.inspect.custom')]() {
-        return 'MockProcess';
-      },
-      toJSON() {
-        return { _tag: 'MockProcess', pid: 12_345 };
-      },
-      [Inspectable.NodeInspectSymbol](): unknown {
-        throw new Error('Function not implemented.');
-      },
+    const recordCommand = Effect.fn('recordCommand')(function* (command: Command.Command): Effect.fn.Return<void> {
+      if (command._tag === 'StandardCommand') {
+        yield* Ref.update(executed, (cmds) =>
+          Array.append(cmds, {
+            command: command.command,
+            args: command.args,
+            shell: command.shell,
+          }),
+        );
+      }
     });
+
+    function createMockProcess(_command: Command.Command): CommandExecutor.Process {
+      return {
+        [CommandExecutor.ProcessTypeId]: CommandExecutor.ProcessTypeId,
+        pid: 12_345 as CommandExecutor.ProcessId,
+        exitCode: Effect.succeed(0 as CommandExecutor.ExitCode),
+        isRunning: Effect.succeed(false),
+        kill: () => Effect.void,
+        stderr: Stream.empty,
+        stdin: Sink.drain,
+        stdout: Stream.empty,
+        [Symbol.for('nodejs.util.inspect.custom')]() {
+          return 'MockProcess';
+        },
+        toJSON() {
+          return { _tag: 'MockProcess', pid: 12_345 };
+        },
+        [Inspectable.NodeInspectSymbol](): unknown {
+          throw new Error('Function not implemented.');
+        },
+      };
+    }
 
     const executor: CommandExecutor.CommandExecutor = {
       [CommandExecutor.TypeId]: CommandExecutor.TypeId,
