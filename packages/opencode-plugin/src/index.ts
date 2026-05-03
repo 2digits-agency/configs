@@ -54,9 +54,7 @@ const plugin: Plugin = async (ctx) => {
   }
 
   async function shutdown(): Promise<void> {
-    for (const sessionID of state.getTraceSessionIDs()) {
-      await flushTrace(sessionID);
-    }
+    await Promise.all(state.getTraceSessionIDs().map((sessionID) => flushTrace(sessionID)));
 
     await capture.shutdown();
   }

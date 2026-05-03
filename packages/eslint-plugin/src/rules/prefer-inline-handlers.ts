@@ -165,7 +165,7 @@ export const preferInlineHandlers = createRule<[], MessageId>({
 
     return {
       'VariableDeclarator[init.type=ArrowFunctionExpression], VariableDeclarator[init.type=FunctionExpression]':
-        function (node: TSESTree.VariableDeclarator) {
+        function VariableDeclaratorChecker(node: TSESTree.VariableDeclarator) {
           if (node.id.type !== AST_NODE_TYPES.Identifier) {
             return;
           }

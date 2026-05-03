@@ -81,7 +81,9 @@ export class ProjectDetectionService extends Effect.Service<ProjectDetectionServ
      *
      * @param workspacePath - The path to the workspace directory.
      */
-    const getWorkspacePackageJsonPath = (workspacePath: string) => path.join(workspacePath, 'package.json');
+    function getWorkspacePackageJsonPath(workspacePath: string) {
+      return path.join(workspacePath, 'package.json');
+    }
 
     return {
       isMonorepo,

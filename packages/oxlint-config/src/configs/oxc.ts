@@ -1,4 +1,4 @@
-import { defineTypedConfig } from '../types';
+import { defineTypedConfig, type Rules } from '../types';
 
 export const oxcConfig = defineTypedConfig({
   plugins: ['oxc'],
@@ -19,11 +19,18 @@ export const oxcConfig = defineTypedConfig({
     'oxc/misrefactored-assign-op': 'error',
     'oxc/missing-throw': 'error',
     'oxc/no-accumulating-spread': 'error',
+    'oxc/no-async-await': undefined,
+    'oxc/no-async-endpoint-handlers': undefined,
     'oxc/no-barrel-file': ['error', { threshold: 10_000 }],
     'oxc/no-const-enum': 'error',
+    'oxc/no-map-spread': undefined,
+    'oxc/no-optional-chaining': undefined,
+    'oxc/no-rest-spread-properties': undefined,
     'oxc/no-this-in-exported-function': 'error',
     'oxc/number-arg-out-of-range': 'error',
     'oxc/only-used-in-recursion': 'error',
     'oxc/uninvoked-array-callback': 'error',
+  } satisfies {
+    [k in Extract<keyof Rules, `oxc/${string}`>]: Rules[k];
   },
 });

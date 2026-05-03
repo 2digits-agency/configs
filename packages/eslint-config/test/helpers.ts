@@ -120,12 +120,18 @@ export async function runAutofixFixture({
   });
   const changedFiles: Record<string, string> = {};
 
-  for (const file of files.toSorted()) {
-    const [content, source] = await Promise.all([
-      fs.readFile(path.join(cwd, file), 'utf8'),
-      fs.readFile(path.join(sourceDir, file), 'utf8'),
-    ]);
+  const results = await Promise.all(
+    files.toSorted().map(async (file) => {
+      const [content, source] = await Promise.all([
+        fs.readFile(path.join(cwd, file), 'utf8'),
+        fs.readFile(path.join(sourceDir, file), 'utf8'),
+      ]);
 
+      return { file, content, source };
+    }),
+  );
+
+  for (const { file, content, source } of results) {
     if (content !== source) {
       changedFiles[file] = content;
     }
