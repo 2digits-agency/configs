@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { describe, it } from '@effect/vitest';
 import { assertTrue, strictEqual } from '@effect/vitest/utils';
 import * as Effect from 'effect/Effect';
@@ -21,7 +23,7 @@ describe('CurrentWorkingDirService', () => {
       const service = yield* CurrentWorkingDirService;
       const cwd = yield* service.cwd;
 
-      assertTrue(cwd.startsWith('/') || /^[a-z]:\\/i.test(cwd));
+      assertTrue(path.isAbsolute(cwd));
     }).pipe(Effect.provide(testLayer)));
 
   it('returns a non-empty string', () =>

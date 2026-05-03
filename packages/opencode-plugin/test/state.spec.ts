@@ -1,4 +1,3 @@
-/* eslint-disable sonar/no-duplicate-string */
 import { describe, expect, it } from 'vite-plus/test';
 
 import { createSessionState } from '../src/state.js';
@@ -16,17 +15,37 @@ const config: Config = {
   customProperties: {},
 };
 
+type SessionState = ReturnType<typeof createSessionState>;
+
+function beginPromptForSession(state: SessionState): void {
+  state.beginPrompt(
+    { sessionID: 'session-1', agent: 'agent-1' },
+    {
+      message: { id: 'user-1' },
+      parts: [{ type: 'text', text: 'hello world' }],
+    },
+  );
+}
+
+function createGenerationForSession(state: SessionState) {
+  const generation = state.getOrCreateGenerationState({
+    id: 'assistant-1',
+    parentID: 'user-1',
+    sessionID: 'session-1',
+  });
+
+  if (!generation) {
+    throw new Error('expected generation state');
+  }
+
+  return generation;
+}
+
 describe(createSessionState, () => {
-  it('creates prompt, generation, and tool state for a session', () => {
+  it('creates prompt state for a session', () => {
     const state = createSessionState(config);
 
-    state.beginPrompt(
-      { sessionID: 'session-1', agent: 'agent-1' },
-      {
-        message: { id: 'user-1' },
-        parts: [{ type: 'text', text: 'hello world' }],
-      },
-    );
+    beginPromptForSession(state);
 
     const trace = state.getTraceState('session-1');
     const pending = state.getActiveMessage('session-1');
@@ -34,20 +53,24 @@ describe(createSessionState, () => {
     expect(trace?.agentName).toBe('agent-1');
     expect(trace?.traceName).toBe('hello world');
     expect(pending?.prompt).toBe('hello world');
+  });
 
-    const generation = state.getOrCreateGenerationState({
-      id: 'assistant-1',
-      parentID: 'user-1',
-      sessionID: 'session-1',
-    });
+  it('creates generation state for a session', () => {
+    const state = createSessionState(config);
 
-    expect(generation).toBeDefined();
+    beginPromptForSession(state);
 
-    if (!generation) {
-      throw new Error('expected generation state');
-    }
+    const generation = createGenerationForSession(state);
 
     expect(generation.generation.assistantMessageID).toBe('assistant-1');
+  });
+
+  it('records generation tool calls', () => {
+    const state = createSessionState(config);
+
+    beginPromptForSession(state);
+
+    const generation = createGenerationForSession(state);
 
     state.recordGenerationToolCall(generation.generation.spanID, 'bash');
     state.recordGenerationToolCall(generation.generation.spanID, 'read');
@@ -56,6 +79,14 @@ describe(createSessionState, () => {
       toolsCalled: ['bash', 'read'],
       toolCallCount: 2,
     });
+  });
+
+  it('stores tool calls until they are taken', () => {
+    const state = createSessionState(config);
+
+    beginPromptForSession(state);
+
+    const generation = createGenerationForSession(state);
 
     state.setToolCall('session-1', 'call-1', {
       args: { cmd: 'ls' },
@@ -68,28 +99,12 @@ describe(createSessionState, () => {
     expect(state.takeToolCall('session-1', 'call-1')?.parentSpanID).toBe(generation.generation.spanID);
   });
 
-  it('accumulates assistant message totals and clears per-session state', () => {
+  it('accumulates assistant message totals', () => {
     const state = createSessionState(config);
 
-    state.beginPrompt(
-      { sessionID: 'session-1', agent: 'agent-1' },
-      {
-        message: { id: 'user-1' },
-        parts: [{ type: 'text', text: 'hello world' }],
-      },
-    );
+    beginPromptForSession(state);
 
-    const resolved = state.getOrCreateGenerationState({
-      id: 'assistant-1',
-      parentID: 'user-1',
-      sessionID: 'session-1',
-    });
-
-    expect(resolved).toBeDefined();
-
-    if (!resolved) {
-      throw new Error('expected resolved generation state');
-    }
+    const resolved = createGenerationForSession(state);
 
     state.storeAssistantOutput({ id: 'part-1', messageID: 'assistant-1', text: 'response' });
 
@@ -102,9 +117,19 @@ describe(createSessionState, () => {
 
     expect(errorMessage).toBeUndefined();
     expect(state.getAssistantOutputForMessage('assistant-1')).toBe('response');
-    expect(resolved.traceState.totalInputTokens).toBe(10);
-    expect(resolved.traceState.totalOutputTokens).toBe(15);
-    expect(resolved.traceState.totalCostUsd).toBe(1.5);
+    expect(resolved.traceState).toMatchObject({
+      totalCostUsd: 1.5,
+      totalInputTokens: 10,
+      totalOutputTokens: 15,
+    });
+  });
+
+  it('clears per-session state', () => {
+    const state = createSessionState(config);
+
+    beginPromptForSession(state);
+
+    createGenerationForSession(state);
 
     state.clearSessionState('session-1');
 

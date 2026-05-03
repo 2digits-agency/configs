@@ -29,6 +29,9 @@ const fixtureCases: Array<FixtureCase> = [
   },
 ];
 
+const matchingFixtureCases = fixtureCases.filter((fixture) => fixture.expectation === 'match');
+const knownDifferenceFixtureCases = fixtureCases.filter((fixture) => fixture.expectation === 'known-difference');
+
 async function readFixture(fixture: FixtureCase): Promise<string> {
   return fs.readFile(path.join(testDir, 'fixtures', fixture.name, fixture.fileName), 'utf8');
 }
@@ -50,14 +53,14 @@ describe('idempotence', () => {
 });
 
 describe('prettier parity', () => {
-  it.for(fixtureCases)('$name', async (fixture, { expect }) => {
+  it.for(matchingFixtureCases)('$name matches prettier', async (fixture, { expect }) => {
     const outputs = await formatFixture(await readFixture(fixture), fixture);
 
-    if (fixture.expectation === 'match') {
-      expect(outputs.oxfmt).toBe(outputs.prettier);
+    expect(outputs.oxfmt).toBe(outputs.prettier);
+  });
 
-      return;
-    }
+  it.for(knownDifferenceFixtureCases)('$name differs from prettier', async (fixture, { expect }) => {
+    const outputs = await formatFixture(await readFixture(fixture), fixture);
 
     expect(fixture.reason).toBeDefined();
     expect(outputs.oxfmt).not.toBe(outputs.prettier);
