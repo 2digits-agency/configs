@@ -1,5 +1,65 @@
 # @2digits/oxlint-config
 
+## 0.6.5
+
+### Patch Changes
+
+- 943ce66: Enable additional unicorn rules
+
+  - Added `unicorn/consistent-template-literal-escape`
+  - Added `unicorn/no-anonymous-default-export`
+  - Added `unicorn/no-process-exit`
+  - Added `unicorn/no-useless-iterator-to-array`
+  - Added `unicorn/no-useless-promise-resolve-reject`
+  - Added `unicorn/require-module-specifiers`
+  - Added `unicorn/switch-case-break-position`
+  - Added `unicorn/throw-new-error`
+  - Added type validation for unicorn rules
+
+- 68924a9: Enable additional rules and add type validation
+
+  - Added `eslint/capitalized-comments`
+  - Added `eslint/complexity`
+  - Added `eslint/curly`
+  - Added `eslint/default-param-last`
+  - Added `eslint/func-names`
+  - Added `eslint/func-style`
+  - Added `eslint/getter-return`
+  - Added `eslint/grouped-accessor-pairs`
+  - Added `eslint/guard-for-in`
+  - Added `eslint/no-await-in-loop`
+  - Added `eslint/no-negated-condition`
+  - Added `eslint/no-return-assign`
+  - Added `eslint/no-script-url`
+  - Added `eslint/object-shorthand`
+  - Added `eslint/prefer-object-spread`
+  - Added `eslint/preserve-caught-error`
+  - Added `import/no-absolute-path`
+  - Added `import/no-empty-named-blocks`
+  - Added `import/no-named-default`
+  - Added type validation for `eslint`, `import`, and `oxc` rules
+
+- 74e346a: Enable additional vitest rules
+
+  - Added `vitest/consistent-test-it`
+  - Added `vitest/expect-expect`
+  - Added `vitest/max-expects`
+  - Added `vitest/max-nested-describe`
+  - Added `vitest/no-alias-methods`
+  - Added `vitest/no-commented-out-tests`
+  - Added `vitest/no-conditional-expect`
+  - Added `vitest/no-conditional-in-test`
+  - Added `vitest/no-disabled-tests`
+  - Added `vitest/no-duplicate-hooks`
+  - Added `vitest/no-focused-tests`
+  - Added `vitest/no-identical-title`
+  - Added `vitest/no-interpolation-in-snapshots`
+  - Added `vitest/no-mocks-import`
+  - Added `vitest/prefer-to-contain`
+  - Added `vitest/prefer-todo`
+  - Added `vitest/require-top-level-describe`
+  - Added `vitest/valid-expect`
+
 ## 0.6.4
 
 ### Patch Changes
