@@ -8684,6 +8684,11 @@ Backward pagination arguments
    */
   'zod/prefer-string-schema-with-trim'?: Linter.RuleEntry<[]>
   /**
+   * Enforce `.trim()` is called before string length checks to ensure accurate validation
+   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/prefer-trim-before-string-length-checks.md
+   */
+  'zod/prefer-trim-before-string-length-checks'?: Linter.RuleEntry<[]>
+  /**
    * Require type parameter on `.brand()` functions
    * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/HEAD/docs/rules/require-brand-type-parameter.md
    */

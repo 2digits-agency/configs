@@ -33,6 +33,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/prefer-meta': 'error',
         'zod/prefer-meta-last': 'error',
         'zod/prefer-string-schema-with-trim': 'error',
+        'zod/prefer-trim-before-string-length-checks': 'error',
         'zod/require-brand-type-parameter': 'error',
         'zod/schema-error-property-style': [
           'error',
