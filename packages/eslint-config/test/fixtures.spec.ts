@@ -9,15 +9,15 @@ import { configPresets } from './presets';
 const fixturesInputDir = fileURLToPath(new URL('../fixtures/input/', import.meta.url));
 const tmpDir = fileURLToPath(new URL('../_fixtures/', import.meta.url));
 
-beforeAll(async () => {
-  await fs.rm(tmpDir, { recursive: true, force: true });
-
-  return async () => {
-    await fs.rm(tmpDir, { recursive: true, force: true });
-  };
-});
-
 describe('fixtures', () => {
+  beforeAll(async () => {
+    await fs.rm(tmpDir, { recursive: true, force: true });
+
+    return async () => {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    };
+  });
+
   it.for(configPresets)('autofix: $name', { timeout: 30_000 }, async ({ options, name }, { expect }) => {
     const result = await runAutofixFixture({
       cwd: fileURLToPath(new URL(`../_fixtures/${name}/`, import.meta.url)),

@@ -45,18 +45,24 @@ describe('factory', () => {
   it.for(factoryConfigPresets)('preset: $name', { timeout: 30_000 }, async ({ name, options }, { expect }) => {
     const config = await twoDigits(withDeterministicOptions(options, workspaceRoot));
     const serialized = serializeConfigs(config);
-    const configNames = serialized.flatMap((entry) => (entry.name ? [entry.name] : []));
+    const configNames = serialized.map((entry) => entry.name).filter((name) => name !== undefined);
 
     expect(configNames).toContain('2digits:ignores');
     expect(configNames).toContain('2digits:typescript/setup');
 
-    for (const [optionName, configName] of Object.entries(optionalConfigNames)) {
-      if (isOptionEnabled(options, optionName)) {
-        expect(configNames).toContain(configName);
+    const optionalEntries = Object.entries(optionalConfigNames);
+    const enabledConfigNames = optionalEntries
+      .filter(([optionName]) => isOptionEnabled(options, optionName))
+      .map(([, configName]) => configName);
+    const disabledConfigNames = optionalEntries
+      .filter(([optionName]) => !isOptionEnabled(options, optionName))
+      .map(([, configName]) => configName);
 
-        continue;
-      }
+    for (const configName of enabledConfigNames) {
+      expect(configNames).toContain(configName);
+    }
 
+    for (const configName of disabledConfigNames) {
       expect(configNames).not.toContain(configName);
     }
 

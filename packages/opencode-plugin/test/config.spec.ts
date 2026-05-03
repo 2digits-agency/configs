@@ -15,14 +15,6 @@ const ENV_KEYS = [
   'POSTHOG_LLMA_CUSTOM_PROPERTIES',
 ] as const;
 
-afterEach(() => {
-  vi.restoreAllMocks();
-
-  for (const key of ENV_KEYS) {
-    process.env[key] = undefined;
-  }
-});
-
 function createCtx(gitEmail: string) {
   const text = vi.fn<() => Promise<string>>().mockResolvedValue(gitEmail);
   const shell = vi.fn<() => { text: () => Promise<string> }>().mockReturnValue({ text });
@@ -35,6 +27,14 @@ function createCtx(gitEmail: string) {
 }
 
 describe(buildConfig, () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+
+    for (const key of ENV_KEYS) {
+      process.env[key] = undefined;
+    }
+  });
+
   it('builds config from env and git email', async () => {
     process.env.POSTHOG_OPENCODE_API_KEY = 'key';
     process.env.POSTHOG_OPENCODE_ENABLED = 'true';
