@@ -1,5 +1,45 @@
 # @2digits/eslint-config
 
+## 5.4.11
+
+### Patch Changes
+
+- c1eabd5: Update ESLint core and plugins
+
+  - Updated `eslint` to 10.3.0
+  - Updated `@tanstack/eslint-plugin-query` to 5.100.8
+  - Updated `eslint-plugin-turbo` to 2.9.8
+  - Updated `eslint-plugin-zod` to 3.12.0
+  - Updated `globals` to 17.6.0
+  - Added `zod/prefer-trim-before-string-length-checks` rule
+  - Updated generated types
+
+- 943ce66: Update @tanstack/eslint-plugin-query to 5.100.9
+- 74e346a: Enable additional vitest rules
+
+  - Added `vitest/expect-expect`
+  - Added `vitest/max-expects`
+  - Added `vitest/max-nested-describe`
+  - Added `vitest/no-alias-methods`
+  - Added `vitest/no-commented-out-tests`
+  - Added `vitest/no-conditional-expect`
+  - Added `vitest/no-conditional-in-test`
+  - Added `vitest/no-disabled-tests`
+  - Added `vitest/no-duplicate-hooks`
+  - Added `vitest/no-focused-tests`
+  - Added `vitest/no-identical-title`
+  - Added `vitest/no-interpolation-in-snapshots`
+  - Added `vitest/no-mocks-import`
+  - Added `vitest/prefer-to-contain`
+  - Added `vitest/prefer-todo`
+  - Added `vitest/require-top-level-describe`
+  - Added `vitest/valid-expect`
+
+- 68924a9: Small internal performance refactors
+- Updated dependencies [c1eabd5]
+- Updated dependencies [68924a9]
+  - @2digits/eslint-plugin@4.0.13
+
 ## 5.4.10
 
 ### Patch Changes

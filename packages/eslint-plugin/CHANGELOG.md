@@ -1,5 +1,12 @@
 # @2digits/eslint-plugin
 
+## 4.0.13
+
+### Patch Changes
+
+- c1eabd5: Update eslint to 10.3.0
+- 68924a9: Small internal performance refactors
+
 ## 4.0.12
 
 ### Patch Changes

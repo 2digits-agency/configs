@@ -1,5 +1,11 @@
 # @2digits/cli
 
+## 1.2.54
+
+### Patch Changes
+
+- 68924a9: Small internal performance refactors
+
 ## 1.2.53
 
 ### Patch Changes
