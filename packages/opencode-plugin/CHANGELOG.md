@@ -1,5 +1,14 @@
 # @2digits/opencode-plugin
 
+## 0.2.8
+
+### Patch Changes
+
+- 353439d: Update opencode plugin dependencies
+
+  - Updated `@opencode-ai/plugin` to 1.14.40
+  - Updated `posthog-node` to 5.33.3
+
 ## 0.2.7
 
 ### Patch Changes
