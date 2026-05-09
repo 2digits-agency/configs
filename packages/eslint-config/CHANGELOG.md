@@ -1,5 +1,21 @@
 # @2digits/eslint-config
 
+## 5.4.14
+
+### Patch Changes
+
+- af1fdf7: Update ESLint plugins and enable additional vitest rules
+
+  - Updated `@eslint/compat` to 2.1.0
+  - Updated `@next/eslint-plugin-next` to 16.2.6
+  - Updated `@vitest/eslint-plugin` to 1.6.17
+  - Updated `empathic` to 2.0.1
+  - Updated `eslint-plugin-turbo` to 2.9.12
+  - Updated `eslint-plugin-zod` to 4.1.0
+  - Enabled 20+ new vitest rules including `vitest/prefer-to-be`, `vitest/no-standalone-expect`, `vitest/prefer-hooks-on-top`, `vitest/valid-describe-callback`, and `vitest/prefer-snapshot-hint`
+  - Replaced deprecated `zod/no-string-schema-with-uuid` with `zod/prefer-top-level-string-formats`
+  - Updated generated types for zod and vitest rule documentation
+
 ## 5.4.13
 
 ### Patch Changes

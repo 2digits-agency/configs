@@ -1,5 +1,11 @@
 # @2digits/oxfmt-config
 
+## 0.3.6
+
+### Patch Changes
+
+- af1fdf7: Update oxfmt to 0.48.0
+
 ## 0.3.5
 
 ### Patch Changes
