@@ -8640,6 +8640,7 @@ Backward pagination arguments
   /**
    * Disallow usage of `z.string().uuid()` in favor of the dedicated `z.uuid()` schema
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-string-schema-with-uuid.md
+   * @deprecated
    */
   'zod/no-string-schema-with-uuid'?: Linter.RuleEntry<[]>
   /**
@@ -8677,6 +8678,11 @@ Backward pagination arguments
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-string-schema-with-trim.md
    */
   'zod/prefer-string-schema-with-trim'?: Linter.RuleEntry<[]>
+  /**
+   * Prefer top-level string format schemas over deprecated `z.string().<format>()` methods
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-top-level-string-formats.md
+   */
+  'zod/prefer-top-level-string-formats'?: Linter.RuleEntry<ZodPreferTopLevelStringFormats>
   /**
    * Enforce `.trim()` is called before string length checks to ensure accurate validation
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-trim-before-string-length-checks.md
@@ -16115,6 +16121,11 @@ type ZodConsistentSchemaVarName = []|[{
 type ZodNoOptionalAndDefaultTogether = []|[{
   
   preferredMethod?: ("none" | "default" | "optional")
+}]
+// ----- zod/prefer-top-level-string-formats -----
+type ZodPreferTopLevelStringFormats = []|[{
+  
+  ignore?: ("base64" | "base64url" | "cidrv4" | "cidrv6" | "cuid" | "cuid2" | "date" | "datetime" | "duration" | "e164" | "email" | "emoji" | "guid" | "ipv4" | "ipv6" | "jwt" | "ksuid" | "nanoid" | "time" | "ulid" | "url" | "uuid" | "uuidv4" | "uuidv6" | "uuidv7" | "xid")[]
 }]
 // ----- zod/schema-error-property-style -----
 type ZodSchemaErrorPropertyStyle = []|[{
