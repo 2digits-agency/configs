@@ -39,33 +39,33 @@ describe(enabled, () => {
 
 describe(extractConfig, () => {
   it('returns empty object for true', () => {
-    expect(extractConfig(true)).toEqual({});
+    expect(extractConfig(true)).toStrictEqual({});
   });
 
   it('returns empty object for false', () => {
-    expect(extractConfig(false)).toEqual({});
+    expect(extractConfig(false)).toStrictEqual({});
   });
 
   it('returns empty object for undefined', () => {
-    expect(extractConfig<unknown>(undefined)).toEqual({});
+    expect(extractConfig<unknown>(undefined)).toStrictEqual({});
   });
 
   it('strips enable property from object', () => {
-    expect(extractConfig({ enable: true, foo: 'bar' })).toEqual({ foo: 'bar' });
-    expect(extractConfig({ enable: false, foo: 'bar' })).toEqual({ foo: 'bar' });
+    expect(extractConfig({ enable: true, foo: 'bar' })).toStrictEqual({ foo: 'bar' });
+    expect(extractConfig({ enable: false, foo: 'bar' })).toStrictEqual({ foo: 'bar' });
   });
 
   it('returns object as-is when no enable property', () => {
-    expect(extractConfig({ foo: 'bar', baz: 123 })).toEqual({ foo: 'bar', baz: 123 });
+    expect(extractConfig({ foo: 'bar', baz: 123 })).toStrictEqual({ foo: 'bar', baz: 123 });
   });
 
   it('handles empty object', () => {
-    expect(extractConfig({})).toEqual({});
+    expect(extractConfig({})).toStrictEqual({});
   });
 
   it('handles nested objects', () => {
     const input = { enable: true, nested: { deep: 'value' } };
 
-    expect(extractConfig(input)).toEqual({ nested: { deep: 'value' } });
+    expect(extractConfig(input)).toStrictEqual({ nested: { deep: 'value' } });
   });
 });

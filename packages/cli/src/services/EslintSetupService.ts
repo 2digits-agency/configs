@@ -342,7 +342,7 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()('Es
       const root = yield* pm.resolveRoot();
       const packageJson = yield* pm.readPackageJson({ id: root });
 
-      packageJson.scripts = packageJson.scripts ?? {};
+      packageJson.scripts ??= {};
 
       if (!packageJson.scripts.lint) {
         packageJson.scripts.lint = isMonorepo ? 'turbo run lint lint:root' : 'eslint .';

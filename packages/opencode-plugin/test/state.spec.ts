@@ -75,7 +75,7 @@ describe(createSessionState, () => {
     state.recordGenerationToolCall(generation.generation.spanID, 'bash');
     state.recordGenerationToolCall(generation.generation.spanID, 'read');
 
-    expect(state.getGenerationToolProperties(generation.generation.spanID)).toEqual({
+    expect(state.getGenerationToolProperties(generation.generation.spanID)).toStrictEqual({
       toolsCalled: ['bash', 'read'],
       toolCallCount: 2,
     });
@@ -135,6 +135,6 @@ describe(createSessionState, () => {
 
     expect(state.getTraceState('session-1')).toBeUndefined();
     expect(state.getActiveMessage('session-1')).toBeUndefined();
-    expect(state.getTraceSessionIDs()).toEqual([]);
+    expect(state.getTraceSessionIDs()).toStrictEqual([]);
   });
 });
