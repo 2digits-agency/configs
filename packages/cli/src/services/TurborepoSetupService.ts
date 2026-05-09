@@ -214,7 +214,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
       const root = yield* pm.resolveRoot();
       const packageJson = yield* pm.readPackageJson({ id: root });
 
-      packageJson.scripts = packageJson.scripts ?? {};
+      packageJson.scripts ??= {};
 
       let updated = false;
 

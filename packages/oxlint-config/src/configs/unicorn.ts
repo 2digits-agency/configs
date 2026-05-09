@@ -40,6 +40,7 @@ export const unicornConfig = defineTypedConfig({
     'unicorn/no-length-as-slice-end': 'error',
     'unicorn/no-lonely-if': 'error',
     'unicorn/no-magic-array-flat-depth': 'error',
+    'unicorn/no-negated-condition': 'error',
     'unicorn/no-negation-in-equality-check': 'error',
     'unicorn/no-nested-ternary': undefined,
     'unicorn/no-new-array': 'error',

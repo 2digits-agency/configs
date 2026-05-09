@@ -34,7 +34,6 @@
   "scripts": {
     "build": "vp pack --minify",
     "dev": "vp pack --watch",
-    "rules:check": "tsx ./scripts/check-rules.ts",
     "types": "tsgo --noEmit"
   },
   "dependencies": {
@@ -52,7 +51,6 @@
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
     "publint": "catalog:",
-    "tsx": "catalog:",
     "typescript": "catalog:",
     "vite-plus": "catalog:"
   },

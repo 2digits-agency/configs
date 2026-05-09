@@ -30,7 +30,7 @@ describe(redactSensitive, () => {
 
     value.self = value;
 
-    expect(redactSensitive(value, new WeakSet<object>(), 0)).toEqual({
+    expect(redactSensitive(value, new WeakSet<object>(), 0)).toStrictEqual({
       token: '[REDACTED]',
       nested: { apiKey: '[REDACTED]', keep: 'ok' },
       self: '[Circular]',
@@ -53,9 +53,9 @@ describe(parseNumber, () => {
 
 describe(parseCustomProperties, () => {
   it('returns parsed records and ignores invalid values', () => {
-    expect(parseCustomProperties('{"foo":"bar"}')).toEqual({ foo: 'bar' });
-    expect(parseCustomProperties('{')).toEqual({});
-    expect(parseCustomProperties('[]')).toEqual({});
+    expect(parseCustomProperties('{"foo":"bar"}')).toStrictEqual({ foo: 'bar' });
+    expect(parseCustomProperties('{')).toStrictEqual({});
+    expect(parseCustomProperties('[]')).toStrictEqual({});
   });
 });
 
@@ -108,7 +108,7 @@ describe('message builders', () => {
   });
 
   it('builds user and assistant messages when privacy mode is off', () => {
-    expect(buildInputMessages('hello', false)).toEqual([{ role: 'user', content: 'hello' }]);
-    expect(buildOutputChoices('hi', undefined, false)).toEqual([{ role: 'assistant', content: 'hi' }]);
+    expect(buildInputMessages('hello', false)).toStrictEqual([{ role: 'user', content: 'hello' }]);
+    expect(buildOutputChoices('hi', undefined, false)).toStrictEqual([{ role: 'assistant', content: 'hi' }]);
   });
 });

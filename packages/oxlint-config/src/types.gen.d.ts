@@ -247,6 +247,17 @@ export interface RuleOptions {
 'eslint/init-declarations'?: DummyRule;
 
 /**
+ * Logical assignment operators
+ *
+ * plugin: Eslint
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/logical-assignment-operators.html
+ */
+'eslint/logical-assignment-operators'?: DummyRule;
+
+/**
  * Max classes per file
  *
  * plugin: Eslint
@@ -1182,6 +1193,17 @@ export interface RuleOptions {
 'eslint/no-restricted-imports'?: DummyRule;
 
 /**
+ * No restricted properties
+ *
+ * plugin: Eslint
+ * category: Restriction
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-restricted-properties.html
+ */
+'eslint/no-restricted-properties'?: DummyRule;
+
+/**
  * No return assign
  *
  * plugin: Eslint
@@ -1818,6 +1840,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-await.html
  */
 'eslint/require-await'?: DummyRule;
+
+/**
+ * Require unicode regexp
+ *
+ * plugin: Eslint
+ * category: Pedantic
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-unicode-regexp.html
+ */
+'eslint/require-unicode-regexp'?: DummyRule;
 
 /**
  * Require yield
@@ -3303,6 +3336,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/img-redundant-alt.html
  */
 'jsx_a11y/img-redundant-alt'?: DummyRule;
+
+/**
+ * Interactive supports focus
+ *
+ * plugin: Jsx_a11y
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/interactive-supports-focus.html
+ */
+'jsx_a11y/interactive-supports-focus'?: DummyRule;
 
 /**
  * Label has associated control
@@ -6539,6 +6583,17 @@ export interface RuleOptions {
 'unicorn/no-magic-array-flat-depth'?: DummyRule;
 
 /**
+ * No negated condition
+ *
+ * plugin: Unicorn
+ * category: Pedantic
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-negated-condition.html
+ */
+'unicorn/no-negated-condition'?: DummyRule;
+
+/**
  * No negation in equality check
  *
  * plugin: Unicorn
@@ -7804,6 +7859,72 @@ export interface RuleOptions {
 'vitest/no-mocks-import'?: DummyRule;
 
 /**
+ * No restricted matchers
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-restricted-matchers.html
+ */
+'vitest/no-restricted-matchers'?: DummyRule;
+
+/**
+ * No restricted vi methods
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-restricted-vi-methods.html
+ */
+'vitest/no-restricted-vi-methods'?: DummyRule;
+
+/**
+ * No standalone expect
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-standalone-expect.html
+ */
+'vitest/no-standalone-expect'?: DummyRule;
+
+/**
+ * No test prefixes
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-test-prefixes.html
+ */
+'vitest/no-test-prefixes'?: DummyRule;
+
+/**
+ * No test return statement
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-test-return-statement.html
+ */
+'vitest/no-test-return-statement'?: DummyRule;
+
+/**
+ * No unneeded async expect function
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-unneeded-async-expect-function.html
+ */
+'vitest/no-unneeded-async-expect-function'?: DummyRule;
+
+/**
  * Prefer called exactly once with
  *
  * plugin: Vitest
@@ -7837,6 +7958,28 @@ export interface RuleOptions {
 'vitest/prefer-called-times'?: DummyRule;
 
 /**
+ * Prefer called with
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-called-with.html
+ */
+'vitest/prefer-called-with'?: DummyRule;
+
+/**
+ * Prefer comparison matcher
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-comparison-matcher.html
+ */
+'vitest/prefer-comparison-matcher'?: DummyRule;
+
+/**
  * Prefer describe function title
  *
  * plugin: Vitest
@@ -7846,6 +7989,28 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-describe-function-title.html
  */
 'vitest/prefer-describe-function-title'?: DummyRule;
+
+/**
+ * Prefer each
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-each.html
+ */
+'vitest/prefer-each'?: DummyRule;
+
+/**
+ * Prefer equality matcher
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-equality-matcher.html
+ */
+'vitest/prefer-equality-matcher'?: DummyRule;
 
 /**
  * Prefer expect assertions
@@ -7859,6 +8024,17 @@ export interface RuleOptions {
 'vitest/prefer-expect-assertions'?: DummyRule;
 
 /**
+ * Prefer expect resolves
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-expect-resolves.html
+ */
+'vitest/prefer-expect-resolves'?: DummyRule;
+
+/**
  * Prefer expect type of
  *
  * plugin: Vitest
@@ -7868,6 +8044,28 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-expect-type-of.html
  */
 'vitest/prefer-expect-type-of'?: DummyRule;
+
+/**
+ * Prefer hooks in order
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-hooks-in-order.html
+ */
+'vitest/prefer-hooks-in-order'?: DummyRule;
+
+/**
+ * Prefer hooks on top
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-hooks-on-top.html
+ */
+'vitest/prefer-hooks-on-top'?: DummyRule;
 
 /**
  * Prefer import in mock
@@ -7892,6 +8090,61 @@ export interface RuleOptions {
 'vitest/prefer-importing-vitest-globals'?: DummyRule;
 
 /**
+ * Prefer lowercase title
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-lowercase-title.html
+ */
+'vitest/prefer-lowercase-title'?: DummyRule;
+
+/**
+ * Prefer mock promise shorthand
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-mock-promise-shorthand.html
+ */
+'vitest/prefer-mock-promise-shorthand'?: DummyRule;
+
+/**
+ * Prefer mock return shorthand
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-mock-return-shorthand.html
+ */
+'vitest/prefer-mock-return-shorthand'?: DummyRule;
+
+/**
+ * Prefer snapshot hint
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-snapshot-hint.html
+ */
+'vitest/prefer-snapshot-hint'?: DummyRule;
+
+/**
+ * Prefer spy on
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-spy-on.html
+ */
+'vitest/prefer-spy-on'?: DummyRule;
+
+/**
  * Prefer strict boolean matchers
  *
  * plugin: Vitest
@@ -7901,6 +8154,28 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-strict-boolean-matchers.html
  */
 'vitest/prefer-strict-boolean-matchers'?: DummyRule;
+
+/**
+ * Prefer strict equal
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-strict-equal.html
+ */
+'vitest/prefer-strict-equal'?: DummyRule;
+
+/**
+ * Prefer to be
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-be.html
+ */
+'vitest/prefer-to-be'?: DummyRule;
 
 /**
  * Prefer to be falsy
@@ -7947,6 +8222,28 @@ export interface RuleOptions {
 'vitest/prefer-to-contain'?: DummyRule;
 
 /**
+ * Prefer to have been called times
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-have-been-called-times.html
+ */
+'vitest/prefer-to-have-been-called-times'?: DummyRule;
+
+/**
+ * Prefer to have length
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-have-length.html
+ */
+'vitest/prefer-to-have-length'?: DummyRule;
+
+/**
  * Prefer todo
  *
  * plugin: Vitest
@@ -7967,6 +8264,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-awaited-expect-poll.html
  */
 'vitest/require-awaited-expect-poll'?: DummyRule;
+
+/**
+ * Require hook
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-hook.html
+ */
+'vitest/require-hook'?: DummyRule;
 
 /**
  * Require local test context for concurrent snapshots
@@ -8002,6 +8310,17 @@ export interface RuleOptions {
 'vitest/require-test-timeout'?: DummyRule;
 
 /**
+ * Require to throw message
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-to-throw-message.html
+ */
+'vitest/require-to-throw-message'?: DummyRule;
+
+/**
  * Require top level describe
  *
  * plugin: Vitest
@@ -8013,6 +8332,17 @@ export interface RuleOptions {
 'vitest/require-top-level-describe'?: DummyRule;
 
 /**
+ * Valid describe callback
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-describe-callback.html
+ */
+'vitest/valid-describe-callback'?: DummyRule;
+
+/**
  * Valid expect
  *
  * plugin: Vitest
@@ -8022,6 +8352,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-expect.html
  */
 'vitest/valid-expect'?: DummyRule;
+
+/**
+ * Valid expect in promise
+ *
+ * plugin: Vitest
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-expect-in-promise.html
+ */
+'vitest/valid-expect-in-promise'?: DummyRule;
 
 /**
  * Valid title
@@ -8145,6 +8486,17 @@ export interface RuleOptions {
 'vue/no-deprecated-events-api'?: DummyRule;
 
 /**
+ * No deprecated model definition
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-model-definition.html
+ */
+'vue/no-deprecated-model-definition'?: DummyRule;
+
+/**
  * No deprecated vue config keycodes
  *
  * plugin: Vue
@@ -8253,6 +8605,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/require-typed-ref.html
  */
 'vue/require-typed-ref'?: DummyRule;
+
+/**
+ * Return in computed property
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/return-in-computed-property.html
+ */
+'vue/return-in-computed-property'?: DummyRule;
 
 /**
  * Valid define emits

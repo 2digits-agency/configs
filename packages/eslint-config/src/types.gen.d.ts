@@ -8230,7 +8230,7 @@ Backward pagination arguments
    */
   'vitest/prefer-expect-resolves'?: Linter.RuleEntry<[]>
   /**
-   * enforce using `expectTypeOf` instead of `expect(typeof ...)`
+   * enforce using `expect(...).toBeTypeOf(...)` instead of `expect(typeof ...).toBe(...)`
    * @see https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-type-of.md
    */
   'vitest/prefer-expect-type-of'?: Linter.RuleEntry<[]>
@@ -8564,149 +8564,143 @@ Backward pagination arguments
   'yoda'?: Linter.RuleEntry<Yoda>
   /**
    * Enforce consistent Zod array style
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/array-style.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/array-style.md
    */
   'zod/array-style'?: Linter.RuleEntry<ZodArrayStyle>
   /**
    * Enforce a consistent import style for Zod
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/consistent-import.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/consistent-import.md
    */
   'zod/consistent-import'?: Linter.RuleEntry<ZodConsistentImport>
   /**
    * Enforce consistent source from Zod imports
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/consistent-import-source.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/consistent-import-source.md
    */
   'zod/consistent-import-source'?: Linter.RuleEntry<ZodConsistentImportSource>
   /**
    * Enforce consistent usage of Zod schema methods
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/consistent-object-schema-type.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/consistent-object-schema-type.md
    */
   'zod/consistent-object-schema-type'?: Linter.RuleEntry<ZodConsistentObjectSchemaType>
   /**
    * Enforce consistent use of z.infer or z.output for schema type inference
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/consistent-schema-output-type-style.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/consistent-schema-output-type-style.md
    */
   'zod/consistent-schema-output-type-style'?: Linter.RuleEntry<ZodConsistentSchemaOutputTypeStyle>
   /**
    * Enforce a consistent naming convention for Zod schema variables
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/consistent-schema-var-name.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/consistent-schema-var-name.md
    */
   'zod/consistent-schema-var-name'?: Linter.RuleEntry<ZodConsistentSchemaVarName>
   /**
    * Disallow usage of `z.any()` in Zod schemas
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-any-schema.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-any-schema.md
    */
   'zod/no-any-schema'?: Linter.RuleEntry<[]>
   /**
    * Disallow usage of `z.custom()` without arguments
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-empty-custom-schema.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-empty-custom-schema.md
    */
   'zod/no-empty-custom-schema'?: Linter.RuleEntry<[]>
   /**
    * Disallow deprecated `z.number().finite()`. In Zod 4+ number schemas do not allow infinite values by default, so it is a no-op.
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-number-schema-with-finite.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-number-schema-with-finite.md
    */
   'zod/no-number-schema-with-finite'?: Linter.RuleEntry<[]>
   /**
    * Disallow usage of `z.number().int()` as it is considered legacy
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-number-schema-with-int.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-number-schema-with-int.md
    */
   'zod/no-number-schema-with-int'?: Linter.RuleEntry<[]>
   /**
    * Disallow using deprecated `isFinite` on a Zod number schema; in v4+ it is always `true`.
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-number-schema-with-is-finite.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-number-schema-with-is-finite.md
    */
   'zod/no-number-schema-with-is-finite'?: Linter.RuleEntry<[]>
   /**
    * Disallow using deprecated `isInt` on a Zod number schema; check the `format` property instead.
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-number-schema-with-is-int.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-number-schema-with-is-int.md
    */
   'zod/no-number-schema-with-is-int'?: Linter.RuleEntry<[]>
   /**
    * Disallow deprecated `z.number().safe()`. Use `z.int()`; `.safe()` is now identical to `.int()`.
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-number-schema-with-safe.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-number-schema-with-safe.md
    */
   'zod/no-number-schema-with-safe'?: Linter.RuleEntry<[]>
   /**
    * Disallow deprecated `z.number().step()`. Use `.multipleOf()` instead.
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-number-schema-with-step.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-number-schema-with-step.md
    */
   'zod/no-number-schema-with-step'?: Linter.RuleEntry<[]>
   /**
    * Disallow using both `.optional()` and `.default()` on the same Zod schema
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-optional-and-default-together.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-optional-and-default-together.md
    */
   'zod/no-optional-and-default-together'?: Linter.RuleEntry<ZodNoOptionalAndDefaultTogether>
   /**
    * Disallow usage of `z.string().uuid()` in favor of the dedicated `z.uuid()` schema
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-string-schema-with-uuid.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-string-schema-with-uuid.md
+   * @deprecated
    */
   'zod/no-string-schema-with-uuid'?: Linter.RuleEntry<[]>
   /**
    * Disallow throwing errors directly inside Zod refine callbacks
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-throw-in-refine.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-throw-in-refine.md
    */
   'zod/no-throw-in-refine'?: Linter.RuleEntry<[]>
   /**
    * Disallow transforms in z.record() key schemas, which can cause silent key mutations and data loss through key collisions
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-transform-in-record-key.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-transform-in-record-key.md
    */
   'zod/no-transform-in-record-key'?: Linter.RuleEntry<[]>
   /**
    * Disallow usage of `z.unknown()` in Zod schemas
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/no-unknown-schema.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-unknown-schema.md
    */
   'zod/no-unknown-schema'?: Linter.RuleEntry<[]>
   /**
    * Prefer `z.enum()` over `z.union()` when all members are string literals.
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/prefer-enum-over-literal-union.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-enum-over-literal-union.md
    */
   'zod/prefer-enum-over-literal-union'?: Linter.RuleEntry<[]>
   /**
    * Enforce usage of `.meta()` over `.describe()`
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/prefer-meta.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-meta.md
    */
   'zod/prefer-meta'?: Linter.RuleEntry<[]>
   /**
    * Enforce `.meta()` as last method
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/prefer-meta-last.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-meta-last.md
    */
   'zod/prefer-meta-last'?: Linter.RuleEntry<[]>
   /**
-   * Enforce importing zod as a namespace import (`import * as z from 'zod'`)
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/prefer-namespace-import.md
-   * @deprecated
-   */
-  'zod/prefer-namespace-import'?: Linter.RuleEntry<[]>
-  /**
    * Enforce `z.string().trim()` to prevent accidental leading/trailing whitespace
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/prefer-string-schema-with-trim.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-string-schema-with-trim.md
    */
   'zod/prefer-string-schema-with-trim'?: Linter.RuleEntry<[]>
   /**
+   * Prefer top-level string format schemas over deprecated `z.string().<format>()` methods
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-top-level-string-formats.md
+   */
+  'zod/prefer-top-level-string-formats'?: Linter.RuleEntry<ZodPreferTopLevelStringFormats>
+  /**
    * Enforce `.trim()` is called before string length checks to ensure accurate validation
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/prefer-trim-before-string-length-checks.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-trim-before-string-length-checks.md
    */
   'zod/prefer-trim-before-string-length-checks'?: Linter.RuleEntry<[]>
   /**
    * Require type parameter on `.brand()` functions
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/require-brand-type-parameter.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/require-brand-type-parameter.md
    */
   'zod/require-brand-type-parameter'?: Linter.RuleEntry<[]>
   /**
    * Enforce that custom refinements include an error message
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/require-error-message.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/require-error-message.md
    */
   'zod/require-error-message'?: Linter.RuleEntry<[]>
   /**
-   * Require schema suffix when declaring a Zod schema
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/require-schema-suffix.md
-   * @deprecated
-   */
-  'zod/require-schema-suffix'?: Linter.RuleEntry<ZodRequireSchemaSuffix>
-  /**
    * Enforce consistent style for error messages in Zod schema validation (using ESQuery patterns)
-   * @see https://github.com/marcalexiei/eslint-plugin-zod/blob/v3.12.1/docs/rules/schema-error-property-style.md
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/schema-error-property-style.md
    */
   'zod/schema-error-property-style'?: Linter.RuleEntry<ZodSchemaErrorPropertyStyle>
 }
@@ -16104,7 +16098,7 @@ type ZodConsistentImport = []|[{
 // ----- zod/consistent-import-source -----
 type ZodConsistentImportSource = []|[{
   
-  sources?: [("zod" | "zod/mini" | "zod/v4" | "zod/v4-mini" | "zod/v3"), ...(("zod" | "zod/mini" | "zod/v4" | "zod/v4-mini" | "zod/v3"))[]]
+  sources?: [("zod" | "zod/v4" | "zod/v3"), ...(("zod" | "zod/v4" | "zod/v3"))[]]
 }]
 // ----- zod/consistent-object-schema-type -----
 type ZodConsistentObjectSchemaType = []|[{
@@ -16128,10 +16122,10 @@ type ZodNoOptionalAndDefaultTogether = []|[{
   
   preferredMethod?: ("none" | "default" | "optional")
 }]
-// ----- zod/require-schema-suffix -----
-type ZodRequireSchemaSuffix = []|[{
+// ----- zod/prefer-top-level-string-formats -----
+type ZodPreferTopLevelStringFormats = []|[{
   
-  suffix?: string
+  ignore?: ("base64" | "base64url" | "cidrv4" | "cidrv6" | "cuid" | "cuid2" | "date" | "datetime" | "duration" | "e164" | "email" | "emoji" | "guid" | "ipv4" | "ipv6" | "jwt" | "ksuid" | "nanoid" | "time" | "ulid" | "url" | "uuid" | "uuidv4" | "uuidv6" | "uuidv7" | "xid")[]
 }]
 // ----- zod/schema-error-property-style -----
 type ZodSchemaErrorPropertyStyle = []|[{
