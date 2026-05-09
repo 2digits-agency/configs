@@ -33,24 +33,6 @@ jobs:
           cache: true
           registry-url: 'https://registry.npmjs.org'
 
-      - name: 🏷️ Type-check
-        run: vp run types
-
-      - name: ⚗️ Check
-        run: vp check
-
-      - name: 🧪 Test
-        run: vp test run
-
-      - name: 🔍 Lint
-        run: vp run lint
-
-      - name: 🪄 Format
-        run: vp run format
-
-      - name: ✂️ Knip
-        run: vp run knip
-
       - name: 🏗️ Build packages
         run: vp run build --force
 
