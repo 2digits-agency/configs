@@ -1,5 +1,13 @@
 # @2digits/cli
 
+## 2.0.0
+
+### Major Changes
+
+- af1fdf7: Rename CLI binary from `2d` to `cli`
+
+  - Changed package binary name from `2d` to `cli`
+
 ## 1.2.54
 
 ### Patch Changes
