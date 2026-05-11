@@ -394,7 +394,7 @@ export default twoDigits({
 
           const written = yield* fs.readFileString(configPath);
 
-          assertTrue(written.includes('@2digits/eslint-config'));
+          strictEqual(written, content);
         }
       }).pipe(Effect.provide(testLayer)),
     );

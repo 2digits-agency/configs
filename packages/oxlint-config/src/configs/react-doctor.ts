@@ -1,12 +1,8 @@
-import { createRequire } from 'node:module';
-
 import { defineConfig } from 'oxlint';
-
-const esmRequire = createRequire(import.meta.url);
 
 export const reactDoctorConfig = defineConfig({
   options: { typeAware: true },
-  jsPlugins: [{ name: 'react-doctor', specifier: esmRequire.resolve('react-doctor/oxlint-plugin') }],
+  jsPlugins: [{ name: 'react-doctor', specifier: import.meta.resolve('react-doctor/oxlint-plugin') }],
   rules: {
     'react-doctor/advanced-event-handler-refs': 'error',
     'react-doctor/async-await-in-loop': 'error',

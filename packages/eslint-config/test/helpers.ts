@@ -99,6 +99,7 @@ export async function runAutofixFixture({
   options: Record<string, boolean | undefined>;
   sourceDir: string;
 }): Promise<AutofixFixtureResult> {
+  // eslint-disable-next-line react-doctor/async-parallel
   await fs.rm(cwd, { recursive: true, force: true });
   await fs.cp(sourceDir, cwd, {
     recursive: true,

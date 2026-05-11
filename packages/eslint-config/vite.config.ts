@@ -30,7 +30,7 @@ export default defineConfig({
           ...(Object.values(await import('./src/configs')).map((config) => config()) as []),
         );
 
-        const configNames = configs.map((i) => i.name).filter(Boolean) as Array<string>;
+        const configNames = configs.flatMap((config) => (config.name ? [config.name] : []));
 
         let dts = await flatConfigsToRulesDTS(configs, {
           includeAugmentation: false,

@@ -90,7 +90,15 @@ export class EslintDetectionService extends Effect.Service<EslintDetectionServic
         { concurrency: 'unbounded' },
       );
 
-      return checks.filter((check) => check.exists).map((check) => path.join(targetDir, check.file));
+      const configPaths = new Array<string>();
+
+      for (const check of checks) {
+        if (check.exists) {
+          configPaths.push(path.join(targetDir, check.file));
+        }
+      }
+
+      return configPaths;
     });
 
     /**

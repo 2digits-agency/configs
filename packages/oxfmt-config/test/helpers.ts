@@ -29,11 +29,14 @@ export function snapshotJson(value: unknown): string {
 }
 
 export async function formatFixture(source: string, fixture: FixtureCase): Promise<FormatterOutputs> {
-  const prettier = await formatPrettier(source, {
-    ...prettierConfig,
-    filepath: path.join(fixture.name, fixture.fileName),
-  });
-  const result = await formatOxfmt(path.join(fixture.name, fixture.fileName), source, twoDigits);
+  const fixturePath = path.join(fixture.name, fixture.fileName);
+  const [prettier, result] = await Promise.all([
+    formatPrettier(source, {
+      ...prettierConfig,
+      filepath: fixturePath,
+    }),
+    formatOxfmt(fixturePath, source, twoDigits),
+  ]);
 
   expect(result.errors).toStrictEqual([]);
 

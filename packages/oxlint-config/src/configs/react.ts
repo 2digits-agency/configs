@@ -1,10 +1,6 @@
-import { createRequire } from 'node:module';
-
 import type { DummyRule } from 'oxlint';
 
 import { defineTypedConfig } from '../types';
-
-const esmRequire = createRequire(import.meta.url);
 
 export const reactConfig = defineTypedConfig({
   settings: {
@@ -17,11 +13,11 @@ export const reactConfig = defineTypedConfig({
   jsPlugins: [
     {
       name: 'react-compiler',
-      specifier: esmRequire.resolve('eslint-plugin-react-compiler'),
+      specifier: import.meta.resolve('eslint-plugin-react-compiler'),
     },
     {
       name: 'stylistic',
-      specifier: esmRequire.resolve('@stylistic/eslint-plugin'),
+      specifier: import.meta.resolve('@stylistic/eslint-plugin'),
     },
   ],
   rules: {

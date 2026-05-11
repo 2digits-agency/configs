@@ -189,11 +189,15 @@ export function getErrorMessage(error: unknown): string | undefined {
 }
 
 export function getPrompt(parts: Array<PromptPart>): string | undefined {
-  const prompt = parts
-    .filter((part) => part.type === 'text' && !part.synthetic && typeof part.text === 'string')
-    .map((part) => part.text ?? '')
-    .join('\n')
-    .trim();
+  const textParts = new Array<string>();
+
+  for (const part of parts) {
+    if (part.type === 'text' && !part.synthetic && typeof part.text === 'string') {
+      textParts.push(part.text);
+    }
+  }
+
+  const prompt = textParts.join('\n').trim();
 
   return prompt.length > 0 ? prompt : undefined;
 }

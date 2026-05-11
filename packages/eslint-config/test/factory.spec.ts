@@ -1,3 +1,4 @@
+// oxlint-disable vitest/no-conditional-in-test
 import { fileURLToPath } from 'node:url';
 
 import { describe, it, vi } from 'vite-plus/test';
@@ -45,18 +46,19 @@ describe('factory', () => {
   it.for(factoryConfigPresets)('preset: $name', { timeout: 30_000 }, async ({ name, options }, { expect }) => {
     const config = await twoDigits(withDeterministicOptions(options, workspaceRoot));
     const serialized = serializeConfigs(config);
-    const configNames = serialized.map((entry) => entry.name).filter((name) => name !== undefined);
+    const configNames = serialized.flatMap((entry) => entry.name ?? []);
 
     expect(configNames).toContain('2digits:ignores');
     expect(configNames).toContain('2digits:typescript/setup');
 
     const optionalEntries = Object.entries(optionalConfigNames);
-    const enabledConfigNames = optionalEntries
-      .filter(([optionName]) => isOptionEnabled(options, optionName))
-      .map(([, configName]) => configName);
-    const disabledConfigNames = optionalEntries
-      .filter(([optionName]) => !isOptionEnabled(options, optionName))
-      .map(([, configName]) => configName);
+
+    const { disabled = [], enabled = [] } = Object.groupBy(optionalEntries, ([optionName]) =>
+      isOptionEnabled(options, optionName) ? 'enabled' : 'disabled',
+    );
+
+    const enabledConfigNames = enabled.map(([, configName]) => configName);
+    const disabledConfigNames = disabled.map(([, configName]) => configName);
 
     for (const configName of enabledConfigNames) {
       expect(configNames).toContain(configName);
