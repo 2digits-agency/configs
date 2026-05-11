@@ -11,7 +11,7 @@ export interface TypedOxlintOverride extends Omit<OxlintOverride, 'rules'> {
 }
 
 export interface TypedOxlintConfig extends Omit<OxlintConfig, 'extends' | 'overrides' | 'rules'> {
-  extends?: Array<TypedOxlintConfig>;
+  extends?: Array<TypedOxlintConfig | OxlintConfig>;
   overrides?: Array<TypedOxlintOverride>;
   rules?: Rules;
 }

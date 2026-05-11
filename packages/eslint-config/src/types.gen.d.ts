@@ -29,12 +29,12 @@ export interface RuleOptions {
    */
   'accessor-pairs'?: Linter.RuleEntry<AccessorPairs>
   /**
-   * Having line breaks styles to object, array and named imports
+   * Enforce consistent line breaks for chaining member access
    * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/consistent-chaining.md
    */
   'antfu/consistent-chaining'?: Linter.RuleEntry<AntfuConsistentChaining>
   /**
-   * Having line breaks styles to object, array and named imports
+   * Enforce consistent line breaks inside braces and parentheses
    * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/consistent-list-newline.md
    */
   'antfu/consistent-list-newline'?: Linter.RuleEntry<AntfuConsistentListNewline>
@@ -60,22 +60,22 @@ export interface RuleOptions {
   'antfu/indent-unindent'?: Linter.RuleEntry<AntfuIndentUnindent>
   /**
    * Prevent importing modules in `dist` folder
-   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-import-dist.test.ts
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-import-dist.md
    */
   'antfu/no-import-dist'?: Linter.RuleEntry<[]>
   /**
    * Prevent importing modules in `node_modules` folder by relative or absolute path
-   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-import-node-modules-by-path.test.ts
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-import-node-modules-by-path.md
    */
   'antfu/no-import-node-modules-by-path'?: Linter.RuleEntry<[]>
   /**
    * Prevent using top-level await
-   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-top-level-await.test.ts
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-top-level-await.md
    */
   'antfu/no-top-level-await'?: Linter.RuleEntry<[]>
   /**
    * Do not use `exports =`
-   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-ts-export-equal.test.ts
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-ts-export-equal.md
    */
   'antfu/no-ts-export-equal'?: Linter.RuleEntry<[]>
   /**
@@ -3129,6 +3129,901 @@ Backward pagination arguments
    * Surfaces diagnostics from React Forget
    */
   'react-compiler/react-compiler'?: Linter.RuleEntry<ReactCompilerReactCompiler>
+  /**
+   * Advanced Event Handler Refs
+   * @see https://react.doctor/rules/advanced-event-handler-refs
+   */
+  'react-doctor/advanced-event-handler-refs'?: Linter.RuleEntry<[]>
+  /**
+   * Async Await In Loop
+   * @see https://react.doctor/rules/async-await-in-loop
+   */
+  'react-doctor/async-await-in-loop'?: Linter.RuleEntry<[]>
+  /**
+   * Async Defer Await
+   * @see https://react.doctor/rules/async-defer-await
+   */
+  'react-doctor/async-defer-await'?: Linter.RuleEntry<[]>
+  /**
+   * Async Parallel
+   * @see https://react.doctor/rules/async-parallel
+   */
+  'react-doctor/async-parallel'?: Linter.RuleEntry<[]>
+  /**
+   * Client Localstorage No Version
+   * @see https://react.doctor/rules/client-localstorage-no-version
+   */
+  'react-doctor/client-localstorage-no-version'?: Linter.RuleEntry<[]>
+  /**
+   * Client Passive Event Listeners
+   * @see https://react.doctor/rules/client-passive-event-listeners
+   */
+  'react-doctor/client-passive-event-listeners'?: Linter.RuleEntry<[]>
+  /**
+   * Design No Bold Heading
+   * @see https://react.doctor/rules/design-no-bold-heading
+   */
+  'react-doctor/design-no-bold-heading'?: Linter.RuleEntry<[]>
+  /**
+   * Design No Default Tailwind Palette
+   * @see https://react.doctor/rules/design-no-default-tailwind-palette
+   */
+  'react-doctor/design-no-default-tailwind-palette'?: Linter.RuleEntry<[]>
+  /**
+   * Design No Em Dash In Jsx Text
+   * @see https://react.doctor/rules/design-no-em-dash-in-jsx-text
+   */
+  'react-doctor/design-no-em-dash-in-jsx-text'?: Linter.RuleEntry<[]>
+  /**
+   * Design No Redundant Padding Axes
+   * @see https://react.doctor/rules/design-no-redundant-padding-axes
+   */
+  'react-doctor/design-no-redundant-padding-axes'?: Linter.RuleEntry<[]>
+  /**
+   * Design No Redundant Size Axes
+   * @see https://react.doctor/rules/design-no-redundant-size-axes
+   */
+  'react-doctor/design-no-redundant-size-axes'?: Linter.RuleEntry<[]>
+  /**
+   * Design No Space On Flex Children
+   * @see https://react.doctor/rules/design-no-space-on-flex-children
+   */
+  'react-doctor/design-no-space-on-flex-children'?: Linter.RuleEntry<[]>
+  /**
+   * Design No Three Period Ellipsis
+   * @see https://react.doctor/rules/design-no-three-period-ellipsis
+   */
+  'react-doctor/design-no-three-period-ellipsis'?: Linter.RuleEntry<[]>
+  /**
+   * Design No Vague Button Label
+   * @see https://react.doctor/rules/design-no-vague-button-label
+   */
+  'react-doctor/design-no-vague-button-label'?: Linter.RuleEntry<[]>
+  /**
+   * Effect Needs Cleanup
+   * @see https://react.doctor/rules/effect-needs-cleanup
+   */
+  'react-doctor/effect-needs-cleanup'?: Linter.RuleEntry<[]>
+  /**
+   * Js Batch Dom Css
+   * @see https://react.doctor/rules/js-batch-dom-css
+   */
+  'react-doctor/js-batch-dom-css'?: Linter.RuleEntry<[]>
+  /**
+   * Js Cache Property Access
+   * @see https://react.doctor/rules/js-cache-property-access
+   */
+  'react-doctor/js-cache-property-access'?: Linter.RuleEntry<[]>
+  /**
+   * Js Cache Storage
+   * @see https://react.doctor/rules/js-cache-storage
+   */
+  'react-doctor/js-cache-storage'?: Linter.RuleEntry<[]>
+  /**
+   * Js Combine Iterations
+   * @see https://react.doctor/rules/js-combine-iterations
+   */
+  'react-doctor/js-combine-iterations'?: Linter.RuleEntry<[]>
+  /**
+   * Js Early Exit
+   * @see https://react.doctor/rules/js-early-exit
+   */
+  'react-doctor/js-early-exit'?: Linter.RuleEntry<[]>
+  /**
+   * Js Flatmap Filter
+   * @see https://react.doctor/rules/js-flatmap-filter
+   */
+  'react-doctor/js-flatmap-filter'?: Linter.RuleEntry<[]>
+  /**
+   * Js Hoist Intl
+   * @see https://react.doctor/rules/js-hoist-intl
+   */
+  'react-doctor/js-hoist-intl'?: Linter.RuleEntry<[]>
+  /**
+   * Js Hoist Regexp
+   * @see https://react.doctor/rules/js-hoist-regexp
+   */
+  'react-doctor/js-hoist-regexp'?: Linter.RuleEntry<[]>
+  /**
+   * Js Index Maps
+   * @see https://react.doctor/rules/js-index-maps
+   */
+  'react-doctor/js-index-maps'?: Linter.RuleEntry<[]>
+  /**
+   * Js Length Check First
+   * @see https://react.doctor/rules/js-length-check-first
+   */
+  'react-doctor/js-length-check-first'?: Linter.RuleEntry<[]>
+  /**
+   * Js Min Max Loop
+   * @see https://react.doctor/rules/js-min-max-loop
+   */
+  'react-doctor/js-min-max-loop'?: Linter.RuleEntry<[]>
+  /**
+   * Js Set Map Lookups
+   * @see https://react.doctor/rules/js-set-map-lookups
+   */
+  'react-doctor/js-set-map-lookups'?: Linter.RuleEntry<[]>
+  /**
+   * Js Tosorted Immutable
+   * @see https://react.doctor/rules/js-tosorted-immutable
+   */
+  'react-doctor/js-tosorted-immutable'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs Async Client Component
+   * @see https://react.doctor/rules/nextjs-async-client-component
+   */
+  'react-doctor/nextjs-async-client-component'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs Image Missing Sizes
+   * @see https://react.doctor/rules/nextjs-image-missing-sizes
+   */
+  'react-doctor/nextjs-image-missing-sizes'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs Inline Script Missing Id
+   * @see https://react.doctor/rules/nextjs-inline-script-missing-id
+   */
+  'react-doctor/nextjs-inline-script-missing-id'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs Missing Metadata
+   * @see https://react.doctor/rules/nextjs-missing-metadata
+   */
+  'react-doctor/nextjs-missing-metadata'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No A Element
+   * @see https://react.doctor/rules/nextjs-no-a-element
+   */
+  'react-doctor/nextjs-no-a-element'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Client Fetch For Server Data
+   * @see https://react.doctor/rules/nextjs-no-client-fetch-for-server-data
+   */
+  'react-doctor/nextjs-no-client-fetch-for-server-data'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Client Side Redirect
+   * @see https://react.doctor/rules/nextjs-no-client-side-redirect
+   */
+  'react-doctor/nextjs-no-client-side-redirect'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Css Link
+   * @see https://react.doctor/rules/nextjs-no-css-link
+   */
+  'react-doctor/nextjs-no-css-link'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Font Link
+   * @see https://react.doctor/rules/nextjs-no-font-link
+   */
+  'react-doctor/nextjs-no-font-link'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Head Import
+   * @see https://react.doctor/rules/nextjs-no-head-import
+   */
+  'react-doctor/nextjs-no-head-import'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Img Element
+   * @see https://react.doctor/rules/nextjs-no-img-element
+   */
+  'react-doctor/nextjs-no-img-element'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Native Script
+   * @see https://react.doctor/rules/nextjs-no-native-script
+   */
+  'react-doctor/nextjs-no-native-script'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Polyfill Script
+   * @see https://react.doctor/rules/nextjs-no-polyfill-script
+   */
+  'react-doctor/nextjs-no-polyfill-script'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Redirect In Try Catch
+   * @see https://react.doctor/rules/nextjs-no-redirect-in-try-catch
+   */
+  'react-doctor/nextjs-no-redirect-in-try-catch'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Side Effect In Get Handler
+   * @see https://react.doctor/rules/nextjs-no-side-effect-in-get-handler
+   */
+  'react-doctor/nextjs-no-side-effect-in-get-handler'?: Linter.RuleEntry<[]>
+  /**
+   * Nextjs No Use Search Params Without Suspense
+   * @see https://react.doctor/rules/nextjs-no-use-search-params-without-suspense
+   */
+  'react-doctor/nextjs-no-use-search-params-without-suspense'?: Linter.RuleEntry<[]>
+  /**
+   * No Array Index As Key
+   * @see https://react.doctor/rules/no-array-index-as-key
+   */
+  'react-doctor/no-array-index-as-key'?: Linter.RuleEntry<[]>
+  /**
+   * No Barrel Import
+   * @see https://react.doctor/rules/no-barrel-import
+   */
+  'react-doctor/no-barrel-import'?: Linter.RuleEntry<[]>
+  /**
+   * No Cascading Set State
+   * @see https://react.doctor/rules/no-cascading-set-state
+   */
+  'react-doctor/no-cascading-set-state'?: Linter.RuleEntry<[]>
+  /**
+   * No Dark Mode Glow
+   * @see https://react.doctor/rules/no-dark-mode-glow
+   */
+  'react-doctor/no-dark-mode-glow'?: Linter.RuleEntry<[]>
+  /**
+   * No Default Props
+   * @see https://react.doctor/rules/no-default-props
+   */
+  'react-doctor/no-default-props'?: Linter.RuleEntry<[]>
+  /**
+   * No Derived State Effect
+   * @see https://react.doctor/rules/no-derived-state-effect
+   */
+  'react-doctor/no-derived-state-effect'?: Linter.RuleEntry<[]>
+  /**
+   * No Derived UseState
+   * @see https://react.doctor/rules/no-derived-useState
+   */
+  'react-doctor/no-derived-useState'?: Linter.RuleEntry<[]>
+  /**
+   * No Direct State Mutation
+   * @see https://react.doctor/rules/no-direct-state-mutation
+   */
+  'react-doctor/no-direct-state-mutation'?: Linter.RuleEntry<[]>
+  /**
+   * No Disabled Zoom
+   * @see https://react.doctor/rules/no-disabled-zoom
+   */
+  'react-doctor/no-disabled-zoom'?: Linter.RuleEntry<[]>
+  /**
+   * No Document Start View Transition
+   * @see https://react.doctor/rules/no-document-start-view-transition
+   */
+  'react-doctor/no-document-start-view-transition'?: Linter.RuleEntry<[]>
+  /**
+   * No Dynamic Import Path
+   * @see https://react.doctor/rules/no-dynamic-import-path
+   */
+  'react-doctor/no-dynamic-import-path'?: Linter.RuleEntry<[]>
+  /**
+   * No Effect Chain
+   * @see https://react.doctor/rules/no-effect-chain
+   */
+  'react-doctor/no-effect-chain'?: Linter.RuleEntry<[]>
+  /**
+   * No Effect Event Handler
+   * @see https://react.doctor/rules/no-effect-event-handler
+   */
+  'react-doctor/no-effect-event-handler'?: Linter.RuleEntry<[]>
+  /**
+   * No Effect Event In Deps
+   * @see https://react.doctor/rules/no-effect-event-in-deps
+   */
+  'react-doctor/no-effect-event-in-deps'?: Linter.RuleEntry<[]>
+  /**
+   * No Eval
+   * @see https://react.doctor/rules/no-eval
+   */
+  'react-doctor/no-eval'?: Linter.RuleEntry<[]>
+  /**
+   * No Event Trigger State
+   * @see https://react.doctor/rules/no-event-trigger-state
+   */
+  'react-doctor/no-event-trigger-state'?: Linter.RuleEntry<[]>
+  /**
+   * No Fetch In Effect
+   * @see https://react.doctor/rules/no-fetch-in-effect
+   */
+  'react-doctor/no-fetch-in-effect'?: Linter.RuleEntry<[]>
+  /**
+   * No Flush Sync
+   * @see https://react.doctor/rules/no-flush-sync
+   */
+  'react-doctor/no-flush-sync'?: Linter.RuleEntry<[]>
+  /**
+   * No Full Lodash Import
+   * @see https://react.doctor/rules/no-full-lodash-import
+   */
+  'react-doctor/no-full-lodash-import'?: Linter.RuleEntry<[]>
+  /**
+   * No Generic Handler Names
+   * @see https://react.doctor/rules/no-generic-handler-names
+   */
+  'react-doctor/no-generic-handler-names'?: Linter.RuleEntry<[]>
+  /**
+   * No Giant Component
+   * @see https://react.doctor/rules/no-giant-component
+   */
+  'react-doctor/no-giant-component'?: Linter.RuleEntry<[]>
+  /**
+   * No Global Css Variable Animation
+   * @see https://react.doctor/rules/no-global-css-variable-animation
+   */
+  'react-doctor/no-global-css-variable-animation'?: Linter.RuleEntry<[]>
+  /**
+   * No Gradient Text
+   * @see https://react.doctor/rules/no-gradient-text
+   */
+  'react-doctor/no-gradient-text'?: Linter.RuleEntry<[]>
+  /**
+   * No Gray On Colored Background
+   * @see https://react.doctor/rules/no-gray-on-colored-background
+   */
+  'react-doctor/no-gray-on-colored-background'?: Linter.RuleEntry<[]>
+  /**
+   * No Inline Bounce Easing
+   * @see https://react.doctor/rules/no-inline-bounce-easing
+   */
+  'react-doctor/no-inline-bounce-easing'?: Linter.RuleEntry<[]>
+  /**
+   * No Inline Exhaustive Style
+   * @see https://react.doctor/rules/no-inline-exhaustive-style
+   */
+  'react-doctor/no-inline-exhaustive-style'?: Linter.RuleEntry<[]>
+  /**
+   * No Inline Prop On Memo Component
+   * @see https://react.doctor/rules/no-inline-prop-on-memo-component
+   */
+  'react-doctor/no-inline-prop-on-memo-component'?: Linter.RuleEntry<[]>
+  /**
+   * No Justified Text
+   * @see https://react.doctor/rules/no-justified-text
+   */
+  'react-doctor/no-justified-text'?: Linter.RuleEntry<[]>
+  /**
+   * No Large Animated Blur
+   * @see https://react.doctor/rules/no-large-animated-blur
+   */
+  'react-doctor/no-large-animated-blur'?: Linter.RuleEntry<[]>
+  /**
+   * No Layout Property Animation
+   * @see https://react.doctor/rules/no-layout-property-animation
+   */
+  'react-doctor/no-layout-property-animation'?: Linter.RuleEntry<[]>
+  /**
+   * No Layout Transition Inline
+   * @see https://react.doctor/rules/no-layout-transition-inline
+   */
+  'react-doctor/no-layout-transition-inline'?: Linter.RuleEntry<[]>
+  /**
+   * No Legacy Class Lifecycles
+   * @see https://react.doctor/rules/no-legacy-class-lifecycles
+   */
+  'react-doctor/no-legacy-class-lifecycles'?: Linter.RuleEntry<[]>
+  /**
+   * No Legacy Context Api
+   * @see https://react.doctor/rules/no-legacy-context-api
+   */
+  'react-doctor/no-legacy-context-api'?: Linter.RuleEntry<[]>
+  /**
+   * No Long Transition Duration
+   * @see https://react.doctor/rules/no-long-transition-duration
+   */
+  'react-doctor/no-long-transition-duration'?: Linter.RuleEntry<[]>
+  /**
+   * No Many Boolean Props
+   * @see https://react.doctor/rules/no-many-boolean-props
+   */
+  'react-doctor/no-many-boolean-props'?: Linter.RuleEntry<[]>
+  /**
+   * No Mirror Prop Effect
+   * @see https://react.doctor/rules/no-mirror-prop-effect
+   */
+  'react-doctor/no-mirror-prop-effect'?: Linter.RuleEntry<[]>
+  /**
+   * No Moment
+   * @see https://react.doctor/rules/no-moment
+   */
+  'react-doctor/no-moment'?: Linter.RuleEntry<[]>
+  /**
+   * No Mutable In Deps
+   * @see https://react.doctor/rules/no-mutable-in-deps
+   */
+  'react-doctor/no-mutable-in-deps'?: Linter.RuleEntry<[]>
+  /**
+   * No Nested Component Definition
+   * @see https://react.doctor/rules/no-nested-component-definition
+   */
+  'react-doctor/no-nested-component-definition'?: Linter.RuleEntry<[]>
+  /**
+   * No Outline None
+   * @see https://react.doctor/rules/no-outline-none
+   */
+  'react-doctor/no-outline-none'?: Linter.RuleEntry<[]>
+  /**
+   * No Permanent Will Change
+   * @see https://react.doctor/rules/no-permanent-will-change
+   */
+  'react-doctor/no-permanent-will-change'?: Linter.RuleEntry<[]>
+  /**
+   * No Polymorphic Children
+   * @see https://react.doctor/rules/no-polymorphic-children
+   */
+  'react-doctor/no-polymorphic-children'?: Linter.RuleEntry<[]>
+  /**
+   * No Prevent Default
+   * @see https://react.doctor/rules/no-prevent-default
+   */
+  'react-doctor/no-prevent-default'?: Linter.RuleEntry<[]>
+  /**
+   * No Prop Callback In Effect
+   * @see https://react.doctor/rules/no-prop-callback-in-effect
+   */
+  'react-doctor/no-prop-callback-in-effect'?: Linter.RuleEntry<[]>
+  /**
+   * No Pure Black Background
+   * @see https://react.doctor/rules/no-pure-black-background
+   */
+  'react-doctor/no-pure-black-background'?: Linter.RuleEntry<[]>
+  /**
+   * No React Dom Deprecated Apis
+   * @see https://react.doctor/rules/no-react-dom-deprecated-apis
+   */
+  'react-doctor/no-react-dom-deprecated-apis'?: Linter.RuleEntry<[]>
+  /**
+   * No React19 Deprecated Apis
+   * @see https://react.doctor/rules/no-react19-deprecated-apis
+   */
+  'react-doctor/no-react19-deprecated-apis'?: Linter.RuleEntry<[]>
+  /**
+   * No Render In Render
+   * @see https://react.doctor/rules/no-render-in-render
+   */
+  'react-doctor/no-render-in-render'?: Linter.RuleEntry<[]>
+  /**
+   * No Render Prop Children
+   * @see https://react.doctor/rules/no-render-prop-children
+   */
+  'react-doctor/no-render-prop-children'?: Linter.RuleEntry<[]>
+  /**
+   * No Scale From Zero
+   * @see https://react.doctor/rules/no-scale-from-zero
+   */
+  'react-doctor/no-scale-from-zero'?: Linter.RuleEntry<[]>
+  /**
+   * No Secrets In Client Code
+   * @see https://react.doctor/rules/no-secrets-in-client-code
+   */
+  'react-doctor/no-secrets-in-client-code'?: Linter.RuleEntry<[]>
+  /**
+   * No Set State In Render
+   * @see https://react.doctor/rules/no-set-state-in-render
+   */
+  'react-doctor/no-set-state-in-render'?: Linter.RuleEntry<[]>
+  /**
+   * No Side Tab Border
+   * @see https://react.doctor/rules/no-side-tab-border
+   */
+  'react-doctor/no-side-tab-border'?: Linter.RuleEntry<[]>
+  /**
+   * No Tiny Text
+   * @see https://react.doctor/rules/no-tiny-text
+   */
+  'react-doctor/no-tiny-text'?: Linter.RuleEntry<[]>
+  /**
+   * No Transition All
+   * @see https://react.doctor/rules/no-transition-all
+   */
+  'react-doctor/no-transition-all'?: Linter.RuleEntry<[]>
+  /**
+   * No Uncontrolled Input
+   * @see https://react.doctor/rules/no-uncontrolled-input
+   */
+  'react-doctor/no-uncontrolled-input'?: Linter.RuleEntry<[]>
+  /**
+   * No Undeferred Third Party
+   * @see https://react.doctor/rules/no-undeferred-third-party
+   */
+  'react-doctor/no-undeferred-third-party'?: Linter.RuleEntry<[]>
+  /**
+   * No Usememo Simple Expression
+   * @see https://react.doctor/rules/no-usememo-simple-expression
+   */
+  'react-doctor/no-usememo-simple-expression'?: Linter.RuleEntry<[]>
+  /**
+   * No Wide Letter Spacing
+   * @see https://react.doctor/rules/no-wide-letter-spacing
+   */
+  'react-doctor/no-wide-letter-spacing'?: Linter.RuleEntry<[]>
+  /**
+   * No Z Index 9999
+   * @see https://react.doctor/rules/no-z-index-9999
+   */
+  'react-doctor/no-z-index-9999'?: Linter.RuleEntry<[]>
+  /**
+   * Prefer Dynamic Import
+   * @see https://react.doctor/rules/prefer-dynamic-import
+   */
+  'react-doctor/prefer-dynamic-import'?: Linter.RuleEntry<[]>
+  /**
+   * Prefer Use Effect Event
+   * @see https://react.doctor/rules/prefer-use-effect-event
+   */
+  'react-doctor/prefer-use-effect-event'?: Linter.RuleEntry<[]>
+  /**
+   * Prefer Use Sync External Store
+   * @see https://react.doctor/rules/prefer-use-sync-external-store
+   */
+  'react-doctor/prefer-use-sync-external-store'?: Linter.RuleEntry<[]>
+  /**
+   * Prefer UseReducer
+   * @see https://react.doctor/rules/prefer-useReducer
+   */
+  'react-doctor/prefer-useReducer'?: Linter.RuleEntry<[]>
+  /**
+   * Query Mutation Missing Invalidation
+   * @see https://react.doctor/rules/query-mutation-missing-invalidation
+   */
+  'react-doctor/query-mutation-missing-invalidation'?: Linter.RuleEntry<[]>
+  /**
+   * Query No Query In Effect
+   * @see https://react.doctor/rules/query-no-query-in-effect
+   */
+  'react-doctor/query-no-query-in-effect'?: Linter.RuleEntry<[]>
+  /**
+   * Query No Rest Destructuring
+   * @see https://react.doctor/rules/query-no-rest-destructuring
+   */
+  'react-doctor/query-no-rest-destructuring'?: Linter.RuleEntry<[]>
+  /**
+   * Query No Usequery For Mutation
+   * @see https://react.doctor/rules/query-no-usequery-for-mutation
+   */
+  'react-doctor/query-no-usequery-for-mutation'?: Linter.RuleEntry<[]>
+  /**
+   * Query No Void Query Fn
+   * @see https://react.doctor/rules/query-no-void-query-fn
+   */
+  'react-doctor/query-no-void-query-fn'?: Linter.RuleEntry<[]>
+  /**
+   * Query Stable Query Client
+   * @see https://react.doctor/rules/query-stable-query-client
+   */
+  'react-doctor/query-stable-query-client'?: Linter.RuleEntry<[]>
+  /**
+   * React Compiler Destructure Method
+   * @see https://react.doctor/rules/react-compiler-destructure-method
+   */
+  'react-doctor/react-compiler-destructure-method'?: Linter.RuleEntry<[]>
+  /**
+   * Rendering Animate Svg Wrapper
+   * @see https://react.doctor/rules/rendering-animate-svg-wrapper
+   */
+  'react-doctor/rendering-animate-svg-wrapper'?: Linter.RuleEntry<[]>
+  /**
+   * Rendering Conditional Render
+   * @see https://react.doctor/rules/rendering-conditional-render
+   */
+  'react-doctor/rendering-conditional-render'?: Linter.RuleEntry<[]>
+  /**
+   * Rendering Hoist Jsx
+   * @see https://react.doctor/rules/rendering-hoist-jsx
+   */
+  'react-doctor/rendering-hoist-jsx'?: Linter.RuleEntry<[]>
+  /**
+   * Rendering Hydration Mismatch Time
+   * @see https://react.doctor/rules/rendering-hydration-mismatch-time
+   */
+  'react-doctor/rendering-hydration-mismatch-time'?: Linter.RuleEntry<[]>
+  /**
+   * Rendering Hydration No Flicker
+   * @see https://react.doctor/rules/rendering-hydration-no-flicker
+   */
+  'react-doctor/rendering-hydration-no-flicker'?: Linter.RuleEntry<[]>
+  /**
+   * Rendering Script Defer Async
+   * @see https://react.doctor/rules/rendering-script-defer-async
+   */
+  'react-doctor/rendering-script-defer-async'?: Linter.RuleEntry<[]>
+  /**
+   * Rendering Svg Precision
+   * @see https://react.doctor/rules/rendering-svg-precision
+   */
+  'react-doctor/rendering-svg-precision'?: Linter.RuleEntry<[]>
+  /**
+   * Rendering Usetransition Loading
+   * @see https://react.doctor/rules/rendering-usetransition-loading
+   */
+  'react-doctor/rendering-usetransition-loading'?: Linter.RuleEntry<[]>
+  /**
+   * Rerender Defer Reads Hook
+   * @see https://react.doctor/rules/rerender-defer-reads-hook
+   */
+  'react-doctor/rerender-defer-reads-hook'?: Linter.RuleEntry<[]>
+  /**
+   * Rerender Dependencies
+   * @see https://react.doctor/rules/rerender-dependencies
+   */
+  'react-doctor/rerender-dependencies'?: Linter.RuleEntry<[]>
+  /**
+   * Rerender Derived State From Hook
+   * @see https://react.doctor/rules/rerender-derived-state-from-hook
+   */
+  'react-doctor/rerender-derived-state-from-hook'?: Linter.RuleEntry<[]>
+  /**
+   * Rerender Functional Setstate
+   * @see https://react.doctor/rules/rerender-functional-setstate
+   */
+  'react-doctor/rerender-functional-setstate'?: Linter.RuleEntry<[]>
+  /**
+   * Rerender Lazy State Init
+   * @see https://react.doctor/rules/rerender-lazy-state-init
+   */
+  'react-doctor/rerender-lazy-state-init'?: Linter.RuleEntry<[]>
+  /**
+   * Rerender Memo Before Early Return
+   * @see https://react.doctor/rules/rerender-memo-before-early-return
+   */
+  'react-doctor/rerender-memo-before-early-return'?: Linter.RuleEntry<[]>
+  /**
+   * Rerender Memo With Default Value
+   * @see https://react.doctor/rules/rerender-memo-with-default-value
+   */
+  'react-doctor/rerender-memo-with-default-value'?: Linter.RuleEntry<[]>
+  /**
+   * Rerender State Only In Handlers
+   * @see https://react.doctor/rules/rerender-state-only-in-handlers
+   */
+  'react-doctor/rerender-state-only-in-handlers'?: Linter.RuleEntry<[]>
+  /**
+   * Rerender Transitions Scroll
+   * @see https://react.doctor/rules/rerender-transitions-scroll
+   */
+  'react-doctor/rerender-transitions-scroll'?: Linter.RuleEntry<[]>
+  /**
+   * Rn Animate Layout Property
+   * @see https://react.doctor/rules/rn-animate-layout-property
+   */
+  'react-doctor/rn-animate-layout-property'?: Linter.RuleEntry<[]>
+  /**
+   * Rn Animation Reaction As Derived
+   * @see https://react.doctor/rules/rn-animation-reaction-as-derived
+   */
+  'react-doctor/rn-animation-reaction-as-derived'?: Linter.RuleEntry<[]>
+  /**
+   * Rn Bottom Sheet Prefer Native
+   * @see https://react.doctor/rules/rn-bottom-sheet-prefer-native
+   */
+  'react-doctor/rn-bottom-sheet-prefer-native'?: Linter.RuleEntry<[]>
+  /**
+   * Rn List Callback Per Row
+   * @see https://react.doctor/rules/rn-list-callback-per-row
+   */
+  'react-doctor/rn-list-callback-per-row'?: Linter.RuleEntry<[]>
+  /**
+   * Rn List Data Mapped
+   * @see https://react.doctor/rules/rn-list-data-mapped
+   */
+  'react-doctor/rn-list-data-mapped'?: Linter.RuleEntry<[]>
+  /**
+   * Rn List Recyclable Without Types
+   * @see https://react.doctor/rules/rn-list-recyclable-without-types
+   */
+  'react-doctor/rn-list-recyclable-without-types'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Deprecated Modules
+   * @see https://react.doctor/rules/rn-no-deprecated-modules
+   */
+  'react-doctor/rn-no-deprecated-modules'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Dimensions Get
+   * @see https://react.doctor/rules/rn-no-dimensions-get
+   */
+  'react-doctor/rn-no-dimensions-get'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Inline Flatlist Renderitem
+   * @see https://react.doctor/rules/rn-no-inline-flatlist-renderitem
+   */
+  'react-doctor/rn-no-inline-flatlist-renderitem'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Inline Object In List Item
+   * @see https://react.doctor/rules/rn-no-inline-object-in-list-item
+   */
+  'react-doctor/rn-no-inline-object-in-list-item'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Legacy Expo Packages
+   * @see https://react.doctor/rules/rn-no-legacy-expo-packages
+   */
+  'react-doctor/rn-no-legacy-expo-packages'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Legacy Shadow Styles
+   * @see https://react.doctor/rules/rn-no-legacy-shadow-styles
+   */
+  'react-doctor/rn-no-legacy-shadow-styles'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Non Native Navigator
+   * @see https://react.doctor/rules/rn-no-non-native-navigator
+   */
+  'react-doctor/rn-no-non-native-navigator'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Raw Text
+   * @see https://react.doctor/rules/rn-no-raw-text
+   */
+  'react-doctor/rn-no-raw-text'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Scroll State
+   * @see https://react.doctor/rules/rn-no-scroll-state
+   */
+  'react-doctor/rn-no-scroll-state'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Scrollview Mapped List
+   * @see https://react.doctor/rules/rn-no-scrollview-mapped-list
+   */
+  'react-doctor/rn-no-scrollview-mapped-list'?: Linter.RuleEntry<[]>
+  /**
+   * Rn No Single Element Style Array
+   * @see https://react.doctor/rules/rn-no-single-element-style-array
+   */
+  'react-doctor/rn-no-single-element-style-array'?: Linter.RuleEntry<[]>
+  /**
+   * Rn Prefer Content Inset Adjustment
+   * @see https://react.doctor/rules/rn-prefer-content-inset-adjustment
+   */
+  'react-doctor/rn-prefer-content-inset-adjustment'?: Linter.RuleEntry<[]>
+  /**
+   * Rn Prefer Expo Image
+   * @see https://react.doctor/rules/rn-prefer-expo-image
+   */
+  'react-doctor/rn-prefer-expo-image'?: Linter.RuleEntry<[]>
+  /**
+   * Rn Prefer Pressable
+   * @see https://react.doctor/rules/rn-prefer-pressable
+   */
+  'react-doctor/rn-prefer-pressable'?: Linter.RuleEntry<[]>
+  /**
+   * Rn Prefer Reanimated
+   * @see https://react.doctor/rules/rn-prefer-reanimated
+   */
+  'react-doctor/rn-prefer-reanimated'?: Linter.RuleEntry<[]>
+  /**
+   * Rn Pressable Shared Value Mutation
+   * @see https://react.doctor/rules/rn-pressable-shared-value-mutation
+   */
+  'react-doctor/rn-pressable-shared-value-mutation'?: Linter.RuleEntry<[]>
+  /**
+   * Rn Scrollview Dynamic Padding
+   * @see https://react.doctor/rules/rn-scrollview-dynamic-padding
+   */
+  'react-doctor/rn-scrollview-dynamic-padding'?: Linter.RuleEntry<[]>
+  /**
+   * Rn Style Prefer Boxshadow
+   * @see https://react.doctor/rules/rn-style-prefer-boxshadow
+   */
+  'react-doctor/rn-style-prefer-boxshadow'?: Linter.RuleEntry<[]>
+  /**
+   * Server After Nonblocking
+   * @see https://react.doctor/rules/server-after-nonblocking
+   */
+  'react-doctor/server-after-nonblocking'?: Linter.RuleEntry<[]>
+  /**
+   * Server Auth Actions
+   * @see https://react.doctor/rules/server-auth-actions
+   */
+  'react-doctor/server-auth-actions'?: Linter.RuleEntry<[]>
+  /**
+   * Server Cache With Object Literal
+   * @see https://react.doctor/rules/server-cache-with-object-literal
+   */
+  'react-doctor/server-cache-with-object-literal'?: Linter.RuleEntry<[]>
+  /**
+   * Server Dedup Props
+   * @see https://react.doctor/rules/server-dedup-props
+   */
+  'react-doctor/server-dedup-props'?: Linter.RuleEntry<[]>
+  /**
+   * Server Fetch Without Revalidate
+   * @see https://react.doctor/rules/server-fetch-without-revalidate
+   */
+  'react-doctor/server-fetch-without-revalidate'?: Linter.RuleEntry<[]>
+  /**
+   * Server Hoist Static Io
+   * @see https://react.doctor/rules/server-hoist-static-io
+   */
+  'react-doctor/server-hoist-static-io'?: Linter.RuleEntry<[]>
+  /**
+   * Server No Mutable Module State
+   * @see https://react.doctor/rules/server-no-mutable-module-state
+   */
+  'react-doctor/server-no-mutable-module-state'?: Linter.RuleEntry<[]>
+  /**
+   * Server Sequential Independent Await
+   * @see https://react.doctor/rules/server-sequential-independent-await
+   */
+  'react-doctor/server-sequential-independent-await'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start Get Mutation
+   * @see https://react.doctor/rules/tanstack-start-get-mutation
+   */
+  'react-doctor/tanstack-start-get-mutation'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start Loader Parallel Fetch
+   * @see https://react.doctor/rules/tanstack-start-loader-parallel-fetch
+   */
+  'react-doctor/tanstack-start-loader-parallel-fetch'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start Missing Head Content
+   * @see https://react.doctor/rules/tanstack-start-missing-head-content
+   */
+  'react-doctor/tanstack-start-missing-head-content'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start No Anchor Element
+   * @see https://react.doctor/rules/tanstack-start-no-anchor-element
+   */
+  'react-doctor/tanstack-start-no-anchor-element'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start No Direct Fetch In Loader
+   * @see https://react.doctor/rules/tanstack-start-no-direct-fetch-in-loader
+   */
+  'react-doctor/tanstack-start-no-direct-fetch-in-loader'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start No Dynamic Server Fn Import
+   * @see https://react.doctor/rules/tanstack-start-no-dynamic-server-fn-import
+   */
+  'react-doctor/tanstack-start-no-dynamic-server-fn-import'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start No Navigate In Render
+   * @see https://react.doctor/rules/tanstack-start-no-navigate-in-render
+   */
+  'react-doctor/tanstack-start-no-navigate-in-render'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start No Secrets In Loader
+   * @see https://react.doctor/rules/tanstack-start-no-secrets-in-loader
+   */
+  'react-doctor/tanstack-start-no-secrets-in-loader'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start No Use Server In Handler
+   * @see https://react.doctor/rules/tanstack-start-no-use-server-in-handler
+   */
+  'react-doctor/tanstack-start-no-use-server-in-handler'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start No Useeffect Fetch
+   * @see https://react.doctor/rules/tanstack-start-no-useeffect-fetch
+   */
+  'react-doctor/tanstack-start-no-useeffect-fetch'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start Redirect In Try Catch
+   * @see https://react.doctor/rules/tanstack-start-redirect-in-try-catch
+   */
+  'react-doctor/tanstack-start-redirect-in-try-catch'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start Route Property Order
+   * @see https://react.doctor/rules/tanstack-start-route-property-order
+   */
+  'react-doctor/tanstack-start-route-property-order'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start Server Fn Method Order
+   * @see https://react.doctor/rules/tanstack-start-server-fn-method-order
+   */
+  'react-doctor/tanstack-start-server-fn-method-order'?: Linter.RuleEntry<[]>
+  /**
+   * Tanstack Start Server Fn Validate Input
+   * @see https://react.doctor/rules/tanstack-start-server-fn-validate-input
+   */
+  'react-doctor/tanstack-start-server-fn-validate-input'?: Linter.RuleEntry<[]>
+  /**
+   * Use Lazy Motion
+   * @see https://react.doctor/rules/use-lazy-motion
+   */
+  'react-doctor/use-lazy-motion'?: Linter.RuleEntry<[]>
   /**
    * Disallows higher order functions that define components or hooks inside them.
    * @see https://eslint-react.xyz/docs/rules/component-hook-factories
@@ -8602,6 +9497,11 @@ Backward pagination arguments
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-empty-custom-schema.md
    */
   'zod/no-empty-custom-schema'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow deprecated `z.nativeEnum()` in favor of `z.enum()`.
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-native-enum.md
+   */
+  'zod/no-native-enum'?: Linter.RuleEntry<[]>
   /**
    * Disallow deprecated `z.number().finite()`. In Zod 4+ number schemas do not allow infinite values by default, so it is a no-op.
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-number-schema-with-finite.md
@@ -16135,4 +17035,4 @@ type ZodSchemaErrorPropertyStyle = []|[{
   example?: string
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:depend' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:next/proxy' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack-query' | '2digits:tanstack-router' | '2digits:toml' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:vitest/setup' | '2digits:vitest/rules' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier' | '2digits:zod'
+export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:depend' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:next/proxy' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:react-doctor' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack-query' | '2digits:tanstack-router' | '2digits:toml' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:vitest/setup' | '2digits:vitest/rules' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier' | '2digits:zod'

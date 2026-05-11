@@ -37,6 +37,7 @@ import {
   yaml,
   zod,
 } from './configs';
+import { reactDoctor } from './configs/react-doctor';
 import { PluginNameMap, storybookPackages } from './constants';
 import type {
   ConfigNames,
@@ -121,6 +122,7 @@ export async function twoDigits(
     yaml(),
     markdown(),
     githubActions(),
+    reactDoctor(),
   );
 
   if (enabled(options.css)) {

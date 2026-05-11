@@ -12,10 +12,15 @@ function parseCookies(cookiesStr: Option.Option<string>): ReadonlyMap<string, st
     return new Map();
   }
 
-  const entries = cookiesStr.value
-    .split(';')
-    .map((pair) => pair.trim().split('='))
-    .filter((parts): parts is [string, string] => parts.length === 2);
+  const entries = new Array<[string, string]>();
+
+  for (const pair of cookiesStr.value.split(';')) {
+    const [key, val] = pair.trim().split('=');
+
+    if (key && val) {
+      entries.push([key, val]);
+    }
+  }
 
   return new Map(entries);
 }

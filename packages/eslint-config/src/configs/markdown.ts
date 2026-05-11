@@ -52,8 +52,10 @@ export function markdown(): Array<TypedFlatConfigItem> {
 }
 
 export async function markdownDisables(): Promise<Array<TypedFlatConfigItem>> {
-  const tseslint = await interopDefault(import('typescript-eslint'));
-  const reactPlugin = await interopDefault(import('@eslint-react/eslint-plugin'));
+  const [tseslint, reactPlugin] = await Promise.all([
+    interopDefault(import('typescript-eslint')),
+    interopDefault(import('@eslint-react/eslint-plugin')),
+  ]);
 
   const disableTypeCheckedRules = renamePluginsInRules(
     {

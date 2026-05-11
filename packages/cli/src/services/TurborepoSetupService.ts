@@ -229,6 +229,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
           // Only update if not already using turbo
           const existingScript = packageJson.scripts[taskName];
 
+          // eslint-disable-next-line react-doctor/js-set-map-lookups
           if (!existingScript.includes('turbo')) {
             packageJson.scripts[taskName] = turboCommand;
             updated = true;

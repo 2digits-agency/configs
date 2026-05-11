@@ -16,6 +16,7 @@ export * from './node';
 export * from './pnpm';
 export * from './prettier';
 export * from './react';
+export * from './react-doctor';
 export * from './regexp';
 export * from './sonar';
 export * from './storybook';
