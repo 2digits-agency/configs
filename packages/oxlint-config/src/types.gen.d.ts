@@ -1776,6 +1776,17 @@ export interface RuleOptions {
 'eslint/prefer-promise-reject-errors'?: DummyRule;
 
 /**
+ * Prefer regex literals
+ *
+ * plugin: Eslint
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-regex-literals.html
+ */
+'eslint/prefer-regex-literals'?: DummyRule;
+
+/**
  * Prefer rest params
  *
  * plugin: Eslint
@@ -3435,6 +3446,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-distracting-elements.html
  */
 'jsx_a11y/no-distracting-elements'?: DummyRule;
+
+/**
+ * No noninteractive element to interactive role
+ *
+ * plugin: Jsx_a11y
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-noninteractive-element-to-interactive-role.html
+ */
+'jsx_a11y/no-noninteractive-element-to-interactive-role'?: DummyRule;
 
 /**
  * No noninteractive tabindex

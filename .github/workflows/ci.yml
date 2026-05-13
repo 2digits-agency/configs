@@ -49,7 +49,7 @@ jobs:
         run: vp check
 
       - name: 🧪 Test
-        run: vp test run
+        run: vp run test
 
       - name: 🔍 Lint
         run: vp run lint
