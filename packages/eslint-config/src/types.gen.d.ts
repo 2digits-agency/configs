@@ -29,12 +29,12 @@ export interface RuleOptions {
    */
   'accessor-pairs'?: Linter.RuleEntry<AccessorPairs>
   /**
-   * Having line breaks styles to object, array and named imports
+   * Enforce consistent line breaks for chaining member access
    * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/consistent-chaining.md
    */
   'antfu/consistent-chaining'?: Linter.RuleEntry<AntfuConsistentChaining>
   /**
-   * Having line breaks styles to object, array and named imports
+   * Enforce consistent line breaks inside braces and parentheses
    * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/consistent-list-newline.md
    */
   'antfu/consistent-list-newline'?: Linter.RuleEntry<AntfuConsistentListNewline>
@@ -60,22 +60,22 @@ export interface RuleOptions {
   'antfu/indent-unindent'?: Linter.RuleEntry<AntfuIndentUnindent>
   /**
    * Prevent importing modules in `dist` folder
-   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-import-dist.test.ts
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-import-dist.md
    */
   'antfu/no-import-dist'?: Linter.RuleEntry<[]>
   /**
    * Prevent importing modules in `node_modules` folder by relative or absolute path
-   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-import-node-modules-by-path.test.ts
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-import-node-modules-by-path.md
    */
   'antfu/no-import-node-modules-by-path'?: Linter.RuleEntry<[]>
   /**
    * Prevent using top-level await
-   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-top-level-await.test.ts
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-top-level-await.md
    */
   'antfu/no-top-level-await'?: Linter.RuleEntry<[]>
   /**
    * Do not use `exports =`
-   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-ts-export-equal.test.ts
+   * @see https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/no-ts-export-equal.md
    */
   'antfu/no-ts-export-equal'?: Linter.RuleEntry<[]>
   /**
@@ -8603,6 +8603,11 @@ Backward pagination arguments
    */
   'zod/no-empty-custom-schema'?: Linter.RuleEntry<[]>
   /**
+   * Disallow deprecated `z.nativeEnum()` in favor of `z.enum()`.
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-native-enum.md
+   */
+  'zod/no-native-enum'?: Linter.RuleEntry<[]>
+  /**
    * Disallow deprecated `z.number().finite()`. In Zod 4+ number schemas do not allow infinite values by default, so it is a no-op.
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-number-schema-with-finite.md
    */
@@ -8638,6 +8643,16 @@ Backward pagination arguments
    */
   'zod/no-optional-and-default-together'?: Linter.RuleEntry<ZodNoOptionalAndDefaultTogether>
   /**
+   * Disallow deprecated `.isNullable()` on a Zod schema; use `safeParse(null).success` instead.
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-schema-with-is-nullable.md
+   */
+  'zod/no-schema-with-is-nullable'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow deprecated `.isOptional()` on a Zod schema; use `safeParse(undefined).success` instead.
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-schema-with-is-optional.md
+   */
+  'zod/no-schema-with-is-optional'?: Linter.RuleEntry<[]>
+  /**
    * Disallow usage of `z.string().uuid()` in favor of the dedicated `z.uuid()` schema
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-string-schema-with-uuid.md
    * @deprecated
@@ -8664,6 +8679,11 @@ Backward pagination arguments
    */
   'zod/prefer-enum-over-literal-union'?: Linter.RuleEntry<[]>
   /**
+   * Prefer `z.looseObject()` over `z.object().passthrough()` and `z.object().loose()`
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-loose-object.md
+   */
+  'zod/prefer-loose-object'?: Linter.RuleEntry<[]>
+  /**
    * Enforce usage of `.meta()` over `.describe()`
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-meta.md
    */
@@ -8673,6 +8693,11 @@ Backward pagination arguments
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-meta-last.md
    */
   'zod/prefer-meta-last'?: Linter.RuleEntry<[]>
+  /**
+   * Prefer `z.strictObject()` over `z.object().strict()`
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-strict-object.md
+   */
+  'zod/prefer-strict-object'?: Linter.RuleEntry<[]>
   /**
    * Enforce `z.string().trim()` to prevent accidental leading/trailing whitespace
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-string-schema-with-trim.md

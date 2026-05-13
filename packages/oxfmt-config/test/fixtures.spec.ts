@@ -21,12 +21,7 @@ const fixtureCases: Array<FixtureCase> = [
     expectation: 'known-difference',
     reason: 'Oxfmt does not support Prettier experimentalOperatorPosition=start yet.',
   },
-  {
-    name: 'import-attributes',
-    fileName: 'input.ts',
-    expectation: 'known-difference',
-    reason: 'Oxfmt currently formats import attribute spacing differently.',
-  },
+  { name: 'import-attributes', fileName: 'input.ts', expectation: 'match' },
 ];
 
 const matchingFixtureCases = fixtureCases.filter((fixture) => fixture.expectation === 'match');
