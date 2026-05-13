@@ -1,5 +1,14 @@
 # @2digits/oxfmt-config
 
+## 0.3.7
+
+### Patch Changes
+
+- 1389c83: Update oxfmt to 0.49.0
+
+  - Updated `oxfmt` to 0.49.0
+  - Import attributes now match Prettier formatting for spacing
+
 ## 0.3.6
 
 ### Patch Changes
