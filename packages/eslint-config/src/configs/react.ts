@@ -64,12 +64,12 @@ export async function react(
         ...(reactCompiler ? { 'react-compiler/react-compiler': 'error' } : {}),
 
         'react-extra/exhaustive-deps': 'error',
+        'react-extra/globals': 'error',
         'react-extra/purity': 'error',
         'react-extra/no-unused-class-component-members': 'error',
-        'react-extra/no-unnecessary-use-callback': 'error',
         'react-extra/no-unnecessary-use-prefix': 'error',
-        'react-extra/no-unnecessary-use-memo': 'error',
         'react-extra/set-state-in-effect': 'error',
+        'react-extra/no-unused-state': 'error',
         'react-extra/use-state': 'error',
 
         'react-extra/no-unstable-context-value': 'error',
@@ -83,17 +83,18 @@ export async function react(
         'react-extra/immutability': 'error',
         'react-extra/refs': 'error',
         'react-extra/no-duplicate-key': 'error',
+        'react-extra/static-components': 'error',
 
         'react-extra/dom-no-missing-button-type': 'error',
         'react-extra/dom-no-missing-iframe-sandbox': 'error',
         'react-extra/dom-no-unsafe-target-blank': 'error',
+        'react-extra/web-api-no-leaked-fetch': 'error',
 
         'react-extra/naming-convention-context-name': 'error',
         'react-extra/naming-convention-id-name': 'error',
         'react-extra/naming-convention-ref-name': 'error',
 
-        'react-extra/prefer-namespace-import': 'error',
-
+        'react-extra/jsx-no-leaked-dollar': 'error',
         'react-extra/jsx-no-useless-fragment': 'off',
 
         'stylistic/jsx-curly-newline': 'off',
