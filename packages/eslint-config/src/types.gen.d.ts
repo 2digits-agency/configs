@@ -3434,6 +3434,8 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/no-set-state-in-component-will-update
    */
   'react-extra/no-set-state-in-component-will-update'?: Linter.RuleEntry<[]>
+  'react-extra/no-unnecessary-use-callback'?: Linter.RuleEntry<[]>
+  'react-extra/no-unnecessary-use-memo'?: Linter.RuleEntry<[]>
   /**
    * Enforces that a function with the 'use' prefix uses at least one Hook inside it.
    * @see https://eslint-react.xyz/docs/rules/no-unnecessary-use-prefix
@@ -3484,6 +3486,8 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/no-use-context
    */
   'react-extra/no-use-context'?: Linter.RuleEntry<[]>
+  'react-extra/prefer-destructuring-assignment'?: Linter.RuleEntry<[]>
+  'react-extra/prefer-namespace-import'?: Linter.RuleEntry<[]>
   /**
    * Validates that components and hooks are pure by checking that they do not call known-impure functions during render.
    * @see https://eslint-react.xyz/docs/rules/purity
