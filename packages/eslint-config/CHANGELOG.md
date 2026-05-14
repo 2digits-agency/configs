@@ -1,5 +1,25 @@
 # @2digits/eslint-config
 
+## 5.5.0
+
+### Minor Changes
+
+- ec8ea99: Update @eslint-react/eslint-plugin to 5.7.8 and add @eslint-react/kit for custom rules
+
+  - Added upstream rules: `react-extra/globals`, `react-extra/jsx-no-leaked-dollar`, `react-extra/static-components`, `react-extra/web-api-no-leaked-fetch`
+  - Re-added dropped rules as custom implementations using `@eslint-react/kit`: `no-unnecessary-use-callback`, `no-unnecessary-use-memo`, `prefer-destructuring-assignment`, `prefer-namespace-import`
+  - Removed rules dropped upstream without replacement: `component-hook-factories`, `no-redundant-should-component-update`, `dom-no-string-style-prop`, `dom-no-unknown-property`
+  - Updated generated types with new and changed rule descriptions
+
+### Patch Changes
+
+- e665a3c: Update ESLint plugin dependencies
+
+  - Updated `eslint-plugin-turbo` to 2.9.14
+  - Updated `@eslint-react/kit` to 5.7.8
+
+- 62087fd: Update eslint-plugin-storybook to 10.4.0
+
 ## 5.4.15
 
 ### Patch Changes
