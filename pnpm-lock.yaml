@@ -73,8 +73,8 @@ catalogs:
       specifier: 16.2.6
       version: 16.2.6
     '@opencode-ai/plugin':
-      specifier: 1.14.50
-      version: 1.14.50
+      specifier: 1.15.0
+      version: 1.15.0
     '@prettier/plugin-oxc':
       specifier: 0.1.4
       version: 0.1.4
@@ -698,7 +698,7 @@ importers:
     dependencies:
       '@opencode-ai/plugin':
         specifier: 'catalog:'
-        version: 1.14.50
+        version: 1.15.0
       posthog-node:
         specifier: 'catalog:'
         version: 5.34.1
@@ -2334,12 +2334,12 @@ packages:
   '@one-ini/wasm@0.2.1':
     resolution: {integrity: sha512-TUqERXGNTifZ9y2g3wPxQrw3HpHv/02DsW3D90T9x0hhonrL1ZqpSmNrU2XkoIq0fP1N6gZfVQzy2Fw1ZvGBNg==}
 
-  '@opencode-ai/plugin@1.14.50':
-    resolution: {integrity: sha512-2D4k6r8IFaAajEmezOZ3UKmRRGqEw2YzqotH5zLGT434yKtabduEsQgXa0fWlASut4FVT3JURhq5LqeBUV/k4g==}
+  '@opencode-ai/plugin@1.15.0':
+    resolution: {integrity: sha512-97N985FDqNMpbBbsNotu0j3lkHwDyHX+2BnPFfnuNmBrTQNqLrn2UyA6wBfP6J5l4xUslwKNrH2IVrGIZeiSxQ==}
     peerDependencies:
-      '@opentui/core': '>=0.2.9'
-      '@opentui/keymap': '>=0.2.9'
-      '@opentui/solid': '>=0.2.9'
+      '@opentui/core': '>=0.2.10'
+      '@opentui/keymap': '>=0.2.10'
+      '@opentui/solid': '>=0.2.10'
     peerDependenciesMeta:
       '@opentui/core':
         optional: true
@@ -2348,8 +2348,8 @@ packages:
       '@opentui/solid':
         optional: true
 
-  '@opencode-ai/sdk@1.14.50':
-    resolution: {integrity: sha512-IrTKTFviR4Tj+u0BI8h8XgXIvEpxwkkHqBj6E0aEc4DBErpS3qh2Lkp1xt0OdtCYiLE3wZ1bAIiHOiO66H/7TA==}
+  '@opencode-ai/sdk@1.15.0':
+    resolution: {integrity: sha512-npmURKwd1HoV/i3CsGl2tdHpGhWSGVqTN1cp0s2gDH5gE6XduAtFmmVXBZ/ovJLh3Evu6sTVZ9n0IkJzFNeveQ==}
 
   '@opentelemetry/api-logs@0.215.0':
     resolution: {integrity: sha512-xrFlqhdhUyO8wSRn6DjE0145/HPWSJ5Nm0C7vWua6TdL/FSEAZvEyvdsa9CRXuxo9ebb7j/NEPhEcO62IJ0qUA==}
@@ -10252,13 +10252,13 @@ snapshots:
 
   '@one-ini/wasm@0.2.1': {}
 
-  '@opencode-ai/plugin@1.14.50':
+  '@opencode-ai/plugin@1.15.0':
     dependencies:
-      '@opencode-ai/sdk': 1.14.50
+      '@opencode-ai/sdk': 1.15.0
       effect: 4.0.0-beta.65
       zod: 4.1.8
 
-  '@opencode-ai/sdk@1.14.50':
+  '@opencode-ai/sdk@1.15.0':
     dependencies:
       cross-spawn: 7.0.6
 
