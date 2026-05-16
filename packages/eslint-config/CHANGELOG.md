@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 5.5.1
+
+### Patch Changes
+
+- efd6d57: Update ESLint core and plugins
+
+  - Updated `eslint` to 10.4.0
+  - Updated `@eslint-react/eslint-plugin` to 5.7.9
+  - Updated `@eslint-react/kit` to 5.7.9
+  - Updated `@tanstack/eslint-plugin-router` to 1.162.0
+
+- Updated dependencies [efd6d57]
+  - @2digits/eslint-plugin@4.0.16
+
 ## 5.5.0
 
 ### Minor Changes
