@@ -8607,6 +8607,11 @@ Backward pagination arguments
    */
   'zod/no-optional-and-default-together'?: Linter.RuleEntry<ZodNoOptionalAndDefaultTogether>
   /**
+   * Disallow deprecated `z.promise()` schemas.
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-promise-schema.md
+   */
+  'zod/no-promise-schema'?: Linter.RuleEntry<[]>
+  /**
    * Disallow deprecated `.isNullable()` on a Zod schema; use `safeParse(null).success` instead.
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-schema-with-is-nullable.md
    */
