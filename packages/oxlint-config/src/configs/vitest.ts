@@ -82,6 +82,8 @@ export const vitestConfig = defineTypedConfig({
     'vitest/valid-expect-in-promise': 'error',
     'vitest/valid-title': undefined,
     'vitest/warn-todo': 'error',
+
+    'vitest/padding-around-after-all-blocks': undefined,
   } satisfies {
     [k in Extract<keyof Rules, `vitest/${string}`>]: Rules[k];
   },

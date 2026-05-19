@@ -236,6 +236,17 @@ export interface RuleOptions {
 'eslint/id-length'?: DummyRule;
 
 /**
+ * Id match
+ *
+ * plugin: Eslint
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/id-match.html
+ */
+'eslint/id-match'?: DummyRule;
+
+/**
  * Init declarations
  *
  * plugin: Eslint
@@ -817,6 +828,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-globals.html
  */
 'eslint/no-implicit-globals'?: DummyRule;
+
+/**
+ * No implied eval
+ *
+ * plugin: Eslint
+ * category: Suspicious
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implied-eval.html
+ */
+'eslint/no-implied-eval'?: DummyRule;
 
 /**
  * No import assign
@@ -2104,6 +2126,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/import/namespace.html
  */
 'import/namespace'?: DummyRule;
+
+/**
+ * Newline after import
+ *
+ * plugin: Import
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/import/newline-after-import.html
+ */
+'import/newline-after-import'?: DummyRule;
 
 /**
  * No absolute path
@@ -4823,6 +4856,17 @@ export interface RuleOptions {
 'react/no-namespace'?: DummyRule;
 
 /**
+ * No object type as default prop
+ *
+ * plugin: React
+ * category: Perf
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/react/no-object-type-as-default-prop.html
+ */
+'react/no-object-type-as-default-prop'?: DummyRule;
+
+/**
  * No react children
  *
  * plugin: React
@@ -4920,6 +4964,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/react/no-unsafe.html
  */
 'react/no-unsafe'?: DummyRule;
+
+/**
+ * No unstable nested components
+ *
+ * plugin: React
+ * category: Suspicious
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/react/no-unstable-nested-components.html
+ */
+'react/no-unstable-nested-components'?: DummyRule;
 
 /**
  * No will update set state
@@ -8033,6 +8088,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-unneeded-async-expect-function.html
  */
 'vitest/no-unneeded-async-expect-function'?: DummyRule;
+
+/**
+ * Padding around after all blocks
+ *
+ * plugin: Vitest
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/padding-around-after-all-blocks.html
+ */
+'vitest/padding-around-after-all-blocks'?: DummyRule;
 
 /**
  * Prefer called exactly once with

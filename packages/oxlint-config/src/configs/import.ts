@@ -35,6 +35,8 @@ export const importConfig = defineTypedConfig({
     'import/no-webpack-loader-syntax': 'error',
     'import/prefer-default-export': undefined,
     'import/unambiguous': undefined,
+
+    'import/newline-after-import': undefined,
   } satisfies {
     [k in Extract<keyof Rules, `import/${string}`>]: Rules[k];
   },

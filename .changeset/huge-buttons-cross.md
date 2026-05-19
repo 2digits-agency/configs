@@ -2,4 +2,4 @@
 '@2digits/oxfmt-config': patch
 ---
 
-Update oxfmt to 0.50.0
+Update oxfmt to 0.51.0
