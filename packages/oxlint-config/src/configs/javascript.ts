@@ -76,7 +76,6 @@ export const javascriptConfig = defineTypedConfig({
     'eslint/no-func-assign': 'error',
     'eslint/no-global-assign': 'error',
     'eslint/no-implicit-coercion': undefined,
-    'eslint/no-implicit-globals': undefined,
     'eslint/no-import-assign': 'error',
     'eslint/no-inline-comments': undefined,
     'eslint/no-inner-declarations': undefined,
@@ -175,7 +174,6 @@ export const javascriptConfig = defineTypedConfig({
     'eslint/no-with': 'error',
     'eslint/object-shorthand': 'error',
     'eslint/operator-assignment': ['error', 'always'],
-    'eslint/prefer-arrow-callback': undefined,
     'eslint/prefer-const': ['error', { destructuring: 'all', ignoreReadBeforeAssign: true }],
     'eslint/prefer-destructuring': ['error', { enforceForRenamedProperties: true }],
     'eslint/prefer-exponentiation-operator': 'error',
@@ -201,6 +199,11 @@ export const javascriptConfig = defineTypedConfig({
     'eslint/valid-typeof': ['error', { requireStringLiterals: true }],
     'eslint/vars-on-top': 'error',
     'eslint/yoda': ['error', 'never'],
+
+    'eslint/no-implicit-globals': undefined,
+    'eslint/prefer-arrow-callback': undefined,
+    'eslint/id-match': undefined,
+    'eslint/no-implied-eval': undefined,
   } satisfies {
     [k in Extract<keyof Rules, `eslint/${string}`>]: Rules[k];
   },
