@@ -23,7 +23,7 @@ catalog:
   '@effect/rpc': 0.75.1
   '@effect/vitest': 0.29.0
   '@eslint-community/eslint-plugin-eslint-comments': 4.7.1
-  '@eslint-react/eslint-plugin': 5.7.9
+  '@eslint-react/eslint-plugin': 5.8.1
   '@eslint/compat': 2.1.0
   '@eslint/config-inspector': 3.0.2
   '@eslint/css': 1.2.0
@@ -33,7 +33,7 @@ catalog:
   '@ianvs/prettier-plugin-sort-imports': 4.7.1
   '@manypkg/cli': 0.25.1
   '@next/eslint-plugin-next': 16.2.6
-  '@opencode-ai/plugin': 1.15.1
+  '@opencode-ai/plugin': 1.15.4
   '@prettier/plugin-oxc': 0.1.4
   '@prettier/plugin-xml': 3.4.2
   '@stylistic/eslint-plugin': 5.10.0
@@ -45,7 +45,7 @@ catalog:
   '@typescript-eslint/scope-manager': 8.59.3
   '@typescript-eslint/utils': 8.59.3
   '@vitest/eslint-plugin': 1.6.17
-  '@typescript/native-preview': 7.0.0-dev.20260516.1
+  '@typescript/native-preview': 7.0.0-dev.20260518.1
   dedent: 1.7.2
   defu: 6.1.7
   effect: 3.21.2
@@ -73,7 +73,7 @@ catalog:
   eslint-plugin-turbo: 2.9.14
   eslint-plugin-unicorn: 64.0.0
   eslint-plugin-yml: 3.3.2
-  eslint-plugin-zod: 4.4.0
+  eslint-plugin-zod: 4.5.1
   eslint-typegen: 2.3.1
   eslint-vitest-rule-tester: 3.1.0
   globals: 17.6.0
@@ -83,12 +83,12 @@ catalog:
   local-pkg: 1.1.2
   nolyfill: 1.0.44
   nypm: 0.6.6
-  oxfmt: 0.49.0
-  oxlint: 1.64.0
-  oxlint-tsgolint: 0.22.1
-  pkg-pr-new: 0.0.73
+  oxfmt: 0.50.0
+  oxlint: 1.65.0
+  oxlint-tsgolint: 0.23.0
+  pkg-pr-new: 0.0.75
   pkg-types: 2.3.1
-  posthog-node: 5.34.2
+  posthog-node: 5.34.3
   prettier: 3.8.3
   prettier-plugin-jsdoc: 1.8.0
   prettier-plugin-tailwindcss: 0.8.0
@@ -99,7 +99,7 @@ catalog:
   tinyexec: 1.1.2
   tinyglobby: 0.2.16
   ts-api-utils: 2.5.0
-  tsx: 4.22.0
+  tsx: 4.22.1
   turbo: 2.9.14
   typescript: 6.0.3
   typescript-eslint: 8.59.3
@@ -109,11 +109,13 @@ catalog:
   vitest: npm:@voidzero-dev/vite-plus-test@0.1.21
   yaml-eslint-parser: 2.0.0
   zod: 4.4.3
-  '@eslint-react/kit': 5.7.9
+  '@eslint-react/kit': 5.8.1
 
 catalogMode: strict
 
 cleanupUnusedCatalogs: true
+
+minimumReleaseAge: 0
 
 optimisticRepeatInstall: true
 
@@ -123,7 +125,7 @@ overrides:
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
   array.prototype.flatmap: npm:@nolyfill/array.prototype.flatmap@1.0.44
   array.prototype.tosorted: npm:@nolyfill/array.prototype.tosorted@1.0.44
-  baseline-browser-mapping: 2.10.29
+  baseline-browser-mapping: 2.10.30
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
   globalthis: npm:@nolyfill/globalthis@1.0.44
   hasown: npm:@nolyfill/hasown@1.0.44

@@ -808,6 +808,17 @@ export interface RuleOptions {
 'eslint/no-implicit-coercion'?: DummyRule;
 
 /**
+ * No implicit globals
+ *
+ * plugin: Eslint
+ * category: Restriction
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-globals.html
+ */
+'eslint/no-implicit-globals'?: DummyRule;
+
+/**
  * No import assign
  *
  * plugin: Eslint
@@ -1697,6 +1708,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/operator-assignment.html
  */
 'eslint/operator-assignment'?: DummyRule;
+
+/**
+ * Prefer arrow callback
+ *
+ * plugin: Eslint
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-arrow-callback.html
+ */
+'eslint/prefer-arrow-callback'?: DummyRule;
 
 /**
  * Prefer const
@@ -3173,6 +3195,28 @@ export interface RuleOptions {
 'jsdoc/require-returns-type'?: DummyRule;
 
 /**
+ * Require throws description
+ *
+ * plugin: Jsdoc
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-throws-description.html
+ */
+'jsdoc/require-throws-description'?: DummyRule;
+
+/**
+ * Require throws type
+ *
+ * plugin: Jsdoc
+ * category: Pedantic
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-throws-type.html
+ */
+'jsdoc/require-throws-type'?: DummyRule;
+
+/**
  * Require yields
  *
  * plugin: Jsdoc
@@ -3182,6 +3226,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-yields.html
  */
 'jsdoc/require-yields'?: DummyRule;
+
+/**
+ * Require yields type
+ *
+ * plugin: Jsdoc
+ * category: Pedantic
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-yields-type.html
+ */
+'jsdoc/require-yields-type'?: DummyRule;
 
 /**
  * Alt text
@@ -3303,6 +3358,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/click-events-have-key-events.html
  */
 'jsx_a11y/click-events-have-key-events'?: DummyRule;
+
+/**
+ * Control has associated label
+ *
+ * plugin: Jsx_a11y
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/control-has-associated-label.html
+ */
+'jsx_a11y/control-has-associated-label'?: DummyRule;
 
 /**
  * Heading has content
@@ -3446,6 +3512,28 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-distracting-elements.html
  */
 'jsx_a11y/no-distracting-elements'?: DummyRule;
+
+/**
+ * No interactive element to noninteractive role
+ *
+ * plugin: Jsx_a11y
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-interactive-element-to-noninteractive-role.html
+ */
+'jsx_a11y/no-interactive-element-to-noninteractive-role'?: DummyRule;
+
+/**
+ * No noninteractive element interactions
+ *
+ * plugin: Jsx_a11y
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-noninteractive-element-interactions.html
+ */
+'jsx_a11y/no-noninteractive-element-interactions'?: DummyRule;
 
 /**
  * No noninteractive element to interactive role
