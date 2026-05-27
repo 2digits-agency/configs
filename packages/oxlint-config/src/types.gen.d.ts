@@ -3899,6 +3899,17 @@ export interface RuleOptions {
 'nextjs/no-unwanted-polyfillio'?: DummyRule;
 
 /**
+ * Callback return
+ *
+ * plugin: Node
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/node/callback-return.html
+ */
+'node/callback-return'?: DummyRule;
+
+/**
  * Global require
  *
  * plugin: Node
@@ -6484,6 +6495,17 @@ export interface RuleOptions {
 'unicorn/filename-case'?: DummyRule;
 
 /**
+ * Import style
+ *
+ * plugin: Unicorn
+ * category: Restriction
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/import-style.html
+ */
+'unicorn/import-style'?: DummyRule;
+
+/**
  * New for builtins
  *
  * plugin: Unicorn
@@ -8618,6 +8640,17 @@ export interface RuleOptions {
 'vue/no-arrow-functions-in-watch'?: DummyRule;
 
 /**
+ * No computed properties in data
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-computed-properties-in-data.html
+ */
+'vue/no-computed-properties-in-data'?: DummyRule;
+
+/**
  * No deprecated data object declaration
  *
  * plugin: Vue
@@ -8673,6 +8706,17 @@ export interface RuleOptions {
 'vue/no-deprecated-model-definition'?: DummyRule;
 
 /**
+ * No deprecated props default this
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-props-default-this.html
+ */
+'vue/no-deprecated-props-default-this'?: DummyRule;
+
+/**
  * No deprecated vue config keycodes
  *
  * plugin: Vue
@@ -8693,6 +8737,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-export-in-script-setup.html
  */
 'vue/no-export-in-script-setup'?: DummyRule;
+
+/**
+ * No expose after await
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-expose-after-await.html
+ */
+'vue/no-expose-after-await'?: DummyRule;
 
 /**
  * No import compiler macros
@@ -8739,6 +8794,17 @@ export interface RuleOptions {
 'vue/no-required-prop-with-default'?: DummyRule;
 
 /**
+ * No shared component data
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-shared-component-data.html
+ */
+'vue/no-shared-component-data'?: DummyRule;
+
+/**
  * No this in before route enter
  *
  * plugin: Vue
@@ -8748,6 +8814,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-this-in-before-route-enter.html
  */
 'vue/no-this-in-before-route-enter'?: DummyRule;
+
+/**
+ * No watch after await
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-watch-after-await.html
+ */
+'vue/no-watch-after-await'?: DummyRule;
 
 /**
  * Prefer import from vue
@@ -8772,6 +8849,28 @@ export interface RuleOptions {
 'vue/require-default-export'?: DummyRule;
 
 /**
+ * Require render return
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/require-render-return.html
+ */
+'vue/require-render-return'?: DummyRule;
+
+/**
+ * Require slots as functions
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/require-slots-as-functions.html
+ */
+'vue/require-slots-as-functions'?: DummyRule;
+
+/**
  * Require typed ref
  *
  * plugin: Vue
@@ -8794,6 +8893,17 @@ export interface RuleOptions {
 'vue/return-in-computed-property'?: DummyRule;
 
 /**
+ * Return in emits validator
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/return-in-emits-validator.html
+ */
+'vue/return-in-emits-validator'?: DummyRule;
+
+/**
  * Valid define emits
  *
  * plugin: Vue
@@ -8805,6 +8915,17 @@ export interface RuleOptions {
 'vue/valid-define-emits'?: DummyRule;
 
 /**
+ * Valid define options
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/valid-define-options.html
+ */
+'vue/valid-define-options'?: DummyRule;
+
+/**
  * Valid define props
  *
  * plugin: Vue
@@ -8814,6 +8935,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/valid-define-props.html
  */
 'vue/valid-define-props'?: DummyRule;
+
+/**
+ * Valid next tick
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/valid-next-tick.html
+ */
+'vue/valid-next-tick'?: DummyRule;
 }
 
 export type RuleName = keyof RuleOptions;

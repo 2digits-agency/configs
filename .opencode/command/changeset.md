@@ -1,6 +1,5 @@
 ---
 description: Generate changeset(s) from code changes
-model: opencode-go/kimi-k2.6
 ---
 
 Analyze code changes and create changeset entries for this monorepo.
