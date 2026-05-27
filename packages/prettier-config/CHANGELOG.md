@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 4.0.39
+
+### Patch Changes
+
+- cb2b172: Update local-pkg to 1.2.1
+
 ## 4.0.38
 
 ### Patch Changes
