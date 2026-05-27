@@ -3270,7 +3270,7 @@ Backward pagination arguments
    */
   'react-extra/jsx-no-useless-fragment'?: Linter.RuleEntry<ReactExtraJsxNoUselessFragment>
   /**
-   * Enforces the context name to be a valid component name with the suffix 'Context'.
+   * Enforces identifier names assigned from `createContext` calls to be a valid component name with the suffix `Context`.
    * @see https://eslint-react.xyz/docs/rules/naming-convention-context-name
    */
   'react-extra/naming-convention-context-name'?: Linter.RuleEntry<[]>

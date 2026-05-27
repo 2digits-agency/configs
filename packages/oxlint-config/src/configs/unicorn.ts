@@ -133,6 +133,8 @@ export const unicornConfig = defineTypedConfig({
     'unicorn/switch-case-break-position': 'error',
     'unicorn/text-encoding-identifier-case': 'error',
     'unicorn/throw-new-error': 'error',
+
+    'unicorn/import-style': undefined,
   } satisfies {
     [k in Extract<keyof Rules, `unicorn/${string}`>]: Rules[k];
   },
