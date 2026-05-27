@@ -1,5 +1,11 @@
 # @2digits/tlo-mcp
 
+## 0.1.19
+
+### Patch Changes
+
+- cb2b172: Update @effect/language-service to 0.86.2
+
 ## 0.1.18
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @2digits/oxlint-config
 
+## 0.6.9
+
+### Patch Changes
+
+- 626d181: Update oxlint to 1.67.0 and generated rule types
+
+  - Updated `oxlint` to 1.67.0
+  - Added `unicorn/import-style` to the disabled rule set
+  - Updated generated types for new `node`, `unicorn`, and `vue` rules
+
 ## 0.6.8
 
 ### Patch Changes

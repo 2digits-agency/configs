@@ -1,5 +1,12 @@
 # @2digits/cli
 
+## 2.0.3
+
+### Patch Changes
+
+- cb2b172: Update @effect/language-service to 0.86.2
+- 626d181: Update tinyexec to 1.2.2
+
 ## 2.0.2
 
 ### Patch Changes
