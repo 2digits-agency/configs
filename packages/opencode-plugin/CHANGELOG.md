@@ -1,5 +1,13 @@
 # @2digits/opencode-plugin
 
+## 0.2.15
+
+### Patch Changes
+
+- 128f6a2: Update @opencode-ai/plugin to 1.15.13
+
+  - Updated `posthog-node` to 5.35.7
+
 ## 0.2.14
 
 ### Patch Changes

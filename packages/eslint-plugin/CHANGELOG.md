@@ -1,5 +1,11 @@
 # @2digits/eslint-plugin
 
+## 4.0.17
+
+### Patch Changes
+
+- 128f6a2: Update eslint to 10.4.1
+
 ## 4.0.16
 
 ### Patch Changes
