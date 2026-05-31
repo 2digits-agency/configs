@@ -19,6 +19,36 @@ import {
   getTraceName,
 } from './utilities.js';
 
+function updateTraceStateFromAssistantMessage(
+  traceState: TraceState,
+  pending: PendingMessage,
+  info: {
+    mode: string;
+    time: { completed: number };
+    cost: number;
+    tokens: { input: number; output: number };
+    output?: string;
+    error?: unknown;
+  },
+): string | undefined {
+  traceState.agentName = info.mode || pending.agentName;
+  traceState.lastActivityAt = info.time.completed;
+  traceState.totalCostUsd += info.cost;
+  traceState.totalInputTokens += info.tokens.input;
+  traceState.totalOutputTokens += info.tokens.output;
+
+  const errorMessage = getErrorMessage(info.error);
+
+  traceState.outputState = info.output ?? errorMessage ?? traceState.outputState;
+
+  if (errorMessage) {
+    traceState.hasError = true;
+    traceState.errorMessage = errorMessage;
+  }
+
+  return errorMessage;
+}
+
 export function createSessionState(config: Config) {
   const pendingMessages = new Map<string, PendingMessage>();
   const activeMessages = new Map<string, PendingMessage>();
@@ -197,36 +227,6 @@ export function createSessionState(config: Config) {
     currentGenerationIDs.set(info.sessionID, info.id);
 
     return { generation, ...resolved };
-  }
-
-  function updateTraceStateFromAssistantMessage(
-    traceState: TraceState,
-    pending: PendingMessage,
-    info: {
-      mode: string;
-      time: { completed: number };
-      cost: number;
-      tokens: { input: number; output: number };
-      output?: string;
-      error?: unknown;
-    },
-  ): string | undefined {
-    traceState.agentName = info.mode || pending.agentName;
-    traceState.lastActivityAt = info.time.completed;
-    traceState.totalCostUsd += info.cost;
-    traceState.totalInputTokens += info.tokens.input;
-    traceState.totalOutputTokens += info.tokens.output;
-
-    const errorMessage = getErrorMessage(info.error);
-
-    traceState.outputState = info.output ?? errorMessage ?? traceState.outputState;
-
-    if (errorMessage) {
-      traceState.hasError = true;
-      traceState.errorMessage = errorMessage;
-    }
-
-    return errorMessage;
   }
 
   function hasCompletedAssistantMessage(messageID: string): boolean {
