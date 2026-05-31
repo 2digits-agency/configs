@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 4.0.40
+
+### Patch Changes
+
+- 128f6a2: Update prettier-plugin-jsdoc to 1.8.1
+
 ## 4.0.39
 
 ### Patch Changes
