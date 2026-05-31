@@ -17,6 +17,28 @@ interface ExecutedCommand {
   readonly shell: boolean | string;
 }
 
+function createMockProcess(_command: Command.Command): CommandExecutor.Process {
+  return {
+    [CommandExecutor.ProcessTypeId]: CommandExecutor.ProcessTypeId,
+    pid: 12_345 as CommandExecutor.ProcessId,
+    exitCode: Effect.succeed(0 as CommandExecutor.ExitCode),
+    isRunning: Effect.succeed(false),
+    kill: () => Effect.void,
+    stderr: Stream.empty,
+    stdin: Sink.drain,
+    stdout: Stream.empty,
+    [Symbol.for('nodejs.util.inspect.custom')]() {
+      return 'MockProcess';
+    },
+    toJSON() {
+      return { _tag: 'MockProcess', pid: 12_345 };
+    },
+    [Inspectable.NodeInspectSymbol](): unknown {
+      throw new Error('Function not implemented.');
+    },
+  };
+}
+
 /**
  * A spy/intercept implementation of CommandExecutor for testing. Records all commands that would be executed and
  * returns fake successful results.
@@ -36,28 +58,6 @@ export class MockCommandExecutor extends Effect.Service<MockCommandExecutor>()('
         );
       }
     });
-
-    function createMockProcess(_command: Command.Command): CommandExecutor.Process {
-      return {
-        [CommandExecutor.ProcessTypeId]: CommandExecutor.ProcessTypeId,
-        pid: 12_345 as CommandExecutor.ProcessId,
-        exitCode: Effect.succeed(0 as CommandExecutor.ExitCode),
-        isRunning: Effect.succeed(false),
-        kill: () => Effect.void,
-        stderr: Stream.empty,
-        stdin: Sink.drain,
-        stdout: Stream.empty,
-        [Symbol.for('nodejs.util.inspect.custom')]() {
-          return 'MockProcess';
-        },
-        toJSON() {
-          return { _tag: 'MockProcess', pid: 12_345 };
-        },
-        [Inspectable.NodeInspectSymbol](): unknown {
-          throw new Error('Function not implemented.');
-        },
-      };
-    }
 
     const executor: CommandExecutor.CommandExecutor = {
       [CommandExecutor.TypeId]: CommandExecutor.TypeId,
