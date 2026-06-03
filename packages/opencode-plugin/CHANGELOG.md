@@ -1,5 +1,11 @@
 # @2digits/opencode-plugin
 
+## 0.2.16
+
+### Patch Changes
+
+- 0b1927b: Update posthog-node to 5.35.13
+
 ## 0.2.15
 
 ### Patch Changes
