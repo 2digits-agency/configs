@@ -1,5 +1,11 @@
 # @2digits/oxfmt-config
 
+## 0.3.10
+
+### Patch Changes
+
+- 0b1927b: Update oxfmt to 0.53.0
+
 ## 0.3.9
 
 ### Patch Changes

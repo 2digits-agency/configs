@@ -1,5 +1,15 @@
 # @2digits/oxlint-config
 
+## 0.6.10
+
+### Patch Changes
+
+- 0b1927b: Update oxlint to 1.68.0 and generated rule types
+
+  - Updated `oxlint` to 1.68.0
+  - Added `eslint/prefer-named-capture-group` to the disabled rule set
+  - Updated generated types for new `eslint`, `jsdoc`, `typescript`, and `vue` rules
+
 ## 0.6.9
 
 ### Patch Changes
