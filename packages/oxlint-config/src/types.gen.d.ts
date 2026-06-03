@@ -1776,6 +1776,17 @@ export interface RuleOptions {
 'eslint/prefer-exponentiation-operator'?: DummyRule;
 
 /**
+ * Prefer named capture group
+ *
+ * plugin: Eslint
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-named-capture-group.html
+ */
+'eslint/prefer-named-capture-group'?: DummyRule;
+
+/**
  * Prefer numeric literals
  *
  * plugin: Eslint
@@ -3259,6 +3270,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-yields.html
  */
 'jsdoc/require-yields'?: DummyRule;
+
+/**
+ * Require yields description
+ *
+ * plugin: Jsdoc
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-yields-description.html
+ */
+'jsdoc/require-yields-description'?: DummyRule;
 
 /**
  * Require yields type
@@ -5349,6 +5371,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/explicit-module-boundary-types.html
  */
 'typescript/explicit-module-boundary-types'?: DummyRule;
+
+/**
+ * Method signature style
+ *
+ * plugin: Typescript
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/typescript/method-signature-style.html
+ */
+'typescript/method-signature-style'?: DummyRule;
 
 /**
  * No array delete
@@ -8585,6 +8618,17 @@ export interface RuleOptions {
 'vitest/warn-todo'?: DummyRule;
 
 /**
+ * Component definition name casing
+ *
+ * plugin: Vue
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/component-definition-name-casing.html
+ */
+'vue/component-definition-name-casing'?: DummyRule;
+
+/**
  * Define emits declaration
  *
  * plugin: Vue
@@ -8794,6 +8838,17 @@ export interface RuleOptions {
 'vue/no-required-prop-with-default'?: DummyRule;
 
 /**
+ * No reserved component names
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-reserved-component-names.html
+ */
+'vue/no-reserved-component-names'?: DummyRule;
+
+/**
  * No shared component data
  *
  * plugin: Vue
@@ -8847,6 +8902,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/require-default-export.html
  */
 'vue/require-default-export'?: DummyRule;
+
+/**
+ * Require prop type constructor
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/require-prop-type-constructor.html
+ */
+'vue/require-prop-type-constructor'?: DummyRule;
 
 /**
  * Require render return
