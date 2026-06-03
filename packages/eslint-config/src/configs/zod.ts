@@ -18,6 +18,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/consistent-schema-output-type-style': ['error', { style: 'infer' }],
         'zod/consistent-schema-var-name': ['warn', { after: 'Schema' }],
         'zod/no-any-schema': 'error',
+        'zod/no-duplicate-schema-methods': 'error',
         'zod/no-empty-custom-schema': 'error',
         'zod/no-native-enum': 'error',
         'zod/no-number-schema-with-finite': 'error',

@@ -8562,6 +8562,11 @@ Backward pagination arguments
    */
   'zod/no-any-schema'?: Linter.RuleEntry<[]>
   /**
+   * Disallow calling the same schema method more than once in a single chain
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-duplicate-schema-methods.md
+   */
+  'zod/no-duplicate-schema-methods'?: Linter.RuleEntry<[]>
+  /**
    * Disallow usage of `z.custom()` without arguments
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-empty-custom-schema.md
    */
