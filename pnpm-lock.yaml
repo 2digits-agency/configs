@@ -94,8 +94,8 @@ catalogs:
       specifier: 24.12.4
       version: 24.12.4
     '@types/react':
-      specifier: 19.2.16
-      version: 19.2.16
+      specifier: 19.2.17
+      version: 19.2.17
     '@typescript-eslint/parser':
       specifier: 8.60.0
       version: 8.60.0
@@ -607,7 +607,7 @@ importers:
         version: 3.0.4(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       '@types/react':
         specifier: 'catalog:'
-        version: 19.2.16
+        version: 19.2.17
       '@typescript-eslint/scope-manager':
         specifier: 'catalog:'
         version: 8.60.0
@@ -3908,8 +3908,8 @@ packages:
     resolution: {integrity: sha512-EULJ8LApcVEPbrfND0cRQqutIOdiIgJ1Mgrhpy755r14xMohPTEpkV/k28SJvuOs9bHRFW8x+KeDAEPiGQPB9Q==}
     deprecated: This is a stub types definition. parse-path provides its own type definitions, so you do not need this installed.
 
-  '@types/react@19.2.16':
-    resolution: {integrity: sha512-esJiCAnl0kfpNdE69f3So4WJUXy95dLZydX0KwK46riIHDzHM7O9Vtf9xCHW0PXIqvgqNrswl522kA/5yx+F4w==}
+  '@types/react@19.2.17':
+    resolution: {integrity: sha512-MXfmqaVPEVgkBT/aY0aGCkRWWtByiYQXo3xdQ8r5RzuFrPiRn8Gar2tQdXSUQ2GKV3bkXckek89V8wQBY2Q/Aw==}
 
   '@types/responselike@1.0.3':
     resolution: {integrity: sha512-H/+L+UkTV33uf49PH5pCAUBVPNj2nDBXTN+qS1dOwyyg24l3CcicicCA7ca+HMvJBZcFgl5r8e+RR6elsb4Lyw==}
@@ -10635,7 +10635,7 @@ snapshots:
     dependencies:
       parse-path: 7.1.0
 
-  '@types/react@19.2.16':
+  '@types/react@19.2.17':
     dependencies:
       csstype: 3.2.3
 
@@ -12121,7 +12121,7 @@ snapshots:
 
   estree-walker@3.0.3:
     dependencies:
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
 
   esutils@2.0.3: {}
 
