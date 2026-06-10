@@ -1,4 +1,5 @@
 {
+  "$schema": "./node_modules/@effect/language-service/schema.json",
   "extends": "@2digits/tsconfig/tsconfig.json",
   "compilerOptions": {
     "plugins": [
@@ -12,6 +13,7 @@
         "inlays": true,
         "namespaceImportPackages": ["effect", "@effect/*"],
         "topLevelNamedReexports": "follow",
+        "includeSuggestionsInTsc": true,
         "diagnosticSeverity": {
           "deterministicKeys": "error"
         },
