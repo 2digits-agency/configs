@@ -3,6 +3,12 @@ import type { Scope } from '@typescript-eslint/scope-manager';
 import { AST_NODE_TYPES, type TSESTree } from '@typescript-eslint/utils';
 import type { RuleContext, SourceCode } from '@typescript-eslint/utils/ts-eslint';
 
+const FUNCTION_NODE_TYPES = new Set<TSESTree.Node['type']>([
+  AST_NODE_TYPES.ArrowFunctionExpression,
+  AST_NODE_TYPES.FunctionDeclaration,
+  AST_NODE_TYPES.FunctionExpression,
+]);
+
 export function noUnnecessaryUseCallback(): RuleFunction {
   return noUnnecessaryUseCallbackImpl;
 }
@@ -146,11 +152,7 @@ function isEmptyDependencyArray(node: TSESTree.CallExpressionArgument): boolean 
 function isFunction(
   node: TSESTree.Node,
 ): node is TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration | TSESTree.FunctionExpression {
-  return (
-    node.type === AST_NODE_TYPES.ArrowFunctionExpression ||
-    node.type === AST_NODE_TYPES.FunctionDeclaration ||
-    node.type === AST_NODE_TYPES.FunctionExpression
-  );
+  return FUNCTION_NODE_TYPES.has(node.type);
 }
 
 function reportIfPresent(context: RuleContext, report: UseEffectOnlyReport | undefined): void {

@@ -59,7 +59,7 @@ export const copyFixture = Effect.fn('copyFixture')(function* (fixtureName: Fixt
   const fixtureDirExists = yield* fs.exists(fixtureDir);
 
   if (!fixtureDirExists) {
-    return yield* Effect.fail(new Error(`Fixture not found: ${fixtureName} at ${fixtureDir}`));
+    return yield* Effect.die(new Error(`Fixture not found: ${fixtureName} at ${fixtureDir}`));
   }
 
   const targetDir = process.cwd();

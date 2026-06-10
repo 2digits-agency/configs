@@ -8673,6 +8673,17 @@ export interface RuleOptions {
 'vue/max-props'?: DummyRule;
 
 /**
+ * Next tick style
+ *
+ * plugin: Vue
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/next-tick-style.html
+ */
+'vue/next-tick-style'?: DummyRule;
+
+/**
  * No arrow functions in watch
  *
  * plugin: Vue
@@ -8849,6 +8860,28 @@ export interface RuleOptions {
 'vue/no-reserved-component-names'?: DummyRule;
 
 /**
+ * No reserved keys
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-reserved-keys.html
+ */
+'vue/no-reserved-keys'?: DummyRule;
+
+/**
+ * No reserved props
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-reserved-props.html
+ */
+'vue/no-reserved-props'?: DummyRule;
+
+/**
  * No shared component data
  *
  * plugin: Vue
@@ -8893,6 +8926,17 @@ export interface RuleOptions {
 'vue/prefer-import-from-vue'?: DummyRule;
 
 /**
+ * Prop name casing
+ *
+ * plugin: Vue
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/prop-name-casing.html
+ */
+'vue/prop-name-casing'?: DummyRule;
+
+/**
  * Require default export
  *
  * plugin: Vue
@@ -8904,6 +8948,17 @@ export interface RuleOptions {
 'vue/require-default-export'?: DummyRule;
 
 /**
+ * Require direct export
+ *
+ * plugin: Vue
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/require-direct-export.html
+ */
+'vue/require-direct-export'?: DummyRule;
+
+/**
  * Require prop type constructor
  *
  * plugin: Vue
@@ -8913,6 +8968,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/require-prop-type-constructor.html
  */
 'vue/require-prop-type-constructor'?: DummyRule;
+
+/**
+ * Require prop types
+ *
+ * plugin: Vue
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/require-prop-types.html
+ */
+'vue/require-prop-types'?: DummyRule;
 
 /**
  * Require render return

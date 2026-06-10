@@ -11,7 +11,7 @@ import * as Struct from 'effect/Struct';
 import { PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
 
-class TurborepoSetupError extends Data.TaggedError('TurborepoSetupError')<{
+class TurborepoSetupError extends Data.TaggedError('@2digits/cli/services/TurborepoSetupService/TurborepoSetupError')<{
   message: string;
   cause?: unknown;
 }> {}
@@ -33,7 +33,7 @@ type TaskCategory = 'build' | 'test' | 'lint' | 'typecheck' | 'dev' | 'other';
 function categorizeTask(taskName: string): TaskCategory {
   const lower = taskName.toLowerCase();
 
-  if (lower === 'build' || lower === 'compile' || lower === 'bundle') {
+  if (Array.contains(['build', 'compile', 'bundle'], lower)) {
     return 'build';
   }
 
@@ -45,11 +45,11 @@ function categorizeTask(taskName: string): TaskCategory {
     return 'lint';
   }
 
-  if (lower === 'typecheck' || lower === 'types' || lower === 'tsc') {
+  if (Array.contains(['typecheck', 'types', 'tsc'], lower)) {
     return 'typecheck';
   }
 
-  if (lower === 'dev' || lower === 'start' || lower === 'serve') {
+  if (Array.contains(['dev', 'start', 'serve'], lower)) {
     return 'dev';
   }
 
@@ -114,218 +114,226 @@ function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): Tu
 /**
  * Service for setting up Turborepo configuration in projects.
  */
-export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>()('TurborepoSetupService', {
-  effect: Effect.gen(function* () {
-    const fs = yield* FileSystem.FileSystem;
-    const path = yield* Path.Path;
-    const pm = yield* PackageManagerService;
-    const projectDetect = yield* ProjectDetectionService;
+export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>()(
+  '@2digits/cli/services/TurborepoSetupService',
+  {
+    effect: Effect.gen(function* () {
+      const fs = yield* FileSystem.FileSystem;
+      const path = yield* Path.Path;
+      const pm = yield* PackageManagerService;
+      const projectDetect = yield* ProjectDetectionService;
 
-    /**
-     * Detect tasks from workspace package.json files.
-     */
-    const detectWorkspaceTasks = Effect.fn('TurborepoSetupService.detectWorkspaceTasks')(function* () {
-      const workspaces = yield* projectDetect.discoverWorkspaces();
+      /**
+       * Detect tasks from workspace package.json files.
+       */
+      const detectWorkspaceTasks = Effect.fn('TurborepoSetupService.detectWorkspaceTasks')(function* () {
+        const workspaces = yield* projectDetect.discoverWorkspaces();
 
-      // oxlint-disable-next-line unicorn/no-array-for-each
-      const tasksPerWorkspace = yield* Effect.forEach(
-        workspaces,
-        (workspacePath) =>
-          pm.readPackageJson({ id: workspacePath }).pipe(Effect.map((pkg) => Struct.keys({ ...pkg.scripts }))),
-        { concurrency: 'unbounded' },
-      ).pipe(Effect.map(Array.flatten));
+        // oxlint-disable-next-line unicorn/no-array-for-each
+        const tasksPerWorkspace = yield* Effect.forEach(
+          workspaces,
+          (workspacePath) =>
+            pm.readPackageJson({ id: workspacePath }).pipe(Effect.map((pkg) => Struct.keys({ ...pkg.scripts }))),
+          { concurrency: 'unbounded' },
+        ).pipe(Effect.map(Array.flatten));
 
-      return new Set(tasksPerWorkspace);
-    });
-
-    /**
-     * Read existing turbo.json configuration.
-     */
-    const readTurboConfig = Effect.fn('TurborepoSetupService.readTurboConfig')(function* () {
-      const root = yield* pm.resolveRoot();
-      const turboPath = path.join(root, 'turbo.json');
-
-      const exists = yield* fs.exists(turboPath).pipe(Effect.orElseSucceed(() => false));
-
-      if (!exists) {
-        return Option.none();
-      }
-
-      const content = yield* fs
-        .readFileString(turboPath)
-        .pipe(Effect.mapError((cause) => new TurborepoSetupError({ message: 'Failed to read turbo.json', cause })));
-
-      const config = yield* Effect.try({
-        try: () => JSON.parse(content) as TurboConfig,
-        catch: (cause) =>
-          new TurborepoSetupError({
-            message: 'Invalid JSON in turbo.json',
-            cause,
-          }),
+        return new Set(tasksPerWorkspace);
       });
 
-      return Option.some(config);
-    });
+      /**
+       * Read existing turbo.json configuration.
+       */
+      const readTurboConfig = Effect.fn('TurborepoSetupService.readTurboConfig')(function* () {
+        const root = yield* pm.resolveRoot();
+        const turboPath = path.join(root, 'turbo.json');
 
-    /**
-     * Write turbo.json configuration.
-     */
-    const writeTurboConfig = Effect.fn('TurborepoSetupService.writeTurboConfig')(function* (config: TurboConfig) {
-      const root = yield* pm.resolveRoot();
-      const turboPath = path.join(root, 'turbo.json');
+        const exists = yield* fs.exists(turboPath).pipe(Effect.orElseSucceed(() => false));
 
-      const content = JSON.stringify(config, undefined, 2);
+        if (!exists) {
+          return Option.none();
+        }
 
-      yield* fs
-        .writeFileString(turboPath, content)
-        .pipe(Effect.mapError((cause) => new TurborepoSetupError({ message: 'Failed to write turbo.json', cause })));
+        const content = yield* fs
+          .readFileString(turboPath)
+          .pipe(Effect.mapError((cause) => new TurborepoSetupError({ message: 'Failed to read turbo.json', cause })));
 
-      yield* Effect.logInfo('✅ Updated turbo.json');
-    });
+        const config = yield* Effect.try({
+          try: () => JSON.parse(content) as TurboConfig,
+          catch: (cause) =>
+            new TurborepoSetupError({
+              message: 'Invalid JSON in turbo.json',
+              cause,
+            }),
+        });
 
-    /**
-     * Merge detected tasks into turbo.json.
-     */
-    const mergeTurboConfig = Effect.fn('TurborepoSetupService.mergeTurboConfig')(function* (
-      detectedTasks: Set<string>,
-    ) {
-      const turboConfigOption = yield* readTurboConfig();
+        return Option.some(config);
+      });
 
-      if (Option.isSome(turboConfigOption)) {
-        const existingConfig = turboConfigOption.value;
-        const mergedConfig = mergeTasks(existingConfig, detectedTasks);
+      /**
+       * Write turbo.json configuration.
+       */
+      const writeTurboConfig = Effect.fn('TurborepoSetupService.writeTurboConfig')(function* (config: TurboConfig) {
+        const root = yield* pm.resolveRoot();
+        const turboPath = path.join(root, 'turbo.json');
 
-        yield* writeTurboConfig(mergedConfig);
-        yield* Effect.logInfo(`📦 Merged ${detectedTasks.size} detected task(s) into turbo.json`);
-      } else {
-        const newConfig = mergeTasks({}, detectedTasks);
+        const content = JSON.stringify(config, undefined, 2);
 
-        yield* writeTurboConfig(newConfig);
-        yield* Effect.logInfo(`✨ Created turbo.json with ${detectedTasks.size} task(s)`);
-      }
-    });
+        yield* fs
+          .writeFileString(turboPath, content)
+          .pipe(Effect.mapError((cause) => new TurborepoSetupError({ message: 'Failed to write turbo.json', cause })));
 
-    /**
-     * Update root package.json scripts to use turbo run.
-     */
-    const updateRootScripts = Effect.fn('TurborepoSetupService.updateRootScripts')(function* (
-      detectedTasks: Set<string>,
-    ) {
-      const root = yield* pm.resolveRoot();
-      const packageJson = yield* pm.readPackageJson({ id: root });
+        yield* Effect.logInfo('✅ Updated turbo.json');
+      });
 
-      packageJson.scripts ??= {};
+      /**
+       * Merge detected tasks into turbo.json.
+       */
+      const mergeTurboConfig = Effect.fn('TurborepoSetupService.mergeTurboConfig')(function* (
+        detectedTasks: Set<string>,
+      ) {
+        const turboConfigOption = yield* readTurboConfig();
 
-      let updated = false;
+        if (Option.isSome(turboConfigOption)) {
+          const existingConfig = turboConfigOption.value;
+          const mergedConfig = mergeTasks(existingConfig, detectedTasks);
 
-      for (const taskName of detectedTasks) {
-        const turboCommand = `turbo run ${taskName}`;
+          yield* writeTurboConfig(mergedConfig);
+          yield* Effect.logInfo(`📦 Merged ${detectedTasks.size} detected task(s) into turbo.json`);
+        } else {
+          const newConfig = mergeTasks({}, detectedTasks);
 
-        if (!packageJson.scripts[taskName]) {
-          packageJson.scripts[taskName] = turboCommand;
-          updated = true;
-          yield* Effect.logInfo(`✅ Added script: ${taskName}`);
-        } else if (packageJson.scripts[taskName] !== turboCommand) {
-          // Only update if not already using turbo
-          const existingScript = packageJson.scripts[taskName];
+          yield* writeTurboConfig(newConfig);
+          yield* Effect.logInfo(`✨ Created turbo.json with ${detectedTasks.size} task(s)`);
+        }
+      });
 
-          if (!existingScript.includes('turbo')) {
+      /**
+       * Update root package.json scripts to use turbo run.
+       */
+      const updateRootScripts = Effect.fn('TurborepoSetupService.updateRootScripts')(function* (
+        detectedTasks: Set<string>,
+      ) {
+        const root = yield* pm.resolveRoot();
+        const packageJson = yield* pm.readPackageJson({ id: root });
+
+        packageJson.scripts ??= {};
+
+        let updated = false;
+
+        for (const taskName of detectedTasks) {
+          const turboCommand = `turbo run ${taskName}`;
+
+          if (!packageJson.scripts[taskName]) {
             packageJson.scripts[taskName] = turboCommand;
             updated = true;
-            yield* Effect.logInfo(`✅ Updated script: ${taskName}`);
+            yield* Effect.logInfo(`✅ Added script: ${taskName}`);
+          } else if (packageJson.scripts[taskName] !== turboCommand) {
+            // Only update if not already using turbo
+            const existingScript = packageJson.scripts[taskName];
+
+            if (!existingScript.includes('turbo')) {
+              packageJson.scripts[taskName] = turboCommand;
+              updated = true;
+              yield* Effect.logInfo(`✅ Updated script: ${taskName}`);
+            }
           }
         }
-      }
 
-      yield* updated
-        ? pm.writePackageJson({ id: root, content: packageJson })
-        : Effect.logInfo('✅ Scripts already configured');
-    });
+        yield* updated
+          ? pm.writePackageJson({ id: root, content: packageJson })
+          : Effect.logInfo('✅ Scripts already configured');
+      });
 
-    /**
-     * Ensure turbo is installed as devDependency.
-     */
-    const ensureTurboInstalled = Effect.fn('TurborepoSetupService.ensureTurboInstalled')(function* () {
-      yield* Effect.logInfo('Checking turbo installation...');
-      const root = yield* pm.resolveRoot();
-      const packageJson = yield* pm.readPackageJson({ id: root });
-      const deps = {
-        ...packageJson.dependencies,
-        ...packageJson.devDependencies,
+      /**
+       * Ensure turbo is installed as devDependency.
+       */
+      const ensureTurboInstalled = Effect.fn('TurborepoSetupService.ensureTurboInstalled')(function* () {
+        yield* Effect.logInfo('Checking turbo installation...');
+        const root = yield* pm.resolveRoot();
+        const packageJson = yield* pm.readPackageJson({ id: root });
+        const deps = {
+          ...packageJson.dependencies,
+          ...packageJson.devDependencies,
+        };
+
+        if ('turbo' in deps) {
+          yield* Effect.logInfo('✅ Turbo already installed');
+        } else {
+          yield* Effect.logInfo('Installing turbo...');
+          yield* pm.addDependencies({
+            devDependencies: ['turbo'],
+          });
+          yield* Effect.logInfo('✅ Installed turbo');
+        }
+      });
+
+      /**
+       * Main setup orchestration workflow.
+       */
+      const setup = Effect.fn('TurborepoSetupService.setup')(function* () {
+        yield* Effect.logInfo('🚀 Setting up Turborepo...');
+
+        // Detect project type by checking for workspaces in root package.json
+        yield* Effect.logInfo('Detecting project type...');
+        const root = yield* pm.resolveRoot();
+        const rootPackageJson = yield* pm.readPackageJson({ id: root });
+        const isMonorepo = !!rootPackageJson.workspaces;
+
+        if (!isMonorepo) {
+          yield* Effect.logInfo('⚠️  Not a monorepo project - Turborepo requires monorepo structure');
+          yield* Effect.logInfo('💡 Configure workspaces in package.json to enable monorepo features');
+
+          return;
+        }
+
+        yield* Effect.logInfo('✅ Detected monorepo project');
+
+        // Ensure turbo is installed
+        yield* ensureTurboInstalled();
+
+        // Detect workspace tasks
+        yield* Effect.logInfo('Scanning workspaces for tasks...');
+        const detectedTasks = yield* detectWorkspaceTasks();
+
+        if (detectedTasks.size === 0) {
+          yield* Effect.logInfo('⚠️  No tasks detected in workspaces');
+
+          return;
+        }
+
+        yield* Effect.logInfo(
+          `Found ${detectedTasks.size} unique task(s): ${Array.fromIterable(detectedTasks).join(', ')}`,
+        );
+
+        // Merge tasks into turbo.json
+        yield* mergeTurboConfig(detectedTasks);
+
+        // Update root scripts
+        yield* Effect.logInfo('Updating root package.json scripts...');
+        yield* updateRootScripts(detectedTasks);
+
+        // Completion
+        const turboCmd = yield* pm.runScriptCommand({ script: 'build' });
+
+        yield* Effect.logInfo('🎉 Turborepo setup complete!');
+        yield* Effect.logInfo(`Run '${turboCmd}' to test the build pipeline`);
+      });
+
+      return {
+        setup,
+        detectWorkspaceTasks,
+        readTurboConfig,
+        writeTurboConfig,
+        mergeTurboConfig,
+        updateRootScripts,
+        ensureTurboInstalled,
       };
-
-      if ('turbo' in deps) {
-        yield* Effect.logInfo('✅ Turbo already installed');
-      } else {
-        yield* Effect.logInfo('Installing turbo...');
-        yield* pm.addDependencies({
-          devDependencies: ['turbo'],
-        });
-        yield* Effect.logInfo('✅ Installed turbo');
-      }
-    });
-
-    /**
-     * Main setup orchestration workflow.
-     */
-    const setup = Effect.fn('TurborepoSetupService.setup')(function* () {
-      yield* Effect.logInfo('🚀 Setting up Turborepo...');
-
-      // Detect project type by checking for workspaces in root package.json
-      yield* Effect.logInfo('Detecting project type...');
-      const root = yield* pm.resolveRoot();
-      const rootPackageJson = yield* pm.readPackageJson({ id: root });
-      const isMonorepo = !!rootPackageJson.workspaces;
-
-      if (!isMonorepo) {
-        yield* Effect.logInfo('⚠️  Not a monorepo project - Turborepo requires monorepo structure');
-        yield* Effect.logInfo('💡 Configure workspaces in package.json to enable monorepo features');
-
-        return;
-      }
-
-      yield* Effect.logInfo('✅ Detected monorepo project');
-
-      // Ensure turbo is installed
-      yield* ensureTurboInstalled();
-
-      // Detect workspace tasks
-      yield* Effect.logInfo('Scanning workspaces for tasks...');
-      const detectedTasks = yield* detectWorkspaceTasks();
-
-      if (detectedTasks.size === 0) {
-        yield* Effect.logInfo('⚠️  No tasks detected in workspaces');
-
-        return;
-      }
-
-      yield* Effect.logInfo(
-        `Found ${detectedTasks.size} unique task(s): ${Array.fromIterable(detectedTasks).join(', ')}`,
-      );
-
-      // Merge tasks into turbo.json
-      yield* mergeTurboConfig(detectedTasks);
-
-      // Update root scripts
-      yield* Effect.logInfo('Updating root package.json scripts...');
-      yield* updateRootScripts(detectedTasks);
-
-      // Completion
-      const turboCmd = yield* pm.runScriptCommand({ script: 'build' });
-
-      yield* Effect.logInfo('🎉 Turborepo setup complete!');
-      yield* Effect.logInfo(`Run '${turboCmd}' to test the build pipeline`);
-    });
-
-    return {
-      setup,
-      detectWorkspaceTasks,
-      readTurboConfig,
-      writeTurboConfig,
-      mergeTurboConfig,
-      updateRootScripts,
-      ensureTurboInstalled,
-    };
-  }),
-  dependencies: [NodeFileSystem.layer, NodePath.layer, PackageManagerService.Default, ProjectDetectionService.Default],
-}) {}
+    }),
+    dependencies: [
+      NodeFileSystem.layer,
+      NodePath.layer,
+      PackageManagerService.Default,
+      ProjectDetectionService.Default,
+    ],
+  },
+) {}

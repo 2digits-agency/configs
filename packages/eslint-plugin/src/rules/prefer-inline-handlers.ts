@@ -7,6 +7,12 @@ type MessageId = 'preferInlineHandler';
 
 const MEMO_HOOKS = new Set(['useCallback', 'useMemo']);
 
+const FUNCTION_NODE_TYPES = new Set<TSESTree.Node['type']>([
+  AST_NODE_TYPES.ArrowFunctionExpression,
+  AST_NODE_TYPES.FunctionDeclaration,
+  AST_NODE_TYPES.FunctionExpression,
+]);
+
 const componentBoundaryCache = new WeakMap<TSESTree.Node, TSESTree.Node | undefined>();
 
 function getComponentBoundary(node: TSESTree.Node): TSESTree.Node | undefined {
@@ -20,11 +26,7 @@ function getComponentBoundary(node: TSESTree.Node): TSESTree.Node | undefined {
   let result: TSESTree.Node | undefined;
 
   while (current) {
-    if (
-      current.type === AST_NODE_TYPES.FunctionDeclaration ||
-      current.type === AST_NODE_TYPES.FunctionExpression ||
-      current.type === AST_NODE_TYPES.ArrowFunctionExpression
-    ) {
+    if (FUNCTION_NODE_TYPES.has(current.type)) {
       result = current;
       break;
     }
