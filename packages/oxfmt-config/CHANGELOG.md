@@ -1,5 +1,11 @@
 # @2digits/oxfmt-config
 
+## 0.3.11
+
+### Patch Changes
+
+- 433d415: Update oxfmt to 0.54.0
+
 ## 0.3.10
 
 ### Patch Changes

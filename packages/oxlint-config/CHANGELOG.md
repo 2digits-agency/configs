@@ -1,5 +1,13 @@
 # @2digits/oxlint-config
 
+## 0.6.11
+
+### Patch Changes
+
+- 433d415: Update oxlint to 1.69.0
+
+  - Updated generated Oxlint rule types
+
 ## 0.6.10
 
 ### Patch Changes

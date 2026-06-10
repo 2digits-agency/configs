@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 5.5.6
+
+### Patch Changes
+
+- 433d415: Update ESLint plugins
+
+  - Updated ESLint plugin dependencies, including `eslint-plugin-unicorn` to 65.0.1
+  - Added new `eslint-plugin-zod` rule coverage for `zod/no-coerce-boolean`
+  - Updated generated rule types for new and renamed Unicorn rules
+  - Fixed Tailwind major version detection for CSS syntax selection
+
+- Updated dependencies [433d415]
+  - @2digits/eslint-plugin@4.0.18
+
 ## 5.5.5
 
 ### Patch Changes
