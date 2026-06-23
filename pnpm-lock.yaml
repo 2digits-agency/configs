@@ -25,8 +25,8 @@ catalogs:
       specifier: 0.86.2
       version: 0.86.2
     '@effect/platform':
-      specifier: 0.96.1
-      version: 0.96.1
+      specifier: 0.96.2
+      version: 0.96.2
     '@effect/platform-node':
       specifier: 0.107.0
       version: 0.107.0
@@ -118,8 +118,8 @@ catalogs:
       specifier: 6.1.7
       version: 6.1.7
     effect:
-      specifier: 3.21.3
-      version: 3.21.3
+      specifier: 3.21.4
+      version: 3.21.4
     empathic:
       specifier: 2.0.1
       version: 2.0.1
@@ -374,16 +374,16 @@ importers:
     dependencies:
       '@effect/cli':
         specifier: 'catalog:'
-        version: 0.75.2(@effect/platform@0.96.1(effect@3.21.3))(@effect/printer-ansi@0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3))(@effect/printer@0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)
+        version: 0.75.2(@effect/platform@0.96.2(effect@3.21.4))(@effect/printer-ansi@0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4))(@effect/printer@0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)
       '@effect/platform':
         specifier: 'catalog:'
-        version: 0.96.1(effect@3.21.3)
+        version: 0.96.2(effect@3.21.4)
       '@effect/platform-node':
         specifier: 'catalog:'
-        version: 0.107.0(@effect/cluster@0.48.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/workflow@0.9.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)
+        version: 0.107.0(@effect/cluster@0.48.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/workflow@0.9.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)
       effect:
         specifier: 'catalog:'
-        version: 3.21.3
+        version: 3.21.4
       nypm:
         specifier: 'catalog:'
         version: 0.6.6
@@ -402,7 +402,7 @@ importers:
         version: 0.86.2
       '@effect/vitest':
         specifier: 'catalog:'
-        version: 0.29.0(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))(effect@3.21.3)
+        version: 0.29.0(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(effect@3.21.4)
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20260610.1
@@ -420,10 +420,10 @@ importers:
         version: 0.9.0(rolldown@1.0.3)
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       vitest:
         specifier: npm:@voidzero-dev/vite-plus-test@0.1.24
-        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)'
+        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
 
   packages/constants:
     devDependencies:
@@ -444,7 +444,7 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
 
   packages/eslint-config:
     dependencies:
@@ -498,7 +498,7 @@ importers:
         version: 8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       '@vitest/eslint-plugin':
         specifier: 'catalog:'
-        version: 1.6.20(@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
+        version: 1.6.20(@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       empathic:
         specifier: 'catalog:'
         version: 2.0.1
@@ -552,7 +552,7 @@ importers:
         version: 4.0.3(eslint@10.4.1(jiti@2.7.0))
       eslint-plugin-storybook:
         specifier: 'catalog:'
-        version: 10.4.3(eslint@10.4.1(jiti@2.7.0))(storybook@9.1.3(@testing-library/dom@10.4.1)(prettier@3.8.4)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)))(typescript@6.0.3)
+        version: 10.4.3(eslint@10.4.1(jiti@2.7.0))(storybook@9.1.3(@testing-library/dom@10.4.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(prettier@3.8.4))(typescript@6.0.3)
       eslint-plugin-tailwindcss:
         specifier: 'catalog:'
         version: 3.18.2(tailwindcss@3.4.17)
@@ -570,7 +570,7 @@ importers:
         version: 3.4.0(eslint@10.4.1(jiti@2.7.0))
       eslint-plugin-zod:
         specifier: 'catalog:'
-        version: 4.7.0(eslint@10.4.1(jiti@2.7.0))(oxlint@1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)(zod@4.4.3)
+        version: 4.7.0(eslint@10.4.1(jiti@2.7.0))(oxlint@1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)))(typescript@6.0.3)(zod@4.4.3)
       globals:
         specifier: 'catalog:'
         version: 17.6.0
@@ -640,10 +640,10 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       vitest:
         specifier: npm:@voidzero-dev/vite-plus-test@0.1.24
-        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)'
+        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -677,7 +677,7 @@ importers:
         version: 7.0.0-dev.20260610.1
       eslint-vitest-rule-tester:
         specifier: 'catalog:'
-        version: 3.1.0(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
+        version: 3.1.0(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       publint:
         specifier: 'catalog:'
         version: 0.3.21
@@ -686,10 +686,10 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       vitest:
         specifier: npm:@voidzero-dev/vite-plus-test@0.1.24
-        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)'
+        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
 
   packages/opencode-plugin:
     dependencies:
@@ -717,10 +717,10 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       vitest:
         specifier: npm:@voidzero-dev/vite-plus-test@0.1.24
-        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)'
+        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
 
   packages/oxfmt-config:
     dependencies:
@@ -748,7 +748,7 @@ importers:
         version: 7.0.0-dev.20260610.1
       oxfmt:
         specifier: 'catalog:'
-        version: 0.54.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
+        version: 0.54.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))
       prettier:
         specifier: 'catalog:'
         version: 3.8.4
@@ -760,10 +760,10 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       vitest:
         specifier: npm:@voidzero-dev/vite-plus-test@0.1.24
-        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)'
+        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
 
   packages/oxlint-config:
     dependencies:
@@ -797,7 +797,7 @@ importers:
         version: 1.7.2
       oxlint:
         specifier: 'catalog:'
-        version: 1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
+        version: 1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))
       oxlint-tsgolint:
         specifier: 'catalog:'
         version: 0.23.0
@@ -809,7 +809,7 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
 
   packages/prettier-config:
     dependencies:
@@ -858,7 +858,7 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
 
   packages/renovate:
     devDependencies:
@@ -885,25 +885,25 @@ importers:
     dependencies:
       '@effect/ai':
         specifier: 'catalog:'
-        version: 0.36.0(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)
+        version: 0.36.0(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)
       '@effect/cli':
         specifier: 'catalog:'
-        version: 0.75.2(@effect/platform@0.96.1(effect@3.21.3))(@effect/printer-ansi@0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3))(@effect/printer@0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)
+        version: 0.75.2(@effect/platform@0.96.2(effect@3.21.4))(@effect/printer-ansi@0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4))(@effect/printer@0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)
       '@effect/experimental':
         specifier: 'catalog:'
-        version: 0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
+        version: 0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
       '@effect/platform':
         specifier: 'catalog:'
-        version: 0.96.1(effect@3.21.3)
+        version: 0.96.2(effect@3.21.4)
       '@effect/platform-node':
         specifier: 'catalog:'
-        version: 0.107.0(@effect/cluster@0.48.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/workflow@0.9.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)
+        version: 0.107.0(@effect/cluster@0.48.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/workflow@0.9.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)
       '@effect/rpc':
         specifier: 'catalog:'
-        version: 0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
+        version: 0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
       effect:
         specifier: 'catalog:'
-        version: 3.21.3
+        version: 3.21.4
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -916,7 +916,7 @@ importers:
         version: 0.86.2
       '@effect/vitest':
         specifier: 'catalog:'
-        version: 0.29.0(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))(effect@3.21.3)
+        version: 0.29.0(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(effect@3.21.4)
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20260610.1
@@ -928,10 +928,10 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
       vitest:
         specifier: npm:@voidzero-dev/vite-plus-test@0.1.24
-        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)'
+        version: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
 
   packages/tsconfig:
     devDependencies:
@@ -1379,10 +1379,10 @@ packages:
       '@effect/sql': ^0.51.1
       effect: ^3.21.2
 
-  '@effect/platform@0.96.1':
-    resolution: {integrity: sha512-cjB1QZZYEP8JXCFNGvBLVi0T6YUBQTmOVEUA3SDbiQ6RUO+p6CE3eyD2vMWmrz5nE8yY5QSAuOV9v0boEcUv+A==}
+  '@effect/platform@0.96.2':
+    resolution: {integrity: sha512-oJm3UztdzZvK7BXkFSV3IdyGuqQrhLmViG/hMDZh99ski7aADesNuv19z4R0heH3bAXnSt/Nb8O9KJQ886C0Tg==}
     peerDependencies:
-      effect: ^3.21.2
+      effect: ^3.21.4
 
   '@effect/printer-ansi@0.45.0':
     resolution: {integrity: sha512-3MS02RP83eZaBJX98PRI4f5kyoEVyNfg2Qu/XUWQMFRp4wvmgNwEy18RjO9G6s7uB8NaYXTpQVDmtUoKARx7fA==}
@@ -2186,19 +2186,9 @@ packages:
     resolution: {integrity: sha512-0FOIepYR4ugPYaHwK7hDeHDkfPOBVvayt9QpvRbi2LT/h2b0GaE/gM9Gag7fsnyYyNaTZ2IGyOuVg07IYepvYQ==}
     engines: {node: '>=20.0.0'}
 
-  '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
-    resolution: {integrity: sha512-QZHtlVgbAdy2zAqNA9Gu1UpIuI8Xvsd1v8ic6B2pZmeFnFcMWiPLfWXh7TVw4eGEZ/C9TH281KwhVoeQUKbyjw==}
-    cpu: [arm64]
-    os: [darwin]
-
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4':
     resolution: {integrity: sha512-LCkGo6JDfaBhgST7UpPWgNgLINpcpabaHfyz5OBx75nUYxBsaEPxjnyNjWpeb/xBup/682QnBfRBy2/LvPutZQ==}
     cpu: [arm64]
-    os: [darwin]
-
-  '@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.3':
-    resolution: {integrity: sha512-mdzd3AVzYKuUmiWOQ8GNhl64/IoFGol569zNRdkLReh6LRLHOXxU4U8eq0JwaD8iFHdVGqSy4IjFL4reoWCDFw==}
-    cpu: [x64]
     os: [darwin]
 
   '@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.4':
@@ -2206,19 +2196,9 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.3':
-    resolution: {integrity: sha512-YxQL+ax0XqBJDZiKimS2XQaf+2wDGVa1enVRGzEvLLVFeqa5kx2bWbtcSXgsxjQB7nRqqIGFIcLteF/sHeVtQg==}
-    cpu: [arm64]
-    os: [linux]
-
   '@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.4':
     resolution: {integrity: sha512-dgX0P/9wGPJeHFBG+ZmhgE6bmtMt7NP5CRBGyyktpopdk/mW4POnrpQsSLtKI1dwpc+pPLuXHDh6vvskyQE/sw==}
     cpu: [arm64]
-    os: [linux]
-
-  '@msgpackr-extract/msgpackr-extract-linux-arm@3.0.3':
-    resolution: {integrity: sha512-fg0uy/dG/nZEXfYilKoRe7yALaNmHoYeIoJuJ7KJ+YyU2bvY8vPv27f7UKhGRpY6euFYqEVhxCFZgAUNQBM3nw==}
-    cpu: [arm]
     os: [linux]
 
   '@msgpackr-extract/msgpackr-extract-linux-arm@3.0.4':
@@ -2226,20 +2206,10 @@ packages:
     cpu: [arm]
     os: [linux]
 
-  '@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3':
-    resolution: {integrity: sha512-cvwNfbP07pKUfq1uH+S6KJ7dT9K8WOE4ZiAcsrSes+UY55E/0jLYc+vq+DO7jlmqRb5zAggExKm0H7O/CBaesg==}
-    cpu: [x64]
-    os: [linux]
-
   '@msgpackr-extract/msgpackr-extract-linux-x64@3.0.4':
     resolution: {integrity: sha512-8TNXMEjJc3QEy7R/x1INhgiU+XakDAFUzBhaz7+Rbrs8NH5UQeHQxxmzsSBJGyV6I1jW79undiQm8tOI+D+8FQ==}
     cpu: [x64]
     os: [linux]
-
-  '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3':
-    resolution: {integrity: sha512-x0fWaQtYp4E6sktbsdAqnehxDgEc/VwM7uLsRCYWaiGu0ykYdZPiS8zCWdnjHwyiumousxfBm4SO31eXqwEZhQ==}
-    cpu: [x64]
-    os: [win32]
 
   '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.4':
     resolution: {integrity: sha512-CmCXPQrkbwExx3j946/PtHWHbYJiCRBRDl4BlkRQcJB/YOwQxJRTpoo7aTsortjgoJ1x7opzTSxn7C+ASSLVjQ==}
@@ -5040,8 +5010,8 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  effect@3.21.3:
-    resolution: {integrity: sha512-RqwU7WnJ6CqYhyjpOVJA5vh1Sgkn6eVECO6mnD0EjlbWcC2M3LJaPglXXr13Rdo/Y+B+wTEPzGRYFNL2xKxNeQ==}
+  effect@3.21.4:
+    resolution: {integrity: sha512-B89v/xSgPbl1J2Ai2u18jxq3odpFauU1rC6/eSs4FeNHi72kwKdJp12VGigvRV2lK+kRnx+OOz41XV8guZd4gQ==}
 
   effect@4.0.0-beta.74:
     resolution: {integrity: sha512-Yx+Kh12U+i2FmjwEfKs+ePFmpMd43RPD1oGqc/VraSS9bYzvF0Ff3PojwEFEVEewp8xc92Uxu28gTspU4qyvHA==}
@@ -6474,10 +6444,6 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  msgpackr-extract@3.0.3:
-    resolution: {integrity: sha512-P0efT1C9jIdVRefqjzOQ9Xml57zpOXnIuS+csaB4MdZbTdmGDLo8XhzBG1N7aO11gKDDkJvBLULeFTo46wwreA==}
-    hasBin: true
-
   msgpackr-extract@3.0.4:
     resolution: {integrity: sha512-4kmO/MdyUIkLIvTPr8VHLil4AtoKIoniWPIEk5+CDy0xnWC84azhSFmuJ7PxZdsYtiP5kEeQsORAVIeMgxT+Hw==}
     hasBin: true
@@ -7803,49 +7769,6 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
-  vite@8.0.16:
-    resolution: {integrity: sha512-h9bXPmJichP5fLmVQo3PyaGSDE2n3aPuomeAlVRm0JLmt4rY6zmPKd59HYI4LNW8oTK7tlTsuC7l/m7awx9Jcw==}
-    engines: {node: ^20.19.0 || >=22.12.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^20.19.0 || >=22.12.0
-      '@vitejs/devtools': ^0.1.18
-      esbuild: ^0.27.0 || ^0.28.0
-      jiti: '>=1.21.0'
-      less: ^4.0.0
-      sass: ^1.70.0
-      sass-embedded: ^1.70.0
-      stylus: '>=0.54.8'
-      sugarss: ^5.0.0
-      terser: ^5.16.0
-      tsx: ^4.8.1
-      yaml: ^2.4.2
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      '@vitejs/devtools':
-        optional: true
-      esbuild:
-        optional: true
-      jiti:
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      sass-embedded:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-      tsx:
-        optional: true
-      yaml:
-        optional: true
-
   walk-up-path@4.0.0:
     resolution: {integrity: sha512-3hu+tD8YzSLGuFYtPRb48vdhKMi0KQV5sn+uWr8+7dMEq/2G/dtLrdDinkLjqq5TIbIBjYJ4Ax/n3YiaW7QM8A==}
     engines: {node: 20 || >=22}
@@ -8715,62 +8638,62 @@ snapshots:
       human-id: 4.1.1
       prettier: 2.8.8
 
-  '@effect/ai@0.36.0(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)':
+  '@effect/ai@0.36.0(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/experimental': 0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
-      '@effect/platform': 0.96.1(effect@3.21.3)
-      '@effect/rpc': 0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
-      effect: 3.21.3
+      '@effect/experimental': 0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      '@effect/platform': 0.96.2(effect@3.21.4)
+      '@effect/rpc': 0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      effect: 3.21.4
       find-my-way-ts: 0.1.6
 
-  '@effect/cli@0.75.2(@effect/platform@0.96.1(effect@3.21.3))(@effect/printer-ansi@0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3))(@effect/printer@0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)':
+  '@effect/cli@0.75.2(@effect/platform@0.96.2(effect@3.21.4))(@effect/printer-ansi@0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4))(@effect/printer@0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/platform': 0.96.1(effect@3.21.3)
-      '@effect/printer': 0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3)
-      '@effect/printer-ansi': 0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3)
-      effect: 3.21.3
+      '@effect/platform': 0.96.2(effect@3.21.4)
+      '@effect/printer': 0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4)
+      '@effect/printer-ansi': 0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4)
+      effect: 3.21.4
       ini: 4.1.3
       toml: 3.0.0
       yaml: 2.9.0
 
-  '@effect/cluster@0.48.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/workflow@0.9.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)':
+  '@effect/cluster@0.48.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/workflow@0.9.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/platform': 0.96.1(effect@3.21.3)
-      '@effect/rpc': 0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
-      '@effect/sql': 0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
-      '@effect/workflow': 0.9.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)
-      effect: 3.21.3
+      '@effect/platform': 0.96.2(effect@3.21.4)
+      '@effect/rpc': 0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      '@effect/sql': 0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      '@effect/workflow': 0.9.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)
+      effect: 3.21.4
 
-  '@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)':
+  '@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/platform': 0.96.1(effect@3.21.3)
-      effect: 3.21.3
+      '@effect/platform': 0.96.2(effect@3.21.4)
+      effect: 3.21.4
       uuid: 11.1.0
 
   '@effect/language-service@0.86.2': {}
 
-  '@effect/platform-node-shared@0.60.0(@effect/cluster@0.48.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/workflow@0.9.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)':
+  '@effect/platform-node-shared@0.60.0(@effect/cluster@0.48.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/workflow@0.9.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/cluster': 0.48.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/workflow@0.9.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)
-      '@effect/platform': 0.96.1(effect@3.21.3)
-      '@effect/rpc': 0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
-      '@effect/sql': 0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
+      '@effect/cluster': 0.48.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/workflow@0.9.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)
+      '@effect/platform': 0.96.2(effect@3.21.4)
+      '@effect/rpc': 0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      '@effect/sql': 0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
       '@parcel/watcher': 2.5.1
-      effect: 3.21.3
+      effect: 3.21.4
       multipasta: 0.2.7
       ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@effect/platform-node@0.107.0(@effect/cluster@0.48.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/workflow@0.9.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)':
+  '@effect/platform-node@0.107.0(@effect/cluster@0.48.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/workflow@0.9.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/cluster': 0.48.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/workflow@0.9.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)
-      '@effect/platform': 0.96.1(effect@3.21.3)
-      '@effect/platform-node-shared': 0.60.0(@effect/cluster@0.48.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/workflow@0.9.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)
-      '@effect/rpc': 0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
-      '@effect/sql': 0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
-      effect: 3.21.3
+      '@effect/cluster': 0.48.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/workflow@0.9.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)
+      '@effect/platform': 0.96.2(effect@3.21.4)
+      '@effect/platform-node-shared': 0.60.0(@effect/cluster@0.48.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/workflow@0.9.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)
+      '@effect/rpc': 0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      '@effect/sql': 0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      effect: 3.21.4
       mime: 3.0.0
       undici: 7.15.0
       ws: 8.21.0
@@ -8778,51 +8701,51 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@effect/platform@0.96.1(effect@3.21.3)':
+  '@effect/platform@0.96.2(effect@3.21.4)':
     dependencies:
-      effect: 3.21.3
+      effect: 3.21.4
       find-my-way-ts: 0.1.6
       msgpackr: 1.11.10
       multipasta: 0.2.7
 
-  '@effect/printer-ansi@0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3)':
+  '@effect/printer-ansi@0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/printer': 0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3)
-      '@effect/typeclass': 0.36.0(effect@3.21.3)
-      effect: 3.21.3
+      '@effect/printer': 0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4)
+      '@effect/typeclass': 0.36.0(effect@3.21.4)
+      effect: 3.21.4
 
-  '@effect/printer@0.45.0(@effect/typeclass@0.36.0(effect@3.21.3))(effect@3.21.3)':
+  '@effect/printer@0.45.0(@effect/typeclass@0.36.0(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/typeclass': 0.36.0(effect@3.21.3)
-      effect: 3.21.3
+      '@effect/typeclass': 0.36.0(effect@3.21.4)
+      effect: 3.21.4
 
-  '@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)':
+  '@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/platform': 0.96.1(effect@3.21.3)
-      effect: 3.21.3
+      '@effect/platform': 0.96.2(effect@3.21.4)
+      effect: 3.21.4
       msgpackr: 1.11.10
 
-  '@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)':
+  '@effect/sql@0.44.2(@effect/experimental@0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/experimental': 0.60.0(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
-      '@effect/platform': 0.96.1(effect@3.21.3)
-      effect: 3.21.3
+      '@effect/experimental': 0.60.0(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      '@effect/platform': 0.96.2(effect@3.21.4)
+      effect: 3.21.4
       uuid: 11.1.0
 
-  '@effect/typeclass@0.36.0(effect@3.21.3)':
+  '@effect/typeclass@0.36.0(effect@3.21.4)':
     dependencies:
-      effect: 3.21.3
+      effect: 3.21.4
 
-  '@effect/vitest@0.29.0(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))(effect@3.21.3)':
+  '@effect/vitest@0.29.0(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(effect@3.21.4)':
     dependencies:
-      effect: 3.21.3
-      vitest: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)'
+      effect: 3.21.4
+      vitest: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
 
-  '@effect/workflow@0.9.3(@effect/platform@0.96.1(effect@3.21.3))(@effect/rpc@0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3))(effect@3.21.3)':
+  '@effect/workflow@0.9.3(@effect/platform@0.96.2(effect@3.21.4))(@effect/rpc@0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4))(effect@3.21.4)':
     dependencies:
-      '@effect/platform': 0.96.1(effect@3.21.3)
-      '@effect/rpc': 0.75.1(@effect/platform@0.96.1(effect@3.21.3))(effect@3.21.3)
-      effect: 3.21.3
+      '@effect/platform': 0.96.2(effect@3.21.4)
+      '@effect/rpc': 0.75.1(@effect/platform@0.96.2(effect@3.21.4))(effect@3.21.4)
+      effect: 3.21.4
 
   '@emnapi/core@1.10.0':
     dependencies:
@@ -9615,37 +9538,19 @@ snapshots:
       js-yaml: 4.1.1
       tinyglobby: 0.2.17
 
-  '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
-    optional: true
-
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4':
-    optional: true
-
-  '@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.3':
     optional: true
 
   '@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.4':
     optional: true
 
-  '@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.3':
-    optional: true
-
   '@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.4':
-    optional: true
-
-  '@msgpackr-extract/msgpackr-extract-linux-arm@3.0.3':
     optional: true
 
   '@msgpackr-extract/msgpackr-extract-linux-arm@3.0.4':
     optional: true
 
-  '@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3':
-    optional: true
-
   '@msgpackr-extract/msgpackr-extract-linux-x64@3.0.4':
-    optional: true
-
-  '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.3':
     optional: true
 
   '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.4':
@@ -10628,7 +10533,8 @@ snapshots:
   '@rolldown/binding-win32-x64-msvc@1.0.3':
     optional: true
 
-  '@rolldown/pluginutils@1.0.1': {}
+  '@rolldown/pluginutils@1.0.1':
+    optional: true
 
   '@sec-ant/readable-stream@0.4.1': {}
 
@@ -11088,7 +10994,7 @@ snapshots:
     dependencies:
       valibot: 1.4.1(typescript@6.0.3)
 
-  '@vitest/eslint-plugin@1.6.20(@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)':
+  '@vitest/eslint-plugin@1.6.20(@typescript-eslint/eslint-plugin@8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.60.0
       '@typescript-eslint/utils': 8.60.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
@@ -11096,7 +11002,7 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.61.0(@typescript-eslint/parser@8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       typescript: 6.0.3
-      vitest: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)'
+      vitest: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
     transitivePeerDependencies:
       - supports-color
 
@@ -11108,13 +11014,13 @@ snapshots:
       chai: 5.3.3
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.2.4(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))':
+  '@vitest/mocker@3.2.4(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 3.2.4
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
+      vite: '@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
 
   '@vitest/pretty-format@3.2.4':
     dependencies:
@@ -11182,6 +11088,47 @@ snapshots:
   '@voidzero-dev/vite-plus-linux-x64-musl@0.1.24':
     optional: true
 
+  '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
+    dependencies:
+      '@standard-schema/spec': 1.1.0
+      '@types/chai': 5.2.3
+      '@voidzero-dev/vite-plus-core': 0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+      es-module-lexer: 1.7.0
+      obug: 2.1.1
+      pixelmatch: 7.1.0
+      pngjs: 7.0.0
+      sirv: 3.0.2
+      std-env: 4.0.0
+      tinybench: 2.9.0
+      tinyexec: 1.2.4
+      tinyglobby: 0.2.17
+      vite: '@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
+      ws: 8.21.0
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.1
+      '@types/node': 24.13.1
+    transitivePeerDependencies:
+      - '@arethetypeswrong/core'
+      - '@tsdown/css'
+      - '@tsdown/exe'
+      - '@vitejs/devtools'
+      - bufferutil
+      - esbuild
+      - jiti
+      - less
+      - publint
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - typescript
+      - unplugin-unused
+      - unrun
+      - utf-8-validate
+      - yaml
+
   '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -11197,88 +11144,6 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       vite: '@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
-      ws: 8.21.0
-    optionalDependencies:
-      '@opentelemetry/api': 1.9.1
-      '@types/node': 24.13.1
-    transitivePeerDependencies:
-      - '@arethetypeswrong/core'
-      - '@tsdown/css'
-      - '@tsdown/exe'
-      - '@vitejs/devtools'
-      - bufferutil
-      - esbuild
-      - jiti
-      - less
-      - publint
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - terser
-      - tsx
-      - typescript
-      - unplugin-unused
-      - unrun
-      - utf-8-validate
-      - yaml
-
-  '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)':
-    dependencies:
-      '@standard-schema/spec': 1.1.0
-      '@types/chai': 5.2.3
-      '@voidzero-dev/vite-plus-core': 0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
-      es-module-lexer: 1.7.0
-      obug: 2.1.1
-      pixelmatch: 7.1.0
-      pngjs: 7.0.0
-      sirv: 3.0.2
-      std-env: 4.0.0
-      tinybench: 2.9.0
-      tinyexec: 1.2.4
-      tinyglobby: 0.2.17
-      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
-      ws: 8.21.0
-    optionalDependencies:
-      '@opentelemetry/api': 1.9.1
-      '@types/node': 24.13.1
-    transitivePeerDependencies:
-      - '@arethetypeswrong/core'
-      - '@tsdown/css'
-      - '@tsdown/exe'
-      - '@vitejs/devtools'
-      - bufferutil
-      - esbuild
-      - jiti
-      - less
-      - publint
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - terser
-      - tsx
-      - typescript
-      - unplugin-unused
-      - unrun
-      - utf-8-validate
-      - yaml
-
-  '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)':
-    dependencies:
-      '@standard-schema/spec': 1.1.0
-      '@types/chai': 5.2.3
-      '@voidzero-dev/vite-plus-core': 0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
-      es-module-lexer: 1.7.0
-      obug: 2.1.1
-      pixelmatch: 7.1.0
-      pngjs: 7.0.0
-      sirv: 3.0.2
-      std-env: 4.0.0
-      tinybench: 2.9.0
-      tinyexec: 1.2.4
-      tinyglobby: 0.2.17
-      vite: 8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
       ws: 8.21.0
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
@@ -11906,7 +11771,7 @@ snapshots:
       minimatch: 10.2.5
       semver: 7.8.1
 
-  effect@3.21.3:
+  effect@3.21.4:
     dependencies:
       '@standard-schema/spec': 1.1.0
       fast-check: 3.23.2
@@ -12295,11 +12160,11 @@ snapshots:
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
 
-  eslint-plugin-storybook@10.4.3(eslint@10.4.1(jiti@2.7.0))(storybook@9.1.3(@testing-library/dom@10.4.1)(prettier@3.8.4)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)))(typescript@6.0.3):
+  eslint-plugin-storybook@10.4.3(eslint@10.4.1(jiti@2.7.0))(storybook@9.1.3(@testing-library/dom@10.4.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(prettier@3.8.4))(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/utils': 8.60.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       eslint: 10.4.1(jiti@2.7.0)
-      storybook: 9.1.3(@testing-library/dom@10.4.1)(prettier@3.8.4)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+      storybook: 9.1.3(@testing-library/dom@10.4.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(prettier@3.8.4)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -12357,13 +12222,13 @@ snapshots:
       natural-compare: 1.4.0
       yaml-eslint-parser: 2.0.0
 
-  eslint-plugin-zod@4.7.0(eslint@10.4.1(jiti@2.7.0))(oxlint@1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)(zod@4.4.3):
+  eslint-plugin-zod@4.7.0(eslint@10.4.1(jiti@2.7.0))(oxlint@1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)))(typescript@6.0.3)(zod@4.4.3):
     dependencies:
       '@eslint-zod/utils': 2.3.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       '@typescript-eslint/utils': 8.60.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
     optionalDependencies:
       eslint: 10.4.1(jiti@2.7.0)
-      oxlint: 1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
+      oxlint: 1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))
       zod: 4.4.3
     transitivePeerDependencies:
       - supports-color
@@ -12390,11 +12255,11 @@ snapshots:
 
   eslint-visitor-keys@5.0.1: {}
 
-  eslint-vitest-rule-tester@3.1.0(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3):
+  eslint-vitest-rule-tester@3.1.0(@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/utils': 8.60.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       eslint: 10.4.1(jiti@2.7.0)
-      vitest: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)'
+      vitest: '@voidzero-dev/vite-plus-test@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -13685,18 +13550,6 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msgpackr-extract@3.0.3:
-    dependencies:
-      node-gyp-build-optional-packages: 5.2.2
-    optionalDependencies:
-      '@msgpackr-extract/msgpackr-extract-darwin-arm64': 3.0.3
-      '@msgpackr-extract/msgpackr-extract-darwin-x64': 3.0.3
-      '@msgpackr-extract/msgpackr-extract-linux-arm': 3.0.3
-      '@msgpackr-extract/msgpackr-extract-linux-arm64': 3.0.3
-      '@msgpackr-extract/msgpackr-extract-linux-x64': 3.0.3
-      '@msgpackr-extract/msgpackr-extract-win32-x64': 3.0.3
-    optional: true
-
   msgpackr-extract@3.0.4:
     dependencies:
       node-gyp-build-optional-packages: 5.2.2
@@ -13711,7 +13564,7 @@ snapshots:
 
   msgpackr@1.11.10:
     optionalDependencies:
-      msgpackr-extract: 3.0.3
+      msgpackr-extract: 3.0.4
 
   msgpackr@2.0.4:
     optionalDependencies:
@@ -13961,6 +13814,31 @@ snapshots:
       '@oxc-resolver/binding-win32-arm64-msvc': 11.20.0
       '@oxc-resolver/binding-win32-x64-msvc': 11.20.0
 
+  oxfmt@0.52.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)):
+    dependencies:
+      tinypool: 2.1.0
+    optionalDependencies:
+      '@oxfmt/binding-android-arm-eabi': 0.52.0
+      '@oxfmt/binding-android-arm64': 0.52.0
+      '@oxfmt/binding-darwin-arm64': 0.52.0
+      '@oxfmt/binding-darwin-x64': 0.52.0
+      '@oxfmt/binding-freebsd-x64': 0.52.0
+      '@oxfmt/binding-linux-arm-gnueabihf': 0.52.0
+      '@oxfmt/binding-linux-arm-musleabihf': 0.52.0
+      '@oxfmt/binding-linux-arm64-gnu': 0.52.0
+      '@oxfmt/binding-linux-arm64-musl': 0.52.0
+      '@oxfmt/binding-linux-ppc64-gnu': 0.52.0
+      '@oxfmt/binding-linux-riscv64-gnu': 0.52.0
+      '@oxfmt/binding-linux-riscv64-musl': 0.52.0
+      '@oxfmt/binding-linux-s390x-gnu': 0.52.0
+      '@oxfmt/binding-linux-x64-gnu': 0.52.0
+      '@oxfmt/binding-linux-x64-musl': 0.52.0
+      '@oxfmt/binding-openharmony-arm64': 0.52.0
+      '@oxfmt/binding-win32-arm64-msvc': 0.52.0
+      '@oxfmt/binding-win32-ia32-msvc': 0.52.0
+      '@oxfmt/binding-win32-x64-msvc': 0.52.0
+      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+
   oxfmt@0.52.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)):
     dependencies:
       tinypool: 2.1.0
@@ -13986,57 +13864,7 @@ snapshots:
       '@oxfmt/binding-win32-x64-msvc': 0.52.0
       vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
 
-  oxfmt@0.52.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
-    dependencies:
-      tinypool: 2.1.0
-    optionalDependencies:
-      '@oxfmt/binding-android-arm-eabi': 0.52.0
-      '@oxfmt/binding-android-arm64': 0.52.0
-      '@oxfmt/binding-darwin-arm64': 0.52.0
-      '@oxfmt/binding-darwin-x64': 0.52.0
-      '@oxfmt/binding-freebsd-x64': 0.52.0
-      '@oxfmt/binding-linux-arm-gnueabihf': 0.52.0
-      '@oxfmt/binding-linux-arm-musleabihf': 0.52.0
-      '@oxfmt/binding-linux-arm64-gnu': 0.52.0
-      '@oxfmt/binding-linux-arm64-musl': 0.52.0
-      '@oxfmt/binding-linux-ppc64-gnu': 0.52.0
-      '@oxfmt/binding-linux-riscv64-gnu': 0.52.0
-      '@oxfmt/binding-linux-riscv64-musl': 0.52.0
-      '@oxfmt/binding-linux-s390x-gnu': 0.52.0
-      '@oxfmt/binding-linux-x64-gnu': 0.52.0
-      '@oxfmt/binding-linux-x64-musl': 0.52.0
-      '@oxfmt/binding-openharmony-arm64': 0.52.0
-      '@oxfmt/binding-win32-arm64-msvc': 0.52.0
-      '@oxfmt/binding-win32-ia32-msvc': 0.52.0
-      '@oxfmt/binding-win32-x64-msvc': 0.52.0
-      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
-
-  oxfmt@0.52.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
-    dependencies:
-      tinypool: 2.1.0
-    optionalDependencies:
-      '@oxfmt/binding-android-arm-eabi': 0.52.0
-      '@oxfmt/binding-android-arm64': 0.52.0
-      '@oxfmt/binding-darwin-arm64': 0.52.0
-      '@oxfmt/binding-darwin-x64': 0.52.0
-      '@oxfmt/binding-freebsd-x64': 0.52.0
-      '@oxfmt/binding-linux-arm-gnueabihf': 0.52.0
-      '@oxfmt/binding-linux-arm-musleabihf': 0.52.0
-      '@oxfmt/binding-linux-arm64-gnu': 0.52.0
-      '@oxfmt/binding-linux-arm64-musl': 0.52.0
-      '@oxfmt/binding-linux-ppc64-gnu': 0.52.0
-      '@oxfmt/binding-linux-riscv64-gnu': 0.52.0
-      '@oxfmt/binding-linux-riscv64-musl': 0.52.0
-      '@oxfmt/binding-linux-s390x-gnu': 0.52.0
-      '@oxfmt/binding-linux-x64-gnu': 0.52.0
-      '@oxfmt/binding-linux-x64-musl': 0.52.0
-      '@oxfmt/binding-openharmony-arm64': 0.52.0
-      '@oxfmt/binding-win32-arm64-msvc': 0.52.0
-      '@oxfmt/binding-win32-ia32-msvc': 0.52.0
-      '@oxfmt/binding-win32-x64-msvc': 0.52.0
-      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
-
-  oxfmt@0.54.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
+  oxfmt@0.54.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)):
     dependencies:
       tinypool: 2.1.0
     optionalDependencies:
@@ -14059,7 +13887,7 @@ snapshots:
       '@oxfmt/binding-win32-arm64-msvc': 0.54.0
       '@oxfmt/binding-win32-ia32-msvc': 0.54.0
       '@oxfmt/binding-win32-x64-msvc': 0.54.0
-      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
 
   oxlint-tsgolint@0.23.0:
     optionalDependencies:
@@ -14069,6 +13897,30 @@ snapshots:
       '@oxlint-tsgolint/linux-x64': 0.23.0
       '@oxlint-tsgolint/win32-arm64': 0.23.0
       '@oxlint-tsgolint/win32-x64': 0.23.0
+
+  oxlint@1.67.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)):
+    optionalDependencies:
+      '@oxlint/binding-android-arm-eabi': 1.67.0
+      '@oxlint/binding-android-arm64': 1.67.0
+      '@oxlint/binding-darwin-arm64': 1.67.0
+      '@oxlint/binding-darwin-x64': 1.67.0
+      '@oxlint/binding-freebsd-x64': 1.67.0
+      '@oxlint/binding-linux-arm-gnueabihf': 1.67.0
+      '@oxlint/binding-linux-arm-musleabihf': 1.67.0
+      '@oxlint/binding-linux-arm64-gnu': 1.67.0
+      '@oxlint/binding-linux-arm64-musl': 1.67.0
+      '@oxlint/binding-linux-ppc64-gnu': 1.67.0
+      '@oxlint/binding-linux-riscv64-gnu': 1.67.0
+      '@oxlint/binding-linux-riscv64-musl': 1.67.0
+      '@oxlint/binding-linux-s390x-gnu': 1.67.0
+      '@oxlint/binding-linux-x64-gnu': 1.67.0
+      '@oxlint/binding-linux-x64-musl': 1.67.0
+      '@oxlint/binding-openharmony-arm64': 1.67.0
+      '@oxlint/binding-win32-arm64-msvc': 1.67.0
+      '@oxlint/binding-win32-ia32-msvc': 1.67.0
+      '@oxlint/binding-win32-x64-msvc': 1.67.0
+      oxlint-tsgolint: 0.23.0
+      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
 
   oxlint@1.67.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)):
     optionalDependencies:
@@ -14094,55 +13946,7 @@ snapshots:
       oxlint-tsgolint: 0.23.0
       vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
 
-  oxlint@1.67.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
-    optionalDependencies:
-      '@oxlint/binding-android-arm-eabi': 1.67.0
-      '@oxlint/binding-android-arm64': 1.67.0
-      '@oxlint/binding-darwin-arm64': 1.67.0
-      '@oxlint/binding-darwin-x64': 1.67.0
-      '@oxlint/binding-freebsd-x64': 1.67.0
-      '@oxlint/binding-linux-arm-gnueabihf': 1.67.0
-      '@oxlint/binding-linux-arm-musleabihf': 1.67.0
-      '@oxlint/binding-linux-arm64-gnu': 1.67.0
-      '@oxlint/binding-linux-arm64-musl': 1.67.0
-      '@oxlint/binding-linux-ppc64-gnu': 1.67.0
-      '@oxlint/binding-linux-riscv64-gnu': 1.67.0
-      '@oxlint/binding-linux-riscv64-musl': 1.67.0
-      '@oxlint/binding-linux-s390x-gnu': 1.67.0
-      '@oxlint/binding-linux-x64-gnu': 1.67.0
-      '@oxlint/binding-linux-x64-musl': 1.67.0
-      '@oxlint/binding-openharmony-arm64': 1.67.0
-      '@oxlint/binding-win32-arm64-msvc': 1.67.0
-      '@oxlint/binding-win32-ia32-msvc': 1.67.0
-      '@oxlint/binding-win32-x64-msvc': 1.67.0
-      oxlint-tsgolint: 0.23.0
-      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
-
-  oxlint@1.67.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
-    optionalDependencies:
-      '@oxlint/binding-android-arm-eabi': 1.67.0
-      '@oxlint/binding-android-arm64': 1.67.0
-      '@oxlint/binding-darwin-arm64': 1.67.0
-      '@oxlint/binding-darwin-x64': 1.67.0
-      '@oxlint/binding-freebsd-x64': 1.67.0
-      '@oxlint/binding-linux-arm-gnueabihf': 1.67.0
-      '@oxlint/binding-linux-arm-musleabihf': 1.67.0
-      '@oxlint/binding-linux-arm64-gnu': 1.67.0
-      '@oxlint/binding-linux-arm64-musl': 1.67.0
-      '@oxlint/binding-linux-ppc64-gnu': 1.67.0
-      '@oxlint/binding-linux-riscv64-gnu': 1.67.0
-      '@oxlint/binding-linux-riscv64-musl': 1.67.0
-      '@oxlint/binding-linux-s390x-gnu': 1.67.0
-      '@oxlint/binding-linux-x64-gnu': 1.67.0
-      '@oxlint/binding-linux-x64-musl': 1.67.0
-      '@oxlint/binding-openharmony-arm64': 1.67.0
-      '@oxlint/binding-win32-arm64-msvc': 1.67.0
-      '@oxlint/binding-win32-ia32-msvc': 1.67.0
-      '@oxlint/binding-win32-x64-msvc': 1.67.0
-      oxlint-tsgolint: 0.23.0
-      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
-
-  oxlint@1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
+  oxlint@1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)):
     optionalDependencies:
       '@oxlint/binding-android-arm-eabi': 1.69.0
       '@oxlint/binding-android-arm64': 1.69.0
@@ -14164,10 +13968,10 @@ snapshots:
       '@oxlint/binding-win32-ia32-msvc': 1.69.0
       '@oxlint/binding-win32-x64-msvc': 1.69.0
       oxlint-tsgolint: 0.23.0
-      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
     optional: true
 
-  oxlint@1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)):
+  oxlint@1.69.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)):
     optionalDependencies:
       '@oxlint/binding-android-arm-eabi': 1.69.0
       '@oxlint/binding-android-arm64': 1.69.0
@@ -14189,7 +13993,7 @@ snapshots:
       '@oxlint/binding-win32-ia32-msvc': 1.69.0
       '@oxlint/binding-win32-x64-msvc': 1.69.0
       oxlint-tsgolint: 0.23.0
-      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
+      vite-plus: 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
 
   p-all@5.0.1:
     dependencies:
@@ -14796,6 +14600,7 @@ snapshots:
       '@rolldown/binding-wasm32-wasi': 1.0.3
       '@rolldown/binding-win32-arm64-msvc': 1.0.3
       '@rolldown/binding-win32-x64-msvc': 1.0.3
+    optional: true
 
   rou3@0.8.1: {}
 
@@ -14921,19 +14726,19 @@ snapshots:
 
   std-env@4.0.0: {}
 
-  storybook@9.1.3(@testing-library/dom@10.4.1)(prettier@3.8.4)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)):
+  storybook@9.1.3(@testing-library/dom@10.4.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(prettier@3.8.4):
     dependencies:
       '@storybook/global': 5.0.0
       '@testing-library/jest-dom': 6.9.1
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
       '@vitest/expect': 3.2.4
-      '@vitest/mocker': 3.2.4(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
+      '@vitest/mocker': 3.2.4(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))
       '@vitest/spy': 3.2.4
       better-opn: 3.0.2
       esbuild: 0.25.12
       esbuild-register: 3.6.0(esbuild@0.25.12)
       recast: 0.23.11
-      semver: 7.8.1
+      semver: 7.8.4
       ws: 8.21.0
     optionalDependencies:
       prettier: 3.8.4
@@ -15311,6 +15116,56 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
+  vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0):
+    dependencies:
+      '@oxc-project/types': 0.133.0
+      '@oxlint/plugins': 1.61.0
+      '@voidzero-dev/vite-plus-core': 0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+      '@voidzero-dev/vite-plus-test': 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
+      oxfmt: 0.52.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))
+      oxlint: 1.67.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))
+      oxlint-tsgolint: 0.23.0
+    optionalDependencies:
+      '@voidzero-dev/vite-plus-darwin-arm64': 0.1.24
+      '@voidzero-dev/vite-plus-darwin-x64': 0.1.24
+      '@voidzero-dev/vite-plus-linux-arm64-gnu': 0.1.24
+      '@voidzero-dev/vite-plus-linux-arm64-musl': 0.1.24
+      '@voidzero-dev/vite-plus-linux-x64-gnu': 0.1.24
+      '@voidzero-dev/vite-plus-linux-x64-musl': 0.1.24
+      '@voidzero-dev/vite-plus-win32-arm64-msvc': 0.1.24
+      '@voidzero-dev/vite-plus-win32-x64-msvc': 0.1.24
+    transitivePeerDependencies:
+      - '@arethetypeswrong/core'
+      - '@edge-runtime/vm'
+      - '@opentelemetry/api'
+      - '@tsdown/css'
+      - '@tsdown/exe'
+      - '@types/node'
+      - '@vitejs/devtools'
+      - '@vitest/coverage-istanbul'
+      - '@vitest/coverage-v8'
+      - '@vitest/ui'
+      - bufferutil
+      - esbuild
+      - happy-dom
+      - jiti
+      - jsdom
+      - less
+      - publint
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - svelte
+      - terser
+      - tsx
+      - typescript
+      - unplugin-unused
+      - unrun
+      - utf-8-validate
+      - vite
+      - yaml
+
   vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(@voidzero-dev/vite-plus-core@0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0):
     dependencies:
       '@oxc-project/types': 0.133.0
@@ -15360,136 +15215,6 @@ snapshots:
       - utf-8-validate
       - vite
       - yaml
-
-  vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0):
-    dependencies:
-      '@oxc-project/types': 0.133.0
-      '@oxlint/plugins': 1.61.0
-      '@voidzero-dev/vite-plus-core': 0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
-      '@voidzero-dev/vite-plus-test': 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
-      oxfmt: 0.52.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
-      oxlint: 1.67.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
-      oxlint-tsgolint: 0.23.0
-    optionalDependencies:
-      '@voidzero-dev/vite-plus-darwin-arm64': 0.1.24
-      '@voidzero-dev/vite-plus-darwin-x64': 0.1.24
-      '@voidzero-dev/vite-plus-linux-arm64-gnu': 0.1.24
-      '@voidzero-dev/vite-plus-linux-arm64-musl': 0.1.24
-      '@voidzero-dev/vite-plus-linux-x64-gnu': 0.1.24
-      '@voidzero-dev/vite-plus-linux-x64-musl': 0.1.24
-      '@voidzero-dev/vite-plus-win32-arm64-msvc': 0.1.24
-      '@voidzero-dev/vite-plus-win32-x64-msvc': 0.1.24
-    transitivePeerDependencies:
-      - '@arethetypeswrong/core'
-      - '@edge-runtime/vm'
-      - '@opentelemetry/api'
-      - '@tsdown/css'
-      - '@tsdown/exe'
-      - '@types/node'
-      - '@vitejs/devtools'
-      - '@vitest/coverage-istanbul'
-      - '@vitest/coverage-v8'
-      - '@vitest/ui'
-      - bufferutil
-      - esbuild
-      - happy-dom
-      - jiti
-      - jsdom
-      - less
-      - publint
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - svelte
-      - terser
-      - tsx
-      - typescript
-      - unplugin-unused
-      - unrun
-      - utf-8-validate
-      - vite
-      - yaml
-
-  vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0):
-    dependencies:
-      '@oxc-project/types': 0.133.0
-      '@oxlint/plugins': 1.61.0
-      '@voidzero-dev/vite-plus-core': 0.1.24(@arethetypeswrong/core@0.18.3)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)
-      '@voidzero-dev/vite-plus-test': 0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0)
-      oxfmt: 0.52.0(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
-      oxlint: 1.67.0(oxlint-tsgolint@0.23.0)(vite-plus@0.1.24(@arethetypeswrong/core@0.18.3)(@opentelemetry/api@1.9.1)(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.22.4)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(yaml@2.9.0))
-      oxlint-tsgolint: 0.23.0
-    optionalDependencies:
-      '@voidzero-dev/vite-plus-darwin-arm64': 0.1.24
-      '@voidzero-dev/vite-plus-darwin-x64': 0.1.24
-      '@voidzero-dev/vite-plus-linux-arm64-gnu': 0.1.24
-      '@voidzero-dev/vite-plus-linux-arm64-musl': 0.1.24
-      '@voidzero-dev/vite-plus-linux-x64-gnu': 0.1.24
-      '@voidzero-dev/vite-plus-linux-x64-musl': 0.1.24
-      '@voidzero-dev/vite-plus-win32-arm64-msvc': 0.1.24
-      '@voidzero-dev/vite-plus-win32-x64-msvc': 0.1.24
-    transitivePeerDependencies:
-      - '@arethetypeswrong/core'
-      - '@edge-runtime/vm'
-      - '@opentelemetry/api'
-      - '@tsdown/css'
-      - '@tsdown/exe'
-      - '@types/node'
-      - '@vitejs/devtools'
-      - '@vitest/coverage-istanbul'
-      - '@vitest/coverage-v8'
-      - '@vitest/ui'
-      - bufferutil
-      - esbuild
-      - happy-dom
-      - jiti
-      - jsdom
-      - less
-      - publint
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - svelte
-      - terser
-      - tsx
-      - typescript
-      - unplugin-unused
-      - unrun
-      - utf-8-validate
-      - vite
-      - yaml
-
-  vite@8.0.16(@types/node@24.13.1)(esbuild@0.25.12)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0):
-    dependencies:
-      lightningcss: 1.32.0
-      picomatch: 4.0.4
-      postcss: 8.5.15
-      rolldown: 1.0.3
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@types/node': 24.13.1
-      esbuild: 0.25.12
-      fsevents: 2.3.3
-      jiti: 2.7.0
-      tsx: 4.22.4
-      yaml: 2.9.0
-
-  vite@8.0.16(@types/node@24.13.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0):
-    dependencies:
-      lightningcss: 1.32.0
-      picomatch: 4.0.4
-      postcss: 8.5.15
-      rolldown: 1.0.3
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@types/node': 24.13.1
-      esbuild: 0.28.0
-      fsevents: 2.3.3
-      jiti: 2.7.0
-      tsx: 4.22.4
-      yaml: 2.9.0
 
   walk-up-path@4.0.0: {}
 
