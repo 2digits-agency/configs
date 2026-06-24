@@ -98,11 +98,13 @@ function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): Tu
   const tasks = existingConfig.tasks ?? {};
 
   for (const taskName of detectedTasks) {
-    if (!tasks[taskName]) {
-      const category = categorizeTask(taskName);
-
-      tasks[taskName] = generateTaskConfig(category);
+    if (tasks[taskName]) {
+      continue;
     }
+
+    const category = categorizeTask(taskName);
+
+    tasks[taskName] = generateTaskConfig(category);
   }
 
   return {

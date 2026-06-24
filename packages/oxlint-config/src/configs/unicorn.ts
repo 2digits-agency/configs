@@ -135,6 +135,11 @@ export const unicornConfig = defineTypedConfig({
     'unicorn/throw-new-error': 'error',
 
     'unicorn/import-style': undefined,
+    'unicorn/max-nested-calls': undefined,
+    'unicorn/no-array-fill-with-reference-type': 'error',
+    'unicorn/prefer-export-from': 'error',
+    'unicorn/prefer-number-coercion': undefined,
+    'unicorn/prefer-single-call': 'error',
   } satisfies {
     [k in Extract<keyof Rules, `unicorn/${string}`>]: Rules[k];
   },

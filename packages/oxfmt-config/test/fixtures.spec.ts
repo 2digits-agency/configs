@@ -40,8 +40,10 @@ describe('formatted output snapshots', () => {
 });
 
 describe('idempotence', () => {
-  it.for(fixtureCases)('$name', async (fixture) => {
+  it.for(fixtureCases)('$name', async (fixture, { expect }) => {
     const outputs = await formatFixture(await readFixture(fixture), fixture);
+
+    expect(outputs.oxfmt).toBeTypeOf('string');
 
     await expectFormatterIdempotence(outputs, fixture);
   });

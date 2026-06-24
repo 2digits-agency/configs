@@ -89,6 +89,7 @@ export async function markdownDisables(): Promise<Array<TypedFlatConfigItem>> {
         'no-unused-expressions': 'off',
         'no-unused-labels': 'off',
         'no-unused-vars': 'off',
+        'unicorn/no-for-each': 'off',
         'node/prefer-global/process': 'off',
         'ts/consistent-type-imports': 'off',
         'ts/explicit-function-return-type': 'off',

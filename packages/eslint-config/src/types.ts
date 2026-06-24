@@ -1,5 +1,6 @@
 import type { ParserOptions } from '@typescript-eslint/parser';
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
+import type { Linter } from 'eslint';
 import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore';
 
 import type { PluginNameMap } from './constants';
@@ -7,7 +8,7 @@ import type { RuleOptions } from './types.gen';
 
 export type { ConfigNames } from './types.gen';
 
-export type Rules = RuleOptions;
+export type Rules = RuleOptions & Record<string, Linter.RuleEntry | undefined>;
 
 export interface TypedFlatConfigItem extends Omit<FlatConfig.Config, 'plugins' | 'languageOptions' | 'rules'> {
   // Relax plugins type limitation, as most of the plugins did not have correct type info yet.

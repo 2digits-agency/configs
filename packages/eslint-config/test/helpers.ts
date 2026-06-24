@@ -205,8 +205,7 @@ function serializeRules(rules: TypedFlatConfigItem['rules']): Array<string> | un
 
   return Object.entries(rules)
     .toSorted(([leftName], [rightName]) => leftName.localeCompare(rightName))
-    .map(([name, _value]) => {
-      const value = _value as (typeof rules)[keyof typeof rules];
+    .map(([name, value]) => {
       const severity = Array.isArray(value) ? value[0] : value;
 
       return severity === 'off' || severity === 0 ? `- ${name}` : name;

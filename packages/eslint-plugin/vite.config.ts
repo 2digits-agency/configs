@@ -1,6 +1,11 @@
 import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      'vite-plus/test': 'vitest',
+    },
+  },
   pack: {
     entry: ['src/index.ts'],
     dts: {

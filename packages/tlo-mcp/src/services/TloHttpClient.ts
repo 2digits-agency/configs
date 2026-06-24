@@ -16,7 +16,7 @@ export class TloHttpClient extends Context.Tag('@2digits/tlo-mcp/services/TloHtt
 >() {}
 
 function formatCookies(cookies: ReadonlyMap<string, string>): string {
-  return [...cookies.entries()].map(([key, value]) => `${key}=${value}`).join('; ');
+  return [...cookies].map(([key, value]) => `${key}=${value}`).join('; ');
 }
 
 export const TloHttpClientLive = Layer.effect(

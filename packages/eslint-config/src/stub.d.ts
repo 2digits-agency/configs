@@ -1,7 +1,7 @@
 declare module '@eslint-community/eslint-plugin-eslint-comments' {
   import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
 
-  declare const exprt: {
+  const exprt: {
     configs: {
       recommended: ClassicConfig.Config;
     };
@@ -13,7 +13,7 @@ declare module '@eslint-community/eslint-plugin-eslint-comments' {
 declare module '@eslint-community/eslint-plugin-eslint-comments/configs' {
   import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
 
-  declare const exprt: {
+  const exprt: {
     recommended: FlatConfig.Config;
   };
   export = exprt;
@@ -22,7 +22,7 @@ declare module '@eslint-community/eslint-plugin-eslint-comments/configs' {
 declare module 'eslint-plugin-tailwindcss' {
   import type { ClassicConfig, Linter, FlatConfig } from '@typescript-eslint/utils/ts-eslint';
 
-  declare const exprt: {
+  const exprt: {
     configs: {
       recommended: ClassicConfig.Config;
       'flat/recommended': FlatConfig.ConfigArray;
@@ -35,7 +35,7 @@ declare module 'eslint-plugin-tailwindcss' {
 declare module 'eslint-plugin-drizzle' {
   import type { ClassicConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
 
-  declare const exprt: {
+  const exprt: {
     configs: {
       recommended: ClassicConfig.Config;
       all: ClassicConfig.Config;

@@ -1,3 +1,4 @@
+// oxlint-disable unicorn/throw-new-error
 import * as Schema from 'effect/Schema';
 
 /**

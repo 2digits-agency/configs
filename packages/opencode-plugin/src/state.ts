@@ -65,7 +65,7 @@ export function createSessionState(config: Config) {
     activeMessages.delete(sessionID);
     currentGenerationIDs.delete(sessionID);
 
-    for (const [pendingKey, pending] of pendingMessages.entries()) {
+    for (const [pendingKey, pending] of pendingMessages) {
       if (pending.sessionID === sessionID) {
         pendingMessages.delete(pendingKey);
       }
@@ -73,7 +73,7 @@ export function createSessionState(config: Config) {
 
     const generationSpanIDs = new Set<string>();
 
-    for (const [assistantMessageID, generation] of generationStates.entries()) {
+    for (const [assistantMessageID, generation] of generationStates) {
       if (generation.sessionID !== sessionID) {
         continue;
       }
@@ -88,7 +88,7 @@ export function createSessionState(config: Config) {
       generationTools.delete(spanID);
     }
 
-    for (const [toolKey, toolCall] of toolCalls.entries()) {
+    for (const [toolKey, toolCall] of toolCalls) {
       if (toolCall.sessionID === sessionID) {
         toolCalls.delete(toolKey);
       }
@@ -100,7 +100,7 @@ export function createSessionState(config: Config) {
   }
 
   function getTraceSessionIDs(): Array<string> {
-    return [...traceStates.keys()];
+    return traceStates.keys().toArray();
   }
 
   function getOrCreateTraceState(sessionID: string, agentName: string | undefined, startedAt: number): TraceState {
