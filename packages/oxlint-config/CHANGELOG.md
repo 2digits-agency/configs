@@ -1,5 +1,15 @@
 # @2digits/oxlint-config
 
+## 0.6.12
+
+### Patch Changes
+
+- e88c38d: Update oxlint to 1.71.0 and generated rule types
+
+  - Updated `typescript/consistent-generic-constructors` option syntax
+  - Disabled newly unsupported Unicorn rules in the default config
+  - Updated generated rule types for new Node, React, and Unicorn rules
+
 ## 0.6.11
 
 ### Patch Changes
