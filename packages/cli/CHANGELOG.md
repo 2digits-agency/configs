@@ -1,5 +1,16 @@
 # @2digits/cli
 
+## 2.0.5
+
+### Patch Changes
+
+- e88c38d: Update Effect ecosystem dependencies
+
+  - Updated `effect` to 3.21.4
+  - Updated `@effect/platform` to 0.96.2
+
+- e88c38d: Update nypm to 0.6.8
+
 ## 2.0.4
 
 ### Patch Changes

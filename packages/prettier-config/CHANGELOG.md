@@ -1,5 +1,13 @@
 # @2digits/prettier-config
 
+## 4.0.42
+
+### Patch Changes
+
+- e88c38d: Update prettier to 3.9.1
+
+  - Updated `@prettier/plugin-oxc` to 0.2.0
+
 ## 4.0.41
 
 ### Patch Changes

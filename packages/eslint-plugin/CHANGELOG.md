@@ -1,5 +1,15 @@
 # @2digits/eslint-plugin
 
+## 4.0.19
+
+### Patch Changes
+
+- e88c38d: Update ESLint core and plugins
+
+  - Updated `eslint` to 10.6.0 and TypeScript ESLint packages to 8.62.0
+  - Updated React, Query, JSDoc, Unicorn, Turbo, YAML, Storybook, RegExp, SonarJS, Node, and GitHub Action plugin dependencies
+  - Disabled newly incompatible Unicorn rules and refreshed generated rule types and snapshots
+
 ## 4.0.18
 
 ### Patch Changes
