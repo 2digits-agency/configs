@@ -22,6 +22,18 @@ export function unicorn(): Array<TypedFlatConfigItem> {
         'unicorn/no-useless-undefined': ['error', { checkArguments: false, checkArrowFunctionBody: false }],
         'unicorn/prefer-top-level-await': 'off',
         'unicorn/no-nested-ternary': 'off',
+
+        'unicorn/name-replacements': 'off',
+        'unicorn/consistent-boolean-name': 'off',
+        'unicorn/no-computed-property-existence-check': 'off',
+        'unicorn/prefer-await': 'off',
+        'unicorn/no-non-function-verb-prefix': 'off',
+        'unicorn/consistent-conditional-object-spread': 'off',
+        'unicorn/no-break-in-nested-loop': 'off',
+        'unicorn/no-declarations-before-early-exit': 'off',
+        'unicorn/require-array-sort-compare': 'off',
+        'unicorn/max-nested-calls': 'off',
+        'unicorn/prefer-number-coercion': 'off',
       },
     },
   ];

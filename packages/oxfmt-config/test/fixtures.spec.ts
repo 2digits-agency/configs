@@ -2,9 +2,14 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, it } from 'vite-plus/test';
+import { format as formatOxfmt } from 'oxfmt';
+import { format as formatPrettier } from 'prettier';
+import { describe, it } from 'vitest';
 
-import { expectFormatterIdempotence, type FixtureCase, formatFixture, getSnapshotPath, snapshotJson } from './helpers';
+import prettierConfig from '@2digits/prettier-config';
+
+import { twoDigits } from '../src';
+import { type FixtureCase, formatFixture, getSnapshotPath, snapshotJson } from './helpers';
 
 const testDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -40,10 +45,22 @@ describe('formatted output snapshots', () => {
 });
 
 describe('idempotence', () => {
-  it.for(fixtureCases)('$name', async (fixture) => {
+  it.for(fixtureCases)('$name', async (fixture, { expect }) => {
     const outputs = await formatFixture(await readFixture(fixture), fixture);
 
-    await expectFormatterIdempotence(outputs, fixture);
+    await expect(
+      formatPrettier(outputs.prettier, {
+        ...prettierConfig,
+        filepath: path.join(fixture.name, fixture.fileName),
+      }),
+    ).resolves.toBe(outputs.prettier);
+
+    await expect(
+      formatOxfmt(path.join(fixture.name, fixture.fileName), outputs.oxfmt, twoDigits),
+    ).resolves.toMatchObject({
+      code: outputs.oxfmt,
+      errors: [],
+    });
   });
 });
 

@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
-import { beforeAll, describe, it } from 'vite-plus/test';
+import { beforeAll, describe, it } from 'vitest';
 
 import { fixtureSnapshotPath, runAutofixFixture, snapshotJson } from './helpers';
 import { configPresets } from './presets';

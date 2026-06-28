@@ -3965,6 +3965,17 @@ export interface RuleOptions {
 'node/no-exports-assign'?: DummyRule;
 
 /**
+ * No mixed requires
+ *
+ * plugin: Node
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/node/no-mixed-requires.html
+ */
+'node/no-mixed-requires'?: DummyRule;
+
+/**
  * No new require
  *
  * plugin: Node
@@ -3996,6 +4007,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/node/no-process-env.html
  */
 'node/no-process-env'?: DummyRule;
+
+/**
+ * No sync
+ *
+ * plugin: Node
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/node/no-sync.html
+ */
+'node/no-sync'?: DummyRule;
 
 /**
  * Approx constant
@@ -4680,6 +4702,17 @@ export interface RuleOptions {
 'react/jsx-no-duplicate-props'?: DummyRule;
 
 /**
+ * Jsx no literals
+ *
+ * plugin: React
+ * category: Restriction
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-no-literals.html
+ */
+'react/jsx-no-literals'?: DummyRule;
+
+/**
  * Jsx no script url
  *
  * plugin: React
@@ -5052,6 +5085,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/react/prefer-function-component.html
  */
 'react/prefer-function-component'?: DummyRule;
+
+/**
+ * React compiler
+ *
+ * plugin: React
+ * category: Nursery
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/react/react-compiler.html
+ */
+'react/react-compiler'?: DummyRule;
 
 /**
  * React in jsx scope
@@ -6539,6 +6583,17 @@ export interface RuleOptions {
 'unicorn/import-style'?: DummyRule;
 
 /**
+ * Max nested calls
+ *
+ * plugin: Unicorn
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/max-nested-calls.html
+ */
+'unicorn/max-nested-calls'?: DummyRule;
+
+/**
  * New for builtins
  *
  * plugin: Unicorn
@@ -6592,6 +6647,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-callback-reference.html
  */
 'unicorn/no-array-callback-reference'?: DummyRule;
+
+/**
+ * No array fill with reference type
+ *
+ * plugin: Unicorn
+ * category: Suspicious
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-fill-with-reference-type.html
+ */
+'unicorn/no-array-fill-with-reference-type'?: DummyRule;
 
 /**
  * No array for each
@@ -7353,6 +7419,17 @@ export interface RuleOptions {
 'unicorn/prefer-event-target'?: DummyRule;
 
 /**
+ * Prefer export from
+ *
+ * plugin: Unicorn
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-export-from.html
+ */
+'unicorn/prefer-export-from'?: DummyRule;
+
+/**
  * Prefer global this
  *
  * plugin: Unicorn
@@ -7496,6 +7573,17 @@ export interface RuleOptions {
 'unicorn/prefer-node-protocol'?: DummyRule;
 
 /**
+ * Prefer number coercion
+ *
+ * plugin: Unicorn
+ * category: Pedantic
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-number-coercion.html
+ */
+'unicorn/prefer-number-coercion'?: DummyRule;
+
+/**
  * Prefer number properties
  *
  * plugin: Unicorn
@@ -7604,6 +7692,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-set-size.html
  */
 'unicorn/prefer-set-size'?: DummyRule;
+
+/**
+ * Prefer single call
+ *
+ * plugin: Unicorn
+ * category: Pedantic
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-single-call.html
+ */
+'unicorn/prefer-single-call'?: DummyRule;
 
 /**
  * Prefer spread
@@ -7829,7 +7928,7 @@ export interface RuleOptions {
  * Consistent each for
  *
  * plugin: Vitest
- * category: Correctness
+ * category: Style
  * type-aware: false
  *
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vitest/consistent-each-for.html
@@ -8695,6 +8794,17 @@ export interface RuleOptions {
 'vue/no-arrow-functions-in-watch'?: DummyRule;
 
 /**
+ * No async in computed properties
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-async-in-computed-properties.html
+ */
+'vue/no-async-in-computed-properties'?: DummyRule;
+
+/**
  * No computed properties in data
  *
  * plugin: Vue
@@ -8781,6 +8891,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-deprecated-vue-config-keycodes.html
  */
 'vue/no-deprecated-vue-config-keycodes'?: DummyRule;
+
+/**
+ * No dupe keys
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-dupe-keys.html
+ */
+'vue/no-dupe-keys'?: DummyRule;
 
 /**
  * No export in script setup
@@ -8893,6 +9014,17 @@ export interface RuleOptions {
 'vue/no-shared-component-data'?: DummyRule;
 
 /**
+ * No side effects in computed properties
+ *
+ * plugin: Vue
+ * category: Correctness
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/no-side-effects-in-computed-properties.html
+ */
+'vue/no-side-effects-in-computed-properties'?: DummyRule;
+
+/**
  * No this in before route enter
  *
  * plugin: Vue
@@ -8946,6 +9078,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/require-default-export.html
  */
 'vue/require-default-export'?: DummyRule;
+
+/**
+ * Require default prop
+ *
+ * plugin: Vue
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/vue/require-default-prop.html
+ */
+'vue/require-default-prop'?: DummyRule;
 
 /**
  * Require direct export

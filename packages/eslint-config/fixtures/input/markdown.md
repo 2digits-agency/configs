@@ -39,7 +39,9 @@ export interface Something {
   items: string[];
 }
 
-export const someFunc = ({items}: Something) => {
-    items.forEach(item => console.log(item));
+export function someFunc({ items }: Something) {
+  for (const item of items) {
+    console.log(item);
+  }
 }
 ```

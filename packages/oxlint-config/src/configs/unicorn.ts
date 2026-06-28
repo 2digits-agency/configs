@@ -132,9 +132,14 @@ export const unicornConfig = defineTypedConfig({
     'unicorn/switch-case-braces': ['error', 'always'],
     'unicorn/switch-case-break-position': 'error',
     'unicorn/text-encoding-identifier-case': 'error',
-    'unicorn/throw-new-error': 'error',
+    'unicorn/throw-new-error': 'off',
 
     'unicorn/import-style': undefined,
+    'unicorn/max-nested-calls': undefined,
+    'unicorn/no-array-fill-with-reference-type': undefined,
+    'unicorn/prefer-export-from': undefined,
+    'unicorn/prefer-number-coercion': undefined,
+    'unicorn/prefer-single-call': undefined,
   } satisfies {
     [k in Extract<keyof Rules, `unicorn/${string}`>]: Rules[k];
   },

@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 
-import { describe, it, vi } from 'vite-plus/test';
+import { describe, it, vi } from 'vitest';
 
 import { fixtureSnapshotPath, serializeConfigs, snapshotJson, withDeterministicOptions } from './helpers';
 import { factoryConfigPresets } from './presets';

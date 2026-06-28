@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import { format as formatOxfmt } from 'oxfmt';
 import { format as formatPrettier } from 'prettier';
-import { expect } from 'vite-plus/test';
+import { expect } from 'vitest';
 
 import prettierConfig from '@2digits/prettier-config';
 
@@ -41,20 +41,4 @@ export async function formatFixture(source: string, fixture: FixtureCase): Promi
     prettier,
     oxfmt: result.code,
   };
-}
-
-export async function expectFormatterIdempotence(outputs: FormatterOutputs, fixture: FixtureCase): Promise<void> {
-  await expect(
-    formatPrettier(outputs.prettier, {
-      ...prettierConfig,
-      filepath: path.join(fixture.name, fixture.fileName),
-    }),
-  ).resolves.toBe(outputs.prettier);
-
-  await expect(formatOxfmt(path.join(fixture.name, fixture.fileName), outputs.oxfmt, twoDigits)).resolves.toMatchObject(
-    {
-      code: outputs.oxfmt,
-      errors: [],
-    },
-  );
 }
