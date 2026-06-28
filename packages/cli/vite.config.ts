@@ -1,6 +1,5 @@
 import path from 'node:path';
 
-import Replace from 'unplugin-replace';
 import { defineConfig } from 'vite-plus';
 
 import pkg from './package.json';
@@ -14,9 +13,17 @@ export default defineConfig({
     attw: { profile: 'esm-only', level: 'error' },
     publint: { strict: true },
     plugins: [
-      Replace.rolldown({
-        __REPLACE_VERSION__: () => pkg.version,
-      }),
+      {
+        name: 'replace-version',
+        transform(code) {
+          if (!code.includes('__REPLACE_VERSION__')) {
+            return;
+          }
+
+          // eslint-disable-next-line unicorn/no-unsafe-string-replacement
+          return code.replaceAll('__REPLACE_VERSION__', pkg.version);
+        },
+      },
     ],
   },
   test: {
