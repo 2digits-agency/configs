@@ -12,7 +12,7 @@ export const typescriptRulesConfig = defineTypedConfig({
     'typescript/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
     'typescript/ban-tslint-comment': 'error',
     'typescript/class-literal-property-style': 'error',
-    'typescript/consistent-generic-constructors': ['error', { option: 'constructor' }],
+    'typescript/consistent-generic-constructors': ['error', 'constructor'],
     'typescript/consistent-indexed-object-style': ['error', 'record'],
     'typescript/consistent-type-assertions': ['error', { assertionStyle: 'as' }],
     'typescript/consistent-type-definitions': ['error', 'interface'],
