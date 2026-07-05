@@ -196,7 +196,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
         const turboConfigOption = yield* readTurboConfig();
 
         if (Option.isSome(turboConfigOption)) {
-          const existingConfig = turboConfigOption.value;
+          const { value: existingConfig } = turboConfigOption;
           const mergedConfig = mergeTasks(existingConfig, detectedTasks);
 
           yield* writeTurboConfig(mergedConfig);
@@ -219,25 +219,25 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
         const packageJson = yield* pm.readPackageJson({ id: root });
 
         packageJson.scripts ??= {};
+        const { scripts } = packageJson;
 
         let updated = false;
 
         for (const taskName of detectedTasks) {
           const turboCommand = `turbo run ${taskName}`;
 
-          if (!packageJson.scripts[taskName]) {
-            packageJson.scripts[taskName] = turboCommand;
+          // eslint-disable-next-line unicorn/no-unreadable-object-destructuring
+          const { [taskName]: existingScript } = scripts;
+
+          if (!existingScript) {
+            scripts[taskName] = turboCommand;
             updated = true;
             yield* Effect.logInfo(`✅ Added script: ${taskName}`);
-          } else if (packageJson.scripts[taskName] !== turboCommand) {
+          } else if (existingScript !== turboCommand && !existingScript.includes('turbo')) {
             // Only update if not already using turbo
-            const existingScript = packageJson.scripts[taskName];
-
-            if (!existingScript.includes('turbo')) {
-              packageJson.scripts[taskName] = turboCommand;
-              updated = true;
-              yield* Effect.logInfo(`✅ Updated script: ${taskName}`);
-            }
+            scripts[taskName] = turboCommand;
+            updated = true;
+            yield* Effect.logInfo(`✅ Updated script: ${taskName}`);
           }
         }
 

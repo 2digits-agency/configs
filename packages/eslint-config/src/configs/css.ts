@@ -1,4 +1,4 @@
-import plugin, { type CSSLanguageOptions } from '@eslint/css';
+import plugin from '@eslint/css';
 import { getPackageInfo } from 'local-pkg';
 import { tailwind3, tailwind4 } from 'tailwind-csstree';
 
@@ -7,7 +7,9 @@ import type { OptionsCss, TypedFlatConfigItem } from '../types';
 
 async function resolveTailwindSyntax(options?: OptionsCss) {
   if (options?.customSyntax) {
-    return options.customSyntax as Exclude<CSSLanguageOptions['customSyntax'], undefined>;
+    const { customSyntax } = options;
+
+    return customSyntax;
   }
 
   if (options?.tailwindMajor === 3) {

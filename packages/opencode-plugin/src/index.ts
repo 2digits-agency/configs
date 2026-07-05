@@ -105,7 +105,8 @@ const plugin: Plugin = async (ctx) => {
 
   async function onEvent(event: Parameters<NonNullable<Hooks['event']>>[0]['event']) {
     if (event.type === 'message.part.updated') {
-      const { part } = event.properties;
+      const { properties } = event;
+      const { part } = properties;
 
       if (part.type === 'text') {
         state.storeAssistantOutput(part);
@@ -115,13 +116,17 @@ const plugin: Plugin = async (ctx) => {
     }
 
     if (event.type === 'session.deleted') {
-      await flushTrace(event.properties.info.id);
+      const { properties } = event;
+      const { info } = properties;
+
+      await flushTrace(info.id);
 
       return;
     }
 
     if (event.type === 'session.error') {
-      const { error, sessionID } = event.properties;
+      const { properties } = event;
+      const { error, sessionID } = properties;
 
       if (sessionID) {
         state.markSessionError(sessionID, error);
@@ -134,7 +139,8 @@ const plugin: Plugin = async (ctx) => {
       return;
     }
 
-    const { info } = event.properties;
+    const { properties } = event;
+    const { info } = properties;
 
     if (info.role !== 'assistant') {
       return;
@@ -145,10 +151,6 @@ const plugin: Plugin = async (ctx) => {
     if (state.shouldCompleteAssistantMessage(info)) {
       state.markAssistantMessageCompleted(info.id);
       await completeAssistantMessage(info);
-    }
-
-    if (false as boolean) {
-      await Promise.resolve();
     }
   }
 
@@ -171,10 +173,6 @@ const plugin: Plugin = async (ctx) => {
       }
 
       state.beginPrompt(input, output);
-
-      if (false as boolean) {
-        await Promise.resolve();
-      }
     },
 
     'tool.execute.before': (input, output) => {
@@ -196,11 +194,11 @@ const plugin: Plugin = async (ctx) => {
       return Promise.resolve();
     },
 
-    'tool.execute.after': async (input, output) => {
+    'tool.execute.after': (input, output) => {
       const toolCall = state.takeToolCall(input.sessionID, input.callID);
 
       if (!toolCall) {
-        return;
+        return Promise.resolve();
       }
 
       const traceState = state.getTraceState(toolCall.sessionID);
@@ -222,9 +220,7 @@ const plugin: Plugin = async (ctx) => {
         }),
       );
 
-      if (false as boolean) {
-        await Promise.resolve();
-      }
+      return Promise.resolve();
     },
 
     event: async ({ event }) => onEvent(event),

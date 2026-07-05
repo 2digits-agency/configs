@@ -30,8 +30,8 @@ export const typeParamNames = createRule<[], MessageId>({
       remainder: "Type parameter {{name}}'s name should contain at least one lowercase letter",
       suggestRename: 'Rename to {{suggestion}}',
     },
+    defaultOptions: [],
   },
-  defaultOptions: [],
   create(context) {
     return {
       TSTypeParameterDeclaration(node) {
@@ -42,7 +42,9 @@ export const typeParamNames = createRule<[], MessageId>({
         }
 
         for (const param of params) {
-          const { name } = param.name;
+          const {
+            name: { name },
+          } = param;
           const messageId = getMessageId(name);
 
           if (messageId) {

@@ -3,6 +3,7 @@ import { run, type InvalidTestCase, type ValidTestCase } from 'eslint-vitest-rul
 
 import { preferInlineArrayCallbacks, RULE_NAME } from '../../src/rules/prefer-inline-array-callbacks';
 
+// oxlint-disable-next-line eslint/prefer-destructuring -- Keep String.raw as the readable tagged-template alias.
 const typescript = String.raw;
 
 const valids: Array<ValidTestCase> = [

@@ -11,7 +11,8 @@ function preferDestructuringAssignmentImpl(context: RuleContext, { collect }: Ru
 
   function programExit(program: TSESTree.Program) {
     for (const { node } of query.all(program)) {
-      const [props] = node.params;
+      const { params } = node;
+      const [props] = params;
 
       if (props === undefined || props.type !== AST_NODE_TYPES.Identifier) {
         continue;
@@ -21,7 +22,8 @@ function preferDestructuringAssignmentImpl(context: RuleContext, { collect }: Ru
         context.sourceCode.getScope(node).variables.find((variable) => variable.name === props.name)?.references ?? [];
 
       for (const reference of propReferences) {
-        const { parent } = reference.identifier;
+        const { identifier } = reference;
+        const { parent } = identifier;
 
         if (parent.type !== AST_NODE_TYPES.MemberExpression) {
           continue;

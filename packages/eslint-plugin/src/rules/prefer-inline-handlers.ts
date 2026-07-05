@@ -22,7 +22,7 @@ function getComponentBoundary(node: TSESTree.Node): TSESTree.Node | undefined {
     return cached;
   }
 
-  let current = node.parent;
+  let { parent: current } = node;
   let result: TSESTree.Node | undefined;
 
   while (current) {
@@ -108,10 +108,10 @@ export const preferInlineHandlers = createRule<[], MessageId>({
     messages: {
       preferInlineHandler: "Handler '{{name}}' is only used once as a JSX prop. Inline it where it's used.",
     },
+    defaultOptions: [],
   },
-  defaultOptions: [],
   create(context) {
-    const sourceCode = context.sourceCode;
+    const { sourceCode } = context;
 
     function reportIfSingleUse(
       identifier: TSESTree.Identifier,
@@ -131,13 +131,13 @@ export const preferInlineHandlers = createRule<[], MessageId>({
         return;
       }
 
-      const ref = reads[0];
+      const [ref] = reads;
 
       if (!ref) {
         return;
       }
 
-      const refNode = ref.identifier;
+      const { identifier: refNode } = ref;
       const { parent } = refNode;
 
       const isJsxPropValue =

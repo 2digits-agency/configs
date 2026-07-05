@@ -128,8 +128,13 @@ describe('TurborepoSetupService', () => {
 
         // Read existing config first
         const configOptionBefore = yield* service.readTurboConfig();
-        const existingTasks =
-          configOptionBefore._tag === 'Some' ? Object.keys(configOptionBefore.value.tasks ?? {}) : [];
+        let existingTasks: Array<string> = [];
+
+        if (configOptionBefore._tag === 'Some') {
+          const { value: configBefore } = configOptionBefore;
+
+          existingTasks = Object.keys(configBefore.tasks ?? {});
+        }
 
         const detectedTasks = new Set(['build', 'typecheck']);
 
@@ -479,7 +484,7 @@ describe('TurborepoSetupService', () => {
         const projectDetect = yield* ProjectDetectionService;
 
         const workspaces = yield* projectDetect.discoverWorkspaces();
-        const firstWorkspace = workspaces[0];
+        const [firstWorkspace] = workspaces;
 
         if (firstWorkspace) {
           const pkg = yield* pm.readPackageJson({ id: firstWorkspace });
@@ -533,7 +538,7 @@ describe('TurborepoSetupService', () => {
         const projectDetect = yield* ProjectDetectionService;
 
         const workspaces = yield* projectDetect.discoverWorkspaces();
-        const firstWorkspace = workspaces[0];
+        const [firstWorkspace] = workspaces;
 
         if (firstWorkspace) {
           const pkg = yield* pm.readPackageJson({ id: firstWorkspace });
@@ -583,7 +588,7 @@ describe('TurborepoSetupService', () => {
         const configOption = yield* service.readTurboConfig();
 
         if (configOption._tag === 'Some') {
-          const config = configOption.value;
+          const { value: config } = configOption;
 
           expect(config.tasks?.build).toHaveProperty('dependsOn');
           expect(config.tasks?.build).toHaveProperty('outputs');

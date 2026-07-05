@@ -22,14 +22,17 @@ export async function react(
     interopDefault(import('@stylistic/eslint-plugin')),
   ]);
 
-  const plugins = pluginReact.configs.all.plugins;
+  const { configs } = pluginReact;
+  const {
+    all: { plugins },
+  } = configs;
   const reactExtraPlugin = plugins?.['@eslint-react'] ?? {};
 
   const recommended = renamePluginsInRules(
     {
-      ...pluginReact.configs['disable-conflict-eslint-plugin-react'].rules,
-      ...pluginReact.configs['disable-conflict-eslint-plugin-react-hooks'].rules,
-      ...pluginReact.configs['strict-type-checked'].rules,
+      ...configs['disable-conflict-eslint-plugin-react'].rules,
+      ...configs['disable-conflict-eslint-plugin-react-hooks'].rules,
+      ...configs['strict-type-checked'].rules,
     },
     PluginNameMap,
   );

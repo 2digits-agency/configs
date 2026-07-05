@@ -14,7 +14,9 @@ export function noUnnecessaryUseCallback(): RuleFunction {
 }
 
 function noUnnecessaryUseCallbackImpl(context: RuleContext, { ast, is }: RuleToolkit): RuleListener {
-  if (!context.sourceCode.text.includes('useCallback')) {
+  const { sourceCode } = context;
+
+  if (!sourceCode.text.includes('useCallback')) {
     return {};
   }
 
@@ -26,27 +28,28 @@ function noUnnecessaryUseCallbackImpl(context: RuleContext, { ast, is }: RuleToo
         return;
       }
 
-      const [callback, ...rest] = context.sourceCode.getDeclaredVariables(node);
+      const [callback, ...rest] = sourceCode.getDeclaredVariables(node);
 
       if (!callback || rest.length > 0) {
         return;
       }
 
       const effectReport = getUseEffectOnlyReport(
-        context.sourceCode,
+        sourceCode,
         (candidate, test) => ast.findParent(candidate, test) ?? undefined,
         init,
         id.name,
         is.useEffectLikeCall,
       );
 
-      const component = context.sourceCode.getScope(init).block;
+      const { block: component } = sourceCode.getScope(init);
 
       if (!isFunction(component)) {
         return;
       }
 
-      const [fn, deps] = init.arguments;
+      const { arguments: initArguments } = init;
+      const [fn, deps] = initArguments;
 
       if (!fn || !deps) {
         return;
@@ -64,7 +67,7 @@ function noUnnecessaryUseCallbackImpl(context: RuleContext, { ast, is }: RuleToo
         return;
       }
 
-      const referencesComponentScope = getScopes(context.sourceCode.getScope(callbackNode))
+      const referencesComponentScope = getScopes(sourceCode.getScope(callbackNode))
         .flatMap((scope) => scope.references)
         .some((reference) => reference.resolved?.scope.block === component);
 

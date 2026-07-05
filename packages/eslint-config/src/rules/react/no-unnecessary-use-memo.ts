@@ -14,7 +14,9 @@ export function noUnnecessaryUseMemo(): RuleFunction {
 }
 
 function noUnnecessaryUseMemoImpl(context: RuleContext, { ast, is }: RuleToolkit): RuleListener {
-  if (!context.sourceCode.text.includes('useMemo')) {
+  const { sourceCode } = context;
+
+  if (!sourceCode.text.includes('useMemo')) {
     return {};
   }
 
@@ -26,26 +28,27 @@ function noUnnecessaryUseMemoImpl(context: RuleContext, { ast, is }: RuleToolkit
         return;
       }
 
-      const [memo, ...rest] = context.sourceCode.getDeclaredVariables(node);
+      const [memo, ...rest] = sourceCode.getDeclaredVariables(node);
 
       if (memo === undefined || rest.length > 0) {
         return;
       }
 
       const effectReport = getUseEffectOnlyReport(
-        context.sourceCode,
+        sourceCode,
         (candidate, test) => ast.findParent(candidate, test) ?? undefined,
         init,
         id.name,
         is.useEffectLikeCall,
       );
-      const component = context.sourceCode.getScope(init).block;
+      const { block: component } = sourceCode.getScope(init);
 
       if (!isFunction(component)) {
         return;
       }
 
-      const [fn, deps] = init.arguments;
+      const { arguments: initArguments } = init;
+      const [fn, deps] = initArguments;
 
       if (fn === undefined || deps === undefined) {
         return;
@@ -63,7 +66,7 @@ function noUnnecessaryUseMemoImpl(context: RuleContext, { ast, is }: RuleToolkit
         return;
       }
 
-      const memoReferences = getScopes(context.sourceCode.getScope(memoNode)).flatMap((scope) => scope.references);
+      const memoReferences = getScopes(sourceCode.getScope(memoNode)).flatMap((scope) => scope.references);
       const referencesComponentScope = memoReferences.some(
         (reference) => reference.resolved?.scope.block === component,
       );

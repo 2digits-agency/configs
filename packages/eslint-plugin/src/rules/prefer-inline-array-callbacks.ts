@@ -131,8 +131,8 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
       noCallbackReference:
         'Do not pass `{{name}}` by reference to `Array#{{method}}`. Array methods pass extra arguments (index, array) which may cause unexpected behavior.',
     },
+    defaultOptions: [],
   },
-  defaultOptions: [],
   create(context) {
     const parserServices = ESLintUtils.getParserServices(context, true);
 
@@ -145,17 +145,19 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
     function checkArrayMethod(node: TSESTree.CallExpression): void {
       const { object, property } = node.callee as TSESTree.MemberExpression;
 
-      const methodName = (property as TSESTree.Identifier).name;
+      const { name: methodName } = property as TSESTree.Identifier;
 
       if (!ALL_METHODS.has(methodName)) {
         return;
       }
 
-      if (node.arguments.length === 0 || node.arguments.length > 2) {
+      const { arguments: nodeArgs } = node;
+
+      if (nodeArgs.length === 0 || nodeArgs.length > 2) {
         return;
       }
 
-      const [callback] = node.arguments;
+      const [callback] = nodeArgs;
 
       if (!callback || callback.type === AST_NODE_TYPES.SpreadElement) {
         return;
