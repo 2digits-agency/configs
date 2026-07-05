@@ -1,5 +1,15 @@
 # @2digits/eslint-plugin
 
+## 4.0.20
+
+### Patch Changes
+
+- 3103077: Update ESLint core and plugins
+
+  - Updated React, CSS, Markdown, Next, Vitest, TypeScript ESLint, JSDoc, Turbo, Unicorn, and Zod ESLint dependencies
+  - Updated generated rule types and config snapshots for upstream rule metadata changes
+  - Adjusted custom rule code for stricter destructuring lint coverage
+
 ## 4.0.19
 
 ### Patch Changes

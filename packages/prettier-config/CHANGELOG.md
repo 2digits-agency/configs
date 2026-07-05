@@ -1,5 +1,11 @@
 # @2digits/prettier-config
 
+## 4.0.43
+
+### Patch Changes
+
+- 3103077: Update prettier to 3.9.4
+
 ## 4.0.42
 
 ### Patch Changes
