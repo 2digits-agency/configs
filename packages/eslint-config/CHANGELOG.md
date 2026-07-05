@@ -1,5 +1,18 @@
 # @2digits/eslint-config
 
+## 5.5.8
+
+### Patch Changes
+
+- 3103077: Update ESLint core and plugins
+
+  - Updated React, CSS, Markdown, Next, Vitest, TypeScript ESLint, JSDoc, Turbo, Unicorn, and Zod ESLint dependencies
+  - Updated generated rule types and config snapshots for upstream rule metadata changes
+  - Adjusted custom rule code for stricter destructuring lint coverage
+
+- Updated dependencies [3103077]
+  - @2digits/eslint-plugin@4.0.20
+
 ## 5.5.7
 
 ### Patch Changes
