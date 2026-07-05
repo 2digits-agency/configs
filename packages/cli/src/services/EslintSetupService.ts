@@ -299,7 +299,7 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
         const turboConfigOption = yield* readTurboConfig();
 
         if (Option.isSome(turboConfigOption)) {
-          const turboConfig = turboConfigOption.value;
+          const { value: turboConfig } = turboConfigOption;
           const hasLintTask = turboConfig.tasks && 'lint' in turboConfig.tasks;
 
           if (hasLintTask) {
@@ -345,25 +345,28 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
         const packageJson = yield* pm.readPackageJson({ id: root });
 
         packageJson.scripts ??= {};
+        const { scripts } = packageJson;
 
-        if (!packageJson.scripts.lint) {
-          packageJson.scripts.lint = isMonorepo ? 'turbo run lint lint:root' : 'eslint .';
+        const { lint, 'lint:fix': lintFix, 'lint:root': lintRoot, 'lint:root:fix': lintRootFix } = scripts;
+
+        if (!lint) {
+          scripts.lint = isMonorepo ? 'turbo run lint lint:root' : 'eslint .';
           yield* Effect.logInfo('✅ Added lint script');
         }
 
-        if (!packageJson.scripts['lint:fix']) {
-          packageJson.scripts['lint:fix'] = isMonorepo ? 'turbo run lint:fix lint:root:fix' : 'eslint . --fix';
+        if (!lintFix) {
+          scripts['lint:fix'] = isMonorepo ? 'turbo run lint:fix lint:root:fix' : 'eslint . --fix';
           yield* Effect.logInfo('✅ Added lint:fix script');
         }
 
         if (isMonorepo) {
-          if (!packageJson.scripts['lint:root']) {
-            packageJson.scripts['lint:root'] = 'eslint .';
+          if (!lintRoot) {
+            scripts['lint:root'] = 'eslint .';
             yield* Effect.logInfo('✅ Added lint:root script');
           }
 
-          if (!packageJson.scripts['lint:root:fix']) {
-            packageJson.scripts['lint:root:fix'] = 'eslint . --fix';
+          if (!lintRootFix) {
+            scripts['lint:root:fix'] = 'eslint . --fix';
             yield* Effect.logInfo('✅ Added lint:root:fix script');
           }
         }

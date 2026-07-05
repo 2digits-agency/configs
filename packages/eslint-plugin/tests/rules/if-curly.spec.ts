@@ -3,6 +3,7 @@ import { run, type InvalidTestCase, type ValidTestCase } from 'eslint-vitest-rul
 
 import { ifCurly, RULE_NAME } from '../../src/rules/if-curly';
 
+// oxlint-disable-next-line eslint/prefer-destructuring -- Keep String.raw as the readable tagged-template alias.
 const javascript = String.raw;
 
 const valids: Array<ValidTestCase> = [

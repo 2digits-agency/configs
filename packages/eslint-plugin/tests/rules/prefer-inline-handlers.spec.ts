@@ -3,6 +3,7 @@ import { run, type InvalidTestCase, type ValidTestCase } from 'eslint-vitest-rul
 
 import { preferInlineHandlers, RULE_NAME } from '../../src/rules/prefer-inline-handlers';
 
+// oxlint-disable-next-line eslint/prefer-destructuring -- Keep String.raw as the readable tagged-template alias.
 const tsx = String.raw;
 
 const valids: Array<ValidTestCase> = [

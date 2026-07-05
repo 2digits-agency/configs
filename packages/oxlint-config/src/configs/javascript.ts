@@ -175,7 +175,7 @@ export const javascriptConfig = defineTypedConfig({
     'eslint/object-shorthand': 'error',
     'eslint/operator-assignment': ['error', 'always'],
     'eslint/prefer-const': ['error', { destructuring: 'all', ignoreReadBeforeAssign: true }],
-    'eslint/prefer-destructuring': ['error', { enforceForRenamedProperties: true }],
+    'eslint/prefer-destructuring': ['error', { array: true, object: true }, { enforceForRenamedProperties: true }],
     'eslint/prefer-exponentiation-operator': 'error',
     'eslint/prefer-numeric-literals': 'error',
     'eslint/prefer-object-has-own': 'error',

@@ -28,7 +28,7 @@ export default defineConfig({
           },
         );
 
-        const rules = JSON.parse(output) as Array<OxlintRule>;
+        const rules: Array<OxlintRule> = JSON.parse(output) as Array<OxlintRule>;
 
         const ruleDefinitions = rules.map((element) => toDefinition(element));
 
@@ -60,6 +60,7 @@ function toDefinition(rule: OxlintRule): string {
   const scope = rule.scope.charAt(0).toUpperCase() + rule.scope.slice(1);
   const category = rule.category.charAt(0).toUpperCase() + rule.category.slice(1);
 
+  // oxlint-disable-next-line eslint/prefer-destructuring -- Keep String.raw as the readable tagged-template alias.
   const ts = String.raw;
 
   return ts`

@@ -18,10 +18,10 @@ export const ifCurly = createRule<[], MessageId>({
     messages: {
       missingCurly: 'Expected curly braces around if statement body',
     },
+    defaultOptions: [],
   },
-  defaultOptions: [],
   create(context) {
-    const sourceCode = context.sourceCode;
+    const { sourceCode } = context;
 
     function getIndent(node: TSESTree.Node): string {
       const line = sourceCode.lines[node.loc.start.line - 1] ?? '';
