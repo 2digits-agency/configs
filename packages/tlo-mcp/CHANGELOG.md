@@ -1,5 +1,11 @@
 # @2digits/tlo-mcp
 
+## 0.1.23
+
+### Patch Changes
+
+- 7916d9c: Update @effect/language-service to 0.86.6
+
 ## 0.1.22
 
 ### Patch Changes

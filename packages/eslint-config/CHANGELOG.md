@@ -1,5 +1,19 @@
 # @2digits/eslint-config
 
+## 5.5.9
+
+### Patch Changes
+
+- 7916d9c: Update ESLint plugins
+
+  - Updated React ESLint packages to 5.13.2.
+  - Updated TypeScript ESLint packages to 8.63.0.
+  - Updated Vitest, JSDoc, JSONC, Storybook, Turbo, Unicorn, and YAML plugin dependencies.
+  - Refreshed generated rule types and config snapshots for upstream metadata and recommended-rule changes.
+
+- Updated dependencies [7916d9c]
+  - @2digits/eslint-plugin@4.0.21
+
 ## 5.5.8
 
 ### Patch Changes

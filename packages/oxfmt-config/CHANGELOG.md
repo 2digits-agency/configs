@@ -1,5 +1,11 @@
 # @2digits/oxfmt-config
 
+## 0.3.14
+
+### Patch Changes
+
+- 7916d9c: Update oxfmt to 0.58.0
+
 ## 0.3.13
 
 ### Patch Changes
