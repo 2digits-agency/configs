@@ -154,8 +154,8 @@ catalogs:
       specifier: 0.3.0
       version: 0.3.0
     eslint-plugin-jsdoc:
-      specifier: 63.0.11
-      version: 63.0.11
+      specifier: 63.0.13
+      version: 63.0.13
     eslint-plugin-jsonc:
       specifier: 3.2.0
       version: 3.2.0
@@ -527,7 +527,7 @@ importers:
         version: 0.3.0(eslint@10.6.0(jiti@2.7.0))
       eslint-plugin-jsdoc:
         specifier: 'catalog:'
-        version: 63.0.11(eslint@10.6.0(jiti@2.7.0))
+        version: 63.0.13(eslint@10.6.0(jiti@2.7.0))
       eslint-plugin-jsonc:
         specifier: 'catalog:'
         version: 3.2.0(eslint@10.6.0(jiti@2.7.0))
@@ -4637,8 +4637,8 @@ packages:
     peerDependencies:
       eslint: ^9.5.0 || ^10.0.0
 
-  eslint-plugin-jsdoc@63.0.11:
-    resolution: {integrity: sha512-QhLmqREgRJSIKg0r23ckTVaNK1lmMsTmpyY5Hv7NTCHNWTFZx/8PqycWhR0p0Lk/U5aJ6H3zAKMQ0xB2NkN0sA==}
+  eslint-plugin-jsdoc@63.0.13:
+    resolution: {integrity: sha512-ahG1kWA8jYNwaQJtzJlnF+v4Gb9w5r+WL98gp+L8qjLN9ErpL5sevGuemN+fCYsU3Np27F36KmDc8UPi1ml/dg==}
     engines: {node: ^22.13.0 || >=24}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -8166,7 +8166,7 @@ snapshots:
   '@es-joy/jsdoccomment@0.88.0':
     dependencies:
       '@types/estree': 1.0.9
-      '@typescript-eslint/types': 8.62.0
+      '@typescript-eslint/types': 8.62.1
       comment-parser: 1.4.7
       esquery: 1.7.0
       jsdoc-type-pratt-parser: 7.2.0
@@ -9967,7 +9967,7 @@ snapshots:
   '@typescript-eslint/project-service@8.62.0(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/tsconfig-utils': 8.62.0(typescript@6.0.3)
-      '@typescript-eslint/types': 8.62.0
+      '@typescript-eslint/types': 8.62.1
       debug: 4.4.3
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -11101,7 +11101,7 @@ snapshots:
       uncase: 0.2.0
       yaml-eslint-parser: 2.0.0
 
-  eslint-plugin-jsdoc@63.0.11(eslint@10.6.0(jiti@2.7.0)):
+  eslint-plugin-jsdoc@63.0.13(eslint@10.6.0(jiti@2.7.0)):
     dependencies:
       '@es-joy/jsdoccomment': 0.88.0
       '@es-joy/resolve.exports': 1.2.0
