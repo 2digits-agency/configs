@@ -190,8 +190,8 @@ catalogs:
       specifier: 70.0.0
       version: 70.0.0
     eslint-plugin-yml:
-      specifier: 3.5.0
-      version: 3.5.0
+      specifier: 3.6.0
+      version: 3.6.0
     eslint-plugin-zod:
       specifier: 4.7.1
       version: 4.7.1
@@ -563,7 +563,7 @@ importers:
         version: 70.0.0(eslint@10.6.0(jiti@2.7.0))
       eslint-plugin-yml:
         specifier: 'catalog:'
-        version: 3.5.0(eslint@10.6.0(jiti@2.7.0))
+        version: 3.6.0(eslint@10.6.0(jiti@2.7.0))
       eslint-plugin-zod:
         specifier: 'catalog:'
         version: 4.7.1(eslint@10.6.0(jiti@2.7.0))(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.2(@arethetypeswrong/core@0.18.4)(@opentelemetry/api@1.9.1)(@types/node@24.13.2)(@voidzero-dev/vite-plus-core@0.2.2(@arethetypeswrong/core@0.18.4)(@types/node@24.13.2)(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.25.12)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.0)(typescript@6.0.3)(yaml@2.9.0)))(typescript@6.0.3)(zod@4.4.3)
@@ -4756,8 +4756,8 @@ packages:
     peerDependencies:
       eslint: '>=10.4'
 
-  eslint-plugin-yml@3.5.0:
-    resolution: {integrity: sha512-u2UkSIp/+th1wYCt0QWeCI6agf24dxX6PbFfCCN18gGQHmXh3Cn9D/U5OiP5RNYTEwjXCLusj1OJRK+zwdvFqQ==}
+  eslint-plugin-yml@3.6.0:
+    resolution: {integrity: sha512-8lSqBIiOJO8ms1gktdlNaVGm3zXQJiYeKhQmtIG66XzU58kFDOjQae4sufQEMGHC4bP8VxiaH3tjU5PpDB6euw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -11347,7 +11347,7 @@ snapshots:
       semver: 7.8.5
       strip-indent: 4.1.1
 
-  eslint-plugin-yml@3.5.0(eslint@10.6.0(jiti@2.7.0)):
+  eslint-plugin-yml@3.6.0(eslint@10.6.0(jiti@2.7.0)):
     dependencies:
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.2
