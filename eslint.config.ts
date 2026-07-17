@@ -10,7 +10,7 @@ export default twoDigits(
         '.opencode',
         'fixtures/',
         'packages/*/test/fixtures/**',
-        '.changeset/*-*-*.md',
+        '.tegami/*.md',
         '.claude/commands/',
         '.cursor/commands/',
         '.claude/skills/openspec-*/',
