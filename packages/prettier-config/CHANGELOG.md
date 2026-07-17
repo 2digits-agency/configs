@@ -1,5 +1,14 @@
 # @2digits/prettier-config
 
+## 4.0.45
+
+### Patch Changes
+
+- bfb16bd: Update Prettier plugins
+
+  - Updated `@prettier/plugin-oxc` to 0.2.1
+  - Updated `prettier-plugin-tailwindcss` to 0.8.1
+
 ## 4.0.44
 
 ### Patch Changes
