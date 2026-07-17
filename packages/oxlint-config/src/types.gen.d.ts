@@ -1468,6 +1468,17 @@ export interface RuleOptions {
 'eslint/no-unreachable'?: DummyRule;
 
 /**
+ * No unreachable loop
+ *
+ * plugin: Eslint
+ * category: Nursery
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unreachable-loop.html
+ */
+'eslint/no-unreachable-loop'?: DummyRule;
+
+/**
  * No unsafe finally
  *
  * plugin: Eslint
@@ -6561,6 +6572,17 @@ export interface RuleOptions {
 'unicorn/explicit-length-check'?: DummyRule;
 
 /**
+ * Explicit timer delay
+ *
+ * plugin: Unicorn
+ * category: Style
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/explicit-timer-delay.html
+ */
+'unicorn/explicit-timer-delay'?: DummyRule;
+
+/**
  * Filename case
  *
  * plugin: Unicorn
@@ -6735,6 +6757,17 @@ export interface RuleOptions {
  * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-await-in-promise-methods.html
  */
 'unicorn/no-await-in-promise-methods'?: DummyRule;
+
+/**
+ * No confusing array with
+ *
+ * plugin: Unicorn
+ * category: Suspicious
+ * type-aware: false
+ *
+ * @see https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-confusing-array-with.html
+ */
+'unicorn/no-confusing-array-with'?: DummyRule;
 
 /**
  * No console spaces
