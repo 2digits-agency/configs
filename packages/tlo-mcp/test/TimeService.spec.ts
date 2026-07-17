@@ -37,7 +37,7 @@ function createMockClient(response: unknown) {
   );
 }
 
-describe('TimeService', () => {
+describe(TimeService, () => {
   describe('getWeek', () => {
     const TestLayer = TimeServiceLive.pipe(Layer.provide(createMockClient(mockActivitiesRaw)));
 
@@ -94,7 +94,7 @@ describe('TimeService', () => {
             description: 'Updated',
           });
 
-          expect(true).toBe(true);
+          expect(true).toBeTruthy();
         }),
       );
     });
@@ -110,7 +110,7 @@ describe('TimeService', () => {
 
           yield* service.deleteActivity({ id: 1 });
 
-          expect(true).toBe(true);
+          expect(true).toBeTruthy();
         }),
       );
     });

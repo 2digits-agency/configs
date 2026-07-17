@@ -19,7 +19,7 @@ import {
 } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
-describe('TurborepoSetupService', () => {
+describe(TurborepoSetupService, () => {
   const testLayer = Layer.mergeAll(
     TurborepoSetupService.Default,
     ProjectDetectionService.Default,
@@ -40,11 +40,11 @@ describe('TurborepoSetupService', () => {
         const tasks = yield* service.detectWorkspaceTasks();
 
         // Should detect build, dev, test, lint, typecheck from both packages
-        expect(tasks.has('build')).toBe(true);
-        expect(tasks.has('dev')).toBe(true);
-        expect(tasks.has('test')).toBe(true);
-        expect(tasks.has('lint')).toBe(true);
-        expect(tasks.has('typecheck')).toBe(true);
+        expect(tasks.has('build')).toBeTruthy();
+        expect(tasks.has('dev')).toBeTruthy();
+        expect(tasks.has('test')).toBeTruthy();
+        expect(tasks.has('lint')).toBeTruthy();
+        expect(tasks.has('typecheck')).toBeTruthy();
       }).pipe(Effect.provide(testLayer)),
     );
 
@@ -308,11 +308,13 @@ describe('TurborepoSetupService', () => {
         // Verify scripts were added to package.json
         const rootPackageJsonAfter = yield* pm.readPackageJson({ id: root });
 
-        expect(rootPackageJsonAfter.scripts?.build).toBe('turbo run build');
-        expect(rootPackageJsonAfter.scripts?.test).toBe('turbo run test');
-        expect(rootPackageJsonAfter.scripts?.dev).toBe('turbo run dev');
-        expect(rootPackageJsonAfter.scripts?.lint).toBe('turbo run lint');
-        expect(rootPackageJsonAfter.scripts?.typecheck).toBe('turbo run typecheck');
+        expect(rootPackageJsonAfter.scripts).toMatchObject({
+          build: 'turbo run build',
+          test: 'turbo run test',
+          dev: 'turbo run dev',
+          lint: 'turbo run lint',
+          typecheck: 'turbo run typecheck',
+        });
       }).pipe(Effect.provide(testLayer)),
     );
 
@@ -336,12 +338,18 @@ describe('TurborepoSetupService', () => {
 
         const service = yield* TurborepoSetupService;
 
+        const rootPackageBefore = yield* pm.readPackageJson();
+
         yield* service.setup();
+
+        const rootPackageAfter = yield* pm.readPackageJson();
+
+        expect(rootPackageAfter).toStrictEqual(rootPackageBefore);
       }).pipe(Effect.provide(testLayer)),
     );
   });
 
-  describe('ensureTurboInstalled', () => {
+  describe('ensureTurboInstalled package updates', () => {
     it.scoped('installs turbo if not present', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
@@ -356,7 +364,7 @@ describe('TurborepoSetupService', () => {
           ...pkgBefore.devDependencies,
         };
 
-        expect('turbo' in depsBefore).toBe(false);
+        expect('turbo' in depsBefore).toBeFalsy();
 
         yield* service.ensureTurboInstalled();
       }).pipe(Effect.provide(testLayer)),
@@ -408,7 +416,7 @@ describe('TurborepoSetupService', () => {
         const content = yield* fs.readFileString(turboPath);
         const parsed = JSON.parse(content) as TurboConfig;
 
-        expect(parsed).toEqual(config);
+        expect(parsed).toStrictEqual(config);
       }).pipe(Effect.provide(testLayer)),
     );
   });
@@ -556,9 +564,9 @@ describe('TurborepoSetupService', () => {
         const service = yield* TurborepoSetupService;
         const tasks = yield* service.detectWorkspaceTasks();
 
-        expect(tasks.has('build:prod')).toBe(true);
-        expect(tasks.has('test:unit')).toBe(true);
-        expect(tasks.has('lint:eslint')).toBe(true);
+        expect(tasks.has('build:prod')).toBeTruthy();
+        expect(tasks.has('test:unit')).toBeTruthy();
+        expect(tasks.has('lint:eslint')).toBeTruthy();
       }).pipe(Effect.provide(testLayer)),
     );
 
@@ -629,7 +637,7 @@ describe('TurborepoSetupService', () => {
         const updatedContent = yield* fs.readFileString(turboPath);
         const updatedConfig = JSON.parse(updatedContent) as TurboConfig;
 
-        expect(updatedConfig.tasks?.build).toEqual(config.tasks?.build);
+        expect(updatedConfig.tasks?.build).toStrictEqual(config.tasks?.build);
       }).pipe(Effect.provide(testLayer)),
     );
   });
