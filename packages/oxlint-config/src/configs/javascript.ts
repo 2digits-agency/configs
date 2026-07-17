@@ -205,6 +205,7 @@ export const javascriptConfig = defineTypedConfig({
     'eslint/id-match': undefined,
     'eslint/no-implied-eval': undefined,
     'eslint/prefer-named-capture-group': undefined,
+    'eslint/no-unreachable-loop': undefined,
   } satisfies {
     [k in Extract<keyof Rules, `eslint/${string}`>]: Rules[k];
   },

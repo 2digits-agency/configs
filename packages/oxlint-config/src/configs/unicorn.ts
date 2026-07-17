@@ -140,6 +140,8 @@ export const unicornConfig = defineTypedConfig({
     'unicorn/prefer-export-from': undefined,
     'unicorn/prefer-number-coercion': undefined,
     'unicorn/prefer-single-call': undefined,
+    'unicorn/explicit-timer-delay': undefined,
+    'unicorn/no-confusing-array-with': undefined,
   } satisfies {
     [k in Extract<keyof Rules, `unicorn/${string}`>]: Rules[k];
   },
