@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   publish:
-    name: 🦋 Changesets
+    name: ✉️ Tegami
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: 🗃️ Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
 
       - name: ⚡Setup Vite+
         uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1.15.0
@@ -36,11 +38,8 @@ jobs:
       - name: 🏗️ Build packages
         run: vp run build --force
 
-      - name: 🪄 Create Release Pull Request or Publish
-        id: changesets
-        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
-        with:
-          publish: vp run release
+      - name: 🪄 Version or publish packages
+        run: vp run tegami ci
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

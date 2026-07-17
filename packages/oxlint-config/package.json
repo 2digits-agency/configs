@@ -29,7 +29,8 @@
       "./base": "./dist/base.mjs",
       "./typescript": "./dist/typescript.mjs",
       "./package.json": "./package.json"
-    }
+    },
+    "access": "public"
   },
   "scripts": {
     "build": "vp pack --minify",
