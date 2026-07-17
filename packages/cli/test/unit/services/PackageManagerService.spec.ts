@@ -19,7 +19,7 @@ import {
 } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
-describe('PackageManagerService', () => {
+describe(PackageManagerService, () => {
   const testLayer = Layer.mergeAll(
     PackageManagerService.Default,
     MockCommandExecutor.Default,
@@ -358,7 +358,7 @@ describe('PackageManagerService', () => {
         const service = yield* PackageManagerService;
         const pkg = yield* service.readPackageJson();
 
-        expect(pkg.scripts).toEqual({});
+        expect(pkg.scripts).toStrictEqual({});
       }).pipe(Effect.provide(testLayer)),
     );
 

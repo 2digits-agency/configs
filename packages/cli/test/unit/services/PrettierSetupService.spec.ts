@@ -16,7 +16,7 @@ import {
 } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
-describe('PrettierSetupService', () => {
+describe(PrettierSetupService, () => {
   const testLayer = Layer.mergeAll(
     PrettierSetupService.Default,
     PackageManagerService.Default,
@@ -61,7 +61,7 @@ describe('PrettierSetupService', () => {
           `"pnpm add --workspace-root -D prettier @2digits/prettier-config"`,
         );
 
-        expect(updatedPkg).toMatchSnapshot();
+        expect(updatedPkg).toMatchSnapshot('configured package');
       }).pipe(Effect.provide(testLayer)),
     );
 
@@ -93,7 +93,7 @@ describe('PrettierSetupService', () => {
           format: 'prettier . --ignore-unknown --check --cache',
         });
 
-        expect(updatedPkg).toMatchSnapshot();
+        expect(updatedPkg).toMatchSnapshot('preserved config package');
       }).pipe(Effect.provide(testLayer)),
     );
 
@@ -130,7 +130,7 @@ describe('PrettierSetupService', () => {
         // Should still add format:fix if not present
         assertTrue(updatedPkg.scripts?.['format:fix'] !== undefined);
 
-        expect(updatedPkg).toMatchSnapshot();
+        expect(updatedPkg).toMatchSnapshot('preserved scripts package');
       }).pipe(Effect.provide(testLayer)),
     );
   });

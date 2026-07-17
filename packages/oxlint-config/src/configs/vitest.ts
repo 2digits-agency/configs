@@ -15,7 +15,13 @@ export const vitestConfig = defineTypedConfig({
     ],
     'vitest/consistent-test-it': 'error',
     'vitest/consistent-vitest-vi': ['error', { fn: 'vi' }],
-    'vitest/expect-expect': 'error',
+    'vitest/expect-expect': [
+      'error',
+      {
+        additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped'],
+        assertFunctionNames: ['expect', 'expectTypeOf', 'assert', 'assertType', 'assert*', '*Equal'],
+      },
+    ],
     'vitest/hoisted-apis-on-top': 'error',
     'vitest/max-expects': 'error',
     'vitest/max-nested-describe': 'error',
@@ -36,7 +42,7 @@ export const vitestConfig = defineTypedConfig({
     'vitest/no-mocks-import': 'error',
     'vitest/no-restricted-matchers': undefined,
     'vitest/no-restricted-vi-methods': undefined,
-    'vitest/no-standalone-expect': 'error',
+    'vitest/no-standalone-expect': ['error', { additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped'] }],
     'vitest/no-test-prefixes': 'error',
     'vitest/no-test-return-statement': 'error',
     'vitest/no-unneeded-async-expect-function': 'error',

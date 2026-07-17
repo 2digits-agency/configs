@@ -17,7 +17,7 @@ import type { TurboConfig } from '../../../src/services/TurborepoSetupService.js
 import { MockCommandExecutor, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
-describe('EslintSetupService', () => {
+describe(EslintSetupService, () => {
   const testLayer = Layer.mergeAll(
     EslintSetupService.Default,
     EslintDetectionService.Default,
@@ -323,7 +323,7 @@ describe('EslintSetupService', () => {
         const written = yield* fs.readFileString(turboPath);
         const parsed = JSON.parse(written) as TurboConfig;
 
-        expect(parsed).toEqual(config);
+        expect(parsed).toStrictEqual(config);
       }).pipe(Effect.provide(testLayer)),
     );
 

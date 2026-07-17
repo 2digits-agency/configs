@@ -12,7 +12,7 @@ import { PackageManagerService } from '../../../src/services/PackageManagerServi
 import { MockCommandExecutor, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
 import { copyFixture, fixturesBasePath, withTempTestEnv } from '../../helpers/testEnv.js';
 
-describe('EslintDetectionService', () => {
+describe(EslintDetectionService, () => {
   const testLayer = Layer.mergeAll(
     EslintDetectionService.Default,
     PackageManagerService.Default,

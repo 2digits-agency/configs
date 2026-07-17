@@ -2,8 +2,8 @@ import { describe, expect, it } from '@effect/vitest';
 
 import { TloApiError, TloAuthError, TloNetworkError, TloParseError } from '../src/schemas/errors.js';
 
-describe('TloErrors', () => {
-  describe('TloApiError', () => {
+describe('tloErrors', () => {
+  describe(TloApiError, () => {
     it('is tagged correctly', () => {
       const error = new TloApiError({ message: 'API failed', endpoint: '/test' });
 
@@ -13,7 +13,7 @@ describe('TloErrors', () => {
     });
   });
 
-  describe('TloAuthError', () => {
+  describe(TloAuthError, () => {
     it('is tagged correctly', () => {
       const error = new TloAuthError({ message: 'Session expired' });
 
@@ -22,7 +22,7 @@ describe('TloErrors', () => {
     });
   });
 
-  describe('TloNetworkError', () => {
+  describe(TloNetworkError, () => {
     it('is tagged correctly', () => {
       const error = new TloNetworkError({
         message: 'Connection refused',
@@ -36,7 +36,7 @@ describe('TloErrors', () => {
     });
   });
 
-  describe('TloParseError', () => {
+  describe(TloParseError, () => {
     it('is tagged correctly', () => {
       const error = new TloParseError({ message: 'Invalid JSON' });
 

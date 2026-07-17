@@ -12,7 +12,7 @@ import { ProjectDetectionService } from '../../../src/services/ProjectDetectionS
 import { MockCommandExecutor, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
-describe('ProjectDetectionService', () => {
+describe(ProjectDetectionService, () => {
   const testLayer = Layer.mergeAll(
     ProjectDetectionService.Default,
     PackageManagerService.Default,

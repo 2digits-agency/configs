@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PrettierSetupService > setup > adds prettier config and scripts to package.json 2`] = `
+exports[`PrettierSetupService > setup > adds prettier config and scripts to package.json > configured package 1`] = `
 {
   "devDependencies": {},
   "name": "test-single-package",
@@ -17,7 +17,7 @@ exports[`PrettierSetupService > setup > adds prettier config and scripts to pack
 }
 `;
 
-exports[`PrettierSetupService > setup > preserves existing prettier config 1`] = `
+exports[`PrettierSetupService > setup > preserves existing prettier config > preserved config package 1`] = `
 {
   "devDependencies": {
     "@company/eslint-config": "^1.0.0",
@@ -37,7 +37,7 @@ exports[`PrettierSetupService > setup > preserves existing prettier config 1`] =
 }
 `;
 
-exports[`PrettierSetupService > setup > preserves existing scripts 1`] = `
+exports[`PrettierSetupService > setup > preserves existing scripts > preserved scripts package 1`] = `
 {
   "devDependencies": {},
   "name": "test-single-package",

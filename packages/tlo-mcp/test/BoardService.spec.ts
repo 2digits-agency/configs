@@ -46,7 +46,7 @@ function createMockClient(response: unknown) {
   );
 }
 
-describe('BoardService', () => {
+describe(BoardService, () => {
   describe('getProjects', () => {
     const TestLayer = BoardServiceLive.pipe(Layer.provide(createMockClient(mockProjectsRaw)));
 
@@ -108,7 +108,7 @@ describe('BoardService', () => {
             state: 'COMPLETED',
           });
 
-          expect(true).toBe(true);
+          expect(true).toBeTruthy();
         }),
       );
     });
