@@ -1,3 +1,9 @@
+## @2digits/tlo-mcp@0.1.25
+
+### Update Effect ecosystem dependencies
+
+- Updated `@effect/platform` to 0.97.0
+
 # @2digits/tlo-mcp
 
 ## 0.1.24
