@@ -1,5 +1,13 @@
 # @2digits/oxlint-config
 
+## 0.6.14
+
+### Patch Changes
+
+- bfb16bd: Update oxlint to 1.74.0 and generated rule types
+
+  - Added generated types for new ESLint and Unicorn rules
+
 ## 0.6.13
 
 ### Patch Changes

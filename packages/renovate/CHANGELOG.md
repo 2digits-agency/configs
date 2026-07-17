@@ -1,5 +1,11 @@
 # @2digits/renovate-config
 
+## 1.2.93
+
+### Patch Changes
+
+- bfb16bd: Update renovate to 43.265.0
+
 ## 1.2.92
 
 ### Patch Changes
