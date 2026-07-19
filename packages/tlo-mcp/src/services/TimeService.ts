@@ -30,7 +30,7 @@ export interface TimeServiceShape {
     date: Date,
     contactId: string,
     timezone?: string,
-  ) => Effect.Effect<ReadonlyArray<typeof Activity.Type>, TloError>;
+  ) => Effect.Effect<ReadonlyArray<Activity>, TloError>;
 
   readonly createActivity: (params: CreateActivityParams) => Effect.Effect<number, TloError>;
 
@@ -39,10 +39,9 @@ export interface TimeServiceShape {
   readonly deleteActivity: (params: DeleteActivityParams) => Effect.Effect<void, TloError>;
 }
 
-export class TimeService extends Context.Tag('@2digits/tlo-mcp/services/TimeService')<
-  TimeService,
-  TimeServiceShape
->() {}
+export class TimeService extends Context.Service<TimeService, TimeServiceShape>()(
+  '@2digits/tlo-mcp/services/TimeService',
+) {}
 
 export const TimeServiceLive = Layer.effect(
   TimeService,

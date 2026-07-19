@@ -26,6 +26,7 @@
     "lint:pkg:fix": "manypkg fix",
     "lint:root": "eslint .",
     "oxlint": "vp lint .",
+    "prepare": "effect-tsgo patch",
     "tegami": "node scripts/tegami.mts",
     "test": "turbo test",
     "types": "turbo types"
@@ -35,6 +36,7 @@
     "@2digits/oxfmt-config": "workspace:*",
     "@2digits/oxlint-config": "workspace:*",
     "@2digits/tsconfig": "workspace:*",
+    "@effect/tsgo": "catalog:",
     "@manypkg/cli": "catalog:",
     "@types/node": "catalog:",
     "eslint": "catalog:",

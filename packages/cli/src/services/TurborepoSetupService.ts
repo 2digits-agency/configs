@@ -1,11 +1,13 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as FileSystem from '@effect/platform/FileSystem';
-import * as Path from '@effect/platform/Path';
 import * as Array from 'effect/Array';
+import * as Context from 'effect/Context';
 import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
+import * as FileSystem from 'effect/FileSystem';
+import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
+import * as Path from 'effect/Path';
 import * as Struct from 'effect/Struct';
 
 import { PackageManagerService } from './PackageManagerService';
@@ -116,10 +118,10 @@ function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): Tu
 /**
  * Service for setting up Turborepo configuration in projects.
  */
-export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>()(
+export class TurborepoSetupService extends Context.Service<TurborepoSetupService>()(
   '@2digits/cli/services/TurborepoSetupService',
   {
-    effect: Effect.gen(function* () {
+    make: Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
       const path = yield* Path.Path;
       const pm = yield* PackageManagerService;
@@ -331,11 +333,12 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
         ensureTurboInstalled,
       };
     }),
-    dependencies: [
-      NodeFileSystem.layer,
-      NodePath.layer,
-      PackageManagerService.Default,
-      ProjectDetectionService.Default,
-    ],
   },
-) {}
+) {
+  /**
+   * Provides the setup service with its runtime dependencies.
+   */
+  static readonly layer = Layer.effect(this, this.make).pipe(
+    Layer.provide([NodeFileSystem.layer, NodePath.layer, PackageManagerService.layer, ProjectDetectionService.layer]),
+  );
+}

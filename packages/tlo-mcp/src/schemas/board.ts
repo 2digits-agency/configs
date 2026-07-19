@@ -1,6 +1,6 @@
 import * as Schema from 'effect/Schema';
 
-export type ProjectRaw = typeof ProjectRaw.Type;
+export type ProjectRaw = Schema.Type<typeof ProjectRaw>;
 export const ProjectRaw = Schema.Struct({
   ID: Schema.Number,
   PROJECT_NAME: Schema.optional(Schema.String),
@@ -22,14 +22,14 @@ export const ProjectRaw = Schema.Struct({
   CALC_PLANNED: Schema.optional(Schema.Number),
 });
 
-export type GetProjectsResponse = typeof GetProjectsResponse.Type;
+export type GetProjectsResponse = Schema.Type<typeof GetProjectsResponse>;
 export const GetProjectsResponse = Schema.Struct({
   Records: Schema.Array(ProjectRaw),
   RecordCount: Schema.optional(Schema.Number),
 });
 
-export type GetProjectDetailsResponse = typeof GetProjectDetailsResponse.Type;
-export const GetProjectDetailsResponse = Schema.Union(ProjectRaw, Schema.Struct({ Record: ProjectRaw }));
+export type GetProjectDetailsResponse = Schema.Type<typeof GetProjectDetailsResponse>;
+export const GetProjectDetailsResponse = Schema.Union([ProjectRaw, Schema.Struct({ Record: ProjectRaw })]);
 
 export class Project extends Schema.Class<Project>('Project')({
   id: Schema.Number,
@@ -73,7 +73,7 @@ export function projectFromRaw(raw: ProjectRaw): Project {
   });
 }
 
-export type MessageRaw = typeof MessageRaw.Type;
+export type MessageRaw = Schema.Type<typeof MessageRaw>;
 export const MessageRaw = Schema.Struct({
   ID: Schema.Number,
   OWNERID: Schema.optional(Schema.Number),
@@ -92,7 +92,7 @@ export const MessageRaw = Schema.Struct({
   INTERNAL: Schema.optional(Schema.Number),
 });
 
-export type GetMessagesResponse = typeof GetMessagesResponse.Type;
+export type GetMessagesResponse = Schema.Type<typeof GetMessagesResponse>;
 export const GetMessagesResponse = Schema.Array(MessageRaw);
 
 export class Message extends Schema.Class<Message>('Message')({
@@ -113,7 +113,7 @@ export class Message extends Schema.Class<Message>('Message')({
   internal: Schema.optional(Schema.Boolean),
 }) {}
 
-export function messageFromRaw(raw: MessageRaw): typeof Message.Type {
+export function messageFromRaw(raw: MessageRaw): Schema.Type<typeof Message> {
   return new Message({
     id: raw.ID,
     ownerId: raw.OWNERID,
@@ -135,7 +135,7 @@ export function messageFromRaw(raw: MessageRaw): typeof Message.Type {
 
 export type TaskState = 'OPEN' | 'COMPLETED' | 'DRAFT' | 'CLOSED';
 
-export type TaskRaw = typeof TaskRaw.Type;
+export type TaskRaw = Schema.Type<typeof TaskRaw>;
 export const TaskRaw = Schema.Struct({
   ID: Schema.Number,
   PROJECTID: Schema.optional(Schema.Number),
@@ -147,7 +147,7 @@ export const TaskRaw = Schema.Struct({
   BUDGET: Schema.optional(Schema.Number),
 });
 
-export type GetTasksResponse = typeof GetTasksResponse.Type;
+export type GetTasksResponse = Schema.Type<typeof GetTasksResponse>;
 export const GetTasksResponse = Schema.Struct({
   Records: Schema.Array(TaskRaw),
   RecordCount: Schema.optional(Schema.Number),
@@ -164,7 +164,7 @@ export class Task extends Schema.Class<Task>('Task')({
   budget: Schema.optional(Schema.Number),
 }) {}
 
-export function taskFromRaw(raw: TaskRaw): typeof Task.Type {
+export function taskFromRaw(raw: TaskRaw): Schema.Type<typeof Task> {
   return new Task({
     id: raw.ID,
     projectId: raw.PROJECTID,
@@ -197,7 +197,7 @@ export interface GetProjectsParams {
   readonly page?: number;
 }
 
-export type TaskForUserRaw = typeof TaskForUserRaw.Type;
+export type TaskForUserRaw = Schema.Type<typeof TaskForUserRaw>;
 export const TaskForUserRaw = Schema.Struct({
   ID: Schema.Number,
   WORKLOAD: Schema.optional(Schema.Number),
@@ -213,7 +213,7 @@ export const TaskForUserRaw = Schema.Struct({
   STATE: Schema.optional(Schema.String),
 });
 
-export type GetTasksForUserResponse = typeof GetTasksForUserResponse.Type;
+export type GetTasksForUserResponse = Schema.Type<typeof GetTasksForUserResponse>;
 export const GetTasksForUserResponse = Schema.Struct({ Records: Schema.Array(TaskForUserRaw) });
 
 export class TaskForUser extends Schema.Class<TaskForUser>('TaskForUser')({
@@ -231,7 +231,7 @@ export class TaskForUser extends Schema.Class<TaskForUser>('TaskForUser')({
   state: Schema.optional(Schema.String),
 }) {}
 
-export function taskForUserFromRaw(raw: TaskForUserRaw): typeof TaskForUser.Type {
+export function taskForUserFromRaw(raw: TaskForUserRaw): Schema.Type<typeof TaskForUser> {
   return new TaskForUser({
     id: raw.ID,
     workload: raw.WORKLOAD,
@@ -248,10 +248,10 @@ export function taskForUserFromRaw(raw: TaskForUserRaw): typeof TaskForUser.Type
   });
 }
 
-export type TodoDetail = typeof TodoDetail.Type;
-export const TodoDetail = Schema.Record({ key: Schema.String, value: Schema.Unknown });
+export type TodoDetail = Schema.Type<typeof TodoDetail>;
+export const TodoDetail = Schema.Record(Schema.String, Schema.Unknown);
 
-type TodoSummaryRaw = typeof TodoSummaryRaw.Type;
+type TodoSummaryRaw = Schema.Type<typeof TodoSummaryRaw>;
 const TodoSummaryRaw = Schema.Struct({
   ID: Schema.Number,
   NAME: Schema.optional(Schema.String),
@@ -264,7 +264,7 @@ const TodoSummaryRaw = Schema.Struct({
   DESCRIPTION: Schema.optional(Schema.NullOr(Schema.String)),
 });
 
-export type GetBoardTodosResponse = typeof GetBoardTodosResponse.Type;
+export type GetBoardTodosResponse = Schema.Type<typeof GetBoardTodosResponse>;
 export const GetBoardTodosResponse = Schema.Struct({
   Records: Schema.Array(TodoSummaryRaw),
   RecordCount: Schema.optional(Schema.Number),
@@ -282,7 +282,7 @@ export class TodoSummary extends Schema.Class<TodoSummary>('TodoSummary')({
   description: Schema.optional(Schema.NullOr(Schema.String)),
 }) {}
 
-export function todoSummaryFromRaw(raw: TodoSummaryRaw): typeof TodoSummary.Type {
+export function todoSummaryFromRaw(raw: TodoSummaryRaw): Schema.Type<typeof TodoSummary> {
   return new TodoSummary({
     id: raw.ID,
     name: raw.NAME,

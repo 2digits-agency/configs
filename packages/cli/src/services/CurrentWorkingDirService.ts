@@ -1,11 +1,14 @@
+import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
 
-export class CurrentWorkingDirService extends Effect.Service<CurrentWorkingDirService>()(
+export class CurrentWorkingDirService extends Context.Service<CurrentWorkingDirService>()(
   '@2digits/cli/services/CurrentWorkingDirService',
   {
-    succeed: {
+    make: Effect.succeed({
       cwd: Effect.sync(() => process.cwd()),
-    },
-    accessors: true,
+    }),
   },
-) {}
+) {
+  static readonly layer = Layer.effect(this, this.make);
+}

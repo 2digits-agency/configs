@@ -1,11 +1,13 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as FileSystem from '@effect/platform/FileSystem';
-import * as Path from '@effect/platform/Path';
 import * as Array from 'effect/Array';
+import * as Context from 'effect/Context';
 import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
+import * as FileSystem from 'effect/FileSystem';
+import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
+import * as Path from 'effect/Path';
 
 import { EslintDetectionService } from './EslintDetectionService';
 import { PackageManagerService } from './PackageManagerService';
@@ -87,10 +89,10 @@ function mergeLintTasks(config: TurboConfig): TurboConfig {
 /**
  * Service for setting up ESLint configuration in projects.
  */
-export class EslintSetupService extends Effect.Service<EslintSetupService>()(
+export class EslintSetupService extends Context.Service<EslintSetupService>()(
   '@2digits/cli/services/EslintSetupService',
   {
-    effect: Effect.gen(function* () {
+    make: Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
       const path = yield* Path.Path;
       const pm = yield* PackageManagerService;
@@ -416,12 +418,18 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
         setup,
       };
     }),
-    dependencies: [
+  },
+) {
+  /**
+   * Provides the setup service with its runtime dependencies.
+   */
+  static readonly layer = Layer.effect(this, this.make).pipe(
+    Layer.provide([
       NodeFileSystem.layer,
       NodePath.layer,
-      PackageManagerService.Default,
-      ProjectDetectionService.Default,
-      EslintDetectionService.Default,
-    ],
-  },
-) {}
+      PackageManagerService.layer,
+      ProjectDetectionService.layer,
+      EslintDetectionService.layer,
+    ]),
+  );
+}

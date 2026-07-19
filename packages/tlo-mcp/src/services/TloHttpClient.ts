@@ -1,8 +1,8 @@
-import * as HttpClient from '@effect/platform/HttpClient';
-import * as HttpClientRequest from '@effect/platform/HttpClientRequest';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as HttpClient from 'effect/unstable/http/HttpClient';
+import * as HttpClientRequest from 'effect/unstable/http/HttpClientRequest';
 
 import { TloConfig } from './TloConfig.js';
 
@@ -10,10 +10,9 @@ interface TloHttpClientShape {
   readonly client: HttpClient.HttpClient;
 }
 
-export class TloHttpClient extends Context.Tag('@2digits/tlo-mcp/services/TloHttpClient')<
-  TloHttpClient,
-  TloHttpClientShape
->() {}
+export class TloHttpClient extends Context.Service<TloHttpClient, TloHttpClientShape>()(
+  '@2digits/tlo-mcp/services/TloHttpClient',
+) {}
 
 function formatCookies(cookies: ReadonlyMap<string, string>): string {
   return cookies

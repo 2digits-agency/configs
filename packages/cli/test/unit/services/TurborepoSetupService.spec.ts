@@ -2,11 +2,11 @@
 /* eslint-disable sonar/no-duplicate-string */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as FileSystem from '@effect/platform/FileSystem';
 import { describe, expect, it } from '@effect/vitest';
 import { strictEqual } from '@effect/vitest/utils';
 import * as Array from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
@@ -31,7 +31,7 @@ describe(TurborepoSetupService, () => {
   );
 
   describe('detectWorkspaceTasks', () => {
-    it.scoped('detects tasks from workspace package.json files', (ctx) =>
+    it.effect('detects tasks from workspace package.json files', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -48,7 +48,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('returns empty set for project without workspaces', (ctx) =>
+    it.effect('returns empty set for project without workspaces', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -62,7 +62,7 @@ describe(TurborepoSetupService, () => {
   });
 
   describe('readTurboConfig', () => {
-    it.scoped('reads existing turbo.json', (ctx) =>
+    it.effect('reads existing turbo.json', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-turborepo');
@@ -74,7 +74,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('returns None when turbo.json does not exist', (ctx) =>
+    it.effect('returns None when turbo.json does not exist', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -88,7 +88,7 @@ describe(TurborepoSetupService, () => {
   });
 
   describe('mergeTurboConfig', () => {
-    it.scoped('creates new turbo.json when none exists', (ctx) =>
+    it.effect('creates new turbo.json when none exists', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -117,7 +117,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('merges with existing turbo.json without overwriting', (ctx) =>
+    it.effect('merges with existing turbo.json without overwriting', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-turborepo');
@@ -157,7 +157,7 @@ describe(TurborepoSetupService, () => {
   });
 
   describe('updateRootScripts', () => {
-    it.scoped('adds turbo run commands to package.json', (ctx) =>
+    it.effect('adds turbo run commands to package.json', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -177,7 +177,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('does not overwrite existing turbo commands', (ctx) =>
+    it.effect('does not overwrite existing turbo commands', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-turborepo');
@@ -205,7 +205,7 @@ describe(TurborepoSetupService, () => {
   });
 
   describe('ensureTurboInstalled', () => {
-    it.scoped('installs turbo in root package.json when not present', (ctx) =>
+    it.effect('installs turbo in root package.json when not present', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -231,7 +231,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('does not install turbo if already in root package.json', (ctx) =>
+    it.effect('does not install turbo if already in root package.json', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-turborepo');
@@ -254,7 +254,7 @@ describe(TurborepoSetupService, () => {
   });
 
   describe('setup', () => {
-    it.scoped('skips setup for non-monorepo projects', (ctx) =>
+    it.effect('skips setup for non-monorepo projects', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -273,7 +273,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('sets up turborepo for monorepo without turbo.json', (ctx) =>
+    it.effect('sets up turborepo for monorepo without turbo.json', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -318,7 +318,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('skips if no workspace tasks detected', (ctx) =>
+    it.effect('skips if no workspace tasks detected', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-turborepo');
@@ -350,7 +350,7 @@ describe(TurborepoSetupService, () => {
   });
 
   describe('ensureTurboInstalled package updates', () => {
-    it.scoped('installs turbo if not present', (ctx) =>
+    it.effect('installs turbo if not present', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -370,7 +370,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('skips install if turbo already present', (ctx) =>
+    it.effect('skips install if turbo already present', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-turborepo');
@@ -393,7 +393,7 @@ describe(TurborepoSetupService, () => {
   });
 
   describe('writeTurboConfig', () => {
-    it.scoped('writes valid turbo.json', (ctx) =>
+    it.effect('writes valid turbo.json', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -422,7 +422,7 @@ describe(TurborepoSetupService, () => {
   });
 
   describe('error scenarios', () => {
-    it.scoped('handles invalid turbo.json', (ctx) =>
+    it.effect('handles invalid turbo.json', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-turborepo');
@@ -436,13 +436,13 @@ describe(TurborepoSetupService, () => {
         yield* fs.writeFileString(turboPath, '{ invalid json }');
 
         const service = yield* TurborepoSetupService;
-        const result = yield* Effect.either(service.readTurboConfig());
+        const result = yield* Effect.result(service.readTurboConfig());
 
-        expect(result._tag).toBe('Left');
+        expect(result._tag).toBe('Failure');
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('handles missing workspace package.json', (ctx) =>
+    it.effect('handles missing workspace package.json', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -454,7 +454,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('handles readonly turbo.json', (ctx) =>
+    it.effect('handles readonly turbo.json', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-turborepo');
@@ -468,7 +468,7 @@ describe(TurborepoSetupService, () => {
         yield* fs.chmod(turboPath, 0o444);
 
         const service = yield* TurborepoSetupService;
-        const result = yield* Effect.either(
+        const result = yield* Effect.result(
           service.writeTurboConfig({
             $schema: 'https://turbo.build/schema.json',
             tasks: {},
@@ -477,13 +477,13 @@ describe(TurborepoSetupService, () => {
 
         yield* fs.chmod(turboPath, 0o644);
 
-        expect(result._tag).toBe('Left');
+        expect(result._tag).toBe('Failure');
       }).pipe(Effect.provide(testLayer)),
     );
   });
 
   describe('edge cases', () => {
-    it.scoped('handles workspace with no scripts', (ctx) =>
+    it.effect('handles workspace with no scripts', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -509,7 +509,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('preserves existing turbo tasks', (ctx) =>
+    it.effect('preserves existing turbo tasks', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-turborepo');
@@ -537,7 +537,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('handles complex task names', (ctx) =>
+    it.effect('handles complex task names', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -570,7 +570,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('task categorization works correctly', (ctx) =>
+    it.effect('task categorization works correctly', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-no-turbo');
@@ -607,7 +607,7 @@ describe(TurborepoSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('does not override existing task configs', (ctx) =>
+    it.effect('does not override existing task configs', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('monorepo-turborepo');

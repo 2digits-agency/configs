@@ -38,23 +38,19 @@ import type { TloError } from '../schemas/errors.js';
 import { TeamLeaderClient } from './TeamLeaderClient.js';
 
 export interface BoardServiceShape {
-  readonly getProjects: (params?: GetProjectsParams) => Effect.Effect<ReadonlyArray<typeof Project.Type>, TloError>;
+  readonly getProjects: (params?: GetProjectsParams) => Effect.Effect<ReadonlyArray<Project>, TloError>;
 
-  readonly getProjectDetails: (params: GetProjectDetailsParams) => Effect.Effect<typeof Project.Type, TloError>;
+  readonly getProjectDetails: (params: GetProjectDetailsParams) => Effect.Effect<Project, TloError>;
 
-  readonly getMessages: (params: GetMessagesParams) => Effect.Effect<ReadonlyArray<typeof Message.Type>, TloError>;
+  readonly getMessages: (params: GetMessagesParams) => Effect.Effect<ReadonlyArray<Message>, TloError>;
 
-  readonly getTasks: (params: GetTasksParams) => Effect.Effect<ReadonlyArray<typeof Task.Type>, TloError>;
+  readonly getTasks: (params: GetTasksParams) => Effect.Effect<ReadonlyArray<Task>, TloError>;
 
-  readonly getTasksForUser: (
-    params: GetTasksForUserParams,
-  ) => Effect.Effect<ReadonlyArray<typeof TaskForUser.Type>, TloError>;
+  readonly getTasksForUser: (params: GetTasksForUserParams) => Effect.Effect<ReadonlyArray<TaskForUser>, TloError>;
 
   readonly getTodoDetail: (params: GetTodoDetailParams) => Effect.Effect<TodoDetail, TloError>;
 
-  readonly getBoardTodos: (
-    params: GetBoardTodosParams,
-  ) => Effect.Effect<ReadonlyArray<typeof TodoSummary.Type>, TloError>;
+  readonly getBoardTodos: (params: GetBoardTodosParams) => Effect.Effect<ReadonlyArray<TodoSummary>, TloError>;
 
   readonly moveTodo: (params: MoveTodoParams) => Effect.Effect<void, TloError>;
 
@@ -63,10 +59,9 @@ export interface BoardServiceShape {
   readonly setTaskState: (params: SetTaskStateParams) => Effect.Effect<void, TloError>;
 }
 
-export class BoardService extends Context.Tag('@2digits/tlo-mcp/services/BoardService')<
-  BoardService,
-  BoardServiceShape
->() {}
+export class BoardService extends Context.Service<BoardService, BoardServiceShape>()(
+  '@2digits/tlo-mcp/services/BoardService',
+) {}
 
 function formatRequestDate(d: Date): string {
   const year = d.getFullYear();

@@ -3,12 +3,12 @@
 
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as FileSystem from '@effect/platform/FileSystem';
-import * as Path from '@effect/platform/Path';
 import { describe, expect, it } from '@effect/vitest';
 import { assertTrue, strictEqual } from '@effect/vitest/utils';
 import * as Effect from 'effect/Effect';
+import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
+import * as Path from 'effect/Path';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import {
@@ -29,7 +29,7 @@ describe(PackageManagerService, () => {
   );
 
   describe('resolveRoot', () => {
-    it.scoped('resolves workspace root', (ctx) =>
+    it.effect('resolves workspace root', (ctx) =>
       Effect.gen(function* () {
         const dir = yield* withTempTestEnv(ctx.task.id);
 
@@ -44,7 +44,7 @@ describe(PackageManagerService, () => {
   });
 
   describe('readPackageJson', () => {
-    it.scoped('reads package.json from current directory', (ctx) =>
+    it.effect('reads package.json from current directory', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -59,7 +59,7 @@ describe(PackageManagerService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('reads package.json from specified directory', (ctx) =>
+    it.effect('reads package.json from specified directory', (ctx) =>
       Effect.gen(function* () {
         const tempDir = yield* withTempTestEnv(ctx.task.id);
 
@@ -80,7 +80,7 @@ describe(PackageManagerService, () => {
   });
 
   describe('getPackageManager', () => {
-    it.scoped('detects pnpm package manager', (ctx) =>
+    it.effect('detects pnpm package manager', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -94,7 +94,7 @@ describe(PackageManagerService, () => {
   });
 
   describe('addDependencies', () => {
-    it.scoped('executes command to add dev dependencies', (ctx) =>
+    it.effect('executes command to add dev dependencies', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -121,7 +121,7 @@ describe(PackageManagerService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('executes separate commands for dependencies and devDependencies', (ctx) =>
+    it.effect('executes separate commands for dependencies and devDependencies', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -150,7 +150,7 @@ describe(PackageManagerService, () => {
   });
 
   describe('runScriptCommand', () => {
-    it.scoped('returns command string for running script', (ctx) =>
+    it.effect('returns command string for running script', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -168,7 +168,7 @@ describe(PackageManagerService, () => {
   });
 
   describe('writePackageJson', () => {
-    it.scoped('writes package.json to current directory', (ctx) =>
+    it.effect('writes package.json to current directory', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -193,7 +193,7 @@ describe(PackageManagerService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('writes package.json to specified directory', (ctx) =>
+    it.effect('writes package.json to specified directory', (ctx) =>
       Effect.gen(function* () {
         const tempDir = yield* withTempTestEnv(ctx.task.id);
 
@@ -217,7 +217,7 @@ describe(PackageManagerService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('preserves existing fields when updating', (ctx) =>
+    it.effect('preserves existing fields when updating', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -245,19 +245,19 @@ describe(PackageManagerService, () => {
   });
 
   describe('error handling', () => {
-    it.scoped('readPackageJson fails on missing file', (ctx) =>
+    it.effect('readPackageJson fails on missing file', (ctx) =>
       Effect.gen(function* () {
         const tempDir = yield* withTempTestEnv(ctx.task.id);
 
         const service = yield* PackageManagerService;
 
-        const result = yield* Effect.either(service.readPackageJson({ id: tempDir }));
+        const result = yield* Effect.result(service.readPackageJson({ id: tempDir }));
 
-        expect(result._tag).toBe('Left');
+        expect(result._tag).toBe('Failure');
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('writePackageJson fails on readonly file', (ctx) =>
+    it.effect('writePackageJson fails on readonly file', (ctx) =>
       Effect.gen(function* () {
         const tempDir = yield* withTempTestEnv(ctx.task.id);
 
@@ -270,7 +270,7 @@ describe(PackageManagerService, () => {
         yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(pkgPath, 0o444)));
 
         const service = yield* PackageManagerService;
-        const result = yield* Effect.either(
+        const result = yield* Effect.result(
           service.writePackageJson({
             content: {
               name: 'should-fail',
@@ -281,16 +281,16 @@ describe(PackageManagerService, () => {
 
         yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(pkgPath, 0o644)));
 
-        expect(result._tag).toBe('Left');
+        expect(result._tag).toBe('Failure');
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('writePackageJson fails on invalid directory', (ctx) =>
+    it.effect('writePackageJson fails on invalid directory', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
 
         const service = yield* PackageManagerService;
-        const result = yield* Effect.either(
+        const result = yield* Effect.result(
           service.writePackageJson({
             id: '/nonexistent/directory',
             content: {
@@ -300,24 +300,24 @@ describe(PackageManagerService, () => {
           }),
         );
 
-        expect(result._tag).toBe('Left');
+        expect(result._tag).toBe('Failure');
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('resolveRoot fails in non-workspace directory', (ctx) =>
+    it.effect('resolveRoot fails in non-workspace directory', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
 
         const service = yield* PackageManagerService;
-        const result = yield* Effect.either(service.resolveRoot());
+        const result = yield* Effect.result(service.resolveRoot());
 
-        expect(result._tag).toBe('Left');
+        expect(result._tag).toBe('Failure');
       }).pipe(Effect.provide(testLayer)),
     );
   });
 
   describe('edge cases', () => {
-    it.scoped('handles package.json with no scripts', (ctx) =>
+    it.effect('handles package.json with no scripts', (ctx) =>
       Effect.gen(function* () {
         const tempDir = yield* withTempTestEnv(ctx.task.id);
 
@@ -339,7 +339,7 @@ describe(PackageManagerService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('handles package.json with empty scripts', (ctx) =>
+    it.effect('handles package.json with empty scripts', (ctx) =>
       Effect.gen(function* () {
         const tempDir = yield* withTempTestEnv(ctx.task.id);
 
@@ -362,7 +362,7 @@ describe(PackageManagerService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('addDependencies handles empty arrays', (ctx) =>
+    it.effect('addDependencies handles empty arrays', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');

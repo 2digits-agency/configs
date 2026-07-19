@@ -1,11 +1,16 @@
 import * as Brand from 'effect/Brand';
 import * as Schema from 'effect/Schema';
+import * as SchemaTransformation from 'effect/SchemaTransformation';
 
 /**
  * TeamLeader Orbit uses YYYYMMDDHHMMSS format for dates. Example: "20251117143000" = Nov 17, 2025 14:30:00.
  */
-export const TloDateString = Schema.String.pipe(Schema.pattern(/^\d{14}$/), Schema.brand('TloDateString'));
-export type TloDateString = typeof TloDateString.Type;
+export const TloDateString = Schema.String.pipe(
+  Schema.check(Schema.isPattern(/^\d{14}$/)),
+  Schema.brand('TloDateString'),
+);
+export type TloDateString = Schema.Type<typeof TloDateString>;
+const makeTloDateString = Brand.nominal<TloDateString>();
 
 /**
  * Parse YYYYMMDDHHMMSS string to Date.
@@ -36,18 +41,22 @@ function formatTloDate(date: Date): TloDateString {
   const minute = date.getMinutes().toString().padStart(2, '0');
   const second = date.getSeconds().toString().padStart(2, '0');
 
-  return `${year}${month}${day}${hour}${minute}${second}` as TloDateString;
+  return makeTloDateString(`${year}${month}${day}${hour}${minute}${second}`);
 }
 
 /**
  * Transform between TLO date strings and JavaScript Date objects.
  */
-export const TloDate = Schema.transform(TloDateString, Schema.DateFromSelf, {
-  strict: true,
-  decode: parseTloDate,
-  encode: formatTloDate,
-});
-export type TloDate = typeof TloDate.Type;
+export const TloDate = TloDateString.pipe(
+  Schema.decodeTo(
+    Schema.Date,
+    SchemaTransformation.transform({
+      decode: parseTloDate,
+      encode: formatTloDate,
+    }),
+  ),
+);
+export type TloDate = Schema.Type<typeof TloDate>;
 
 export { formatTloDate };
 
@@ -57,7 +66,7 @@ export { formatTloDate };
 export type TloId = string & Brand.Brand<'TloId'>;
 export const TloId = Brand.nominal<TloId>();
 
-export const TloIdSchema = Schema.String.pipe(Schema.fromBrand(TloId));
+export const TloIdSchema = Schema.String.pipe(Schema.fromBrand('TloId', TloId));
 
 /**
  * Standard TLO API response envelope schema. Note: Most endpoints return data directly without this wrapper. Kept for
@@ -65,7 +74,7 @@ export const TloIdSchema = Schema.String.pipe(Schema.fromBrand(TloId));
  *
  * @param dataSchema - Data schema to wrap.
  */
-export function TloResponse<$A, $I, $R>(dataSchema: Schema.Schema<$A, $I, $R>) {
+export function TloResponse<$A, $I, $RD, $RE>(dataSchema: Schema.Codec<$A, $I, $RD, $RE>) {
   return Schema.Struct({
     success: Schema.Boolean,
     ID: Schema.optional(Schema.Number),

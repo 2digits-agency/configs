@@ -7,4 +7,4 @@ export interface TloConfigShape {
   readonly cookies: ReadonlyMap<string, string>;
 }
 
-export class TloConfig extends Context.Tag('@2digits/tlo-mcp/services/TloConfig')<TloConfig, TloConfigShape>() {}
+export class TloConfig extends Context.Service<TloConfig, TloConfigShape>()('@2digits/tlo-mcp/services/TloConfig') {}

@@ -1,7 +1,6 @@
 import { ScopeType } from '@typescript-eslint/scope-manager';
 import { AST_NODE_TYPES, ESLintUtils, type TSESLint, type TSESTree } from '@typescript-eslint/utils';
 import * as tsutils from 'ts-api-utils';
-import type ts from 'typescript';
 
 import { createRule } from '../utils';
 
@@ -110,14 +109,6 @@ function needsParentheses(node: TSESTree.Node): node is NeedsParenthesesNode {
   return needsParenthesesItems.includes(node.type as never);
 }
 
-function isArrayType(checker: ts.TypeChecker, type: ts.Type) {
-  return tsutils
-    .unionConstituents(type)
-    .some((unionPart) =>
-      tsutils.intersectionConstituents(unionPart).every((t) => checker.isArrayType(t) || checker.isTupleType(t)),
-    );
-}
-
 export const preferInlineArrayCallbacks = createRule<[], MessageId>({
   name: RULE_NAME,
   meta: {
@@ -177,7 +168,11 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
         const tsNode = parserServices.esTreeNodeToTSNodeMap.get(object);
         const objectType = checker.getTypeAtLocation(tsNode);
 
-        isArray = isArrayType(checker, objectType);
+        isArray = tsutils
+          .unionConstituents(objectType)
+          .some((unionPart) =>
+            tsutils.intersectionConstituents(unionPart).every((t) => checker.isArrayType(t) || checker.isTupleType(t)),
+          );
         arrayTypeCache.set(object, isArray);
       }
 

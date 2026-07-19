@@ -1,4 +1,3 @@
-/* eslint-disable ts/no-deprecated */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import { describe, expect, it } from '@effect/vitest';
@@ -27,7 +26,7 @@ describe(PrettierSetupService, () => {
   );
 
   describe('setup', () => {
-    it.scoped('adds prettier config and scripts to package.json', (ctx) =>
+    it.effect('adds prettier config and scripts to package.json', (ctx) =>
       Effect.gen(function* () {
         const service = yield* PrettierSetupService;
         const pm = yield* PackageManagerService;
@@ -65,7 +64,7 @@ describe(PrettierSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('preserves existing prettier config', (ctx) =>
+    it.effect('preserves existing prettier config', (ctx) =>
       Effect.gen(function* () {
         const service = yield* PrettierSetupService;
         const pm = yield* PackageManagerService;
@@ -97,7 +96,7 @@ describe(PrettierSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('preserves existing scripts', (ctx) =>
+    it.effect('preserves existing scripts', (ctx) =>
       Effect.gen(function* () {
         const service = yield* PrettierSetupService;
         const pm = yield* PackageManagerService;

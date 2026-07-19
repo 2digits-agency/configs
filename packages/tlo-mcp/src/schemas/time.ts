@@ -6,12 +6,12 @@ import * as Schema from 'effect/Schema';
  */
 export const ActivityRaw = Schema.Struct({
   ID: Schema.Number,
-  FOLDERID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
-  PROJECT_ID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
-  TASKID: Schema.optional(Schema.NullOr(Schema.Union(Schema.String, Schema.Number))),
-  TODOID: Schema.optional(Schema.NullOr(Schema.Union(Schema.String, Schema.Number))),
-  TICKETID: Schema.optional(Schema.NullOr(Schema.Union(Schema.String, Schema.Number))),
-  CONTACTID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
+  FOLDERID: Schema.optional(Schema.Union([Schema.String, Schema.Number])),
+  PROJECT_ID: Schema.optional(Schema.Union([Schema.String, Schema.Number])),
+  TASKID: Schema.optional(Schema.NullOr(Schema.Union([Schema.String, Schema.Number]))),
+  TODOID: Schema.optional(Schema.NullOr(Schema.Union([Schema.String, Schema.Number]))),
+  TICKETID: Schema.optional(Schema.NullOr(Schema.Union([Schema.String, Schema.Number]))),
+  CONTACTID: Schema.optional(Schema.Union([Schema.String, Schema.Number])),
   DESCRIPTION: Schema.NullOr(Schema.String),
   DT: Schema.String,
   START_DT: Schema.optional(Schema.String),
@@ -40,7 +40,7 @@ export const ActivityRaw = Schema.Struct({
   READONLY: Schema.optional(Schema.NullOr(Schema.Number)),
   TASK_WORKLOAD: Schema.optional(Schema.NullOr(Schema.Number)),
 });
-export type ActivityRaw = typeof ActivityRaw.Type;
+export type ActivityRaw = Schema.Type<typeof ActivityRaw>;
 
 export class Activity extends Schema.Class<Activity>('Activity')({
   id: Schema.Number,
@@ -77,7 +77,7 @@ export class Activity extends Schema.Class<Activity>('Activity')({
   clientColor: Schema.optional(Schema.String),
 }) {}
 
-export function activityFromRaw(raw: ActivityRaw): typeof Activity.Type {
+export function activityFromRaw(raw: ActivityRaw): Schema.Type<typeof Activity> {
   return new Activity({
     id: raw.ID,
     projectId:
@@ -122,7 +122,7 @@ export function activityFromRaw(raw: ActivityRaw): typeof Activity.Type {
 export const GetWeekResponse = Schema.Struct({
   ACTIVITIES: Schema.Array(ActivityRaw),
 });
-export type GetWeekResponse = typeof GetWeekResponse.Type;
+export type GetWeekResponse = Schema.Type<typeof GetWeekResponse>;
 
 export const SetActivityResponse = Schema.Struct({
   ID: Schema.Number,
@@ -131,9 +131,9 @@ export const SetActivityResponse = Schema.Struct({
   TYPE: Schema.optional(Schema.Number),
   DESCRIPTION: Schema.optional(Schema.NullOr(Schema.String)),
   CLIENT_COLOR: Schema.optional(Schema.String),
-  FOLDERID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
+  FOLDERID: Schema.optional(Schema.Union([Schema.String, Schema.Number])),
 });
-export type SetActivityResponse = typeof SetActivityResponse.Type;
+export type SetActivityResponse = Schema.Type<typeof SetActivityResponse>;
 
 export interface CreateActivityParams {
   readonly folderId: string;

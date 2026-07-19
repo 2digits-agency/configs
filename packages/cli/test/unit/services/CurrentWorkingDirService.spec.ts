@@ -9,37 +9,41 @@ import { CurrentWorkingDirService } from '../../../src/services/CurrentWorkingDi
 describe(CurrentWorkingDirService, () => {
   const { Default: testLayer } = CurrentWorkingDirService;
 
-  it('returns process.cwd()', () =>
+  it.effect('returns process.cwd()', () =>
     Effect.gen(function* () {
       const service = yield* CurrentWorkingDirService;
       const cwd = yield* service.cwd;
       const expected = process.cwd();
 
       strictEqual(cwd, expected);
-    }).pipe(Effect.provide(testLayer)));
+    }).pipe(Effect.provide(testLayer)),
+  );
 
-  it('returns an absolute path', () =>
+  it.effect('returns an absolute path', () =>
     Effect.gen(function* () {
       const service = yield* CurrentWorkingDirService;
       const cwd = yield* service.cwd;
 
       assertTrue(path.isAbsolute(cwd));
-    }).pipe(Effect.provide(testLayer)));
+    }).pipe(Effect.provide(testLayer)),
+  );
 
-  it('returns a non-empty string', () =>
+  it.effect('returns a non-empty string', () =>
     Effect.gen(function* () {
       const service = yield* CurrentWorkingDirService;
       const cwd = yield* service.cwd;
 
       assertTrue(cwd.length > 0);
-    }).pipe(Effect.provide(testLayer)));
+    }).pipe(Effect.provide(testLayer)),
+  );
 
-  it('is consistent across multiple calls', () =>
+  it.effect('is consistent across multiple calls', () =>
     Effect.gen(function* () {
       const service = yield* CurrentWorkingDirService;
       const cwd1 = yield* service.cwd;
       const cwd2 = yield* service.cwd;
 
       strictEqual(cwd1, cwd2);
-    }).pipe(Effect.provide(testLayer)));
+    }).pipe(Effect.provide(testLayer)),
+  );
 });
