@@ -1,5 +1,5 @@
-import * as FetchHttpClient from '@effect/platform/FetchHttpClient';
 import * as Layer from 'effect/Layer';
+import * as FetchHttpClient from 'effect/unstable/http/FetchHttpClient';
 
 import { BoardServiceLive } from '../services/BoardService.js';
 import { TeamLeaderClientLive } from '../services/TeamLeaderClient.js';

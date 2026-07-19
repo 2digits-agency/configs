@@ -14,16 +14,11 @@ allowBuilds:
 catalog:
   '@arethetypeswrong/core': 0.18.5
   tegami: 1.2.5
-  '@effect/ai': 0.37.0
-  '@effect/cli': 0.76.0
-  '@effect/experimental': 0.61.0
-  '@effect/language-service': 0.87.0
-  '@effect/platform': 0.97.0
-  '@effect/platform-node': 0.108.0
-  '@effect/rpc': 0.76.0
-  '@effect/vitest': 0.30.0
+  '@effect/platform-node': 4.0.0-beta.99
+  '@effect/tsgo': 0.24.1
+  '@effect/vitest': 4.0.0-beta.99
   '@eslint-community/eslint-plugin-eslint-comments': 4.7.2
-  '@eslint-react/eslint-plugin': 5.17.1
+  '@eslint-react/eslint-plugin': 5.17.2
   '@eslint/compat': 2.1.0
   '@eslint/config-inspector': 3.1.0
   '@eslint/css': 1.4.0
@@ -43,12 +38,12 @@ catalog:
   '@typescript-eslint/parser': 8.64.0
   '@typescript-eslint/scope-manager': 8.64.0
   '@typescript-eslint/utils': 8.64.0
+  '@typescript/native-preview': npm:typescript@7.0.2
   '@types/react': 19.2.17
   '@vitest/eslint-plugin': 1.6.23
-  '@typescript/native-preview': 7.0.0-dev.20260707.2
   dedent: 1.7.2
   defu: 6.1.7
-  effect: 3.22.0
+  effect: 4.0.0-beta.99
   empathic: 2.0.1
   eslint: 10.7.0
   eslint-config-flat-gitignore: 2.3.0
@@ -60,7 +55,7 @@ catalog:
   eslint-plugin-depend: 1.5.0
   eslint-plugin-drizzle: 0.2.3
   eslint-plugin-github-action: 0.3.0
-  eslint-plugin-jsdoc: 63.0.14
+  eslint-plugin-jsdoc: 63.1.0
   eslint-plugin-jsonc: 3.3.0
   eslint-plugin-n: 18.2.2
   eslint-plugin-pnpm: 1.6.1
@@ -94,13 +89,13 @@ catalog:
   prettier-plugin-tailwindcss: 0.8.1
   publint: 0.3.21
   react: 19.2.7
-  renovate: 43.265.5
+  renovate: 43.271.3
   tailwind-csstree: 0.3.3
   tinyexec: 1.2.4
   tinyglobby: 0.2.17
   ts-api-utils: 2.5.0
   tsx: 4.23.1
-  typescript: 6.0.3
+  typescript: 7.0.2
   turbo: 2.10.5
   typescript-eslint: 8.64.0
   vite: npm:@voidzero-dev/vite-plus-core@0.2.5
@@ -108,7 +103,7 @@ catalog:
   vitest: 4.1.10
   yaml-eslint-parser: 2.1.0
   zod: 4.4.3
-  '@eslint-react/kit': 5.17.1
+  '@eslint-react/kit': 5.17.2
 
 catalogMode: strict
 
@@ -118,6 +113,8 @@ minimumReleaseAge: 0
 
 optimisticRepeatInstall: true
 
+verifyDepsBeforeRun: warn
+
 overrides:
   array-includes: npm:@nolyfill/array-includes@1.0.44
   array.prototype.findlast: npm:@nolyfill/array.prototype.findlast@1.0.44
@@ -126,7 +123,6 @@ overrides:
   array.prototype.tosorted: npm:@nolyfill/array.prototype.tosorted@1.0.44
   baseline-browser-mapping: 2.10.43
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
-  eslint-plugin-sonarjs>typescript: 'catalog:'
   globalthis: npm:@nolyfill/globalthis@1.0.44
   hasown: npm:@nolyfill/hasown@1.0.44
   is-arguments: npm:@nolyfill/is-arguments@1.0.44
@@ -155,3 +151,6 @@ peerDependencyRules:
 preferWorkspacePackages: true
 
 savePrefix: ''
+catalogs:
+  typescript-eslint:
+    typescript: 6.0.3

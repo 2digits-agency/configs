@@ -1,17 +1,31 @@
+import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
+import type { PlatformError } from 'effect/PlatformError';
+import type { ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
 
-import { PackageManagerService } from './PackageManagerService';
+import { type PackageManagerError, PackageManagerService } from './PackageManagerService';
 
-export class PrettierSetupService extends Effect.Service<PrettierSetupService>()(
+/**
+ * Operations exposed by the Prettier setup service.
+ */
+export interface PrettierSetupServiceShape {
+  readonly setup: Effect.Effect<void, PackageManagerError | PlatformError, ChildProcessSpawner>;
+}
+
+/**
+ * Service for configuring Prettier in a project.
+ */
+export class PrettierSetupService extends Context.Service<PrettierSetupService, PrettierSetupServiceShape>()(
   '@2digits/cli/services/PrettierSetupService',
   {
-    effect: Effect.gen(function* () {
+    make: Effect.gen(function* () {
       const pm = yield* PackageManagerService;
 
-      const setup = Effect.fn('PrettierSetupService.setup')(function* () {
+      const setup = Effect.gen(function* () {
         yield* Effect.logInfo('🚀 Setting up Prettier...');
 
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
 
         const packageJson = yield* pm.readPackageJson({ id: root });
 
@@ -42,12 +56,13 @@ export class PrettierSetupService extends Effect.Service<PrettierSetupService>()
         yield* Effect.logInfo('🎉 Prettier setup complete!');
         yield* Effect.logInfo(`Run '${formatCmd}' to check formatting`);
         yield* Effect.logInfo(`Run '${formatFixCmd}' to fix formatting issues`);
-      });
+      }).pipe(Effect.withSpan('PrettierSetupService.setup'));
 
       return {
         setup,
       };
     }),
-    dependencies: [PackageManagerService.Default],
   },
-) {}
+) {
+  static readonly layer = Layer.effect(this, this.make).pipe(Layer.provide(PackageManagerService.layer));
+}

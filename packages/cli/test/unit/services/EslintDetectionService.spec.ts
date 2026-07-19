@@ -1,29 +1,27 @@
-/* eslint-disable ts/no-deprecated */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as Path from '@effect/platform/Path';
 import { describe, it } from '@effect/vitest';
 import { assertTrue, strictEqual } from '@effect/vitest/utils';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Path from 'effect/Path';
 
 import { EslintDetectionService } from '../../../src/services/EslintDetectionService.js';
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
-import { MockCommandExecutor, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
+import { MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
 import { copyFixture, fixturesBasePath, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(EslintDetectionService, () => {
   const testLayer = Layer.mergeAll(
-    EslintDetectionService.Default,
-    PackageManagerService.Default,
-    MockCommandExecutor.Default,
+    EslintDetectionService.layer,
+    PackageManagerService.layer,
     MockCommandExecutorLayer,
     NodeFileSystem.layer,
     NodePath.layer,
   );
 
   describe('isEslintInstalled', () => {
-    it.scoped('detects eslint in devDependencies', (ctx) =>
+    it.effect('detects eslint in devDependencies', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('existing-configs');
@@ -35,7 +33,7 @@ describe(EslintDetectionService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('returns false when eslint not installed', (ctx) =>
+    it.effect('returns false when eslint not installed', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -49,7 +47,7 @@ describe(EslintDetectionService, () => {
   });
 
   describe('hasEslintConfig', () => {
-    it.scoped('detects existing eslint config file', (ctx) =>
+    it.effect('detects existing eslint config file', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('existing-configs');
@@ -61,7 +59,7 @@ describe(EslintDetectionService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('returns false when no config exists', (ctx) =>
+    it.effect('returns false when no config exists', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -75,7 +73,7 @@ describe(EslintDetectionService, () => {
   });
 
   describe('detectExistingConfigs', () => {
-    it.scoped('returns list of existing config files', (ctx) =>
+    it.effect('returns list of existing config files', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('existing-configs');
@@ -88,7 +86,7 @@ describe(EslintDetectionService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('returns empty array when no configs exist', (ctx) =>
+    it.effect('returns empty array when no configs exist', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');
@@ -119,7 +117,7 @@ describe(EslintDetectionService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('returns false when config file does not exist', (ctx) =>
+    it.effect('returns false when config file does not exist', (ctx) =>
       Effect.gen(function* () {
         yield* withTempTestEnv(ctx.task.id);
         yield* copyFixture('single-package');

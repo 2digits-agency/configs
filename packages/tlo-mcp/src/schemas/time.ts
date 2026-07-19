@@ -5,19 +5,19 @@ import * as Schema from 'effect/Schema';
  * Raw activity from TLO API response. Field names match the API exactly.
  */
 export const ActivityRaw = Schema.Struct({
-  ID: Schema.Number,
-  FOLDERID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
-  PROJECT_ID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
-  TASKID: Schema.optional(Schema.NullOr(Schema.Union(Schema.String, Schema.Number))),
-  TODOID: Schema.optional(Schema.NullOr(Schema.Union(Schema.String, Schema.Number))),
-  TICKETID: Schema.optional(Schema.NullOr(Schema.Union(Schema.String, Schema.Number))),
-  CONTACTID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
+  ID: Schema.Finite,
+  FOLDERID: Schema.optional(Schema.Union([Schema.String, Schema.Finite])),
+  PROJECT_ID: Schema.optional(Schema.Union([Schema.String, Schema.Finite])),
+  TASKID: Schema.optional(Schema.NullOr(Schema.Union([Schema.String, Schema.Finite]))),
+  TODOID: Schema.optional(Schema.NullOr(Schema.Union([Schema.String, Schema.Finite]))),
+  TICKETID: Schema.optional(Schema.NullOr(Schema.Union([Schema.String, Schema.Finite]))),
+  CONTACTID: Schema.optional(Schema.Union([Schema.String, Schema.Finite])),
   DESCRIPTION: Schema.NullOr(Schema.String),
   DT: Schema.String,
   START_DT: Schema.optional(Schema.String),
   END_DT: Schema.optional(Schema.String),
-  DURATION: Schema.Number,
-  TYPE: Schema.optional(Schema.Number),
+  DURATION: Schema.Finite,
+  TYPE: Schema.optional(Schema.Finite),
   PROJECT_NAME: Schema.optional(Schema.NullOr(Schema.String)),
   TASK_NAME: Schema.optional(Schema.NullOr(Schema.String)),
   CLIENT_NAME: Schema.optional(Schema.NullOr(Schema.String)),
@@ -30,20 +30,20 @@ export const ActivityRaw = Schema.Struct({
   TASK_STATE: Schema.optional(Schema.NullOr(Schema.String)),
   TIMESHEET_STATE: Schema.optional(Schema.NullOr(Schema.String)),
   BILLING_MODE: Schema.optional(Schema.NullOr(Schema.String)),
-  NON_BILLABLE: Schema.optional(Schema.NullOr(Schema.Number)),
-  RATE: Schema.optional(Schema.NullOr(Schema.Number)),
-  VALUE: Schema.optional(Schema.NullOr(Schema.Number)),
+  NON_BILLABLE: Schema.optional(Schema.NullOr(Schema.Finite)),
+  RATE: Schema.optional(Schema.NullOr(Schema.Finite)),
+  VALUE: Schema.optional(Schema.NullOr(Schema.Finite)),
   PROJECT_START_DT: Schema.optional(Schema.NullOr(Schema.String)),
   PROJECT_END_DT: Schema.optional(Schema.NullOr(Schema.String)),
   TASK_START_DT: Schema.optional(Schema.NullOr(Schema.String)),
   TASK_END_DT: Schema.optional(Schema.NullOr(Schema.String)),
-  READONLY: Schema.optional(Schema.NullOr(Schema.Number)),
-  TASK_WORKLOAD: Schema.optional(Schema.NullOr(Schema.Number)),
+  READONLY: Schema.optional(Schema.NullOr(Schema.Finite)),
+  TASK_WORKLOAD: Schema.optional(Schema.NullOr(Schema.Finite)),
 });
 export type ActivityRaw = typeof ActivityRaw.Type;
 
 export class Activity extends Schema.Class<Activity>('Activity')({
-  id: Schema.Number,
+  id: Schema.Finite,
   projectId: Schema.optional(Schema.String),
   folderId: Schema.optional(Schema.String),
   taskId: Schema.optional(Schema.NullOr(Schema.String)),
@@ -53,7 +53,7 @@ export class Activity extends Schema.Class<Activity>('Activity')({
   description: Schema.NullOr(Schema.String),
   startDate: Schema.String,
   endDate: Schema.optional(Schema.String),
-  durationMinutes: Schema.Number,
+  durationMinutes: Schema.Finite,
   projectName: Schema.optional(Schema.NullOr(Schema.String)),
   taskName: Schema.optional(Schema.NullOr(Schema.String)),
   clientName: Schema.optional(Schema.NullOr(Schema.String)),
@@ -64,20 +64,20 @@ export class Activity extends Schema.Class<Activity>('Activity')({
   taskState: Schema.optional(Schema.NullOr(Schema.String)),
   timesheetState: Schema.optional(Schema.NullOr(Schema.String)),
   billingMode: Schema.optional(Schema.NullOr(Schema.String)),
-  nonBillable: Schema.optional(Schema.NullOr(Schema.Number)),
-  rate: Schema.optional(Schema.NullOr(Schema.Number)),
-  value: Schema.optional(Schema.NullOr(Schema.Number)),
+  nonBillable: Schema.optional(Schema.NullOr(Schema.Finite)),
+  rate: Schema.optional(Schema.NullOr(Schema.Finite)),
+  value: Schema.optional(Schema.NullOr(Schema.Finite)),
   projectStartDate: Schema.optional(Schema.NullOr(Schema.String)),
   projectEndDate: Schema.optional(Schema.NullOr(Schema.String)),
   taskStartDate: Schema.optional(Schema.NullOr(Schema.String)),
   taskEndDate: Schema.optional(Schema.NullOr(Schema.String)),
   readOnly: Schema.optional(Schema.NullOr(Schema.Boolean)),
-  taskWorkload: Schema.optional(Schema.NullOr(Schema.Number)),
+  taskWorkload: Schema.optional(Schema.NullOr(Schema.Finite)),
   projectColor: Schema.optional(Schema.String),
   clientColor: Schema.optional(Schema.String),
 }) {}
 
-export function activityFromRaw(raw: ActivityRaw): typeof Activity.Type {
+export function activityFromRaw(raw: ActivityRaw): Activity {
   return new Activity({
     id: raw.ID,
     projectId:
@@ -125,13 +125,13 @@ export const GetWeekResponse = Schema.Struct({
 export type GetWeekResponse = typeof GetWeekResponse.Type;
 
 export const SetActivityResponse = Schema.Struct({
-  ID: Schema.Number,
-  DURATION: Schema.optional(Schema.Number),
+  ID: Schema.Finite,
+  DURATION: Schema.optional(Schema.Finite),
   DT: Schema.optional(Schema.String),
-  TYPE: Schema.optional(Schema.Number),
+  TYPE: Schema.optional(Schema.Finite),
   DESCRIPTION: Schema.optional(Schema.NullOr(Schema.String)),
   CLIENT_COLOR: Schema.optional(Schema.String),
-  FOLDERID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
+  FOLDERID: Schema.optional(Schema.Union([Schema.String, Schema.Finite])),
 });
 export type SetActivityResponse = typeof SetActivityResponse.Type;
 

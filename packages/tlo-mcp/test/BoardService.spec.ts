@@ -1,11 +1,13 @@
 import { describe, expect, layer } from '@effect/vitest';
-import { Effect, Layer } from 'effect';
+import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
+import * as SchemaParser from 'effect/SchemaParser';
 
 import type { GetMessagesResponse, GetProjectsResponse } from '../src/schemas/board.js';
 import { BoardService, BoardServiceLive } from '../src/services/BoardService.js';
 import { TeamLeaderClient } from '../src/services/TeamLeaderClient.js';
 
-const mockProjectsRaw: typeof GetProjectsResponse.Type = {
+const mockProjectsRaw: GetProjectsResponse = {
   Records: [
     {
       ID: 123,
@@ -22,7 +24,7 @@ const mockProjectsRaw: typeof GetProjectsResponse.Type = {
   ],
 };
 
-const mockMessagesRaw: typeof GetMessagesResponse.Type = [
+const mockMessagesRaw: GetMessagesResponse = [
   {
     ID: 1,
     OWNERID: 789,
@@ -41,7 +43,7 @@ function createMockClient(response: unknown) {
   return Layer.succeed(
     TeamLeaderClient,
     TeamLeaderClient.of({
-      post: () => Effect.succeed(response) as never,
+      post: (_path, _body, schema) => SchemaParser.decodeUnknownEffect(schema)(response).pipe(Effect.orDie),
     }),
   );
 }

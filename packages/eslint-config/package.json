@@ -32,7 +32,7 @@
     "docs:dev": "eslint-config-inspector",
     "test": "vp test run",
     "test:watch": "vp test",
-    "types": "tsgo --noEmit"
+    "types": "node ../../node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@2digits/constants": "workspace:*",
@@ -82,6 +82,7 @@
     "local-pkg": "catalog:",
     "pkg-types": "catalog:",
     "tailwind-csstree": "catalog:",
+    "typescript": "catalog:typescript-eslint",
     "typescript-eslint": "catalog:",
     "yaml-eslint-parser": "catalog:"
   },
@@ -91,7 +92,6 @@
     "@eslint/config-inspector": "catalog:",
     "@types/react": "catalog:",
     "@typescript-eslint/scope-manager": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "dedent": "catalog:",
     "eslint": "catalog:",
     "eslint-typegen": "catalog:",
@@ -99,7 +99,6 @@
     "react": "catalog:",
     "tinyexec": "catalog:",
     "tinyglobby": "catalog:",
-    "typescript": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:",
     "zod": "catalog:"

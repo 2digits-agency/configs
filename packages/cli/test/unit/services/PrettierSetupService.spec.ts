@@ -1,4 +1,3 @@
-/* eslint-disable ts/no-deprecated */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import { describe, expect, it } from '@effect/vitest';
@@ -11,23 +10,21 @@ import { PrettierSetupService } from '../../../src/services/PrettierSetupService
 import {
   clearExecutedCommands,
   getExecutedCommands,
-  MockCommandExecutor,
   MockCommandExecutorLayer,
 } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(PrettierSetupService, () => {
   const testLayer = Layer.mergeAll(
-    PrettierSetupService.Default,
-    PackageManagerService.Default,
-    MockCommandExecutor.Default,
+    PrettierSetupService.layer,
+    PackageManagerService.layer,
     MockCommandExecutorLayer,
     NodeFileSystem.layer,
     NodePath.layer,
   );
 
   describe('setup', () => {
-    it.scoped('adds prettier config and scripts to package.json', (ctx) =>
+    it.effect('adds prettier config and scripts to package.json', (ctx) =>
       Effect.gen(function* () {
         const service = yield* PrettierSetupService;
         const pm = yield* PackageManagerService;
@@ -39,7 +36,7 @@ describe(PrettierSetupService, () => {
         yield* clearExecutedCommands;
 
         // Run setup
-        yield* service.setup();
+        yield* service.setup;
 
         // Read updated package.json
         const updatedPkg = yield* pm.readPackageJson({ id: tempDir });
@@ -65,7 +62,7 @@ describe(PrettierSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('preserves existing prettier config', (ctx) =>
+    it.effect('preserves existing prettier config', (ctx) =>
       Effect.gen(function* () {
         const service = yield* PrettierSetupService;
         const pm = yield* PackageManagerService;
@@ -77,7 +74,7 @@ describe(PrettierSetupService, () => {
         yield* clearExecutedCommands;
 
         // Run setup
-        yield* service.setup();
+        yield* service.setup;
 
         // Read updated package.json
         const updatedPkg = yield* pm.readPackageJson({ id: tempDir });
@@ -97,7 +94,7 @@ describe(PrettierSetupService, () => {
       }).pipe(Effect.provide(testLayer)),
     );
 
-    it.scoped('preserves existing scripts', (ctx) =>
+    it.effect('preserves existing scripts', (ctx) =>
       Effect.gen(function* () {
         const service = yield* PrettierSetupService;
         const pm = yield* PackageManagerService;
@@ -116,7 +113,7 @@ describe(PrettierSetupService, () => {
         yield* clearExecutedCommands;
 
         // Run setup
-        yield* service.setup();
+        yield* service.setup;
 
         // Read updated package.json
         const updatedPkg = yield* pm.readPackageJson({ id: tempDir });

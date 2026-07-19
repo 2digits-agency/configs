@@ -32,7 +32,7 @@ export async function pnpm(): Promise<Array<TypedFlatConfigItem>> {
         pnpm,
       },
       rules: {
-        'pnpm/yaml-no-duplicate-catalog-item': 'error',
+        'pnpm/yaml-no-duplicate-catalog-item': ['error', { checkDuplicates: 'exact-version' }],
         'pnpm/yaml-no-unused-catalog-item': 'error',
         'pnpm/yaml-valid-packages': 'error',
         'pnpm/yaml-enforce-settings': [

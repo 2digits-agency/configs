@@ -1,6 +1,6 @@
-import * as Command from '@effect/cli/Command';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Command from 'effect/unstable/cli/Command';
 
 import { TloConfigLive } from '../layers/TloConfigLive.js';
 import { TloLive } from '../layers/TloLive.js';
@@ -21,4 +21,4 @@ const tloMcpCommand = Command.make(
   }),
 );
 
-export const run = Command.run(tloMcpCommand, { name: NAME, version: VERSION });
+export const run = Command.run(tloMcpCommand, { version: VERSION });

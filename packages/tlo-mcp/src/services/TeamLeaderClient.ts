@@ -1,41 +1,43 @@
-import * as HttpBody from '@effect/platform/HttpBody';
-import type * as HttpClientError from '@effect/platform/HttpClientError';
-import * as UrlParams from '@effect/platform/UrlParams';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
-import type * as ParseResult from 'effect/ParseResult';
 import * as Redacted from 'effect/Redacted';
-import * as Schema from 'effect/Schema';
+import type * as Schema from 'effect/Schema';
+import type * as SchemaIssue from 'effect/SchemaIssue';
+import * as SchemaParser from 'effect/SchemaParser';
+import type * as HttpClientError from 'effect/unstable/http/HttpClientError';
+import * as HttpClientRequest from 'effect/unstable/http/HttpClientRequest';
 
 import { TloApiError, TloNetworkError, TloParseError, type TloError } from '../schemas/errors.js';
 import { TloConfig } from './TloConfig.js';
 import { TloHttpClient } from './TloHttpClient.js';
 
 export interface TeamLeaderClientShape {
-  readonly post: <TResponse, TInput, TEnv>(
+  readonly post: <TResponse, TEnv>(
     path: string,
     body: Record<string, string | number | boolean | undefined>,
-    schema: Schema.Schema<TResponse, TInput, TEnv>,
+    schema: Schema.ConstraintDecoder<TResponse, TEnv>,
   ) => Effect.Effect<TResponse, TloError, TEnv>;
 }
 
-export class TeamLeaderClient extends Context.Tag('@2digits/tlo-mcp/services/TeamLeaderClient')<
-  TeamLeaderClient,
-  TeamLeaderClientShape
->() {}
+export class TeamLeaderClient extends Context.Service<TeamLeaderClient, TeamLeaderClientShape>()(
+  '@2digits/tlo-mcp/services/TeamLeaderClient',
+) {}
 
 function mapHttpError(path: string) {
   return (error: HttpClientError.HttpClientError): TloNetworkError =>
     new TloNetworkError({
-      message: error._tag === 'ResponseError' ? `HTTP ${error.response.status}` : `Request failed: ${error.reason}`,
+      message:
+        error.reason._tag === 'StatusCodeError'
+          ? `HTTP ${error.reason.response.status}`
+          : `Request failed: ${error.reason.message}`,
       cause: error,
       endpoint: path,
     });
 }
 
-function mapParseError(error: ParseResult.ParseError): TloParseError {
+function mapParseError(error: SchemaIssue.Issue): TloParseError {
   return new TloParseError({
     message: 'Failed to parse response',
     cause: error,
@@ -43,13 +45,7 @@ function mapParseError(error: ParseResult.ParseError): TloParseError {
 }
 
 function isErrorResponse(json: unknown): json is { MSG: string; err: number } {
-  return (
-    typeof json === 'object' &&
-    json !== null &&
-    'err' in json &&
-    typeof (json as Record<string, unknown>).err === 'number' &&
-    (json as Record<string, unknown>).err !== 0
-  );
+  return typeof json === 'object' && json !== null && 'err' in json && typeof json.err === 'number' && json.err !== 0;
 }
 
 /**
@@ -75,18 +71,19 @@ export const TeamLeaderClientLive = Layer.effect(
     const { client } = yield* TloHttpClient;
 
     return TeamLeaderClient.of({
-      post: Effect.fn('TeamLeaderClient.post')(function* <TResponse, TInput, TEnv>(
+      post: Effect.fn('TeamLeaderClient.post')(function* <TResponse, TEnv>(
         path: string,
         body: Record<string, string | number | boolean | undefined>,
-        schema: Schema.Schema<TResponse, TInput, TEnv>,
+        schema: Schema.ConstraintDecoder<TResponse, TEnv>,
       ) {
         const bodyWithToken = {
           ...body,
           t: Redacted.value(config.sessionToken),
         };
-        const urlParams = UrlParams.fromInput(bodyWithToken);
 
-        return yield* client.post(path, { body: HttpBody.urlParams(urlParams) }).pipe(
+        return yield* HttpClientRequest.post(path).pipe(
+          HttpClientRequest.bodyUrlParams(bodyWithToken),
+          client.execute,
           Effect.flatMap((response) => response.text),
           Effect.flatMap((text): Effect.Effect<TResponse, TloParseError | TloApiError, TEnv> => {
             const malformedError = parseMalformedJson(text);
@@ -122,7 +119,7 @@ export const TeamLeaderClientLive = Layer.effect(
               );
             }
 
-            return Schema.decodeUnknown(schema)(json).pipe(Effect.mapError(mapParseError));
+            return SchemaParser.decodeUnknownEffect(schema)(json).pipe(Effect.mapError(mapParseError));
           }),
           Effect.scoped,
           Effect.mapError((error): TloError => {

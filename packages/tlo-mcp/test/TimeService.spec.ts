@@ -1,11 +1,13 @@
 import { describe, expect, layer } from '@effect/vitest';
-import { Effect, Layer } from 'effect';
+import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
+import * as SchemaParser from 'effect/SchemaParser';
 
 import type { GetWeekResponse, SetActivityResponse } from '../src/schemas/time.js';
 import { TeamLeaderClient } from '../src/services/TeamLeaderClient.js';
 import { TimeService, TimeServiceLive } from '../src/services/TimeService.js';
 
-const mockActivitiesRaw: typeof GetWeekResponse.Type = {
+const mockActivitiesRaw: GetWeekResponse = {
   ACTIVITIES: [
     {
       ID: 1,
@@ -22,7 +24,7 @@ const mockActivitiesRaw: typeof GetWeekResponse.Type = {
   ],
 };
 
-const mockSetActivityResponse: typeof SetActivityResponse.Type = {
+const mockSetActivityResponse: SetActivityResponse = {
   ID: 999,
   DURATION: 30,
   DT: '20250115100000',
@@ -32,7 +34,7 @@ function createMockClient(response: unknown) {
   return Layer.succeed(
     TeamLeaderClient,
     TeamLeaderClient.of({
-      post: () => Effect.succeed(response) as never,
+      post: (_path, _body, schema) => SchemaParser.decodeUnknownEffect(schema)(response).pipe(Effect.orDie),
     }),
   );
 }

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-import * as CliConfig from '@effect/cli/CliConfig';
-import * as NodeContext from '@effect/platform-node/NodeContext';
 import * as NodeRuntime from '@effect/platform-node/NodeRuntime';
+import * as NodeServices from '@effect/platform-node/NodeServices';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 
@@ -14,14 +13,13 @@ import { ProjectDetectionService } from './services/ProjectDetectionService';
 import { TurborepoSetupService } from './services/TurborepoSetupService';
 
 const MainLive = Layer.mergeAll(
-  CliConfig.layer(),
-  CurrentWorkingDirService.Default,
-  PrettierSetupService.Default,
-  EslintSetupService.Default,
-  ProjectDetectionService.Default,
-  EslintDetectionService.Default,
-  TurborepoSetupService.Default,
-  NodeContext.layer,
+  CurrentWorkingDirService.layer,
+  PrettierSetupService.layer,
+  EslintSetupService.layer,
+  ProjectDetectionService.layer,
+  EslintDetectionService.layer,
+  TurborepoSetupService.layer,
+  NodeServices.layer,
 );
 
-cli(process.argv).pipe(Effect.provide(MainLive), NodeRuntime.runMain);
+cli.pipe(Effect.provide(MainLive), NodeRuntime.runMain);
