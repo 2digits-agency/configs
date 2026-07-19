@@ -38,6 +38,7 @@ catalog:
   '@typescript-eslint/parser': 8.64.0
   '@typescript-eslint/scope-manager': 8.64.0
   '@typescript-eslint/utils': 8.64.0
+  '@typescript/native-preview': npm:typescript@7.0.2
   '@types/react': 19.2.17
   '@vitest/eslint-plugin': 1.6.23
   dedent: 1.7.2
@@ -103,6 +104,10 @@ catalog:
   yaml-eslint-parser: 2.1.0
   zod: 4.4.3
   '@eslint-react/kit': 5.17.1
+
+catalogs:
+  typescript-eslint:
+    typescript: 6.0.3
 
 catalogMode: strict
 

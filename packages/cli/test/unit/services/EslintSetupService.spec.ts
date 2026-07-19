@@ -14,20 +14,16 @@ import { EslintSetupService } from '../../../src/services/EslintSetupService.js'
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
 import type { TurboConfig } from '../../../src/services/TurborepoSetupService.js';
-import { MockCommandExecutor, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
+import { MockCommandExecutorLayer } from '../../helpers/MockCommandService.js'
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(EslintSetupService, () => {
-  const testLayer = Layer.mergeAll(
-    EslintSetupService.Default,
-    EslintDetectionService.Default,
-    ProjectDetectionService.Default,
-    PackageManagerService.Default,
-    MockCommandExecutor.Default,
-    MockCommandExecutorLayer,
-    NodeFileSystem.layer,
-    NodePath.layer,
-  );
+  const testLayer = Layer.mergeAll(EslintSetupService.layer,
+  EslintDetectionService.layer,
+  ProjectDetectionService.layer,
+  PackageManagerService.layer, MockCommandExecutorLayer,
+  NodeFileSystem.layer,
+  NodePath.layer,);
 
   describe('setup - single package', () => {
     it.effect('sets up eslint in single package project', (ctx) =>

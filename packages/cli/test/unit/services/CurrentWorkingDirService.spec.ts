@@ -7,7 +7,7 @@ import * as Effect from 'effect/Effect';
 import { CurrentWorkingDirService } from '../../../src/services/CurrentWorkingDirService.js';
 
 describe(CurrentWorkingDirService, () => {
-  const { Default: testLayer } = CurrentWorkingDirService;
+  const { layer: testLayer } = CurrentWorkingDirService;
 
   it.effect('returns process.cwd()', () =>
     Effect.gen(function* () {

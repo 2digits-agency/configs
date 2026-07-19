@@ -14,19 +14,14 @@ import { PackageManagerService } from '../../../src/services/PackageManagerServi
 import {
   clearExecutedCommands,
   getExecutedCommands,
-  MockCommandExecutor,
   MockCommandExecutorLayer,
 } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(PackageManagerService, () => {
-  const testLayer = Layer.mergeAll(
-    PackageManagerService.Default,
-    MockCommandExecutor.Default,
-    MockCommandExecutorLayer,
-    NodeFileSystem.layer,
-    NodePath.layer,
-  );
+  const testLayer = Layer.mergeAll(PackageManagerService.layer, MockCommandExecutorLayer,
+  NodeFileSystem.layer,
+  NodePath.layer,);
 
   describe('resolveRoot', () => {
     it.effect('resolves workspace root', (ctx) =>

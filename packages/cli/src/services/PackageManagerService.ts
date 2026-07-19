@@ -88,7 +88,7 @@ const make = Effect.gen(function* () {
 
     const workspace = options.workspace ?? true;
 
-    if (options.devDependencies && Array.isNonEmptyArray(options.devDependencies)) {
+    if (options.devDependencies && Array.isArrayNonEmpty(options.devDependencies)) {
       const devDepsCommand = nypm.addDependencyCommand(pm.name, options.devDependencies, {
         workspace,
         dev: true,
@@ -101,13 +101,13 @@ const make = Effect.gen(function* () {
           Effect.all({
             stdout: process.stdout.pipe(
               Stream.decodeText(),
-              Stream.tap(Effect.logDebug),
-              Stream.runFold(String.empty, String.concat),
+              Stream.tap((message) => Effect.logDebug(() => message)),
+              Stream.runFold(() => String.empty, String.concat),
             ),
             stderr: process.stderr.pipe(
               Stream.decodeText(),
-              Stream.tap(Effect.logDebug),
-              Stream.runFold(String.empty, String.concat),
+              Stream.tap((message) => Effect.logDebug(() => message)),
+              Stream.runFold(() => String.empty, String.concat),
             ),
             exitCode: process.exitCode,
           }),
@@ -126,7 +126,7 @@ const make = Effect.gen(function* () {
       yield* Effect.logDebug(`Added devDependencies: ${options.devDependencies.join(', ')}`);
     }
 
-    if (options.dependencies && Array.isNonEmptyArray(options.dependencies)) {
+    if (options.dependencies && Array.isArrayNonEmpty(options.dependencies)) {
       const dependenciesCommand = nypm.addDependencyCommand(pm.name, options.dependencies, {
         workspace,
         short: true,
@@ -138,13 +138,13 @@ const make = Effect.gen(function* () {
           Effect.all({
             stdout: process.stdout.pipe(
               Stream.decodeText(),
-              Stream.tap(Effect.logDebug),
-              Stream.runFold(String.empty, String.concat),
+              Stream.tap((message) => Effect.logDebug(() => message)),
+              Stream.runFold(() => String.empty, String.concat),
             ),
             stderr: process.stderr.pipe(
               Stream.decodeText(),
-              Stream.tap(Effect.logDebug),
-              Stream.runFold(String.empty, String.concat),
+              Stream.tap((message) => Effect.logDebug(() => message)),
+              Stream.runFold(() => String.empty, String.concat),
             ),
             exitCode: process.exitCode,
           }),

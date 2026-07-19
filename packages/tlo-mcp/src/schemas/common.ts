@@ -9,7 +9,7 @@ export const TloDateString = Schema.String.pipe(
   Schema.check(Schema.isPattern(/^\d{14}$/)),
   Schema.brand('TloDateString'),
 );
-export type TloDateString = Schema.Type<typeof TloDateString>;
+export type TloDateString = typeof TloDateString.Type
 const makeTloDateString = Brand.nominal<TloDateString>();
 
 /**
@@ -56,7 +56,7 @@ export const TloDate = TloDateString.pipe(
     }),
   ),
 );
-export type TloDate = Schema.Type<typeof TloDate>;
+export type TloDate = typeof TloDate.Type
 
 export { formatTloDate };
 
@@ -77,7 +77,7 @@ export const TloIdSchema = Schema.String.pipe(Schema.fromBrand('TloId', TloId));
 export function TloResponse<$A, $I, $RD, $RE>(dataSchema: Schema.Codec<$A, $I, $RD, $RE>) {
   return Schema.Struct({
     success: Schema.Boolean,
-    ID: Schema.optional(Schema.Number),
+    ID: Schema.optional(Schema.Finite),
     OBJ: dataSchema,
     err: Schema.optional(Schema.String),
   });

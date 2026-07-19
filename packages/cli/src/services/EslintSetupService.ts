@@ -273,7 +273,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
         yield* Effect.logInfo('Discovering workspaces...');
         const workspaces = yield* projectDetect.discoverWorkspaces();
 
-        if (Array.isNonEmptyArray(workspaces)) {
+        if (Array.isArrayNonEmpty(workspaces)) {
           yield* Effect.logInfo(`Found ${workspaces.length} workspace(s)`);
 
           for (const workspacePath of workspaces) {
