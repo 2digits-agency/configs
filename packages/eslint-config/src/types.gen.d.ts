@@ -1137,6 +1137,11 @@ Backward pagination arguments
    */
   'jsdoc/no-undefined-types'?: Linter.RuleEntry<JsdocNoUndefinedTypes>
   /**
+   * Normalizes labeled links in `@see` tags to a canonical `{@link}` form.
+   * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/normalize-see-links.md#repos-sticky-header
+   */
+  'jsdoc/normalize-see-links'?: Linter.RuleEntry<JsdocNormalizeSeeLinks>
+  /**
    * Prefer `@import` tags to inline `import()` statements.
    * @see https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/prefer-import-tag.md#repos-sticky-header
    */
@@ -11161,6 +11166,13 @@ type JsdocNoUndefinedTypes = []|[{
   disableReporting?: boolean
   
   markVariablesAsUsed?: boolean
+}]
+// ----- jsdoc/normalize-see-links -----
+type JsdocNormalizeSeeLinks = []|[{
+  
+  canonicalForm?: ("pipe" | "prefix")
+  
+  enableFixer?: boolean
 }]
 // ----- jsdoc/prefer-import-tag -----
 type JsdocPreferImportTag = []|[{
