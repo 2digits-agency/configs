@@ -1,10 +1,22 @@
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import { type PlatformError } from 'effect/PlatformError';
+import { type ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
 
-import { PackageManagerService } from './PackageManagerService';
+import { type PackageManagerError, PackageManagerService } from './PackageManagerService';
 
-export class PrettierSetupService extends Context.Service<PrettierSetupService>()(
+/**
+ * Operations exposed by the Prettier setup service.
+ */
+export interface PrettierSetupServiceShape {
+  readonly setup: () => Effect.Effect<void, PackageManagerError | PlatformError, ChildProcessSpawner>;
+}
+
+/**
+ * Service for configuring Prettier in a project.
+ */
+export class PrettierSetupService extends Context.Service<PrettierSetupService, PrettierSetupServiceShape>()(
   '@2digits/cli/services/PrettierSetupService',
   {
     make: Effect.gen(function* () {

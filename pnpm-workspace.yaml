@@ -105,10 +105,6 @@ catalog:
   zod: 4.4.3
   '@eslint-react/kit': 5.17.1
 
-catalogs:
-  typescript-eslint:
-    typescript: 6.0.3
-
 catalogMode: strict
 
 cleanupUnusedCatalogs: true
@@ -155,3 +151,6 @@ peerDependencyRules:
 preferWorkspacePackages: true
 
 savePrefix: ''
+catalogs:
+  conflicts_typescript_npm:typescripta6_0_3:
+    typescript: npm:typescript@6.0.3

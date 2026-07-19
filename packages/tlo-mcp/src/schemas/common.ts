@@ -9,7 +9,7 @@ export const TloDateString = Schema.String.pipe(
   Schema.check(Schema.isPattern(/^\d{14}$/)),
   Schema.brand('TloDateString'),
 );
-export type TloDateString = typeof TloDateString.Type
+export type TloDateString = typeof TloDateString.Type;
 const makeTloDateString = Brand.nominal<TloDateString>();
 
 /**
@@ -56,7 +56,7 @@ export const TloDate = TloDateString.pipe(
     }),
   ),
 );
-export type TloDate = typeof TloDate.Type
+export type TloDate = typeof TloDate.Type;
 
 export { formatTloDate };
 

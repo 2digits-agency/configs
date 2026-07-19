@@ -8,14 +8,17 @@ import * as Path from 'effect/Path';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
-import { MockCommandExecutorLayer } from '../../helpers/MockCommandService.js'
+import { MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(ProjectDetectionService, () => {
-  const testLayer = Layer.mergeAll(ProjectDetectionService.layer,
-  PackageManagerService.layer, MockCommandExecutorLayer,
-  NodeFileSystem.layer,
-  NodePath.layer,);
+  const testLayer = Layer.mergeAll(
+    ProjectDetectionService.layer,
+    PackageManagerService.layer,
+    MockCommandExecutorLayer,
+    NodeFileSystem.layer,
+    NodePath.layer,
+  );
 
   describe('isMonorepo', () => {
     it.effect('detects monorepo with turbo.json', (ctx) =>

@@ -8,12 +8,19 @@ import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
 import * as Path from 'effect/Path';
+import { type PlatformError } from 'effect/PlatformError';
 import * as Struct from 'effect/Struct';
+import { type ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
 
-import { PackageManagerService } from './PackageManagerService';
+import { type PackageManagerError, PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
 
-class TurborepoSetupError extends Data.TaggedError('@2digits/cli/services/TurborepoSetupService/TurborepoSetupError')<{
+/**
+ * Failure while reading, writing, or generating Turborepo configuration.
+ */
+export class TurborepoSetupError extends Data.TaggedError(
+  '@2digits/cli/services/TurborepoSetupService/TurborepoSetupError',
+)<{
   message: string;
   cause?: unknown;
 }> {}
@@ -116,9 +123,28 @@ function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): Tu
 }
 
 /**
+ * Operations exposed by the Turborepo setup service.
+ */
+export interface TurborepoSetupServiceShape {
+  readonly setup: () => Effect.Effect<
+    void,
+    PackageManagerError | PlatformError | TurborepoSetupError,
+    ChildProcessSpawner
+  >;
+  readonly detectWorkspaceTasks: () => Effect.Effect<Set<string>, PackageManagerError | PlatformError>;
+  readonly readTurboConfig: () => Effect.Effect<Option.Option<TurboConfig>, PackageManagerError | TurborepoSetupError>;
+  readonly writeTurboConfig: (config: TurboConfig) => Effect.Effect<void, PackageManagerError | TurborepoSetupError>;
+  readonly mergeTurboConfig: (
+    detectedTasks: Set<string>,
+  ) => Effect.Effect<void, PackageManagerError | TurborepoSetupError>;
+  readonly updateRootScripts: (detectedTasks: Set<string>) => Effect.Effect<void, PackageManagerError>;
+  readonly ensureTurboInstalled: () => Effect.Effect<void, PackageManagerError | PlatformError, ChildProcessSpawner>;
+}
+
+/**
  * Service for setting up Turborepo configuration in projects.
  */
-export class TurborepoSetupService extends Context.Service<TurborepoSetupService>()(
+export class TurborepoSetupService extends Context.Service<TurborepoSetupService, TurborepoSetupServiceShape>()(
   '@2digits/cli/services/TurborepoSetupService',
   {
     make: Effect.gen(function* () {

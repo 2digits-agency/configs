@@ -15,10 +15,13 @@ import {
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(PrettierSetupService, () => {
-  const testLayer = Layer.mergeAll(PrettierSetupService.layer,
-  PackageManagerService.layer, MockCommandExecutorLayer,
-  NodeFileSystem.layer,
-  NodePath.layer,);
+  const testLayer = Layer.mergeAll(
+    PrettierSetupService.layer,
+    PackageManagerService.layer,
+    MockCommandExecutorLayer,
+    NodeFileSystem.layer,
+    NodePath.layer,
+  );
 
   describe('setup', () => {
     it.effect('adds prettier config and scripts to package.json', (ctx) =>

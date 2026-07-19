@@ -5,8 +5,19 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import { type PlatformError } from 'effect/PlatformError';
 
-import { PackageManagerService } from './PackageManagerService';
+import { type PackageManagerError, PackageManagerService } from './PackageManagerService';
+
+/**
+ * Operations exposed by the ESLint detection service.
+ */
+export interface EslintDetectionServiceShape {
+  readonly isEslintInstalled: (packageJsonPath?: string) => Effect.Effect<boolean, PackageManagerError>;
+  readonly hasEslintConfig: (dir?: string) => Effect.Effect<boolean, PackageManagerError | PlatformError>;
+  readonly detectExistingConfigs: (dir?: string) => Effect.Effect<Array<string>, PackageManagerError | PlatformError>;
+  readonly uses2DigitsConfig: (configPath?: string) => Effect.Effect<boolean, PackageManagerError>;
+}
 
 /**
  * Service for detecting ESLint installation and configuration files.
@@ -114,7 +125,7 @@ const make = Effect.gen(function* () {
   };
 });
 
-export class EslintDetectionService extends Context.Service<EslintDetectionService, Effect.Success<typeof make>>()(
+export class EslintDetectionService extends Context.Service<EslintDetectionService, EslintDetectionServiceShape>()(
   '@2digits/cli/services/EslintDetectionService',
 ) {
   static readonly layer = Layer.effect(EslintDetectionService, make).pipe(

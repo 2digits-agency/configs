@@ -8,12 +8,17 @@ import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
 import * as Path from 'effect/Path';
+import { type PlatformError } from 'effect/PlatformError';
+import { type ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
 
 import { EslintDetectionService } from './EslintDetectionService';
-import { PackageManagerService } from './PackageManagerService';
+import { type PackageManagerError, PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
 
-class EslintSetupError extends Data.TaggedError('@2digits/cli/services/EslintSetupService/EslintSetupError')<{
+/**
+ * Failure while generating or validating an ESLint setup.
+ */
+export class EslintSetupError extends Data.TaggedError('@2digits/cli/services/EslintSetupService/EslintSetupError')<{
   message: string;
   cause?: unknown;
 }> {}
@@ -87,9 +92,20 @@ function mergeLintTasks(config: TurboConfig): TurboConfig {
 }
 
 /**
+ * Operations exposed by the ESLint setup service.
+ */
+export interface EslintSetupServiceShape {
+  readonly setup: () => Effect.Effect<
+    void,
+    EslintSetupError | PackageManagerError | PlatformError,
+    ChildProcessSpawner
+  >;
+}
+
+/**
  * Service for setting up ESLint configuration in projects.
  */
-export class EslintSetupService extends Context.Service<EslintSetupService>()(
+export class EslintSetupService extends Context.Service<EslintSetupService, EslintSetupServiceShape>()(
   '@2digits/cli/services/EslintSetupService',
   {
     make: Effect.gen(function* () {

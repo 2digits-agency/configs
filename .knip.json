@@ -1,6 +1,13 @@
 {
   "$schema": "./node_modules/knip/schema.json",
-  "ignoreDependencies": ["vite", "@arethetypeswrong/core", "publint", "pkg-pr-new"],
+  "ignoreDependencies": [
+    "vite",
+    "@arethetypeswrong/core",
+    "publint",
+    "pkg-pr-new",
+    "@effect/language-service",
+    "@typescript/native-preview"
+  ],
   "tsdown": { "config": "vite.config.ts" },
   "vitest": { "config": ["vite.config.ts"] },
   "workspaces": {

@@ -1,4 +1,3 @@
-/* eslint-disable ts/no-deprecated */
 /* eslint-disable sonar/no-duplicate-string */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
@@ -12,18 +11,18 @@ import * as Layer from 'effect/Layer';
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
 import { TurborepoSetupService, type TurboConfig } from '../../../src/services/TurborepoSetupService.js';
-import {
-  getExecutedCommands,
-  MockCommandExecutorLayer,
-} from '../../helpers/MockCommandService.js';
+import { getExecutedCommands, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(TurborepoSetupService, () => {
-  const testLayer = Layer.mergeAll(TurborepoSetupService.layer,
-  ProjectDetectionService.layer,
-  PackageManagerService.layer, MockCommandExecutorLayer,
-  NodeFileSystem.layer,
-  NodePath.layer,);
+  const testLayer = Layer.mergeAll(
+    TurborepoSetupService.layer,
+    ProjectDetectionService.layer,
+    PackageManagerService.layer,
+    MockCommandExecutorLayer,
+    NodeFileSystem.layer,
+    NodePath.layer,
+  );
 
   describe('detectWorkspaceTasks', () => {
     it.effect('detects tasks from workspace package.json files', (ctx) =>

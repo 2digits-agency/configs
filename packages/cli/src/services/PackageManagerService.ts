@@ -4,18 +4,68 @@ import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import { type PlatformError } from 'effect/PlatformError';
 import * as Stream from 'effect/Stream';
 import * as String from 'effect/String';
 import * as ChildProcess from 'effect/unstable/process/ChildProcess';
+import { type ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
 import * as nypm from 'nypm';
 import * as pkgTypes from 'pkg-types';
 
 import { CurrentWorkingDirService } from './CurrentWorkingDirService';
 
-class PackageManagerError extends Data.TaggedError('@2digits/cli/services/PackageManagerService/PackageManagerError')<{
+/**
+ * Failure while reading, writing, or installing package metadata.
+ */
+export class PackageManagerError extends Data.TaggedError(
+  '@2digits/cli/services/PackageManagerService/PackageManagerError',
+)<{
   readonly cause: unknown;
   readonly message?: string;
 }> {}
+
+/**
+ * Options for installing project dependencies.
+ */
+export interface AddDependenciesOptions {
+  /**
+   * Workspace receiving the dependencies, or the repository root when omitted.
+   */
+  readonly workspace?: string;
+  /**
+   * Runtime dependencies to install.
+   */
+  readonly dependencies?: Array<string>;
+  /**
+   * Development dependencies to install.
+   */
+  readonly devDependencies?: Array<string>;
+}
+
+/**
+ * Operations exposed by the package manager service.
+ */
+export interface PackageManagerServiceShape {
+  readonly resolveRoot: () => Effect.Effect<string, PackageManagerError>;
+  readonly readPackageJson: (options?: {
+    readonly id?: string;
+  }) => Effect.Effect<pkgTypes.PackageJson, PackageManagerError>;
+  readonly writePackageJson: (options: {
+    readonly id?: string;
+    readonly content: pkgTypes.PackageJson;
+  }) => Effect.Effect<void, PackageManagerError>;
+  readonly addDependencies: (
+    options: AddDependenciesOptions,
+  ) => Effect.Effect<void, PackageManagerError | PlatformError, ChildProcessSpawner>;
+  readonly getPackageManager: () => Effect.Effect<
+    nypm.PackageManager & { readonly warnings?: Array<string> },
+    PackageManagerError
+  >;
+  readonly runScriptCommand: (options: {
+    readonly script: string;
+    readonly args?: Array<string>;
+  }) => Effect.Effect<string, PackageManagerError>;
+}
 
 const make = Effect.gen(function* () {
   const path = yield* Path.Path;
@@ -70,16 +120,6 @@ const make = Effect.gen(function* () {
       catch: (cause) => new PackageManagerError({ cause }),
     });
   });
-
-  interface AddDependenciesOptions {
-    /**
-     * The workspace to which the dependency should be added. If not provided, the dependency will be added to the root
-     * workspace.
-     */
-    workspace?: string;
-    dependencies?: Array<string>;
-    devDependencies?: Array<string>;
-  }
 
   const addDependencies = Effect.fn('PackageManagerService.addDependencies')(function* (
     options: AddDependenciesOptions,
@@ -198,7 +238,7 @@ const make = Effect.gen(function* () {
   };
 });
 
-export class PackageManagerService extends Context.Service<PackageManagerService, Effect.Success<typeof make>>()(
+export class PackageManagerService extends Context.Service<PackageManagerService, PackageManagerServiceShape>()(
   '@2digits/cli/services/PackageManagerService',
 ) {
   static readonly layer = Layer.effect(PackageManagerService, make).pipe(

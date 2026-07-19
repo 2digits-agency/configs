@@ -40,7 +40,7 @@ export const ActivityRaw = Schema.Struct({
   READONLY: Schema.optional(Schema.NullOr(Schema.Finite)),
   TASK_WORKLOAD: Schema.optional(Schema.NullOr(Schema.Finite)),
 });
-export type ActivityRaw = typeof ActivityRaw.Type
+export type ActivityRaw = typeof ActivityRaw.Type;
 
 export class Activity extends Schema.Class<Activity>('Activity')({
   id: Schema.Finite,
@@ -77,50 +77,52 @@ export class Activity extends Schema.Class<Activity>('Activity')({
   clientColor: Schema.optional(Schema.String),
 }) {}
 
-export function activityFromRaw(raw: ActivityRaw): Activity { return new Activity({
-  id: raw.ID,
-  projectId:
-    raw.PROJECT_ID === undefined
-      ? raw.FOLDERID === undefined
-        ? undefined
-        : String(raw.FOLDERID)
-      : String(raw.PROJECT_ID),
-  folderId: raw.FOLDERID === undefined ? undefined : String(raw.FOLDERID),
-  taskId: raw.TASKID !== undefined && raw.TASKID !== null ? String(raw.TASKID) : null,
-  todoId: raw.TODOID !== undefined && raw.TODOID !== null ? String(raw.TODOID) : null,
-  ticketId: raw.TICKETID !== undefined && raw.TICKETID !== null ? String(raw.TICKETID) : null,
-  userId: raw.CONTACTID === undefined ? undefined : String(raw.CONTACTID),
-  description: raw.DESCRIPTION,
-  startDate: raw.DT,
-  endDate: raw.END_DT,
-  durationMinutes: raw.DURATION,
-  projectName: raw.PROJECT_NAME,
-  taskName: raw.TASK_NAME,
-  clientName: raw.CLIENT_NAME,
-  folderName: raw.FOLDER_NAME,
-  entityName: raw.ENTITY_NAME,
-  projectOwnerName: raw.PROJECTOWNER_NAME,
-  projectState: raw.PROJECT_STATE,
-  taskState: raw.TASK_STATE,
-  timesheetState: raw.TIMESHEET_STATE,
-  billingMode: raw.BILLING_MODE,
-  nonBillable: raw.NON_BILLABLE,
-  rate: raw.RATE,
-  value: raw.VALUE,
-  projectStartDate: raw.PROJECT_START_DT,
-  projectEndDate: raw.PROJECT_END_DT,
-  taskStartDate: raw.TASK_START_DT,
-  taskEndDate: raw.TASK_END_DT,
-  readOnly: raw.READONLY === undefined || raw.READONLY === null ? undefined : raw.READONLY !== 0,
-  taskWorkload: raw.TASK_WORKLOAD,
-  projectColor: raw.PROJECT_COLOR ?? undefined,
-  clientColor: raw.CLIENT_COLOR ?? undefined,
-}); }
+export function activityFromRaw(raw: ActivityRaw): Activity {
+  return new Activity({
+    id: raw.ID,
+    projectId:
+      raw.PROJECT_ID === undefined
+        ? raw.FOLDERID === undefined
+          ? undefined
+          : String(raw.FOLDERID)
+        : String(raw.PROJECT_ID),
+    folderId: raw.FOLDERID === undefined ? undefined : String(raw.FOLDERID),
+    taskId: raw.TASKID !== undefined && raw.TASKID !== null ? String(raw.TASKID) : null,
+    todoId: raw.TODOID !== undefined && raw.TODOID !== null ? String(raw.TODOID) : null,
+    ticketId: raw.TICKETID !== undefined && raw.TICKETID !== null ? String(raw.TICKETID) : null,
+    userId: raw.CONTACTID === undefined ? undefined : String(raw.CONTACTID),
+    description: raw.DESCRIPTION,
+    startDate: raw.DT,
+    endDate: raw.END_DT,
+    durationMinutes: raw.DURATION,
+    projectName: raw.PROJECT_NAME,
+    taskName: raw.TASK_NAME,
+    clientName: raw.CLIENT_NAME,
+    folderName: raw.FOLDER_NAME,
+    entityName: raw.ENTITY_NAME,
+    projectOwnerName: raw.PROJECTOWNER_NAME,
+    projectState: raw.PROJECT_STATE,
+    taskState: raw.TASK_STATE,
+    timesheetState: raw.TIMESHEET_STATE,
+    billingMode: raw.BILLING_MODE,
+    nonBillable: raw.NON_BILLABLE,
+    rate: raw.RATE,
+    value: raw.VALUE,
+    projectStartDate: raw.PROJECT_START_DT,
+    projectEndDate: raw.PROJECT_END_DT,
+    taskStartDate: raw.TASK_START_DT,
+    taskEndDate: raw.TASK_END_DT,
+    readOnly: raw.READONLY === undefined || raw.READONLY === null ? undefined : raw.READONLY !== 0,
+    taskWorkload: raw.TASK_WORKLOAD,
+    projectColor: raw.PROJECT_COLOR ?? undefined,
+    clientColor: raw.CLIENT_COLOR ?? undefined,
+  });
+}
 
 export const GetWeekResponse = Schema.Struct({
   ACTIVITIES: Schema.Array(ActivityRaw),
 });
-export type GetWeekResponse = typeof GetWeekResponse.Type
+export type GetWeekResponse = typeof GetWeekResponse.Type;
 
 export const SetActivityResponse = Schema.Struct({
   ID: Schema.Finite,
@@ -131,7 +133,7 @@ export const SetActivityResponse = Schema.Struct({
   CLIENT_COLOR: Schema.optional(Schema.String),
   FOLDERID: Schema.optional(Schema.Union([Schema.String, Schema.Finite])),
 });
-export type SetActivityResponse = typeof SetActivityResponse.Type
+export type SetActivityResponse = typeof SetActivityResponse.Type;
 
 export interface CreateActivityParams {
   readonly folderId: string;

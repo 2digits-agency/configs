@@ -1,4 +1,3 @@
-/* eslint-disable ts/no-deprecated */
 /* eslint-disable sonar/no-duplicate-string */
 
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
@@ -19,9 +18,12 @@ import {
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(PackageManagerService, () => {
-  const testLayer = Layer.mergeAll(PackageManagerService.layer, MockCommandExecutorLayer,
-  NodeFileSystem.layer,
-  NodePath.layer,);
+  const testLayer = Layer.mergeAll(
+    PackageManagerService.layer,
+    MockCommandExecutorLayer,
+    NodeFileSystem.layer,
+    NodePath.layer,
+  );
 
   describe('resolveRoot', () => {
     it.effect('resolves workspace root', (ctx) =>

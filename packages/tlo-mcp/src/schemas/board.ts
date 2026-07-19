@@ -1,6 +1,6 @@
 import * as Schema from 'effect/Schema';
 
-export type ProjectRaw = typeof ProjectRaw.Type
+export type ProjectRaw = typeof ProjectRaw.Type;
 export const ProjectRaw = Schema.Struct({
   ID: Schema.Finite,
   PROJECT_NAME: Schema.optional(Schema.String),
@@ -22,13 +22,13 @@ export const ProjectRaw = Schema.Struct({
   CALC_PLANNED: Schema.optional(Schema.Finite),
 });
 
-export type GetProjectsResponse = typeof GetProjectsResponse.Type
+export type GetProjectsResponse = typeof GetProjectsResponse.Type;
 export const GetProjectsResponse = Schema.Struct({
   Records: Schema.Array(ProjectRaw),
   RecordCount: Schema.optional(Schema.Finite),
 });
 
-export type GetProjectDetailsResponse = typeof GetProjectDetailsResponse.Type
+export type GetProjectDetailsResponse = typeof GetProjectDetailsResponse.Type;
 export const GetProjectDetailsResponse = Schema.Union([ProjectRaw, Schema.Struct({ Record: ProjectRaw })]);
 
 export class Project extends Schema.Class<Project>('Project')({
@@ -73,7 +73,7 @@ export function projectFromRaw(raw: ProjectRaw): Project {
   });
 }
 
-export type MessageRaw = typeof MessageRaw.Type
+export type MessageRaw = typeof MessageRaw.Type;
 export const MessageRaw = Schema.Struct({
   ID: Schema.Finite,
   OWNERID: Schema.optional(Schema.Finite),
@@ -92,7 +92,7 @@ export const MessageRaw = Schema.Struct({
   INTERNAL: Schema.optional(Schema.Finite),
 });
 
-export type GetMessagesResponse = typeof GetMessagesResponse.Type
+export type GetMessagesResponse = typeof GetMessagesResponse.Type;
 export const GetMessagesResponse = Schema.Array(MessageRaw);
 
 export class Message extends Schema.Class<Message>('Message')({
@@ -113,27 +113,29 @@ export class Message extends Schema.Class<Message>('Message')({
   internal: Schema.optional(Schema.Boolean),
 }) {}
 
-export function messageFromRaw(raw: MessageRaw): Message { return new Message({
-  id: raw.ID,
-  ownerId: raw.OWNERID,
-  ownerName: raw.OWNER_NAME,
-  avatar: raw.AVATAR,
-  createdAt: raw.CREATED_DT,
-  content: raw.CONTENT,
-  subcontent: raw.SUBCONTENT,
-  objectType: raw.OBJECTTYPE,
-  objectId: raw.OBJECTID,
-  objectName: raw.OBJECTNAME,
-  messageType: raw.MSGTYPE,
-  likeCount: raw.LIKECNT,
-  replyCount: raw.REPLYCNT,
-  outQueueId: raw.OUTQUEUEID,
-  internal: raw.INTERNAL === undefined ? undefined : raw.INTERNAL !== 0,
-}); }
+export function messageFromRaw(raw: MessageRaw): Message {
+  return new Message({
+    id: raw.ID,
+    ownerId: raw.OWNERID,
+    ownerName: raw.OWNER_NAME,
+    avatar: raw.AVATAR,
+    createdAt: raw.CREATED_DT,
+    content: raw.CONTENT,
+    subcontent: raw.SUBCONTENT,
+    objectType: raw.OBJECTTYPE,
+    objectId: raw.OBJECTID,
+    objectName: raw.OBJECTNAME,
+    messageType: raw.MSGTYPE,
+    likeCount: raw.LIKECNT,
+    replyCount: raw.REPLYCNT,
+    outQueueId: raw.OUTQUEUEID,
+    internal: raw.INTERNAL === undefined ? undefined : raw.INTERNAL !== 0,
+  });
+}
 
 export type TaskState = 'OPEN' | 'COMPLETED' | 'DRAFT' | 'CLOSED';
 
-export type TaskRaw = typeof TaskRaw.Type
+export type TaskRaw = typeof TaskRaw.Type;
 export const TaskRaw = Schema.Struct({
   ID: Schema.Finite,
   PROJECTID: Schema.optional(Schema.Finite),
@@ -145,7 +147,7 @@ export const TaskRaw = Schema.Struct({
   BUDGET: Schema.optional(Schema.Finite),
 });
 
-export type GetTasksResponse = typeof GetTasksResponse.Type
+export type GetTasksResponse = typeof GetTasksResponse.Type;
 export const GetTasksResponse = Schema.Struct({
   Records: Schema.Array(TaskRaw),
   RecordCount: Schema.optional(Schema.Finite),
@@ -162,16 +164,18 @@ export class Task extends Schema.Class<Task>('Task')({
   budget: Schema.optional(Schema.Finite),
 }) {}
 
-export function taskFromRaw(raw: TaskRaw): Task { return new Task({
-  id: raw.ID,
-  projectId: raw.PROJECTID,
-  name: raw.NAME,
-  state: raw.STATE,
-  ownerName: raw.OWNER_NAME,
-  startDate: raw.START_DT,
-  endDate: raw.END_DT,
-  budget: raw.BUDGET,
-}); }
+export function taskFromRaw(raw: TaskRaw): Task {
+  return new Task({
+    id: raw.ID,
+    projectId: raw.PROJECTID,
+    name: raw.NAME,
+    state: raw.STATE,
+    ownerName: raw.OWNER_NAME,
+    startDate: raw.START_DT,
+    endDate: raw.END_DT,
+    budget: raw.BUDGET,
+  });
+}
 
 export interface SetTaskStateParams {
   readonly projectId: number;
@@ -193,7 +197,7 @@ export interface GetProjectsParams {
   readonly page?: number;
 }
 
-export type TaskForUserRaw = typeof TaskForUserRaw.Type
+export type TaskForUserRaw = typeof TaskForUserRaw.Type;
 export const TaskForUserRaw = Schema.Struct({
   ID: Schema.Finite,
   WORKLOAD: Schema.optional(Schema.Finite),
@@ -209,7 +213,7 @@ export const TaskForUserRaw = Schema.Struct({
   STATE: Schema.optional(Schema.String),
 });
 
-export type GetTasksForUserResponse = typeof GetTasksForUserResponse.Type
+export type GetTasksForUserResponse = typeof GetTasksForUserResponse.Type;
 export const GetTasksForUserResponse = Schema.Struct({ Records: Schema.Array(TaskForUserRaw) });
 
 export class TaskForUser extends Schema.Class<TaskForUser>('TaskForUser')({
@@ -227,25 +231,27 @@ export class TaskForUser extends Schema.Class<TaskForUser>('TaskForUser')({
   state: Schema.optional(Schema.String),
 }) {}
 
-export function taskForUserFromRaw(raw: TaskForUserRaw): TaskForUser { return new TaskForUser({
-  id: raw.ID,
-  workload: raw.WORKLOAD,
-  total: raw.TOTAL,
-  remaining: raw.REMAINING,
-  avail: raw.AVAIL,
-  clientId: raw.CLIENTID,
-  projectId: raw.PROJECTID,
-  projectStartDate: raw.PROJECT_START_DT,
-  projectEndDate: raw.PROJECT_END_DT,
-  startDate: raw.START_DT,
-  endDate: raw.END_DT,
-  state: raw.STATE,
-}); }
+export function taskForUserFromRaw(raw: TaskForUserRaw): TaskForUser {
+  return new TaskForUser({
+    id: raw.ID,
+    workload: raw.WORKLOAD,
+    total: raw.TOTAL,
+    remaining: raw.REMAINING,
+    avail: raw.AVAIL,
+    clientId: raw.CLIENTID,
+    projectId: raw.PROJECTID,
+    projectStartDate: raw.PROJECT_START_DT,
+    projectEndDate: raw.PROJECT_END_DT,
+    startDate: raw.START_DT,
+    endDate: raw.END_DT,
+    state: raw.STATE,
+  });
+}
 
-export type TodoDetail = typeof TodoDetail.Type
+export type TodoDetail = typeof TodoDetail.Type;
 export const TodoDetail = Schema.Record(Schema.String, Schema.Unknown);
 
-type TodoSummaryRaw = typeof TodoSummaryRaw.Type
+type TodoSummaryRaw = typeof TodoSummaryRaw.Type;
 const TodoSummaryRaw = Schema.Struct({
   ID: Schema.Finite,
   NAME: Schema.optional(Schema.String),
@@ -258,7 +264,7 @@ const TodoSummaryRaw = Schema.Struct({
   DESCRIPTION: Schema.optional(Schema.NullOr(Schema.String)),
 });
 
-export type GetBoardTodosResponse = typeof GetBoardTodosResponse.Type
+export type GetBoardTodosResponse = typeof GetBoardTodosResponse.Type;
 export const GetBoardTodosResponse = Schema.Struct({
   Records: Schema.Array(TodoSummaryRaw),
   RecordCount: Schema.optional(Schema.Finite),
@@ -276,17 +282,19 @@ export class TodoSummary extends Schema.Class<TodoSummary>('TodoSummary')({
   description: Schema.optional(Schema.NullOr(Schema.String)),
 }) {}
 
-export function todoSummaryFromRaw(raw: TodoSummaryRaw): TodoSummary { return new TodoSummary({
-  id: raw.ID,
-  name: raw.NAME,
-  boardListId: raw.BOARDLISTID,
-  boardId: raw.BOARDID,
-  ownerId: raw.OWNERID,
-  extId: raw.EXTID,
-  state: raw.STATE,
-  dueDate: raw.DUE_DT,
-  description: raw.DESCRIPTION,
-}); }
+export function todoSummaryFromRaw(raw: TodoSummaryRaw): TodoSummary {
+  return new TodoSummary({
+    id: raw.ID,
+    name: raw.NAME,
+    boardListId: raw.BOARDLISTID,
+    boardId: raw.BOARDID,
+    ownerId: raw.OWNERID,
+    extId: raw.EXTID,
+    state: raw.STATE,
+    dueDate: raw.DUE_DT,
+    description: raw.DESCRIPTION,
+  });
+}
 
 export interface GetBoardTodosParams {
   readonly boardId: number;

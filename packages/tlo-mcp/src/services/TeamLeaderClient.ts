@@ -80,6 +80,7 @@ export const TeamLeaderClientLive = Layer.effect(
           ...body,
           t: Redacted.value(config.sessionToken),
         };
+
         return yield* HttpClientRequest.post(path).pipe(
           HttpClientRequest.bodyUrlParams(bodyWithToken),
           client.execute,

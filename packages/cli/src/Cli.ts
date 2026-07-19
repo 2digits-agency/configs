@@ -1,13 +1,16 @@
 import * as Console from 'effect/Console';
 import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
+import { type PlatformError } from 'effect/PlatformError';
+import { type CliError } from 'effect/unstable/cli/CliError';
 import * as Command from 'effect/unstable/cli/Command';
 import * as Flag from 'effect/unstable/cli/Flag';
 
 import { moduleVersion } from './internal/version';
-import { EslintSetupService } from './services/EslintSetupService';
+import { EslintSetupError, EslintSetupService } from './services/EslintSetupService';
+import { type PackageManagerError } from './services/PackageManagerService';
 import { PrettierSetupService } from './services/PrettierSetupService';
-import { TurborepoSetupService } from './services/TurborepoSetupService';
+import { TurborepoSetupError, TurborepoSetupService } from './services/TurborepoSetupService';
 
 const command = Command.make('2d', {
   prettier: Flag.boolean('prettier').pipe(
@@ -65,6 +68,13 @@ const command = Command.make('2d', {
   ),
 );
 
-export const cli = Command.run(command, {
+/**
+ * Executable Effect program for the 2DIGITS configuration CLI.
+ */
+export const cli: Effect.Effect<
+  void,
+  CliError | EslintSetupError | PackageManagerError | PlatformError | TurborepoSetupError,
+  EslintSetupService | PrettierSetupService | TurborepoSetupService | Command.Environment
+> = Command.run(command, {
   version: `v${moduleVersion}`,
 });

@@ -5,8 +5,19 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import { type PlatformError } from 'effect/PlatformError';
 
-import { PackageManagerService } from './PackageManagerService';
+import { type PackageManagerError, PackageManagerService } from './PackageManagerService';
+
+/**
+ * Operations exposed by the project detection service.
+ */
+export interface ProjectDetectionServiceShape {
+  readonly isMonorepo: () => Effect.Effect<boolean, PackageManagerError | PlatformError>;
+  readonly isTurborepoProject: () => Effect.Effect<boolean, PackageManagerError | PlatformError>;
+  readonly discoverWorkspaces: () => Effect.Effect<Array<string>, PackageManagerError | PlatformError>;
+  readonly getWorkspacePackageJsonPath: (workspacePath: string) => string;
+}
 
 const make = Effect.gen(function* () {
   const fs = yield* FileSystem.FileSystem;
@@ -94,7 +105,10 @@ const make = Effect.gen(function* () {
   };
 });
 
-export class ProjectDetectionService extends Context.Service<ProjectDetectionService, Effect.Success<typeof make>>()(
+/**
+ * Service for detecting monorepo and workspace structure.
+ */
+export class ProjectDetectionService extends Context.Service<ProjectDetectionService, ProjectDetectionServiceShape>()(
   '@2digits/cli/services/ProjectDetectionService',
 ) {
   static readonly layer = Layer.effect(ProjectDetectionService, make).pipe(
