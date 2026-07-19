@@ -1,0 +1,66 @@
+core:changelogs:
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update Effect ecosystem dependencies\n\n- Updated `@effect/platform` to 0.97.0\n"
+    filename: 2026-07-17-mrp07hkc.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update OpenCode plugin dependencies\n\n- Updated `@opencode-ai/plugin` to 1.18.3\n- Updated `posthog-node` to 5.45.2\n"
+    filename: 2026-07-17-opencode-dependencies.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update ESLint plugins\n\n- Updated React ESLint packages to 5.17.1\n- Updated `eslint-plugin-jsdoc` to 63.0.14 and `eslint-plugin-storybook` to 10.5.2\n"
+    filename: 2026-07-17-eslint-plugins.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Support Effect Vitest test blocks\n\n- Recognized `it.effect` and `it.scoped` as test blocks for Vitest expectation rules\n- Recognized Effect assertion helpers when checking test expectations\n- Updated `oxlint-tsgolint` to 0.25.0\n"
+    filename: 2026-07-17-effect-vitest.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 43.265.5\n"
+    filename: 2026-07-17-renovate.md
+    v: 0.0.0
+core:packages:
+  - id: npm:@2digits/config-monorepo
+    updated: false
+  - changelogIds:
+      - 2026-07-17-mrp07hkc.md
+    id: npm:@2digits/cli
+    updated: true
+  - id: npm:@2digits/constants
+    updated: false
+  - id: npm:@2digits/eslint-plugin
+    updated: false
+  - changelogIds:
+      - 2026-07-17-opencode-dependencies.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
+  - changelogIds:
+      - 2026-07-17-eslint-plugins.md
+    id: npm:@2digits/eslint-config
+    updated: true
+  - id: npm:@2digits/oxfmt-config
+    updated: false
+  - changelogIds:
+      - 2026-07-17-effect-vitest.md
+    id: npm:@2digits/oxlint-config
+    updated: true
+  - id: npm:@2digits/prettier-config
+    updated: false
+  - changelogIds:
+      - 2026-07-17-mrp07hkc.md
+    id: npm:@2digits/tlo-mcp
+    updated: true
+  - changelogIds:
+      - 2026-07-17-renovate.md
+    id: npm:@2digits/renovate-config
+    updated: true
+  - id: npm:@2digits/tsconfig
+    updated: false
+npm:packages:
+  - id: npm:@2digits/config-monorepo
+  - id: npm:@2digits/cli
+  - id: npm:@2digits/constants
+  - id: npm:@2digits/eslint-plugin
+  - id: npm:@2digits/opencode-plugin
+  - id: npm:@2digits/eslint-config
+  - id: npm:@2digits/oxfmt-config
+  - id: npm:@2digits/oxlint-config
+  - id: npm:@2digits/prettier-config
+  - id: npm:@2digits/tlo-mcp
+  - id: npm:@2digits/renovate-config
+  - id: npm:@2digits/tsconfig

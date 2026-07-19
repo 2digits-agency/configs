@@ -1,3 +1,9 @@
+## @2digits/cli@2.0.9
+
+### Update Effect ecosystem dependencies
+
+- Updated `@effect/platform` to 0.97.0
+
 # @2digits/cli
 
 ## 2.0.8
