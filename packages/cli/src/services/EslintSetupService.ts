@@ -8,8 +8,8 @@ import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
 import * as Path from 'effect/Path';
-import { type PlatformError } from 'effect/PlatformError';
-import { type ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
+import type { PlatformError } from 'effect/PlatformError';
+import type { ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
 
 import { EslintDetectionService } from './EslintDetectionService';
 import { type PackageManagerError, PackageManagerService } from './PackageManagerService';
@@ -95,11 +95,7 @@ function mergeLintTasks(config: TurboConfig): TurboConfig {
  * Operations exposed by the ESLint setup service.
  */
 export interface EslintSetupServiceShape {
-  readonly setup: () => Effect.Effect<
-    void,
-    EslintSetupError | PackageManagerError | PlatformError,
-    ChildProcessSpawner
-  >;
+  readonly setup: Effect.Effect<void, EslintSetupError | PackageManagerError | PlatformError, ChildProcessSpawner>;
 }
 
 /**
@@ -130,7 +126,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService, Esli
        * Backup existing ESLint configuration files.
        */
       const backupExistingConfigs = Effect.fn('EslintSetupService.backupExistingConfigs')(function* (dir?: string) {
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const targetDir = dir ?? root;
 
         const existingConfigs = yield* eslintDetect.detectExistingConfigs(targetDir);
@@ -162,7 +158,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService, Esli
        * Remove old ESLint configuration files after backup.
        */
       const removeOldConfigs = Effect.fn('EslintSetupService.removeOldConfigs')(function* (dir?: string) {
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const targetDir = dir ?? root;
 
         const existingConfigs = yield* eslintDetect.detectExistingConfigs(targetDir);
@@ -177,7 +173,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService, Esli
        * Read turbo.json configuration.
        */
       const readTurboConfig = Effect.fn('EslintSetupService.readTurboConfig')(function* () {
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = path.join(root, 'turbo.json');
 
         const exists = yield* fs.exists(turboPath).pipe(Effect.orElseSucceed(() => false));
@@ -206,7 +202,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService, Esli
        * Write turbo.json configuration.
        */
       const writeTurboConfig = Effect.fn('EslintSetupService.writeTurboConfig')(function* (config: TurboConfig) {
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = path.join(root, 'turbo.json');
 
         const content = JSON.stringify(config, undefined, 2);
@@ -287,7 +283,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService, Esli
        */
       const setupWorkspaceConfigs = Effect.fn('EslintSetupService.setupWorkspaceConfigs')(function* () {
         yield* Effect.logInfo('Discovering workspaces...');
-        const workspaces = yield* projectDetect.discoverWorkspaces();
+        const workspaces = yield* projectDetect.discoverWorkspaces;
 
         if (Array.isArrayNonEmpty(workspaces)) {
           yield* Effect.logInfo(`Found ${workspaces.length} workspace(s)`);
@@ -359,7 +355,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService, Esli
        * Add lint scripts to package.json.
        */
       const addLintScripts = Effect.fn('EslintSetupService.addLintScripts')(function* (isMonorepo: boolean) {
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const packageJson = yield* pm.readPackageJson({ id: root });
 
         packageJson.scripts ??= {};
@@ -395,12 +391,12 @@ export class EslintSetupService extends Context.Service<EslintSetupService, Esli
       /**
        * Main setup orchestration workflow.
        */
-      const setup = Effect.fn('EslintSetupService.setup')(function* () {
+      const setup = Effect.gen(function* () {
         yield* Effect.logInfo('🚀 Setting up ESLint...');
 
         // Detect project type
         yield* Effect.logInfo('Detecting project type...');
-        const isMonorepo = yield* projectDetect.isMonorepo();
+        const isMonorepo = yield* projectDetect.isMonorepo;
 
         yield* isMonorepo
           ? Effect.logInfo('✅ Detected Turborepo monorepo')
@@ -410,7 +406,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService, Esli
         yield* ensureDependencies();
 
         // Migrate existing configurations
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
 
         yield* migrateExistingConfigs(root);
 
@@ -428,7 +424,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService, Esli
 
         // Validate and complete
         yield* validateAndComplete();
-      });
+      }).pipe(Effect.withSpan('EslintSetupService.setup'));
 
       return {
         setup,

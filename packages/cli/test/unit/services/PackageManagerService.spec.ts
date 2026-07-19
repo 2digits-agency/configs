@@ -33,7 +33,7 @@ describe(PackageManagerService, () => {
         yield* copyFixture('monorepo-turborepo');
 
         const service = yield* PackageManagerService;
-        const root = yield* service.resolveRoot();
+        const root = yield* service.resolveRoot;
 
         assertTrue(root.includes(dir));
       }).pipe(Effect.provide(testLayer)),
@@ -83,7 +83,7 @@ describe(PackageManagerService, () => {
         yield* copyFixture('single-package');
 
         const service = yield* PackageManagerService;
-        const pm = yield* service.getPackageManager();
+        const pm = yield* service.getPackageManager;
 
         strictEqual(pm.name, 'pnpm');
       }).pipe(Effect.provide(testLayer)),
@@ -306,7 +306,7 @@ describe(PackageManagerService, () => {
         yield* withTempTestEnv(ctx.task.id);
 
         const service = yield* PackageManagerService;
-        const result = yield* Effect.result(service.resolveRoot());
+        const result = yield* Effect.result(service.resolveRoot);
 
         expect(result._tag).toBe('Failure');
       }).pipe(Effect.provide(testLayer)),

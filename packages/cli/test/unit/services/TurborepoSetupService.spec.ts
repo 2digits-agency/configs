@@ -31,7 +31,7 @@ describe(TurborepoSetupService, () => {
         yield* copyFixture('monorepo-no-turbo');
 
         const service = yield* TurborepoSetupService;
-        const tasks = yield* service.detectWorkspaceTasks();
+        const tasks = yield* service.detectWorkspaceTasks;
 
         // Should detect build, dev, test, lint, typecheck from both packages
         expect(tasks.has('build')).toBeTruthy();
@@ -48,7 +48,7 @@ describe(TurborepoSetupService, () => {
         yield* copyFixture('single-package');
 
         const service = yield* TurborepoSetupService;
-        const tasks = yield* service.detectWorkspaceTasks();
+        const tasks = yield* service.detectWorkspaceTasks;
 
         strictEqual(tasks.size, 0);
       }).pipe(Effect.provide(testLayer)),
@@ -62,7 +62,7 @@ describe(TurborepoSetupService, () => {
         yield* copyFixture('monorepo-turborepo');
 
         const service = yield* TurborepoSetupService;
-        const configOption = yield* service.readTurboConfig();
+        const configOption = yield* service.readTurboConfig;
 
         expect(configOption._tag).toBe('Some');
       }).pipe(Effect.provide(testLayer)),
@@ -74,7 +74,7 @@ describe(TurborepoSetupService, () => {
         yield* copyFixture('monorepo-no-turbo');
 
         const service = yield* TurborepoSetupService;
-        const configOption = yield* service.readTurboConfig();
+        const configOption = yield* service.readTurboConfig;
 
         expect(configOption._tag).toBe('None');
       }).pipe(Effect.provide(testLayer)),
@@ -95,7 +95,7 @@ describe(TurborepoSetupService, () => {
 
         yield* service.mergeTurboConfig(detectedTasks);
 
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = `${root}/turbo.json`;
         const exists = yield* fs.exists(turboPath);
 
@@ -121,7 +121,7 @@ describe(TurborepoSetupService, () => {
         const pm = yield* PackageManagerService;
 
         // Read existing config first
-        const configOptionBefore = yield* service.readTurboConfig();
+        const configOptionBefore = yield* service.readTurboConfig;
         let existingTasks: Array<string> = [];
 
         if (configOptionBefore._tag === 'Some') {
@@ -134,7 +134,7 @@ describe(TurborepoSetupService, () => {
 
         yield* service.mergeTurboConfig(detectedTasks);
 
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = `${root}/turbo.json`;
         const content = yield* fs.readFileString(turboPath);
         const config = JSON.parse(content) as TurboConfig;
@@ -163,7 +163,7 @@ describe(TurborepoSetupService, () => {
 
         yield* service.updateRootScripts(detectedTasks);
 
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const packageJson = yield* pm.readPackageJson({ id: root });
 
         expect(packageJson.scripts?.build).toBe('turbo run build');
@@ -180,7 +180,7 @@ describe(TurborepoSetupService, () => {
         const pm = yield* PackageManagerService;
 
         // First, add a turbo command manually
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const packageJson = yield* pm.readPackageJson({ id: root });
 
         packageJson.scripts ??= {};
@@ -207,12 +207,12 @@ describe(TurborepoSetupService, () => {
         const service = yield* TurborepoSetupService;
         const pm = yield* PackageManagerService;
 
-        const rootBefore = yield* pm.resolveRoot();
+        const rootBefore = yield* pm.resolveRoot;
         const rootPackageJsonBefore = yield* pm.readPackageJson({ id: rootBefore });
 
         expect(rootPackageJsonBefore.devDependencies?.turbo).toBeUndefined();
 
-        yield* service.ensureTurboInstalled();
+        yield* service.ensureTurboInstalled;
 
         const executed = yield* getExecutedCommands.pipe(Effect.map(Array.map((e) => e.command)));
 
@@ -233,12 +233,12 @@ describe(TurborepoSetupService, () => {
         const service = yield* TurborepoSetupService;
         const pm = yield* PackageManagerService;
 
-        const rootBefore = yield* pm.resolveRoot();
+        const rootBefore = yield* pm.resolveRoot;
         const rootPackageJsonBefore = yield* pm.readPackageJson({ id: rootBefore });
 
         expect(rootPackageJsonBefore.devDependencies?.turbo).toBeDefined();
 
-        yield* service.ensureTurboInstalled();
+        yield* service.ensureTurboInstalled;
 
         const executed = yield* getExecutedCommands.pipe(Effect.map(Array.map((e) => e.command)));
 
@@ -257,9 +257,9 @@ describe(TurborepoSetupService, () => {
         const fs = yield* FileSystem.FileSystem;
         const pm = yield* PackageManagerService;
 
-        yield* service.setup();
+        yield* service.setup;
 
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = `${root}/turbo.json`;
         const exists = yield* fs.exists(turboPath);
 
@@ -277,7 +277,7 @@ describe(TurborepoSetupService, () => {
         const pm = yield* PackageManagerService;
 
         // Verify initial state
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = `${root}/turbo.json`;
         const turboExistsBefore = yield* fs.exists(turboPath);
         const rootPackageJsonBefore = yield* pm.readPackageJson({ id: root });
@@ -285,7 +285,7 @@ describe(TurborepoSetupService, () => {
         strictEqual(turboExistsBefore, false);
         expect(rootPackageJsonBefore.devDependencies?.turbo).toBeUndefined();
 
-        yield* service.setup();
+        yield* service.setup;
 
         const turboExistsAfter = yield* fs.exists(turboPath);
 
@@ -320,7 +320,7 @@ describe(TurborepoSetupService, () => {
         const pm = yield* PackageManagerService;
         const projectDetect = yield* ProjectDetectionService;
 
-        const workspaces = yield* projectDetect.discoverWorkspaces();
+        const workspaces = yield* projectDetect.discoverWorkspaces;
 
         for (const workspace of workspaces) {
           const pkg = yield* pm.readPackageJson({ id: workspace });
@@ -334,7 +334,7 @@ describe(TurborepoSetupService, () => {
 
         const rootPackageBefore = yield* pm.readPackageJson();
 
-        yield* service.setup();
+        yield* service.setup;
 
         const rootPackageAfter = yield* pm.readPackageJson();
 
@@ -360,7 +360,7 @@ describe(TurborepoSetupService, () => {
 
         expect('turbo' in depsBefore).toBeFalsy();
 
-        yield* service.ensureTurboInstalled();
+        yield* service.ensureTurboInstalled;
       }).pipe(Effect.provide(testLayer)),
     );
 
@@ -377,7 +377,7 @@ describe(TurborepoSetupService, () => {
         pkg.devDependencies = { ...pkg.devDependencies, turbo: '^2.0.0' };
         yield* pm.writePackageJson({ content: pkg });
 
-        yield* service.ensureTurboInstalled();
+        yield* service.ensureTurboInstalled;
 
         const pkgAfter = yield* pm.readPackageJson();
 
@@ -405,7 +405,7 @@ describe(TurborepoSetupService, () => {
 
         yield* service.writeTurboConfig(config);
 
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = `${root}/turbo.json`;
         const content = yield* fs.readFileString(turboPath);
         const parsed = JSON.parse(content) as TurboConfig;
@@ -424,13 +424,13 @@ describe(TurborepoSetupService, () => {
         const fs = yield* FileSystem.FileSystem;
         const pm = yield* PackageManagerService;
 
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = `${root}/turbo.json`;
 
         yield* fs.writeFileString(turboPath, '{ invalid json }');
 
         const service = yield* TurborepoSetupService;
-        const result = yield* Effect.result(service.readTurboConfig());
+        const result = yield* Effect.result(service.readTurboConfig);
 
         expect(result._tag).toBe('Failure');
       }).pipe(Effect.provide(testLayer)),
@@ -442,7 +442,7 @@ describe(TurborepoSetupService, () => {
         yield* copyFixture('monorepo-no-turbo');
 
         const service = yield* TurborepoSetupService;
-        const tasks = yield* service.detectWorkspaceTasks();
+        const tasks = yield* service.detectWorkspaceTasks;
 
         expect(tasks.size).toBeGreaterThan(0);
       }).pipe(Effect.provide(testLayer)),
@@ -456,7 +456,7 @@ describe(TurborepoSetupService, () => {
         const fs = yield* FileSystem.FileSystem;
         const pm = yield* PackageManagerService;
 
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = `${root}/turbo.json`;
 
         yield* fs.chmod(turboPath, 0o444);
@@ -485,7 +485,7 @@ describe(TurborepoSetupService, () => {
         const pm = yield* PackageManagerService;
         const projectDetect = yield* ProjectDetectionService;
 
-        const workspaces = yield* projectDetect.discoverWorkspaces();
+        const workspaces = yield* projectDetect.discoverWorkspaces;
         const [firstWorkspace] = workspaces;
 
         if (firstWorkspace) {
@@ -497,7 +497,7 @@ describe(TurborepoSetupService, () => {
         }
 
         const service = yield* TurborepoSetupService;
-        const tasks = yield* service.detectWorkspaceTasks();
+        const tasks = yield* service.detectWorkspaceTasks;
 
         expect(tasks.size).toBeGreaterThan(0);
       }).pipe(Effect.provide(testLayer)),
@@ -512,7 +512,7 @@ describe(TurborepoSetupService, () => {
         const fs = yield* FileSystem.FileSystem;
         const pm = yield* PackageManagerService;
 
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = `${root}/turbo.json`;
 
         const originalContent = yield* fs.readFileString(turboPath);
@@ -539,7 +539,7 @@ describe(TurborepoSetupService, () => {
         const pm = yield* PackageManagerService;
         const projectDetect = yield* ProjectDetectionService;
 
-        const workspaces = yield* projectDetect.discoverWorkspaces();
+        const workspaces = yield* projectDetect.discoverWorkspaces;
         const [firstWorkspace] = workspaces;
 
         if (firstWorkspace) {
@@ -556,7 +556,7 @@ describe(TurborepoSetupService, () => {
         }
 
         const service = yield* TurborepoSetupService;
-        const tasks = yield* service.detectWorkspaceTasks();
+        const tasks = yield* service.detectWorkspaceTasks;
 
         expect(tasks.has('build:prod')).toBeTruthy();
         expect(tasks.has('test:unit')).toBeTruthy();
@@ -587,7 +587,7 @@ describe(TurborepoSetupService, () => {
 
         yield* service.mergeTurboConfig(detectedTasks);
 
-        const configOption = yield* service.readTurboConfig();
+        const configOption = yield* service.readTurboConfig;
 
         if (configOption._tag === 'Some') {
           const { value: config } = configOption;
@@ -609,7 +609,7 @@ describe(TurborepoSetupService, () => {
         const fs = yield* FileSystem.FileSystem;
         const pm = yield* PackageManagerService;
 
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = `${root}/turbo.json`;
 
         const config: TurboConfig = {

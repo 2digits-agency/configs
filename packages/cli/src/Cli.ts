@@ -1,16 +1,16 @@
 import * as Console from 'effect/Console';
 import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
-import { type PlatformError } from 'effect/PlatformError';
-import { type CliError } from 'effect/unstable/cli/CliError';
+import type { PlatformError } from 'effect/PlatformError';
+import type { CliError } from 'effect/unstable/cli/CliError';
 import * as Command from 'effect/unstable/cli/Command';
 import * as Flag from 'effect/unstable/cli/Flag';
 
 import { moduleVersion } from './internal/version';
-import { EslintSetupError, EslintSetupService } from './services/EslintSetupService';
-import { type PackageManagerError } from './services/PackageManagerService';
+import { type EslintSetupError, EslintSetupService } from './services/EslintSetupService';
+import type { PackageManagerError } from './services/PackageManagerService';
 import { PrettierSetupService } from './services/PrettierSetupService';
-import { TurborepoSetupError, TurborepoSetupService } from './services/TurborepoSetupService';
+import { type TurborepoSetupError, TurborepoSetupService } from './services/TurborepoSetupService';
 
 const command = Command.make('2d', {
   prettier: Flag.boolean('prettier').pipe(
@@ -38,7 +38,7 @@ const command = Command.make('2d', {
 
           const setupService = yield* PrettierSetupService;
 
-          yield* setupService.setup();
+          yield* setupService.setup;
         } else {
           yield* Effect.logDebug('Skipping Prettier setup');
         }
@@ -48,7 +48,7 @@ const command = Command.make('2d', {
 
           const eslintSetupService = yield* EslintSetupService;
 
-          yield* eslintSetupService.setup();
+          yield* eslintSetupService.setup;
         } else {
           yield* Effect.logDebug('Skipping ESLint setup');
         }
@@ -58,7 +58,7 @@ const command = Command.make('2d', {
 
           const turborepoSetupService = yield* TurborepoSetupService;
 
-          yield* turborepoSetupService.setup();
+          yield* turborepoSetupService.setup;
         } else {
           yield* Effect.logDebug('Skipping Turborepo setup');
         }

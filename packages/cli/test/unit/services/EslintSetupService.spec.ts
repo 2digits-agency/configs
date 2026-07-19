@@ -40,7 +40,7 @@ describe(EslintSetupService, () => {
         yield* copyFixture('single-package');
 
         // Run setup
-        yield* service.setup();
+        yield* service.setup;
 
         // Check eslint.config.ts was created
         const configPath = path.join(tempDir, 'eslint.config.ts');
@@ -77,7 +77,7 @@ describe(EslintSetupService, () => {
 
         yield* copyFixture('monorepo-turborepo');
 
-        yield* service.setup();
+        yield* service.setup;
 
         const rootConfigContent = yield* fs.readFileString(path.join(tempDir, 'eslint.config.ts'));
 
@@ -110,7 +110,7 @@ describe(EslintSetupService, () => {
         yield* copyFixture('existing-configs');
 
         // Run setup
-        yield* service.setup();
+        yield* service.setup;
 
         const backupPath = path.join(tempDir, 'eslint.config.js.backup');
         const backupContent = yield* fs.readFileString(backupPath);
@@ -382,7 +382,7 @@ describe(EslintSetupService, () => {
 
         yield* copyFixture('monorepo-turborepo');
 
-        const workspaces = yield* projectDetect.discoverWorkspaces();
+        const workspaces = yield* projectDetect.discoverWorkspaces;
 
         for (const workspace of workspaces) {
           const configPath = path.join(workspace, 'eslint.config.ts');
@@ -447,7 +447,7 @@ describe(EslintSetupService, () => {
         yield* fs.writeFileString(turboPath, '{ invalid json }');
 
         const service = yield* EslintSetupService;
-        const result = yield* Effect.result(service.setup());
+        const result = yield* Effect.result(service.setup);
 
         expect(result._tag).toBe('Failure');
       }).pipe(Effect.provide(testLayer)),
@@ -489,7 +489,7 @@ describe(EslintSetupService, () => {
         yield* pm.writePackageJson({ content: pkg });
 
         const service = yield* EslintSetupService;
-        const result = yield* Effect.result(service.setup());
+        const result = yield* Effect.result(service.setup);
 
         assertTrue(result._tag === 'Success');
       }).pipe(Effect.provide(testLayer)),
@@ -512,7 +512,7 @@ describe(EslintSetupService, () => {
 
         const service = yield* EslintSetupService;
 
-        yield* service.setup();
+        yield* service.setup;
 
         const updated = yield* pm.readPackageJson();
 
@@ -538,7 +538,7 @@ describe(EslintSetupService, () => {
 
         const service = yield* EslintSetupService;
 
-        yield* service.setup();
+        yield* service.setup;
 
         const updated = yield* pm.readPackageJson();
 
@@ -554,7 +554,7 @@ describe(EslintSetupService, () => {
         yield* copyFixture('monorepo-no-turbo');
 
         const service = yield* EslintSetupService;
-        const result = yield* Effect.result(service.setup());
+        const result = yield* Effect.result(service.setup);
 
         assertSuccess(result, void 0);
       }).pipe(Effect.provide(testLayer)),
@@ -577,7 +577,7 @@ describe(EslintSetupService, () => {
 
         const service = yield* EslintSetupService;
 
-        yield* service.setup();
+        yield* service.setup;
 
         const final = yield* fs.readFileString(configPath);
 

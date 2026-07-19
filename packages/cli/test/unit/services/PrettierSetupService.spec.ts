@@ -36,7 +36,7 @@ describe(PrettierSetupService, () => {
         yield* clearExecutedCommands;
 
         // Run setup
-        yield* service.setup();
+        yield* service.setup;
 
         // Read updated package.json
         const updatedPkg = yield* pm.readPackageJson({ id: tempDir });
@@ -74,7 +74,7 @@ describe(PrettierSetupService, () => {
         yield* clearExecutedCommands;
 
         // Run setup
-        yield* service.setup();
+        yield* service.setup;
 
         // Read updated package.json
         const updatedPkg = yield* pm.readPackageJson({ id: tempDir });
@@ -113,7 +113,7 @@ describe(PrettierSetupService, () => {
         yield* clearExecutedCommands;
 
         // Run setup
-        yield* service.setup();
+        yield* service.setup;
 
         // Read updated package.json
         const updatedPkg = yield* pm.readPackageJson({ id: tempDir });

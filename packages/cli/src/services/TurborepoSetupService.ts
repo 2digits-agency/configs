@@ -8,9 +8,9 @@ import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
 import * as Path from 'effect/Path';
-import { type PlatformError } from 'effect/PlatformError';
+import type { PlatformError } from 'effect/PlatformError';
 import * as Struct from 'effect/Struct';
-import { type ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
+import type { ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
 
 import { type PackageManagerError, PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
@@ -126,19 +126,15 @@ function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): Tu
  * Operations exposed by the Turborepo setup service.
  */
 export interface TurborepoSetupServiceShape {
-  readonly setup: () => Effect.Effect<
-    void,
-    PackageManagerError | PlatformError | TurborepoSetupError,
-    ChildProcessSpawner
-  >;
-  readonly detectWorkspaceTasks: () => Effect.Effect<Set<string>, PackageManagerError | PlatformError>;
-  readonly readTurboConfig: () => Effect.Effect<Option.Option<TurboConfig>, PackageManagerError | TurborepoSetupError>;
+  readonly setup: Effect.Effect<void, PackageManagerError | PlatformError | TurborepoSetupError, ChildProcessSpawner>;
+  readonly detectWorkspaceTasks: Effect.Effect<Set<string>, PackageManagerError | PlatformError>;
+  readonly readTurboConfig: Effect.Effect<Option.Option<TurboConfig>, PackageManagerError | TurborepoSetupError>;
   readonly writeTurboConfig: (config: TurboConfig) => Effect.Effect<void, PackageManagerError | TurborepoSetupError>;
   readonly mergeTurboConfig: (
     detectedTasks: Set<string>,
   ) => Effect.Effect<void, PackageManagerError | TurborepoSetupError>;
   readonly updateRootScripts: (detectedTasks: Set<string>) => Effect.Effect<void, PackageManagerError>;
-  readonly ensureTurboInstalled: () => Effect.Effect<void, PackageManagerError | PlatformError, ChildProcessSpawner>;
+  readonly ensureTurboInstalled: Effect.Effect<void, PackageManagerError | PlatformError, ChildProcessSpawner>;
 }
 
 /**
@@ -156,8 +152,8 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
       /**
        * Detect tasks from workspace package.json files.
        */
-      const detectWorkspaceTasks = Effect.fn('TurborepoSetupService.detectWorkspaceTasks')(function* () {
-        const workspaces = yield* projectDetect.discoverWorkspaces();
+      const detectWorkspaceTasks = Effect.gen(function* () {
+        const workspaces = yield* projectDetect.discoverWorkspaces;
 
         // oxlint-disable-next-line unicorn/no-array-for-each
         const tasksPerWorkspace = yield* Effect.forEach(
@@ -168,13 +164,13 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
         ).pipe(Effect.map(Array.flatten));
 
         return new Set(tasksPerWorkspace);
-      });
+      }).pipe(Effect.withSpan('TurborepoSetupService.detectWorkspaceTasks'));
 
       /**
        * Read existing turbo.json configuration.
        */
-      const readTurboConfig = Effect.fn('TurborepoSetupService.readTurboConfig')(function* () {
-        const root = yield* pm.resolveRoot();
+      const readTurboConfig = Effect.gen(function* () {
+        const root = yield* pm.resolveRoot;
         const turboPath = path.join(root, 'turbo.json');
 
         const exists = yield* fs.exists(turboPath).pipe(Effect.orElseSucceed(() => false));
@@ -197,13 +193,13 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
         });
 
         return Option.some(config);
-      });
+      }).pipe(Effect.withSpan('TurborepoSetupService.readTurboConfig'));
 
       /**
        * Write turbo.json configuration.
        */
       const writeTurboConfig = Effect.fn('TurborepoSetupService.writeTurboConfig')(function* (config: TurboConfig) {
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const turboPath = path.join(root, 'turbo.json');
 
         const content = JSON.stringify(config, undefined, 2);
@@ -221,7 +217,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
       const mergeTurboConfig = Effect.fn('TurborepoSetupService.mergeTurboConfig')(function* (
         detectedTasks: Set<string>,
       ) {
-        const turboConfigOption = yield* readTurboConfig();
+        const turboConfigOption = yield* readTurboConfig;
 
         if (Option.isSome(turboConfigOption)) {
           const { value: existingConfig } = turboConfigOption;
@@ -243,7 +239,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
       const updateRootScripts = Effect.fn('TurborepoSetupService.updateRootScripts')(function* (
         detectedTasks: Set<string>,
       ) {
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const packageJson = yield* pm.readPackageJson({ id: root });
 
         packageJson.scripts ??= {};
@@ -277,9 +273,9 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
       /**
        * Ensure turbo is installed as devDependency.
        */
-      const ensureTurboInstalled = Effect.fn('TurborepoSetupService.ensureTurboInstalled')(function* () {
+      const ensureTurboInstalled = Effect.gen(function* () {
         yield* Effect.logInfo('Checking turbo installation...');
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const packageJson = yield* pm.readPackageJson({ id: root });
         const deps = {
           ...packageJson.dependencies,
@@ -295,17 +291,17 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
           });
           yield* Effect.logInfo('✅ Installed turbo');
         }
-      });
+      }).pipe(Effect.withSpan('TurborepoSetupService.ensureTurboInstalled'));
 
       /**
        * Main setup orchestration workflow.
        */
-      const setup = Effect.fn('TurborepoSetupService.setup')(function* () {
+      const setup = Effect.gen(function* () {
         yield* Effect.logInfo('🚀 Setting up Turborepo...');
 
         // Detect project type by checking for workspaces in root package.json
         yield* Effect.logInfo('Detecting project type...');
-        const root = yield* pm.resolveRoot();
+        const root = yield* pm.resolveRoot;
         const rootPackageJson = yield* pm.readPackageJson({ id: root });
         const isMonorepo = !!rootPackageJson.workspaces;
 
@@ -319,11 +315,11 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
         yield* Effect.logInfo('✅ Detected monorepo project');
 
         // Ensure turbo is installed
-        yield* ensureTurboInstalled();
+        yield* ensureTurboInstalled;
 
         // Detect workspace tasks
         yield* Effect.logInfo('Scanning workspaces for tasks...');
-        const detectedTasks = yield* detectWorkspaceTasks();
+        const detectedTasks = yield* detectWorkspaceTasks;
 
         if (detectedTasks.size === 0) {
           yield* Effect.logInfo('⚠️  No tasks detected in workspaces');
@@ -347,7 +343,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
 
         yield* Effect.logInfo('🎉 Turborepo setup complete!');
         yield* Effect.logInfo(`Run '${turboCmd}' to test the build pipeline`);
-      });
+      }).pipe(Effect.withSpan('TurborepoSetupService.setup'));
 
       return {
         setup,

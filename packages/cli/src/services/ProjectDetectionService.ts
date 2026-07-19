@@ -5,7 +5,7 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
-import { type PlatformError } from 'effect/PlatformError';
+import type { PlatformError } from 'effect/PlatformError';
 
 import { type PackageManagerError, PackageManagerService } from './PackageManagerService';
 
@@ -13,9 +13,9 @@ import { type PackageManagerError, PackageManagerService } from './PackageManage
  * Operations exposed by the project detection service.
  */
 export interface ProjectDetectionServiceShape {
-  readonly isMonorepo: () => Effect.Effect<boolean, PackageManagerError | PlatformError>;
-  readonly isTurborepoProject: () => Effect.Effect<boolean, PackageManagerError | PlatformError>;
-  readonly discoverWorkspaces: () => Effect.Effect<Array<string>, PackageManagerError | PlatformError>;
+  readonly isMonorepo: Effect.Effect<boolean, PackageManagerError | PlatformError>;
+  readonly isTurborepoProject: Effect.Effect<boolean, PackageManagerError | PlatformError>;
+  readonly discoverWorkspaces: Effect.Effect<Array<string>, PackageManagerError | PlatformError>;
   readonly getWorkspacePackageJsonPath: (workspacePath: string) => string;
 }
 
@@ -27,12 +27,12 @@ const make = Effect.gen(function* () {
   /**
    * Check if the project is a monorepo with Turborepo.
    */
-  const isMonorepo = Effect.fn('ProjectDetectionService.isMonorepo')(function* () {
-    const root = yield* pm.resolveRoot();
+  const isMonorepo = Effect.gen(function* () {
+    const root = yield* pm.resolveRoot;
     const turboPath = path.join(root, 'turbo.json');
 
     return yield* fs.exists(turboPath);
-  });
+  }).pipe(Effect.withSpan('ProjectDetectionService.isMonorepo'));
 
   /**
    * Check if the project uses Turborepo (alias for isMonorepo)
@@ -42,8 +42,8 @@ const make = Effect.gen(function* () {
   /**
    * Discover workspace directories in apps/ and packages/
    */
-  const discoverWorkspaces = Effect.fn('ProjectDetectionService.discoverWorkspaces')(function* () {
-    const root = yield* pm.resolveRoot();
+  const discoverWorkspaces = Effect.gen(function* () {
+    const root = yield* pm.resolveRoot;
     const appsPath = path.join(root, 'apps');
     const packagesPath = path.join(root, 'packages');
 
@@ -86,7 +86,7 @@ const make = Effect.gen(function* () {
     }
 
     return workspaceDirs;
-  });
+  }).pipe(Effect.withSpan('ProjectDetectionService.discoverWorkspaces'));
 
   /**
    * Get the package.json path for a workspace.

@@ -4,11 +4,11 @@ import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
-import { type PlatformError } from 'effect/PlatformError';
+import type { PlatformError } from 'effect/PlatformError';
 import * as Stream from 'effect/Stream';
 import * as String from 'effect/String';
 import * as ChildProcess from 'effect/unstable/process/ChildProcess';
-import { type ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
+import type { ChildProcessSpawner } from 'effect/unstable/process/ChildProcessSpawner';
 import * as nypm from 'nypm';
 import * as pkgTypes from 'pkg-types';
 
@@ -27,7 +27,7 @@ export class PackageManagerError extends Data.TaggedError(
 /**
  * Options for installing project dependencies.
  */
-export interface AddDependenciesOptions {
+interface AddDependenciesOptions {
   /**
    * Workspace receiving the dependencies, or the repository root when omitted.
    */
@@ -46,7 +46,7 @@ export interface AddDependenciesOptions {
  * Operations exposed by the package manager service.
  */
 export interface PackageManagerServiceShape {
-  readonly resolveRoot: () => Effect.Effect<string, PackageManagerError>;
+  readonly resolveRoot: Effect.Effect<string, PackageManagerError>;
   readonly readPackageJson: (options?: {
     readonly id?: string;
   }) => Effect.Effect<pkgTypes.PackageJson, PackageManagerError>;
@@ -57,7 +57,7 @@ export interface PackageManagerServiceShape {
   readonly addDependencies: (
     options: AddDependenciesOptions,
   ) => Effect.Effect<void, PackageManagerError | PlatformError, ChildProcessSpawner>;
-  readonly getPackageManager: () => Effect.Effect<
+  readonly getPackageManager: Effect.Effect<
     nypm.PackageManager & { readonly warnings?: Array<string> },
     PackageManagerError
   >;
@@ -71,14 +71,14 @@ const make = Effect.gen(function* () {
   const path = yield* Path.Path;
   const cwdService = yield* CurrentWorkingDirService;
 
-  const resolveRoot = Effect.fn('PackageManagerService.resolveRoot')(function* () {
+  const resolveRoot = Effect.gen(function* () {
     const cwd = yield* cwdService.cwd;
 
     return yield* Effect.tryPromise({
       try: () => pkgTypes.findWorkspaceDir(cwd),
       catch: (cause) => new PackageManagerError({ cause }),
     }).pipe(Effect.map(path.normalize));
-  });
+  }).pipe(Effect.withSpan('PackageManagerService.resolveRoot'));
 
   const readPackageJson = Effect.fn('PackageManagerService.readPackageJson')(function* (options?: {
     /**
@@ -124,7 +124,7 @@ const make = Effect.gen(function* () {
   const addDependencies = Effect.fn('PackageManagerService.addDependencies')(function* (
     options: AddDependenciesOptions,
   ) {
-    const pm = yield* getPackageManager();
+    const pm = yield* getPackageManager;
 
     const workspace = options.workspace ?? true;
 
@@ -204,8 +204,8 @@ const make = Effect.gen(function* () {
     }
   }, Effect.scoped);
 
-  const getPackageManager = Effect.fn('PackageManagerService.getPackageManager')(function* () {
-    const root = yield* resolveRoot();
+  const getPackageManager = Effect.gen(function* () {
+    const root = yield* resolveRoot;
 
     const pm = yield* Effect.tryPromise({
       try: () => nypm.detectPackageManager(root),
@@ -217,13 +217,13 @@ const make = Effect.gen(function* () {
     }
 
     return pm;
-  });
+  }).pipe(Effect.withSpan('PackageManagerService.getPackageManager'));
 
   const runScriptCommand = Effect.fn('PackageManagerService.runScriptCommand')(function* (options: {
     script: string;
     args?: Array<string>;
   }) {
-    const pm = yield* getPackageManager();
+    const pm = yield* getPackageManager;
 
     return nypm.runScriptCommand(pm.name, options.script, { args: options.args });
   });

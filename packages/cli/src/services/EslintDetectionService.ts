@@ -5,7 +5,7 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
-import { type PlatformError } from 'effect/PlatformError';
+import type { PlatformError } from 'effect/PlatformError';
 
 import { type PackageManagerError, PackageManagerService } from './PackageManagerService';
 
@@ -31,7 +31,7 @@ const make = Effect.gen(function* () {
    * Check if ESLint is installed in the project dependencies.
    */
   const isEslintInstalled = Effect.fn('EslintDetectionService.isEslintInstalled')(function* (packageJsonPath?: string) {
-    const root = yield* pm.resolveRoot();
+    const root = yield* pm.resolveRoot;
     const pkgPath = packageJsonPath ?? path.join(root, 'package.json');
 
     const packageJson = yield* pm.readPackageJson({ id: pkgPath });
@@ -48,7 +48,7 @@ const make = Effect.gen(function* () {
    * Check if any ESLint configuration file exists.
    */
   const hasEslintConfig = Effect.fn('EslintDetectionService.hasEslintConfig')(function* (dir?: string) {
-    const root = yield* pm.resolveRoot();
+    const root = yield* pm.resolveRoot;
     const targetDir = dir ?? root;
 
     const configFiles = [
@@ -76,7 +76,7 @@ const make = Effect.gen(function* () {
    * Detect all existing ESLint configuration files.
    */
   const detectExistingConfigs = Effect.fn('EslintDetectionService.detectExistingConfigs')(function* (dir?: string) {
-    const root = yield* pm.resolveRoot();
+    const root = yield* pm.resolveRoot;
     const targetDir = dir ?? root;
 
     const configFiles = [
@@ -103,7 +103,7 @@ const make = Effect.gen(function* () {
    * Check if the project uses @2digits/eslint-config.
    */
   const uses2DigitsConfig = Effect.fn('EslintDetectionService.uses2DigitsConfig')(function* (configPath?: string) {
-    const root = yield* pm.resolveRoot();
+    const root = yield* pm.resolveRoot;
     const targetPath = configPath ?? path.join(root, 'eslint.config.ts');
 
     const exists = yield* fs.exists(targetPath).pipe(Effect.orElseSucceed(() => false));

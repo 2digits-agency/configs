@@ -27,7 +27,7 @@ describe(ProjectDetectionService, () => {
         yield* copyFixture('monorepo-turborepo');
 
         const service = yield* ProjectDetectionService;
-        const result = yield* service.isMonorepo();
+        const result = yield* service.isMonorepo;
 
         strictEqual(result, true);
       }).pipe(Effect.provide(testLayer)),
@@ -39,7 +39,7 @@ describe(ProjectDetectionService, () => {
         yield* copyFixture('single-package');
 
         const service = yield* ProjectDetectionService;
-        const result = yield* service.isMonorepo();
+        const result = yield* service.isMonorepo;
 
         strictEqual(result, false);
       }).pipe(Effect.provide(testLayer)),
@@ -53,7 +53,7 @@ describe(ProjectDetectionService, () => {
         yield* copyFixture('monorepo-turborepo');
 
         const service = yield* ProjectDetectionService;
-        const result = yield* service.isTurborepoProject();
+        const result = yield* service.isTurborepoProject;
 
         strictEqual(result, true);
       }).pipe(Effect.provide(testLayer)),
@@ -68,7 +68,7 @@ describe(ProjectDetectionService, () => {
         yield* copyFixture('monorepo-turborepo');
 
         const service = yield* ProjectDetectionService;
-        const workspaces = yield* service.discoverWorkspaces();
+        const workspaces = yield* service.discoverWorkspaces;
 
         // Should find the packages/app workspace
         strictEqual(workspaces.length, 1);
@@ -84,7 +84,7 @@ describe(ProjectDetectionService, () => {
         yield* copyFixture('single-package');
 
         const service = yield* ProjectDetectionService;
-        const workspaces = yield* service.discoverWorkspaces();
+        const workspaces = yield* service.discoverWorkspaces;
 
         deepStrictEqual(workspaces, []);
       }).pipe(Effect.provide(testLayer)),
