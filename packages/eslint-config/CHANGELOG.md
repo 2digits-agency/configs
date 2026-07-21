@@ -1,3 +1,16 @@
+## @2digits/eslint-config@5.5.12
+
+### Updated eslint-plugin-jsdoc to v63.1.0
+
+
+
+### Update ESLint plugins
+
+- Updated React ESLint packages to 5.17.3
+- Updated `@tanstack/eslint-plugin-query` to 5.101.3
+- Updated `eslint-plugin-jsdoc` to 63.2.0 and `eslint-plugin-storybook` to 10.5.3
+- Refreshed generated rule types for upstream JSDoc options
+
 ## @2digits/eslint-config@5.5.11
 
 ### Update ESLint plugins
