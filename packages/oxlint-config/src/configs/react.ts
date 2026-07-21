@@ -1,6 +1,6 @@
 import type { DummyRule } from 'oxlint';
 
-import { defineTypedConfig } from '../types';
+import { defineTypedConfig, type Rules } from '../types';
 
 export const reactConfig = defineTypedConfig({
   settings: {
@@ -52,5 +52,50 @@ export const reactConfig = defineTypedConfig({
       'stylistic/jsx-curly-newline': 'off',
       'stylistic/jsx-newline': ['error', { prevent: false }],
     } as Record<string, DummyRule>),
+
+    'react/checked-requires-onchange-or-readonly': undefined,
+    'react/display-name': 'off',
+    'react/forbid-component-props': undefined,
+    'react/forbid-dom-props': undefined,
+    'react/forbid-elements': undefined,
+    'react/forward-ref-uses-ref': 'off',
+    'react/hook-use-state': 'off',
+    'react/jsx-boolean-value': 'off',
+    'react/jsx-curly-brace-presence': undefined,
+    'react/jsx-filename-extension': 'off',
+    'react/jsx-fragments': 'off',
+    'react/jsx-handler-names': undefined,
+    'react/jsx-max-depth': undefined,
+    'react/jsx-no-duplicate-props': undefined,
+    'react/jsx-no-literals': undefined,
+    'react/jsx-no-undef': undefined,
+    'react/jsx-pascal-case': 'off',
+    'react/jsx-props-no-spread-multi': undefined,
+    'react/jsx-props-no-spreading': undefined,
+    'react/no-did-update-set-state': 'off',
+    'react/no-is-mounted': undefined,
+    'react/no-multi-comp': undefined,
+    'react/no-object-type-as-default-prop': 'off',
+    'react/no-react-children': undefined,
+    'react/no-set-state': undefined,
+    'react/no-string-refs': 'off',
+    'react/no-this-in-sfc': undefined,
+    'react/no-unescaped-entities': undefined,
+    'react/no-unknown-property': 'off',
+    'react/no-unstable-nested-components': 'off',
+    'react/only-export-components': undefined,
+    'react/prefer-es6-class': undefined,
+    'react/prefer-function-component': undefined,
+    'react/react-compiler': undefined,
+    'react/react-in-jsx-scope': undefined,
+    'react/require-render-return': undefined,
+    'react/state-in-constructor': undefined,
+    'react/style-prop-object': undefined,
+
+    'react_perf/jsx-no-new-array-as-prop': undefined,
+    'react_perf/jsx-no-new-function-as-prop': undefined,
+    'react_perf/jsx-no-new-object-as-prop': undefined,
+  } satisfies {
+    [k in Extract<keyof Rules, `react/${string}` | `react_perf/${string}`>]: Rules[k];
   },
 });
