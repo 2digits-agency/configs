@@ -70,8 +70,8 @@ catalogs:
       specifier: 16.2.10
       version: 16.2.10
     '@opencode-ai/plugin':
-      specifier: 1.18.3
-      version: 1.18.3
+      specifier: 1.18.4
+      version: 1.18.4
     '@prettier/plugin-oxc':
       specifier: 0.2.1
       version: 0.2.1
@@ -692,7 +692,7 @@ importers:
     dependencies:
       '@opencode-ai/plugin':
         specifier: 'catalog:'
-        version: 1.18.3
+        version: 1.18.4
       posthog-node:
         specifier: 'catalog:'
         version: 5.45.2
@@ -2004,12 +2004,12 @@ packages:
   '@one-ini/wasm@0.2.1':
     resolution: {integrity: sha512-TUqERXGNTifZ9y2g3wPxQrw3HpHv/02DsW3D90T9x0hhonrL1ZqpSmNrU2XkoIq0fP1N6gZfVQzy2Fw1ZvGBNg==}
 
-  '@opencode-ai/plugin@1.18.3':
-    resolution: {integrity: sha512-hAm/hZkSCsMSNHVy9DKmFtZAve/qYoIWpduNPcvXnnKK7NMlJEOQitA6CQC67Ym5DFKypDW1TC9YO6S1WdGtpg==}
+  '@opencode-ai/plugin@1.18.4':
+    resolution: {integrity: sha512-Mkq128aLJo4E8Sb2bX8zrRlQ+I2WPaJ/n1kzaor8nTi/K/zNP4t8LGKwyMbuRoD/lhw4veSbzDOASSSypv3mcQ==}
     peerDependencies:
-      '@opentui/core': '>=0.4.3'
-      '@opentui/keymap': '>=0.4.3'
-      '@opentui/solid': '>=0.4.3'
+      '@opentui/core': '>=0.4.5'
+      '@opentui/keymap': '>=0.4.5'
+      '@opentui/solid': '>=0.4.5'
     peerDependenciesMeta:
       '@opentui/core':
         optional: true
@@ -2018,8 +2018,8 @@ packages:
       '@opentui/solid':
         optional: true
 
-  '@opencode-ai/sdk@1.18.3':
-    resolution: {integrity: sha512-Mevo4e6kQwbvto9E+42KSIVMhp+JBu+SwQhC5AomAvrV6Xkio3U249T+xDILDCXhl5Z/Hi/DlAuVLzpGnuh0gg==}
+  '@opencode-ai/sdk@1.18.4':
+    resolution: {integrity: sha512-p/3P0KtWknoLvpsk8QrUzCKd4Q1A5Z3RmACEvwuQBGxnUy4AGo379lUYMgt7fczFn53079oroLuo6BosQri+HA==}
 
   '@opentelemetry/api-logs@0.220.0':
     resolution: {integrity: sha512-CmVa4ImJ+ynfrPMNaAXHET6Bhb44SwzmfyVJFq9ni2jgXJR/l7C6gfVFddNmHP+ZOkP9cf4f9DBe68qVLTHc9w==}
@@ -9069,14 +9069,14 @@ snapshots:
 
   '@one-ini/wasm@0.2.1': {}
 
-  '@opencode-ai/plugin@1.18.3':
+  '@opencode-ai/plugin@1.18.4':
     dependencies:
       '@ai-sdk/provider': 3.0.8
-      '@opencode-ai/sdk': 1.18.3
+      '@opencode-ai/sdk': 1.18.4
       effect: 4.0.0-beta.83
       zod: 4.1.8
 
-  '@opencode-ai/sdk@1.18.3':
+  '@opencode-ai/sdk@1.18.4':
     dependencies:
       cross-spawn: 7.0.6
 
@@ -10260,7 +10260,7 @@ snapshots:
       '@typescript-eslint/utils': 8.64.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@typescript-eslint/visitor-keys': 8.64.0
       eslint: 10.7.0(jiti@2.7.0)(supports-color@7.2.0)
-      ignore: 7.0.5
+      ignore: 7.0.6
       natural-compare: 1.4.0
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
