@@ -11173,6 +11173,8 @@ type JsdocNormalizeSeeLinks = []|[{
   canonicalForm?: ("pipe" | "prefix")
   
   enableFixer?: boolean
+  
+  wrapBareUrls?: boolean
 }]
 // ----- jsdoc/prefer-import-tag -----
 type JsdocPreferImportTag = []|[{
