@@ -238,8 +238,8 @@ catalogs:
       specifier: 5.45.2
       version: 5.45.2
     prettier:
-      specifier: 3.9.5
-      version: 3.9.5
+      specifier: 3.9.6
+      version: 3.9.6
     prettier-plugin-jsdoc:
       specifier: 1.8.1
       version: 1.8.1
@@ -549,7 +549,7 @@ importers:
         version: 4.2.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-storybook:
         specifier: 'catalog:'
-        version: 10.5.2(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(storybook@10.5.2(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.7)(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)
+        version: 10.5.2(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(storybook@10.5.2(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7)(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)
       eslint-plugin-tailwindcss:
         specifier: 'catalog:'
         version: 3.18.2(tailwindcss@3.4.17)
@@ -748,7 +748,7 @@ importers:
         version: 0.59.0(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))
       prettier:
         specifier: 'catalog:'
-        version: 3.9.5
+        version: 3.9.6
       publint:
         specifier: 'catalog:'
         version: 0.3.21
@@ -815,22 +815,22 @@ importers:
         version: link:../constants
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 'catalog:'
-        version: 4.7.1(@prettier/plugin-oxc@0.2.1)(prettier@3.9.5)(supports-color@7.2.0)
+        version: 4.7.1(@prettier/plugin-oxc@0.2.1)(prettier@3.9.6)(supports-color@7.2.0)
       '@prettier/plugin-oxc':
         specifier: 'catalog:'
         version: 0.2.1
       '@prettier/plugin-xml':
         specifier: 'catalog:'
-        version: 3.4.2(prettier@3.9.5)
+        version: 3.4.2(prettier@3.9.6)
       local-pkg:
         specifier: 'catalog:'
         version: 1.2.1
       prettier-plugin-jsdoc:
         specifier: 'catalog:'
-        version: 1.8.1(prettier@3.9.5)(supports-color@7.2.0)
+        version: 1.8.1(prettier@3.9.6)(supports-color@7.2.0)
       prettier-plugin-tailwindcss:
         specifier: 'catalog:'
-        version: 0.8.1(@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.1)(prettier@3.9.5)(supports-color@7.2.0))(@prettier/plugin-oxc@0.2.1)(prettier-plugin-jsdoc@1.8.1(prettier@3.9.5)(supports-color@7.2.0))(prettier@3.9.5)
+        version: 0.8.1(@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.1)(prettier@3.9.6)(supports-color@7.2.0))(@prettier/plugin-oxc@0.2.1)(prettier-plugin-jsdoc@1.8.1(prettier@3.9.6)(supports-color@7.2.0))(prettier@3.9.6)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -846,7 +846,7 @@ importers:
         version: 7.0.0-dev.20260707.2
       prettier:
         specifier: 'catalog:'
-        version: 3.9.5
+        version: 3.9.6
       publint:
         specifier: 'catalog:'
         version: 0.3.21
@@ -6731,8 +6731,8 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  prettier@3.9.5:
-    resolution: {integrity: sha512-/FVl766LpUfB5vXgCYOYa0MeV/441Ia99AeICQIQFTY/Nw0roZwULcXpku5i1/m5kt/baz+s4Zogspd839HSMg==}
+  prettier@3.9.6:
+    resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -8920,13 +8920,13 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.1)(prettier@3.9.5)(supports-color@7.2.0)':
+  '@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.1)(prettier@3.9.6)(supports-color@7.2.0)':
     dependencies:
       '@babel/generator': 7.28.5
       '@babel/parser': 7.28.6
       '@babel/traverse': 7.28.3(supports-color@7.2.0)
       '@babel/types': 7.28.6
-      prettier: 3.9.5
+      prettier: 3.9.6
       semver: 7.8.5
     optionalDependencies:
       '@prettier/plugin-oxc': 0.2.1
@@ -9915,10 +9915,10 @@ snapshots:
     dependencies:
       oxc-parser: 0.139.0
 
-  '@prettier/plugin-xml@3.4.2(prettier@3.9.5)':
+  '@prettier/plugin-xml@3.4.2(prettier@3.9.6)':
     dependencies:
       '@xml-tools/parser': 1.0.11
-      prettier: 3.9.5
+      prettier: 3.9.6
 
   '@publint/pack@0.1.4': {}
 
@@ -10260,7 +10260,7 @@ snapshots:
       '@typescript-eslint/utils': 8.64.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@typescript-eslint/visitor-keys': 8.64.0
       eslint: 10.7.0(jiti@2.7.0)(supports-color@7.2.0)
-      ignore: 7.0.5
+      ignore: 7.0.6
       natural-compare: 1.4.0
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
@@ -11590,12 +11590,12 @@ snapshots:
       typescript: 6.0.3
       yaml: 2.9.0
 
-  eslint-plugin-storybook@10.5.2(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(storybook@10.5.2(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.7)(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3):
+  eslint-plugin-storybook@10.5.2(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(storybook@10.5.2(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7)(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/types': 8.64.0
       '@typescript-eslint/utils': 8.64.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       eslint: 10.7.0(jiti@2.7.0)(supports-color@7.2.0)
-      storybook: 10.5.2(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.7)(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))
+      storybook: 10.5.2(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7)(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -13545,26 +13545,26 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-jsdoc@1.8.1(prettier@3.9.5)(supports-color@7.2.0):
+  prettier-plugin-jsdoc@1.8.1(prettier@3.9.6)(supports-color@7.2.0):
     dependencies:
       binary-searching: 2.0.5
       comment-parser: 1.4.7
       mdast-util-from-markdown: 2.0.3(supports-color@7.2.0)
-      prettier: 3.9.5
+      prettier: 3.9.6
     transitivePeerDependencies:
       - supports-color
 
-  prettier-plugin-tailwindcss@0.8.1(@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.1)(prettier@3.9.5)(supports-color@7.2.0))(@prettier/plugin-oxc@0.2.1)(prettier-plugin-jsdoc@1.8.1(prettier@3.9.5)(supports-color@7.2.0))(prettier@3.9.5):
+  prettier-plugin-tailwindcss@0.8.1(@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.1)(prettier@3.9.6)(supports-color@7.2.0))(@prettier/plugin-oxc@0.2.1)(prettier-plugin-jsdoc@1.8.1(prettier@3.9.6)(supports-color@7.2.0))(prettier@3.9.6):
     dependencies:
-      prettier: 3.9.5
+      prettier: 3.9.6
     optionalDependencies:
-      '@ianvs/prettier-plugin-sort-imports': 4.7.1(@prettier/plugin-oxc@0.2.1)(prettier@3.9.5)(supports-color@7.2.0)
+      '@ianvs/prettier-plugin-sort-imports': 4.7.1(@prettier/plugin-oxc@0.2.1)(prettier@3.9.6)(supports-color@7.2.0)
       '@prettier/plugin-oxc': 0.2.1
-      prettier-plugin-jsdoc: 1.8.1(prettier@3.9.5)(supports-color@7.2.0)
+      prettier-plugin-jsdoc: 1.8.1(prettier@3.9.6)(supports-color@7.2.0)
 
   prettier@3.8.1: {}
 
-  prettier@3.9.5: {}
+  prettier@3.9.6: {}
 
   pretty-format@27.5.1:
     dependencies:
@@ -14024,7 +14024,7 @@ snapshots:
 
   std-env@4.0.0: {}
 
-  storybook@10.5.2(@types/react@19.2.17)(prettier@3.9.5)(react@19.2.7)(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0)):
+  storybook@10.5.2(@types/react@19.2.17)(prettier@3.9.6)(react@19.2.7)(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0)):
     dependencies:
       '@storybook/global': 5.0.0
       '@storybook/icons': 2.1.0(react@19.2.7)
@@ -14045,7 +14045,7 @@ snapshots:
       ws: 8.21.0
     optionalDependencies:
       '@types/react': 19.2.17
-      prettier: 3.9.5
+      prettier: 3.9.6
       vite-plus: 0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0)
     transitivePeerDependencies:
       - bufferutil
