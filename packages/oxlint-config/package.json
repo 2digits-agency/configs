@@ -35,6 +35,7 @@
   "scripts": {
     "build": "vp pack --minify",
     "dev": "vp pack --watch",
+    "test": "vp test run",
     "types": "tsgo --noEmit"
   },
   "dependencies": {
