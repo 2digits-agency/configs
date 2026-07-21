@@ -1,3 +1,11 @@
+## @2digits/prettier-config@4.0.46
+
+### Update prettier to 3.9.6
+
+
+
+### Update @prettier/plugin-oxc to 0.2.2
+
 # @2digits/prettier-config
 
 ## 4.0.45
