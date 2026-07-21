@@ -48,6 +48,9 @@ export type RuleName = keyof RuleOptions;
       });
     },
   },
+  test: {
+    include: ['test/**/*.spec.ts'],
+  },
 });
 
 function toDefinition(rule: OxlintRule): string {
