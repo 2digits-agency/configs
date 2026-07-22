@@ -1,3 +1,5 @@
+import { defineConfig } from '@oxlint-types/define-config';
+
 import { ignorePatterns } from '@2digits/constants';
 
 import { importConfig } from './configs/import';
@@ -6,9 +8,9 @@ import { jsdocConfig } from './configs/jsdoc';
 import { nodeConfig } from './configs/node';
 import { oxcConfig } from './configs/oxc';
 import { unicornConfig } from './configs/unicorn';
-import { defineTypedConfig } from './types';
+import { zodConfig } from './configs/zod';
 
-export const baseConfig = defineTypedConfig({
+export const baseConfig = defineConfig({
   env: {
     browser: true,
     node: true,
@@ -26,6 +28,6 @@ export const baseConfig = defineTypedConfig({
     restriction: 'off',
     suspicious: 'off',
   },
-  extends: [javascriptConfig, unicornConfig, importConfig, nodeConfig, oxcConfig, jsdocConfig],
+  extends: [javascriptConfig, unicornConfig, importConfig, nodeConfig, oxcConfig, jsdocConfig, zodConfig],
   ignorePatterns,
 });

@@ -1,6 +1,6 @@
-import { defineTypedConfig, type Rules } from '../types';
+import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
 
-export const nodeConfig = defineTypedConfig({
+export const nodeConfig = defineConfig({
   plugins: ['node'],
   rules: {
     'node/handle-callback-err': 'error',
@@ -14,6 +14,6 @@ export const nodeConfig = defineTypedConfig({
     'node/no-process-env': undefined,
     'node/no-sync': undefined,
   } satisfies {
-    [k in Extract<keyof Rules, `node/${string}`>]: Rules[k];
+    [k in Extract<keyof RuleMap, `node/${string}`>]: RuleMap[k];
   },
 });

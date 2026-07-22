@@ -1,6 +1,6 @@
-import { defineTypedConfig, type Rules } from '../types';
+import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
 
-export const oxcConfig = defineTypedConfig({
+export const oxcConfig = defineConfig({
   plugins: ['oxc'],
 
   rules: {
@@ -31,6 +31,6 @@ export const oxcConfig = defineTypedConfig({
     'oxc/only-used-in-recursion': 'error',
     'oxc/uninvoked-array-callback': 'error',
   } satisfies {
-    [k in Extract<keyof Rules, `oxc/${string}`>]: Rules[k];
+    [k in Extract<keyof RuleMap, `oxc/${string}`>]: RuleMap[k];
   },
 });

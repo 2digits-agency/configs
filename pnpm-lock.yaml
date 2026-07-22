@@ -72,6 +72,9 @@ catalogs:
     '@opencode-ai/plugin':
       specifier: 1.18.4
       version: 1.18.4
+    '@oxlint-types/define-config':
+      specifier: 0.0.12
+      version: 0.0.12
     '@prettier/plugin-oxc':
       specifier: 0.2.2
       version: 0.2.2
@@ -767,6 +770,9 @@ importers:
       '@2digits/constants':
         specifier: workspace:*
         version: link:../constants
+      '@oxlint-types/define-config':
+        specifier: 'catalog:'
+        version: 0.0.12
       '@stylistic/eslint-plugin':
         specifier: 'catalog:'
         version: 5.10.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))
@@ -776,6 +782,9 @@ importers:
       eslint-plugin-react-compiler:
         specifier: 'catalog:'
         version: 19.1.0-rc.2(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)
+      eslint-plugin-zod:
+        specifier: 'catalog:'
+        version: 4.8.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.74.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -789,9 +798,6 @@ importers:
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20260707.2
-      dedent:
-        specifier: 'catalog:'
-        version: 1.7.2
       oxlint:
         specifier: 'catalog:'
         version: 1.74.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))
@@ -807,6 +813,9 @@ importers:
       vite-plus:
         specifier: 'catalog:'
         version: 0.2.5(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.5(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.21)(tsx@4.23.1)(typescript@6.0.3)(yaml@2.9.0)
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
 
   packages/prettier-config:
     dependencies:
@@ -2955,6 +2964,9 @@ packages:
     resolution: {integrity: sha512-FkDRm8hx9OwzGQqyWG1tO5QrTLRApff9DzSgpz9QZau37BR8d1VYKOxMLGf6shPZntJFoTwIIJYT68VndYDCog==}
     cpu: [x64]
     os: [win32]
+
+  '@oxlint-types/define-config@0.0.12':
+    resolution: {integrity: sha512-MwJTe4QNqwYnrAT4Qa3F3UtfygT1LOeY61hTQbg230GdYfp5CZIC9IjAaAPbnJHTCksCG7nTgorh4aJFZpBsIg==}
 
   '@oxlint/binding-android-arm-eabi@1.73.0':
     resolution: {integrity: sha512-HZQRN/UMBu+Ut+/9MiAChkbP4qZqrNOWBcNI45vOT40GVhbGR0JgHB87L48D4iAqFQIdVmeQYtV9RF89AjTKkg==}
@@ -9643,6 +9655,8 @@ snapshots:
 
   '@oxlint-tsgolint/win32-x64@7.0.2001':
     optional: true
+
+  '@oxlint-types/define-config@0.0.12': {}
 
   '@oxlint/binding-android-arm-eabi@1.73.0':
     optional: true

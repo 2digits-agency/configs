@@ -1,13 +1,6 @@
-import type { DummyRule } from 'oxlint';
+import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
 
-import { defineTypedConfig, type Rules } from '../types';
-
-export const reactConfig = defineTypedConfig({
-  settings: {
-    'react-x': {
-      version: 'detect',
-    },
-  },
+export const reactConfig = defineConfig({
   options: { typeAware: true },
   plugins: ['react', 'react-perf'],
   jsPlugins: [
@@ -47,11 +40,9 @@ export const reactConfig = defineTypedConfig({
     'react/self-closing-comp': 'error',
     'react/void-dom-elements-no-children': 'error',
     'react_perf/jsx-no-jsx-as-prop': 'error',
-    ...({
-      'react-compiler/react-compiler': 'error',
-      'stylistic/jsx-curly-newline': 'off',
-      'stylistic/jsx-newline': ['error', { prevent: false }],
-    } as Record<string, DummyRule>),
+    'react-compiler/react-compiler': 'error',
+    'stylistic/jsx-curly-newline': 'off',
+    'stylistic/jsx-newline': ['error', { prevent: false }],
 
     'react/checked-requires-onchange-or-readonly': undefined,
     'react/display-name': 'off',
@@ -96,6 +87,9 @@ export const reactConfig = defineTypedConfig({
     'react_perf/jsx-no-new-function-as-prop': undefined,
     'react_perf/jsx-no-new-object-as-prop': undefined,
   } satisfies {
-    [k in Extract<keyof Rules, `react/${string}` | `react_perf/${string}`>]: Rules[k];
+    [k in Extract<
+      keyof RuleMap,
+      `react/${string}` | `react_perf/${string}` | `react-compiler/${string}` | `stylistic/${string}`
+    >]: RuleMap[k];
   },
 });
