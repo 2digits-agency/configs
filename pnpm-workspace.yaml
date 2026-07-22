@@ -64,7 +64,7 @@ catalog:
   eslint-plugin-jsdoc: 63.2.0
   eslint-plugin-jsonc: 3.3.0
   eslint-plugin-n: 18.2.2
-  eslint-plugin-pnpm: 1.6.1
+  eslint-plugin-pnpm: 1.7.0
   eslint-plugin-react-compiler: 19.1.0-rc.2
   eslint-plugin-regexp: 3.1.1
   eslint-plugin-sonarjs: 4.2.0
@@ -84,8 +84,8 @@ catalog:
   local-pkg: 1.2.1
   nolyfill: 1.0.44
   nypm: 0.6.8
-  oxfmt: 0.59.0
-  oxlint: 1.74.0
+  oxfmt: 0.60.0
+  oxlint: 1.75.0
   oxlint-tsgolint: 7.0.2001
   pkg-pr-new: 0.0.79
   pkg-types: 2.3.1
@@ -95,7 +95,7 @@ catalog:
   prettier-plugin-tailwindcss: 0.8.1
   publint: 0.3.21
   react: 19.2.8
-  renovate: 43.275.0
+  renovate: 43.275.2
   tailwind-csstree: 0.3.3
   tinyexec: 1.2.4
   tinyglobby: 0.2.17
@@ -110,14 +110,6 @@ catalog:
   yaml-eslint-parser: 2.1.0
   zod: 4.4.3
   '@eslint-react/kit': 5.17.3
-
-catalogMode: strict
-
-cleanupUnusedCatalogs: true
-
-minimumReleaseAge: 0
-
-optimisticRepeatInstall: true
 
 overrides:
   array-includes: npm:@nolyfill/array-includes@1.0.44
@@ -153,6 +145,10 @@ peerDependencyRules:
   allowedVersions:
     vite: '*'
 
+catalogMode: strict
+cleanupUnusedCatalogs: true
+minimumReleaseAge: 0
+optimisticRepeatInstall: true
 preferWorkspacePackages: true
-
 savePrefix: ''
+verifyDepsBeforeRun: warn

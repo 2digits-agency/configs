@@ -44,6 +44,7 @@ export async function pnpm(): Promise<Array<TypedFlatConfigItem>> {
               savePrefix: '',
               preferWorkspacePackages: true,
               cleanupUnusedCatalogs: true,
+              verifyDepsBeforeRun: 'warn',
             },
           },
         ],
