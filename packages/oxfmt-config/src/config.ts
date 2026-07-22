@@ -71,6 +71,7 @@ const sortImports: SortImportsConfig = {
   order: 'asc',
   customGroups,
   groups,
+  partitionByNewline: false,
 };
 
 export const twoDigits = defineConfig({

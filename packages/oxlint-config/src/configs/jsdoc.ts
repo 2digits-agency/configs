@@ -1,4 +1,4 @@
-import { defineTypedConfig } from '../types';
+import { defineTypedConfig, type Rules } from '../types';
 
 export const jsdocConfig = defineTypedConfig({
   plugins: ['jsdoc'],
@@ -21,5 +21,16 @@ export const jsdocConfig = defineTypedConfig({
     'jsdoc/require-property-name': 'error',
     'jsdoc/require-returns-description': 'error',
     'jsdoc/require-yields': 'error',
+    'jsdoc/require-param-description': undefined,
+    'jsdoc/require-param-type': undefined,
+    'jsdoc/require-property-type': undefined,
+    'jsdoc/require-returns': undefined,
+    'jsdoc/require-returns-type': undefined,
+    'jsdoc/require-throws-description': undefined,
+    'jsdoc/require-throws-type': undefined,
+    'jsdoc/require-yields-description': undefined,
+    'jsdoc/require-yields-type': undefined,
+  } satisfies {
+    [k in Extract<keyof Rules, `jsdoc/${string}`>]: Rules[k];
   },
 });

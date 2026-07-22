@@ -1,4 +1,4 @@
-import { defineTypedConfig } from '../types';
+import { defineTypedConfig, type Rules } from '../types';
 
 export const typescriptRulesConfig = defineTypedConfig({
   plugins: ['typescript'],
@@ -104,5 +104,23 @@ export const typescriptRulesConfig = defineTypedConfig({
     'typescript/triple-slash-reference': 'error',
     'typescript/unified-signatures': 'error',
     'typescript/use-unknown-in-catch-callback-variable': 'error',
+
+    'typescript/ban-types': undefined,
+    'typescript/consistent-return': undefined,
+    'typescript/explicit-function-return-type': undefined,
+    'typescript/explicit-member-accessibility': undefined,
+    'typescript/explicit-module-boundary-types': undefined,
+    'typescript/method-signature-style': undefined,
+    'typescript/no-restricted-types': undefined,
+    'typescript/no-unsafe-type-assertion': undefined,
+    'typescript/prefer-readonly-parameter-types': undefined,
+    'typescript/prefer-ts-expect-error': undefined,
+    'typescript/promise-function-async': undefined,
+    'typescript/strict-boolean-expressions': undefined,
+    'typescript/strict-void-return': undefined,
+    'typescript/switch-exhaustiveness-check': undefined,
+    'typescript/unbound-method': 'off',
+  } satisfies {
+    [k in Extract<keyof Rules, `typescript/${string}`>]: Rules[k];
   },
 });
