@@ -1,6 +1,6 @@
-import { defineTypedConfig, type Rules } from '../types';
+import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
 
-export const importConfig = defineTypedConfig({
+export const importConfig = defineConfig({
   plugins: ['import'],
   rules: {
     'import/consistent-type-specifier-style': undefined,
@@ -38,6 +38,6 @@ export const importConfig = defineTypedConfig({
 
     'import/newline-after-import': undefined,
   } satisfies {
-    [k in Extract<keyof Rules, `import/${string}`>]: Rules[k];
+    [k in Extract<keyof RuleMap, `import/${string}`>]: RuleMap[k];
   },
 });

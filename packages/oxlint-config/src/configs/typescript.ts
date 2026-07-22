@@ -1,6 +1,6 @@
-import { defineTypedConfig, type Rules } from '../types';
+import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
 
-export const typescriptRulesConfig = defineTypedConfig({
+export const typescriptRulesConfig = defineConfig({
   plugins: ['typescript'],
   options: {
     typeAware: true,
@@ -121,6 +121,6 @@ export const typescriptRulesConfig = defineTypedConfig({
     'typescript/switch-exhaustiveness-check': undefined,
     'typescript/unbound-method': 'off',
   } satisfies {
-    [k in Extract<keyof Rules, `typescript/${string}`>]: Rules[k];
+    [k in Extract<keyof RuleMap, `typescript/${string}`>]: RuleMap[k];
   },
 });

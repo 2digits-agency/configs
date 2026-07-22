@@ -1,7 +1,8 @@
-import { commonJsFiles, dtsFiles, testFiles } from '../globs';
-import { defineTypedConfig } from '../types';
+import { defineConfig } from '@oxlint-types/define-config';
 
-export const overridesConfig = defineTypedConfig({
+import { commonJsFiles, dtsFiles, testFiles } from '../globs';
+
+export const overridesConfig = defineConfig({
   overrides: [
     {
       files: [...dtsFiles],

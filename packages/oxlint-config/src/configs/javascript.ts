@@ -1,6 +1,6 @@
-import { defineTypedConfig, type Rules } from '../types';
+import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
 
-export const javascriptConfig = defineTypedConfig({
+export const javascriptConfig = defineConfig({
   plugins: ['eslint'],
   rules: {
     'eslint/accessor-pairs': ['error', { enforceForClassMembers: true, setWithoutGet: true }],
@@ -207,6 +207,6 @@ export const javascriptConfig = defineTypedConfig({
     'eslint/prefer-named-capture-group': undefined,
     'eslint/no-unreachable-loop': undefined,
   } satisfies {
-    [k in Extract<keyof Rules, `eslint/${string}`>]: Rules[k];
+    [k in Extract<keyof RuleMap, `eslint/${string}`>]: RuleMap[k];
   },
 });

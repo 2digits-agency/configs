@@ -1,6 +1,6 @@
-import { defineTypedConfig, type Rules } from '../types';
+import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
 
-export const vitestConfig = defineTypedConfig({
+export const vitestConfig = defineConfig({
   plugins: ['vitest'],
 
   settings: {
@@ -91,6 +91,6 @@ export const vitestConfig = defineTypedConfig({
 
     'vitest/padding-around-after-all-blocks': undefined,
   } satisfies {
-    [k in Extract<keyof Rules, `vitest/${string}`>]: Rules[k];
+    [k in Extract<keyof RuleMap, `vitest/${string}`>]: RuleMap[k];
   },
 });

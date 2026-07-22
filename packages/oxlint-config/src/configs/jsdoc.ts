@@ -1,12 +1,7 @@
-import { defineTypedConfig, type Rules } from '../types';
+import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
 
-export const jsdocConfig = defineTypedConfig({
+export const jsdocConfig = defineConfig({
   plugins: ['jsdoc'],
-
-  settings: {
-    jsdoc: {},
-  },
-
   rules: {
     'jsdoc/check-access': 'error',
     'jsdoc/check-property-names': 'error',
@@ -31,6 +26,6 @@ export const jsdocConfig = defineTypedConfig({
     'jsdoc/require-yields-description': undefined,
     'jsdoc/require-yields-type': undefined,
   } satisfies {
-    [k in Extract<keyof Rules, `jsdoc/${string}`>]: Rules[k];
+    [k in Extract<keyof RuleMap, `jsdoc/${string}`>]: RuleMap[k];
   },
 });

@@ -1,6 +1,6 @@
-import { defineTypedConfig, type Rules } from '../types';
+import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
 
-export const unicornConfig = defineTypedConfig({
+export const unicornConfig = defineConfig({
   plugins: ['unicorn'],
   rules: {
     'unicorn/catch-error-name': 'error',
@@ -143,6 +143,6 @@ export const unicornConfig = defineTypedConfig({
     'unicorn/explicit-timer-delay': undefined,
     'unicorn/no-confusing-array-with': undefined,
   } satisfies {
-    [k in Extract<keyof Rules, `unicorn/${string}`>]: Rules[k];
+    [k in Extract<keyof RuleMap, `unicorn/${string}`>]: RuleMap[k];
   },
 });

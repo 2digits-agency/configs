@@ -1,14 +1,27 @@
+import { defineConfig, type OxlintConfig } from '@oxlint-types/define-config';
 import { defu } from 'defu';
-import type { OxlintConfig } from 'oxlint';
 
 import { baseConfig } from './base';
-import { defineTypedConfig, type TypedOxlintConfig } from './types';
 import { typescriptConfig } from './typescript';
 
-export const twoDigits = defineTypedConfig(defu(baseConfig, typescriptConfig)) as OxlintConfig;
+/**
+ * Complete 2digits Oxlint configuration.
+ */
+export const twoDigits = defineConfig(defu(baseConfig, typescriptConfig));
 
-export function withTwoDigits(...configs: Array<TypedOxlintConfig>): OxlintConfig {
-  const [config, ...rest] = configs;
+/**
+ * Extend the 2digits defaults with consumer configuration.
+ *
+ * Consumer configuration takes precedence over the defaults; later configs take precedence over earlier configs.
+ *
+ * @param configs Consumer configurations to merge into the defaults.
+ */
+export function withTwoDigits(...configs: Array<OxlintConfig>): OxlintConfig {
+  let config: OxlintConfig = twoDigits;
 
-  return defineTypedConfig(defu(config, ...rest, twoDigits)) as OxlintConfig;
+  for (const overrides of configs) {
+    config = defu(overrides, config);
+  }
+
+  return defineConfig(config);
 }
