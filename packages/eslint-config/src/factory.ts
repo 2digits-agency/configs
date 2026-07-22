@@ -1,6 +1,6 @@
 // oxlint-disable complexity
 import { FlatConfigComposer } from 'eslint-flat-config-utils';
-import { isPackageExists } from 'local-pkg';
+import { getPackageInfoSync, isPackageExists } from 'local-pkg';
 import { findWorkspaceDir } from 'pkg-types';
 
 import {
@@ -42,6 +42,7 @@ import type {
   ConfigNames,
   OptionsCss,
   OptionsOverrides,
+  OptionsTailwind,
   OptionsTypeScriptWithTypes,
   OptionsWithDrizzle,
   OptionsWithFiles,
@@ -66,7 +67,7 @@ interface ESLint2DigitsOptions {
   graphql?: SharedOptions<OptionsWithFiles> | boolean;
   react?: SharedOptions<OptionsWithReact> | boolean;
   next?: SharedOptions<OptionsWithFiles> | boolean;
-  tailwind?: SharedOptions<OptionsOverrides> | boolean;
+  tailwind?: SharedOptions<OptionsTailwind> | boolean;
   storybook?: SharedOptions<OptionsWithStorybook> | boolean;
   vitest?: SharedOptions<OptionsWithVitest> | boolean;
   tanstackQuery?: SharedOptions<OptionsOverrides> | boolean;
@@ -92,6 +93,18 @@ export function extractConfig<T>(options: SharedOptions<T> | undefined | boolean
   const { enable: _, ...rest } = options;
 
   return rest as T;
+}
+
+function isTailwindV4Installed(): boolean {
+  if (!isPackageExists('tailwindcss')) {
+    return false;
+  }
+
+  const info = getPackageInfoSync('tailwindcss');
+  const [majorVersion = '0'] = info?.version?.split('.', 1) ?? [];
+  const major = Number.parseInt(majorVersion, 10);
+
+  return Number.isFinite(major) && major >= 4;
 }
 
 // eslint-disable-next-line sonar/cognitive-complexity
@@ -177,7 +190,7 @@ export async function twoDigits(
     composer = composer.append(vitest(extractConfig(options.vitest)));
   }
 
-  if (enabled(options.tailwind, isPackageExists('tailwindcss'))) {
+  if (enabled(options.tailwind, isTailwindV4Installed())) {
     composer = composer.append(tailwind(extractConfig(options.tailwind)));
   }
 

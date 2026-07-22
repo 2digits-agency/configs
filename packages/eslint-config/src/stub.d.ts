@@ -22,17 +22,31 @@ declare module '@eslint-community/eslint-plugin-eslint-comments/configs' {
 }
 
 declare module 'eslint-plugin-tailwindcss' {
-  import type { ClassicConfig, Linter, FlatConfig } from '@typescript-eslint/utils/ts-eslint';
+  import type { FlatConfig, Linter } from '@typescript-eslint/utils/ts-eslint';
 
-  const exprt: {
+  type PluginSettings = {
+    attributes?: Array<string>;
+    cssConfigPath: string;
+    functions?: Array<string>;
+    parseKeyFunctions?: Array<string>;
+    ignoredKeys?: Array<string>;
+    cacheMaxSize?: number;
+    cacheMaxAge?: number;
+  };
+
+  const plugin: {
+    meta: {
+      name: string;
+      version: string;
+    };
     configs: {
-      recommended: ClassicConfig.Config;
-      'flat/recommended': FlatConfig.ConfigArray;
+      recommended: FlatConfig.Config;
     };
     rules: NonNullable<Linter.Plugin['rules']>;
   };
 
-  export = exprt;
+  export type { PluginSettings };
+  export default plugin;
 }
 
 declare module 'eslint-plugin-drizzle' {
