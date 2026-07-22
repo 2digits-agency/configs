@@ -1,70 +1,44 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Updated pnpm to v11.15.1\n"
-    filename: 2026-07-20-mrt69fnf.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update pnpm workspace linting\n\n- Updated `eslint-plugin-pnpm` to 1.7.0 and refreshed generated rule types\n- Required `verifyDepsBeforeRun` to use warning mode in pnpm workspaces\n"
+    filename: 2026-07-22-calm-pnpm-rules.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update tegami to 1.2.6\n"
-    filename: 2026-07-21-mrubzamd.md
+  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update Oxlint and Oxfmt\n\n- Updated `oxlint` to 1.75.0\n- Updated `oxfmt` to 0.60.0\n"
+    filename: 2026-07-22-swift-ox-tools.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pkg-pr-new to 0.0.79\n"
-    filename: 2026-07-21-mrubzoil.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n### Align rules and add Zod checks\n\nOxlint's newly supported React, TypeScript, Node.js, and JSDoc rules now match the corresponding ESLint configuration.\n\nZod schemas now receive the same checks through Oxlint's JavaScript plugin support. Config typings now use `oxlint-types`, and consumer overrides merge without dropping defaults.\n"
+    filename: 2026-07-21-3013786a.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Updated eslint-plugin-jsdoc to v63.1.0\n"
-    filename: 2026-07-20-mrt6afe5.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update ESLint plugins\n\n- Updated React ESLint packages to 5.17.3\n- Updated `@tanstack/eslint-plugin-query` to 5.101.3\n- Updated `eslint-plugin-jsdoc` to 63.2.0 and `eslint-plugin-storybook` to 10.5.3\n- Refreshed generated rule types for upstream JSDoc options\n"
-    filename: 2026-07-21-mrubrkjv.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update OpenCode plugin dependencies\n\n- Updated `@opencode-ai/plugin` to 1.18.4\n- Updated `posthog-node` to 5.46.0\n"
-    filename: 2026-07-21-mruc0d24.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n  npm:@2digits/prettier-config:\n    type: patch\n---\n\n## Update prettier to 3.9.6\n"
-    filename: 2026-07-21-mruc34o5.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/prettier-config:\n    type: patch\n---\n\n## Update @prettier/plugin-oxc to 0.2.2\n"
-    filename: 2026-07-21-mruc461j.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Updated renovate to v43.271.2\n"
-    filename: 2026-07-20-mrt6b0oi.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 43.272.6\n"
-    filename: 2026-07-21-mrubseab.md
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 43.275.2\n"
+    filename: 2026-07-22-fresh-renovate.md
     v: 0.0.0
 core:packages:
-  - changelogIds:
-      - 2026-07-20-mrt69fnf.md
-      - 2026-07-21-mrubzamd.md
-      - 2026-07-21-mrubzoil.md
-    id: npm:@2digits/config-monorepo
-    updated: true
+  - id: npm:@2digits/config-monorepo
+    updated: false
   - id: npm:@2digits/cli
     updated: false
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-07-20-mrt6afe5.md
-      - 2026-07-21-mrubrkjv.md
+      - 2026-07-22-calm-pnpm-rules.md
     id: npm:@2digits/eslint-config
     updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
-  - changelogIds:
-      - 2026-07-21-mruc0d24.md
-    id: npm:@2digits/opencode-plugin
-    updated: true
-  - changelogIds:
-      - 2026-07-21-mruc34o5.md
-    id: npm:@2digits/oxfmt-config
-    updated: true
-  - id: npm:@2digits/oxlint-config
+  - id: npm:@2digits/opencode-plugin
     updated: false
   - changelogIds:
-      - 2026-07-21-mruc34o5.md
-      - 2026-07-21-mruc461j.md
-    id: npm:@2digits/prettier-config
+      - 2026-07-22-swift-ox-tools.md
+    id: npm:@2digits/oxfmt-config
     updated: true
   - changelogIds:
-      - 2026-07-20-mrt6b0oi.md
-      - 2026-07-21-mrubseab.md
+      - 2026-07-21-3013786a.md
+      - 2026-07-22-swift-ox-tools.md
+    id: npm:@2digits/oxlint-config
+    updated: true
+  - id: npm:@2digits/prettier-config
+    updated: false
+  - changelogIds:
+      - 2026-07-22-fresh-renovate.md
     id: npm:@2digits/renovate-config
     updated: true
   - id: npm:@2digits/tlo-mcp

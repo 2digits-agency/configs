@@ -1,3 +1,16 @@
+## @2digits/oxlint-config@0.6.16
+
+### Align rules and add Zod checks
+
+Oxlint's newly supported React, TypeScript, Node.js, and JSDoc rules now match the corresponding ESLint configuration.
+
+Zod schemas now receive the same checks through Oxlint's JavaScript plugin support. Config typings now use `oxlint-types`, and consumer overrides merge without dropping defaults.
+
+### Update Oxlint and Oxfmt
+
+- Updated `oxlint` to 1.75.0
+- Updated `oxfmt` to 0.60.0
+
 ## @2digits/oxlint-config@0.6.15
 
 ### Support Effect Vitest test blocks

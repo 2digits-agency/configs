@@ -1,3 +1,10 @@
+## @2digits/eslint-config@5.5.13
+
+### Update pnpm workspace linting
+
+- Updated `eslint-plugin-pnpm` to 1.7.0 and refreshed generated rule types
+- Required `verifyDepsBeforeRun` to use warning mode in pnpm workspaces
+
 ## @2digits/eslint-config@5.5.12
 
 ### Updated eslint-plugin-jsdoc to v63.1.0
