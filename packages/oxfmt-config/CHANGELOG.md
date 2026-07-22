@@ -1,3 +1,10 @@
+## @2digits/oxfmt-config@0.3.17
+
+### Update Oxlint and Oxfmt
+
+- Updated `oxlint` to 1.75.0
+- Updated `oxfmt` to 0.60.0
+
 ## @2digits/oxfmt-config@0.3.16
 
 ### Update prettier to 3.9.6
