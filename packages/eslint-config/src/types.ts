@@ -119,3 +119,12 @@ export interface OptionsCss extends OptionsOverrides {
    */
   customSyntax?: unknown;
 }
+
+export interface OptionsTailwind extends OptionsOverrides {
+  /**
+   * Path to the main Tailwind CSS v4 entry CSS file. Required by eslint-plugin-tailwindcss v4 for theme-aware rules.
+   *
+   * When omitted, searches for common CSS entry files such as `src/globals.css`, `app/globals.css`, and `styles.css`.
+   */
+  cssConfigPath?: string;
+}
