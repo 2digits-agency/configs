@@ -181,8 +181,8 @@ catalogs:
       specifier: 3.18.2
       version: 3.18.2
     eslint-plugin-toml:
-      specifier: 1.4.0
-      version: 1.4.0
+      specifier: 1.5.0
+      version: 1.5.0
     eslint-plugin-turbo:
       specifier: 2.10.5
       version: 2.10.5
@@ -558,7 +558,7 @@ importers:
         version: 3.18.2(tailwindcss@3.4.17)
       eslint-plugin-toml:
         specifier: 'catalog:'
-        version: 1.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)
+        version: 1.5.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)
       eslint-plugin-turbo:
         specifier: 'catalog:'
         version: 2.10.5(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(turbo@2.10.5)
@@ -5046,8 +5046,8 @@ packages:
     peerDependencies:
       tailwindcss: ^3.4.0
 
-  eslint-plugin-toml@1.4.0:
-    resolution: {integrity: sha512-3ErTnfUjXq/23f72XeyRcE0Y4Sd/ME1lsZeezczqpn2R4tE7+Sgco/NUKDXm0xAMz15tzcRz/9RfJRm6AqRO+A==}
+  eslint-plugin-toml@1.5.0:
+    resolution: {integrity: sha512-qBjRywEkKxO2uYOjus//6GVF1r+Hg5QDkRO8RTY6XcaXgWfBU0DhwpFmJa2Ljf0Sz49r7DdZlpKwwHmJ4nmH1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -11619,7 +11619,7 @@ snapshots:
       postcss: 8.5.15
       tailwindcss: 3.4.17
 
-  eslint-plugin-toml@1.4.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0):
+  eslint-plugin-toml@1.5.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0):
     dependencies:
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.2
