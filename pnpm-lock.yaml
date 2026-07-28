@@ -73,8 +73,8 @@ catalogs:
       specifier: 1.18.4
       version: 1.18.4
     '@oxlint-types/define-config':
-      specifier: 0.0.12
-      version: 0.0.12
+      specifier: 0.0.13
+      version: 0.0.13
     '@prettier/plugin-oxc':
       specifier: 0.2.2
       version: 0.2.2
@@ -772,7 +772,7 @@ importers:
         version: link:../constants
       '@oxlint-types/define-config':
         specifier: 'catalog:'
-        version: 0.0.12
+        version: 0.0.13
       '@stylistic/eslint-plugin':
         specifier: 'catalog:'
         version: 5.10.0(eslint@10.7.0(jiti@2.7.0)(supports-color@7.2.0))
@@ -2965,8 +2965,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@oxlint-types/define-config@0.0.12':
-    resolution: {integrity: sha512-MwJTe4QNqwYnrAT4Qa3F3UtfygT1LOeY61hTQbg230GdYfp5CZIC9IjAaAPbnJHTCksCG7nTgorh4aJFZpBsIg==}
+  '@oxlint-types/define-config@0.0.13':
+    resolution: {integrity: sha512-yN3PJgpD95IDeoZlwX0qf3pSTebRZEuYIph8e3YYBDrTtxEmWcPXwTBvVWlCHwpG2lsZg++AEuq+ESKdhgUv5Q==}
 
   '@oxlint/binding-android-arm-eabi@1.73.0':
     resolution: {integrity: sha512-HZQRN/UMBu+Ut+/9MiAChkbP4qZqrNOWBcNI45vOT40GVhbGR0JgHB87L48D4iAqFQIdVmeQYtV9RF89AjTKkg==}
@@ -9656,7 +9656,7 @@ snapshots:
   '@oxlint-tsgolint/win32-x64@7.0.2001':
     optional: true
 
-  '@oxlint-types/define-config@0.0.12': {}
+  '@oxlint-types/define-config@0.0.13': {}
 
   '@oxlint/binding-android-arm-eabi@1.73.0':
     optional: true
