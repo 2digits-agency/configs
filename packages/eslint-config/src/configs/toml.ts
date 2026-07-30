@@ -1,6 +1,6 @@
 import eslintPluginToml, { configs } from 'eslint-plugin-toml';
 
-import { GLOB_TOML } from '../globs';
+import { GLOB_MISE_TOML, GLOB_TOML } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
 const standard = Object.fromEntries(configs.standard.flatMap(({ rules }) => Object.entries({ ...rules })));
@@ -20,6 +20,13 @@ export function toml(): Array<TypedFlatConfigItem> {
         'toml/array-bracket-spacing': ['error', 'never'],
         'toml/array-element-newline': ['error', 'consistent'],
         'toml/indent': ['error', 2, { keyValuePairs: 0, subTables: 0 }],
+      },
+    },
+    {
+      name: '2digits:toml:mise',
+      files: [GLOB_MISE_TOML],
+      rules: {
+        'toml/spaced-comment': ['off'],
       },
     },
   ];

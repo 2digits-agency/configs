@@ -13,6 +13,7 @@ export const nodeConfig = defineConfig({
     'node/no-mixed-requires': undefined,
     'node/no-process-env': undefined,
     'node/no-sync': undefined,
+    'node/no-top-level-await': undefined,
   } satisfies {
     [k in Extract<keyof RuleMap, `node/${string}`>]: RuleMap[k];
   },

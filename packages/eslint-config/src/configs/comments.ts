@@ -19,7 +19,6 @@ export function comments(): Array<TypedFlatConfigItem> {
       rules: {
         ...recommended,
 
-        'comments/no-unused-disable': 'error',
         'comments/disable-enable-pair': ['error', { allowWholeFile: true }],
       },
     },

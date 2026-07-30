@@ -315,7 +315,7 @@
     ],
     "settings": {
       "node": {
-        "version": "24.18.0"
+        "version": "24.18.1"
       }
     },
     "rules": [
@@ -348,7 +348,6 @@
       "comments/no-aggregating-enable",
       "comments/no-duplicate-disable",
       "comments/no-unlimited-disable",
-      "comments/no-unused-disable",
       "comments/no-unused-enable"
     ]
   },
@@ -709,7 +708,6 @@
       "unicorn/prefer-url-href",
       "unicorn/prefer-url-search-parameters",
       "unicorn/prefer-while-loop-condition",
-      "- unicorn/prevent-abbreviations",
       "unicorn/relative-url-style",
       "unicorn/require-array-join-separator",
       "- unicorn/require-array-sort-compare",
@@ -742,7 +740,6 @@
       "sonar/cognitive-complexity",
       "sonar/comma-or-logical-or-case",
       "sonar/concise-regex",
-      "sonar/confidential-information-logging",
       "sonar/constructor-for-side-effects",
       "sonar/content-length",
       "sonar/content-security-policy",
@@ -1134,6 +1131,15 @@
     ]
   },
   {
+    "name": "2digits:toml:mise",
+    "files": [
+      "**/{mise,.mise}?(.*).toml"
+    ],
+    "rules": [
+      "- toml/spaced-comment"
+    ]
+  },
+  {
     "name": "2digits:yaml/setup",
     "plugins": [
       "yml"
@@ -1149,8 +1155,7 @@
     },
     "rules": [
       "- no-irregular-whitespace",
-      "- no-unused-vars",
-      "- spaced-comment"
+      "- no-unused-vars"
     ]
   },
   {
@@ -1312,7 +1317,7 @@
       "parserOptions": {
         "tsconfigRootDir": "<cwd>",
         "projectService": true,
-        "warnOnUnsupportedTypeScriptVersion": false
+        "onUnsupportedTypeScriptVersion": "ignore"
       },
       "sourceType": "module"
     },
@@ -1456,8 +1461,7 @@
       "**/*.cts"
     ],
     "rules": [
-      "- ts/no-require-imports",
-      "- ts/no-var-requires"
+      "- ts/no-require-imports"
     ]
   },
   {

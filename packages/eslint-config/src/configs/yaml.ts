@@ -19,7 +19,6 @@ export function yaml(): Array<TypedFlatConfigItem> {
       rules: {
         'no-irregular-whitespace': 'off',
         'no-unused-vars': 'off',
-        'spaced-comment': 'off',
       },
     },
 

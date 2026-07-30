@@ -1,7 +1,4 @@
-[tools]
-bun = "1.3.14"
-node = "24.18.0"
-pnpm = "11.15.1"
+#:schema https://mise.jdx.dev/schema/mise.json
 
 [env]
 FORCE_COLOR = "1"
@@ -10,3 +7,7 @@ NODE_OPTIONS = "--no-deprecation"
 [settings]
 pin = true
 ignored_config_paths = ["**/fixtures/**"]
+idiomatic_version_file_enable_tools = ["node", "pnpm"]
+
+[hooks]
+enter = "mise i -q"

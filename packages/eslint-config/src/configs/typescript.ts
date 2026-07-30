@@ -33,7 +33,7 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
         parserOptions: {
           tsconfigRootDir: process.cwd(),
           projectService: true,
-          warnOnUnsupportedTypeScriptVersion: false,
+          onUnsupportedTypeScriptVersion: 'ignore',
           ...parserOptions,
         },
         sourceType: 'module',
@@ -95,7 +95,6 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
       files: ['**/*.js', '**/*.cjs', '**/*.cts'],
       rules: {
         'ts/no-require-imports': 'off',
-        'ts/no-var-requires': 'off',
       },
     },
   ];
