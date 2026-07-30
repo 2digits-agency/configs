@@ -36,6 +36,7 @@ export function javascript(options: OptionsOverrides = {}): Array<TypedFlatConfi
       },
       linterOptions: {
         reportUnusedDisableDirectives: true,
+        reportUnusedInlineConfigs: 'error',
       },
       rules: {
         ...eslint.configs.recommended.rules,

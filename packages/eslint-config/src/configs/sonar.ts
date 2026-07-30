@@ -15,7 +15,6 @@ export function sonar(): Array<TypedFlatConfigItem> {
         'sonar/cognitive-complexity': 'error',
         'sonar/comma-or-logical-or-case': 'error',
         'sonar/concise-regex': 'error',
-        'sonar/confidential-information-logging': 'error',
         'sonar/constructor-for-side-effects': 'error',
         'sonar/content-length': 'error',
         'sonar/content-security-policy': 'error',
