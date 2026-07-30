@@ -1,3 +1,26 @@
+## @2digits/oxlint-config@0.6.17
+
+### Update eslint-plugin-zod to 4.9.0
+
+- Added the new `zod/prefer-nullish` rule to the generated rule types
+
+### Update @oxlint-types/define-config to 0.0.13
+
+
+
+### Update oxlint to 1.76.0
+
+
+
+### Require function declarations for named React components
+
+- Enabled `react/function-component-definition` with `namedComponents: 'function-declaration'`
+
+### Leave newly added oxlint rules unset
+
+- Left `node/no-top-level-await` unset, so top-level `await` stays allowed in ESM
+- Left `vitest/padding-around-test-blocks` unset, since formatting is handled by Oxfmt
+
 ## @2digits/oxlint-config@0.6.16
 
 ### Align rules and add Zod checks

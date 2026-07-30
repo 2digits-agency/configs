@@ -1,3 +1,78 @@
+## @2digits/eslint-config@5.5.14
+
+### Update eslint to 10.8.0
+
+
+
+### Report unused inline configs through ESLint core
+
+- Enabled `reportUnusedInlineConfigs: 'error'` in the JavaScript config
+- Removed the now redundant `comments/no-unused-disable` rule
+
+### Remove obsolete rule overrides
+
+- Removed `unicorn/prevent-abbreviations`, which is no longer part of the upstream recommended set
+- Removed `sonar/confidential-information-logging` and `ts/no-var-requires`
+- Removed the `spaced-comment` override from the YAML config
+- Sorted the remaining `unicorn` overrides alphabetically
+
+### Update eslint-plugin-jsdoc to 63.3.0
+
+
+
+### Update @eslint-react/eslint-plugin to 5.18.0
+
+
+
+### Update globals to 17.8.0
+
+
+
+### Bump the supported Node.js version to 24.18.1
+
+
+
+### Update eslint-plugin-jsdoc to 63.3.2
+
+
+
+### Update eslint-plugin-zod to 4.9.0
+
+- Added the new `zod/prefer-nullish` rule to the generated rule types
+
+### Update eslint-plugin-storybook to 10.5.5
+
+
+
+### Update eslint-plugin-turbo to 2.10.7
+
+
+
+### Update @vitest/eslint-plugin to 1.6.24
+
+
+
+### Update eslint-plugin-toml to 1.5.0
+
+
+
+### Update @next/eslint-plugin-next to 16.2.12
+
+
+
+### Update eslint-plugin-storybook to 10.5.4
+
+
+
+### Update typescript-eslint to 8.65.0
+
+- Replaced the removed `warnOnUnsupportedTypeScriptVersion: false` parser option with `onUnsupportedTypeScriptVersion: 'ignore'`
+
+### Allow schema comments in mise TOML files
+
+- Added a `2digits:toml:mise` config that turns off `toml/spaced-comment` for `mise*.toml`, so `#:schema` directives lint cleanly
+- Added the `GLOB_MISE_TOML` glob
+
 ## @2digits/eslint-config@5.5.13
 
 ### Update pnpm workspace linting

@@ -1,3 +1,13 @@
+## @2digits/eslint-plugin@4.0.23
+
+### Update eslint to 10.8.0
+
+
+
+### Update typescript-eslint to 8.65.0
+
+- Replaced the removed `warnOnUnsupportedTypeScriptVersion: false` parser option with `onUnsupportedTypeScriptVersion: 'ignore'`
+
 # @2digits/eslint-plugin
 
 ## 4.0.22

@@ -1,3 +1,23 @@
+## @2digits/cli@2.0.10
+
+### Update nypm to 0.6.9
+
+
+
+### Update @effect/cli to 0.77.0
+
+
+
+### Update @effect/platform to 0.97.1
+
+
+
+### Update effect to 3.22.1
+
+
+
+### Update @effect/language-service to 0.87.1
+
 ## @2digits/cli@2.0.9
 
 ### Update Effect ecosystem dependencies
