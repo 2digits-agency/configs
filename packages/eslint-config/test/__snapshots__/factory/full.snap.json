@@ -1133,7 +1133,7 @@
   {
     "name": "2digits:toml:mise",
     "files": [
-      "**/mise?(.*).toml"
+      "**/{mise,.mise}?(.*).toml"
     ],
     "rules": [
       "- toml/spaced-comment"

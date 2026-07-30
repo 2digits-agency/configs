@@ -16,6 +16,7 @@ export const reactConfig = defineConfig({
   rules: {
     'react/button-has-type': 'error',
     'react/exhaustive-deps': 'error',
+    'react/function-component-definition': ['error', { namedComponents: 'function-declaration' }],
     'react/iframe-missing-sandbox': 'error',
     'react/jsx-key': 'error',
     'react/jsx-no-comment-textnodes': 'warn',

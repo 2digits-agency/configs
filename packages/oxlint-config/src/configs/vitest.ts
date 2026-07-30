@@ -90,6 +90,7 @@ export const vitestConfig = defineConfig({
     'vitest/warn-todo': 'error',
 
     'vitest/padding-around-after-all-blocks': undefined,
+    'vitest/padding-around-test-blocks': undefined,
   } satisfies {
     [k in Extract<keyof RuleMap, `vitest/${string}`>]: RuleMap[k];
   },
