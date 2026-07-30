@@ -1,3 +1,27 @@
+## @2digits/tlo-mcp@0.1.26
+
+### Update @effect/cli to 0.77.0
+
+
+
+### Update @effect/platform to 0.97.1
+
+
+
+### Update effect to 3.22.1
+
+
+
+### Update @effect/experimental to 0.61.1
+
+
+
+### Update @effect/rpc to 0.76.1
+
+
+
+### Update @effect/language-service to 0.87.1
+
 ## @2digits/tlo-mcp@0.1.25
 
 ### Update Effect ecosystem dependencies

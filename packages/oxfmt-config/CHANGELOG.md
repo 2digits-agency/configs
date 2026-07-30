@@ -1,3 +1,7 @@
+## @2digits/oxfmt-config@0.3.18
+
+### Update oxfmt to 0.61.0
+
 ## @2digits/oxfmt-config@0.3.17
 
 ### Update Oxlint and Oxfmt

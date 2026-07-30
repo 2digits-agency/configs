@@ -1,48 +1,223 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update pnpm workspace linting\n\n- Updated `eslint-plugin-pnpm` to 1.7.0 and refreshed generated rule types\n- Required `verifyDepsBeforeRun` to use warning mode in pnpm workspaces\n"
-    filename: 2026-07-22-calm-pnpm-rules.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the baseline-browser-mapping override to 2.11.4\n"
+    filename: 2026-07-30-agile-perch-baseline.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update Oxlint and Oxfmt\n\n- Updated `oxlint` to 1.75.0\n- Updated `oxfmt` to 0.60.0\n"
-    filename: 2026-07-22-swift-ox-tools.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update tegami to 1.2.7\n"
+    filename: 2026-07-30-amber-storks-tegami.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n### Align rules and add Zod checks\n\nOxlint's newly supported React, TypeScript, Node.js, and JSDoc rules now match the corresponding ESLint configuration.\n\nZod schemas now receive the same checks through Oxlint's JavaScript plugin support. Config typings now use `oxlint-types`, and consumer overrides merge without dropping defaults.\n"
-    filename: 2026-07-21-3013786a.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Make the Tegami script importable\n\n- Resolved `cwd` from the script location so it works regardless of the invoking directory\n- Guarded `runCli()` behind `import.meta.main` and enabled `createTags` and `release`\n"
+    filename: 2026-07-30-brave-lemurs-tegami.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 43.275.2\n"
-    filename: 2026-07-22-fresh-renovate.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pkg-pr-new to 0.0.82\n"
+    filename: 2026-07-30-bright-shrews-pkgpr.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update publint to 0.3.22\n"
+    filename: 2026-07-30-humble-quails-publint.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the baseline-browser-mapping override to 2.11.7\n"
+    filename: 2026-07-30-mellow-perch-baseline.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pkg-pr-new to 0.0.80\n"
+    filename: 2026-07-30-merry-shrews-pkgpr.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update turbo to 2.10.7\n"
+    filename: 2026-07-30-rapid-terns-turbo.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update vite-plus to 0.2.6\n"
+    filename: 2026-07-30-royal-cedars-viteplus.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update knip to 6.29.0\n"
+    filename: 2026-07-30-silent-yaks-knip.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Manage toolchain versions through idiomatic version files\n\n- Dropped the pinned `[tools]` versions from `mise.toml` in favour of `idiomatic_version_file_enable_tools` for `node` and `pnpm`\n- Added a `mise i -q` enter hook and the mise schema comment\n- Declared `devEngines.packageManager` (pnpm 11.18.0, `onFail: download`) in the root manifest\n"
+    filename: 2026-07-30-solid-ferns-mise.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n## Update nypm to 0.6.9\n"
+    filename: 2026-07-30-brisk-otters-nypm.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/cli to 0.77.0\n"
+    filename: 2026-07-30-broad-herons-cli.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/platform to 0.97.1\n"
+    filename: 2026-07-30-cool-ravens-platform.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update effect to 3.22.1\n"
+    filename: 2026-07-30-keen-swifts-core.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/language-service to 0.87.1\n"
+    filename: 2026-07-30-warm-finch-effect.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update eslint to 10.8.0\n"
+    filename: 2026-07-30-bright-owls-lint.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Report unused inline configs through ESLint core\n\n- Enabled `reportUnusedInlineConfigs: 'error'` in the JavaScript config\n- Removed the now redundant `comments/no-unused-disable` rule\n"
+    filename: 2026-07-30-brisk-storks-inline.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Remove obsolete rule overrides\n\n- Removed `unicorn/prevent-abbreviations`, which is no longer part of the upstream recommended set\n- Removed `sonar/confidential-information-logging` and `ts/no-var-requires`\n- Removed the `spaced-comment` override from the YAML config\n- Sorted the remaining `unicorn` overrides alphabetically\n"
+    filename: 2026-07-30-calm-herons-tidy.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 63.3.0\n"
+    filename: 2026-07-30-clever-larks-jsdoc.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/eslint-plugin to 5.18.0\n"
+    filename: 2026-07-30-eager-hawks-react.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update globals to 17.8.0\n"
+    filename: 2026-07-30-eager-wrens-globals.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Bump the supported Node.js version to 24.18.1\n"
+    filename: 2026-07-30-fresh-ibis-engine.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 63.3.2\n"
+    filename: 2026-07-30-fresh-larks-jsdoc.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update eslint-plugin-zod to 4.9.0\n\n- Added the new `zod/prefer-nullish` rule to the generated rule types\n"
+    filename: 2026-07-30-gentle-elks-zod.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-storybook to 10.5.5\n"
+    filename: 2026-07-30-humble-bears-story.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-turbo to 2.10.7\n"
+    filename: 2026-07-30-lucky-crows-turbo.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @vitest/eslint-plugin to 1.6.24\n"
+    filename: 2026-07-30-mellow-otters-test.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-toml to 1.5.0\n"
+    filename: 2026-07-30-plain-moths-toml.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @next/eslint-plugin-next to 16.2.12\n"
+    filename: 2026-07-30-quiet-foxes-next.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-storybook to 10.5.4\n"
+    filename: 2026-07-30-sunny-bears-story.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update typescript-eslint to 8.65.0\n\n- Replaced the removed `warnOnUnsupportedTypeScriptVersion: false` parser option with `onUnsupportedTypeScriptVersion: 'ignore'`\n"
+    filename: 2026-07-30-swift-pines-parse.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Allow schema comments in mise TOML files\n\n- Added a `2digits:toml:mise` config that turns off `toml/spaced-comment` for `mise*.toml`, so `#:schema` directives lint cleanly\n- Added the `GLOB_MISE_TOML` glob\n"
+    filename: 2026-07-30-tidy-ravens-mise.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update @opencode-ai/plugin to 1.18.9\n"
+    filename: 2026-07-30-gentle-doves-plugin.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update @opencode-ai/plugin to 1.18.5\n"
+    filename: 2026-07-30-noble-doves-plugin.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update posthog-node to 5.46.1\n"
+    filename: 2026-07-30-steady-wrens-posthog.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update oxfmt to 0.61.0\n"
+    filename: 2026-07-30-quiet-elks-oxfmt.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update @oxlint-types/define-config to 0.0.13\n"
+    filename: 2026-07-30-plain-finch-define.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update oxlint to 1.76.0\n"
+    filename: 2026-07-30-solid-hawks-oxlint.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Require function declarations for named React components\n\n- Enabled `react/function-component-definition` with `namedComponents: 'function-declaration'`\n"
+    filename: 2026-07-30-steady-doves-component.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Leave newly added oxlint rules unset\n\n- Left `node/no-top-level-await` unset, so top-level `await` stays allowed in ESM\n- Left `vitest/padding-around-test-blocks` unset, since formatting is handled by Oxfmt\n"
+    filename: 2026-07-30-warm-moths-optout.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 43.281.0\n"
+    filename: 2026-07-30-loyal-storks-renovate.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.2.3\n"
+    filename: 2026-07-30-royal-storks-renovate.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/experimental to 0.61.1\n"
+    filename: 2026-07-30-lively-terns-experimental.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/rpc to 0.76.1\n"
+    filename: 2026-07-30-nimble-larks-rpc.md
     v: 0.0.0
 core:packages:
-  - id: npm:@2digits/config-monorepo
-    updated: false
-  - id: npm:@2digits/cli
-    updated: false
+  - changelogIds:
+      - 2026-07-30-agile-perch-baseline.md
+      - 2026-07-30-amber-storks-tegami.md
+      - 2026-07-30-brave-lemurs-tegami.md
+      - 2026-07-30-bright-shrews-pkgpr.md
+      - 2026-07-30-humble-quails-publint.md
+      - 2026-07-30-mellow-perch-baseline.md
+      - 2026-07-30-merry-shrews-pkgpr.md
+      - 2026-07-30-rapid-terns-turbo.md
+      - 2026-07-30-royal-cedars-viteplus.md
+      - 2026-07-30-silent-yaks-knip.md
+      - 2026-07-30-solid-ferns-mise.md
+    id: npm:@2digits/config-monorepo
+    updated: true
+  - changelogIds:
+      - 2026-07-30-brisk-otters-nypm.md
+      - 2026-07-30-broad-herons-cli.md
+      - 2026-07-30-cool-ravens-platform.md
+      - 2026-07-30-keen-swifts-core.md
+      - 2026-07-30-warm-finch-effect.md
+    id: npm:@2digits/cli
+    updated: true
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-07-22-calm-pnpm-rules.md
+      - 2026-07-30-bright-owls-lint.md
+      - 2026-07-30-brisk-storks-inline.md
+      - 2026-07-30-calm-herons-tidy.md
+      - 2026-07-30-clever-larks-jsdoc.md
+      - 2026-07-30-eager-hawks-react.md
+      - 2026-07-30-eager-wrens-globals.md
+      - 2026-07-30-fresh-ibis-engine.md
+      - 2026-07-30-fresh-larks-jsdoc.md
+      - 2026-07-30-gentle-elks-zod.md
+      - 2026-07-30-humble-bears-story.md
+      - 2026-07-30-lucky-crows-turbo.md
+      - 2026-07-30-mellow-otters-test.md
+      - 2026-07-30-plain-moths-toml.md
+      - 2026-07-30-quiet-foxes-next.md
+      - 2026-07-30-sunny-bears-story.md
+      - 2026-07-30-swift-pines-parse.md
+      - 2026-07-30-tidy-ravens-mise.md
     id: npm:@2digits/eslint-config
     updated: true
-  - id: npm:@2digits/eslint-plugin
-    updated: false
-  - id: npm:@2digits/opencode-plugin
-    updated: false
   - changelogIds:
-      - 2026-07-22-swift-ox-tools.md
+      - 2026-07-30-bright-owls-lint.md
+      - 2026-07-30-swift-pines-parse.md
+    id: npm:@2digits/eslint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-07-30-gentle-doves-plugin.md
+      - 2026-07-30-noble-doves-plugin.md
+      - 2026-07-30-steady-wrens-posthog.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
+  - changelogIds:
+      - 2026-07-30-quiet-elks-oxfmt.md
     id: npm:@2digits/oxfmt-config
     updated: true
   - changelogIds:
-      - 2026-07-21-3013786a.md
-      - 2026-07-22-swift-ox-tools.md
+      - 2026-07-30-gentle-elks-zod.md
+      - 2026-07-30-plain-finch-define.md
+      - 2026-07-30-solid-hawks-oxlint.md
+      - 2026-07-30-steady-doves-component.md
+      - 2026-07-30-warm-moths-optout.md
     id: npm:@2digits/oxlint-config
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
   - changelogIds:
-      - 2026-07-22-fresh-renovate.md
+      - 2026-07-30-loyal-storks-renovate.md
+      - 2026-07-30-royal-storks-renovate.md
     id: npm:@2digits/renovate-config
     updated: true
-  - id: npm:@2digits/tlo-mcp
-    updated: false
+  - changelogIds:
+      - 2026-07-30-broad-herons-cli.md
+      - 2026-07-30-cool-ravens-platform.md
+      - 2026-07-30-keen-swifts-core.md
+      - 2026-07-30-lively-terns-experimental.md
+      - 2026-07-30-nimble-larks-rpc.md
+      - 2026-07-30-warm-finch-effect.md
+    id: npm:@2digits/tlo-mcp
+    updated: true
   - id: npm:@2digits/tsconfig
     updated: false
 npm:packages:
