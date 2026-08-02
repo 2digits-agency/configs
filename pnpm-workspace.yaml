@@ -13,19 +13,19 @@ allowBuilds:
 
 catalog:
   '@arethetypeswrong/core': 0.18.5
-  tegami: 1.2.7
+  tegami: 1.3.0
   '@effect/ai': 0.37.0
   '@effect/cli': 0.77.0
   '@effect/experimental': 0.61.1
   '@effect/language-service': 0.87.1
   '@effect/platform': 0.97.1
-  '@effect/platform-node': 0.108.0
-  '@effect/rpc': 0.76.1
+  '@effect/platform-node': 0.108.1
+  '@effect/rpc': 0.76.2
   '@effect/vitest': 0.30.0
   '@eslint-community/eslint-plugin-eslint-comments': 4.7.2
-  '@eslint-react/eslint-plugin': 5.18.0
+  '@eslint-react/eslint-plugin': 5.18.1
   '@eslint/compat': 2.1.0
-  '@eslint/config-inspector': 3.1.0
+  '@eslint/config-inspector': 3.1.1
   '@eslint/css': 1.4.0
   '@eslint/js': 10.0.1
   '@eslint/markdown': 8.0.3
@@ -33,7 +33,7 @@ catalog:
   '@ianvs/prettier-plugin-sort-imports': 4.7.1
   '@manypkg/cli': 0.25.1
   '@next/eslint-plugin-next': 16.2.12
-  '@opencode-ai/plugin': 1.18.9
+  '@opencode-ai/plugin': 1.18.11
   '@oxlint-types/define-config': 0.0.13
   '@prettier/plugin-oxc': 0.2.2
   '@prettier/plugin-xml': 3.4.2
@@ -44,8 +44,8 @@ catalog:
   '@typescript-eslint/parser': 8.65.0
   '@typescript-eslint/scope-manager': 8.65.0
   '@typescript-eslint/utils': 8.65.0
-  '@types/react': 19.2.17
-  '@vitest/eslint-plugin': 1.6.24
+  '@types/react': 19.2.18
+  '@vitest/eslint-plugin': 1.6.25
   '@typescript/native-preview': 7.0.0-dev.20260707.2
   dedent: 1.7.2
   defu: 6.1.7
@@ -71,45 +71,45 @@ catalog:
   eslint-plugin-storybook: 10.5.5
   eslint-plugin-tailwindcss: 3.18.2
   eslint-plugin-toml: 1.5.0
-  eslint-plugin-turbo: 2.10.7
+  eslint-plugin-turbo: 2.10.8
   eslint-plugin-unicorn: 72.0.0
-  eslint-plugin-yml: 3.6.0
+  eslint-plugin-yml: 3.7.0
   eslint-plugin-zod: 4.9.0
   eslint-typegen: 2.3.1
   eslint-vitest-rule-tester: 3.1.0
   globals: 17.8.0
   graphql-config: 5.1.6
   jsonc-eslint-parser: 3.1.0
-  knip: 6.29.0
+  knip: 6.31.0
   local-pkg: 1.2.1
   nolyfill: 1.0.44
   nypm: 0.6.9
   oxfmt: 0.61.0
   oxlint: 1.76.0
   oxlint-tsgolint: 7.0.2001
-  pkg-pr-new: 0.0.82
+  pkg-pr-new: 0.0.86
   pkg-types: 2.3.1
-  posthog-node: 5.46.1
+  posthog-node: 5.47.3
   prettier: 3.9.6
   prettier-plugin-jsdoc: 1.8.1
   prettier-plugin-tailwindcss: 0.8.1
   publint: 0.3.22
   react: 19.2.8
-  renovate: 44.2.3
+  renovate: 44.7.0
   tailwind-csstree: 0.3.3
-  tinyexec: 1.2.4
+  tinyexec: 1.3.0
   tinyglobby: 0.2.17
   ts-api-utils: 2.5.0
-  tsx: 4.23.1
+  tsx: 4.23.3
   typescript: 6.0.3
-  turbo: 2.10.7
+  turbo: 2.10.8
   typescript-eslint: 8.65.0
-  vite: npm:@voidzero-dev/vite-plus-core@0.2.6
-  vite-plus: 0.2.6
+  vite: npm:@voidzero-dev/vite-plus-core@0.2.7
+  vite-plus: 0.2.7
   vitest: 4.1.10
   yaml-eslint-parser: 2.1.0
   zod: 4.4.3
-  '@eslint-react/kit': 5.18.0
+  '@eslint-react/kit': 5.18.1
 
 overrides:
   array-includes: npm:@nolyfill/array-includes@1.0.44
@@ -117,7 +117,7 @@ overrides:
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
   array.prototype.flatmap: npm:@nolyfill/array.prototype.flatmap@1.0.44
   array.prototype.tosorted: npm:@nolyfill/array.prototype.tosorted@1.0.44
-  baseline-browser-mapping: 2.11.7
+  baseline-browser-mapping: 2.11.10
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
   eslint-plugin-sonarjs>typescript: 'catalog:'
   globalthis: npm:@nolyfill/globalthis@1.0.44
