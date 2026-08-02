@@ -1,3 +1,25 @@
+## @2digits/eslint-config@5.5.15
+
+### Update @eslint-react/eslint-plugin to 5.18.1
+
+
+
+### Update @eslint-react/kit to 5.18.1
+
+
+
+### Update @vitest/eslint-plugin to 1.6.25
+
+
+
+### Update eslint-plugin-turbo to 2.10.8
+
+
+
+### Update eslint-plugin-yml to 3.7.0
+
+- Added the new `yml/no-boolean-key` rule to the generated rule types
+
 ## @2digits/eslint-config@5.5.14
 
 ### Update eslint to 10.8.0

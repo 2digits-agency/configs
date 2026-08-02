@@ -1,3 +1,31 @@
+## @2digits/config-monorepo@0.0.3
+
+### Update tegami to 1.3.0
+
+
+
+### Update knip to 6.31.0
+
+
+
+### Update pkg-pr-new to 0.0.86
+
+
+
+### Update turbo to 2.10.8
+
+
+
+### Update vite-plus to 0.2.7
+
+
+
+### Update the baseline-browser-mapping override to 2.11.10
+
+
+
+### Update the vite alias to @voidzero-dev/vite-plus-core 0.2.7
+
 ## @2digits/config-monorepo@0.0.2
 
 ### Update the baseline-browser-mapping override to 2.11.4

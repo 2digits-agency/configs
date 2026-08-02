@@ -1,3 +1,11 @@
+## @2digits/tlo-mcp@0.1.27
+
+### Update @effect/platform-node to 0.108.1
+
+
+
+### Update @effect/rpc to 0.76.2
+
 ## @2digits/tlo-mcp@0.1.26
 
 ### Update @effect/cli to 0.77.0
