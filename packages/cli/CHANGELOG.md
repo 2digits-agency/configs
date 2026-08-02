@@ -1,3 +1,7 @@
+## @2digits/cli@2.0.11
+
+### Update @effect/platform-node to 0.108.1
+
 ## @2digits/cli@2.0.10
 
 ### Update nypm to 0.6.9
