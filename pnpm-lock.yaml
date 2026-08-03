@@ -503,7 +503,7 @@ overrides:
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
   array.prototype.flatmap: npm:@nolyfill/array.prototype.flatmap@1.0.44
   array.prototype.tosorted: npm:@nolyfill/array.prototype.tosorted@1.0.44
-  baseline-browser-mapping: 2.11.10
+  baseline-browser-mapping: 2.11.12
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
   eslint-plugin-sonarjs>typescript: 6.0.3
   globalthis: npm:@nolyfill/globalthis@1.0.44
@@ -4461,8 +4461,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.11.10:
-    resolution: {integrity: sha512-35JEvJ5/KKlbCHjMCsONI2w6HE88STjVdHk+C7d8LtcFxUjZR1KeLP9izofn2qs0KUxX5r4z73bwH/rd+JHacw==}
+  baseline-browser-mapping@2.11.12:
+    resolution: {integrity: sha512-r7WnVImvVCeFpf2DOXfy41aPWzeNg3H/A2X4dKmy1QL0MSyyk/e7z8ihJ3N6Nn2PsdhkVlqnEfnUE4a05P2aTA==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -10091,7 +10091,7 @@ snapshots:
 
   '@publint/pack@0.1.6':
     dependencies:
-      tinyexec: 1.2.4
+      tinyexec: 1.3.0
 
   '@qnighy/marshal@0.1.3':
     dependencies:
@@ -10983,7 +10983,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.11.10: {}
+  baseline-browser-mapping@2.11.12: {}
 
   bignumber.js@9.3.1: {}
 
@@ -11017,7 +11017,7 @@ snapshots:
 
   browserslist@4.28.4:
     dependencies:
-      baseline-browser-mapping: 2.11.10
+      baseline-browser-mapping: 2.11.12
       caniuse-lite: 1.0.30001799
       electron-to-chromium: 1.5.380
       node-releases: 2.0.50
