@@ -32,6 +32,7 @@ export function unicorn(): Array<TypedFlatConfigItem> {
         'unicorn/prefer-ternary': ['error', 'only-single-line'],
         'unicorn/prefer-top-level-await': 'off',
         'unicorn/require-array-sort-compare': 'off',
+        'unicorn/single-line-block-comment-style': 'off',
       },
     },
   ];
