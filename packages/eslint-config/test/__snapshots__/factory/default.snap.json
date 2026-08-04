@@ -165,7 +165,7 @@
         "sourceType": "module"
       },
       "globals": {
-        "_count": 1261
+        "_count": 1266
       },
       "ecmaVersion": 2022,
       "sourceType": "module"
@@ -315,7 +315,7 @@
     ],
     "settings": {
       "node": {
-        "version": "24.18.1"
+        "version": "24.19.0"
       }
     },
     "rules": [
@@ -397,6 +397,7 @@
       "unicorn/catch-error-name",
       "unicorn/class-reference-in-static-methods",
       "- unicorn/comment-content",
+      "- unicorn/consistent-arrow-return-style",
       "unicorn/consistent-assert",
       "- unicorn/consistent-boolean-name",
       "unicorn/consistent-class-member-order",
@@ -426,6 +427,7 @@
       "- unicorn/id-match",
       "unicorn/import-style",
       "unicorn/isolated-functions",
+      "- unicorn/iteration-fallback-style",
       "unicorn/logical-assignment-operators",
       "- unicorn/max-nested-calls",
       "- unicorn/name-replacements",
@@ -449,6 +451,7 @@
       "unicorn/no-async-promise-finally",
       "unicorn/no-await-expression-member",
       "unicorn/no-await-in-promise-methods",
+      "- unicorn/no-barrel-files",
       "unicorn/no-blob-to-file",
       "unicorn/no-boolean-sort-comparator",
       "- unicorn/no-break-in-nested-loop",
@@ -547,6 +550,7 @@
       "- unicorn/no-unsafe-dom-html",
       "unicorn/no-unsafe-promise-all-settled-values",
       "unicorn/no-unsafe-property-key",
+      "unicorn/no-unsafe-sqlite-interpolation",
       "unicorn/no-unsafe-string-replacement",
       "unicorn/no-unused-array-method-return",
       "- unicorn/no-unused-properties",
@@ -719,6 +723,7 @@
       "unicorn/require-passive-events",
       "- unicorn/require-post-message-target-origin",
       "unicorn/require-proxy-trap-boolean-return",
+      "- unicorn/single-line-block-comment-style",
       "- unicorn/string-content",
       "unicorn/switch-case-braces",
       "unicorn/switch-case-break-position",
