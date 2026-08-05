@@ -1,4 +1,4 @@
-import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
+import { defineConfig } from 'oxlint';
 
 export const zodConfig = defineConfig({
   jsPlugins: [
@@ -54,7 +54,5 @@ export const zodConfig = defineConfig({
     'zod/no-string-schema-with-uuid': undefined,
     'zod/no-unknown-schema': undefined,
     'zod/require-error-message': undefined,
-  } satisfies {
-    [k in Extract<keyof RuleMap, `zod/${string}`>]: RuleMap[k];
   },
 });

@@ -1,4 +1,4 @@
-import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
+import { defineConfig } from 'oxlint';
 
 export const importConfig = defineConfig({
   plugins: ['import'],
@@ -37,7 +37,5 @@ export const importConfig = defineConfig({
     'import/unambiguous': undefined,
 
     'import/newline-after-import': undefined,
-  } satisfies {
-    [k in Extract<keyof RuleMap, `import/${string}`>]: RuleMap[k];
   },
 });

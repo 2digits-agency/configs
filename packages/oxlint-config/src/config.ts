@@ -1,5 +1,5 @@
-import { defineConfig, type OxlintConfig } from '@oxlint-types/define-config';
 import { defu } from 'defu';
+import { defineConfig, type OxlintConfig } from 'oxlint';
 
 import { baseConfig } from './base';
 import { typescriptConfig } from './typescript';

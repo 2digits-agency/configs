@@ -3,11 +3,50 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vite-plus/test';
 
+import eslintTwoDigits from '@2digits/eslint-config';
+
 import withTwoDigits, { twoDigits } from '../src';
+import { javascriptConfig } from '../src/configs/javascript';
+import { nodeConfig } from '../src/configs/node';
+import { reactConfig } from '../src/configs/react';
+import { typescriptRulesConfig } from '../src/configs/typescript';
+import { unicornConfig } from '../src/configs/unicorn';
+import { vitestConfig } from '../src/configs/vitest';
 import { zodConfig } from '../src/configs/zod';
 
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+
+const eslintConfig = await eslintTwoDigits({
+  css: false,
+  depend: false,
+  drizzle: false,
+  graphql: false,
+  next: false,
+  pnpm: false,
+  react: false,
+  storybook: false,
+  tailwind: false,
+  tanstackQuery: false,
+  tanstackRouter: false,
+  ts: false,
+  turbo: false,
+  vitest: false,
+  zod: false,
+});
+const eslintJavascriptConfig = eslintConfig.find(({ name }) => name === '2digits:javascript');
+
+// Oxlint's core rule also covers TypeScript, so it carries the TypeScript `_` ignore patterns.
+const sharedJavascriptRuleNames = new Set(
+  Object.entries(javascriptConfig.rules)
+    .filter(([rule, value]) => value !== undefined && rule !== 'no-unused-vars')
+    .map(([rule]) => rule),
+);
+const sharedEslintJavascriptRules = Object.fromEntries(
+  Object.entries(eslintJavascriptConfig?.rules ?? {}).filter(
+    ([rule, value]) => value !== undefined && sharedJavascriptRuleNames.has(rule),
+  ),
+);
 
 describe('oxlint config', () => {
   it('preserves top-level defaults when extending the config', () => {
@@ -28,6 +67,54 @@ describe('oxlint config', () => {
     expect(config.ignorePatterns).toContain('**/fixtures/**');
     expect(config.rules?.['eslint/no-console']).toBe('off');
     expect(twoDigits.env).toMatchObject({ browser: true, node: true });
+  });
+
+  it('matches all shared ESLint JavaScript rules', () => {
+    expect(eslintJavascriptConfig?.rules).toBeDefined();
+    expect(javascriptConfig.rules).toMatchObject(sharedEslintJavascriptRules);
+  });
+
+  it('matches shared non-core ESLint rule behavior', () => {
+    expect({
+      node: nodeConfig.rules['node/handle-callback-err'],
+      react: reactConfig.rules['react/hook-use-state'],
+    }).toStrictEqual({
+      node: ['error', '^(err|error)$'],
+      react: 'error',
+    });
+    expect(typescriptRulesConfig.rules).toMatchObject({
+      'typescript/consistent-type-exports': ['error'],
+      'typescript/no-confusing-void-expression': 'off',
+      'typescript/no-explicit-any': ['error'],
+      'typescript/no-extraneous-class': 'error',
+      'typescript/no-import-type-side-effects': ['error'],
+      'typescript/no-misused-promises': 'off',
+      'typescript/no-namespace': 'error',
+      'typescript/no-unnecessary-condition': 'error',
+      'typescript/no-unnecessary-type-assertion': 'off',
+      'typescript/restrict-plus-operands': [
+        'error',
+        { allowAny: false, allowBoolean: false, allowNullish: false, allowNumberAndString: false, allowRegExp: false },
+      ],
+    });
+    expect(unicornConfig.rules).toMatchObject({
+      'unicorn/prefer-at': 'error',
+      'unicorn/prefer-object-from-entries': 'error',
+      'unicorn/prefer-structured-clone': 'error',
+      'unicorn/switch-case-braces': 'error',
+      'unicorn/throw-new-error': 'off',
+    });
+    expect(vitestConfig.rules).toMatchObject({
+      'vitest/consistent-test-it': ['error', { fn: 'it', withinDescribe: 'it' }],
+      'vitest/expect-expect': [
+        'error',
+        {
+          additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped'],
+          assertFunctionNames: ['expect', 'expectTypeOf', 'assert', 'assertType', 'assert*', '*Equal'],
+        },
+      ],
+      'vitest/no-standalone-expect': ['error', { additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped'] }],
+    });
   });
 
   it('configures eslint-plugin-zod', () => {

@@ -1,4 +1,4 @@
-import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
+import { defineConfig } from 'oxlint';
 
 export const unicornConfig = defineConfig({
   plugins: ['unicorn'],
@@ -77,7 +77,7 @@ export const unicornConfig = defineConfig({
     'unicorn/prefer-array-flat-map': 'error',
     'unicorn/prefer-array-index-of': 'error',
     'unicorn/prefer-array-some': 'error',
-    'unicorn/prefer-at': ['error', { checkAllIndexAccess: false }],
+    'unicorn/prefer-at': 'error',
     'unicorn/prefer-bigint-literals': 'error',
     'unicorn/prefer-blob-reading-methods': 'error',
     'unicorn/prefer-class-fields': 'error',
@@ -104,7 +104,7 @@ export const unicornConfig = defineConfig({
     'unicorn/prefer-negative-index': 'error',
     'unicorn/prefer-node-protocol': 'error',
     'unicorn/prefer-number-properties': 'error',
-    'unicorn/prefer-object-from-entries': ['error', { functions: [] }],
+    'unicorn/prefer-object-from-entries': 'error',
     'unicorn/prefer-optional-catch-binding': 'error',
     'unicorn/prefer-prototype-methods': 'error',
     'unicorn/prefer-query-selector': 'error',
@@ -119,7 +119,7 @@ export const unicornConfig = defineConfig({
     'unicorn/prefer-string-slice': 'error',
     'unicorn/prefer-string-starts-ends-with': 'error',
     'unicorn/prefer-string-trim-start-end': 'error',
-    'unicorn/prefer-structured-clone': ['error', { functions: [] }],
+    'unicorn/prefer-structured-clone': 'error',
     'unicorn/prefer-ternary': ['error', 'only-single-line'],
     'unicorn/prefer-top-level-await': undefined,
     'unicorn/prefer-type-error': 'error',
@@ -129,7 +129,7 @@ export const unicornConfig = defineConfig({
     'unicorn/require-module-specifiers': 'error',
     'unicorn/require-number-to-fixed-digits-argument': 'error',
     'unicorn/require-post-message-target-origin': undefined,
-    'unicorn/switch-case-braces': ['error', 'always'],
+    'unicorn/switch-case-braces': 'error',
     'unicorn/switch-case-break-position': 'error',
     'unicorn/text-encoding-identifier-case': 'error',
     'unicorn/throw-new-error': 'off',
@@ -142,7 +142,5 @@ export const unicornConfig = defineConfig({
     'unicorn/prefer-single-call': undefined,
     'unicorn/explicit-timer-delay': undefined,
     'unicorn/no-confusing-array-with': undefined,
-  } satisfies {
-    [k in Extract<keyof RuleMap, `unicorn/${string}`>]: RuleMap[k];
   },
 });

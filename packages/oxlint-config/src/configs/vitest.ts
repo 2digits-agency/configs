@@ -1,4 +1,4 @@
-import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
+import { defineConfig } from 'oxlint';
 
 export const vitestConfig = defineConfig({
   plugins: ['vitest'],
@@ -13,7 +13,7 @@ export const vitestConfig = defineConfig({
       'error',
       { pattern: String.raw`.*\.spec\.[tj]sx?$`, allTestPattern: String.raw`.*\.(test|spec)\.[tj]sx?$` },
     ],
-    'vitest/consistent-test-it': 'error',
+    'vitest/consistent-test-it': ['error', { fn: 'it', withinDescribe: 'it' }],
     'vitest/consistent-vitest-vi': ['error', { fn: 'vi' }],
     'vitest/expect-expect': [
       'error',
@@ -91,7 +91,5 @@ export const vitestConfig = defineConfig({
 
     'vitest/padding-around-after-all-blocks': undefined,
     'vitest/padding-around-test-blocks': undefined,
-  } satisfies {
-    [k in Extract<keyof RuleMap, `vitest/${string}`>]: RuleMap[k];
   },
 });

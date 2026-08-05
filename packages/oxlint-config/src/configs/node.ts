@@ -1,9 +1,9 @@
-import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
+import { defineConfig } from 'oxlint';
 
 export const nodeConfig = defineConfig({
   plugins: ['node'],
   rules: {
-    'node/handle-callback-err': 'error',
+    'node/handle-callback-err': ['error', '^(err|error)$'],
     'node/no-exports-assign': 'error',
     'node/no-new-require': 'error',
     'node/no-path-concat': 'error',
@@ -14,7 +14,5 @@ export const nodeConfig = defineConfig({
     'node/no-process-env': undefined,
     'node/no-sync': undefined,
     'node/no-top-level-await': undefined,
-  } satisfies {
-    [k in Extract<keyof RuleMap, `node/${string}`>]: RuleMap[k];
   },
 });

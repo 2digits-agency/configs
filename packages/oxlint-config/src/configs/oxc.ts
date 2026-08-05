@@ -1,4 +1,4 @@
-import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
+import { defineConfig } from 'oxlint';
 
 export const oxcConfig = defineConfig({
   plugins: ['oxc'],
@@ -30,7 +30,5 @@ export const oxcConfig = defineConfig({
     'oxc/number-arg-out-of-range': 'error',
     'oxc/only-used-in-recursion': 'error',
     'oxc/uninvoked-array-callback': 'error',
-  } satisfies {
-    [k in Extract<keyof RuleMap, `oxc/${string}`>]: RuleMap[k];
   },
 });

@@ -1,4 +1,4 @@
-import { defineConfig } from '@oxlint-types/define-config';
+import { defineConfig } from 'oxlint';
 
 import { commonJsFiles, dtsFiles, testFiles } from '../globs';
 
@@ -7,9 +7,9 @@ export const overridesConfig = defineConfig({
     {
       files: [...dtsFiles],
       rules: {
-        'eslint/no-duplicate-imports': 'off',
-        'eslint/no-undef': 'off',
-        'eslint/no-unused-vars': 'off',
+        'no-duplicate-imports': 'off',
+        'no-undef': 'off',
+        'no-unused-vars': 'off',
         'import/unambiguous': 'off',
       },
     },
@@ -30,7 +30,7 @@ export const overridesConfig = defineConfig({
         vi: 'readonly',
       },
       rules: {
-        'eslint/no-unused-expressions': 'off',
+        'no-unused-expressions': 'off',
       },
     },
     {
