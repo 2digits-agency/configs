@@ -389,8 +389,8 @@ catalogs:
       specifier: 73.0.0
       version: 73.0.0
     eslint-plugin-yml:
-      specifier: 3.8.0
-      version: 3.8.0
+      specifier: 3.8.1
+      version: 3.8.1
     eslint-plugin-zod:
       specifier: 4.9.0
       version: 4.9.0
@@ -770,7 +770,7 @@ importers:
         version: 73.0.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-yml:
         specifier: 'catalog:'
-        version: 3.8.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))
+        version: 3.8.1(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-zod:
         specifier: 'catalog:'
         version: 4.9.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.77.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.7(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.7(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.5)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.5)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3)
@@ -1212,6 +1212,9 @@ packages:
   '@aws-sdk/core@3.977.4':
     resolution: {integrity: sha512-CEkcQlMOQJCvul60U7wdAOACjtdgFWDsfJI+6wUOGdhGNV2lGbuJpi/R50QLpFG3Tp+sQxa/RmzC3X7KHbhuTA==}
     engines: {node: '>=20.0.0'}
+    deprecated: |-
+      Deprecated due to Document number parsing bug in JSON, see
+        https://github.com/aws/aws-sdk-js-v3/issues/8246. Newer version available.
 
   '@aws-sdk/credential-provider-cognito-identity@3.972.64':
     resolution: {integrity: sha512-bilBheDT6GKnFkPnovgt1HL5spmnTCntm8w+hO3bmjnlZ8qMhqfQ1RJYPRTNsPlXaCcBXWUtg+zn/NM6WQUXoA==}
@@ -5158,8 +5161,8 @@ packages:
     peerDependencies:
       eslint: '>=10.4'
 
-  eslint-plugin-yml@3.8.0:
-    resolution: {integrity: sha512-LC1mTQnjqhmmevGHsK+2daDe9FI87pZ9P2ey8vue8YSIqKxOYNWUsCMo/pW9o0ipT5KTkI4gktq/YSXk9NeFUQ==}
+  eslint-plugin-yml@3.8.1:
+    resolution: {integrity: sha512-E/70psRwxz5EJ8dBtzrFfqSiiInuSytbdtFCjueb/GcKjsWzPBfxfhtQePImMAPjHwMA/VDurO7DJwStDJ4wWg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -11689,7 +11692,7 @@ snapshots:
       strip-indent: 4.1.1
       yaml: 2.9.0
 
-  eslint-plugin-yml@3.8.0(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0)):
+  eslint-plugin-yml@3.8.1(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0)):
     dependencies:
       '@eslint/core': 1.2.1
       '@eslint/plugin-kit': 0.7.2
