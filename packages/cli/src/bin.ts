@@ -24,4 +24,5 @@ const MainLive = Layer.mergeAll(
   NodeContext.layer,
 );
 
+// oxlint-disable-next-line effecttsgo/strict-effect-provide -- the process entry point is where the layer belongs
 cli(process.argv).pipe(Effect.provide(MainLive), NodeRuntime.runMain);

@@ -546,6 +546,9 @@ importers:
       '@2digits/tsconfig':
         specifier: workspace:*
         version: link:packages/tsconfig
+      '@effect/language-service':
+        specifier: 'catalog:'
+        version: 0.87.2
       '@effect/tsgo':
         specifier: 'catalog:'
         version: 0.36.0

@@ -32,7 +32,11 @@ export async function pnpm(): Promise<Array<TypedFlatConfigItem>> {
         pnpm,
       },
       rules: {
-        'pnpm/yaml-no-duplicate-catalog-item': 'error',
+        /**
+         * Named catalogs exist to pin a _different_ version of a package, so only an exact duplicate across catalogs is
+         * an actual mistake.
+         */
+        'pnpm/yaml-no-duplicate-catalog-item': ['error', { checkDuplicates: 'exact-version' }],
         'pnpm/yaml-no-unused-catalog-item': 'error',
         'pnpm/yaml-valid-packages': 'error',
         'pnpm/yaml-enforce-settings': [

@@ -87,9 +87,18 @@ export class MockCommandExecutor extends Effect.Service<MockCommandExecutor>()(
 
             return [];
           }),
-        stream: (command) => Stream.fromEffect(recordCommand(command)).pipe(Stream.flatMap(() => Stream.empty)),
+        stream: (command) =>
+          command.pipe(
+            recordCommand,
+            Stream.fromEffect,
+            Stream.flatMap(() => Stream.empty),
+          ),
         streamLines: (command, _encoding) =>
-          Stream.fromEffect(recordCommand(command)).pipe(Stream.flatMap(() => Stream.empty)),
+          command.pipe(
+            recordCommand,
+            Stream.fromEffect,
+            Stream.flatMap(() => Stream.empty),
+          ),
       };
 
       return {

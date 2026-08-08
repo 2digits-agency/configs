@@ -21,6 +21,8 @@ export interface TwoDigitsConfig extends Omit<OxlintConfig, 'extends' | 'plugins
   plugins?: Array<'effecttsgo' | NonNullable<OxlintConfig['plugins']>[number]>;
 }
 
+type Overrides = NonNullable<TwoDigitsConfig['overrides']>;
+
 /**
  * Extend the 2digits defaults with consumer configuration.
  *
@@ -28,12 +30,19 @@ export interface TwoDigitsConfig extends Omit<OxlintConfig, 'extends' | 'plugins
  *
  * @param configs Consumer configurations to merge into the defaults.
  */
-export function withTwoDigits(...configs: Array<TwoDigitsConfig>): OxlintConfig {
+export function withTwoDigits(...configs: Array<TwoDigitsConfig>): TwoDigitsConfig {
   let config: TwoDigitsConfig = twoDigits;
 
-  for (const overrides of configs) {
-    config = defu(overrides, config);
+  /**
+   * Oxlint applies `overrides` in array order, so the last matching entry wins. Merging them with `defu` would prepend
+   * each config's entries and hand precedence to the earliest config, so they are collected separately.
+   */
+  const extraOverrides: Overrides = [];
+
+  for (const { overrides = [], ...rest } of configs) {
+    config = defu(rest, config);
+    extraOverrides.push(...overrides);
   }
 
-  return config as never as OxlintConfig;
+  return { ...config, overrides: [...(config.overrides ?? []), ...extraOverrides] };
 }

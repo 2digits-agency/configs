@@ -113,7 +113,7 @@ export class Message extends Schema.Class<Message>('Message')({
   internal: Schema.optional(Schema.Boolean),
 }) {}
 
-export function messageFromRaw(raw: MessageRaw): typeof Message.Type {
+export function messageFromRaw(raw: MessageRaw): Message {
   return new Message({
     id: raw.ID,
     ownerId: raw.OWNERID,
@@ -164,7 +164,7 @@ export class Task extends Schema.Class<Task>('Task')({
   budget: Schema.optional(Schema.Number),
 }) {}
 
-export function taskFromRaw(raw: TaskRaw): typeof Task.Type {
+export function taskFromRaw(raw: TaskRaw): Task {
   return new Task({
     id: raw.ID,
     projectId: raw.PROJECTID,
@@ -231,7 +231,7 @@ export class TaskForUser extends Schema.Class<TaskForUser>('TaskForUser')({
   state: Schema.optional(Schema.String),
 }) {}
 
-export function taskForUserFromRaw(raw: TaskForUserRaw): typeof TaskForUser.Type {
+export function taskForUserFromRaw(raw: TaskForUserRaw): TaskForUser {
   return new TaskForUser({
     id: raw.ID,
     workload: raw.WORKLOAD,
@@ -259,9 +259,9 @@ const TodoSummaryRaw = Schema.Struct({
   BOARDID: Schema.optional(Schema.Number),
   OWNERID: Schema.optional(Schema.Number),
   EXTID: Schema.optional(Schema.String),
-  STATE: Schema.optional(Schema.NullOr(Schema.String)),
-  DUE_DT: Schema.optional(Schema.NullOr(Schema.String)),
-  DESCRIPTION: Schema.optional(Schema.NullOr(Schema.String)),
+  STATE: Schema.String.pipe(Schema.NullOr, Schema.optional),
+  DUE_DT: Schema.String.pipe(Schema.NullOr, Schema.optional),
+  DESCRIPTION: Schema.String.pipe(Schema.NullOr, Schema.optional),
 });
 
 export type GetBoardTodosResponse = typeof GetBoardTodosResponse.Type;
@@ -277,12 +277,12 @@ export class TodoSummary extends Schema.Class<TodoSummary>('TodoSummary')({
   boardId: Schema.optional(Schema.Number),
   ownerId: Schema.optional(Schema.Number),
   extId: Schema.optional(Schema.String),
-  state: Schema.optional(Schema.NullOr(Schema.String)),
-  dueDate: Schema.optional(Schema.NullOr(Schema.String)),
-  description: Schema.optional(Schema.NullOr(Schema.String)),
+  state: Schema.String.pipe(Schema.NullOr, Schema.optional),
+  dueDate: Schema.String.pipe(Schema.NullOr, Schema.optional),
+  description: Schema.String.pipe(Schema.NullOr, Schema.optional),
 }) {}
 
-export function todoSummaryFromRaw(raw: TodoSummaryRaw): typeof TodoSummary.Type {
+export function todoSummaryFromRaw(raw: TodoSummaryRaw): TodoSummary {
   return new TodoSummary({
     id: raw.ID,
     name: raw.NAME,

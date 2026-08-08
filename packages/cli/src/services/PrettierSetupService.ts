@@ -1,6 +1,7 @@
 import * as Effect from 'effect/Effect';
+import * as Predicate from 'effect/Predicate';
 
-import { PackageManagerService } from './PackageManagerService';
+import { PackageManagerService, type PackageJson } from './PackageManagerService';
 
 export class PrettierSetupService extends Effect.Service<PrettierSetupService>()(
   '@2digits/cli/services/PrettierSetupService',
@@ -13,19 +14,19 @@ export class PrettierSetupService extends Effect.Service<PrettierSetupService>()
 
         const root = yield* pm.resolveRoot();
 
-        const packageJson = yield* pm.readPackageJson({ id: root });
+        const packageJson: PackageJson = yield* pm.readPackageJson({ id: root });
 
-        if (!packageJson.prettier) {
+        if (!Predicate.isTruthy(packageJson.prettier)) {
           packageJson.prettier = '@2digits/prettier-config';
           yield* Effect.logInfo('✅ Added prettier config to package.json');
         }
 
         packageJson.scripts ??= {};
-        if (!packageJson.scripts.format) {
+        if (packageJson.scripts.format === undefined || packageJson.scripts.format === '') {
           packageJson.scripts.format = 'prettier . --ignore-unknown --check --cache';
           yield* Effect.logInfo('✅ Added format script');
         }
-        if (!packageJson.scripts['format:fix']) {
+        if (packageJson.scripts['format:fix'] === undefined || packageJson.scripts['format:fix'] === '') {
           packageJson.scripts['format:fix'] = 'prettier . --ignore-unknown --write --cache';
           yield* Effect.logInfo('✅ Added format:fix script');
         }

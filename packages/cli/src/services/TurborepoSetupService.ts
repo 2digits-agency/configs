@@ -7,8 +7,11 @@ import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
 import * as Option from 'effect/Option';
+import * as Predicate from 'effect/Predicate';
+import * as Schema from 'effect/Schema';
 import * as Struct from 'effect/Struct';
 
+import { type TurboConfig, TurboConfigJson } from '../schemas/TurboConfig';
 import { PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
 
@@ -16,13 +19,6 @@ class TurborepoSetupError extends Data.TaggedError('@2digits/cli/services/Turbor
   message: string;
   cause?: unknown;
 }> {}
-
-export interface TurboConfig {
-  tasks?: Record<string, unknown>;
-  globalPassThroughEnv?: Array<string>;
-  ui?: string;
-  [key: string]: unknown;
-}
 
 type TaskCategory = 'build' | 'test' | 'lint' | 'typecheck' | 'dev' | 'other';
 
@@ -79,10 +75,10 @@ const generateTaskConfig = Match.type<TaskCategory>().pipe(
  * @param detectedTasks - The set of detected tasks.
  */
 function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): TurboConfig {
-  const tasks = existingConfig.tasks ?? {};
+  const tasks = { ...existingConfig.tasks };
 
   for (const taskName of detectedTasks) {
-    if (tasks[taskName]) {
+    if (Predicate.isTruthy(tasks[taskName])) {
       continue;
     }
 
@@ -143,14 +139,15 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
           .readFileString(turboPath)
           .pipe(Effect.mapError((cause) => new TurborepoSetupError({ message: 'Failed to read turbo.json', cause })));
 
-        const config = yield* Effect.try({
-          try: () => JSON.parse(content) as TurboConfig,
-          catch: (cause) =>
-            new TurborepoSetupError({
-              message: 'Invalid JSON in turbo.json',
-              cause,
-            }),
-        });
+        const config = yield* Schema.decodeUnknown(TurboConfigJson)(content).pipe(
+          Effect.mapError(
+            (cause) =>
+              new TurborepoSetupError({
+                message: 'Invalid JSON in turbo.json',
+                cause,
+              }),
+          ),
+        );
 
         return Option.some(config);
       });
@@ -162,7 +159,9 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
         const root = yield* pm.resolveRoot();
         const turboPath = path.join(root, 'turbo.json');
 
-        const content = JSON.stringify(config, undefined, 2);
+        const content = yield* Schema.encode(TurboConfigJson)(config).pipe(
+          Effect.mapError((cause) => new TurborepoSetupError({ message: 'Failed to write turbo.json', cause })),
+        );
 
         yield* fs
           .writeFileString(turboPath, content)
@@ -213,7 +212,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
           // eslint-disable-next-line unicorn/no-unreadable-object-destructuring
           const { [taskName]: existingScript } = scripts;
 
-          if (!existingScript) {
+          if (existingScript === undefined || existingScript === '') {
             scripts[taskName] = turboCommand;
             updated = true;
             yield* Effect.logInfo(`✅ Added script: ${taskName}`);
@@ -263,7 +262,7 @@ export class TurborepoSetupService extends Effect.Service<TurborepoSetupService>
         yield* Effect.logInfo('Detecting project type...');
         const root = yield* pm.resolveRoot();
         const rootPackageJson = yield* pm.readPackageJson({ id: root });
-        const isMonorepo = !!rootPackageJson.workspaces;
+        const isMonorepo = rootPackageJson.workspaces !== undefined;
 
         if (!isMonorepo) {
           yield* Effect.logInfo('⚠️  Not a monorepo project - Turborepo requires monorepo structure');

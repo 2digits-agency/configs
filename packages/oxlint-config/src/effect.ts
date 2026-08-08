@@ -111,3 +111,26 @@ export const effectConfig: TwoDigitsConfig = {
     'effecttsgo/unsafe-effect-type-assertion': 'error',
   },
 };
+
+/**
+ * {@link effectConfig}, targeted at the sources that are written with Effect.
+ *
+ * The rules judge plain TypeScript as well — `async-function`, `process-env` and `node-builtin-import` fire on any file
+ * — so pointing them at a package that does not depend on `effect` reports advice that cannot be followed without
+ * adopting Effect there. In a repository that mixes Effect and non-Effect packages, name the Effect ones. The plugin
+ * itself stays enabled globally because Oxlint only accepts `plugins` and `options` at the top level.
+ *
+ * @example
+ *   ```ts
+ *   export default withTwoDigits(effectConfigFor(['packages/api/src/**', 'packages/worker/src/**']));
+ *   ```;
+ *
+ * @param files Globs selecting the Effect sources.
+ */
+export function effectConfigFor(files: Array<string>): TwoDigitsConfig {
+  return {
+    plugins: effectConfig.plugins,
+    options: effectConfig.options,
+    overrides: [{ files, rules: effectConfig.rules }],
+  };
+}

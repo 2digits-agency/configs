@@ -3,10 +3,13 @@ import * as NodePath from '@effect/platform-node/NodePath';
 import * as FileSystem from '@effect/platform/FileSystem';
 import * as Path from '@effect/platform/Path';
 import * as Array from 'effect/Array';
+import * as Clock from 'effect/Clock';
 import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
+import * as Schema from 'effect/Schema';
 
+import { type TurboConfig, TurboConfigJson } from '../schemas/TurboConfig';
 import { EslintDetectionService } from './EslintDetectionService';
 import { PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
@@ -15,13 +18,6 @@ class EslintSetupError extends Data.TaggedError('@2digits/cli/services/EslintSet
   message: string;
   cause?: unknown;
 }> {}
-
-interface TurboConfig {
-  tasks?: Record<string, unknown>;
-  globalPassThroughEnv?: Array<string>;
-  ui?: string;
-  [key: string]: unknown;
-}
 
 /**
  * Generate root ESLint configuration content.
@@ -62,7 +58,7 @@ export default twoDigits();
  * @param config - The base turbo config object.
  */
 function mergeLintTasks(config: TurboConfig): TurboConfig {
-  const tasks = config.tasks ?? {};
+  const tasks = { ...config.tasks };
 
   // Only add tasks if they don't already exist
   tasks.lint ??= {
@@ -129,7 +125,7 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
           // Check if backup already exists, append timestamp if needed
           const backupExists = yield* fs.exists(backupPath).pipe(Effect.orElseSucceed(() => false));
 
-          const finalBackupPath = backupExists ? `${backupPath}.${Date.now()}` : backupPath;
+          const finalBackupPath = backupExists ? `${backupPath}.${yield* Clock.currentTimeMillis}` : backupPath;
 
           yield* fs.copy(configPath, finalBackupPath);
           backups.push(finalBackupPath);
@@ -172,14 +168,15 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
           .readFileString(turboPath)
           .pipe(Effect.mapError((cause) => new EslintSetupError({ message: 'Failed to read turbo.json', cause })));
 
-        const config = yield* Effect.try({
-          try: () => JSON.parse(content) as TurboConfig,
-          catch: (cause) =>
-            new EslintSetupError({
-              message: 'Invalid JSON in turbo.json',
-              cause,
-            }),
-        });
+        const config = yield* Schema.decodeUnknown(TurboConfigJson)(content).pipe(
+          Effect.mapError(
+            (cause) =>
+              new EslintSetupError({
+                message: 'Invalid JSON in turbo.json',
+                cause,
+              }),
+          ),
+        );
 
         return Option.some(config);
       });
@@ -191,7 +188,9 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
         const root = yield* pm.resolveRoot();
         const turboPath = path.join(root, 'turbo.json');
 
-        const content = JSON.stringify(config, undefined, 2);
+        const content = yield* Schema.encode(TurboConfigJson)(config).pipe(
+          Effect.mapError((cause) => new EslintSetupError({ message: 'Failed to write turbo.json', cause })),
+        );
 
         yield* fs
           .writeFileString(turboPath, content)
@@ -300,7 +299,7 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
 
         if (Option.isSome(turboConfigOption)) {
           const { value: turboConfig } = turboConfigOption;
-          const hasLintTask = turboConfig.tasks && 'lint' in turboConfig.tasks;
+          const hasLintTask = turboConfig.tasks !== undefined && 'lint' in turboConfig.tasks;
 
           if (hasLintTask) {
             yield* Effect.logInfo('✅ Lint tasks already exist in turbo.json');
@@ -349,23 +348,23 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
 
         const { lint, 'lint:fix': lintFix, 'lint:root': lintRoot, 'lint:root:fix': lintRootFix } = scripts;
 
-        if (!lint) {
+        if (lint === undefined || lint === '') {
           scripts.lint = isMonorepo ? 'turbo run lint lint:root' : 'eslint .';
           yield* Effect.logInfo('✅ Added lint script');
         }
 
-        if (!lintFix) {
+        if (lintFix === undefined || lintFix === '') {
           scripts['lint:fix'] = isMonorepo ? 'turbo run lint:fix lint:root:fix' : 'eslint . --fix';
           yield* Effect.logInfo('✅ Added lint:fix script');
         }
 
         if (isMonorepo) {
-          if (!lintRoot) {
+          if (lintRoot === undefined || lintRoot === '') {
             scripts['lint:root'] = 'eslint .';
             yield* Effect.logInfo('✅ Added lint:root script');
           }
 
-          if (!lintRootFix) {
+          if (lintRootFix === undefined || lintRootFix === '') {
             scripts['lint:root:fix'] = 'eslint . --fix';
             yield* Effect.logInfo('✅ Added lint:root:fix script');
           }

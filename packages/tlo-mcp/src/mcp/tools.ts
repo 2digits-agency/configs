@@ -19,7 +19,7 @@ export const GetProjects = Tool.make('get_projects', {
   description:
     'List all projects. Returns projectId, folderId, client, owner, dates, and budget info. Use to discover projects before drilling into tasks or logging time. Data hierarchy: FOLDER → PROJECT → TASK → ACTIVITY.',
   parameters: {
-    states: Schema.optional(Schema.Array(TaskStateSchema)).annotations({
+    states: TaskStateSchema.pipe(Schema.Array, Schema.optional).annotations({
       description: 'Filter by project states: DRAFT, OPEN, COMPLETED, CLOSED. Defaults to DRAFT, OPEN, CLOSED',
     }),
     limit: Schema.optional(Schema.Number).annotations({
@@ -90,7 +90,7 @@ export const GetTasks = Tool.make('get_tasks', {
     'Get tasks within a project. Tasks have budget (workload), remaining hours, and state. Use taskId when logging time to attribute work to specific deliverables.',
   parameters: {
     projectId: Schema.Number.annotations({ description: 'Project ID from get_projects' }),
-    states: Schema.optional(Schema.Array(TaskStateSchema)).annotations({
+    states: TaskStateSchema.pipe(Schema.Array, Schema.optional).annotations({
       description: 'Filter by task states: DRAFT, OPEN, COMPLETED, CLOSED. Defaults to DRAFT, OPEN, CLOSED',
     }),
     limit: Schema.optional(Schema.Number).annotations({
