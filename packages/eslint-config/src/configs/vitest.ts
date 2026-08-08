@@ -88,6 +88,7 @@ export async function vitest(options: OptionsWithVitest & OptionsOverrides = {})
         'vitest/valid-describe-callback': 'error',
         'vitest/valid-expect': 'error',
         'vitest/valid-expect-in-promise': 'error',
+        'vitest/valid-title': 'error',
         'vitest/warn-todo': 'error',
 
         ...overrides,
