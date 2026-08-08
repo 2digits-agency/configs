@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vite-plus/test';
 
 import eslintTwoDigits from '@2digits/eslint-config';
 
-import withTwoDigits, { twoDigits } from '../src';
+import withTwoDigits, { twoDigits, type TwoDigitsConfig } from '../src';
 import { javascriptConfig } from '../src/configs/javascript';
 import { nodeConfig } from '../src/configs/node';
 import { reactConfig } from '../src/configs/react';
@@ -13,6 +13,7 @@ import { typescriptRulesConfig } from '../src/configs/typescript';
 import { unicornConfig } from '../src/configs/unicorn';
 import { vitestConfig } from '../src/configs/vitest';
 import { zodConfig } from '../src/configs/zod';
+import { effectConfig } from '../src/effect';
 
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
@@ -47,6 +48,21 @@ const sharedEslintJavascriptRules = Object.fromEntries(
     ([rule, value]) => value !== undefined && sharedJavascriptRuleNames.has(rule),
   ),
 );
+
+function collectPluginsAndRules(config: TwoDigitsConfig): Array<string> {
+  const nested = config.extends ?? [];
+
+  return [
+    ...(config.plugins ?? []),
+    ...Object.keys(config.rules ?? {}),
+    ...nested.flatMap((child) => collectPluginsAndRules(child)),
+  ];
+}
+
+const defaultPresetEffectEntries = collectPluginsAndRules(twoDigits).filter((entry) => entry.startsWith('effecttsgo'));
+const effectRules = Object.entries(effectConfig.rules ?? {});
+const foreignEffectRules = effectRules.filter(([rule]) => !rule.startsWith('effecttsgo/')).map(([rule]) => rule);
+const effectWarnings = effectRules.filter(([, severity]) => severity === 'warn').map(([rule]) => rule);
 
 describe('oxlint config', () => {
   it('preserves top-level defaults when extending the config', () => {
@@ -123,6 +139,21 @@ describe('oxlint config', () => {
     expect(plugin?.name).toBe('zod');
     expect(plugin?.specifier).toContain('eslint-plugin-zod');
     expect(zodConfig.rules['zod/array-style']).toStrictEqual(['error', { style: 'function' }]);
+  });
+
+  it('keeps the Effect rules out of the default preset', () => {
+    expect(defaultPresetEffectEntries).toStrictEqual([]);
+  });
+
+  it('enables the patched effecttsgo plugin in type-aware mode', () => {
+    expect(effectConfig.plugins).toStrictEqual(['effecttsgo']);
+    expect(effectConfig.options).toMatchObject({ typeAware: true });
+    expect(foreignEffectRules).toStrictEqual([]);
+    expect(effectWarnings).toStrictEqual([
+      'effecttsgo/missing-pipeable-signature',
+      'effecttsgo/strict-boolean-expressions',
+      'effecttsgo/strict-effect-provide',
+    ]);
   });
 
   it('loads and executes eslint-plugin-zod', () => {
