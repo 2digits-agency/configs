@@ -2,7 +2,7 @@ import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
   pack: {
-    entry: ['src/index.ts', 'src/base.ts', 'src/typescript.ts'],
+    entry: ['src/index.ts', 'src/base.ts', 'src/typescript.ts', 'src/effect.ts'],
     dts: {
       tsgo: true,
     },
