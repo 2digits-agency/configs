@@ -4,18 +4,29 @@ import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import * as FileSystem from '@effect/platform/FileSystem';
 import * as Path from '@effect/platform/Path';
-import { describe, expect, it } from '@effect/vitest';
+import { describe, expect, layer } from '@effect/vitest';
 import { assertRight, assertTrue, strictEqual } from '@effect/vitest/utils';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Schema from 'effect/Schema';
 
 import { EslintDetectionService } from '../../../src/services/EslintDetectionService.js';
 import { EslintSetupService } from '../../../src/services/EslintSetupService.js';
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
-import type { TurboConfig } from '../../../src/services/TurborepoSetupService.js';
 import { MockCommandExecutor, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
+
+const TurboConfigSchema = Schema.Struct(
+  {
+    $schema: Schema.optional(Schema.String),
+    tasks: Schema.optional(Schema.Record({ key: Schema.String, value: Schema.Unknown })),
+    globalPassThroughEnv: Schema.Array(Schema.String).pipe(Schema.optional),
+    ui: Schema.optional(Schema.String),
+  },
+  Schema.Record({ key: Schema.String, value: Schema.Unknown }),
+);
+const TurboConfigJson = Schema.parseJson(TurboConfigSchema, { space: 2 });
 
 describe(EslintSetupService, () => {
   const testLayer = Layer.mergeAll(
@@ -29,365 +40,325 @@ describe(EslintSetupService, () => {
     NodePath.layer,
   );
 
-  describe('setup - single package', () => {
-    it.scoped('sets up eslint in single package project', (ctx) =>
-      Effect.gen(function* () {
-        const service = yield* EslintSetupService;
-        const pm = yield* PackageManagerService;
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+  layer(testLayer)((it) =>
+    describe('setup - single package', () => {
+      it.scoped('sets up eslint in single package project', (ctx) =>
+        Effect.gen(function* () {
+          const service = yield* EslintSetupService;
+          const pm = yield* PackageManagerService;
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        yield* copyFixture('single-package');
+          yield* copyFixture('single-package');
 
-        // Run setup
-        yield* service.setup();
+          // Run setup
+          yield* service.setup();
 
-        // Check eslint.config.ts was created
-        const configPath = path.join(tempDir, 'eslint.config.ts');
-        const configExists = yield* fs.exists(configPath);
+          // Check eslint.config.ts was created
+          const configPath = path.join(tempDir, 'eslint.config.ts');
+          const configExists = yield* fs.exists(configPath);
 
-        strictEqual(configExists, true);
+          strictEqual(configExists, true);
 
-        // Check config content
-        const configContent = yield* fs.readFileString(configPath);
+          // Check config content
+          const configContent = yield* fs.readFileString(configPath);
 
-        assertTrue(configContent.includes('@2digits/eslint-config'));
-        assertTrue(configContent.includes('export default twoDigits()'));
+          assertTrue(configContent.includes('@2digits/eslint-config'));
+          assertTrue(configContent.includes('export default twoDigits()'));
 
-        // Check package.json was updated
-        const updatedPkg = yield* pm.readPackageJson({ id: tempDir });
+          // Check package.json was updated
+          const updatedPkg = yield* pm.readPackageJson({ id: tempDir });
 
-        assertTrue(updatedPkg.scripts?.lint !== undefined);
-        assertTrue(updatedPkg.scripts['lint:fix'] !== undefined);
-        strictEqual(updatedPkg.scripts.lint, 'eslint .');
-        strictEqual(updatedPkg.scripts['lint:fix'], 'eslint . --fix');
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
+          assertTrue(updatedPkg.scripts?.lint !== undefined);
+          assertTrue(updatedPkg.scripts['lint:fix'] !== undefined);
+          strictEqual(updatedPkg.scripts.lint, 'eslint .');
+          strictEqual(updatedPkg.scripts['lint:fix'], 'eslint . --fix');
+        }),
+      );
+    }),
+  );
 
-  describe('setup - monorepo', () => {
-    it.scoped('sets up eslint in monorepo project', (ctx) =>
-      Effect.gen(function* () {
-        const service = yield* EslintSetupService;
-        const pm = yield* PackageManagerService;
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+  layer(testLayer)((it) =>
+    describe('setup - monorepo', () => {
+      it.scoped('sets up eslint in monorepo project', (ctx) =>
+        Effect.gen(function* () {
+          const service = yield* EslintSetupService;
+          const pm = yield* PackageManagerService;
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        yield* copyFixture('monorepo-turborepo');
+          yield* copyFixture('monorepo-turborepo');
 
-        yield* service.setup();
+          yield* service.setup();
 
-        const rootConfigContent = yield* fs.readFileString(path.join(tempDir, 'eslint.config.ts'));
+          const rootConfigContent = yield* fs.readFileString(path.join(tempDir, 'eslint.config.ts'));
 
-        expect(rootConfigContent).toMatchSnapshot('eslint.config.ts');
+          expect(rootConfigContent).toMatchSnapshot('eslint.config.ts');
 
-        const workspaceConfigContent = yield* fs.readFileString(path.join(tempDir, 'packages/app/eslint.config.ts'));
+          const workspaceConfigContent = yield* fs.readFileString(path.join(tempDir, 'packages/app/eslint.config.ts'));
 
-        expect(workspaceConfigContent).toMatchSnapshot('packages/app/eslint.config.ts');
+          expect(workspaceConfigContent).toMatchSnapshot('packages/app/eslint.config.ts');
 
-        const updatedPkg = yield* pm.readPackageJson({ id: tempDir });
+          const updatedPkg = yield* pm.readPackageJson({ id: tempDir });
 
-        expect(updatedPkg).toMatchSnapshot('package.json');
+          expect(updatedPkg).toMatchSnapshot('package.json');
 
-        const turboContent = yield* fs.readFileString(path.join(tempDir, 'turbo.json'));
+          const turboContent = yield* fs.readFileString(path.join(tempDir, 'turbo.json'));
 
-        expect(JSON.parse(turboContent)).toMatchSnapshot('turbo.json');
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
+          const turboConfig = yield* Schema.decodeUnknown(TurboConfigJson)(turboContent);
 
-  describe('setup - with existing config', () => {
-    it.scoped('backs up existing eslint config', (ctx) =>
-      Effect.gen(function* () {
-        const service = yield* EslintSetupService;
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          expect(turboConfig).toMatchSnapshot('turbo.json');
+        }),
+      );
+    }),
+  );
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+  layer(testLayer)((it) =>
+    describe('setup - with existing config', () => {
+      it.scoped('backs up existing eslint config', (ctx) =>
+        Effect.gen(function* () {
+          const service = yield* EslintSetupService;
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('existing-configs');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        // Run setup
-        yield* service.setup();
+          yield* copyFixture('existing-configs');
 
-        const backupPath = path.join(tempDir, 'eslint.config.js.backup');
-        const backupContent = yield* fs.readFileString(backupPath);
+          // Run setup
+          yield* service.setup();
 
-        expect(backupContent).toMatchSnapshot('eslint.config.js.backup');
+          const backupPath = path.join(tempDir, 'eslint.config.js.backup');
+          const backupContent = yield* fs.readFileString(backupPath);
 
-        const newConfigPath = path.join(tempDir, 'eslint.config.ts');
-        const newConfigContent = yield* fs.readFileString(newConfigPath);
+          expect(backupContent).toMatchSnapshot('eslint.config.js.backup');
 
-        expect(newConfigContent).toMatchSnapshot('eslint.config.ts');
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
+          const newConfigPath = path.join(tempDir, 'eslint.config.ts');
+          const newConfigContent = yield* fs.readFileString(newConfigPath);
 
-  describe('internal methods', () => {
-    it.scoped('writeEslintConfig creates config file', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          expect(newConfigContent).toMatchSnapshot('eslint.config.ts');
+        }),
+      );
+    }),
+  );
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+  layer(testLayer)((it) =>
+    describe('internal methods', () => {
+      it.scoped('writeEslintConfig creates config file', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('single-package');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const configPath = path.join(tempDir, 'eslint.config.ts');
-        const content = 'import twoDigits from "@2digits/eslint-config";\nexport default twoDigits();';
+          yield* copyFixture('single-package');
 
-        yield* fs.writeFileString(configPath, content);
+          const configPath = path.join(tempDir, 'eslint.config.ts');
+          const content = 'import twoDigits from "@2digits/eslint-config";\nexport default twoDigits();';
 
-        const written = yield* fs.readFileString(configPath);
+          yield* fs.writeFileString(configPath, content);
 
-        strictEqual(written, content);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const written = yield* fs.readFileString(configPath);
 
-    it.scoped('addLintScripts adds scripts to single package', (ctx) =>
-      Effect.gen(function* () {
-        const pm = yield* PackageManagerService;
+          strictEqual(written, content);
+        }),
+      );
 
-        yield* withTempTestEnv(ctx.task.id);
+      it.scoped('addLintScripts adds scripts to single package', (ctx) =>
+        Effect.gen(function* () {
+          const pm = yield* PackageManagerService;
 
-        yield* copyFixture('single-package');
+          yield* withTempTestEnv(ctx.task.id);
 
-        const pkg = yield* pm.readPackageJson();
+          yield* copyFixture('single-package');
 
-        pkg.scripts ??= {};
-        pkg.scripts.lint = 'eslint .';
-        pkg.scripts['lint:fix'] = 'eslint . --fix';
-        yield* pm.writePackageJson({ content: pkg });
+          const pkg = yield* pm.readPackageJson();
 
-        const updated = yield* pm.readPackageJson();
+          pkg.scripts ??= {};
+          pkg.scripts.lint = 'eslint .';
+          pkg.scripts['lint:fix'] = 'eslint . --fix';
+          yield* pm.writePackageJson({ content: pkg });
 
-        strictEqual(updated.scripts?.lint, 'eslint .');
-        strictEqual(updated.scripts?.['lint:fix'], 'eslint . --fix');
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const updated = yield* pm.readPackageJson();
 
-    it.scoped('addLintScripts adds monorepo scripts', (ctx) =>
-      Effect.gen(function* () {
-        const pm = yield* PackageManagerService;
+          strictEqual(updated.scripts?.lint, 'eslint .');
+          strictEqual(updated.scripts?.['lint:fix'], 'eslint . --fix');
+        }),
+      );
 
-        yield* withTempTestEnv(ctx.task.id);
+      it.scoped('addLintScripts adds monorepo scripts', (ctx) =>
+        Effect.gen(function* () {
+          const pm = yield* PackageManagerService;
 
-        yield* copyFixture('monorepo-turborepo');
+          yield* withTempTestEnv(ctx.task.id);
 
-        const pkg = yield* pm.readPackageJson();
+          yield* copyFixture('monorepo-turborepo');
 
-        pkg.scripts ??= {};
-        pkg.scripts.lint = 'turbo run lint lint:root';
-        pkg.scripts['lint:fix'] = 'turbo run lint:fix lint:root:fix';
-        pkg.scripts['lint:root'] = 'eslint .';
-        pkg.scripts['lint:root:fix'] = 'eslint . --fix';
-        yield* pm.writePackageJson({ content: pkg });
+          const pkg = yield* pm.readPackageJson();
 
-        const updated = yield* pm.readPackageJson();
+          pkg.scripts ??= {};
+          pkg.scripts.lint = 'turbo run lint lint:root';
+          pkg.scripts['lint:fix'] = 'turbo run lint:fix lint:root:fix';
+          pkg.scripts['lint:root'] = 'eslint .';
+          pkg.scripts['lint:root:fix'] = 'eslint . --fix';
+          yield* pm.writePackageJson({ content: pkg });
 
-        strictEqual(updated.scripts?.lint, 'turbo run lint lint:root');
-        strictEqual(updated.scripts?.['lint:fix'], 'turbo run lint:fix lint:root:fix');
-        strictEqual(updated.scripts?.['lint:root'], 'eslint .');
-        strictEqual(updated.scripts?.['lint:root:fix'], 'eslint . --fix');
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const updated = yield* pm.readPackageJson();
 
-    it.scoped('backupExistingConfigs creates backup files', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          strictEqual(updated.scripts?.lint, 'turbo run lint lint:root');
+          strictEqual(updated.scripts?.['lint:fix'], 'turbo run lint:fix lint:root:fix');
+          strictEqual(updated.scripts?.['lint:root'], 'eslint .');
+          strictEqual(updated.scripts?.['lint:root:fix'], 'eslint . --fix');
+        }),
+      );
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+      it.scoped('backupExistingConfigs creates backup files', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('existing-configs');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const originalPath = path.join(tempDir, 'eslint.config.js');
-        const originalExists = yield* fs.exists(originalPath);
+          yield* copyFixture('existing-configs');
 
-        strictEqual(originalExists, true);
+          const originalPath = path.join(tempDir, 'eslint.config.js');
+          const originalExists = yield* fs.exists(originalPath);
 
-        const originalContent = yield* fs.readFileString(originalPath);
-        const backupPath = `${originalPath}.backup`;
+          strictEqual(originalExists, true);
 
-        yield* fs.copy(originalPath, backupPath);
+          const originalContent = yield* fs.readFileString(originalPath);
+          const backupPath = `${originalPath}.backup`;
 
-        const backupExists = yield* fs.exists(backupPath);
+          yield* fs.copy(originalPath, backupPath);
 
-        strictEqual(backupExists, true);
+          const backupExists = yield* fs.exists(backupPath);
 
-        const backupContent = yield* fs.readFileString(backupPath);
+          strictEqual(backupExists, true);
 
-        strictEqual(backupContent, originalContent);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const backupContent = yield* fs.readFileString(backupPath);
 
-    it.scoped('backupExistingConfigs handles duplicate backups', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          strictEqual(backupContent, originalContent);
+        }),
+      );
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+      it.scoped('backupExistingConfigs handles duplicate backups', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('existing-configs');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const originalPath = path.join(tempDir, 'eslint.config.js');
-        const backupPath = `${originalPath}.backup`;
+          yield* copyFixture('existing-configs');
 
-        yield* fs.copy(originalPath, backupPath);
+          const originalPath = path.join(tempDir, 'eslint.config.js');
+          const backupPath = `${originalPath}.backup`;
 
-        const firstBackupExists = yield* fs.exists(backupPath);
+          yield* fs.copy(originalPath, backupPath);
 
-        strictEqual(firstBackupExists, true);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const firstBackupExists = yield* fs.exists(backupPath);
 
-    it.scoped('removeOldConfigs deletes existing configs', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          strictEqual(firstBackupExists, true);
+        }),
+      );
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+      it.scoped('removeOldConfigs deletes existing configs', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('existing-configs');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const configPath = path.join(tempDir, 'eslint.config.js');
-        const existsBefore = yield* fs.exists(configPath);
+          yield* copyFixture('existing-configs');
 
-        strictEqual(existsBefore, true);
+          const configPath = path.join(tempDir, 'eslint.config.js');
+          const existsBefore = yield* fs.exists(configPath);
 
-        yield* fs.remove(configPath);
+          strictEqual(existsBefore, true);
 
-        const existsAfter = yield* fs.exists(configPath);
+          yield* fs.remove(configPath);
 
-        strictEqual(existsAfter, false);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const existsAfter = yield* fs.exists(configPath);
 
-    it.scoped('readTurboConfig returns config if exists', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          strictEqual(existsAfter, false);
+        }),
+      );
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+      it.scoped('readTurboConfig returns config if exists', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('monorepo-turborepo');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const turboPath = path.join(tempDir, 'turbo.json');
-        const content = yield* fs.readFileString(turboPath);
-        const config = JSON.parse(content) as TurboConfig;
+          yield* copyFixture('monorepo-turborepo');
 
-        assertTrue(typeof config === 'object');
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const turboPath = path.join(tempDir, 'turbo.json');
+          const content = yield* fs.readFileString(turboPath);
+          const config = yield* Schema.decodeUnknown(TurboConfigJson)(content);
 
-    it.scoped('readTurboConfig returns none if not exists', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          assertTrue(typeof config === 'object');
+        }),
+      );
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+      it.scoped('readTurboConfig returns none if not exists', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('single-package');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const turboPath = path.join(tempDir, 'turbo.json');
-        const exists = yield* fs.exists(turboPath);
+          yield* copyFixture('single-package');
 
-        strictEqual(exists, false);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const turboPath = path.join(tempDir, 'turbo.json');
+          const exists = yield* fs.exists(turboPath);
 
-    it.scoped('writeTurboConfig writes valid json', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          strictEqual(exists, false);
+        }),
+      );
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+      it.scoped('writeTurboConfig writes valid json', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('monorepo-turborepo');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const turboPath = path.join(tempDir, 'turbo.json');
-        const config = {
-          $schema: 'https://turbo.build/schema.json',
-          tasks: {
-            build: {},
-            test: {},
-          },
-        };
+          yield* copyFixture('monorepo-turborepo');
 
-        yield* fs.writeFileString(turboPath, JSON.stringify(config, undefined, 2));
+          const turboPath = path.join(tempDir, 'turbo.json');
+          const config = {
+            $schema: 'https://turbo.build/schema.json',
+            tasks: {
+              build: {},
+              test: {},
+            },
+          };
 
-        const written = yield* fs.readFileString(turboPath);
-        const parsed = JSON.parse(written) as TurboConfig;
+          const encoded = yield* Schema.encode(TurboConfigJson)(config);
 
-        expect(parsed).toStrictEqual(config);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          yield* fs.writeFileString(turboPath, encoded);
 
-    it.scoped('setupRootConfig creates root config', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          const written = yield* fs.readFileString(turboPath);
+          const parsed = yield* Schema.decodeUnknown(TurboConfigJson)(written);
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+          expect(parsed).toStrictEqual(config);
+        }),
+      );
 
-        yield* copyFixture('single-package');
+      it.scoped('setupRootConfig creates root config', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        const configPath = path.join(tempDir, 'eslint.config.ts');
-        const content = 'import twoDigits from "@2digits/eslint-config";\nexport default twoDigits();';
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        yield* fs.writeFileString(configPath, content);
+          yield* copyFixture('single-package');
 
-        const written = yield* fs.readFileString(configPath);
-
-        assertTrue(written.includes('@2digits/eslint-config'));
-        assertTrue(written.includes('export default twoDigits()'));
-      }).pipe(Effect.provide(testLayer)),
-    );
-
-    it.scoped('setupRootConfig creates monorepo root config', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
-
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
-
-        yield* copyFixture('monorepo-turborepo');
-
-        const configPath = path.join(tempDir, 'eslint.config.ts');
-        const content = `import twoDigits from '@2digits/eslint-config';
-
-export default twoDigits({
-  ignores: {
-    ignores: ['apps/**', 'packages/**'],
-  },
-});`;
-
-        yield* fs.writeFileString(configPath, content);
-
-        const written = yield* fs.readFileString(configPath);
-
-        assertTrue(written.includes("ignores: ['apps/**', 'packages/**']"));
-      }).pipe(Effect.provide(testLayer)),
-    );
-
-    it.scoped('setupWorkspaceConfigs creates workspace configs', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
-        const projectDetect = yield* ProjectDetectionService;
-
-        yield* withTempTestEnv(ctx.task.id);
-
-        yield* copyFixture('monorepo-turborepo');
-
-        const workspaces = yield* projectDetect.discoverWorkspaces();
-
-        for (const workspace of workspaces) {
-          const configPath = path.join(workspace, 'eslint.config.ts');
+          const configPath = path.join(tempDir, 'eslint.config.ts');
           const content = 'import twoDigits from "@2digits/eslint-config";\nexport default twoDigits();';
 
           yield* fs.writeFileString(configPath, content);
@@ -395,196 +366,258 @@ export default twoDigits({
           const written = yield* fs.readFileString(configPath);
 
           assertTrue(written.includes('@2digits/eslint-config'));
-        }
-      }).pipe(Effect.provide(testLayer)),
-    );
+          assertTrue(written.includes('export default twoDigits()'));
+        }),
+      );
 
-    it.scoped('updateTurboConfig merges lint tasks', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+      it.scoped('setupRootConfig creates monorepo root config', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        yield* copyFixture('monorepo-turborepo');
+          yield* copyFixture('monorepo-turborepo');
 
-        const turboPath = path.join(tempDir, 'turbo.json');
-        const originalContent = yield* fs.readFileString(turboPath);
-        const originalConfig = JSON.parse(originalContent) as TurboConfig;
+          const configPath = path.join(tempDir, 'eslint.config.ts');
+          const content = `import twoDigits from '@2digits/eslint-config';
 
-        originalConfig.tasks ??= {};
-        originalConfig.tasks.lint = {
-          dependsOn: ['topo', '^build'],
-          outputLogs: 'new-only',
-        };
-        originalConfig.tasks['lint:fix'] = {};
-        originalConfig.tasks['//#lint:root'] = {
-          outputLogs: 'new-only',
-        };
-        originalConfig.tasks['//#lint:root:fix'] = {};
+export default twoDigits({
+  ignores: {
+    ignores: ['apps/**', 'packages/**'],
+  },
+});`;
 
-        yield* fs.writeFileString(turboPath, JSON.stringify(originalConfig, undefined, 2));
+          yield* fs.writeFileString(configPath, content);
 
-        const updated = yield* fs.readFileString(turboPath);
-        const config = JSON.parse(updated) as TurboConfig;
+          const written = yield* fs.readFileString(configPath);
 
-        assertTrue(config.tasks?.lint !== undefined);
-        assertTrue(config.tasks['lint:fix'] !== undefined);
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
+          assertTrue(written.includes("ignores: ['apps/**', 'packages/**']"));
+        }),
+      );
 
-  describe('error scenarios', () => {
-    it.scoped('handles corrupted turbo.json', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+      it.scoped('setupWorkspaceConfigs creates workspace configs', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
+          const projectDetect = yield* ProjectDetectionService;
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv(ctx.task.id);
 
-        yield* copyFixture('monorepo-turborepo');
+          yield* copyFixture('monorepo-turborepo');
 
-        const turboPath = path.join(tempDir, 'turbo.json');
+          const workspaces = yield* projectDetect.discoverWorkspaces();
 
-        yield* fs.writeFileString(turboPath, '{ invalid json }');
+          for (const workspace of workspaces) {
+            const configPath = path.join(workspace, 'eslint.config.ts');
+            const content = 'import twoDigits from "@2digits/eslint-config";\nexport default twoDigits();';
 
-        const service = yield* EslintSetupService;
-        const result = yield* Effect.either(service.setup());
+            yield* fs.writeFileString(configPath, content);
 
-        expect(result._tag).toBe('Left');
-      }).pipe(Effect.provide(testLayer)),
-    );
+            const written = yield* fs.readFileString(configPath);
 
-    it.scoped('handles readonly config file', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+            assertTrue(written.includes('@2digits/eslint-config'));
+          }
+        }),
+      );
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+      it.scoped('updateTurboConfig merges lint tasks', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('single-package');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const configPath = path.join(tempDir, 'eslint.config.ts');
+          yield* copyFixture('monorepo-turborepo');
 
-        yield* fs.writeFileString(configPath, 'test');
-        yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(configPath, 0o444)));
+          const turboPath = path.join(tempDir, 'turbo.json');
+          const originalContent = yield* fs.readFileString(turboPath);
+          const originalConfig = yield* Schema.decodeUnknown(TurboConfigJson)(originalContent);
+          const updatedConfig = {
+            ...originalConfig,
+            tasks: {
+              ...originalConfig.tasks,
+              lint: {
+                dependsOn: ['topo', '^build'],
+                outputLogs: 'new-only',
+              },
+              'lint:fix': {},
+              '//#lint:root': {
+                outputLogs: 'new-only',
+              },
+              '//#lint:root:fix': {},
+            },
+          };
 
-        const result = yield* Effect.either(fs.writeFileString(configPath, 'new content'));
+          const encoded = yield* Schema.encode(TurboConfigJson)(updatedConfig);
 
-        yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(configPath, 0o644)));
+          yield* fs.writeFileString(turboPath, encoded);
 
-        expect(result._tag).toBe('Left');
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const updated = yield* fs.readFileString(turboPath);
+          const config = yield* Schema.decodeUnknown(TurboConfigJson)(updated);
 
-    it.scoped('handles missing workspace directories', (ctx) =>
-      Effect.gen(function* () {
-        const pm = yield* PackageManagerService;
+          assertTrue(config.tasks?.lint !== undefined);
+          assertTrue(config.tasks['lint:fix'] !== undefined);
+        }),
+      );
+    }),
+  );
 
-        yield* withTempTestEnv(ctx.task.id);
+  layer(testLayer)((it) =>
+    describe('error scenarios', () => {
+      it.scoped('handles corrupted turbo.json', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('monorepo-turborepo');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const pkg = yield* pm.readPackageJson();
+          yield* copyFixture('monorepo-turborepo');
 
-        pkg.workspaces = ['nonexistent/*'];
-        yield* pm.writePackageJson({ content: pkg });
+          const turboPath = path.join(tempDir, 'turbo.json');
 
-        const service = yield* EslintSetupService;
-        const result = yield* Effect.either(service.setup());
+          yield* fs.writeFileString(turboPath, '{ invalid json }');
 
-        assertTrue(result._tag === 'Right');
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
+          const service = yield* EslintSetupService;
+          const result = yield* Effect.either(service.setup());
 
-  describe('edge cases', () => {
-    it.scoped('handles project with no package.json scripts', (ctx) =>
-      Effect.gen(function* () {
-        const pm = yield* PackageManagerService;
+          expect(result._tag).toBe('Left');
+        }),
+      );
 
-        yield* withTempTestEnv(ctx.task.id);
+      it.scoped('handles readonly config file', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
 
-        yield* copyFixture('single-package');
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const pkg = yield* pm.readPackageJson();
+          yield* copyFixture('single-package');
 
-        delete pkg.scripts;
-        yield* pm.writePackageJson({ content: pkg });
+          const configPath = path.join(tempDir, 'eslint.config.ts');
 
-        const service = yield* EslintSetupService;
+          yield* fs.writeFileString(configPath, 'test');
+          yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(configPath, 0o444)));
 
-        yield* service.setup();
+          const result = yield* Effect.either(fs.writeFileString(configPath, 'new content'));
 
-        const updated = yield* pm.readPackageJson();
+          yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(configPath, 0o644)));
 
-        assertTrue(updated.scripts?.lint !== undefined);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          expect(result._tag).toBe('Left');
+        }),
+      );
 
-    it.scoped('preserves existing non-lint scripts', (ctx) =>
-      Effect.gen(function* () {
-        const pm = yield* PackageManagerService;
+      it.scoped('handles missing workspace directories', (ctx) =>
+        Effect.gen(function* () {
+          const pm = yield* PackageManagerService;
 
-        yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv(ctx.task.id);
 
-        yield* copyFixture('single-package');
+          yield* copyFixture('monorepo-turborepo');
 
-        const pkg = yield* pm.readPackageJson();
+          const pkg = yield* pm.readPackageJson();
 
-        pkg.scripts = {
-          build: 'tsc',
-          test: 'vitest',
-        };
-        yield* pm.writePackageJson({ content: pkg });
+          pkg.workspaces = ['nonexistent/*'];
+          yield* pm.writePackageJson({ content: pkg });
 
-        const service = yield* EslintSetupService;
+          const service = yield* EslintSetupService;
+          const result = yield* Effect.either(service.setup());
 
-        yield* service.setup();
+          assertTrue(result._tag === 'Right');
+        }),
+      );
+    }),
+  );
 
-        const updated = yield* pm.readPackageJson();
+  layer(testLayer)((it) =>
+    describe('edge cases', () => {
+      it.scoped('handles project with no package.json scripts', (ctx) =>
+        Effect.gen(function* () {
+          const pm = yield* PackageManagerService;
 
-        strictEqual(updated.scripts?.build, 'tsc');
-        strictEqual(updated.scripts?.test, 'vitest');
-        assertTrue(updated.scripts?.lint !== undefined);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          yield* withTempTestEnv(ctx.task.id);
 
-    it.scoped('handles monorepo without turbo.json', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
-        yield* copyFixture('monorepo-no-turbo');
+          yield* copyFixture('single-package');
 
-        const service = yield* EslintSetupService;
-        const result = yield* Effect.either(service.setup());
+          const pkg = yield* pm.readPackageJson();
 
-        assertRight(result, void 0);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          delete pkg.scripts;
+          yield* pm.writePackageJson({ content: pkg });
 
-    it.scoped('does not overwrite existing 2digits config', (ctx) =>
-      Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          const service = yield* EslintSetupService;
 
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+          yield* service.setup();
 
-        yield* copyFixture('single-package');
+          const updated = yield* pm.readPackageJson();
 
-        const configPath = path.join(tempDir, 'eslint.config.ts');
-        const customConfig =
-          'import twoDigits from "@2digits/eslint-config";\nexport default twoDigits({ custom: true });';
+          assertTrue(updated.scripts?.lint !== undefined);
+        }),
+      );
 
-        yield* fs.writeFileString(configPath, customConfig);
+      it.scoped('preserves existing non-lint scripts', (ctx) =>
+        Effect.gen(function* () {
+          const pm = yield* PackageManagerService;
 
-        const service = yield* EslintSetupService;
+          yield* withTempTestEnv(ctx.task.id);
 
-        yield* service.setup();
+          yield* copyFixture('single-package');
 
-        const final = yield* fs.readFileString(configPath);
+          const pkg = yield* pm.readPackageJson();
 
-        assertTrue(final.includes('@2digits/eslint-config'));
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
+          pkg.scripts = {
+            build: 'tsc',
+            test: 'vitest',
+          };
+          yield* pm.writePackageJson({ content: pkg });
+
+          const service = yield* EslintSetupService;
+
+          yield* service.setup();
+
+          const updated = yield* pm.readPackageJson();
+
+          strictEqual(updated.scripts?.build, 'tsc');
+          strictEqual(updated.scripts?.test, 'vitest');
+          assertTrue(updated.scripts?.lint !== undefined);
+        }),
+      );
+
+      it.scoped('handles monorepo without turbo.json', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
+          yield* copyFixture('monorepo-no-turbo');
+
+          const service = yield* EslintSetupService;
+          const result = yield* Effect.either(service.setup());
+
+          assertRight(result, void 0);
+        }),
+      );
+
+      it.scoped('does not overwrite existing 2digits config', (ctx) =>
+        Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
+
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
+
+          yield* copyFixture('single-package');
+
+          const configPath = path.join(tempDir, 'eslint.config.ts');
+          const customConfig =
+            'import twoDigits from "@2digits/eslint-config";\nexport default twoDigits({ custom: true });';
+
+          yield* fs.writeFileString(configPath, customConfig);
+
+          const service = yield* EslintSetupService;
+
+          yield* service.setup();
+
+          const final = yield* fs.readFileString(configPath);
+
+          assertTrue(final.includes('@2digits/eslint-config'));
+        }),
+      );
+    }),
+  );
 });

@@ -38,23 +38,19 @@ import type { TloError } from '../schemas/errors.js';
 import { TeamLeaderClient } from './TeamLeaderClient.js';
 
 export interface BoardServiceShape {
-  readonly getProjects: (params?: GetProjectsParams) => Effect.Effect<ReadonlyArray<typeof Project.Type>, TloError>;
+  readonly getProjects: (params?: GetProjectsParams) => Effect.Effect<ReadonlyArray<Project>, TloError>;
 
-  readonly getProjectDetails: (params: GetProjectDetailsParams) => Effect.Effect<typeof Project.Type, TloError>;
+  readonly getProjectDetails: (params: GetProjectDetailsParams) => Effect.Effect<Project, TloError>;
 
-  readonly getMessages: (params: GetMessagesParams) => Effect.Effect<ReadonlyArray<typeof Message.Type>, TloError>;
+  readonly getMessages: (params: GetMessagesParams) => Effect.Effect<ReadonlyArray<Message>, TloError>;
 
-  readonly getTasks: (params: GetTasksParams) => Effect.Effect<ReadonlyArray<typeof Task.Type>, TloError>;
+  readonly getTasks: (params: GetTasksParams) => Effect.Effect<ReadonlyArray<Task>, TloError>;
 
-  readonly getTasksForUser: (
-    params: GetTasksForUserParams,
-  ) => Effect.Effect<ReadonlyArray<typeof TaskForUser.Type>, TloError>;
+  readonly getTasksForUser: (params: GetTasksForUserParams) => Effect.Effect<ReadonlyArray<TaskForUser>, TloError>;
 
   readonly getTodoDetail: (params: GetTodoDetailParams) => Effect.Effect<TodoDetail, TloError>;
 
-  readonly getBoardTodos: (
-    params: GetBoardTodosParams,
-  ) => Effect.Effect<ReadonlyArray<typeof TodoSummary.Type>, TloError>;
+  readonly getBoardTodos: (params: GetBoardTodosParams) => Effect.Effect<ReadonlyArray<TodoSummary>, TloError>;
 
   readonly moveTodo: (params: MoveTodoParams) => Effect.Effect<void, TloError>;
 
@@ -184,7 +180,7 @@ export const BoardServiceLive = Layer.effect(
           .pipe(
             Effect.map((response) => response.Records.map((raw) => todoSummaryFromRaw(raw))),
             Effect.map((todos) => {
-              if (params.query) {
+              if (params.query !== undefined && params.query !== '') {
                 const query = params.query.toLowerCase();
 
                 return todos.filter((t) => t.name?.toLowerCase().includes(query));

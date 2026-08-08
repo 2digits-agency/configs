@@ -61,7 +61,7 @@ const MALFORMED_ERROR_REGEX = /\{MSG:'([^']*)',\s*err:(\d+)\}/;
 function parseMalformedJson(text: string) {
   const match = MALFORMED_ERROR_REGEX.exec(text);
 
-  if (match) {
+  if (match !== null) {
     return Option.some({ MSG: match[1] ?? 'Unknown error', err: Number(match[2]) });
   }
 
@@ -126,7 +126,7 @@ export const TeamLeaderClientLive = Layer.effect(
           }),
           Effect.scoped,
           Effect.mapError((error): TloError => {
-            if (error instanceof TloApiError || error instanceof TloParseError) {
+            if (Schema.is(TloApiError)(error) || Schema.is(TloParseError)(error)) {
               return error;
             }
 

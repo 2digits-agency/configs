@@ -15,6 +15,12 @@ class PackageManagerError extends Data.TaggedError('@2digits/cli/services/Packag
   message?: string;
 }> {}
 
+type BasePackageJson = pkgTypes.PackageJson;
+
+export interface PackageJson extends BasePackageJson {
+  prettier?: unknown;
+}
+
 export class PackageManagerService extends Effect.Service<PackageManagerService>()(
   '@2digits/cli/services/PackageManagerService',
   {
@@ -43,10 +49,12 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
         const cwd = yield* cwdService.cwd;
         const pkgPath = path.resolve(options?.id ?? cwd, 'package.json');
 
-        return yield* Effect.tryPromise({
+        const packageJson: PackageJson = yield* Effect.tryPromise({
           try: () => pkgTypes.readPackageJSON(pkgPath),
           catch: (cause) => new PackageManagerError({ cause }),
         });
+
+        return packageJson;
       });
 
       const writePackageJson = Effect.fn('PackageManagerService.writePackageJson')(function* (options: {
@@ -89,7 +97,7 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
 
         const workspace = options.workspace ?? true;
 
-        if (options.devDependencies && Array.isNonEmptyArray(options.devDependencies)) {
+        if (options.devDependencies !== undefined && Array.isNonEmptyArray(options.devDependencies)) {
           const devDepsCmd = Command.make(
             nypm.addDependencyCommand(pm.name, options.devDependencies, { workspace, dev: true, short: true }),
           ).pipe(Command.runInShell(true));
@@ -124,7 +132,7 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
           yield* Effect.logDebug(`Added devDependencies: ${options.devDependencies.join(', ')}`);
         }
 
-        if (options.dependencies && Array.isNonEmptyArray(options.dependencies)) {
+        if (options.dependencies !== undefined && Array.isNonEmptyArray(options.dependencies)) {
           const depsCmd = Command.make(
             nypm.addDependencyCommand(pm.name, options.dependencies, { workspace, short: true }),
           ).pipe(Command.runInShell(true));
@@ -168,7 +176,7 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
           catch: (cause) => new PackageManagerError({ cause }),
         });
 
-        if (!pm) {
+        if (pm === undefined) {
           return yield* new PackageManagerError({ cause: 'Could not detect package manager' });
         }
 

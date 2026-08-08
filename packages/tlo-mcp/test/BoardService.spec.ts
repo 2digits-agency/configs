@@ -5,7 +5,7 @@ import type { GetMessagesResponse, GetProjectsResponse } from '../src/schemas/bo
 import { BoardService, BoardServiceLive } from '../src/services/BoardService.js';
 import { TeamLeaderClient } from '../src/services/TeamLeaderClient.js';
 
-const mockProjectsRaw: typeof GetProjectsResponse.Type = {
+const mockProjectsRaw: GetProjectsResponse = {
   Records: [
     {
       ID: 123,
@@ -22,7 +22,7 @@ const mockProjectsRaw: typeof GetProjectsResponse.Type = {
   ],
 };
 
-const mockMessagesRaw: typeof GetMessagesResponse.Type = [
+const mockMessagesRaw: GetMessagesResponse = [
   {
     ID: 1,
     OWNERID: 789,

@@ -5,10 +5,11 @@ import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import * as FileSystem from '@effect/platform/FileSystem';
 import * as Path from '@effect/platform/Path';
-import { describe, expect, it } from '@effect/vitest';
+import { describe, expect, layer } from '@effect/vitest';
 import { assertTrue, strictEqual } from '@effect/vitest/utils';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Schema from 'effect/Schema';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import {
@@ -28,357 +29,359 @@ describe(PackageManagerService, () => {
     NodePath.layer,
   );
 
-  describe('resolveRoot', () => {
-    it.scoped('resolves workspace root', (ctx) =>
-      Effect.gen(function* () {
-        const dir = yield* withTempTestEnv(ctx.task.id);
+  layer(testLayer)((it) => {
+    describe('resolveRoot', () => {
+      it.scoped('resolves workspace root', (ctx) =>
+        Effect.gen(function* () {
+          const dir = yield* withTempTestEnv(ctx.task.id);
 
-        yield* copyFixture('monorepo-turborepo');
+          yield* copyFixture('monorepo-turborepo');
 
-        const service = yield* PackageManagerService;
-        const root = yield* service.resolveRoot();
+          const service = yield* PackageManagerService;
+          const root = yield* service.resolveRoot();
 
-        assertTrue(root.includes(dir));
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
+          assertTrue(root.includes(dir));
+        }),
+      );
+    });
 
-  describe('readPackageJson', () => {
-    it.scoped('reads package.json from current directory', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
-        yield* copyFixture('single-package');
+    describe('readPackageJson', () => {
+      it.scoped('reads package.json from current directory', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
+          yield* copyFixture('single-package');
 
-        const service = yield* PackageManagerService;
-        const pkg = yield* service.readPackageJson();
+          const service = yield* PackageManagerService;
+          const pkg = yield* service.readPackageJson();
 
-        expect(pkg).toMatchObject({
-          name: 'test-single-package',
-          version: '1.0.0',
-        });
-      }).pipe(Effect.provide(testLayer)),
-    );
+          expect(pkg).toMatchObject({
+            name: 'test-single-package',
+            version: '1.0.0',
+          });
+        }),
+      );
 
-    it.scoped('reads package.json from specified directory', (ctx) =>
-      Effect.gen(function* () {
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+      it.scoped('reads package.json from specified directory', (ctx) =>
+        Effect.gen(function* () {
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        yield* copyFixture('monorepo-turborepo');
+          yield* copyFixture('monorepo-turborepo');
 
-        const service = yield* PackageManagerService;
+          const service = yield* PackageManagerService;
 
-        const pkg = yield* service.readPackageJson({
-          id: tempDir,
-        });
+          const pkg = yield* service.readPackageJson({
+            id: tempDir,
+          });
 
-        expect(pkg).toMatchObject({
-          name: 'test-monorepo',
-          private: true,
-        });
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
-
-  describe('getPackageManager', () => {
-    it.scoped('detects pnpm package manager', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
-        yield* copyFixture('single-package');
-
-        const service = yield* PackageManagerService;
-        const pm = yield* service.getPackageManager();
-
-        strictEqual(pm.name, 'pnpm');
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
-
-  describe('addDependencies', () => {
-    it.scoped('executes command to add dev dependencies', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
-        yield* copyFixture('single-package');
-        yield* clearExecutedCommands;
-
-        const service = yield* PackageManagerService;
-
-        yield* service.addDependencies({
-          devDependencies: ['prettier', '@2digits/prettier-config'],
-        });
-
-        const executed = yield* getExecutedCommands;
-
-        assertTrue(executed.length > 0);
-
-        // Should have executed a pnpm add command
-        const addCommand = executed.find((cmd) => cmd.command.includes('add') || cmd.shell === true);
-
-        assertTrue(addCommand !== undefined);
-
-        expect(executed.at(0)?.command).toMatchInlineSnapshot(
-          `"pnpm add --workspace-root -D prettier @2digits/prettier-config"`,
-        );
-      }).pipe(Effect.provide(testLayer)),
-    );
-
-    it.scoped('executes separate commands for dependencies and devDependencies', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
-        yield* copyFixture('single-package');
-        yield* clearExecutedCommands;
-
-        const service = yield* PackageManagerService;
-
-        yield* service.addDependencies({
-          dependencies: ['effect'],
-          devDependencies: ['vitest'],
-        });
-
-        const executed = yield* getExecutedCommands;
-
-        // Should execute 2 commands (one for deps, one for devDeps)
-        assertTrue(executed.length >= 2);
-
-        expect(executed.map((e) => e.command)).toMatchInlineSnapshot(`
-          [
-            "pnpm add --workspace-root -D vitest",
-            "pnpm add --workspace-root effect",
-          ]
-        `);
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
-
-  describe('runScriptCommand', () => {
-    it.scoped('returns command string for running script', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
-        yield* copyFixture('single-package');
-
-        const service = yield* PackageManagerService;
-        const cmd = yield* service.runScriptCommand({ script: 'test' });
-
-        // Should return a pnpm command
-        assertTrue(cmd.includes('pnpm'));
-        assertTrue(cmd.includes('test'));
-
-        expect(cmd).toMatchInlineSnapshot(`"pnpm run test"`);
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
-
-  describe('writePackageJson', () => {
-    it.scoped('writes package.json to current directory', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
-        yield* copyFixture('single-package');
-
-        const service = yield* PackageManagerService;
-
-        yield* service.writePackageJson({
-          content: {
-            name: 'test-updated',
-            version: '2.0.0',
-            scripts: {
-              test: 'vitest',
-            },
-          },
-        });
-
-        const pkg = yield* service.readPackageJson();
-
-        strictEqual(pkg.name, 'test-updated');
-        strictEqual(pkg.version, '2.0.0');
-        strictEqual(pkg.scripts?.test, 'vitest');
-      }).pipe(Effect.provide(testLayer)),
-    );
-
-    it.scoped('writes package.json to specified directory', (ctx) =>
-      Effect.gen(function* () {
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
-
-        yield* copyFixture('monorepo-turborepo');
-
-        const service = yield* PackageManagerService;
-
-        yield* service.writePackageJson({
-          id: tempDir,
-          content: {
-            name: 'monorepo-updated',
+          expect(pkg).toMatchObject({
+            name: 'test-monorepo',
             private: true,
-            version: '1.0.0',
-          },
-        });
+          });
+        }),
+      );
+    });
 
-        const pkg = yield* service.readPackageJson({ id: tempDir });
+    describe('getPackageManager', () => {
+      it.scoped('detects pnpm package manager', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
+          yield* copyFixture('single-package');
 
-        strictEqual(pkg.name, 'monorepo-updated');
-        strictEqual(pkg.private, true);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const service = yield* PackageManagerService;
+          const pm = yield* service.getPackageManager();
 
-    it.scoped('preserves existing fields when updating', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
-        yield* copyFixture('single-package');
+          strictEqual(pm.name, 'pnpm');
+        }),
+      );
+    });
 
-        const service = yield* PackageManagerService;
-        const original = yield* service.readPackageJson();
+    describe('addDependencies', () => {
+      it.scoped('executes command to add dev dependencies', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
+          yield* copyFixture('single-package');
+          yield* clearExecutedCommands;
 
-        yield* service.writePackageJson({
-          content: {
-            ...original,
-            scripts: {
-              ...original.scripts,
-              newScript: 'echo "new"',
-            },
-          },
-        });
+          const service = yield* PackageManagerService;
 
-        const updated = yield* service.readPackageJson();
+          yield* service.addDependencies({
+            devDependencies: ['prettier', '@2digits/prettier-config'],
+          });
 
-        strictEqual(updated.name, original.name);
-        strictEqual(updated.version, original.version);
-        strictEqual(updated.scripts?.newScript, 'echo "new"');
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
+          const executed = yield* getExecutedCommands;
 
-  describe('error handling', () => {
-    it.scoped('readPackageJson fails on missing file', (ctx) =>
-      Effect.gen(function* () {
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+          assertTrue(executed.length > 0);
 
-        const service = yield* PackageManagerService;
+          // Should have executed a pnpm add command
+          const addCommand = executed.find((cmd) => cmd.command.includes('add') || cmd.shell === true);
 
-        const result = yield* Effect.either(service.readPackageJson({ id: tempDir }));
+          assertTrue(addCommand !== undefined);
 
-        expect(result._tag).toBe('Left');
-      }).pipe(Effect.provide(testLayer)),
-    );
+          expect(executed.at(0)?.command).toMatchInlineSnapshot(
+            `"pnpm add --workspace-root -D prettier @2digits/prettier-config"`,
+          );
+        }),
+      );
 
-    it.scoped('writePackageJson fails on readonly file', (ctx) =>
-      Effect.gen(function* () {
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+      it.scoped('executes separate commands for dependencies and devDependencies', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
+          yield* copyFixture('single-package');
+          yield* clearExecutedCommands;
 
-        yield* copyFixture('single-package');
+          const service = yield* PackageManagerService;
 
-        const path = yield* Path.Path;
+          yield* service.addDependencies({
+            dependencies: ['effect'],
+            devDependencies: ['vitest'],
+          });
 
-        const pkgPath = path.join(tempDir, 'package.json');
+          const executed = yield* getExecutedCommands;
 
-        yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(pkgPath, 0o444)));
+          // Should execute 2 commands (one for deps, one for devDeps)
+          assertTrue(executed.length >= 2);
 
-        const service = yield* PackageManagerService;
-        const result = yield* Effect.either(
-          service.writePackageJson({
+          expect(executed.map((e) => e.command)).toMatchInlineSnapshot(`
+            [
+              "pnpm add --workspace-root -D vitest",
+              "pnpm add --workspace-root effect",
+            ]
+          `);
+        }),
+      );
+    });
+
+    describe('runScriptCommand', () => {
+      it.scoped('returns command string for running script', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
+          yield* copyFixture('single-package');
+
+          const service = yield* PackageManagerService;
+          const cmd = yield* service.runScriptCommand({ script: 'test' });
+
+          // Should return a pnpm command
+          assertTrue(cmd.includes('pnpm'));
+          assertTrue(cmd.includes('test'));
+
+          expect(cmd).toMatchInlineSnapshot(`"pnpm run test"`);
+        }),
+      );
+    });
+
+    describe('writePackageJson', () => {
+      it.scoped('writes package.json to current directory', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
+          yield* copyFixture('single-package');
+
+          const service = yield* PackageManagerService;
+
+          yield* service.writePackageJson({
             content: {
-              name: 'should-fail',
+              name: 'test-updated',
+              version: '2.0.0',
+              scripts: {
+                test: 'vitest',
+              },
+            },
+          });
+
+          const pkg = yield* service.readPackageJson();
+
+          strictEqual(pkg.name, 'test-updated');
+          strictEqual(pkg.version, '2.0.0');
+          strictEqual(pkg.scripts?.test, 'vitest');
+        }),
+      );
+
+      it.scoped('writes package.json to specified directory', (ctx) =>
+        Effect.gen(function* () {
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
+
+          yield* copyFixture('monorepo-turborepo');
+
+          const service = yield* PackageManagerService;
+
+          yield* service.writePackageJson({
+            id: tempDir,
+            content: {
+              name: 'monorepo-updated',
+              private: true,
               version: '1.0.0',
             },
-          }),
-        );
+          });
 
-        yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(pkgPath, 0o644)));
+          const pkg = yield* service.readPackageJson({ id: tempDir });
 
-        expect(result._tag).toBe('Left');
-      }).pipe(Effect.provide(testLayer)),
-    );
+          strictEqual(pkg.name, 'monorepo-updated');
+          strictEqual(pkg.private, true);
+        }),
+      );
 
-    it.scoped('writePackageJson fails on invalid directory', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
+      it.scoped('preserves existing fields when updating', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
+          yield* copyFixture('single-package');
 
-        const service = yield* PackageManagerService;
-        const result = yield* Effect.either(
-          service.writePackageJson({
-            id: '/nonexistent/directory',
+          const service = yield* PackageManagerService;
+          const original = yield* service.readPackageJson();
+
+          yield* service.writePackageJson({
             content: {
-              name: 'should-fail',
-              version: '1.0.0',
+              ...original,
+              scripts: {
+                ...original.scripts,
+                newScript: 'echo "new"',
+              },
             },
-          }),
-        );
+          });
 
-        expect(result._tag).toBe('Left');
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const updated = yield* service.readPackageJson();
 
-    it.scoped('resolveRoot fails in non-workspace directory', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
+          strictEqual(updated.name, original.name);
+          strictEqual(updated.version, original.version);
+          strictEqual(updated.scripts?.newScript, 'echo "new"');
+        }),
+      );
+    });
 
-        const service = yield* PackageManagerService;
-        const result = yield* Effect.either(service.resolveRoot());
+    describe('error handling', () => {
+      it.scoped('readPackageJson fails on missing file', (ctx) =>
+        Effect.gen(function* () {
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        expect(result._tag).toBe('Left');
-      }).pipe(Effect.provide(testLayer)),
-    );
-  });
+          const service = yield* PackageManagerService;
 
-  describe('edge cases', () => {
-    it.scoped('handles package.json with no scripts', (ctx) =>
-      Effect.gen(function* () {
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+          const result = yield* Effect.either(service.readPackageJson({ id: tempDir }));
 
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          expect(result._tag).toBe('Left');
+        }),
+      );
 
-        yield* fs.writeFileString(
-          path.join(tempDir, 'package.json'),
-          JSON.stringify({
-            name: 'test-no-scripts',
-            version: '1.0.0',
-          }),
-        );
+      it.scoped('writePackageJson fails on readonly file', (ctx) =>
+        Effect.gen(function* () {
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
 
-        const service = yield* PackageManagerService;
-        const pkg = yield* service.readPackageJson();
+          yield* copyFixture('single-package');
 
-        strictEqual(pkg.scripts, undefined);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const path = yield* Path.Path;
 
-    it.scoped('handles package.json with empty scripts', (ctx) =>
-      Effect.gen(function* () {
-        const tempDir = yield* withTempTestEnv(ctx.task.id);
+          const pkgPath = path.join(tempDir, 'package.json');
 
-        const fs = yield* FileSystem.FileSystem;
-        const path = yield* Path.Path;
+          yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(pkgPath, 0o444)));
 
-        yield* fs.writeFileString(
-          path.join(tempDir, 'package.json'),
-          JSON.stringify({
-            name: 'test-empty-scripts',
-            version: '1.0.0',
-            scripts: {},
-          }),
-        );
+          const service = yield* PackageManagerService;
+          const result = yield* Effect.either(
+            service.writePackageJson({
+              content: {
+                name: 'should-fail',
+                version: '1.0.0',
+              },
+            }),
+          );
 
-        const service = yield* PackageManagerService;
-        const pkg = yield* service.readPackageJson();
+          yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(pkgPath, 0o644)));
 
-        expect(pkg.scripts).toStrictEqual({});
-      }).pipe(Effect.provide(testLayer)),
-    );
+          expect(result._tag).toBe('Left');
+        }),
+      );
 
-    it.scoped('addDependencies handles empty arrays', (ctx) =>
-      Effect.gen(function* () {
-        yield* withTempTestEnv(ctx.task.id);
-        yield* copyFixture('single-package');
-        yield* clearExecutedCommands;
+      it.scoped('writePackageJson fails on invalid directory', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
 
-        const service = yield* PackageManagerService;
+          const service = yield* PackageManagerService;
+          const result = yield* Effect.either(
+            service.writePackageJson({
+              id: '/nonexistent/directory',
+              content: {
+                name: 'should-fail',
+                version: '1.0.0',
+              },
+            }),
+          );
 
-        yield* service.addDependencies({
-          dependencies: [],
-          devDependencies: [],
-        });
+          expect(result._tag).toBe('Left');
+        }),
+      );
 
-        const executed = yield* getExecutedCommands;
+      it.scoped('resolveRoot fails in non-workspace directory', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
 
-        strictEqual(executed.length, 0);
-      }).pipe(Effect.provide(testLayer)),
-    );
+          const service = yield* PackageManagerService;
+          const result = yield* Effect.either(service.resolveRoot());
+
+          expect(result._tag).toBe('Left');
+        }),
+      );
+    });
+
+    describe('edge cases', () => {
+      it.scoped('handles package.json with no scripts', (ctx) =>
+        Effect.gen(function* () {
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
+
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
+
+          yield* fs.writeFileString(
+            path.join(tempDir, 'package.json'),
+            yield* Schema.encode(Schema.parseJson(Schema.Unknown))({
+              name: 'test-no-scripts',
+              version: '1.0.0',
+            }),
+          );
+
+          const service = yield* PackageManagerService;
+          const pkg = yield* service.readPackageJson();
+
+          strictEqual(pkg.scripts, undefined);
+        }),
+      );
+
+      it.scoped('handles package.json with empty scripts', (ctx) =>
+        Effect.gen(function* () {
+          const tempDir = yield* withTempTestEnv(ctx.task.id);
+
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
+
+          yield* fs.writeFileString(
+            path.join(tempDir, 'package.json'),
+            yield* Schema.encode(Schema.parseJson(Schema.Unknown))({
+              name: 'test-empty-scripts',
+              version: '1.0.0',
+              scripts: {},
+            }),
+          );
+
+          const service = yield* PackageManagerService;
+          const pkg = yield* service.readPackageJson();
+
+          expect(pkg.scripts).toStrictEqual({});
+        }),
+      );
+
+      it.scoped('addDependencies handles empty arrays', (ctx) =>
+        Effect.gen(function* () {
+          yield* withTempTestEnv(ctx.task.id);
+          yield* copyFixture('single-package');
+          yield* clearExecutedCommands;
+
+          const service = yield* PackageManagerService;
+
+          yield* service.addDependencies({
+            dependencies: [],
+            devDependencies: [],
+          });
+
+          const executed = yield* getExecutedCommands;
+
+          strictEqual(executed.length, 0);
+        }),
+      );
+    });
   });
 });

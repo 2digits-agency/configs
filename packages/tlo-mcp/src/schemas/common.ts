@@ -1,4 +1,5 @@
 import * as Brand from 'effect/Brand';
+import * as DateTime from 'effect/DateTime';
 import * as Schema from 'effect/Schema';
 
 /**
@@ -14,13 +15,26 @@ export type TloDateString = typeof TloDateString.Type;
  */
 function parseTloDate(dateString: string): Date {
   const year = Number.parseInt(dateString.slice(0, 4), 10);
-  const month = Number.parseInt(dateString.slice(4, 6), 10) - 1;
+  const month = Number.parseInt(dateString.slice(4, 6), 10);
   const day = Number.parseInt(dateString.slice(6, 8), 10);
   const hour = Number.parseInt(dateString.slice(8, 10), 10);
   const minute = Number.parseInt(dateString.slice(10, 12), 10);
   const second = Number.parseInt(dateString.slice(12, 14), 10);
 
-  return new Date(year, month, day, hour, minute, second);
+  return DateTime.unsafeMakeZoned(
+    {
+      year: year <= 99 ? year + 1900 : year,
+      month,
+      day,
+      hours: hour,
+      minutes: minute,
+      seconds: second,
+    },
+    {
+      timeZone: DateTime.zoneMakeLocal(),
+      adjustForTimeZone: true,
+    },
+  ).pipe(DateTime.toDateUtc);
 }
 
 /**

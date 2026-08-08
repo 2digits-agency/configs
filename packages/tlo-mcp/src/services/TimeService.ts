@@ -88,7 +88,7 @@ export const TimeServiceLive = Layer.effect(
             {
               ID: params.id,
               ACTION: 'MOVE',
-              DT: params.startDate ? formatRequestDate(params.startDate) : undefined,
+              DT: params.startDate === undefined ? undefined : formatRequestDate(params.startDate),
               DURATION: params.durationMinutes,
               DESCRIPTION: params.description,
             },
