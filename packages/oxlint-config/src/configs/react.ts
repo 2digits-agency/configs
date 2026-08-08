@@ -1,4 +1,4 @@
-import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
+import { defineConfig } from 'oxlint';
 
 export const reactConfig = defineConfig({
   options: { typeAware: true },
@@ -40,7 +40,7 @@ export const reactConfig = defineConfig({
     'react/rules-of-hooks': 'error',
     'react/self-closing-comp': 'error',
     'react/void-dom-elements-no-children': 'error',
-    'react_perf/jsx-no-jsx-as-prop': 'error',
+    'react-perf/jsx-no-jsx-as-prop': 'error',
     'react-compiler/react-compiler': 'error',
     'stylistic/jsx-curly-newline': 'off',
     'stylistic/jsx-newline': ['error', { prevent: false }],
@@ -51,7 +51,7 @@ export const reactConfig = defineConfig({
     'react/forbid-dom-props': undefined,
     'react/forbid-elements': undefined,
     'react/forward-ref-uses-ref': 'off',
-    'react/hook-use-state': 'off',
+    'react/hook-use-state': 'error',
     'react/jsx-boolean-value': 'off',
     'react/jsx-curly-brace-presence': undefined,
     'react/jsx-filename-extension': 'off',
@@ -84,13 +84,8 @@ export const reactConfig = defineConfig({
     'react/state-in-constructor': undefined,
     'react/style-prop-object': undefined,
 
-    'react_perf/jsx-no-new-array-as-prop': undefined,
-    'react_perf/jsx-no-new-function-as-prop': undefined,
-    'react_perf/jsx-no-new-object-as-prop': undefined,
-  } satisfies {
-    [k in Extract<
-      keyof RuleMap,
-      `react/${string}` | `react_perf/${string}` | `react-compiler/${string}` | `stylistic/${string}`
-    >]: RuleMap[k];
+    'react-perf/jsx-no-new-array-as-prop': undefined,
+    'react-perf/jsx-no-new-function-as-prop': undefined,
+    'react-perf/jsx-no-new-object-as-prop': undefined,
   },
 });

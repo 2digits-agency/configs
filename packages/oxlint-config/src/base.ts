@@ -1,4 +1,4 @@
-import { defineConfig } from '@oxlint-types/define-config';
+import { defineConfig } from 'oxlint';
 
 import { ignorePatterns } from '@2digits/constants';
 

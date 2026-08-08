@@ -1,4 +1,4 @@
-import { defineConfig, type RuleMap } from '@oxlint-types/define-config';
+import { defineConfig } from 'oxlint';
 
 export const jsdocConfig = defineConfig({
   plugins: ['jsdoc'],
@@ -25,7 +25,5 @@ export const jsdocConfig = defineConfig({
     'jsdoc/require-throws-type': undefined,
     'jsdoc/require-yields-description': undefined,
     'jsdoc/require-yields-type': undefined,
-  } satisfies {
-    [k in Extract<keyof RuleMap, `jsdoc/${string}`>]: RuleMap[k];
   },
 });
