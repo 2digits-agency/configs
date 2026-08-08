@@ -5,6 +5,7 @@ import * as Path from '@effect/platform/Path';
 import * as Array from 'effect/Array';
 import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
+import * as Match from 'effect/Match';
 import * as Option from 'effect/Option';
 import * as Struct from 'effect/Struct';
 
@@ -61,32 +62,15 @@ function categorizeTask(taskName: string): TaskCategory {
  *
  * @param category - The task category to generate a task configuration for.
  */
-function generateTaskConfig(category: TaskCategory): Record<string, unknown> {
-  switch (category) {
-    case 'build': {
-      return {
-        dependsOn: ['^build'],
-        outputs: ['dist/**', 'build/**', '.next/**', 'out/**'],
-      };
-    }
-    case 'test':
-    case 'lint':
-    case 'typecheck': {
-      return {
-        dependsOn: ['^build'],
-      };
-    }
-    case 'dev': {
-      return {
-        persistent: true,
-        cache: false,
-      };
-    }
-    default: {
-      return {};
-    }
-  }
-}
+const generateTaskConfig = Match.type<TaskCategory>().pipe(
+  Match.withReturnType<Record<string, unknown>>(),
+  Match.when('build', () => ({ dependsOn: ['^build'], outputs: ['dist/**', 'build/**', '.next/**', 'out/**'] })),
+  Match.when('test', () => ({ dependsOn: ['^build'] })),
+  Match.when('lint', () => ({ dependsOn: ['^build'] })),
+  Match.when('typecheck', () => ({ dependsOn: ['^build'] })),
+  Match.when('dev', () => ({ persistent: true, cache: false })),
+  Match.orElse(() => ({})),
+);
 
 /**
  * Merge tasks into turbo.json config.

@@ -30,7 +30,7 @@ export interface TimeServiceShape {
     date: Date,
     contactId: string,
     timezone?: string,
-  ) => Effect.Effect<ReadonlyArray<typeof Activity.Type>, TloError>;
+  ) => Effect.Effect<ReadonlyArray<Activity>, TloError>;
 
   readonly createActivity: (params: CreateActivityParams) => Effect.Effect<number, TloError>;
 

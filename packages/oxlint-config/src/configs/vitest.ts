@@ -86,7 +86,7 @@ export const vitestConfig = defineConfig({
     'vitest/valid-describe-callback': 'error',
     'vitest/valid-expect': 'error',
     'vitest/valid-expect-in-promise': 'error',
-    'vitest/valid-title': undefined,
+    'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
     'vitest/warn-todo': 'error',
 
     'vitest/padding-around-after-all-blocks': undefined,

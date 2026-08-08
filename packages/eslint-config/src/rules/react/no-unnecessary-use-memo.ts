@@ -95,7 +95,7 @@ function getUseEffectOnlyReport(
   findParent: (node: TSESTree.Node, test: (node: TSESTree.Node) => boolean) => TSESTree.Node | undefined,
   node: TSESTree.CallExpression,
   name: string,
-  isUseEffectLikeCall: (node: TSESTree.Node, additionalHooks?: { test(value: string): boolean }) => boolean,
+  isUseEffectLikeCall: (node: TSESTree.Node, additionalHooks?: { test: (value: string) => boolean }) => boolean,
 ): UseEffectOnlyReport | undefined {
   if (!/use\w*Effect/u.test(sourceCode.text)) {
     return;
