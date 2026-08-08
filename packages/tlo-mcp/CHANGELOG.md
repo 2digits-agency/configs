@@ -1,3 +1,10 @@
+## @2digits/tlo-mcp@0.1.28
+
+### Declare service shapes as properties
+
+- Rewrote `BoardServiceShape`, `TimeServiceShape` and `TeamLeaderClientShape` members as `readonly` function properties, so their parameters type-check contravariantly
+- Fixed `TimeServiceShape.getWeek` to return the `Activity` class type instead of `typeof Activity.Type`
+
 ## @2digits/tlo-mcp@0.1.27
 
 ### Update @effect/platform-node to 0.108.1

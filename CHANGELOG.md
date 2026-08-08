@@ -1,3 +1,55 @@
+## @2digits/config-monorepo@0.0.4
+
+### Update tegami to 1.3.1
+
+
+
+### Update pnpm to 11.20.0
+
+
+
+### Update Node.js to 24.19.0
+
+
+
+### Update the baseline-browser-mapping override to 2.11.12
+
+
+
+### Pin @typescript-eslint/types to 8.66.0
+
+- Kept `@eslint-react` and direct TypeScript ESLint dependencies on one AST type version
+
+### Update publint to 0.3.23
+
+
+
+### Update tegami to 1.3.4
+
+
+
+### Update the baseline-browser-mapping override to 2.11.13
+
+
+
+### Update @effect/language-service to 0.87.2
+
+
+
+### Update knip to 6.32.0
+
+
+
+### Update pkg-pr-new to 0.0.87
+
+
+
+### Update turbo to 2.10.9
+
+
+
+### Update tsx to 4.23.11
+
 ## @2digits/config-monorepo@0.0.3
 
 ### Update tegami to 1.3.0

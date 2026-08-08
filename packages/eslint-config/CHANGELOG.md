@@ -1,3 +1,95 @@
+## @2digits/eslint-config@5.6.0
+
+### Update eslint-plugin-unicorn to 73.0.0
+
+- Enabled the new `unicorn/no-unsafe-sqlite-interpolation` recommended rule
+- Kept `unicorn/single-line-block-comment-style` disabled to preserve concise block comments
+
+### Update eslint-plugin-jsdoc to 63.3.3
+
+
+
+### Update @typescript-eslint/utils to 8.66.0
+
+
+
+### Update globals to 17.9.0
+
+
+
+### Update Node.js to 24.19.0
+
+
+
+### Update eslint-plugin-storybook to 10.5.6
+
+
+
+### Update @graphql-eslint/eslint-plugin to 4.4.1
+
+
+
+### Update @typescript-eslint/parser to 8.66.0
+
+
+
+### Update @vitest/eslint-plugin to 1.6.26
+
+
+
+### Update eslint-plugin-jsonc to 3.4.1
+
+
+
+### Update eslint-plugin-yml to 3.8.0
+
+
+
+### Update @next/eslint-plugin-next to 16.3.0
+
+- Added the new `next/no-location-assign-relative-destination` rule to Next.js presets and generated rule types
+
+### Update typescript-eslint to 8.66.0
+
+
+
+### Enforce property-style method signatures
+
+- Enabled `method-signature-style` with the `property` option in both presets, so interface members are declared as `readonly foo: (…) => R` and keep parameters contravariant
+- Disabled `switch-exhaustiveness-check` in both presets
+
+### Enable no-promise-executor-return and valid-title
+
+- Turned on `no-promise-executor-return` in the JavaScript config
+- Turned on `vitest/valid-title` in the Vitest config
+
+### Update @eslint-react/eslint-plugin and @eslint-react/kit to 5.18.3
+
+
+
+### Update eslint-plugin-n to 18.3.0
+
+- Enabled the new `node/prefer-global/timers`, `node/prefer-import/assert-strict` and `node/prefer-process-get-builtin-module` rules in the Node config
+- Regenerated the rule types, which now cover `import.meta` paths in `node/no-path-concat`
+
+### Update eslint-plugin-storybook to 10.5.7
+
+
+
+### Update eslint to 10.8.1
+
+
+
+### Update eslint-plugin-jsdoc to 64.0.1
+
+
+
+### Update jsonc-eslint-parser to 3.3.0
+
+
+
+### Update eslint-plugin-turbo to 2.10.9
+
 ## @2digits/eslint-config@5.5.15
 
 ### Update @eslint-react/eslint-plugin to 5.18.1

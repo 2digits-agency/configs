@@ -1,3 +1,15 @@
+## @2digits/eslint-plugin@4.0.24
+
+### Update @typescript-eslint/utils to 8.66.0
+
+
+
+### Update @typescript-eslint/scope-manager to 8.66.0
+
+
+
+### Update eslint to 10.8.1
+
 ## @2digits/eslint-plugin@4.0.23
 
 ### Update eslint to 10.8.0
