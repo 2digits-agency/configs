@@ -1,3 +1,9 @@
+## @2digits/cli@2.0.12
+
+### Build Turborepo task config with Match
+
+- Replaced the `switch` in `generateTaskConfig` with an `effect/Match` matcher, removing the implicit fallthrough between the `test`, `lint` and `typecheck` branches
+
 ## @2digits/cli@2.0.11
 
 ### Update @effect/platform-node to 0.108.1

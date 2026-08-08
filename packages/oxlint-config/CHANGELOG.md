@@ -1,3 +1,31 @@
+## @2digits/oxlint-config@0.7.0
+
+### Update oxlint to 1.77.0
+
+
+
+### Use the native oxlint configuration API
+
+- Replaced `@oxlint-types/define-config` with `defineConfig` and the rule types from `oxlint`
+- Registered external JS plugin rules through a `DummyRuleMap` module augmentation
+
+### Align rule settings with @2digits/eslint-config
+
+- Matched the shared JavaScript, TypeScript, React, Node, Unicorn, Vitest, JSDoc, import, Oxc, and Zod rule settings
+- Corrected the `react-perf/*` rule namespace and disabled the unsupported `one-var` rule
+
+### Enforce property-style method signatures
+
+- Enabled `method-signature-style` with the `property` option in both presets, so interface members are declared as `readonly foo: (…) => R` and keep parameters contravariant
+- Disabled `switch-exhaustiveness-check` in both presets
+
+### Adopt previously unconfigured oxlint rules
+
+- Enabled `oxc/bad-match-all-arg`, `no-promise-executor-return` and `vitest/valid-title` with `ignoreTypeOfDescribeName`
+- Enabled the newly available unicorn rules `empty-brace-spaces`, `explicit-timer-delay`, `import-style`, `no-array-fill-with-reference-type`, `no-confusing-array-with`, `prefer-export-from` and `prefer-single-call`
+- Explicitly disabled the type-aware rules that stay off: `consistent-return`, `no-unsafe-type-assertion`, `prefer-readonly-parameter-types` and `strict-void-return`
+- Turned off `no-shadow`, which is covered by the TypeScript-aware equivalent
+
 ## @2digits/oxlint-config@0.6.17
 
 ### Update eslint-plugin-zod to 4.9.0
