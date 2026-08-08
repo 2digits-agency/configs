@@ -1,3 +1,13 @@
+## @2digits/eslint-config@5.6.1
+
+### Only report catalog items duplicated at the same version
+
+`pnpm/yaml-no-duplicate-catalog-item` now runs with `checkDuplicates: 'exact-version'`. A named
+catalog exists precisely to pin a _different_ version of a package — for example a
+`conflicts_typescript_7_0_2` catalog next to a default catalog on TypeScript 6 — and the previous
+name-only comparison flagged that intentional split as a mistake. Two catalogs listing the same
+package at the same version are still reported.
+
 ## @2digits/eslint-config@5.6.0
 
 ### Update eslint-plugin-unicorn to 73.0.0
