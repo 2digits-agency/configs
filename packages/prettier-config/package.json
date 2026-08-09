@@ -31,7 +31,7 @@
   "scripts": {
     "build": "vp pack --minify --config-loader unconfig",
     "dev": "vp pack --watch --config-loader unconfig",
-    "types": "tsgo --noEmit"
+    "types": "tsc --noEmit"
   },
   "dependencies": {
     "@2digits/constants": "workspace:*",
@@ -46,7 +46,6 @@
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
     "@types/node": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "prettier": "catalog:",
     "publint": "catalog:",
     "typescript": "catalog:",

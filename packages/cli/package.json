@@ -27,7 +27,7 @@
     "dev": "vp pack --watch --config-loader unconfig",
     "test": "vp test run",
     "test:watch": "vp test",
-    "types": "tsgo --noEmit"
+    "types": "tsc --noEmit"
   },
   "dependencies": {
     "@effect/cli": "catalog:",
@@ -40,7 +40,6 @@
   "devDependencies": {
     "@arethetypeswrong/core": "catalog:",
     "@effect/vitest": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "publint": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
