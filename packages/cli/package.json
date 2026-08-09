@@ -25,7 +25,6 @@
     "bin": "tsx ./src/bin.ts",
     "build": "vp pack --minify --config-loader unconfig",
     "dev": "vp pack --watch --config-loader unconfig",
-    "prepare": "effect-language-service patch",
     "test": "vp test run",
     "test:watch": "vp test",
     "types": "tsgo --noEmit"
@@ -39,9 +38,7 @@
     "pkg-types": "catalog:"
   },
   "devDependencies": {
-    "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
-    "@effect/language-service": "catalog:",
     "@effect/vitest": "catalog:",
     "@typescript/native-preview": "catalog:",
     "publint": "catalog:",

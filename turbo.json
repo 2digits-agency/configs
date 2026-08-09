@@ -22,7 +22,7 @@
     },
     "types": {
       "dependsOn": ["^types", "build"],
-      "inputs": ["$TURBO_DEFAULT$", "tsconfig.json"],
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig.json", "$TURBO_ROOT$/tsconfig.base.json"],
       "outputs": ["tsconfig.tsbuildinfo"],
       "outputLogs": "new-only"
     },

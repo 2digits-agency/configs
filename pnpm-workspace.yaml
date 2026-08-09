@@ -101,7 +101,7 @@ catalog:
   tinyglobby: 0.2.17
   ts-api-utils: 2.5.0
   tsx: 4.23.11
-  typescript: 6.0.3
+  typescript: 7.0.2
   turbo: 2.10.9
   typescript-eslint: 8.66.0
   vite: npm:@voidzero-dev/vite-plus-core@0.2.8
@@ -120,7 +120,7 @@ overrides:
   baseline-browser-mapping: 2.11.13
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
   '@typescript-eslint/types': 8.66.0
-  eslint-plugin-sonarjs>typescript: 'catalog:'
+  eslint-plugin-sonarjs>typescript: 'catalog:typescript6'
   globalthis: npm:@nolyfill/globalthis@1.0.44
   hasown: npm:@nolyfill/hasown@1.0.44
   is-arguments: npm:@nolyfill/is-arguments@1.0.44
@@ -146,6 +146,14 @@ peerDependencyRules:
   allowedVersions:
     vite: '*'
 
+packageExtensions:
+  # eslint-plugin-zod pulls in @typescript-eslint/utils, whose `typescript` peer would otherwise
+  # resolve to the importer's TypeScript — 7 in @2digits/oxlint-config. typescript-eslint 8.x only
+  # supports `>=4.8.4 <6.1.0`, so bind it to the typescript6 catalog at the plugin boundary instead.
+  eslint-plugin-zod:
+    dependencies:
+      typescript: 6.0.3
+
 catalogMode: strict
 cleanupUnusedCatalogs: true
 minimumReleaseAge: 0
@@ -153,6 +161,9 @@ optimisticRepeatInstall: true
 preferWorkspacePackages: true
 savePrefix: ''
 verifyDepsBeforeRun: warn
+
 catalogs:
-  conflicts_typescript_7_0_2:
-    typescript: 7.0.2
+  # typescript-eslint 8.x declares `typescript: ">=4.8.4 <6.1.0"` as a peer, so every package that
+  # loads it (@2digits/eslint-config, @2digits/eslint-plugin) pins TypeScript 6 through this catalog.
+  typescript6:
+    typescript: 6.0.3
