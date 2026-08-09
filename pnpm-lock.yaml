@@ -396,8 +396,8 @@ catalogs:
       specifier: 3.8.1
       version: 3.8.1
     eslint-plugin-zod:
-      specifier: 4.9.0
-      version: 4.9.0
+      specifier: 4.9.1
+      version: 4.9.1
     eslint-typegen:
       specifier: 2.3.1
       version: 2.3.1
@@ -783,7 +783,7 @@ importers:
         version: 3.8.1(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-zod:
         specifier: 'catalog:'
-        version: 4.9.0(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.77.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.8(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.8(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3)
+        version: 4.9.1(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.77.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.8(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.8(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3)
       globals:
         specifier: 'catalog:'
         version: 17.9.0
@@ -994,7 +994,7 @@ importers:
         version: 19.1.0-rc.2(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)
       eslint-plugin-zod:
         specifier: 'catalog:'
-        version: 4.9.0(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.77.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.8(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.8(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3)
+        version: 4.9.1(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.77.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.8(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.8(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3)
     devDependencies:
       '@2digits/eslint-config':
         specifier: workspace:*
@@ -1866,8 +1866,8 @@ packages:
       eslint: '*'
       typescript: '*'
 
-  '@eslint-zod/utils@2.5.0':
-    resolution: {integrity: sha512-8cWwRFB0hS06mW3avcsAEqxbGJ371S00OVDTaTMyCaGefRZWNo1ONQMstexhjrSPsJYJnBft6zwsmDVzfCO5Dg==}
+  '@eslint-zod/utils@3.0.0':
+    resolution: {integrity: sha512-4nmHpA400HOsSR4582DKtbOoXEi1ND6RuHTP3NFVd8nd2VIkw4IPGg3veiBPjpBtJ3Dk/TjgypFv9UWMWIh5TA==}
     engines: {node: ^20 || ^22 || >=24}
 
   '@eslint/compat@2.1.0':
@@ -5331,8 +5331,8 @@ packages:
     peerDependencies:
       eslint: '>=9.38.0'
 
-  eslint-plugin-zod@4.9.0:
-    resolution: {integrity: sha512-jWUbyQITQEsJxXfMtSw7HcD08Au9kJ6fatm3QrYPePfxJDbf6mbJ/lxdm5dIsyMbuO9A79jLnJjwDmjW2G8Asw==}
+  eslint-plugin-zod@4.9.1:
+    resolution: {integrity: sha512-Dqe9IA+QIngGG+JJoXSxC4n3l/8UEmpKRcTom2tohZ7Xq9+LBnJOgLHYsfNlh6kQY2GAI3PJWmvL+Rnqqx3LDg==}
     engines: {node: ^20 || ^22 || >=24}
     peerDependencies:
       eslint: ^9 || ^10
@@ -8915,7 +8915,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint-zod/utils@2.5.0(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)':
+  '@eslint-zod/utils@3.0.0(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/utils': 8.66.0(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       esquery: 1.7.0
@@ -12029,9 +12029,9 @@ snapshots:
       natural-compare: 1.4.0
       yaml-eslint-parser: 2.1.0
 
-  eslint-plugin-zod@4.9.0(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.77.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.8(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.8(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3):
+  eslint-plugin-zod@4.9.1(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.77.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.8(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.2.8(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.23)(tsx@4.23.11)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3):
     dependencies:
-      '@eslint-zod/utils': 2.5.0(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+      '@eslint-zod/utils': 3.0.0(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@typescript-eslint/utils': 8.66.0(eslint@10.8.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
     optionalDependencies:
       eslint: 10.8.1(jiti@2.7.0)(supports-color@7.2.0)
