@@ -4,5 +4,13 @@
   "rebaseWhen": "auto",
   "schedule": ["at any time"],
   "updateNotScheduled": true,
-  "ignorePaths": ["**/node_modules/**", "**/fixtures/**"]
+  "ignorePaths": ["**/node_modules/**", "**/fixtures/**"],
+  "packageRules": [
+    {
+      "description": "typescript-eslint 8.x peers on `typescript >=4.8.4 <6.1.0`, so this catalog must stay on v6",
+      "matchDepTypes": ["pnpm.catalog.typescript6"],
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<6.1.0"
+    }
+  ]
 }

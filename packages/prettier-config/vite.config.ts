@@ -3,9 +3,7 @@ import { defineConfig } from 'vite-plus';
 export default defineConfig({
   pack: {
     entry: ['src/index.ts'],
-    dts: {
-      tsgo: true,
-    },
+    dts: true,
     fixedExtension: true,
     attw: { profile: 'strict', level: 'error' },
     publint: { strict: true },

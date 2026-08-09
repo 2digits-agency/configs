@@ -28,7 +28,7 @@
     "dev": "vp pack --watch --config-loader unconfig",
     "test": "vp test run",
     "test:watch": "vp test",
-    "types": "tsgo --noEmit"
+    "types": "tsc --noEmit"
   },
   "dependencies": {
     "@2digits/constants": "workspace:*",
@@ -39,7 +39,6 @@
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
     "@types/node": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "oxfmt": "catalog:",
     "prettier": "catalog:",
     "publint": "catalog:",
