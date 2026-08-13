@@ -1,12 +1,12 @@
-import type * as Command from '@effect/platform/Command';
-import * as CommandExecutor from '@effect/platform/CommandExecutor';
 import * as Array from 'effect/Array';
+import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
-import * as Inspectable from 'effect/Inspectable';
 import * as Layer from 'effect/Layer';
 import * as Ref from 'effect/Ref';
 import * as Sink from 'effect/Sink';
 import * as Stream from 'effect/Stream';
+import type * as ChildProcess from 'effect/unstable/process/ChildProcess';
+import * as ChildProcessSpawner from 'effect/unstable/process/ChildProcessSpawner';
 
 /**
  * Represents a command that was executed during a test.
@@ -17,124 +17,77 @@ interface ExecutedCommand {
   readonly shell: boolean | string;
 }
 
-function createMockProcess(_command: Command.Command): CommandExecutor.Process {
-  return {
-    [CommandExecutor.ProcessTypeId]: CommandExecutor.ProcessTypeId,
-    pid: 12_345 as CommandExecutor.ProcessId,
-    exitCode: Effect.succeed(0 as CommandExecutor.ExitCode),
+function createMockProcess(): ChildProcessSpawner.ChildProcessHandle {
+  return ChildProcessSpawner.makeHandle({
+    pid: ChildProcessSpawner.ProcessId(12_345),
+    exitCode: Effect.succeed(ChildProcessSpawner.ExitCode(0)),
     isRunning: Effect.succeed(false),
     kill: () => Effect.void,
     stderr: Stream.empty,
     stdin: Sink.drain,
     stdout: Stream.empty,
-    [Symbol.for('nodejs.util.inspect.custom')]() {
-      return 'MockProcess';
-    },
-    toJSON() {
-      return { _tag: 'MockProcess', pid: 12_345 };
-    },
-    [Inspectable.NodeInspectSymbol](): unknown {
-      throw new Error('Function not implemented.');
-    },
-  };
+    all: Stream.empty,
+    getInputFd: () => Sink.drain,
+    getOutputFd: () => Stream.empty,
+    unref: Effect.succeed(Effect.void),
+  });
 }
 
 /**
- * A spy/intercept implementation of CommandExecutor for testing. Records all commands that would be executed and
+ * A spy/intercept implementation of ChildProcessSpawner for testing. Records all commands that would be executed and
  * returns fake successful results.
  */
-export class MockCommandExecutor extends Effect.Service<MockCommandExecutor>()(
+export class MockCommandExecutor extends Context.Service<MockCommandExecutor>()(
   '@2digits/cli/test/helpers/MockCommandService/MockCommandExecutor',
   {
-    effect: Effect.gen(function* () {
+    make: Effect.gen(function* () {
       const executed = yield* Ref.make<Array<ExecutedCommand>>([]);
 
-      const recordCommand = Effect.fn('recordCommand')(function* (command: Command.Command): Effect.fn.Return<void> {
+      const recordCommand = Effect.fn('MockCommandExecutor.recordCommand')(function* (command: ChildProcess.Command) {
         if (command._tag === 'StandardCommand') {
-          yield* Ref.update(executed, (cmds) =>
-            Array.append(cmds, {
+          yield* Ref.update(executed, (commands) =>
+            Array.append(commands, {
               command: command.command,
               args: command.args,
-              shell: command.shell,
+              shell: command.options.shell ?? false,
             }),
           );
         }
       });
 
-      const executor: CommandExecutor.CommandExecutor = {
-        [CommandExecutor.TypeId]: CommandExecutor.TypeId,
-        exitCode: (command) =>
-          Effect.gen(function* () {
-            yield* recordCommand(command);
+      const spawner = ChildProcessSpawner.make((command) =>
+        Effect.gen(function* () {
+          yield* recordCommand(command);
 
-            return 0 as CommandExecutor.ExitCode;
-          }),
-        start: (command) =>
-          Effect.gen(function* () {
-            yield* recordCommand(command);
-
-            return createMockProcess(command);
-          }),
-        string: (command, _encoding) =>
-          Effect.gen(function* () {
-            yield* recordCommand(command);
-
-            return '';
-          }),
-        lines: (command, _encoding) =>
-          Effect.gen(function* () {
-            yield* recordCommand(command);
-
-            return [];
-          }),
-        stream: (command) =>
-          command.pipe(
-            recordCommand,
-            Stream.fromEffect,
-            Stream.flatMap(() => Stream.empty),
-          ),
-        streamLines: (command, _encoding) =>
-          command.pipe(
-            recordCommand,
-            Stream.fromEffect,
-            Stream.flatMap(() => Stream.empty),
-          ),
-      };
+          return createMockProcess();
+        }),
+      );
 
       return {
-        executor,
-        /**
-         * Get all commands that were executed.
-         */
+        spawner,
         getExecuted: Ref.get(executed),
-        /**
-         * Clear the list of executed commands.
-         */
         clear: Ref.set(executed, []),
       } as const;
     }),
-    dependencies: [],
   },
-) {}
+) {
+  static readonly Default = Layer.effect(this, this.make);
+}
 
 /**
- * Layer that provides the mock CommandExecutor.
+ * Layer that provides the mock ChildProcessSpawner.
  */
 export const MockCommandExecutorLayer = Layer.effect(
-  CommandExecutor.CommandExecutor,
-  Effect.gen(function* () {
-    const mock = yield* MockCommandExecutor;
-
-    return mock.executor;
-  }),
+  ChildProcessSpawner.ChildProcessSpawner,
+  MockCommandExecutor.use((mock) => Effect.succeed(mock.spawner)),
 ).pipe(Layer.provide(MockCommandExecutor.Default));
 
 /**
  * Helper to get the executed commands in tests.
  */
-export const getExecutedCommands = MockCommandExecutor.pipe(Effect.flatMap((mock) => mock.getExecuted));
+export const getExecutedCommands = MockCommandExecutor.use((mock) => mock.getExecuted);
 
 /**
  * Helper to clear executed commands in tests.
  */
-export const clearExecutedCommands = MockCommandExecutor.pipe(Effect.flatMap((mock) => mock.clear));
+export const clearExecutedCommands = MockCommandExecutor.use((mock) => mock.clear);

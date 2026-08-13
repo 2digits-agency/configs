@@ -59,10 +59,9 @@ export interface BoardServiceShape {
   readonly setTaskState: (params: SetTaskStateParams) => Effect.Effect<void, TloError>;
 }
 
-export class BoardService extends Context.Tag('@2digits/tlo-mcp/services/BoardService')<
-  BoardService,
-  BoardServiceShape
->() {}
+export class BoardService extends Context.Service<BoardService, BoardServiceShape>()(
+  '@2digits/tlo-mcp/services/BoardService',
+) {}
 
 function formatRequestDate(d: Date): string {
   const year = d.getFullYear();
@@ -100,7 +99,7 @@ export const BoardServiceLive = Layer.effect(
           .pipe(Effect.map((response) => response.Records.map((raw) => projectFromRaw(raw))));
       }),
 
-      getProjectDetails: Effect.fn('BoardService.getProjectDetails')(function* (params) {
+      getProjectDetails: Effect.fn('BoardService.getProjectDetails')(function* (params: GetProjectDetailsParams) {
         return yield* client
           .post('/ajax/pln/GetProjectDetails', { ID: params.projectId }, GetProjectDetailsResponse)
           .pipe(
@@ -109,7 +108,7 @@ export const BoardServiceLive = Layer.effect(
           );
       }),
 
-      getMessages: Effect.fn('BoardService.getMessages')(function* (params) {
+      getMessages: Effect.fn('BoardService.getMessages')(function* (params: GetMessagesParams) {
         return yield* client
           .post(
             '/ajax/board/ProcessMessage',
@@ -127,7 +126,7 @@ export const BoardServiceLive = Layer.effect(
           .pipe(Effect.map((messages) => messages.map((raw) => messageFromRaw(raw))));
       }),
 
-      getTasks: Effect.fn('BoardService.getTasks')(function* (params) {
+      getTasks: Effect.fn('BoardService.getTasks')(function* (params: GetTasksParams) {
         const states = params.states ?? ['DRAFT', 'OPEN', 'CLOSED'];
 
         return yield* client
@@ -145,7 +144,7 @@ export const BoardServiceLive = Layer.effect(
           .pipe(Effect.map((response) => response.Records.map((raw) => taskFromRaw(raw))));
       }),
 
-      getTasksForUser: Effect.fn('BoardService.getTasksForUser')(function* (params) {
+      getTasksForUser: Effect.fn('BoardService.getTasksForUser')(function* (params: GetTasksForUserParams) {
         return yield* client
           .post(
             '/ajax/pln/GetTasksForUser',
@@ -162,11 +161,11 @@ export const BoardServiceLive = Layer.effect(
           );
       }),
 
-      getTodoDetail: Effect.fn('BoardService.getTodoDetail')(function* (params) {
+      getTodoDetail: Effect.fn('BoardService.getTodoDetail')(function* (params: GetTodoDetailParams) {
         return yield* client.post('/ajax/board/GetTodoDetail', { ID: params.id }, TodoDetailSchema);
       }),
 
-      getBoardTodos: Effect.fn('BoardService.getBoardTodos')(function* (params) {
+      getBoardTodos: Effect.fn('BoardService.getBoardTodos')(function* (params: GetBoardTodosParams) {
         return yield* client
           .post(
             '/ajax/board/GetTodos',
@@ -191,7 +190,7 @@ export const BoardServiceLive = Layer.effect(
           );
       }),
 
-      moveTodo: Effect.fn('BoardService.moveTodo')(function* (params) {
+      moveTodo: Effect.fn('BoardService.moveTodo')(function* (params: MoveTodoParams) {
         return yield* client
           .post(
             '/ajax/board/MoveTodo',
@@ -206,7 +205,7 @@ export const BoardServiceLive = Layer.effect(
           .pipe(Effect.asVoid);
       }),
 
-      postMessage: Effect.fn('BoardService.postMessage')(function* (params) {
+      postMessage: Effect.fn('BoardService.postMessage')(function* (params: PostMessageParams) {
         return yield* client
           .post(
             '/ajax/board/ProcessMessage',
@@ -221,7 +220,7 @@ export const BoardServiceLive = Layer.effect(
           .pipe(Effect.asVoid);
       }),
 
-      setTaskState: Effect.fn('BoardService.setTaskState')(function* (params) {
+      setTaskState: Effect.fn('BoardService.setTaskState')(function* (params: SetTaskStateParams) {
         return yield* client
           .post(
             '/ajax/pln/SetTaskState',

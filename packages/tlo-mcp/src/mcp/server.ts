@@ -1,8 +1,7 @@
-import * as McpServer from '@effect/ai/McpServer';
-import * as NodeSink from '@effect/platform-node/NodeSink';
-import * as NodeStream from '@effect/platform-node/NodeStream';
 import * as Layer from 'effect/Layer';
 import * as Logger from 'effect/Logger';
+import * as McpProtocol from 'effect/unstable/ai/McpProtocol';
+import * as McpServer from 'effect/unstable/ai/McpServer';
 
 import { TloToolkit, TloToolkitHandlers } from './handlers.js';
 
@@ -17,10 +16,9 @@ export function makeMcpServerLayer(options: McpServerOptions) {
     Layer.provide(
       McpServer.layerStdio({
         ...options,
-        stdin: NodeStream.stdin,
-        stdout: NodeSink.stdout,
+        protocols: [McpProtocol.v2025_06_18],
       }),
     ),
-    Layer.provide(Logger.add(Logger.prettyLogger({ stderr: true }))),
+    Layer.provide(Logger.layer([Logger.consolePretty({ stderr: true })])),
   );
 }

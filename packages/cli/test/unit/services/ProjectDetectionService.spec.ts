@@ -1,11 +1,11 @@
 /* eslint-disable ts/no-deprecated */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as Path from '@effect/platform/Path';
 import { describe, expect, layer } from '@effect/vitest';
 import { deepStrictEqual, strictEqual } from '@effect/vitest/utils';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Path from 'effect/Path';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
@@ -24,9 +24,9 @@ describe(ProjectDetectionService, () => {
 
   layer(testLayer)((it) => {
     describe('isMonorepo', () => {
-      it.scoped('detects monorepo with turbo.json', (ctx) =>
+      it.effect('detects monorepo with turbo.json', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('ProjectDetectionService');
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* ProjectDetectionService;
@@ -36,9 +36,9 @@ describe(ProjectDetectionService, () => {
         }),
       );
 
-      it.scoped('does not detect monorepo without turbo.json', (ctx) =>
+      it.effect('does not detect monorepo without turbo.json', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('ProjectDetectionService');
           yield* copyFixture('single-package');
 
           const service = yield* ProjectDetectionService;
@@ -50,9 +50,9 @@ describe(ProjectDetectionService, () => {
     });
 
     describe('isTurborepoProject', () => {
-      it.scoped('is an alias for isMonorepo', (ctx) =>
+      it.effect('is an alias for isMonorepo', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('ProjectDetectionService');
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* ProjectDetectionService;
@@ -64,9 +64,9 @@ describe(ProjectDetectionService, () => {
     });
 
     describe('discoverWorkspaces', () => {
-      it.scoped('discovers workspaces in packages/ directory', (ctx) =>
+      it.effect('discovers workspaces in packages/ directory', () =>
         Effect.gen(function* () {
-          const testDir = yield* withTempTestEnv(ctx.task.id);
+          const testDir = yield* withTempTestEnv('ProjectDetectionService');
 
           yield* copyFixture('monorepo-turborepo');
 
@@ -81,9 +81,9 @@ describe(ProjectDetectionService, () => {
         }),
       );
 
-      it.scoped('returns empty array for single package project', (ctx) =>
+      it.effect('returns empty array for single package project', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('ProjectDetectionService');
           yield* copyFixture('single-package');
 
           const service = yield* ProjectDetectionService;

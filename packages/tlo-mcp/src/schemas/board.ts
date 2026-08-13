@@ -29,7 +29,7 @@ export const GetProjectsResponse = Schema.Struct({
 });
 
 export type GetProjectDetailsResponse = typeof GetProjectDetailsResponse.Type;
-export const GetProjectDetailsResponse = Schema.Union(ProjectRaw, Schema.Struct({ Record: ProjectRaw }));
+export const GetProjectDetailsResponse = Schema.Union([ProjectRaw, Schema.Struct({ Record: ProjectRaw })]);
 
 export class Project extends Schema.Class<Project>('Project')({
   id: Schema.Number,
@@ -249,7 +249,7 @@ export function taskForUserFromRaw(raw: TaskForUserRaw): TaskForUser {
 }
 
 export type TodoDetail = typeof TodoDetail.Type;
-export const TodoDetail = Schema.Record({ key: Schema.String, value: Schema.Unknown });
+export const TodoDetail = Schema.Record(Schema.String, Schema.Unknown);
 
 type TodoSummaryRaw = typeof TodoSummaryRaw.Type;
 const TodoSummaryRaw = Schema.Struct({

@@ -1,5 +1,6 @@
 import { describe, expect, layer } from '@effect/vitest';
-import { DateTime, Effect, Layer } from 'effect';
+import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
 
 import type { GetWeekResponse, SetActivityResponse } from '../src/schemas/time.js';
 import { TeamLeaderClient } from '../src/services/TeamLeaderClient.js';
@@ -45,10 +46,7 @@ describe(TimeService, () => {
       it.effect('returns transformed activities', () =>
         Effect.gen(function* () {
           const service = yield* TimeService;
-          const activities = yield* service.getWeek(
-            DateTime.unsafeMake('2025-01-15').pipe(DateTime.toDateUtc),
-            'user1',
-          );
+          const activities = yield* service.getWeek(new Date('2025-01-15'), 'user1');
 
           expect(activities).toHaveLength(1);
           expect(activities[0]?.id).toBe(1);
@@ -67,18 +65,7 @@ describe(TimeService, () => {
         Effect.gen(function* () {
           const service = yield* TimeService;
           const id = yield* service.createActivity({
-            startDate: DateTime.unsafeMakeZoned(
-              {
-                year: 2025,
-                month: 1,
-                day: 15,
-                hours: 10,
-              },
-              {
-                timeZone: DateTime.zoneMakeLocal(),
-                adjustForTimeZone: true,
-              },
-            ).pipe(DateTime.toDateUtc),
+            startDate: new Date(2025, 0, 15, 10),
             durationMinutes: 30,
             folderId: '100',
             taskId: '200',

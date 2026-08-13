@@ -1,5 +1,5 @@
-import * as Toolkit from '@effect/ai/Toolkit';
 import * as Effect from 'effect/Effect';
+import * as Toolkit from 'effect/unstable/ai/Toolkit';
 
 import { BoardService } from '../services/BoardService.js';
 import { TimeService } from '../services/TimeService.js';

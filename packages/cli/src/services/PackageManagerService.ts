@@ -1,10 +1,11 @@
-import * as Command from '@effect/platform/Command';
-import * as Path from '@effect/platform/Path';
-import * as Array from 'effect/Array';
+import * as Context from 'effect/Context';
 import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
+import * as Path from 'effect/Path';
 import * as Stream from 'effect/Stream';
 import * as String from 'effect/String';
+import * as ChildProcess from 'effect/unstable/process/ChildProcess';
 import * as nypm from 'nypm';
 import * as pkgTypes from 'pkg-types';
 
@@ -21,10 +22,10 @@ export interface PackageJson extends BasePackageJson {
   prettier?: unknown;
 }
 
-export class PackageManagerService extends Effect.Service<PackageManagerService>()(
+export class PackageManagerService extends Context.Service<PackageManagerService>()(
   '@2digits/cli/services/PackageManagerService',
   {
-    effect: Effect.gen(function* () {
+    make: Effect.gen(function* () {
       const path = yield* Path.Path;
       const cwdService = yield* CurrentWorkingDirService;
 
@@ -97,25 +98,26 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
 
         const workspace = options.workspace ?? true;
 
-        if (options.devDependencies !== undefined && Array.isNonEmptyArray(options.devDependencies)) {
-          const devDepsCmd = Command.make(
+        if (options.devDependencies !== undefined && options.devDependencies.length > 0) {
+          const devDepsCmd = ChildProcess.make(
             nypm.addDependencyCommand(pm.name, options.devDependencies, { workspace, dev: true, short: true }),
-          ).pipe(Command.runInShell(true));
+            { shell: true },
+          );
 
-          const { exitCode, stderr } = yield* Command.start(devDepsCmd).pipe(
-            Effect.flatMap((process) =>
+          const { exitCode, stderr } = yield* devDepsCmd.pipe(
+            Effect.flatMap((childProcess) =>
               Effect.all({
-                stdout: process.stdout.pipe(
+                stdout: childProcess.stdout.pipe(
                   Stream.decodeText(),
-                  Stream.tap(Effect.logDebug),
-                  Stream.runFold(String.empty, String.concat),
+                  Stream.tap((output) => Effect.logDebug(output)),
+                  Stream.runFold(() => String.empty, String.concat),
                 ),
-                stderr: process.stderr.pipe(
+                stderr: childProcess.stderr.pipe(
                   Stream.decodeText(),
-                  Stream.tap(Effect.logDebug),
-                  Stream.runFold(String.empty, String.concat),
+                  Stream.tap((output) => Effect.logDebug(output)),
+                  Stream.runFold(() => String.empty, String.concat),
                 ),
-                exitCode: process.exitCode,
+                exitCode: childProcess.exitCode,
               }),
             ),
           );
@@ -132,25 +134,26 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
           yield* Effect.logDebug(`Added devDependencies: ${options.devDependencies.join(', ')}`);
         }
 
-        if (options.dependencies !== undefined && Array.isNonEmptyArray(options.dependencies)) {
-          const depsCmd = Command.make(
+        if (options.dependencies !== undefined && options.dependencies.length > 0) {
+          const depsCmd = ChildProcess.make(
             nypm.addDependencyCommand(pm.name, options.dependencies, { workspace, short: true }),
-          ).pipe(Command.runInShell(true));
+            { shell: true },
+          );
 
-          const { exitCode, stderr } = yield* Command.start(depsCmd).pipe(
-            Effect.flatMap((process) =>
+          const { exitCode, stderr } = yield* depsCmd.pipe(
+            Effect.flatMap((childProcess) =>
               Effect.all({
-                stdout: process.stdout.pipe(
+                stdout: childProcess.stdout.pipe(
                   Stream.decodeText(),
-                  Stream.tap(Effect.logDebug),
-                  Stream.runFold(String.empty, String.concat),
+                  Stream.tap((output) => Effect.logDebug(output)),
+                  Stream.runFold(() => String.empty, String.concat),
                 ),
-                stderr: process.stderr.pipe(
+                stderr: childProcess.stderr.pipe(
                   Stream.decodeText(),
-                  Stream.tap(Effect.logDebug),
-                  Stream.runFold(String.empty, String.concat),
+                  Stream.tap((output) => Effect.logDebug(output)),
+                  Stream.runFold(() => String.empty, String.concat),
                 ),
-                exitCode: process.exitCode,
+                exitCode: childProcess.exitCode,
               }),
             ),
           );
@@ -201,6 +204,9 @@ export class PackageManagerService extends Effect.Service<PackageManagerService>
         runScriptCommand,
       };
     }),
-    dependencies: [Path.layer, CurrentWorkingDirService.Default],
   },
-) {}
+) {
+  static readonly Default = Layer.effect(this, this.make).pipe(
+    Layer.provide(Layer.mergeAll(Path.layer, CurrentWorkingDirService.Default)),
+  );
+}

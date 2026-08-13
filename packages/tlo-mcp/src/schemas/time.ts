@@ -6,12 +6,12 @@ import * as Schema from 'effect/Schema';
  */
 export const ActivityRaw = Schema.Struct({
   ID: Schema.Number,
-  FOLDERID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
-  PROJECT_ID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
-  TASKID: Schema.Union(Schema.String, Schema.Number).pipe(Schema.NullOr, Schema.optional),
-  TODOID: Schema.Union(Schema.String, Schema.Number).pipe(Schema.NullOr, Schema.optional),
-  TICKETID: Schema.Union(Schema.String, Schema.Number).pipe(Schema.NullOr, Schema.optional),
-  CONTACTID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
+  FOLDERID: Schema.optional(Schema.Union([Schema.String, Schema.Number])),
+  PROJECT_ID: Schema.optional(Schema.Union([Schema.String, Schema.Number])),
+  TASKID: Schema.Union([Schema.String, Schema.Number]).pipe(Schema.NullOr, Schema.optional),
+  TODOID: Schema.Union([Schema.String, Schema.Number]).pipe(Schema.NullOr, Schema.optional),
+  TICKETID: Schema.Union([Schema.String, Schema.Number]).pipe(Schema.NullOr, Schema.optional),
+  CONTACTID: Schema.optional(Schema.Union([Schema.String, Schema.Number])),
   DESCRIPTION: Schema.NullOr(Schema.String),
   DT: Schema.String,
   START_DT: Schema.optional(Schema.String),
@@ -131,7 +131,7 @@ export const SetActivityResponse = Schema.Struct({
   TYPE: Schema.optional(Schema.Number),
   DESCRIPTION: Schema.String.pipe(Schema.NullOr, Schema.optional),
   CLIENT_COLOR: Schema.optional(Schema.String),
-  FOLDERID: Schema.optional(Schema.Union(Schema.String, Schema.Number)),
+  FOLDERID: Schema.optional(Schema.Union([Schema.String, Schema.Number])),
 });
 export type SetActivityResponse = typeof SetActivityResponse.Type;
 

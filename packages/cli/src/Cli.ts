@@ -1,8 +1,8 @@
-import * as Command from '@effect/cli/Command';
-import * as Options from '@effect/cli/Options';
 import * as Console from 'effect/Console';
 import * as Effect from 'effect/Effect';
 import * as Option from 'effect/Option';
+import * as Command from 'effect/unstable/cli/Command';
+import * as Flag from 'effect/unstable/cli/Flag';
 
 import { moduleVersion } from './internal/version';
 import { EslintSetupService } from './services/EslintSetupService';
@@ -10,20 +10,20 @@ import { PrettierSetupService } from './services/PrettierSetupService';
 import { TurborepoSetupService } from './services/TurborepoSetupService';
 
 const command = Command.make('2d', {
-  prettier: Options.boolean('prettier').pipe(
-    Options.optional,
-    Options.withDefault(Option.some(true)),
-    Options.withDescription('Setup Prettier with @2digits/prettier-config'),
+  prettier: Flag.boolean('prettier').pipe(
+    Flag.optional,
+    Flag.withDefault(Option.some(true)),
+    Flag.withDescription('Setup Prettier with @2digits/prettier-config'),
   ),
-  eslint: Options.boolean('eslint').pipe(
-    Options.optional,
-    Options.withDefault(Option.none()),
-    Options.withDescription('Setup ESLint with @2digits/eslint-config'),
+  eslint: Flag.boolean('eslint').pipe(
+    Flag.optional,
+    Flag.withDefault(Option.none()),
+    Flag.withDescription('Setup ESLint with @2digits/eslint-config'),
   ),
-  turbo: Options.boolean('turbo').pipe(
-    Options.optional,
-    Options.withDefault(Option.none()),
-    Options.withDescription('Setup Turborepo configuration for monorepo'),
+  turbo: Flag.boolean('turbo').pipe(
+    Flag.optional,
+    Flag.withDefault(Option.none()),
+    Flag.withDescription('Setup Turborepo configuration for monorepo'),
   ),
 }).pipe(
   Command.withDescription('Setup the 2DIGITS configs in your project'),
@@ -66,6 +66,5 @@ const command = Command.make('2d', {
 );
 
 export const cli = Command.run(command, {
-  name: '2DIGITS Configuration CLI',
   version: `v${moduleVersion}`,
 });

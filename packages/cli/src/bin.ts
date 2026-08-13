@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import * as CliConfig from '@effect/cli/CliConfig';
-import * as NodeContext from '@effect/platform-node/NodeContext';
 import * as NodeRuntime from '@effect/platform-node/NodeRuntime';
+import * as NodeServices from '@effect/platform-node/NodeServices';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as CliConfig from 'effect/unstable/cli/CliConfig';
 
 import { cli } from './Cli';
 import { CurrentWorkingDirService } from './services/CurrentWorkingDirService';
@@ -21,8 +21,8 @@ const MainLive = Layer.mergeAll(
   ProjectDetectionService.Default,
   EslintDetectionService.Default,
   TurborepoSetupService.Default,
-  NodeContext.layer,
+  NodeServices.layer,
 );
 
 // oxlint-disable-next-line effecttsgo/strict-effect-provide -- the process entry point is where the layer belongs
-cli(process.argv).pipe(Effect.provide(MainLive), NodeRuntime.runMain);
+cli.pipe(Effect.provide(MainLive), NodeRuntime.runMain);
