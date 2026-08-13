@@ -37,21 +37,11 @@ export const TloToolkit = Toolkit.make(
   DeleteActivity,
 );
 
-const DEFAULT_PROJECT_STATES = ['DRAFT', 'OPEN', 'CLOSED'] as const;
-const DEFAULT_LIMIT = 100;
-const DEFAULT_PAGE = 1;
-const DEFAULT_TIMEZONE = 'Europe/Amsterdam';
-
 export const TloToolkitHandlers = TloToolkit.toLayer({
   get_projects: Effect.fn('TloToolkitHandlers.get_projects')(function* (params) {
     const boardService = yield* BoardService;
 
-    const projects = yield* boardService.getProjects({
-      ...params,
-      states: params.states ?? [...DEFAULT_PROJECT_STATES],
-      limit: params.limit ?? DEFAULT_LIMIT,
-      page: params.page ?? DEFAULT_PAGE,
-    });
+    const projects = yield* boardService.getProjects(params);
 
     return { projects };
   }),
@@ -67,12 +57,7 @@ export const TloToolkitHandlers = TloToolkit.toLayer({
   get_messages: Effect.fn('TloToolkitHandlers.get_messages')(function* (params) {
     const boardService = yield* BoardService;
 
-    const messages = yield* boardService.getMessages({
-      ...params,
-      onlyComments: params.onlyComments ?? true,
-      hideInternal: params.hideInternal ?? true,
-      limit: params.limit ?? DEFAULT_LIMIT,
-    });
+    const messages = yield* boardService.getMessages(params);
 
     return { messages };
   }),
@@ -86,12 +71,7 @@ export const TloToolkitHandlers = TloToolkit.toLayer({
   get_tasks: Effect.fn('TloToolkitHandlers.get_tasks')(function* (params) {
     const boardService = yield* BoardService;
 
-    const tasks = yield* boardService.getTasks({
-      ...params,
-      states: params.states ?? [...DEFAULT_PROJECT_STATES],
-      limit: params.limit ?? DEFAULT_LIMIT,
-      page: params.page ?? DEFAULT_PAGE,
-    });
+    const tasks = yield* boardService.getTasks(params);
 
     return { tasks };
   }),
@@ -115,10 +95,7 @@ export const TloToolkitHandlers = TloToolkit.toLayer({
   get_board_todos: Effect.fn('TloToolkitHandlers.get_board_todos')(function* (params) {
     const boardService = yield* BoardService;
 
-    const todos = yield* boardService.getBoardTodos({
-      ...params,
-      limit: params.limit ?? DEFAULT_LIMIT,
-    });
+    const todos = yield* boardService.getBoardTodos(params);
 
     return { todos };
   }),
@@ -137,9 +114,8 @@ export const TloToolkitHandlers = TloToolkit.toLayer({
 
   get_week_activities: Effect.fn('TloToolkitHandlers.get_week_activities')(function* (params) {
     const timeService = yield* TimeService;
-    const timezone = params.timezone ?? DEFAULT_TIMEZONE;
 
-    const activities = yield* timeService.getWeek(params.date, params.contactId, timezone);
+    const activities = yield* timeService.getWeek(params.date, params.contactId, params.timezone);
 
     return { activities };
   }),

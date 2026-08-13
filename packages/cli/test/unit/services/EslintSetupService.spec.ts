@@ -13,7 +13,7 @@ import { EslintDetectionService } from '../../../src/services/EslintDetectionSer
 import { EslintSetupService } from '../../../src/services/EslintSetupService.js';
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
-import { MockCommandExecutor, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
+import { MockCommandExecutor } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 const TurboConfigSchema = Schema.Struct({
@@ -31,7 +31,6 @@ describe(EslintSetupService, () => {
     ProjectDetectionService.Default,
     PackageManagerService.Default,
     MockCommandExecutor.Default,
-    MockCommandExecutorLayer,
     NodeFileSystem.layer,
     NodePath.layer,
   );

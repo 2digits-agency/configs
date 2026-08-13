@@ -1,7 +1,10 @@
+import * as Array from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Match from 'effect/Match';
 import * as Schema from 'effect/Schema';
+import * as String from 'effect/String';
 
 import {
   GetBoardTodosResponse,
@@ -30,7 +33,6 @@ import {
   type SetTaskStateParams,
   type Task,
   type TaskForUser,
-  type TaskForUserRaw,
   type TodoDetail,
   type TodoSummary,
 } from '../schemas/board.js';
@@ -65,14 +67,10 @@ export class BoardService extends Context.Service<BoardService, BoardServiceShap
 
 function formatRequestDate(d: Date): string {
   const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const day = d.getDate().toString().padStart(2, '0');
 
   return `${year}-${month}-${day}`;
-}
-
-function getTasksForUserRecords(response: GetTasksForUserResponse): ReadonlyArray<TaskForUserRaw> {
-  return response.Records;
 }
 
 export const BoardServiceLive = Layer.effect(
@@ -84,81 +82,83 @@ export const BoardServiceLive = Layer.effect(
       getProjects: Effect.fn('BoardService.getProjects')(function* (params: GetProjectsParams = {}) {
         const states = params.states ?? ['DRAFT', 'OPEN', 'CLOSED'];
 
-        return yield* client
-          .post(
-            '/ajax/pln/GetProjects',
-            {
-              STATE: states.join('|'),
-              COLUMNS:
-                'ID|PROJECT_NAME|NAME|STATE|OWNER_NAME|START_DT|END_DT|BILLING_BUDGET|BILLING_MODE|BILLING_REMAINING|CLIENT_NAME|CLIENT_ID|FOLDERID|FOLDER_NAME|EXTID|CALC_TOTAL|CALC_DONE|CALC_PLANNED',
-              limit: params.limit ?? 100,
-              page: params.page ?? 1,
-            },
-            GetProjectsResponse,
-          )
-          .pipe(Effect.map((response) => response.Records.map((raw) => projectFromRaw(raw))));
+        const response = yield* client.post(
+          '/ajax/pln/GetProjects',
+          {
+            STATE: Array.join(states, '|'),
+            COLUMNS:
+              'ID|PROJECT_NAME|NAME|STATE|OWNER_NAME|START_DT|END_DT|BILLING_BUDGET|BILLING_MODE|BILLING_REMAINING|CLIENT_NAME|CLIENT_ID|FOLDERID|FOLDER_NAME|EXTID|CALC_TOTAL|CALC_DONE|CALC_PLANNED',
+            limit: params.limit ?? 100,
+            page: params.page ?? 1,
+          },
+          GetProjectsResponse,
+        );
+
+        return Array.map(projectFromRaw)(response.Records);
       }),
 
       getProjectDetails: Effect.fn('BoardService.getProjectDetails')(function* (params: GetProjectDetailsParams) {
-        return yield* client
-          .post('/ajax/pln/GetProjectDetails', { ID: params.projectId }, GetProjectDetailsResponse)
-          .pipe(
-            Effect.map((response) => ('Record' in response ? response.Record : response)),
-            Effect.map((raw) => projectFromRaw(raw)),
-          );
+        const response = yield* client.post(
+          '/ajax/pln/GetProjectDetails',
+          { ID: params.projectId },
+          GetProjectDetailsResponse,
+        );
+        const project = Match.value(response).pipe(
+          Match.when({ Record: Match.any }, ({ Record }) => Record),
+          Match.orElse((project) => project),
+        );
+
+        return projectFromRaw(project);
       }),
 
       getMessages: Effect.fn('BoardService.getMessages')(function* (params: GetMessagesParams) {
-        return yield* client
-          .post(
-            '/ajax/board/ProcessMessage',
-            {
-              OBJECTTYPE: params.objectType,
-              OBJECTID: params.objectId,
-              ONLYCOMMENTS: params.onlyComments === false ? 0 : 1,
-              HIDEINTERNAL: params.hideInternal === false ? 0 : 1,
-              PAGETYPE: 'SEQID',
-              MINID: 0,
-              limit: params.limit ?? 100,
-            },
-            GetMessagesResponse,
-          )
-          .pipe(Effect.map((messages) => messages.map((raw) => messageFromRaw(raw))));
+        const messages = yield* client.post(
+          '/ajax/board/ProcessMessage',
+          {
+            OBJECTTYPE: params.objectType,
+            OBJECTID: params.objectId,
+            ONLYCOMMENTS: params.onlyComments === false ? 0 : 1,
+            HIDEINTERNAL: params.hideInternal === false ? 0 : 1,
+            PAGETYPE: 'SEQID',
+            MINID: 0,
+            limit: params.limit ?? 100,
+          },
+          GetMessagesResponse,
+        );
+
+        return Array.map(messageFromRaw)(messages);
       }),
 
       getTasks: Effect.fn('BoardService.getTasks')(function* (params: GetTasksParams) {
         const states = params.states ?? ['DRAFT', 'OPEN', 'CLOSED'];
 
-        return yield* client
-          .post(
-            '/ajax/pln/GetTasks',
-            {
-              PROJECTID: params.projectId,
-              STATE: states.join('|'),
-              COLUMNS: 'ID|PROJECTID|NAME|STATE|OWNER_NAME|START_DT|END_DT|BUDGET',
-              limit: params.limit ?? 100,
-              page: params.page ?? 1,
-            },
-            GetTasksResponse,
-          )
-          .pipe(Effect.map((response) => response.Records.map((raw) => taskFromRaw(raw))));
+        const response = yield* client.post(
+          '/ajax/pln/GetTasks',
+          {
+            PROJECTID: params.projectId,
+            STATE: Array.join(states, '|'),
+            COLUMNS: 'ID|PROJECTID|NAME|STATE|OWNER_NAME|START_DT|END_DT|BUDGET',
+            limit: params.limit ?? 100,
+            page: params.page ?? 1,
+          },
+          GetTasksResponse,
+        );
+
+        return Array.map(taskFromRaw)(response.Records);
       }),
 
       getTasksForUser: Effect.fn('BoardService.getTasksForUser')(function* (params: GetTasksForUserParams) {
-        return yield* client
-          .post(
-            '/ajax/pln/GetTasksForUser',
-            {
-              CONTACTID: params.contactId,
-              START_DT: formatRequestDate(params.startDate),
-              PERIOD: params.period,
-            },
-            GetTasksForUserResponse,
-          )
-          .pipe(
-            Effect.map((response) => getTasksForUserRecords(response)),
-            Effect.map((records) => records.map((raw) => taskForUserFromRaw(raw))),
-          );
+        const response = yield* client.post(
+          '/ajax/pln/GetTasksForUser',
+          {
+            CONTACTID: params.contactId,
+            START_DT: formatRequestDate(params.startDate),
+            PERIOD: params.period,
+          },
+          GetTasksForUserResponse,
+        );
+
+        return Array.map(taskForUserFromRaw)(response.Records);
       }),
 
       getTodoDetail: Effect.fn('BoardService.getTodoDetail')(function* (params: GetTodoDetailParams) {
@@ -166,72 +166,66 @@ export const BoardServiceLive = Layer.effect(
       }),
 
       getBoardTodos: Effect.fn('BoardService.getBoardTodos')(function* (params: GetBoardTodosParams) {
-        return yield* client
-          .post(
-            '/ajax/board/GetTodos',
-            {
-              BOARDID: params.boardId,
-              BOARDLISTID: params.boardListId,
-              limit: params.limit ?? 100,
-            },
-            GetBoardTodosResponse,
-          )
-          .pipe(
-            Effect.map((response) => response.Records.map((raw) => todoSummaryFromRaw(raw))),
-            Effect.map((todos) => {
-              if (params.query !== undefined && params.query !== '') {
-                const query = params.query.toLowerCase();
+        const response = yield* client.post(
+          '/ajax/board/GetTodos',
+          {
+            BOARDID: params.boardId,
+            BOARDLISTID: params.boardListId,
+            limit: params.limit ?? 100,
+          },
+          GetBoardTodosResponse,
+        );
+        const todos = Array.map(todoSummaryFromRaw)(response.Records);
 
-                return todos.filter((t) => t.name?.toLowerCase().includes(query));
-              }
+        return Match.value(params.query).pipe(
+          Match.when(Match.nonEmptyString, (query) => {
+            const normalizedQuery = String.toLowerCase(query);
 
-              return todos;
-            }),
-          );
+            // oxlint-disable-next-line unicorn/no-array-method-this-argument -- Effect Array.filter is data-first.
+            return Array.filter(todos, (todo) =>
+              todo.name === undefined ? false : String.includes(normalizedQuery)(String.toLowerCase(todo.name)),
+            );
+          }),
+          Match.orElse(() => todos),
+        );
       }),
 
       moveTodo: Effect.fn('BoardService.moveTodo')(function* (params: MoveTodoParams) {
-        return yield* client
-          .post(
-            '/ajax/board/MoveTodo',
-            {
-              ID: params.id,
-              BOARDID: params.boardId,
-              BOARDLISTID: params.boardListId,
-              SORTINDEX: params.sortIndex,
-            },
-            Schema.Unknown,
-          )
-          .pipe(Effect.asVoid);
+        yield* client.post(
+          '/ajax/board/MoveTodo',
+          {
+            ID: params.id,
+            BOARDID: params.boardId,
+            BOARDLISTID: params.boardListId,
+            SORTINDEX: params.sortIndex,
+          },
+          Schema.Unknown,
+        );
       }),
 
       postMessage: Effect.fn('BoardService.postMessage')(function* (params: PostMessageParams) {
-        return yield* client
-          .post(
-            '/ajax/board/ProcessMessage',
-            {
-              ACTION: 'ADD',
-              OBJECTTYPE: params.objectType,
-              OBJECTID: params.objectId,
-              CONTENT: params.content,
-            },
-            Schema.Unknown,
-          )
-          .pipe(Effect.asVoid);
+        yield* client.post(
+          '/ajax/board/ProcessMessage',
+          {
+            ACTION: 'ADD',
+            OBJECTTYPE: params.objectType,
+            OBJECTID: params.objectId,
+            CONTENT: params.content,
+          },
+          Schema.Unknown,
+        );
       }),
 
       setTaskState: Effect.fn('BoardService.setTaskState')(function* (params: SetTaskStateParams) {
-        return yield* client
-          .post(
-            '/ajax/pln/SetTaskState',
-            {
-              PROJECTID: params.projectId,
-              ID: params.taskId,
-              STATE: params.state,
-            },
-            Schema.Unknown,
-          )
-          .pipe(Effect.asVoid);
+        yield* client.post(
+          '/ajax/pln/SetTaskState',
+          {
+            PROJECTID: params.projectId,
+            ID: params.taskId,
+            STATE: params.state,
+          },
+          Schema.Unknown,
+        );
       }),
     });
   }),

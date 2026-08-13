@@ -8,7 +8,7 @@ import * as Path from 'effect/Path';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
-import { MockCommandExecutor, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
+import { MockCommandExecutor } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(ProjectDetectionService, () => {
@@ -16,7 +16,6 @@ describe(ProjectDetectionService, () => {
     ProjectDetectionService.Default,
     PackageManagerService.Default,
     MockCommandExecutor.Default,
-    MockCommandExecutorLayer,
     NodeFileSystem.layer,
     NodePath.layer,
   );

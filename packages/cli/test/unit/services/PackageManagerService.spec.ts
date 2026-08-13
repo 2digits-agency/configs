@@ -11,19 +11,13 @@ import * as Path from 'effect/Path';
 import * as Schema from 'effect/Schema';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
-import {
-  clearExecutedCommands,
-  getExecutedCommands,
-  MockCommandExecutor,
-  MockCommandExecutorLayer,
-} from '../../helpers/MockCommandService.js';
+import { clearExecutedCommands, getExecutedCommands, MockCommandExecutor } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(PackageManagerService, () => {
   const testLayer = Layer.mergeAll(
     PackageManagerService.Default,
     MockCommandExecutor.Default,
-    MockCommandExecutorLayer,
     NodeFileSystem.layer,
     NodePath.layer,
   );

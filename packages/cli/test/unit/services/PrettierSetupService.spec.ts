@@ -7,12 +7,7 @@ import * as Layer from 'effect/Layer';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { PrettierSetupService } from '../../../src/services/PrettierSetupService.js';
-import {
-  clearExecutedCommands,
-  getExecutedCommands,
-  MockCommandExecutor,
-  MockCommandExecutorLayer,
-} from '../../helpers/MockCommandService.js';
+import { clearExecutedCommands, getExecutedCommands, MockCommandExecutor } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(PrettierSetupService, () => {
@@ -20,7 +15,6 @@ describe(PrettierSetupService, () => {
     PrettierSetupService.Default,
     PackageManagerService.Default,
     MockCommandExecutor.Default,
-    MockCommandExecutorLayer,
     NodeFileSystem.layer,
     NodePath.layer,
   );

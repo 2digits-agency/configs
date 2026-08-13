@@ -8,7 +8,7 @@ import * as Path from 'effect/Path';
 
 import { EslintDetectionService } from '../../../src/services/EslintDetectionService.js';
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
-import { MockCommandExecutor, MockCommandExecutorLayer } from '../../helpers/MockCommandService.js';
+import { MockCommandExecutor } from '../../helpers/MockCommandService.js';
 import { copyFixture, fixturesBasePath, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(EslintDetectionService, () => {
@@ -16,7 +16,6 @@ describe(EslintDetectionService, () => {
     EslintDetectionService.Default,
     PackageManagerService.Default,
     MockCommandExecutor.Default,
-    MockCommandExecutorLayer,
     NodeFileSystem.layer,
     NodePath.layer,
   );

@@ -1,3 +1,4 @@
+import * as Array from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
@@ -54,56 +55,52 @@ export const TimeServiceLive = Layer.effect(
         contactId: string,
         timezone = 'Europe/Amsterdam',
       ) {
-        return yield* client
-          .post(
-            '/ajax/pln/GetWeek',
-            { DT: formatRequestDate(date), CONTACTID: contactId, tmz: timezone },
-            GetWeekResponse,
-          )
-          .pipe(Effect.map((response) => response.ACTIVITIES.map((raw) => activityFromRaw(raw))));
+        const response = yield* client.post(
+          '/ajax/pln/GetWeek',
+          { DT: formatRequestDate(date), CONTACTID: contactId, tmz: timezone },
+          GetWeekResponse,
+        );
+
+        return Array.map(activityFromRaw)(response.ACTIVITIES);
       }),
 
       createActivity: Effect.fn('TimeService.createActivity')(function* (params: CreateActivityParams) {
-        return yield* client
-          .post(
-            '/ajax/pln/SetActivity',
-            {
-              ID: 0,
-              ACTION: 'CREATE',
-              DT: formatRequestDate(params.startDate),
-              DURATION: params.durationMinutes,
-              FOLDERID: params.folderId,
-              TASKID: params.taskId,
-              TODOID: params.todoId,
-              CONTACTID: params.contactId,
-              CLIENT_COLOR: params.clientColor,
-              DESCRIPTION: params.description,
-            },
-            SetActivityResponse,
-          )
-          .pipe(Effect.map((response) => response.ID));
+        const response = yield* client.post(
+          '/ajax/pln/SetActivity',
+          {
+            ID: 0,
+            ACTION: 'CREATE',
+            DT: formatRequestDate(params.startDate),
+            DURATION: params.durationMinutes,
+            FOLDERID: params.folderId,
+            TASKID: params.taskId,
+            TODOID: params.todoId,
+            CONTACTID: params.contactId,
+            CLIENT_COLOR: params.clientColor,
+            DESCRIPTION: params.description,
+          },
+          SetActivityResponse,
+        );
+
+        return response.ID;
       }),
 
       updateActivity: Effect.fn('TimeService.updateActivity')(function* (params: UpdateActivityParams) {
-        return yield* client
-          .post(
-            '/ajax/pln/SetActivity',
-            {
-              ID: params.id,
-              ACTION: 'MOVE',
-              DT: params.startDate === undefined ? undefined : formatRequestDate(params.startDate),
-              DURATION: params.durationMinutes,
-              DESCRIPTION: params.description,
-            },
-            SetActivityResponse,
-          )
-          .pipe(Effect.asVoid);
+        yield* client.post(
+          '/ajax/pln/SetActivity',
+          {
+            ID: params.id,
+            ACTION: 'MOVE',
+            DT: params.startDate === undefined ? undefined : formatRequestDate(params.startDate),
+            DURATION: params.durationMinutes,
+            DESCRIPTION: params.description,
+          },
+          SetActivityResponse,
+        );
       }),
 
       deleteActivity: Effect.fn('TimeService.deleteActivity')(function* (params: DeleteActivityParams) {
-        return yield* client
-          .post('/ajax/pln/SetActivity', { ID: params.id, ACTION: 'DELETE' }, SetActivityResponse)
-          .pipe(Effect.asVoid);
+        yield* client.post('/ajax/pln/SetActivity', { ID: params.id, ACTION: 'DELETE' }, SetActivityResponse);
       }),
     });
   }),

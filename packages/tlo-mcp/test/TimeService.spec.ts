@@ -2,7 +2,9 @@ import { describe, expect, layer } from '@effect/vitest';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Schema from 'effect/Schema';
 
+import { TloParseError } from '../src/schemas/errors.js';
 import type { GetWeekResponse, SetActivityResponse } from '../src/schemas/time.js';
 import { TeamLeaderClient } from '../src/services/TeamLeaderClient.js';
 import { TimeService, TimeServiceLive } from '../src/services/TimeService.js';
@@ -40,7 +42,11 @@ function createMockClient(response: unknown) {
   return Layer.succeed(
     TeamLeaderClient,
     TeamLeaderClient.of({
-      post: () => Effect.succeed(response) as never,
+      post: Effect.fn('TimeServiceTest.post')(function* (_path, _body, schema) {
+        return yield* Schema.decodeUnknownEffect(schema)(response).pipe(
+          Effect.mapError((cause) => TloParseError.make({ message: 'Invalid mock response', cause })),
+        );
+      }),
     }),
   );
 }
