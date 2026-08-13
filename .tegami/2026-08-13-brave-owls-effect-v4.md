@@ -32,6 +32,10 @@ Effect v4 module layout.
   response decoding, and typed network/API/parse errors.
 - Preserve ISO date input behavior and Teamleader's compact date conversion while moving schemas to the v4 Schema
   APIs.
+- Reject non-finite numeric IDs, counts, budgets, durations, and pagination values at schema boundaries instead of
+  allowing values that cannot be represented safely by the Teamleader JSON API.
+- Construct decoded domain models and typed API errors through the v4 Schema class factories, preserving validation
+  and Effect language-service support.
 - Update service and layer construction for board, time, configuration, and HTTP services.
 - Continue supporting the existing project, task, board, message, and time-entry tools with the same external MCP tool
   names and parameters.

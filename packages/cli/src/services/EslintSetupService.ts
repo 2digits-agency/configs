@@ -169,7 +169,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
           .readFileString(turboPath)
           .pipe(Effect.mapError((cause) => new EslintSetupError({ message: 'Failed to read turbo.json', cause })));
 
-        const config = yield* Schema.decodeUnknownEffect(TurboConfigJson)(content).pipe(
+        const config = yield* Schema.decodeEffect(TurboConfigJson)(content).pipe(
           Effect.mapError(
             (cause) =>
               new EslintSetupError({

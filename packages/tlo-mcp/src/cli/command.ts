@@ -21,4 +21,6 @@ const tloMcpCommand = Command.make(
   }),
 );
 
-export const run = (_args: ReadonlyArray<string>) => Command.run(tloMcpCommand, { version: VERSION });
+export function run(_args: ReadonlyArray<string>) {
+  return Command.run(tloMcpCommand, { version: VERSION });
+}

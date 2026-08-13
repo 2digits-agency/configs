@@ -1,4 +1,3 @@
-/* eslint-disable ts/no-deprecated */
 /* eslint-disable sonar/no-duplicate-string */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
@@ -20,7 +19,7 @@ import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 const TurboConfigSchema = Schema.Struct({
   $schema: Schema.optionalKey(Schema.String),
   tasks: Schema.optionalKey(Schema.Record(Schema.String, Schema.Unknown)),
-  globalPassThroughEnv: Schema.optionalKey(Schema.Array(Schema.String)),
+  globalPassThroughEnv: Schema.String.pipe(Schema.Array, Schema.optionalKey),
   ui: Schema.optionalKey(Schema.String),
 });
 const TurboConfigJson = Schema.fromJsonString(TurboConfigSchema, { space: 2 });
@@ -106,7 +105,7 @@ describe(EslintSetupService, () => {
 
           const turboContent = yield* fs.readFileString(path.join(tempDir, 'turbo.json'));
 
-          const turboConfig = yield* Schema.decodeUnknownEffect(TurboConfigJson)(turboContent);
+          const turboConfig = yield* Schema.decodeEffect(TurboConfigJson)(turboContent);
 
           expect(turboConfig).toMatchSnapshot('turbo.json');
         }),
@@ -295,7 +294,7 @@ describe(EslintSetupService, () => {
 
           const turboPath = path.join(tempDir, 'turbo.json');
           const content = yield* fs.readFileString(turboPath);
-          const config = yield* Schema.decodeUnknownEffect(TurboConfigJson)(content);
+          const config = yield* Schema.decodeEffect(TurboConfigJson)(content);
 
           assertTrue(typeof config === 'object');
         }),
@@ -340,7 +339,7 @@ describe(EslintSetupService, () => {
           yield* fs.writeFileString(turboPath, encoded);
 
           const written = yield* fs.readFileString(turboPath);
-          const parsed = yield* Schema.decodeUnknownEffect(TurboConfigJson)(written);
+          const parsed = yield* Schema.decodeEffect(TurboConfigJson)(written);
 
           expect(parsed).toStrictEqual(config);
         }),
@@ -429,7 +428,7 @@ export default twoDigits({
 
           const turboPath = path.join(tempDir, 'turbo.json');
           const originalContent = yield* fs.readFileString(turboPath);
-          const originalConfig = yield* Schema.decodeUnknownEffect(TurboConfigJson)(originalContent);
+          const originalConfig = yield* Schema.decodeEffect(TurboConfigJson)(originalContent);
           const updatedConfig = {
             ...originalConfig,
             tasks: {
@@ -451,7 +450,7 @@ export default twoDigits({
           yield* fs.writeFileString(turboPath, encoded);
 
           const updated = yield* fs.readFileString(turboPath);
-          const config = yield* Schema.decodeUnknownEffect(TurboConfigJson)(updated);
+          const config = yield* Schema.decodeEffect(TurboConfigJson)(updated);
 
           assertTrue(config.tasks?.lint !== undefined);
           assertTrue(config.tasks['lint:fix'] !== undefined);

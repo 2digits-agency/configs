@@ -5,7 +5,7 @@ import { TloApiError, TloAuthError, TloNetworkError, TloParseError } from '../sr
 describe('tloErrors', () => {
   describe(TloApiError, () => {
     it('is tagged correctly', () => {
-      const error = new TloApiError({ message: 'API failed', endpoint: '/test' });
+      const error = TloApiError.make({ message: 'API failed', endpoint: '/test' });
 
       expect(error._tag).toBe('TloApiError');
       expect(error.message).toBe('API failed');
@@ -15,7 +15,7 @@ describe('tloErrors', () => {
 
   describe(TloAuthError, () => {
     it('is tagged correctly', () => {
-      const error = new TloAuthError({ message: 'Session expired' });
+      const error = TloAuthError.make({ message: 'Session expired' });
 
       expect(error._tag).toBe('TloAuthError');
       expect(error.message).toBe('Session expired');
@@ -24,7 +24,7 @@ describe('tloErrors', () => {
 
   describe(TloNetworkError, () => {
     it('is tagged correctly', () => {
-      const error = new TloNetworkError({
+      const error = TloNetworkError.make({
         message: 'Connection refused',
         endpoint: '/api',
         cause: new Error('ECONNREFUSED'),
@@ -38,7 +38,7 @@ describe('tloErrors', () => {
 
   describe(TloParseError, () => {
     it('is tagged correctly', () => {
-      const error = new TloParseError({ message: 'Invalid JSON' });
+      const error = TloParseError.make({ message: 'Invalid JSON' });
 
       expect(error._tag).toBe('TloParseError');
       expect(error.message).toBe('Invalid JSON');

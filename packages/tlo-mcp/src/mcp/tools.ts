@@ -22,10 +22,10 @@ export const GetProjects = Tool.make('get_projects', {
     states: TaskStateSchema.pipe(Schema.Array, Schema.optional).annotate({
       description: 'Filter by project states: DRAFT, OPEN, COMPLETED, CLOSED. Defaults to DRAFT, OPEN, CLOSED',
     }),
-    limit: Schema.optional(Schema.Number).annotate({
+    limit: Schema.optional(Schema.Finite).annotate({
       description: 'Maximum number of projects to return. Defaults to 100',
     }),
-    page: Schema.optional(Schema.Number).annotate({
+    page: Schema.optional(Schema.Finite).annotate({
       description: 'Page number for pagination. Defaults to 1',
     }),
   }),
@@ -39,7 +39,7 @@ export const GetProjectDetails = Tool.make('get_project_details', {
   description:
     'Get single project with full details including billing rates and folder info. Requires projectId from get_projects.',
   parameters: Schema.Struct({
-    projectId: Schema.Number.annotate({ description: 'Project ID from get_projects response' }),
+    projectId: Schema.Finite.annotate({ description: 'Project ID from get_projects response' }),
   }),
   success: Schema.Struct({ project: Project }),
   failure: TloErrorSchema,
@@ -54,14 +54,14 @@ export const GetMessages = Tool.make('get_messages', {
     objectType: ObjectTypeSchema.annotate({
       description: 'Type of object: PROJECT (for project comments), BOARD (board-level), TODO (kanban card)',
     }),
-    objectId: Schema.Number.annotate({ description: 'ID of the project, board, or todo' }),
+    objectId: Schema.Finite.annotate({ description: 'ID of the project, board, or todo' }),
     onlyComments: Schema.optional(Schema.Boolean).annotate({
       description: 'Only return user comments (exclude system messages). Defaults to true',
     }),
     hideInternal: Schema.optional(Schema.Boolean).annotate({
       description: 'Hide internal/private messages. Defaults to true',
     }),
-    limit: Schema.optional(Schema.Number).annotate({
+    limit: Schema.optional(Schema.Finite).annotate({
       description: 'Maximum number of messages to return. Defaults to 100',
     }),
   }),
@@ -75,8 +75,8 @@ export const SetTaskState = Tool.make('set_task_state', {
   description:
     'Change task state. Typical flow: DRAFT → OPEN → COMPLETED → CLOSED. Requires both projectId and taskId from get_tasks.',
   parameters: Schema.Struct({
-    projectId: Schema.Number.annotate({ description: 'Project ID containing the task (from get_projects)' }),
-    taskId: Schema.Number.annotate({ description: 'Task ID to update (from get_tasks)' }),
+    projectId: Schema.Finite.annotate({ description: 'Project ID containing the task (from get_projects)' }),
+    taskId: Schema.Finite.annotate({ description: 'Task ID to update (from get_tasks)' }),
     state: TaskStateSchema.annotate({ description: 'New state: DRAFT, OPEN, COMPLETED, or CLOSED' }),
   }),
   success: Schema.Void,
@@ -89,14 +89,14 @@ export const GetTasks = Tool.make('get_tasks', {
   description:
     'Get tasks within a project. Tasks have budget (workload), remaining hours, and state. Use taskId when logging time to attribute work to specific deliverables.',
   parameters: Schema.Struct({
-    projectId: Schema.Number.annotate({ description: 'Project ID from get_projects' }),
+    projectId: Schema.Finite.annotate({ description: 'Project ID from get_projects' }),
     states: TaskStateSchema.pipe(Schema.Array, Schema.optional).annotate({
       description: 'Filter by task states: DRAFT, OPEN, COMPLETED, CLOSED. Defaults to DRAFT, OPEN, CLOSED',
     }),
-    limit: Schema.optional(Schema.Number).annotate({
+    limit: Schema.optional(Schema.Finite).annotate({
       description: 'Maximum number of tasks to return. Defaults to 100',
     }),
-    page: Schema.optional(Schema.Number).annotate({
+    page: Schema.optional(Schema.Finite).annotate({
       description: 'Page number for pagination. Defaults to 1',
     }),
   }),
@@ -112,7 +112,7 @@ export const GetTasksForUser = Tool.make('get_tasks_for_user', {
   parameters: Schema.Struct({
     contactId: Schema.String.annotate({ description: 'User/contact ID to get tasks for' }),
     startDate: IsoDate.annotate({ description: 'Start date for the query (e.g., 2025-01-20T00:00:00Z)' }),
-    period: Schema.Number.annotate({ description: 'Number of days to include in the query' }),
+    period: Schema.Finite.annotate({ description: 'Number of days to include in the query' }),
   }),
   success: Schema.Struct({ tasks: Schema.Array(TaskForUser) }),
   failure: TloErrorSchema,
@@ -124,7 +124,7 @@ export const GetTodoDetail = Tool.make('get_todo_detail', {
   description:
     'Get kanban card details. Response includes: BOARDLISTS (all columns with IDs for move_todo), LINKS (connected tasks), ACTIVITIES (time logged against this todo).',
   parameters: Schema.Struct({
-    id: Schema.Number.annotate({ description: 'Todo/card ID to retrieve' }),
+    id: Schema.Finite.annotate({ description: 'Todo/card ID to retrieve' }),
   }),
   success: Schema.Struct({ todo: TodoDetail }),
   failure: TloErrorSchema,
@@ -136,16 +136,16 @@ export const GetBoardTodos = Tool.make('get_board_todos', {
   description:
     'List todos/cards from a kanban board. Use to find todo IDs by name for use with get_todo_detail. Get boardId from get_todo_detail BOARDID field or project board URL.',
   parameters: Schema.Struct({
-    boardId: Schema.Number.annotate({
+    boardId: Schema.Finite.annotate({
       description: 'Board ID (from get_todo_detail TODO.BOARDID field or URL)',
     }),
     query: Schema.optional(Schema.String).annotate({
       description: 'Filter todos by name (case-insensitive partial match)',
     }),
-    boardListId: Schema.optional(Schema.Number).annotate({
+    boardListId: Schema.optional(Schema.Finite).annotate({
       description: 'Filter by column ID (from BOARDLISTS in get_todo_detail)',
     }),
-    limit: Schema.optional(Schema.Number).annotate({
+    limit: Schema.optional(Schema.Finite).annotate({
       description: 'Maximum results. Defaults to 100',
     }),
   }),
@@ -159,10 +159,10 @@ export const MoveTodo = Tool.make('move_todo', {
   description:
     'Move kanban card between columns. Get boardId and boardListId from get_todo_detail response (BOARDLISTS array contains column IDs).',
   parameters: Schema.Struct({
-    id: Schema.Number.annotate({ description: 'Todo/card ID to move' }),
-    boardId: Schema.Number.annotate({ description: 'Board ID (from get_todo_detail)' }),
-    boardListId: Schema.Number.annotate({ description: 'Target column ID (from BOARDLISTS in get_todo_detail)' }),
-    sortIndex: Schema.Number.annotate({ description: 'Position within column (0 = top)' }),
+    id: Schema.Finite.annotate({ description: 'Todo/card ID to move' }),
+    boardId: Schema.Finite.annotate({ description: 'Board ID (from get_todo_detail)' }),
+    boardListId: Schema.Finite.annotate({ description: 'Target column ID (from BOARDLISTS in get_todo_detail)' }),
+    sortIndex: Schema.Finite.annotate({ description: 'Position within column (0 = top)' }),
   }),
   success: Schema.Void,
   failure: TloErrorSchema,
@@ -176,7 +176,7 @@ export const PostMessage = Tool.make('post_message', {
     objectType: ObjectTypeSchema.annotate({
       description: 'Type of object: PROJECT, BOARD, or TODO',
     }),
-    objectId: Schema.Number.annotate({ description: 'ID of the project, board, or todo to comment on' }),
+    objectId: Schema.Finite.annotate({ description: 'ID of the project, board, or todo to comment on' }),
     content: Schema.String.annotate({ description: 'Comment text to post' }),
   }),
   success: Schema.Void,
@@ -213,7 +213,7 @@ export const CreateActivity = Tool.make('create_activity', {
     startDate: IsoDate.annotate({
       description: 'Date and time of the activity (e.g., 2025-01-20T09:00:00Z). Time is for display.',
     }),
-    durationMinutes: Schema.Number.annotate({
+    durationMinutes: Schema.Finite.annotate({
       description: 'Duration in minutes. Examples: 30, 60 (1h), 90 (1.5h), 120 (2h)',
     }),
     contactId: Schema.String.annotate({ description: 'User/contact ID who performed the work' }),
@@ -228,7 +228,7 @@ export const CreateActivity = Tool.make('create_activity', {
       description: 'Hex color code for display (e.g., #eeeeee)',
     }),
   }),
-  success: Schema.Struct({ id: Schema.Number.annotate({ description: 'ID of the created activity' }) }),
+  success: Schema.Struct({ id: Schema.Finite.annotate({ description: 'ID of the created activity' }) }),
   failure: TloErrorSchema,
   failureMode: 'return',
   dependencies: [TimeService],
@@ -238,9 +238,9 @@ export const UpdateActivity = Tool.make('update_activity', {
   description:
     'Modify an existing time entry. Get activity ID from get_week_activities. Only specify fields you want to change.',
   parameters: Schema.Struct({
-    id: Schema.Number.annotate({ description: 'Activity ID to update (from get_week_activities)' }),
+    id: Schema.Finite.annotate({ description: 'Activity ID to update (from get_week_activities)' }),
     startDate: Schema.optional(IsoDate).annotate({ description: 'New date/time for the activity' }),
-    durationMinutes: Schema.optional(Schema.Number).annotate({ description: 'New duration in minutes' }),
+    durationMinutes: Schema.optional(Schema.Finite).annotate({ description: 'New duration in minutes' }),
     description: Schema.optional(Schema.String).annotate({ description: 'New description' }),
   }),
   success: Schema.Void,
@@ -252,7 +252,7 @@ export const UpdateActivity = Tool.make('update_activity', {
 export const DeleteActivity = Tool.make('delete_activity', {
   description: 'Remove a time entry. Get activity ID from get_week_activities. This action cannot be undone.',
   parameters: Schema.Struct({
-    id: Schema.Number.annotate({ description: 'Activity ID to delete (from get_week_activities)' }),
+    id: Schema.Finite.annotate({ description: 'Activity ID to delete (from get_week_activities)' }),
   }),
   success: Schema.Void,
   failure: TloErrorSchema,

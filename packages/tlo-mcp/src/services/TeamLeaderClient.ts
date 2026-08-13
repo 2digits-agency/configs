@@ -26,15 +26,15 @@ export class TeamLeaderClient extends Context.Service<TeamLeaderClient, TeamLead
 
 function mapHttpError(path: string) {
   return (error: HttpClientError.HttpClientError): TloNetworkError =>
-    new TloNetworkError({
-      message: error.response === undefined ? `Request failed: ${error.reason}` : `HTTP ${error.response.status}`,
+    TloNetworkError.make({
+      message: error.response === undefined ? `Request failed: ${error.message}` : `HTTP ${error.response.status}`,
       cause: error,
       endpoint: path,
     });
 }
 
 function mapParseError(error: Schema.SchemaError): TloParseError {
-  return new TloParseError({
+  return TloParseError.make({
     message: 'Failed to parse response',
     cause: error,
   });
@@ -91,7 +91,7 @@ export const TeamLeaderClientLive = Layer.effect(
 
             if (Option.isSome(malformedError) && malformedError.value.err !== 0) {
               return Effect.fail(
-                new TloApiError({
+                TloApiError.make({
                   message: malformedError.value.MSG,
                   endpoint: path,
                 }),
@@ -104,7 +104,7 @@ export const TeamLeaderClientLive = Layer.effect(
               json = JSON.parse(text);
             } catch {
               return Effect.fail(
-                new TloParseError({
+                TloParseError.make({
                   message: 'Invalid JSON response',
                   cause: text,
                 }),
@@ -113,7 +113,7 @@ export const TeamLeaderClientLive = Layer.effect(
 
             if (isErrorResponse(json)) {
               return Effect.fail(
-                new TloApiError({
+                TloApiError.make({
                   message: json.MSG,
                   endpoint: path,
                 }),

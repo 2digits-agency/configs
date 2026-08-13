@@ -1,4 +1,3 @@
-/* eslint-disable ts/no-deprecated */
 /* eslint-disable sonar/no-duplicate-string */
 
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';

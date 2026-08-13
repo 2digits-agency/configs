@@ -1,4 +1,3 @@
-/* eslint-disable ts/no-deprecated */
 /* eslint-disable sonar/no-duplicate-string */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
@@ -118,7 +117,7 @@ describe(TurborepoSetupService, () => {
           strictEqual(exists, true);
 
           const content = yield* fs.readFileString(turboPath);
-          const config = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(TurboConfigSchema))(content);
+          const config = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(content);
 
           expect(config.tasks).toBeDefined();
           expect(config.tasks?.build).toBeDefined();
@@ -153,7 +152,7 @@ describe(TurborepoSetupService, () => {
           const root = yield* pm.resolveRoot();
           const turboPath = `${root}/turbo.json`;
           const content = yield* fs.readFileString(turboPath);
-          const config = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(TurboConfigSchema))(content);
+          const config = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(content);
 
           // Should have both existing and new tasks
           for (const task of existingTasks) {
@@ -427,7 +426,7 @@ describe(TurborepoSetupService, () => {
           const root = yield* pm.resolveRoot();
           const turboPath = `${root}/turbo.json`;
           const content = yield* fs.readFileString(turboPath);
-          const parsed = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(TurboConfigSchema))(content);
+          const parsed = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(content);
 
           expect(parsed).toStrictEqual(config);
         }),
@@ -535,17 +534,13 @@ describe(TurborepoSetupService, () => {
           const turboPath = `${root}/turbo.json`;
 
           const originalContent = yield* fs.readFileString(turboPath);
-          const originalConfig = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(TurboConfigSchema))(
-            originalContent,
-          );
+          const originalConfig = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(originalContent);
           const originalTaskKeys = Object.keys(originalConfig.tasks ?? {});
 
           yield* service.mergeTurboConfig(new Set(['newTask']));
 
           const updatedContent = yield* fs.readFileString(turboPath);
-          const updatedConfig = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(TurboConfigSchema))(
-            updatedContent,
-          );
+          const updatedConfig = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(updatedContent);
 
           for (const taskKey of originalTaskKeys) {
             expect(updatedConfig.tasks?.[taskKey]).toBeDefined();
@@ -654,9 +649,7 @@ describe(TurborepoSetupService, () => {
           yield* service.mergeTurboConfig(new Set(['build']));
 
           const updatedContent = yield* fs.readFileString(turboPath);
-          const updatedConfig = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(TurboConfigSchema))(
-            updatedContent,
-          );
+          const updatedConfig = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(updatedContent);
 
           expect(updatedConfig.tasks?.build).toStrictEqual(config.tasks.build);
         }),

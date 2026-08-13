@@ -141,7 +141,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
           .readFileString(turboPath)
           .pipe(Effect.mapError((cause) => new TurborepoSetupError({ message: 'Failed to read turbo.json', cause })));
 
-        const config = yield* Schema.decodeUnknownEffect(TurboConfigJson)(content).pipe(
+        const config = yield* Schema.decodeEffect(TurboConfigJson)(content).pipe(
           Effect.mapError(
             (cause) =>
               new TurborepoSetupError({

@@ -1,3 +1,4 @@
+/* eslint-disable react-extra/rules-of-hooks -- Effect service accessors are not React hooks. */
 import * as Array from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';

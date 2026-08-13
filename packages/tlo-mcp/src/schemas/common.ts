@@ -90,7 +90,7 @@ export const TloIdSchema = Schema.String.pipe(Schema.fromBrand('TloId', TloId));
 export function TloResponse<T>(dataSchema: Schema.Schema<T>) {
   return Schema.Struct({
     success: Schema.Boolean,
-    ID: Schema.optional(Schema.Number),
+    ID: Schema.optional(Schema.Finite),
     OBJ: dataSchema,
     err: Schema.optional(Schema.String),
   });
