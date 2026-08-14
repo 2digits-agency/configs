@@ -1,12 +1,13 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as FileSystem from '@effect/platform/FileSystem';
-import * as Path from '@effect/platform/Path';
-import * as Array from 'effect/Array';
 import * as Clock from 'effect/Clock';
+import * as Context from 'effect/Context';
 import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
+import * as FileSystem from 'effect/FileSystem';
+import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
+import * as Path from 'effect/Path';
 import * as Schema from 'effect/Schema';
 
 import { type TurboConfig, TurboConfigJson } from '../schemas/TurboConfig';
@@ -83,10 +84,10 @@ function mergeLintTasks(config: TurboConfig): TurboConfig {
 /**
  * Service for setting up ESLint configuration in projects.
  */
-export class EslintSetupService extends Effect.Service<EslintSetupService>()(
+export class EslintSetupService extends Context.Service<EslintSetupService>()(
   '@2digits/cli/services/EslintSetupService',
   {
-    effect: Effect.gen(function* () {
+    make: Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
       const path = yield* Path.Path;
       const pm = yield* PackageManagerService;
@@ -168,7 +169,7 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
           .readFileString(turboPath)
           .pipe(Effect.mapError((cause) => new EslintSetupError({ message: 'Failed to read turbo.json', cause })));
 
-        const config = yield* Schema.decodeUnknown(TurboConfigJson)(content).pipe(
+        const config = yield* Schema.decodeEffect(TurboConfigJson)(content).pipe(
           Effect.mapError(
             (cause) =>
               new EslintSetupError({
@@ -188,7 +189,7 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
         const root = yield* pm.resolveRoot();
         const turboPath = path.join(root, 'turbo.json');
 
-        const content = yield* Schema.encode(TurboConfigJson)(config).pipe(
+        const content = yield* Schema.encodeEffect(TurboConfigJson)(config).pipe(
           Effect.mapError((cause) => new EslintSetupError({ message: 'Failed to write turbo.json', cause })),
         );
 
@@ -270,7 +271,7 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
         yield* Effect.logInfo('Discovering workspaces...');
         const workspaces = yield* projectDetect.discoverWorkspaces();
 
-        if (Array.isNonEmptyArray(workspaces)) {
+        if (workspaces.length > 0) {
           yield* Effect.logInfo(`Found ${workspaces.length} workspace(s)`);
 
           for (const workspacePath of workspaces) {
@@ -415,12 +416,17 @@ export class EslintSetupService extends Effect.Service<EslintSetupService>()(
         setup,
       };
     }),
-    dependencies: [
-      NodeFileSystem.layer,
-      NodePath.layer,
-      PackageManagerService.Default,
-      ProjectDetectionService.Default,
-      EslintDetectionService.Default,
-    ],
   },
-) {}
+) {
+  static readonly Default = Layer.effect(this, this.make).pipe(
+    Layer.provide(
+      Layer.mergeAll(
+        NodeFileSystem.layer,
+        NodePath.layer,
+        PackageManagerService.Default,
+        ProjectDetectionService.Default,
+        EslintDetectionService.Default,
+      ),
+    ),
+  );
+}

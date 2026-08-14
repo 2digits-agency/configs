@@ -1,4 +1,3 @@
-/* eslint-disable ts/no-deprecated */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import { describe, expect, layer } from '@effect/vitest';
@@ -28,12 +27,12 @@ describe(PrettierSetupService, () => {
 
   layer(testLayer)((it) => {
     describe('setup', () => {
-      it.scoped('adds prettier config and scripts to package.json', (ctx) =>
+      it.effect('adds prettier config and scripts to package.json', () =>
         Effect.gen(function* () {
           const service = yield* PrettierSetupService;
           const pm = yield* PackageManagerService;
 
-          const tempDir = yield* withTempTestEnv(ctx.task.id);
+          const tempDir = yield* withTempTestEnv('PrettierSetupService');
 
           yield* copyFixture('single-package');
 
@@ -66,12 +65,12 @@ describe(PrettierSetupService, () => {
         }),
       );
 
-      it.scoped('preserves existing prettier config', (ctx) =>
+      it.effect('preserves existing prettier config', () =>
         Effect.gen(function* () {
           const service = yield* PrettierSetupService;
           const pm = yield* PackageManagerService;
 
-          const tempDir = yield* withTempTestEnv(ctx.task.id);
+          const tempDir = yield* withTempTestEnv('PrettierSetupService');
 
           yield* copyFixture('existing-configs');
 
@@ -98,12 +97,12 @@ describe(PrettierSetupService, () => {
         }),
       );
 
-      it.scoped('preserves existing scripts', (ctx) =>
+      it.effect('preserves existing scripts', () =>
         Effect.gen(function* () {
           const service = yield* PrettierSetupService;
           const pm = yield* PackageManagerService;
 
-          const tempDir = yield* withTempTestEnv(ctx.task.id);
+          const tempDir = yield* withTempTestEnv('PrettierSetupService');
 
           yield* copyFixture('single-package');
 

@@ -35,4 +35,4 @@ export class TloParseError extends Schema.TaggedError<TloParseError>()('TloParse
 
 export type TloError = TloApiError | TloAuthError | TloNetworkError | TloParseError;
 
-export const TloErrorSchema = Schema.Union(TloApiError, TloAuthError, TloNetworkError, TloParseError);
+export const TloErrorSchema = Schema.Union([TloApiError, TloAuthError, TloNetworkError, TloParseError]);

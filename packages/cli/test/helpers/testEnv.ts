@@ -1,8 +1,8 @@
-import * as FileSystem from '@effect/platform/FileSystem';
-import * as Path from '@effect/platform/Path';
-import * as Url from '@effect/platform/Url';
 import * as Effect from 'effect/Effect';
-import * as Either from 'effect/Either';
+import * as FileSystem from 'effect/FileSystem';
+import * as Path from 'effect/Path';
+import * as Result from 'effect/Result';
+import * as Url from 'effect/unstable/http/Url';
 
 /**
  * Creates a scoped temp directory and switches cwd to it. Automatically cleans up temp dir and restores cwd when scope
@@ -34,7 +34,7 @@ export const withTempTestEnv = Effect.fn('withTempTestEnv')(function* (prefix: s
 export const fixturesBasePath = Effect.gen(function* () {
   const path = yield* Path.Path;
 
-  const __filename = yield* path.fromFileUrl(Either.getOrThrow(Url.fromString(import.meta.url)));
+  const __filename = yield* path.fromFileUrl(Result.getOrThrow(Url.fromString(import.meta.url)));
   const __dirname = path.dirname(__filename);
 
   return path.join(__dirname, '../fixtures/');

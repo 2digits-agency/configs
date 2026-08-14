@@ -1,42 +1,40 @@
-import * as HttpBody from '@effect/platform/HttpBody';
-import type * as HttpClientError from '@effect/platform/HttpClientError';
-import * as UrlParams from '@effect/platform/UrlParams';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Option from 'effect/Option';
-import type * as ParseResult from 'effect/ParseResult';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
+import * as HttpBody from 'effect/unstable/http/HttpBody';
+import type * as HttpClientError from 'effect/unstable/http/HttpClientError';
+import * as UrlParams from 'effect/unstable/http/UrlParams';
 
 import { TloApiError, TloNetworkError, TloParseError, type TloError } from '../schemas/errors.js';
 import { TloConfig } from './TloConfig.js';
 import { TloHttpClient } from './TloHttpClient.js';
 
 export interface TeamLeaderClientShape {
-  readonly post: <TResponse, TInput, TEnv>(
+  readonly post: <S extends Schema.Constraint>(
     path: string,
     body: Record<string, string | number | boolean | undefined>,
-    schema: Schema.Schema<TResponse, TInput, TEnv>,
-  ) => Effect.Effect<TResponse, TloError, TEnv>;
+    schema: S,
+  ) => Effect.Effect<S['Type'], TloError, S['DecodingServices']>;
 }
 
-export class TeamLeaderClient extends Context.Tag('@2digits/tlo-mcp/services/TeamLeaderClient')<
-  TeamLeaderClient,
-  TeamLeaderClientShape
->() {}
+export class TeamLeaderClient extends Context.Service<TeamLeaderClient, TeamLeaderClientShape>()(
+  '@2digits/tlo-mcp/services/TeamLeaderClient',
+) {}
 
 function mapHttpError(path: string) {
   return (error: HttpClientError.HttpClientError): TloNetworkError =>
-    new TloNetworkError({
-      message: error._tag === 'ResponseError' ? `HTTP ${error.response.status}` : `Request failed: ${error.reason}`,
+    TloNetworkError.make({
+      message: error.response === undefined ? `Request failed: ${error.message}` : `HTTP ${error.response.status}`,
       cause: error,
       endpoint: path,
     });
 }
 
-function mapParseError(error: ParseResult.ParseError): TloParseError {
-  return new TloParseError({
+function mapParseError(error: Schema.SchemaError): TloParseError {
+  return TloParseError.make({
     message: 'Failed to parse response',
     cause: error,
   });
@@ -75,10 +73,10 @@ export const TeamLeaderClientLive = Layer.effect(
     const { client } = yield* TloHttpClient;
 
     return TeamLeaderClient.of({
-      post: Effect.fn('TeamLeaderClient.post')(function* <TResponse, TInput, TEnv>(
+      post: Effect.fn('TeamLeaderClient.post')(function* <S extends Schema.Constraint>(
         path: string,
         body: Record<string, string | number | boolean | undefined>,
-        schema: Schema.Schema<TResponse, TInput, TEnv>,
+        schema: S,
       ) {
         const bodyWithToken = {
           ...body,
@@ -88,12 +86,12 @@ export const TeamLeaderClientLive = Layer.effect(
 
         return yield* client.post(path, { body: HttpBody.urlParams(urlParams) }).pipe(
           Effect.flatMap((response) => response.text),
-          Effect.flatMap((text): Effect.Effect<TResponse, TloParseError | TloApiError, TEnv> => {
+          Effect.flatMap((text): Effect.Effect<S['Type'], TloParseError | TloApiError, S['DecodingServices']> => {
             const malformedError = parseMalformedJson(text);
 
             if (Option.isSome(malformedError) && malformedError.value.err !== 0) {
               return Effect.fail(
-                new TloApiError({
+                TloApiError.make({
                   message: malformedError.value.MSG,
                   endpoint: path,
                 }),
@@ -106,7 +104,7 @@ export const TeamLeaderClientLive = Layer.effect(
               json = JSON.parse(text);
             } catch {
               return Effect.fail(
-                new TloParseError({
+                TloParseError.make({
                   message: 'Invalid JSON response',
                   cause: text,
                 }),
@@ -115,14 +113,14 @@ export const TeamLeaderClientLive = Layer.effect(
 
             if (isErrorResponse(json)) {
               return Effect.fail(
-                new TloApiError({
+                TloApiError.make({
                   message: json.MSG,
                   endpoint: path,
                 }),
               );
             }
 
-            return Schema.decodeUnknown(schema)(json).pipe(Effect.mapError(mapParseError));
+            return Schema.decodeUnknownEffect(schema)(json).pipe(Effect.mapError(mapParseError));
           }),
           Effect.scoped,
           Effect.mapError((error): TloError => {

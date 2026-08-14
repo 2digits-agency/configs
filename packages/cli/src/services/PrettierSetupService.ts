@@ -1,12 +1,14 @@
+import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
 import * as Predicate from 'effect/Predicate';
 
 import { PackageManagerService, type PackageJson } from './PackageManagerService';
 
-export class PrettierSetupService extends Effect.Service<PrettierSetupService>()(
+export class PrettierSetupService extends Context.Service<PrettierSetupService>()(
   '@2digits/cli/services/PrettierSetupService',
   {
-    effect: Effect.gen(function* () {
+    make: Effect.gen(function* () {
       const pm = yield* PackageManagerService;
 
       const setup = Effect.fn('PrettierSetupService.setup')(function* () {
@@ -49,6 +51,7 @@ export class PrettierSetupService extends Effect.Service<PrettierSetupService>()
         setup,
       };
     }),
-    dependencies: [PackageManagerService.Default],
   },
-) {}
+) {
+  static readonly Default = Layer.effect(this, this.make).pipe(Layer.provide(PackageManagerService.Default));
+}

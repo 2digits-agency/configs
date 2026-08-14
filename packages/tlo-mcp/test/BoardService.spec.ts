@@ -1,5 +1,6 @@
 import { describe, expect, layer } from '@effect/vitest';
-import { Effect, Layer } from 'effect';
+import * as Effect from 'effect/Effect';
+import * as Layer from 'effect/Layer';
 
 import type { GetMessagesResponse, GetProjectsResponse } from '../src/schemas/board.js';
 import { BoardService, BoardServiceLive } from '../src/services/BoardService.js';

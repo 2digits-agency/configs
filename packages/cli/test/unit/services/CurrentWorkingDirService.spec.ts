@@ -1,9 +1,9 @@
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as Path from '@effect/platform/Path';
 import { describe, layer } from '@effect/vitest';
 import { assertTrue, strictEqual } from '@effect/vitest/utils';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Path from 'effect/Path';
 
 import { CurrentWorkingDirService } from '../../../src/services/CurrentWorkingDirService.js';
 

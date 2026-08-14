@@ -1,11 +1,15 @@
 import * as Brand from 'effect/Brand';
 import * as DateTime from 'effect/DateTime';
 import * as Schema from 'effect/Schema';
+import * as SchemaTransformation from 'effect/SchemaTransformation';
 
 /**
  * TeamLeader Orbit uses YYYYMMDDHHMMSS format for dates. Example: "20251117143000" = Nov 17, 2025 14:30:00.
  */
-export const TloDateString = Schema.String.pipe(Schema.pattern(/^\d{14}$/), Schema.brand('TloDateString'));
+export const TloDateString = Schema.String.pipe(
+  Schema.check(Schema.isPattern(/^\d{14}$/)),
+  Schema.brand('TloDateString'),
+);
 export type TloDateString = typeof TloDateString.Type;
 
 /**
@@ -21,14 +25,14 @@ function parseTloDate(dateString: string): Date {
   const minute = Number.parseInt(dateString.slice(10, 12), 10);
   const second = Number.parseInt(dateString.slice(12, 14), 10);
 
-  return DateTime.unsafeMakeZoned(
+  return DateTime.makeZonedUnsafe(
     {
       year: year <= 99 ? year + 1900 : year,
       month,
       day,
-      hours: hour,
-      minutes: minute,
-      seconds: second,
+      hour,
+      minute,
+      second,
     },
     {
       timeZone: DateTime.zoneMakeLocal(),
@@ -56,11 +60,15 @@ function formatTloDate(date: Date): TloDateString {
 /**
  * Transform between TLO date strings and JavaScript Date objects.
  */
-export const TloDate = Schema.transform(TloDateString, Schema.DateFromSelf, {
-  strict: true,
-  decode: parseTloDate,
-  encode: formatTloDate,
-});
+export const TloDate = TloDateString.pipe(
+  Schema.decodeTo(
+    Schema.Date,
+    SchemaTransformation.transform({
+      decode: parseTloDate,
+      encode: formatTloDate,
+    }),
+  ),
+);
 export type TloDate = typeof TloDate.Type;
 
 export { formatTloDate };
@@ -71,7 +79,7 @@ export { formatTloDate };
 export type TloId = string & Brand.Brand<'TloId'>;
 export const TloId = Brand.nominal<TloId>();
 
-export const TloIdSchema = Schema.String.pipe(Schema.fromBrand(TloId));
+export const TloIdSchema = Schema.String.pipe(Schema.fromBrand('TloId', TloId));
 
 /**
  * Standard TLO API response envelope schema. Note: Most endpoints return data directly without this wrapper. Kept for
@@ -79,10 +87,10 @@ export const TloIdSchema = Schema.String.pipe(Schema.fromBrand(TloId));
  *
  * @param dataSchema - Data schema to wrap.
  */
-export function TloResponse<$A, $I, $R>(dataSchema: Schema.Schema<$A, $I, $R>) {
+export function TloResponse<T>(dataSchema: Schema.Schema<T>) {
   return Schema.Struct({
     success: Schema.Boolean,
-    ID: Schema.optional(Schema.Number),
+    ID: Schema.optional(Schema.Finite),
     OBJ: dataSchema,
     err: Schema.optional(Schema.String),
   });

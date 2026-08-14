@@ -1,18 +1,20 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as FileSystem from '@effect/platform/FileSystem';
-import * as Path from '@effect/platform/Path';
+import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
+import * as FileSystem from 'effect/FileSystem';
+import * as Layer from 'effect/Layer';
+import * as Path from 'effect/Path';
 
 import { PackageManagerService } from './PackageManagerService';
 
 /**
  * Service for detecting ESLint installation and configuration files.
  */
-export class EslintDetectionService extends Effect.Service<EslintDetectionService>()(
+export class EslintDetectionService extends Context.Service<EslintDetectionService>()(
   '@2digits/cli/services/EslintDetectionService',
   {
-    effect: Effect.gen(function* () {
+    make: Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
       const path = yield* Path.Path;
       const pm = yield* PackageManagerService;
@@ -120,6 +122,9 @@ export class EslintDetectionService extends Effect.Service<EslintDetectionServic
         uses2DigitsConfig,
       };
     }),
-    dependencies: [NodeFileSystem.layer, NodePath.layer, PackageManagerService.Default],
   },
-) {}
+) {
+  static readonly Default = Layer.effect(this, this.make).pipe(
+    Layer.provide(Layer.mergeAll(NodeFileSystem.layer, NodePath.layer, PackageManagerService.Default)),
+  );
+}

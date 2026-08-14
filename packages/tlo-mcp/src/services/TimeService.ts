@@ -39,10 +39,9 @@ export interface TimeServiceShape {
   readonly deleteActivity: (params: DeleteActivityParams) => Effect.Effect<void, TloError>;
 }
 
-export class TimeService extends Context.Tag('@2digits/tlo-mcp/services/TimeService')<
-  TimeService,
-  TimeServiceShape
->() {}
+export class TimeService extends Context.Service<TimeService, TimeServiceShape>()(
+  '@2digits/tlo-mcp/services/TimeService',
+) {}
 
 export const TimeServiceLive = Layer.effect(
   TimeService,
@@ -50,7 +49,11 @@ export const TimeServiceLive = Layer.effect(
     const client = yield* TeamLeaderClient;
 
     return TimeService.of({
-      getWeek: Effect.fn('TimeService.getWeek')(function* (date, contactId, timezone = 'Europe/Amsterdam') {
+      getWeek: Effect.fn('TimeService.getWeek')(function* (
+        date: Date,
+        contactId: string,
+        timezone = 'Europe/Amsterdam',
+      ) {
         return yield* client
           .post(
             '/ajax/pln/GetWeek',
@@ -60,7 +63,7 @@ export const TimeServiceLive = Layer.effect(
           .pipe(Effect.map((response) => response.ACTIVITIES.map((raw) => activityFromRaw(raw))));
       }),
 
-      createActivity: Effect.fn('TimeService.createActivity')(function* (params) {
+      createActivity: Effect.fn('TimeService.createActivity')(function* (params: CreateActivityParams) {
         return yield* client
           .post(
             '/ajax/pln/SetActivity',
@@ -81,7 +84,7 @@ export const TimeServiceLive = Layer.effect(
           .pipe(Effect.map((response) => response.ID));
       }),
 
-      updateActivity: Effect.fn('TimeService.updateActivity')(function* (params) {
+      updateActivity: Effect.fn('TimeService.updateActivity')(function* (params: UpdateActivityParams) {
         return yield* client
           .post(
             '/ajax/pln/SetActivity',
@@ -97,7 +100,7 @@ export const TimeServiceLive = Layer.effect(
           .pipe(Effect.asVoid);
       }),
 
-      deleteActivity: Effect.fn('TimeService.deleteActivity')(function* (params) {
+      deleteActivity: Effect.fn('TimeService.deleteActivity')(function* (params: DeleteActivityParams) {
         return yield* client
           .post('/ajax/pln/SetActivity', { ID: params.id, ACTION: 'DELETE' }, SetActivityResponse)
           .pipe(Effect.asVoid);

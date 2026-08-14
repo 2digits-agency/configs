@@ -1,12 +1,11 @@
-/* eslint-disable ts/no-deprecated */
 /* eslint-disable sonar/no-duplicate-string */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as FileSystem from '@effect/platform/FileSystem';
 import { describe, expect, layer } from '@effect/vitest';
 import { strictEqual } from '@effect/vitest/utils';
 import * as Array from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Schema from 'effect/Schema';
 
@@ -22,10 +21,10 @@ import {
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 const TurboConfigSchema = Schema.Struct({
-  $schema: Schema.optional(Schema.String),
-  tasks: Schema.optional(Schema.Record({ key: Schema.String, value: Schema.Unknown })),
+  $schema: Schema.optionalKey(Schema.String),
+  tasks: Schema.optionalKey(Schema.Record(Schema.String, Schema.Unknown)),
   globalPassThroughEnv: Schema.String.pipe(Schema.Array, Schema.optional),
-  ui: Schema.optional(Schema.String),
+  ui: Schema.optionalKey(Schema.String),
 });
 
 describe(TurborepoSetupService, () => {
@@ -41,9 +40,9 @@ describe(TurborepoSetupService, () => {
 
   layer(testLayer)((it) => {
     describe('detectWorkspaceTasks', () => {
-      it.scoped('detects tasks from workspace package.json files', (ctx) =>
+      it.effect('detects tasks from workspace package.json files', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
 
           const service = yield* TurborepoSetupService;
@@ -58,9 +57,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('returns empty set for project without workspaces', (ctx) =>
+      it.effect('returns empty set for project without workspaces', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('single-package');
 
           const service = yield* TurborepoSetupService;
@@ -72,9 +71,9 @@ describe(TurborepoSetupService, () => {
     });
 
     describe('readTurboConfig', () => {
-      it.scoped('reads existing turbo.json', (ctx) =>
+      it.effect('reads existing turbo.json', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* TurborepoSetupService;
@@ -84,9 +83,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('returns None when turbo.json does not exist', (ctx) =>
+      it.effect('returns None when turbo.json does not exist', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
 
           const service = yield* TurborepoSetupService;
@@ -98,9 +97,9 @@ describe(TurborepoSetupService, () => {
     });
 
     describe('mergeTurboConfig', () => {
-      it.scoped('creates new turbo.json when none exists', (ctx) =>
+      it.effect('creates new turbo.json when none exists', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
 
           const service = yield* TurborepoSetupService;
@@ -118,7 +117,7 @@ describe(TurborepoSetupService, () => {
           strictEqual(exists, true);
 
           const content = yield* fs.readFileString(turboPath);
-          const config = yield* Schema.decodeUnknown(Schema.parseJson(TurboConfigSchema))(content);
+          const config = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(content);
 
           expect(config.tasks).toBeDefined();
           expect(config.tasks?.build).toBeDefined();
@@ -127,9 +126,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('merges with existing turbo.json without overwriting', (ctx) =>
+      it.effect('merges with existing turbo.json without overwriting', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* TurborepoSetupService;
@@ -153,7 +152,7 @@ describe(TurborepoSetupService, () => {
           const root = yield* pm.resolveRoot();
           const turboPath = `${root}/turbo.json`;
           const content = yield* fs.readFileString(turboPath);
-          const config = yield* Schema.decodeUnknown(Schema.parseJson(TurboConfigSchema))(content);
+          const config = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(content);
 
           // Should have both existing and new tasks
           for (const task of existingTasks) {
@@ -167,9 +166,9 @@ describe(TurborepoSetupService, () => {
     });
 
     describe('updateRootScripts', () => {
-      it.scoped('adds turbo run commands to package.json', (ctx) =>
+      it.effect('adds turbo run commands to package.json', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
 
           const service = yield* TurborepoSetupService;
@@ -187,9 +186,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('does not overwrite existing turbo commands', (ctx) =>
+      it.effect('does not overwrite existing turbo commands', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* TurborepoSetupService;
@@ -215,9 +214,9 @@ describe(TurborepoSetupService, () => {
     });
 
     describe('ensureTurboInstalled', () => {
-      it.scoped('installs turbo in root package.json when not present', (ctx) =>
+      it.effect('installs turbo in root package.json when not present', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
           yield* clearExecutedCommands;
 
@@ -242,9 +241,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('does not install turbo if already in root package.json', (ctx) =>
+      it.effect('does not install turbo if already in root package.json', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-turborepo');
           yield* clearExecutedCommands;
 
@@ -266,9 +265,9 @@ describe(TurborepoSetupService, () => {
     });
 
     describe('setup', () => {
-      it.scoped('skips setup for non-monorepo projects', (ctx) =>
+      it.effect('skips setup for non-monorepo projects', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('single-package');
 
           const service = yield* TurborepoSetupService;
@@ -285,9 +284,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('sets up turborepo for monorepo without turbo.json', (ctx) =>
+      it.effect('sets up turborepo for monorepo without turbo.json', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
           yield* clearExecutedCommands;
 
@@ -331,9 +330,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('skips if no workspace tasks detected', (ctx) =>
+      it.effect('skips if no workspace tasks detected', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-turborepo');
 
           const pm = yield* PackageManagerService;
@@ -363,9 +362,9 @@ describe(TurborepoSetupService, () => {
     });
 
     describe('ensureTurboInstalled package updates', () => {
-      it.scoped('installs turbo if not present', (ctx) =>
+      it.effect('installs turbo if not present', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
 
           const service = yield* TurborepoSetupService;
@@ -383,9 +382,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('skips install if turbo already present', (ctx) =>
+      it.effect('skips install if turbo already present', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* TurborepoSetupService;
@@ -406,9 +405,9 @@ describe(TurborepoSetupService, () => {
     });
 
     describe('writeTurboConfig', () => {
-      it.scoped('writes valid turbo.json', (ctx) =>
+      it.effect('writes valid turbo.json', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
 
           const service = yield* TurborepoSetupService;
@@ -427,7 +426,7 @@ describe(TurborepoSetupService, () => {
           const root = yield* pm.resolveRoot();
           const turboPath = `${root}/turbo.json`;
           const content = yield* fs.readFileString(turboPath);
-          const parsed = yield* Schema.decodeUnknown(Schema.parseJson(TurboConfigSchema))(content);
+          const parsed = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(content);
 
           expect(parsed).toStrictEqual(config);
         }),
@@ -435,9 +434,9 @@ describe(TurborepoSetupService, () => {
     });
 
     describe('error scenarios', () => {
-      it.scoped('handles invalid turbo.json', (ctx) =>
+      it.effect('handles invalid turbo.json', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-turborepo');
 
           const fs = yield* FileSystem.FileSystem;
@@ -449,15 +448,15 @@ describe(TurborepoSetupService, () => {
           yield* fs.writeFileString(turboPath, '{ invalid json }');
 
           const service = yield* TurborepoSetupService;
-          const result = yield* Effect.either(service.readTurboConfig());
+          const result = yield* Effect.result(service.readTurboConfig());
 
-          expect(result._tag).toBe('Left');
+          expect(result._tag).toBe('Failure');
         }),
       );
 
-      it.scoped('handles missing workspace package.json', (ctx) =>
+      it.effect('handles missing workspace package.json', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
 
           const service = yield* TurborepoSetupService;
@@ -467,9 +466,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('handles readonly turbo.json', (ctx) =>
+      it.effect('handles readonly turbo.json', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-turborepo');
 
           const fs = yield* FileSystem.FileSystem;
@@ -481,7 +480,7 @@ describe(TurborepoSetupService, () => {
           yield* fs.chmod(turboPath, 0o444);
 
           const service = yield* TurborepoSetupService;
-          const result = yield* Effect.either(
+          const result = yield* Effect.result(
             service.writeTurboConfig({
               $schema: 'https://turbo.build/schema.json',
               tasks: {},
@@ -490,15 +489,15 @@ describe(TurborepoSetupService, () => {
 
           yield* fs.chmod(turboPath, 0o644);
 
-          expect(result._tag).toBe('Left');
+          expect(result._tag).toBe('Failure');
         }),
       );
     });
 
     describe('edge cases', () => {
-      it.scoped('handles workspace with no scripts', (ctx) =>
+      it.effect('handles workspace with no scripts', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
 
           const pm = yield* PackageManagerService;
@@ -522,9 +521,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('preserves existing turbo tasks', (ctx) =>
+      it.effect('preserves existing turbo tasks', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* TurborepoSetupService;
@@ -535,13 +534,13 @@ describe(TurborepoSetupService, () => {
           const turboPath = `${root}/turbo.json`;
 
           const originalContent = yield* fs.readFileString(turboPath);
-          const originalConfig = yield* Schema.decodeUnknown(Schema.parseJson(TurboConfigSchema))(originalContent);
+          const originalConfig = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(originalContent);
           const originalTaskKeys = Object.keys(originalConfig.tasks ?? {});
 
           yield* service.mergeTurboConfig(new Set(['newTask']));
 
           const updatedContent = yield* fs.readFileString(turboPath);
-          const updatedConfig = yield* Schema.decodeUnknown(Schema.parseJson(TurboConfigSchema))(updatedContent);
+          const updatedConfig = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(updatedContent);
 
           for (const taskKey of originalTaskKeys) {
             expect(updatedConfig.tasks?.[taskKey]).toBeDefined();
@@ -550,9 +549,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('handles complex task names', (ctx) =>
+      it.effect('handles complex task names', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
 
           const pm = yield* PackageManagerService;
@@ -583,9 +582,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('task categorization works correctly', (ctx) =>
+      it.effect('task categorization works correctly', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-no-turbo');
 
           const service = yield* TurborepoSetupService;
@@ -620,9 +619,9 @@ describe(TurborepoSetupService, () => {
         }),
       );
 
-      it.scoped('does not override existing task configs', (ctx) =>
+      it.effect('does not override existing task configs', () =>
         Effect.gen(function* () {
-          yield* withTempTestEnv(ctx.task.id);
+          yield* withTempTestEnv('TurborepoSetupService');
           yield* copyFixture('monorepo-turborepo');
 
           const fs = yield* FileSystem.FileSystem;
@@ -641,7 +640,7 @@ describe(TurborepoSetupService, () => {
             },
           };
 
-          const encodedConfig = yield* Schema.encode(Schema.parseJson(TurboConfigSchema))(config);
+          const encodedConfig = yield* Schema.encodeUnknownEffect(Schema.fromJsonString(TurboConfigSchema))(config);
 
           yield* fs.writeFileString(turboPath, encodedConfig);
 
@@ -650,7 +649,7 @@ describe(TurborepoSetupService, () => {
           yield* service.mergeTurboConfig(new Set(['build']));
 
           const updatedContent = yield* fs.readFileString(turboPath);
-          const updatedConfig = yield* Schema.decodeUnknown(Schema.parseJson(TurboConfigSchema))(updatedContent);
+          const updatedConfig = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(updatedContent);
 
           expect(updatedConfig.tasks?.build).toStrictEqual(config.tasks.build);
         }),
