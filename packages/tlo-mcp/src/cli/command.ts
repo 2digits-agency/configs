@@ -12,7 +12,7 @@ const VERSION = '0.0.0';
 const tloMcpCommand = Command.make(
   NAME,
   {},
-  Effect.fn(function* () {
+  Effect.fn('TloMcp.serve')(function* () {
     return yield* makeMcpServerLayer({ name: NAME, version: VERSION }).pipe(
       Layer.provide(TloLive),
       Layer.provide(TloConfigLive),
@@ -21,6 +21,6 @@ const tloMcpCommand = Command.make(
   }),
 );
 
-export function run(_args: ReadonlyArray<string>) {
-  return Command.run(tloMcpCommand, { version: VERSION });
-}
+export const run = Effect.fn('TloMcp.run')(function* (_args: ReadonlyArray<string>) {
+  return yield* Command.run(tloMcpCommand, { version: VERSION });
+});

@@ -1,13 +1,15 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
+import * as Array from 'effect/Array';
 import * as Clock from 'effect/Clock';
 import * as Context from 'effect/Context';
-import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
+import * as Match from 'effect/Match';
 import * as Option from 'effect/Option';
 import * as Path from 'effect/Path';
+import * as Record from 'effect/Record';
 import * as Schema from 'effect/Schema';
 
 import { type TurboConfig, TurboConfigJson } from '../schemas/TurboConfig';
@@ -15,10 +17,16 @@ import { EslintDetectionService } from './EslintDetectionService';
 import { PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
 
-class EslintSetupError extends Data.TaggedError('@2digits/cli/services/EslintSetupService/EslintSetupError')<{
-  message: string;
-  cause?: unknown;
-}> {}
+const ESLINT_CONFIG_PACKAGE = '@2digits/eslint-config';
+
+class EslintSetupError extends Schema.TaggedError<EslintSetupError>()(
+  '@2digits/cli/services/EslintSetupService/EslintSetupError',
+  {
+    operation: Schema.String,
+    message: Schema.String,
+    cause: Schema.optional(Schema.Defect()),
+  },
+) {}
 
 /**
  * Generate root ESLint configuration content.
@@ -27,7 +35,7 @@ class EslintSetupError extends Data.TaggedError('@2digits/cli/services/EslintSet
  */
 function generateRootConfig(isMonorepo: boolean): string {
   if (isMonorepo) {
-    return `import twoDigits from '@2digits/eslint-config';
+    return `import twoDigits from '${ESLINT_CONFIG_PACKAGE}';
 
 export default twoDigits({
   ignores: {
@@ -37,7 +45,7 @@ export default twoDigits({
 `;
   }
 
-  return `import twoDigits from '@2digits/eslint-config';
+  return `import twoDigits from '${ESLINT_CONFIG_PACKAGE}';
 
 export default twoDigits();
 `;
@@ -47,7 +55,7 @@ export default twoDigits();
  * Generate workspace ESLint configuration content.
  */
 function generateWorkspaceConfig(): string {
-  return `import twoDigits from '@2digits/eslint-config';
+  return `import twoDigits from '${ESLINT_CONFIG_PACKAGE}';
 
 export default twoDigits();
 `;
@@ -114,7 +122,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         const existingConfigs = yield* eslintDetect.detectExistingConfigs(targetDir);
 
-        if (existingConfigs.length === 0) {
+        if (Array.isReadonlyArrayEmpty(existingConfigs)) {
           return [];
         }
 
@@ -167,15 +175,19 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         const content = yield* fs
           .readFileString(turboPath)
-          .pipe(Effect.mapError((cause) => new EslintSetupError({ message: 'Failed to read turbo.json', cause })));
+          .pipe(
+            Effect.mapError((cause) =>
+              EslintSetupError.make({ operation: 'readTurboConfig', message: 'Failed to read turbo.json', cause }),
+            ),
+          );
 
         const config = yield* Schema.decodeEffect(TurboConfigJson)(content).pipe(
-          Effect.mapError(
-            (cause) =>
-              new EslintSetupError({
-                message: 'Invalid JSON in turbo.json',
-                cause,
-              }),
+          Effect.mapError((cause) =>
+            EslintSetupError.make({
+              operation: 'readTurboConfig',
+              message: 'Invalid JSON in turbo.json',
+              cause,
+            }),
           ),
         );
 
@@ -190,12 +202,18 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
         const turboPath = path.join(root, 'turbo.json');
 
         const content = yield* Schema.encodeEffect(TurboConfigJson)(config).pipe(
-          Effect.mapError((cause) => new EslintSetupError({ message: 'Failed to write turbo.json', cause })),
+          Effect.mapError((cause) =>
+            EslintSetupError.make({ operation: 'writeTurboConfig', message: 'Failed to write turbo.json', cause }),
+          ),
         );
 
         yield* fs
           .writeFileString(turboPath, content)
-          .pipe(Effect.mapError((cause) => new EslintSetupError({ message: 'Failed to write turbo.json', cause })));
+          .pipe(
+            Effect.mapError((cause) =>
+              EslintSetupError.make({ operation: 'writeTurboConfig', message: 'Failed to write turbo.json', cause }),
+            ),
+          );
 
         yield* Effect.logInfo('✅ Updated turbo.json with lint tasks');
       });
@@ -209,23 +227,22 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         if (eslintInstalled) {
           const packageJson = yield* pm.readPackageJson();
-          const deps = {
-            ...packageJson.dependencies,
-            ...packageJson.devDependencies,
-          };
 
-          if ('@2digits/eslint-config' in deps) {
+          if (
+            Record.has(packageJson.dependencies ?? {}, ESLINT_CONFIG_PACKAGE) ||
+            Record.has(packageJson.devDependencies ?? {}, ESLINT_CONFIG_PACKAGE)
+          ) {
             yield* Effect.logInfo('✅ Dependencies already installed');
           } else {
-            yield* Effect.logInfo('Installing @2digits/eslint-config...');
+            yield* Effect.logInfo(`Installing ${ESLINT_CONFIG_PACKAGE}...`);
             yield* pm.addDependencies({
-              devDependencies: ['@2digits/eslint-config'],
+              devDependencies: [ESLINT_CONFIG_PACKAGE],
             });
           }
         } else {
-          yield* Effect.logInfo('Installing eslint and @2digits/eslint-config...');
+          yield* Effect.logInfo(`Installing eslint and ${ESLINT_CONFIG_PACKAGE}...`);
           yield* pm.addDependencies({
-            devDependencies: ['eslint', '@2digits/eslint-config'],
+            devDependencies: ['eslint', ESLINT_CONFIG_PACKAGE],
           });
         }
       });
@@ -260,7 +277,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
           yield* writeEslintConfig(rootConfigPath, rootConfig);
         } else {
-          yield* Effect.logInfo('✅ Root config already uses @2digits/eslint-config');
+          yield* Effect.logInfo(`✅ Root config already uses ${ESLINT_CONFIG_PACKAGE}`);
         }
       });
 
@@ -271,7 +288,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
         yield* Effect.logInfo('Discovering workspaces...');
         const workspaces = yield* projectDetect.discoverWorkspaces();
 
-        if (workspaces.length > 0) {
+        if (Array.isReadonlyArrayNonEmpty(workspaces)) {
           yield* Effect.logInfo(`Found ${workspaces.length} workspace(s)`);
 
           for (const workspacePath of workspaces) {
@@ -298,20 +315,22 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
         yield* Effect.logInfo('Updating turbo.json...');
         const turboConfigOption = yield* readTurboConfig();
 
-        if (Option.isSome(turboConfigOption)) {
-          const { value: turboConfig } = turboConfigOption;
-          const hasLintTask = turboConfig.tasks !== undefined && 'lint' in turboConfig.tasks;
+        yield* Match.value(turboConfigOption).pipe(
+          Match.tag(
+            'Some',
+            Effect.fn('EslintSetupService.updateExistingTurboConfig')(function* ({
+              value: turboConfig,
+            }: Option.Some<TurboConfig>) {
+              const hasLintTask = turboConfig.tasks !== undefined && Record.has(turboConfig.tasks, 'lint');
 
-          if (hasLintTask) {
-            yield* Effect.logInfo('✅ Lint tasks already exist in turbo.json');
-          } else {
-            const mergedConfig = mergeLintTasks(turboConfig);
-
-            yield* writeTurboConfig(mergedConfig);
-          }
-        } else {
-          yield* Effect.logInfo('⚠️  turbo.json not found, skipping task configuration');
-        }
+              yield* hasLintTask
+                ? Effect.logInfo('✅ Lint tasks already exist in turbo.json')
+                : writeTurboConfig(mergeLintTasks(turboConfig));
+            }),
+          ),
+          Match.tag('None', () => Effect.logInfo('⚠️  turbo.json not found, skipping task configuration')),
+          Match.exhaustive,
+        );
       });
 
       /**
@@ -320,12 +339,14 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
       const validateAndComplete = Effect.fn('EslintSetupService.validateAndComplete')(function* () {
         yield* Effect.logInfo('Validating setup...');
         const finalPackageJson = yield* pm.readPackageJson();
-        const finalDeps = {
-          ...finalPackageJson.dependencies,
-          ...finalPackageJson.devDependencies,
-        };
+        const hasEslint =
+          Record.has(finalPackageJson.dependencies ?? {}, 'eslint') ||
+          Record.has(finalPackageJson.devDependencies ?? {}, 'eslint');
+        const has2DigitsConfig =
+          Record.has(finalPackageJson.dependencies ?? {}, ESLINT_CONFIG_PACKAGE) ||
+          Record.has(finalPackageJson.devDependencies ?? {}, ESLINT_CONFIG_PACKAGE);
 
-        if (!('eslint' in finalDeps) || !('@2digits/eslint-config' in finalDeps)) {
+        if (!hasEslint || !has2DigitsConfig) {
           yield* Effect.logError('⚠️  Warning: Dependencies may not be fully installed');
         }
 

@@ -1,9 +1,11 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
+import * as Array from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
+import * as Option from 'effect/Option';
 import * as Path from 'effect/Path';
 
 import { PackageManagerService } from './PackageManagerService';
@@ -16,6 +18,35 @@ export class ProjectDetectionService extends Context.Service<ProjectDetectionSer
       const path = yield* Path.Path;
       const pm = yield* PackageManagerService;
 
+      const discoverWorkspaceDirectory = Effect.fn('ProjectDetectionService.discoverWorkspaceDirectory')(function* (
+        directoryPath: string,
+      ) {
+        const exists = yield* fs.exists(directoryPath);
+
+        if (!exists) {
+          return [];
+        }
+
+        const entries = yield* fs.readDirectory(directoryPath).pipe(Effect.orElseSucceed(() => []));
+        // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+        const workspaces = yield* Effect.forEach(
+          entries,
+          Effect.fn('ProjectDetectionService.inspectWorkspace')(function* (entry) {
+            const entryPath = path.join(directoryPath, entry);
+            const packageJsonPath = path.join(entryPath, 'package.json');
+            const [stat, hasPackageJson] = yield* Effect.all([
+              fs.stat(entryPath).pipe(Effect.orElseSucceed(() => undefined)),
+              fs.exists(packageJsonPath).pipe(Effect.orElseSucceed(() => false)),
+            ]);
+
+            return hasPackageJson && stat?.type === 'Directory' ? Option.some(entryPath) : Option.none();
+          }),
+          { concurrency: 'unbounded' },
+        );
+
+        return Array.getSomes(workspaces);
+      });
+
       /**
        * Check if the project is a monorepo with Turborepo.
        */
@@ -27,57 +58,23 @@ export class ProjectDetectionService extends Context.Service<ProjectDetectionSer
       });
 
       /**
-       * Check if the project uses Turborepo (alias for isMonorepo)
+       * Check if the project uses Turborepo.
        */
-      const isTurborepoProject = isMonorepo;
+      const isTurborepoProject = Effect.fn('ProjectDetectionService.isTurborepoProject')(function* () {
+        return yield* isMonorepo();
+      });
 
       /**
        * Discover workspace directories in apps/ and packages/
        */
       const discoverWorkspaces = Effect.fn('ProjectDetectionService.discoverWorkspaces')(function* () {
         const root = yield* pm.resolveRoot();
-        const appsPath = path.join(root, 'apps');
-        const packagesPath = path.join(root, 'packages');
+        const workspaceDirectories = yield* Effect.all(
+          Array.map([path.join(root, 'apps'), path.join(root, 'packages')], discoverWorkspaceDirectory),
+          { concurrency: 'unbounded' },
+        );
 
-        const [appsExists, packagesExists] = yield* Effect.all([fs.exists(appsPath), fs.exists(packagesPath)]);
-
-        const workspaceDirs: Array<string> = [];
-
-        if (appsExists) {
-          const appsEntries = yield* fs.readDirectory(appsPath).pipe(Effect.orElseSucceed(() => []));
-
-          for (const entry of appsEntries) {
-            const entryPath = path.join(appsPath, entry);
-            const packageJsonPath = path.join(entryPath, 'package.json');
-
-            const stat = yield* fs.stat(entryPath).pipe(Effect.orElseSucceed(() => undefined));
-            const isDirectory = stat?.type === 'Directory';
-            const hasPackageJson = yield* fs.exists(packageJsonPath).pipe(Effect.orElseSucceed(() => false));
-
-            if (isDirectory && hasPackageJson) {
-              workspaceDirs.push(entryPath);
-            }
-          }
-        }
-
-        if (packagesExists) {
-          const packagesEntries = yield* fs.readDirectory(packagesPath).pipe(Effect.orElseSucceed(() => []));
-
-          for (const entry of packagesEntries) {
-            const entryPath = path.join(packagesPath, entry);
-            const packageJsonPath = path.join(entryPath, 'package.json');
-
-            const stat = yield* fs.stat(entryPath).pipe(Effect.orElseSucceed(() => undefined));
-            const isDirectory = stat?.type === 'Directory';
-            const hasPackageJson = yield* fs.exists(packageJsonPath).pipe(Effect.orElseSucceed(() => false));
-
-            if (isDirectory && hasPackageJson) {
-              workspaceDirs.push(entryPath);
-            }
-          }
-        }
-
-        return workspaceDirs;
+        return Array.flatten(workspaceDirectories);
       });
 
       /**

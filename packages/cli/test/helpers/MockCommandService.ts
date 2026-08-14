@@ -56,8 +56,8 @@ export class MockCommandExecutor extends Context.Service<MockCommandExecutor>()(
         }
       });
 
-      const spawner = ChildProcessSpawner.make((command) =>
-        Effect.gen(function* () {
+      const spawner = ChildProcessSpawner.make(
+        Effect.fn('MockCommandExecutor.spawn')(function* (command) {
           yield* recordCommand(command);
 
           return createMockProcess();
@@ -72,16 +72,17 @@ export class MockCommandExecutor extends Context.Service<MockCommandExecutor>()(
     }),
   },
 ) {
-  static readonly Default = Layer.effect(this, this.make);
-}
+  static readonly Default = Layer.effectContext(
+    Effect.gen(function* () {
+      const mock = yield* MockCommandExecutor.make;
 
-/**
- * Layer that provides the mock ChildProcessSpawner.
- */
-export const MockCommandExecutorLayer = Layer.effect(
-  ChildProcessSpawner.ChildProcessSpawner,
-  MockCommandExecutor.use((mock) => Effect.succeed(mock.spawner)),
-).pipe(Layer.provide(MockCommandExecutor.Default));
+      return Context.empty().pipe(
+        Context.add(MockCommandExecutor, mock),
+        Context.add(ChildProcessSpawner.ChildProcessSpawner, mock.spawner),
+      );
+    }),
+  );
+}
 
 /**
  * Helper to get the executed commands in tests.

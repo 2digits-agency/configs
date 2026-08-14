@@ -54,7 +54,7 @@ function formatTloDate(date: Date): TloDateString {
   const minute = date.getMinutes().toString().padStart(2, '0');
   const second = date.getSeconds().toString().padStart(2, '0');
 
-  return `${year}${month}${day}${hour}${minute}${second}` as TloDateString;
+  return TloDateString.make(`${year}${month}${day}${hour}${minute}${second}`);
 }
 
 /**

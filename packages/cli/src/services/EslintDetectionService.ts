@@ -1,12 +1,27 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
+import * as Array from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
+import * as Option from 'effect/Option';
 import * as Path from 'effect/Path';
+import * as Record from 'effect/Record';
 
 import { PackageManagerService } from './PackageManagerService';
+
+const ESLINT_CONFIG_FILES = [
+  '.eslintrc',
+  '.eslintrc.json',
+  '.eslintrc.js',
+  '.eslintrc.cjs',
+  '.eslintrc.yaml',
+  '.eslintrc.yml',
+  'eslint.config.js',
+  'eslint.config.cjs',
+  'eslint.config.mjs',
+] as const;
 
 /**
  * Service for detecting ESLint installation and configuration files.
@@ -19,6 +34,24 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
       const path = yield* Path.Path;
       const pm = yield* PackageManagerService;
 
+      const findExistingConfigs = Effect.fn('EslintDetectionService.findExistingConfigs')(function* (
+        targetDir: string,
+        configFiles: ReadonlyArray<string>,
+      ) {
+        // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+        const configs = yield* Effect.forEach(
+          configFiles,
+          Effect.fn('EslintDetectionService.checkConfig')(function* (file) {
+            const configPath = path.join(targetDir, file);
+
+            return (yield* fs.exists(configPath)) ? Option.some(configPath) : Option.none();
+          }),
+          { concurrency: 'unbounded' },
+        );
+
+        return Array.getSomes(configs);
+      });
+
       /**
        * Check if ESLint is installed in the project dependencies.
        */
@@ -30,12 +63,10 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
 
         const packageJson = yield* pm.readPackageJson({ id: pkgPath });
 
-        const deps = {
-          ...packageJson.dependencies,
-          ...packageJson.devDependencies,
-        };
-
-        return 'eslint' in deps;
+        return (
+          Record.has(packageJson.dependencies ?? {}, 'eslint') ||
+          Record.has(packageJson.devDependencies ?? {}, 'eslint')
+        );
       });
 
       /**
@@ -45,27 +76,9 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
         const root = yield* pm.resolveRoot();
         const targetDir = dir ?? root;
 
-        const configFiles = [
-          '.eslintrc',
-          '.eslintrc.json',
-          '.eslintrc.js',
-          '.eslintrc.cjs',
-          '.eslintrc.yaml',
-          '.eslintrc.yml',
-          'eslint.config.js',
-          'eslint.config.cjs',
-          'eslint.config.mjs',
-          'eslint.config.ts',
-        ];
+        const existingConfigs = yield* findExistingConfigs(targetDir, [...ESLINT_CONFIG_FILES, 'eslint.config.ts']);
 
-        const checks = yield* Effect.all(
-          configFiles.map((file) =>
-            fs.exists(path.join(targetDir, file)).pipe(Effect.map((exists) => ({ file, exists }))),
-          ),
-          { concurrency: 'unbounded' },
-        );
-
-        return checks.some((check) => check.exists);
+        return Array.isReadonlyArrayNonEmpty(existingConfigs);
       });
 
       /**
@@ -75,26 +88,7 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
         const root = yield* pm.resolveRoot();
         const targetDir = dir ?? root;
 
-        const configFiles = [
-          '.eslintrc',
-          '.eslintrc.json',
-          '.eslintrc.js',
-          '.eslintrc.cjs',
-          '.eslintrc.yaml',
-          '.eslintrc.yml',
-          'eslint.config.js',
-          'eslint.config.cjs',
-          'eslint.config.mjs',
-        ];
-
-        const checks = yield* Effect.all(
-          configFiles.map((file) =>
-            fs.exists(path.join(targetDir, file)).pipe(Effect.map((exists) => ({ file, exists }))),
-          ),
-          { concurrency: 'unbounded' },
-        );
-
-        return checks.filter((check) => check.exists).map((check) => path.join(targetDir, check.file));
+        return yield* findExistingConfigs(targetDir, ESLINT_CONFIG_FILES);
       });
 
       /**

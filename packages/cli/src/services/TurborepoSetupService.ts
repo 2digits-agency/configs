@@ -2,7 +2,6 @@ import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import * as Array from 'effect/Array';
 import * as Context from 'effect/Context';
-import * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
@@ -10,6 +9,7 @@ import * as Match from 'effect/Match';
 import * as Option from 'effect/Option';
 import * as Path from 'effect/Path';
 import * as Predicate from 'effect/Predicate';
+import * as Record from 'effect/Record';
 import * as Schema from 'effect/Schema';
 import * as Struct from 'effect/Struct';
 
@@ -17,10 +17,14 @@ import { type TurboConfig, TurboConfigJson } from '../schemas/TurboConfig';
 import { PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
 
-class TurborepoSetupError extends Data.TaggedError('@2digits/cli/services/TurborepoSetupService/TurborepoSetupError')<{
-  message: string;
-  cause?: unknown;
-}> {}
+class TurborepoSetupError extends Schema.TaggedError<TurborepoSetupError>()(
+  '@2digits/cli/services/TurborepoSetupService/TurborepoSetupError',
+  {
+    operation: Schema.String,
+    message: Schema.String,
+    cause: Schema.optional(Schema.Unknown),
+  },
+) {}
 
 type TaskCategory = 'build' | 'test' | 'lint' | 'typecheck' | 'dev' | 'other';
 
@@ -113,15 +117,18 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
       const detectWorkspaceTasks = Effect.fn('TurborepoSetupService.detectWorkspaceTasks')(function* () {
         const workspaces = yield* projectDetect.discoverWorkspaces();
 
-        // oxlint-disable-next-line unicorn/no-array-for-each
+        // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
         const tasksPerWorkspace = yield* Effect.forEach(
           workspaces,
-          (workspacePath) =>
-            pm.readPackageJson({ id: workspacePath }).pipe(Effect.map((pkg) => Struct.keys({ ...pkg.scripts }))),
-          { concurrency: 'unbounded' },
-        ).pipe(Effect.map(Array.flatten));
+          Effect.fn('TurborepoSetupService.readWorkspaceTasks')(function* (workspacePath) {
+            const packageJson = yield* pm.readPackageJson({ id: workspacePath });
 
-        return new Set(tasksPerWorkspace);
+            return Struct.keys(packageJson.scripts ?? {});
+          }),
+          { concurrency: 'unbounded' },
+        );
+
+        return new Set(Array.flatten(tasksPerWorkspace));
       });
 
       /**
@@ -137,17 +144,23 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
           return Option.none();
         }
 
-        const content = yield* fs
-          .readFileString(turboPath)
-          .pipe(Effect.mapError((cause) => new TurborepoSetupError({ message: 'Failed to read turbo.json', cause })));
+        const content = yield* fs.readFileString(turboPath).pipe(
+          Effect.mapError((cause) =>
+            TurborepoSetupError.make({
+              operation: 'readTurboConfig',
+              message: 'Failed to read turbo.json',
+              cause,
+            }),
+          ),
+        );
 
         const config = yield* Schema.decodeEffect(TurboConfigJson)(content).pipe(
-          Effect.mapError(
-            (cause) =>
-              new TurborepoSetupError({
-                message: 'Invalid JSON in turbo.json',
-                cause,
-              }),
+          Effect.mapError((cause) =>
+            TurborepoSetupError.make({
+              operation: 'readTurboConfig',
+              message: 'Invalid JSON in turbo.json',
+              cause,
+            }),
           ),
         );
 
@@ -162,12 +175,24 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
         const turboPath = path.join(root, 'turbo.json');
 
         const content = yield* Schema.encodeEffect(TurboConfigJson)(config).pipe(
-          Effect.mapError((cause) => new TurborepoSetupError({ message: 'Failed to write turbo.json', cause })),
+          Effect.mapError((cause) =>
+            TurborepoSetupError.make({
+              operation: 'writeTurboConfig',
+              message: 'Failed to write turbo.json',
+              cause,
+            }),
+          ),
         );
 
-        yield* fs
-          .writeFileString(turboPath, content)
-          .pipe(Effect.mapError((cause) => new TurborepoSetupError({ message: 'Failed to write turbo.json', cause })));
+        yield* fs.writeFileString(turboPath, content).pipe(
+          Effect.mapError((cause) =>
+            TurborepoSetupError.make({
+              operation: 'writeTurboConfig',
+              message: 'Failed to write turbo.json',
+              cause,
+            }),
+          ),
+        );
 
         yield* Effect.logInfo('✅ Updated turbo.json');
       });
@@ -180,18 +205,25 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
       ) {
         const turboConfigOption = yield* readTurboConfig();
 
-        if (Option.isSome(turboConfigOption)) {
-          const { value: existingConfig } = turboConfigOption;
-          const mergedConfig = mergeTasks(existingConfig, detectedTasks);
-
-          yield* writeTurboConfig(mergedConfig);
-          yield* Effect.logInfo(`📦 Merged ${detectedTasks.size} detected task(s) into turbo.json`);
-        } else {
-          const newConfig = mergeTasks({}, detectedTasks);
-
-          yield* writeTurboConfig(newConfig);
-          yield* Effect.logInfo(`✨ Created turbo.json with ${detectedTasks.size} task(s)`);
-        }
+        yield* Match.value(turboConfigOption).pipe(
+          Match.tag(
+            'Some',
+            Effect.fn('TurborepoSetupService.mergeExistingTurboConfig')(function* ({
+              value: existingConfig,
+            }: Option.Some<TurboConfig>) {
+              yield* writeTurboConfig(mergeTasks(existingConfig, detectedTasks));
+              yield* Effect.logInfo(`📦 Merged ${detectedTasks.size} detected task(s) into turbo.json`);
+            }),
+          ),
+          Match.tag(
+            'None',
+            Effect.fn('TurborepoSetupService.createTurboConfig')(function* () {
+              yield* writeTurboConfig(mergeTasks({}, detectedTasks));
+              yield* Effect.logInfo(`✨ Created turbo.json with ${detectedTasks.size} task(s)`);
+            }),
+          ),
+          Match.exhaustive,
+        );
       });
 
       /**
@@ -238,12 +270,11 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
         yield* Effect.logInfo('Checking turbo installation...');
         const root = yield* pm.resolveRoot();
         const packageJson = yield* pm.readPackageJson({ id: root });
-        const deps = {
-          ...packageJson.dependencies,
-          ...packageJson.devDependencies,
-        };
 
-        if ('turbo' in deps) {
+        if (
+          Record.has(packageJson.dependencies ?? {}, 'turbo') ||
+          Record.has(packageJson.devDependencies ?? {}, 'turbo')
+        ) {
           yield* Effect.logInfo('✅ Turbo already installed');
         } else {
           yield* Effect.logInfo('Installing turbo...');
@@ -289,7 +320,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
         }
 
         yield* Effect.logInfo(
-          `Found ${detectedTasks.size} unique task(s): ${Array.fromIterable(detectedTasks).join(', ')}`,
+          `Found ${detectedTasks.size} unique task(s): ${Array.join(Array.fromIterable(detectedTasks), ', ')}`,
         );
 
         // Merge tasks into turbo.json

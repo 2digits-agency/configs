@@ -12,12 +12,7 @@ import * as Schema from 'effect/Schema';
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
 import { TurborepoSetupService } from '../../../src/services/TurborepoSetupService.js';
-import {
-  clearExecutedCommands,
-  getExecutedCommands,
-  MockCommandExecutor,
-  MockCommandExecutorLayer,
-} from '../../helpers/MockCommandService.js';
+import { clearExecutedCommands, getExecutedCommands, MockCommandExecutor } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 const TurboConfigSchema = Schema.Struct({
@@ -33,7 +28,6 @@ describe(TurborepoSetupService, () => {
     ProjectDetectionService.Default,
     PackageManagerService.Default,
     MockCommandExecutor.Default,
-    MockCommandExecutorLayer,
     NodeFileSystem.layer,
     NodePath.layer,
   );
