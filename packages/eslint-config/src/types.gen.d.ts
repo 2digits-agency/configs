@@ -10958,6 +10958,10 @@ type JsdocCheckParamNames = []|[{
   
   allowExtraTrailingParamDocs?: boolean
   
+  badParamNames?: boolean
+  
+  badParamOrder?: boolean
+  
   checkDestructured?: boolean
   
   checkRestProperty?: boolean
@@ -10968,7 +10972,11 @@ type JsdocCheckParamNames = []|[{
   
   disableMissingParamChecks?: boolean
   
+  duplicateParams?: boolean
+  
   enableFixer?: boolean
+  
+  extraParams?: boolean
   
   useDefaultObjectProperties?: boolean
 }]

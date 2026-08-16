@@ -1,3 +1,4 @@
+// @effect-diagnostics-next-line nodeBuiltinImport:off
 import path from 'node:path';
 
 import { defineConfig } from 'vite-plus';
