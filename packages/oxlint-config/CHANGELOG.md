@@ -1,3 +1,11 @@
+## @2digits/oxlint-config@0.8.1
+
+### Update `eslint-plugin-zod` to 4.9.1
+
+
+
+### Update `oxlint` to 1.78.0
+
 ## @2digits/oxlint-config@0.8.0
 
 ### Add an opt-in Effect preset for the `effecttsgo` plugin

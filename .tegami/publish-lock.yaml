@@ -1,49 +1,174 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Only report catalog items duplicated at the same version\n\n`pnpm/yaml-no-duplicate-catalog-item` now runs with `checkDuplicates: 'exact-version'`. A named\ncatalog exists precisely to pin a _different_ version of a package — for example a\n`conflicts_typescript_7_0_2` catalog next to a default catalog on TypeScript 6 — and the previous\nname-only comparison flagged that intentional split as a mistake. Two catalogs listing the same\npackage at the same version are still reported.\n"
-    filename: 2026-08-08-duplicate-catalog-item-versions.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `@effect/tsgo` to 0.36.4\n"
+    filename: 2026-08-13-amber-foxes-tsgo.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n## Add an opt-in Effect preset for the `effecttsgo` plugin\n\n- New `@2digits/oxlint-config/effect` entrypoint exporting `effectConfig`, which enables the\n  `effecttsgo` plugin from `@effect/tsgo` in type-aware mode and configures 82 Effect rules\n  (`missing-pipeable-signature`, `strict-boolean-expressions` and `strict-effect-provide` as\n  warnings, the rest as errors).\n- The preset is deliberately not part of `twoDigits`. Oxlint rejects the entire configuration with\n  `Unknown plugin: 'effecttsgo'` when its binary is unpatched, so projects that do not use Effect\n  are unaffected and keep linting as before.\n- Also exports `effectConfigFor(files)`, which keeps the plugin enabled globally but restricts the\n  rules to the given globs. Rules such as `async-function`, `process-env` and `node-builtin-import`\n  judge plain TypeScript too, so a repository that mixes Effect and non-Effect packages should name\n  its Effect sources rather than reporting unfollowable advice everywhere.\n- The installed `oxlint`, `oxlint-tsgolint` and `@effect/tsgo` versions must match each other;\n  `effect-tsgo patch` refuses to run otherwise. `@effect/tsgo@0.36.0` supports `oxlint@1.77.0` with\n  `oxlint-tsgolint@7.0.2001`, which is what this repository's catalog pins. Set up a consumer with:\n\n  ```sh\n  pnpm add -D @effect/tsgo@0.36.0 oxlint@1.77.0 oxlint-tsgolint@7.0.2001\n  ```\n\n  then add `\"prepare\": \"effect-tsgo patch --oxlint\"` (append `--no-typescript` to leave TypeScript\n  alone) and `export default withTwoDigits(effectConfig)`.\n\n- `withTwoDigits` now accepts and returns `TwoDigitsConfig`, an `OxlintConfig` whose `plugins` also\n  admits plugins registered by a binary patch, and appends each config's `overrides` in argument\n  order. Previously `defu` prepended them, so a later config's override lost to an earlier one even\n  though the documented contract is that later configs win.\n- Effect rules that `@effect/tsgo` enables by default — `floating-effect`, `missing-effect-context`\n  and the other 11 correctness rules — stay off, because this preset disables every Oxlint\n  category. Add them to your own `rules` if you want them enforced.\n"
-    filename: 2026-08-08-effecttsgo-oxlint-preset.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `tegami` to 1.3.5\n"
+    filename: 2026-08-13-bright-cranes-tegami.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update `typescript-eslint` packages to 8.67.0\n"
+    filename: 2026-08-13-copper-larks-typescript-eslint.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `knip` to 6.32.2\n"
+    filename: 2026-08-13-mellow-martens-knip.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update Vite+ packages to 0.2.9\n"
+    filename: 2026-08-13-silver-storks-vite-plus.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `baseline-browser-mapping` to 2.11.14\n"
+    filename: 2026-08-13-swift-beavers-baseline.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 11.21.0\n"
+    filename: 2026-08-13-tidy-falcons-pnpm.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `@effect/tsgo` to 0.36.5\n\n- Enabled the full Effect diagnostic profile across the repository.\n"
+    filename: 2026-08-16-clever-foxes-tsgo.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `pkg-pr-new` to 0.0.88\n"
+    filename: 2026-08-16-nimble-storks-pkg.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `turbo` to 2.10.10\n"
+    filename: 2026-08-16-tidy-beavers-turbo.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Upgrade the Effect runtime to v4 RC 108\n\nBoth command-line applications now run on `effect`, `@effect/platform-node`, and `@effect/vitest` version\n`4.0.0-rc.108`. The upgrade removes the former independently versioned Effect packages and adopts the consolidated\nEffect v4 module layout.\n\n### Update the 2DIGITS configuration CLI\n\n- Migrate CLI commands and flags to Effect v4's consolidated CLI modules while preserving the existing command-line\n  options and setup workflows.\n- Run filesystem, path, terminal, and process operations through the Effect v4 Node services.\n- Migrate package-manager command execution to the v4 child-process service, including streamed output, exit-code\n  handling, and command failures.\n- Structure setup and package-manager workflows as named generator-based Effect operations, with typed operation errors\n  and exhaustive matching for setup choices and optional configuration.\n- Use Effect's collection and predicate modules for dependency checks, workspace discovery, and task aggregation while\n  preserving the CLI's existing public service methods.\n- Preserve unknown `turbo.json` fields while decoding, updating, and formatting configuration through the v4 Schema\n  APIs.\n- Update service construction and layer wiring to Effect v4 without changing the setup behavior for Prettier, ESLint,\n  project detection, or Turborepo.\n- Update the test runtime and child-process test doubles for Effect v4; the CLI's 85 service tests continue to cover\n  package-manager commands, configuration migration, workspace discovery, and generated scripts.\n- Provide the process spawner and command recorder from one shared test layer so package-manager commands are spawned\n  and observed through the same service instance.\n\n### Update the Teamleader Orbit MCP server\n\n- Migrate the MCP server, toolkit, tools, and standard-input transport to Effect v4's consolidated AI modules and\n  current MCP protocol support.\n- Migrate Teamleader HTTP requests to the v4 HTTP client modules while preserving session-token redaction, cookies,\n  response decoding, and typed network/API/parse errors.\n- Keep request, response-decoding, and error-classification business logic in named generator-based Effect operations,\n  using exhaustive matching for Teamleader's normal and malformed error responses.\n- Apply defaults in the board and time services instead of duplicating them in MCP transport handlers, and use Effect's\n  collection, record, string, predicate, and matching modules for response transformations and request construction.\n- Preserve ISO date input behavior and Teamleader's compact date conversion while moving schemas to the v4 Schema\n  APIs.\n- Reject non-finite numeric IDs, counts, budgets, durations, and pagination values at schema boundaries instead of\n  allowing values that cannot be represented safely by the Teamleader JSON API.\n- Construct decoded domain models and typed API errors through the v4 Schema class factories, preserving validation\n  and Effect language-service support.\n- Update service and layer construction for board, time, configuration, and HTTP services.\n- Continue supporting the existing project, task, board, message, and time-entry tools with the same external MCP tool\n  names and parameters.\n- Add focused client-boundary coverage for successful responses, API failures, malformed Teamleader errors, and invalid\n  JSON responses.\n"
+    filename: 2026-08-13-brave-owls-effect-v4.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update Effect v4 to RC 109\n"
+    filename: 2026-08-16-brisk-herons-effect.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Adopt Effect's TypeScript tooling\n\n- Switched type checking to the stable TypeScript 7 native compiler, patched once at the workspace root with `effect-tsgo`.\n- Enabled the full Effect diagnostic profile, including stricter errors and test-specific overrides.\n"
+    filename: 2026-08-16-calm-otters-tooling.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@eslint-react` packages to 5.18.6\n"
+    filename: 2026-08-13-calm-otters-eslint-react.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@vitest/eslint-plugin` to 1.6.27\n"
+    filename: 2026-08-13-crisp-herons-vitest-eslint.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-jsdoc` to 64.1.0\n"
+    filename: 2026-08-13-dapper-finches-jsdoc.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-pnpm` to 1.8.0\n"
+    filename: 2026-08-13-fresh-pandas-pnpm-eslint.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-regexp` to 3.2.0\n"
+    filename: 2026-08-13-gentle-wolves-regexp.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-storybook` to 10.5.8\n"
+    filename: 2026-08-13-golden-ibises-storybook.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-zod` to 4.9.1\n"
+    filename: 2026-08-13-happy-badgers-zod.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `globals` to 17.11.0\n"
+    filename: 2026-08-13-lively-geese-globals.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@next/eslint-plugin-next` to 16.3.1\n"
+    filename: 2026-08-16-dapper-larks-next.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-jsdoc` to 64.2.0\n\n- Added types for the new `check-param-names` options.\n"
+    filename: 2026-08-16-gentle-pandas-jsdoc.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-turbo` to 2.10.10\n"
+    filename: 2026-08-16-lively-wolves-eslint.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `@opencode-ai/plugin` to 1.18.18\n"
+    filename: 2026-08-13-clever-ravens-opencode.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `posthog-node` to 5.49.0\n"
+    filename: 2026-08-13-quiet-lynxes-posthog.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `posthog-node` to 5.49.1\n"
+    filename: 2026-08-16-quiet-badgers-posthog.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `oxlint` to 1.78.0\n"
+    filename: 2026-08-16-mellow-ravens-oxlint.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update `oxfmt` to 0.63.0\n"
+    filename: 2026-08-13-nimble-robins-oxfmt.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update `renovate` to 44.30.4\n"
+    filename: 2026-08-16-swift-ibises-renovate.md
     v: 0.0.0
 core:packages:
-  - id: npm:@2digits/config-monorepo
-    updated: false
-  - id: npm:@2digits/cli
-    updated: false
-  - id: npm:@2digits/eslint-plugin
-    updated: false
+  - changelogIds:
+      - 2026-08-13-amber-foxes-tsgo.md
+      - 2026-08-13-bright-cranes-tegami.md
+      - 2026-08-13-copper-larks-typescript-eslint.md
+      - 2026-08-13-mellow-martens-knip.md
+      - 2026-08-13-silver-storks-vite-plus.md
+      - 2026-08-13-swift-beavers-baseline.md
+      - 2026-08-13-tidy-falcons-pnpm.md
+      - 2026-08-16-clever-foxes-tsgo.md
+      - 2026-08-16-nimble-storks-pkg.md
+      - 2026-08-16-tidy-beavers-turbo.md
+    id: npm:@2digits/config-monorepo
+    updated: true
+  - changelogIds:
+      - 2026-08-13-brave-owls-effect-v4.md
+      - 2026-08-16-brisk-herons-effect.md
+      - 2026-08-16-calm-otters-tooling.md
+    id: npm:@2digits/cli
+    updated: true
+  - changelogIds:
+      - 2026-08-13-calm-otters-eslint-react.md
+      - 2026-08-13-copper-larks-typescript-eslint.md
+      - 2026-08-13-crisp-herons-vitest-eslint.md
+      - 2026-08-13-dapper-finches-jsdoc.md
+      - 2026-08-13-fresh-pandas-pnpm-eslint.md
+      - 2026-08-13-gentle-wolves-regexp.md
+      - 2026-08-13-golden-ibises-storybook.md
+      - 2026-08-13-happy-badgers-zod.md
+      - 2026-08-13-lively-geese-globals.md
+      - 2026-08-16-dapper-larks-next.md
+      - 2026-08-16-gentle-pandas-jsdoc.md
+      - 2026-08-16-lively-wolves-eslint.md
+    id: npm:@2digits/eslint-config
+    updated: true
+  - changelogIds:
+      - 2026-08-13-copper-larks-typescript-eslint.md
+    id: npm:@2digits/eslint-plugin
+    updated: true
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-08-08-duplicate-catalog-item-versions.md
-    id: npm:@2digits/eslint-config
+      - 2026-08-13-clever-ravens-opencode.md
+      - 2026-08-13-quiet-lynxes-posthog.md
+      - 2026-08-16-quiet-badgers-posthog.md
+    id: npm:@2digits/opencode-plugin
     updated: true
-  - id: npm:@2digits/opencode-plugin
-    updated: false
-  - id: npm:@2digits/oxfmt-config
-    updated: false
   - changelogIds:
-      - 2026-08-08-effecttsgo-oxlint-preset.md
+      - 2026-08-13-happy-badgers-zod.md
+      - 2026-08-16-mellow-ravens-oxlint.md
     id: npm:@2digits/oxlint-config
+    updated: true
+  - changelogIds:
+      - 2026-08-13-nimble-robins-oxfmt.md
+    id: npm:@2digits/oxfmt-config
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
-  - id: npm:@2digits/renovate-config
-    updated: false
+  - changelogIds:
+      - 2026-08-16-swift-ibises-renovate.md
+    id: npm:@2digits/renovate-config
+    updated: true
+  - changelogIds:
+      - 2026-08-13-brave-owls-effect-v4.md
+      - 2026-08-16-brisk-herons-effect.md
+      - 2026-08-16-calm-otters-tooling.md
+    id: npm:@2digits/tlo-mcp
+    updated: true
   - id: npm:@2digits/tsconfig
-    updated: false
-  - id: npm:@2digits/tlo-mcp
     updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
+  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/constants
-  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/opencode-plugin
-  - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
+  - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/prettier-config
   - id: npm:@2digits/renovate-config
-  - id: npm:@2digits/tsconfig
   - id: npm:@2digits/tlo-mcp
+  - id: npm:@2digits/tsconfig

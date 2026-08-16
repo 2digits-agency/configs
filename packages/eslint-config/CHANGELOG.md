@@ -1,3 +1,51 @@
+## @2digits/eslint-config@5.6.2
+
+### Update `@eslint-react` packages to 5.18.6
+
+
+
+### Update `typescript-eslint` packages to 8.67.0
+
+
+
+### Update `@vitest/eslint-plugin` to 1.6.27
+
+
+
+### Update `eslint-plugin-jsdoc` to 64.1.0
+
+
+
+### Update `eslint-plugin-pnpm` to 1.8.0
+
+
+
+### Update `eslint-plugin-regexp` to 3.2.0
+
+
+
+### Update `eslint-plugin-storybook` to 10.5.8
+
+
+
+### Update `eslint-plugin-zod` to 4.9.1
+
+
+
+### Update `globals` to 17.11.0
+
+
+
+### Update `@next/eslint-plugin-next` to 16.3.1
+
+
+
+### Update `eslint-plugin-jsdoc` to 64.2.0
+
+- Added types for the new `check-param-names` options.
+
+### Update `eslint-plugin-turbo` to 2.10.10
+
 ## @2digits/eslint-config@5.6.1
 
 ### Only report catalog items duplicated at the same version
