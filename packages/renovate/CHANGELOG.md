@@ -1,3 +1,7 @@
+## @2digits/renovate-config@1.2.100
+
+### Update `renovate` to 44.30.4
+
 ## @2digits/renovate-config@1.2.99
 
 ### Update renovate to 44.14.10

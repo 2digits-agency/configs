@@ -1,3 +1,43 @@
+## @2digits/config-monorepo@0.0.5
+
+### Update `@effect/tsgo` to 0.36.4
+
+
+
+### Update `tegami` to 1.3.5
+
+
+
+### Update `typescript-eslint` packages to 8.67.0
+
+
+
+### Update `knip` to 6.32.2
+
+
+
+### Update Vite+ packages to 0.2.9
+
+
+
+### Update `baseline-browser-mapping` to 2.11.14
+
+
+
+### Update pnpm to 11.21.0
+
+
+
+### Update `@effect/tsgo` to 0.36.5
+
+- Enabled the full Effect diagnostic profile across the repository.
+
+### Update `pkg-pr-new` to 0.0.88
+
+
+
+### Update `turbo` to 2.10.10
+
 ## @2digits/config-monorepo@0.0.4
 
 ### Update tegami to 1.3.1
