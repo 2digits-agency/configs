@@ -1,173 +1,64 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `@effect/tsgo` to 0.36.4\n"
-    filename: 2026-08-13-amber-foxes-tsgo.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 11.22.0\n"
+    filename: 2026-08-17-pnpm-toolchain-refresh.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `tegami` to 1.3.5\n"
-    filename: 2026-08-13-bright-cranes-tegami.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Remove the unsupported service accessor diagnostic\n"
+    filename: 2026-08-17-tsconfig-cleanup.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update `typescript-eslint` packages to 8.67.0\n"
-    filename: 2026-08-13-copper-larks-typescript-eslint.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `effect` to 4.0.0-rc.110\n"
+    filename: 2026-08-17-effect-core-rc.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `knip` to 6.32.2\n"
-    filename: 2026-08-13-mellow-martens-knip.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `@effect/platform-node` to 4.0.0-rc.110\n"
+    filename: 2026-08-17-effect-platform-rc.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update Vite+ packages to 0.2.9\n"
-    filename: 2026-08-13-silver-storks-vite-plus.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `baseline-browser-mapping` to 2.11.14\n"
-    filename: 2026-08-13-swift-beavers-baseline.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 11.21.0\n"
-    filename: 2026-08-13-tidy-falcons-pnpm.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `@effect/tsgo` to 0.36.5\n\n- Enabled the full Effect diagnostic profile across the repository.\n"
-    filename: 2026-08-16-clever-foxes-tsgo.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `pkg-pr-new` to 0.0.88\n"
-    filename: 2026-08-16-nimble-storks-pkg.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `turbo` to 2.10.10\n"
-    filename: 2026-08-16-tidy-beavers-turbo.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Upgrade the Effect runtime to v4 RC 108\n\nBoth command-line applications now run on `effect`, `@effect/platform-node`, and `@effect/vitest` version\n`4.0.0-rc.108`. The upgrade removes the former independently versioned Effect packages and adopts the consolidated\nEffect v4 module layout.\n\n### Update the 2DIGITS configuration CLI\n\n- Migrate CLI commands and flags to Effect v4's consolidated CLI modules while preserving the existing command-line\n  options and setup workflows.\n- Run filesystem, path, terminal, and process operations through the Effect v4 Node services.\n- Migrate package-manager command execution to the v4 child-process service, including streamed output, exit-code\n  handling, and command failures.\n- Structure setup and package-manager workflows as named generator-based Effect operations, with typed operation errors\n  and exhaustive matching for setup choices and optional configuration.\n- Use Effect's collection and predicate modules for dependency checks, workspace discovery, and task aggregation while\n  preserving the CLI's existing public service methods.\n- Preserve unknown `turbo.json` fields while decoding, updating, and formatting configuration through the v4 Schema\n  APIs.\n- Update service construction and layer wiring to Effect v4 without changing the setup behavior for Prettier, ESLint,\n  project detection, or Turborepo.\n- Update the test runtime and child-process test doubles for Effect v4; the CLI's 85 service tests continue to cover\n  package-manager commands, configuration migration, workspace discovery, and generated scripts.\n- Provide the process spawner and command recorder from one shared test layer so package-manager commands are spawned\n  and observed through the same service instance.\n\n### Update the Teamleader Orbit MCP server\n\n- Migrate the MCP server, toolkit, tools, and standard-input transport to Effect v4's consolidated AI modules and\n  current MCP protocol support.\n- Migrate Teamleader HTTP requests to the v4 HTTP client modules while preserving session-token redaction, cookies,\n  response decoding, and typed network/API/parse errors.\n- Keep request, response-decoding, and error-classification business logic in named generator-based Effect operations,\n  using exhaustive matching for Teamleader's normal and malformed error responses.\n- Apply defaults in the board and time services instead of duplicating them in MCP transport handlers, and use Effect's\n  collection, record, string, predicate, and matching modules for response transformations and request construction.\n- Preserve ISO date input behavior and Teamleader's compact date conversion while moving schemas to the v4 Schema\n  APIs.\n- Reject non-finite numeric IDs, counts, budgets, durations, and pagination values at schema boundaries instead of\n  allowing values that cannot be represented safely by the Teamleader JSON API.\n- Construct decoded domain models and typed API errors through the v4 Schema class factories, preserving validation\n  and Effect language-service support.\n- Update service and layer construction for board, time, configuration, and HTTP services.\n- Continue supporting the existing project, task, board, message, and time-entry tools with the same external MCP tool\n  names and parameters.\n- Add focused client-boundary coverage for successful responses, API failures, malformed Teamleader errors, and invalid\n  JSON responses.\n"
-    filename: 2026-08-13-brave-owls-effect-v4.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update Effect v4 to RC 109\n"
-    filename: 2026-08-16-brisk-herons-effect.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Adopt Effect's TypeScript tooling\n\n- Switched type checking to the stable TypeScript 7 native compiler, patched once at the workspace root with `effect-tsgo`.\n- Enabled the full Effect diagnostic profile, including stricter errors and test-specific overrides.\n"
-    filename: 2026-08-16-calm-otters-tooling.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@eslint-react` packages to 5.18.6\n"
-    filename: 2026-08-13-calm-otters-eslint-react.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@vitest/eslint-plugin` to 1.6.27\n"
-    filename: 2026-08-13-crisp-herons-vitest-eslint.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-jsdoc` to 64.1.0\n"
-    filename: 2026-08-13-dapper-finches-jsdoc.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-pnpm` to 1.8.0\n"
-    filename: 2026-08-13-fresh-pandas-pnpm-eslint.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-regexp` to 3.2.0\n"
-    filename: 2026-08-13-gentle-wolves-regexp.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-storybook` to 10.5.8\n"
-    filename: 2026-08-13-golden-ibises-storybook.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-zod` to 4.9.1\n"
-    filename: 2026-08-13-happy-badgers-zod.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `globals` to 17.11.0\n"
-    filename: 2026-08-13-lively-geese-globals.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@next/eslint-plugin-next` to 16.3.1\n"
-    filename: 2026-08-16-dapper-larks-next.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-jsdoc` to 64.2.0\n\n- Added types for the new `check-param-names` options.\n"
-    filename: 2026-08-16-gentle-pandas-jsdoc.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-turbo` to 2.10.10\n"
-    filename: 2026-08-16-lively-wolves-eslint.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `@opencode-ai/plugin` to 1.18.18\n"
-    filename: 2026-08-13-clever-ravens-opencode.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `posthog-node` to 5.49.0\n"
-    filename: 2026-08-13-quiet-lynxes-posthog.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `posthog-node` to 5.49.1\n"
-    filename: 2026-08-16-quiet-badgers-posthog.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `oxlint` to 1.78.0\n"
-    filename: 2026-08-16-mellow-ravens-oxlint.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update `oxfmt` to 0.63.0\n"
-    filename: 2026-08-13-nimble-robins-oxfmt.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update `renovate` to 44.30.4\n"
-    filename: 2026-08-16-swift-ibises-renovate.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Enable additional Effect lint rules\n\n- Added checks for Effect context, generators, floating effects, schema members, and service types.\n"
+    filename: 2026-08-17-effect-rules-float.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-08-13-amber-foxes-tsgo.md
-      - 2026-08-13-bright-cranes-tegami.md
-      - 2026-08-13-copper-larks-typescript-eslint.md
-      - 2026-08-13-mellow-martens-knip.md
-      - 2026-08-13-silver-storks-vite-plus.md
-      - 2026-08-13-swift-beavers-baseline.md
-      - 2026-08-13-tidy-falcons-pnpm.md
-      - 2026-08-16-clever-foxes-tsgo.md
-      - 2026-08-16-nimble-storks-pkg.md
-      - 2026-08-16-tidy-beavers-turbo.md
+      - 2026-08-17-pnpm-toolchain-refresh.md
+      - 2026-08-17-tsconfig-cleanup.md
     id: npm:@2digits/config-monorepo
-    updated: true
-  - changelogIds:
-      - 2026-08-13-brave-owls-effect-v4.md
-      - 2026-08-16-brisk-herons-effect.md
-      - 2026-08-16-calm-otters-tooling.md
-    id: npm:@2digits/cli
-    updated: true
-  - changelogIds:
-      - 2026-08-13-calm-otters-eslint-react.md
-      - 2026-08-13-copper-larks-typescript-eslint.md
-      - 2026-08-13-crisp-herons-vitest-eslint.md
-      - 2026-08-13-dapper-finches-jsdoc.md
-      - 2026-08-13-fresh-pandas-pnpm-eslint.md
-      - 2026-08-13-gentle-wolves-regexp.md
-      - 2026-08-13-golden-ibises-storybook.md
-      - 2026-08-13-happy-badgers-zod.md
-      - 2026-08-13-lively-geese-globals.md
-      - 2026-08-16-dapper-larks-next.md
-      - 2026-08-16-gentle-pandas-jsdoc.md
-      - 2026-08-16-lively-wolves-eslint.md
-    id: npm:@2digits/eslint-config
-    updated: true
-  - changelogIds:
-      - 2026-08-13-copper-larks-typescript-eslint.md
-    id: npm:@2digits/eslint-plugin
     updated: true
   - id: npm:@2digits/constants
     updated: false
+  - id: npm:@2digits/eslint-config
+    updated: false
   - changelogIds:
-      - 2026-08-13-clever-ravens-opencode.md
-      - 2026-08-13-quiet-lynxes-posthog.md
-      - 2026-08-16-quiet-badgers-posthog.md
-    id: npm:@2digits/opencode-plugin
+      - 2026-08-17-effect-core-rc.md
+      - 2026-08-17-effect-platform-rc.md
+    id: npm:@2digits/cli
     updated: true
+  - id: npm:@2digits/opencode-plugin
+    updated: false
+  - id: npm:@2digits/eslint-plugin
+    updated: false
+  - id: npm:@2digits/oxfmt-config
+    updated: false
   - changelogIds:
-      - 2026-08-13-happy-badgers-zod.md
-      - 2026-08-16-mellow-ravens-oxlint.md
+      - 2026-08-17-effect-rules-float.md
     id: npm:@2digits/oxlint-config
-    updated: true
-  - changelogIds:
-      - 2026-08-13-nimble-robins-oxfmt.md
-    id: npm:@2digits/oxfmt-config
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
+  - id: npm:@2digits/renovate-config
+    updated: false
   - changelogIds:
-      - 2026-08-16-swift-ibises-renovate.md
-    id: npm:@2digits/renovate-config
-    updated: true
-  - changelogIds:
-      - 2026-08-13-brave-owls-effect-v4.md
-      - 2026-08-16-brisk-herons-effect.md
-      - 2026-08-16-calm-otters-tooling.md
+      - 2026-08-17-effect-core-rc.md
+      - 2026-08-17-effect-platform-rc.md
     id: npm:@2digits/tlo-mcp
     updated: true
   - id: npm:@2digits/tsconfig
     updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
-  - id: npm:@2digits/cli
-  - id: npm:@2digits/eslint-config
-  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/constants
+  - id: npm:@2digits/eslint-config
+  - id: npm:@2digits/cli
   - id: npm:@2digits/opencode-plugin
-  - id: npm:@2digits/oxlint-config
+  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/oxfmt-config
+  - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/prettier-config
   - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp

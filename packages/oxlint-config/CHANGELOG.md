@@ -1,3 +1,9 @@
+## @2digits/oxlint-config@0.8.2
+
+### Enable additional Effect lint rules
+
+- Added checks for Effect context, generators, floating effects, schema members, and service types.
+
 ## @2digits/oxlint-config@0.8.1
 
 ### Update `eslint-plugin-zod` to 4.9.1
