@@ -1,3 +1,11 @@
+## @2digits/config-monorepo@0.0.6
+
+### Update pnpm to 11.22.0
+
+
+
+### Remove the unsupported service accessor diagnostic
+
 ## @2digits/config-monorepo@0.0.5
 
 ### Update `@effect/tsgo` to 0.36.4

@@ -1,3 +1,11 @@
+## @2digits/tlo-mcp@0.1.30
+
+### Update `effect` to 4.0.0-rc.110
+
+
+
+### Update `@effect/platform-node` to 4.0.0-rc.110
+
 ## @2digits/tlo-mcp@0.1.29
 
 ### Upgrade the Effect runtime to v4 RC 108

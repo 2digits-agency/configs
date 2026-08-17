@@ -1,3 +1,11 @@
+## @2digits/cli@2.0.14
+
+### Update `effect` to 4.0.0-rc.110
+
+
+
+### Update `@effect/platform-node` to 4.0.0-rc.110
+
 ## @2digits/cli@2.0.13
 
 ### Upgrade the Effect runtime to v4 RC 108
