@@ -15,7 +15,6 @@ interface NoConflictingChecksOptions {
  */
 declare module 'oxlint' {
   interface DummyRuleMap {
-    'react-compiler/react-compiler'?: AllowWarnDeny;
     'stylistic/jsx-curly-newline'?: AllowWarnDeny;
     'stylistic/jsx-newline'?: RuleWithOptions<{ readonly allowMultilines?: boolean; readonly prevent?: boolean }>;
     'zod/array-style'?: RuleWithOptions<{ readonly style: 'function' | 'method' }>;

@@ -1,13 +1,11 @@
 import { defineConfig } from 'oxlint';
 
 export const reactConfig = defineConfig({
-  options: { typeAware: true },
+  options: {
+    typeAware: true,
+  },
   plugins: ['react', 'react-perf'],
   jsPlugins: [
-    {
-      name: 'react-compiler',
-      specifier: import.meta.resolve('eslint-plugin-react-compiler'),
-    },
     {
       name: 'stylistic',
       specifier: import.meta.resolve('@stylistic/eslint-plugin'),
@@ -41,7 +39,6 @@ export const reactConfig = defineConfig({
     'react/self-closing-comp': 'error',
     'react/void-dom-elements-no-children': 'error',
     'react-perf/jsx-no-jsx-as-prop': 'error',
-    'react-compiler/react-compiler': 'error',
     'stylistic/jsx-curly-newline': 'off',
     'stylistic/jsx-newline': ['error', { prevent: false }],
 
@@ -78,11 +75,33 @@ export const reactConfig = defineConfig({
     'react/only-export-components': undefined,
     'react/prefer-es6-class': undefined,
     'react/prefer-function-component': undefined,
-    'react/react-compiler': undefined,
     'react/react-in-jsx-scope': undefined,
     'react/require-render-return': undefined,
     'react/state-in-constructor': undefined,
     'react/style-prop-object': undefined,
+    'react/syntax': 'error',
+    'react/todo': 'error',
+    'react/unsupported-syntax': 'error',
+    'react/use-memo': 'error',
+    'react/void-use-memo': 'error',
+
+    'react/capitalized-calls': 'error',
+    'react/error-boundaries': 'error',
+    'react/exhaustive-effect-dependencies': 'error',
+    'react/globals': 'error',
+    'react/hooks': 'error',
+    'react/immutability': 'error',
+    'react/incompatible-library': 'error',
+    'react/invariant': 'error',
+    'react/memo-dependencies': 'error',
+    'react/no-deriving-state-in-effects': 'error',
+    'react/preserve-manual-memoization': 'error',
+    'react/purity': 'error',
+    'react/refs': 'error',
+    'react/rule-suppression': 'error',
+    'react/set-state-in-effect': 'error',
+    'react/set-state-in-render': 'error',
+    'react/static-components': 'error',
 
     'react-perf/jsx-no-new-array-as-prop': undefined,
     'react-perf/jsx-no-new-function-as-prop': undefined,
