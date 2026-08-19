@@ -18,17 +18,24 @@
   "sideEffects": false,
   "types": "./dist/index.d.mts",
   "exports": {
-    ".": "./dist/index.mjs",
-    "./base": "./dist/base.mjs",
-    "./effect": "./dist/effect.mjs",
-    "./typescript": "./dist/typescript.mjs",
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    },
+    "./base": {
+      "types": "./src/base.ts",
+      "default": "./dist/base.mjs"
+    },
+    "./typescript": {
+      "types": "./src/typescript.ts",
+      "default": "./dist/typescript.mjs"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.mjs",
       "./base": "./dist/base.mjs",
-      "./effect": "./dist/effect.mjs",
       "./typescript": "./dist/typescript.mjs",
       "./package.json": "./package.json"
     },

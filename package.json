@@ -26,7 +26,7 @@
     "lint:pkg:fix": "manypkg fix",
     "lint:root": "eslint .",
     "oxlint": "vp lint .",
-    "prepare": "effect-tsgo patch --typescript --oxlint",
+    "prepare": "effect-tsgo patch --typescript",
     "tegami": "node scripts/tegami.mts",
     "test": "turbo test",
     "types": "turbo types"
