@@ -169,6 +169,13 @@
       }
     ]
   },
-  "include": ["packages", "scripts", "./vite.config.ts", "./eslint.config.ts"],
+  "include": [
+    "packages",
+    "scripts",
+    "./vite.config.ts",
+    "./eslint.config.ts",
+    "./oxlint.config.ts",
+    "./oxfmt.config.ts"
+  ],
   "exclude": ["opensrc"]
 }
