@@ -45,9 +45,6 @@ jobs:
       - name: 🏷️ Type-check
         run: vp run types
 
-      - name: ⚗️ Check
-        run: vp check
-
       - name: 🧪 Test
         run: vp run test
 

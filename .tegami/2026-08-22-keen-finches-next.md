@@ -3,4 +3,4 @@ packages:
   'npm:@2digits/eslint-config': patch
 ---
 
-## Update `eslint-plugin-storybook` to 10.5.10
+## Update `@next/eslint-plugin-next` to 16.3.2

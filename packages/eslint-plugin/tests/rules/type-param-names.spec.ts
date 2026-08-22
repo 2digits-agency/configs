@@ -1,10 +1,7 @@
 import parser from '@typescript-eslint/parser';
-import { run, type InvalidTestCase, type ValidTestCase } from 'eslint-vitest-rule-tester';
+import { run, type InvalidTestCase, type ValidTestCase, unindent as typescript } from 'eslint-vitest-rule-tester';
 
 import { RULE_NAME, typeParamNames } from '../../src/rules/type-param-names';
-
-// oxlint-disable-next-line eslint/prefer-destructuring -- Keep String.raw as the readable tagged-template alias.
-const typescript = String.raw;
 
 const valids: Array<ValidTestCase> = [
   typescript`type Foo<T> = T;`,
