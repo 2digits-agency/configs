@@ -105,7 +105,7 @@ export const javascriptConfig = defineConfig({
     'no-promise-executor-return': 'error',
     'no-proto': 'error',
     'no-prototype-builtins': 'error',
-    'no-redeclare': ['error', { builtinGlobals: false }],
+    'no-redeclare': 'off',
     'no-regex-spaces': 'error',
     'no-restricted-exports': undefined,
     'no-restricted-globals': [
@@ -116,7 +116,10 @@ export const javascriptConfig = defineConfig({
     'no-restricted-imports': undefined,
     'no-restricted-properties': [
       'error',
-      { message: 'Use `Object.getPrototypeOf` or `Object.setPrototypeOf` instead.', property: '__proto__' },
+      {
+        message: 'Use `Object.getPrototypeOf` or `Object.setPrototypeOf` instead.',
+        property: '__proto__',
+      },
       { message: 'Use `Object.defineProperty` instead.', property: '__defineGetter__' },
       { message: 'Use `Object.defineProperty` instead.', property: '__defineSetter__' },
       { message: 'Use `Object.getOwnPropertyDescriptor` instead.', property: '__lookupGetter__' },
@@ -181,7 +184,7 @@ export const javascriptConfig = defineConfig({
     'operator-assignment': ['error', 'always'],
     'prefer-arrow-callback': ['error', { allowNamedFunctions: true, allowUnboundThis: true }],
     'prefer-const': ['error', { destructuring: 'all', ignoreReadBeforeAssign: true }],
-    'prefer-destructuring': ['error', { array: true, object: true }, { enforceForRenamedProperties: true }],
+    'prefer-destructuring': 'off',
     'prefer-exponentiation-operator': 'error',
     'prefer-named-capture-group': undefined,
     'prefer-numeric-literals': 'error',

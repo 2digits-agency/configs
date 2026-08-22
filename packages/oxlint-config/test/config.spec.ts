@@ -111,7 +111,7 @@ describe('oxlint config', () => {
     expect(javascriptConfig.rules).toMatchObject(sharedEslintJavascriptRules);
   });
 
-  it('uses every native React Compiler rule', () => {
+  it('uses every native React Compiler rule', ({ expect }) => {
     expect(reactConfig.jsPlugins.map(({ name }) => name)).not.toContain('react-compiler');
 
     for (const rule of reactCompilerRules) {
@@ -139,7 +139,13 @@ describe('oxlint config', () => {
       'typescript/no-unnecessary-type-assertion': 'off',
       'typescript/restrict-plus-operands': [
         'error',
-        { allowAny: false, allowBoolean: false, allowNullish: false, allowNumberAndString: false, allowRegExp: false },
+        {
+          allowAny: false,
+          allowBoolean: false,
+          allowNullish: false,
+          allowNumberAndString: false,
+          allowRegExp: false,
+        },
       ],
     });
     expect(unicornConfig.rules).toMatchObject({
