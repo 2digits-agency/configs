@@ -1,3 +1,28 @@
+## @2digits/oxlint-config@1.0.0
+
+### Remove the opt-in Effect oxlint preset
+
+- Dropped the `@2digits/oxlint-config/effect` entrypoint (`effectConfig` and `effectConfigFor`).
+- Those rules needed an Oxlint binary patched by `effect-tsgo`; that path is no longer supported. Remove the import and drop `--oxlint` from `effect-tsgo patch`.
+
+### Update `oxlint` to 1.79.0
+
+- Enable all 22 category-specific React Compiler rules with Oxlint's native implementation.
+- Projects may now report diagnostics from compiler categories that upstream leaves disabled.
+
+### Turn off `no-redeclare`
+
+
+
+### Turn off `prefer-destructuring`
+
+
+
+### Enable `node/exports-style` and `node/no-mixed-requires`
+
+- `node/exports-style` now errors with `module.exports`.
+- `node/no-mixed-requires` is now an error.
+
 ## @2digits/oxlint-config@0.8.2
 
 ### Enable additional Effect lint rules

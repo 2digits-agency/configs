@@ -1,3 +1,35 @@
+## @2digits/eslint-config@5.6.3
+
+### Update `eslint-plugin-jsdoc` to 64.2.1
+
+
+
+### Update `eslint-plugin-storybook` to 10.5.10
+
+
+
+### Update `eslint-plugin-turbo` to 2.10.11
+
+
+
+### Update `@next/eslint-plugin-next` to 16.3.2
+
+
+
+### Update `eslint` to 10.9.0
+
+
+
+### Turn off `no-redeclare`
+
+
+
+### Update `@tanstack/eslint-plugin-query` to 5.102.2
+
+
+
+### Update `eslint-plugin-jsonc` to 3.4.2
+
 ## @2digits/eslint-config@5.6.2
 
 ### Update `@eslint-react` packages to 5.18.6

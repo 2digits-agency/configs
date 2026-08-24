@@ -1,3 +1,11 @@
+## @2digits/tlo-mcp@0.1.31
+
+### Update `effect` to 4.0.0-rc.111
+
+
+
+### Update `@effect/platform-node` to 4.0.0-rc.111
+
 ## @2digits/tlo-mcp@0.1.30
 
 ### Update `effect` to 4.0.0-rc.110
