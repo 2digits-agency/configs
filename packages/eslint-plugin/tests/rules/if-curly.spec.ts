@@ -1,10 +1,7 @@
 import parser from '@typescript-eslint/parser';
-import { run, type InvalidTestCase, type ValidTestCase } from 'eslint-vitest-rule-tester';
+import { run, type InvalidTestCase, type ValidTestCase, unindent as javascript } from 'eslint-vitest-rule-tester';
 
 import { ifCurly, RULE_NAME } from '../../src/rules/if-curly';
-
-// oxlint-disable-next-line eslint/prefer-destructuring -- Keep String.raw as the readable tagged-template alias.
-const javascript = String.raw;
 
 const valids: Array<ValidTestCase> = [
   javascript`if (foo) {

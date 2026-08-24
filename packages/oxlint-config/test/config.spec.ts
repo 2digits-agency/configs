@@ -13,10 +13,34 @@ import { typescriptRulesConfig } from '../src/configs/typescript';
 import { unicornConfig } from '../src/configs/unicorn';
 import { vitestConfig } from '../src/configs/vitest';
 import { zodConfig } from '../src/configs/zod';
-import { effectConfig } from '../src/effect';
 
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+
+const reactCompilerRules = [
+  'react/capitalized-calls',
+  'react/error-boundaries',
+  'react/exhaustive-effect-dependencies',
+  'react/globals',
+  'react/hooks',
+  'react/immutability',
+  'react/incompatible-library',
+  'react/invariant',
+  'react/memo-dependencies',
+  'react/no-deriving-state-in-effects',
+  'react/preserve-manual-memoization',
+  'react/purity',
+  'react/refs',
+  'react/rule-suppression',
+  'react/set-state-in-effect',
+  'react/set-state-in-render',
+  'react/static-components',
+  'react/syntax',
+  'react/todo',
+  'react/unsupported-syntax',
+  'react/use-memo',
+  'react/void-use-memo',
+] satisfies Array<keyof typeof reactConfig.rules>;
 
 const eslintConfig = await eslintTwoDigits({
   css: false,
@@ -60,9 +84,6 @@ function collectPluginsAndRules(config: TwoDigitsConfig): Array<string> {
 }
 
 const defaultPresetEffectEntries = collectPluginsAndRules(twoDigits).filter((entry) => entry.startsWith('effecttsgo'));
-const effectRules = Object.entries(effectConfig.rules ?? {});
-const foreignEffectRules = effectRules.filter(([rule]) => !rule.startsWith('effecttsgo/')).map(([rule]) => rule);
-const effectWarnings = effectRules.filter(([, severity]) => severity === 'warn').map(([rule]) => rule);
 
 describe('oxlint config', () => {
   it('preserves top-level defaults when extending the config', () => {
@@ -90,6 +111,14 @@ describe('oxlint config', () => {
     expect(javascriptConfig.rules).toMatchObject(sharedEslintJavascriptRules);
   });
 
+  it('uses every native React Compiler rule', ({ expect }) => {
+    expect(reactConfig.jsPlugins.map(({ name }) => name)).not.toContain('react-compiler');
+
+    for (const rule of reactCompilerRules) {
+      expect(reactConfig.rules[rule], rule).toBe('error');
+    }
+  });
+
   it('matches shared non-core ESLint rule behavior', () => {
     expect({
       node: nodeConfig.rules['node/handle-callback-err'],
@@ -110,7 +139,13 @@ describe('oxlint config', () => {
       'typescript/no-unnecessary-type-assertion': 'off',
       'typescript/restrict-plus-operands': [
         'error',
-        { allowAny: false, allowBoolean: false, allowNullish: false, allowNumberAndString: false, allowRegExp: false },
+        {
+          allowAny: false,
+          allowBoolean: false,
+          allowNullish: false,
+          allowNumberAndString: false,
+          allowRegExp: false,
+        },
       ],
     });
     expect(unicornConfig.rules).toMatchObject({
@@ -143,17 +178,6 @@ describe('oxlint config', () => {
 
   it('keeps the Effect rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
-  });
-
-  it('enables the patched effecttsgo plugin in type-aware mode', () => {
-    expect(effectConfig.plugins).toStrictEqual(['effecttsgo']);
-    expect(effectConfig.options).toMatchObject({ typeAware: true });
-    expect(foreignEffectRules).toStrictEqual([]);
-    expect(effectWarnings).toStrictEqual([
-      'effecttsgo/missing-pipeable-signature',
-      'effecttsgo/strict-boolean-expressions',
-      'effecttsgo/strict-effect-provide',
-    ]);
   });
 
   it('loads and executes eslint-plugin-zod', () => {

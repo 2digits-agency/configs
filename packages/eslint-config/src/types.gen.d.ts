@@ -2610,7 +2610,7 @@ Backward pagination arguments
    * Disallow unmodified loop conditions
    * @see https://eslint.org/docs/latest/rules/no-unmodified-loop-condition
    */
-  'no-unmodified-loop-condition'?: Linter.RuleEntry<[]>
+  'no-unmodified-loop-condition'?: Linter.RuleEntry<NoUnmodifiedLoopCondition>
   /**
    * Disallow ternary operators when simpler alternatives exist
    * @see https://eslint.org/docs/latest/rules/no-unneeded-ternary
@@ -12899,6 +12899,10 @@ type NoUnderscoreDangle = []|[{
   enforceInClassFields?: boolean
   allowInArrayDestructuring?: boolean
   allowInObjectDestructuring?: boolean
+}]
+// ----- no-unmodified-loop-condition -----
+type NoUnmodifiedLoopCondition = []|[{
+  checkConditionalExpressions?: boolean
 }]
 // ----- no-unneeded-ternary -----
 type NoUnneededTernary = []|[{

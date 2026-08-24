@@ -112,6 +112,7 @@ export const twoDigits = defineConfig({
   tabWidth: 2,
   useTabs: false,
   ignorePatterns,
+  experimentalOperatorPosition: 'end',
 } satisfies OxfmtConfig);
 
 export function withTwoDigits(...configs: Array<OxfmtConfig>): OxfmtConfig {

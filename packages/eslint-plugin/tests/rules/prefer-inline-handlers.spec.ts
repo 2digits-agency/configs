@@ -1,10 +1,7 @@
 import parser from '@typescript-eslint/parser';
-import { run, type InvalidTestCase, type ValidTestCase } from 'eslint-vitest-rule-tester';
+import { run, type InvalidTestCase, type ValidTestCase, unindent as tsx } from 'eslint-vitest-rule-tester';
 
 import { preferInlineHandlers, RULE_NAME } from '../../src/rules/prefer-inline-handlers';
-
-// oxlint-disable-next-line eslint/prefer-destructuring -- Keep String.raw as the readable tagged-template alias.
-const tsx = String.raw;
 
 const valids: Array<ValidTestCase> = [
   tsx`

@@ -2,13 +2,19 @@ import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
   pack: {
-    entry: ['src/index.ts', 'src/base.ts', 'src/typescript.ts', 'src/effect.ts'],
+    entry: ['src/index.ts', 'src/base.ts', 'src/typescript.ts'],
     dts: {
       tsgo: true,
+      sourcemap: true,
     },
     fixedExtension: true,
-    exports: true,
-    attw: { profile: 'esm-only', level: 'error' },
+    exports: {
+      devExports: 'types',
+    },
+    attw: {
+      profile: 'esm-only',
+      level: 'error',
+    },
     publint: { strict: true },
     shims: true,
   },

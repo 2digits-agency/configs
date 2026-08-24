@@ -15,18 +15,17 @@
     "dev": "turbo run dev docs:dev",
     "docs": "turbo run docs",
     "fix": "pnpm '/(lint|format):fix$/'",
-    "format": "vp fmt . --check",
-    "format:fix": "vp fmt .",
+    "format": "oxfmt . --check",
+    "format:fix": "oxfmt .",
     "knip": "knip",
     "lint": "turbo run lint:root lint:pkg lint:oxlint --continue",
     "lint:fix": "turbo run lint:pkg:fix lint:root --continue -- --fix",
-    "lint:oxlint": "vp lint .",
-    "lint:oxlint:fix": "vp lint . --fix",
+    "lint:oxlint": "oxlint .",
+    "lint:oxlint:fix": "oxlint . --fix",
     "lint:pkg": "manypkg check",
     "lint:pkg:fix": "manypkg fix",
     "lint:root": "eslint .",
-    "oxlint": "vp lint .",
-    "prepare": "effect-tsgo patch --typescript --oxlint",
+    "prepare": "effect-tsgo patch --typescript",
     "tegami": "node scripts/tegami.mts",
     "test": "turbo test",
     "types": "turbo types"
@@ -42,6 +41,9 @@
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "knip": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
     "pkg-pr-new": "catalog:",
     "tegami": "catalog:",
     "turbo": "catalog:",
@@ -52,7 +54,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.22.0",
+      "version": "11.23.0",
       "onFail": "download"
     },
     "runtime": {
@@ -64,5 +66,5 @@
   "engines": {
     "node": "24.19.0"
   },
-  "packageManager": "pnpm@11.22.0"
+  "packageManager": "pnpm@11.23.0"
 }

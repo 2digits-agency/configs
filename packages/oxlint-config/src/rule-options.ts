@@ -15,17 +15,24 @@ interface NoConflictingChecksOptions {
  */
 declare module 'oxlint' {
   interface DummyRuleMap {
-    'react-compiler/react-compiler'?: AllowWarnDeny;
     'stylistic/jsx-curly-newline'?: AllowWarnDeny;
-    'stylistic/jsx-newline'?: RuleWithOptions<{ readonly allowMultilines?: boolean; readonly prevent?: boolean }>;
+    'stylistic/jsx-newline'?: RuleWithOptions<{
+      readonly allowMultilines?: boolean;
+      readonly prevent?: boolean;
+    }>;
     'zod/array-style'?: RuleWithOptions<{ readonly style: 'function' | 'method' }>;
     'zod/consistent-import'?: RuleWithOptions<{ readonly syntax: 'named' | 'namespace' }>;
     'zod/consistent-import-source'?: RuleWithOptions<{ readonly sources: Array<string> }>;
     'zod/consistent-object-schema-type'?: RuleWithOptions<{
       readonly allow: Array<'looseObject' | 'object' | 'strictObject'>;
     }>;
-    'zod/consistent-schema-output-type-style'?: RuleWithOptions<{ readonly style: 'infer' | 'output' }>;
-    'zod/consistent-schema-var-name'?: RuleWithOptions<{ readonly after?: string; readonly before?: string }>;
+    'zod/consistent-schema-output-type-style'?: RuleWithOptions<{
+      readonly style: 'infer' | 'output';
+    }>;
+    'zod/consistent-schema-var-name'?: RuleWithOptions<{
+      readonly after?: string;
+      readonly before?: string;
+    }>;
     'zod/no-any-schema'?: AllowWarnDeny;
     'zod/no-coerce-boolean'?: AllowWarnDeny;
     'zod/no-conflicting-checks'?: RuleWithOptions<NoConflictingChecksOptions>;
@@ -60,6 +67,9 @@ declare module 'oxlint' {
     'zod/prefer-tuple-over-array-length'?: AllowWarnDeny;
     'zod/require-brand-type-parameter'?: AllowWarnDeny;
     'zod/require-error-message'?: AllowWarnDeny;
-    'zod/schema-error-property-style'?: RuleWithOptions<{ readonly example: string; readonly selector: string }>;
+    'zod/schema-error-property-style'?: RuleWithOptions<{
+      readonly example: string;
+      readonly selector: string;
+    }>;
   }
 }
