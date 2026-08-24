@@ -1,3 +1,9 @@
+## @2digits/oxfmt-config@0.3.21
+
+### Update `oxfmt` to 0.64.0
+
+- Set `experimentalOperatorPosition` to `end` now that oxfmt supports the option.
+
 ## @2digits/oxfmt-config@0.3.20
 
 ### Update `oxfmt` to 0.63.0

@@ -1,3 +1,44 @@
+## @2digits/config-monorepo@0.0.7
+
+### Update `tegami` to 1.4.0
+
+
+
+### Update `turbo` to 2.10.11
+
+
+
+### Update `baseline-browser-mapping` to 2.11.17
+
+
+
+### Update `publint` to 0.3.24
+
+
+
+### Stop patching Oxlint with `effect-tsgo`
+
+- The workspace `prepare` script now runs `effect-tsgo patch --typescript` only.
+
+### Run `oxfmt` and `oxlint` from the repo root
+
+- Replaced `vp fmt` / `vp lint` scripts with the `oxfmt` and `oxlint` binaries.
+- Moved formatter and linter options into `oxfmt.config.ts` and `oxlint.config.ts`.
+
+### Stop running `vp check` in CI
+
+- Removed the `vp check` step so CI does not invoke Vite+'s built-in checker. Lint, format, types, and tests already run through `vp run`.
+
+### Update `vite-plus` to 0.3.0
+
+- Pinned `voidzero-dev/setup-vp` to 1.18.0 in GitHub Actions.
+
+### Update `baseline-browser-mapping` to 2.11.18
+
+
+
+### Update `pnpm` to 11.23.0
+
 ## @2digits/config-monorepo@0.0.6
 
 ### Update pnpm to 11.22.0
