@@ -9786,6 +9786,11 @@ Backward pagination arguments
    */
   'zod/prefer-strict-object'?: Linter.RuleEntry<[]>
   /**
+   * Prefer `.length(n)` over `.min(n).max(n)` with the same value on a string schema
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-string-length-over-min-max.md
+   */
+  'zod/prefer-string-length-over-min-max'?: Linter.RuleEntry<[]>
+  /**
    * Enforce `z.string().trim()` to prevent accidental leading/trailing whitespace
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-string-schema-with-trim.md
    */

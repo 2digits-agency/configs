@@ -44,6 +44,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/prefer-meta': 'error',
         'zod/prefer-meta-last': 'error',
         'zod/prefer-strict-object': 'error',
+        'zod/prefer-string-length-over-min-max': 'error',
         'zod/prefer-string-schema-with-trim': 'error',
         'zod/prefer-top-level-string-formats': 'error',
         'zod/prefer-trim-before-string-length-checks': 'error',
