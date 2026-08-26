@@ -1,3 +1,27 @@
+## @2digits/config-monorepo@0.0.8
+
+### Update `@effect/tsgo` to 0.37.0
+
+
+
+### Update `baseline-browser-mapping` to 2.11.19
+
+
+
+### Update pnpm to 11.24.0
+
+
+
+### Prepare Amp orbs for development
+
+- Added lifecycle scripts that install Vite+ and restore frozen workspace dependencies in fresh orbs.
+
+### Update renovate to 44.46.0
+
+
+
+### Update turbo to 2.10.12
+
 ## @2digits/config-monorepo@0.0.7
 
 ### Update `tegami` to 1.4.0

@@ -1,3 +1,31 @@
+## @2digits/eslint-config@5.6.4
+
+### Update `@next/eslint-plugin-next` to 16.3.3
+
+
+
+### Update `@tanstack/eslint-plugin-query` to 5.102.3
+
+
+
+### Update `typescript-eslint` packages to 8.68.0
+
+
+
+### Update `eslint-plugin-zod` to 4.10.0
+
+- Enabled `zod/prefer-string-length-over-min-max` to prefer `.length(n)` over matching `.min(n).max(n)` calls.
+
+### Update `eslint` to 10.9.1
+
+
+
+### Update `@tanstack/eslint-plugin-query` to 5.102.4
+
+
+
+### Update `eslint-plugin-turbo` to 2.10.12
+
 ## @2digits/eslint-config@5.6.3
 
 ### Update `eslint-plugin-jsdoc` to 64.2.1
