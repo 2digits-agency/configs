@@ -38,6 +38,7 @@
     "name": "2digits:gitignore",
     "ignores": [
       "**/.turbo",
+      ".amp/portals/*",
       "**/logs",
       "**/*.log",
       "**/npm-debug.log*",
@@ -1993,6 +1994,7 @@
       "zod/prefer-meta",
       "zod/prefer-meta-last",
       "zod/prefer-strict-object",
+      "zod/prefer-string-length-over-min-max",
       "zod/prefer-string-schema-with-trim",
       "zod/prefer-top-level-string-formats",
       "zod/prefer-trim-before-string-length-checks",
