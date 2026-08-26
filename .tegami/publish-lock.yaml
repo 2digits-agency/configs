@@ -1,166 +1,128 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `tegami` to 1.4.0\n"
-    filename: 2026-08-19-amber-storks-tegami.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `@effect/tsgo` to 0.37.0\n"
+    filename: 2026-08-25-dapper-otters-tsgo.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `turbo` to 2.10.11\n"
-    filename: 2026-08-19-eager-terns-turbo.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `baseline-browser-mapping` to 2.11.19\n"
+    filename: 2026-08-25-tidy-beavers-baseline.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `baseline-browser-mapping` to 2.11.17\n"
-    filename: 2026-08-19-gentle-perch-baseline.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 11.24.0\n"
+    filename: 2026-08-25-vivid-owls-pnpm.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `publint` to 0.3.24\n"
-    filename: 2026-08-19-humble-pines-publint.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Prepare Amp orbs for development\n\n- Added lifecycle scripts that install Vite+ and restore frozen workspace dependencies in fresh orbs.\n"
+    filename: 2026-08-25-warm-martens-orbs.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Stop patching Oxlint with `effect-tsgo`\n\n- The workspace `prepare` script now runs `effect-tsgo patch --typescript` only.\n"
-    filename: 2026-08-19-plain-cedars-tsgo.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update renovate to 44.46.0\n"
+    filename: 2026-08-26-gentle-lynxes-renovate.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Run `oxfmt` and `oxlint` from the repo root\n\n- Replaced `vp fmt` / `vp lint` scripts with the `oxfmt` and `oxlint` binaries.\n- Moved formatter and linter options into `oxfmt.config.ts` and `oxlint.config.ts`.\n"
-    filename: 2026-08-22-vivid-owls-binaries.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update turbo to 2.10.12\n"
+    filename: 2026-08-26-swift-ravens-turbo.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Stop running `vp check` in CI\n\n- Removed the `vp check` step so CI does not invoke Vite+'s built-in checker. Lint, format, types, and tests already run through `vp run`.\n"
-    filename: 2026-08-22-wavy-puffins-check.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `effect` to 4.0.0-rc.112\n"
+    filename: 2026-08-25-brave-kestrels-effect.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `vite-plus` to 0.3.0\n\n- Pinned `voidzero-dev/setup-vp` to 1.18.0 in GitHub Actions.\n"
-    filename: 2026-08-24-dapper-ibises-vite.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `@effect/platform-node` to 4.0.0-rc.112\n"
+    filename: 2026-08-25-calm-lynxes-platform.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `baseline-browser-mapping` to 2.11.18\n"
-    filename: 2026-08-24-eager-jays-baseline.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@next/eslint-plugin-next` to 16.3.3\n"
+    filename: 2026-08-25-eager-pandas-next.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `pnpm` to 11.23.0\n"
-    filename: 2026-08-24-faint-kites-pnpm.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@tanstack/eslint-plugin-query` to 5.102.3\n"
+    filename: 2026-08-25-gentle-wolves-query.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `effect` to 4.0.0-rc.111\n"
-    filename: 2026-08-22-calm-otters-effect-core.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update `typescript-eslint` packages to 8.68.0\n"
+    filename: 2026-08-25-lively-geese-typescript-eslint.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `@effect/platform-node` to 4.0.0-rc.111\n"
-    filename: 2026-08-22-crisp-badgers-platform.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-zod` to 4.10.0\n\n- Enabled `zod/prefer-string-length-over-min-max` to prefer `.length(n)` over matching `.min(n).max(n)` calls.\n"
+    filename: 2026-08-25-merry-foxes-zod.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-jsdoc` to 64.2.1\n"
-    filename: 2026-08-19-brisk-wrens-jsdoc.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update `eslint` to 10.9.1\n"
+    filename: 2026-08-25-nimble-badgers-eslint.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-storybook` to 10.5.10\n"
-    filename: 2026-08-19-humble-quails-storybook.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@tanstack/eslint-plugin-query` to 5.102.4\n"
+    filename: 2026-08-26-brisk-otters-query.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-turbo` to 2.10.11\n"
-    filename: 2026-08-19-rapid-moths-turbo-plugin.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-turbo` to 2.10.12\n"
+    filename: 2026-08-26-copper-ibises-eslint-turbo.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@next/eslint-plugin-next` to 16.3.2\n"
-    filename: 2026-08-22-keen-finches-next.md
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `@opencode-ai/plugin` to 1.18.23\n"
+    filename: 2026-08-25-fuzzy-ravens-opencode.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint` to 10.9.0\n"
-    filename: 2026-08-22-proud-ibises-eslint.md
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `posthog-node` to 5.51.2\n"
+    filename: 2026-08-25-silver-storks-posthog.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Turn off `no-redeclare`\n"
-    filename: 2026-08-22-rusty-kites-redeclare.md
+  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update `oxfmt` to 0.65.0\n"
+    filename: 2026-08-25-quiet-herons-oxfmt.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@tanstack/eslint-plugin-query` to 5.102.2\n"
-    filename: 2026-08-24-amber-foxes-query.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-jsonc` to 3.4.2\n"
-    filename: 2026-08-24-brisk-geese-jsonc.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `@opencode-ai/plugin` to 1.18.21\n"
-    filename: 2026-08-22-nimble-herons-plugin.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `posthog-node` to 5.50.0\n"
-    filename: 2026-08-22-quick-jays-posthog.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: major\n---\n\n## Remove the opt-in Effect oxlint preset\n\n- Dropped the `@2digits/oxlint-config/effect` entrypoint (`effectConfig` and `effectConfigFor`).\n- Those rules needed an Oxlint binary patched by `effect-tsgo`; that path is no longer supported. Remove the import and drop `--oxlint` from `effect-tsgo patch`.\n"
-    filename: 2026-08-19-silent-foxes-effect.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `oxlint` to 1.79.0\n\n- Enable all 22 category-specific React Compiler rules with Oxlint's native implementation.\n- Projects may now report diagnostics from compiler categories that upstream leaves disabled.\n"
-    filename: 2026-08-19-solid-hawks-oxlint.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Turn off `prefer-destructuring`\n"
-    filename: 2026-08-22-sandy-larks-destructure.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Enable `node/exports-style` and `node/no-mixed-requires`\n\n- `node/exports-style` now errors with `module.exports`.\n- `node/no-mixed-requires` is now an error.\n"
-    filename: 2026-08-22-tidy-newts-node.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update `oxfmt` to 0.64.0\n\n- Set `experimentalOperatorPosition` to `end` now that oxfmt supports the option.\n"
-    filename: 2026-08-19-quiet-elks-oxfmt.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update `renovate` to 44.39.2\n"
-    filename: 2026-08-19-warm-shrews-renovate.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update `renovate` to 44.39.3\n"
-    filename: 2026-08-24-crisp-hawks-renovate.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `oxlint` to 1.80.0\n"
+    filename: 2026-08-25-rapid-ibises-oxlint.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-08-19-amber-storks-tegami.md
-      - 2026-08-19-eager-terns-turbo.md
-      - 2026-08-19-gentle-perch-baseline.md
-      - 2026-08-19-humble-pines-publint.md
-      - 2026-08-19-plain-cedars-tsgo.md
-      - 2026-08-22-vivid-owls-binaries.md
-      - 2026-08-22-wavy-puffins-check.md
-      - 2026-08-24-dapper-ibises-vite.md
-      - 2026-08-24-eager-jays-baseline.md
-      - 2026-08-24-faint-kites-pnpm.md
+      - 2026-08-25-dapper-otters-tsgo.md
+      - 2026-08-25-tidy-beavers-baseline.md
+      - 2026-08-25-vivid-owls-pnpm.md
+      - 2026-08-25-warm-martens-orbs.md
+      - 2026-08-26-gentle-lynxes-renovate.md
+      - 2026-08-26-swift-ravens-turbo.md
     id: npm:@2digits/config-monorepo
+    updated: true
+  - changelogIds:
+      - 2026-08-25-brave-kestrels-effect.md
+      - 2026-08-25-calm-lynxes-platform.md
+    id: npm:@2digits/cli
     updated: true
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-08-22-calm-otters-effect-core.md
-      - 2026-08-22-crisp-badgers-platform.md
-    id: npm:@2digits/cli
-    updated: true
-  - changelogIds:
-      - 2026-08-19-brisk-wrens-jsdoc.md
-      - 2026-08-19-humble-quails-storybook.md
-      - 2026-08-19-rapid-moths-turbo-plugin.md
-      - 2026-08-22-keen-finches-next.md
-      - 2026-08-22-proud-ibises-eslint.md
-      - 2026-08-22-rusty-kites-redeclare.md
-      - 2026-08-24-amber-foxes-query.md
-      - 2026-08-24-brisk-geese-jsonc.md
+      - 2026-08-25-eager-pandas-next.md
+      - 2026-08-25-gentle-wolves-query.md
+      - 2026-08-25-lively-geese-typescript-eslint.md
+      - 2026-08-25-merry-foxes-zod.md
+      - 2026-08-25-nimble-badgers-eslint.md
+      - 2026-08-26-brisk-otters-query.md
+      - 2026-08-26-copper-ibises-eslint-turbo.md
     id: npm:@2digits/eslint-config
     updated: true
   - changelogIds:
-      - 2026-08-22-nimble-herons-plugin.md
-      - 2026-08-22-quick-jays-posthog.md
+      - 2026-08-25-lively-geese-typescript-eslint.md
+      - 2026-08-25-nimble-badgers-eslint.md
+    id: npm:@2digits/eslint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-08-25-fuzzy-ravens-opencode.md
+      - 2026-08-25-silver-storks-posthog.md
     id: npm:@2digits/opencode-plugin
     updated: true
   - changelogIds:
-      - 2026-08-19-silent-foxes-effect.md
-      - 2026-08-19-solid-hawks-oxlint.md
-      - 2026-08-22-rusty-kites-redeclare.md
-      - 2026-08-22-sandy-larks-destructure.md
-      - 2026-08-22-tidy-newts-node.md
-    id: npm:@2digits/oxlint-config
-    updated: true
-  - changelogIds:
-      - 2026-08-19-quiet-elks-oxfmt.md
+      - 2026-08-25-quiet-herons-oxfmt.md
     id: npm:@2digits/oxfmt-config
     updated: true
   - changelogIds:
-      - 2026-08-19-warm-shrews-renovate.md
-      - 2026-08-24-crisp-hawks-renovate.md
-    id: npm:@2digits/renovate-config
+      - 2026-08-25-merry-foxes-zod.md
+      - 2026-08-25-rapid-ibises-oxlint.md
+    id: npm:@2digits/oxlint-config
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
+  - id: npm:@2digits/renovate-config
+    updated: false
   - changelogIds:
-      - 2026-08-22-calm-otters-effect-core.md
-      - 2026-08-22-crisp-badgers-platform.md
+      - 2026-08-25-brave-kestrels-effect.md
+      - 2026-08-25-calm-lynxes-platform.md
     id: npm:@2digits/tlo-mcp
     updated: true
   - id: npm:@2digits/tsconfig
     updated: false
-  - id: npm:@2digits/eslint-plugin
-    updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
-  - id: npm:@2digits/constants
   - id: npm:@2digits/cli
+  - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-config
+  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
-  - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxfmt-config
-  - id: npm:@2digits/renovate-config
+  - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/prettier-config
+  - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig
-  - id: npm:@2digits/eslint-plugin

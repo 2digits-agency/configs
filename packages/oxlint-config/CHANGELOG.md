@@ -1,3 +1,11 @@
+## @2digits/oxlint-config@1.0.1
+
+### Update `eslint-plugin-zod` to 4.10.0
+
+- Enabled `zod/prefer-string-length-over-min-max` to prefer `.length(n)` over matching `.min(n).max(n)` calls.
+
+### Update `oxlint` to 1.80.0
+
 ## @2digits/oxlint-config@1.0.0
 
 ### Remove the opt-in Effect oxlint preset
