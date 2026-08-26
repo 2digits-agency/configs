@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+export VP_HOME="${VP_HOME:-$HOME/.vite-plus}"
+
+if [[ ! -x "$VP_HOME/bin/vp" || ! -f "$VP_HOME/env" ]]; then
+  started_at=$SECONDS
+  printf 'Installing Vite+...\n'
+  curl -fsSL https://vite.plus | VP_HOME="$VP_HOME" VP_NODE_MANAGER=yes bash
+  printf 'Installed Vite+ in %ss.\n' "$((SECONDS - started_at))"
+fi
+
+# shellcheck disable=SC1091
+source "$VP_HOME/env"
+
+started_at=$SECONDS
+printf 'Installing workspace dependencies...\n'
+vp install --frozen-lockfile
+printf 'Installed workspace dependencies in %ss.\n' "$((SECONDS - started_at))"
