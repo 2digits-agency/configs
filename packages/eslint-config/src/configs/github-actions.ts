@@ -24,6 +24,7 @@ export function githubActions(): Array<TypedFlatConfigItem> {
       },
       rules: {
         ...recommendedRules,
+        'github-action/no-top-level-permissions': ['error', { allowEmpty: true }],
       },
     },
   ];
