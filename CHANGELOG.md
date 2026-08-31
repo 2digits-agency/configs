@@ -1,3 +1,23 @@
+## @2digits/config-monorepo@0.0.9
+
+### Update Node.js to 24.20.0
+
+
+
+### Update `@effect/tsgo` to 0.38.0
+
+
+
+### Update `knip` to 6.32.3
+
+
+
+### Update `baseline-browser-mapping` to 2.11.20
+
+
+
+### Update `knip` to 6.33.0
+
 ## @2digits/config-monorepo@0.0.8
 
 ### Update `@effect/tsgo` to 0.37.0

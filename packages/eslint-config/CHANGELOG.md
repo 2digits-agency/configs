@@ -1,3 +1,37 @@
+## @2digits/eslint-config@5.6.5
+
+### Update Node.js to 24.20.0
+
+
+
+### Update `@tanstack/eslint-plugin-query` to 5.102.8
+
+
+
+### Update `eslint-config-flat-gitignore` to 2.4.0
+
+
+
+### Update `eslint-plugin-jsdoc` to 64.3.2
+
+
+
+### Update `eslint-plugin-unicorn` to 74.0.0
+
+
+
+### Update `eslint-plugin-zod` to 4.12.0
+
+
+
+### Update `eslint-plugin-github-action` to 0.4.0
+
+- Added enforcement of job-scoped GitHub Actions permissions.
+
+### Enforce exact map and set schema sizes
+
+- Added the `zod/prefer-map-set-size-over-min-max` rule.
+
 ## @2digits/eslint-config@5.6.4
 
 ### Update `@next/eslint-plugin-next` to 16.3.3
