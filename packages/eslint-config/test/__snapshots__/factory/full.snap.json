@@ -1280,6 +1280,7 @@
     },
     "rules": [
       "github-action/no-invalid-key",
+      "github-action/no-top-level-permissions",
       "github-action/prefer-file-extension",
       "github-action/require-action-name",
       "github-action/valid-timeout-minutes",
@@ -1991,6 +1992,7 @@
       "zod/no-unnecessary-readonly",
       "zod/prefer-enum-over-literal-union",
       "zod/prefer-loose-object",
+      "zod/prefer-map-set-size-over-min-max",
       "zod/prefer-meta",
       "zod/prefer-meta-last",
       "zod/prefer-strict-object",

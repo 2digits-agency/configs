@@ -41,6 +41,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/no-unnecessary-readonly': 'error',
         'zod/prefer-enum-over-literal-union': 'error',
         'zod/prefer-loose-object': 'error',
+        'zod/prefer-map-set-size-over-min-max': 'error',
         'zod/prefer-meta': 'error',
         'zod/prefer-meta-last': 'error',
         'zod/prefer-strict-object': 'error',
