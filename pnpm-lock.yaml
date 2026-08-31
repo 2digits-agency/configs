@@ -486,8 +486,8 @@ catalogs:
       specifier: 2.1.0
       version: 2.1.0
     zod:
-      specifier: 4.4.3
-      version: 4.4.3
+      specifier: 4.5.4
+      version: 4.5.4
 
 overrides:
   array-includes: npm:@nolyfill/array-includes@1.0.44
@@ -771,7 +771,7 @@ importers:
         version: 3.8.1(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-zod:
         specifier: 'catalog:'
-        version: 4.10.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.3.0(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3)
+        version: 4.10.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.3.0(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.5.4)
       globals:
         specifier: 'catalog:'
         version: 17.11.0
@@ -847,7 +847,7 @@ importers:
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-preview@4.1.11)(@voidzero-dev/vite-plus-core@0.3.0(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0))
       zod:
         specifier: 'catalog:'
-        version: 4.4.3
+        version: 4.5.4
 
   packages/eslint-plugin:
     dependencies:
@@ -979,7 +979,7 @@ importers:
         version: 6.1.7
       eslint-plugin-zod:
         specifier: 'catalog:'
-        version: 4.10.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.3.0(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3)
+        version: 4.10.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.3.0(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.5.4)
     devDependencies:
       '@2digits/eslint-config':
         specifier: workspace:*
@@ -1013,7 +1013,7 @@ importers:
         version: 0.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.3.0(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0)
       zod:
         specifier: 'catalog:'
-        version: 4.4.3
+        version: 4.5.4
 
   packages/prettier-config:
     dependencies:
@@ -7571,6 +7571,9 @@ packages:
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
+  zod@4.5.4:
+    resolution: {integrity: sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -8350,7 +8353,7 @@ snapshots:
       eslint: 10.9.1(jiti@2.7.0)(supports-color@7.2.0)
       ts-pattern: 5.9.0
       typescript: 6.0.3
-      zod: 4.4.3
+      zod: 4.5.4
     transitivePeerDependencies:
       - supports-color
 
@@ -11380,14 +11383,14 @@ snapshots:
       natural-compare: 1.4.0
       yaml-eslint-parser: 2.1.0
 
-  eslint-plugin-zod@4.10.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.3.0(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.4.3):
+  eslint-plugin-zod@4.10.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.80.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.3.0(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)(zod@4.5.4):
     dependencies:
       '@eslint-zod/utils': 3.1.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@typescript-eslint/utils': 8.67.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
     optionalDependencies:
       eslint: 10.9.1(jiti@2.7.0)(supports-color@7.2.0)
       oxlint: 1.80.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@voidzero-dev/vite-plus-core@0.3.0(@arethetypeswrong/core@0.18.5)(@types/node@24.13.3)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.12)(typescript@6.0.3)(yaml@2.9.0))
-      zod: 4.4.3
+      zod: 4.5.4
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -14439,5 +14442,7 @@ snapshots:
   zod@4.1.8: {}
 
   zod@4.4.3: {}
+
+  zod@4.5.4: {}
 
   zwitch@2.0.4: {}
