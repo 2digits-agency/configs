@@ -342,8 +342,8 @@ catalogs:
       specifier: 0.2.3
       version: 0.2.3
     eslint-plugin-github-action:
-      specifier: 0.3.0
-      version: 0.3.0
+      specifier: 0.4.0
+      version: 0.4.0
     eslint-plugin-jsdoc:
       specifier: 64.2.1
       version: 64.2.1
@@ -729,7 +729,7 @@ importers:
         version: 0.2.3(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-github-action:
         specifier: 'catalog:'
-        version: 0.3.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
+        version: 0.4.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-jsdoc:
         specifier: 'catalog:'
         version: 64.2.1(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)
@@ -2099,9 +2099,9 @@ packages:
     resolution: {integrity: sha512-7OsC1gNORBEawOa5+j2pXN9vsicaIOH5cPXxoR6fJOmH6/EXpJB2CajXOu1fPRFun2m1lktEFX11+P89hqO/og==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@ntnyq/utils@0.15.0':
-    resolution: {integrity: sha512-/V+wlKysA73OD5R+KlA+C1GhzZst7HiRUCAm1l7ebNiG/rGZ0ysYHEO/qcidKvAQoJ5H/KgahKDfzcAGccQHCA==}
-    engines: {node: ^22.13.0 || >=24}
+  '@ntnyq/utils@0.22.0':
+    resolution: {integrity: sha512-HI88N7b2ET1B6B73JpjR0qovRnGq1HEfZaVx2IKPeTjAuBFg5KmXHY8B95Xa8ZnHep7oMI0x5gFn2mkC6/8dVw==}
+    engines: {node: ^22.19.0 || >=24.11.0}
 
   '@one-ini/wasm@0.2.1':
     resolution: {integrity: sha512-TUqERXGNTifZ9y2g3wPxQrw3HpHv/02DsW3D90T9x0hhonrL1ZqpSmNrU2XkoIq0fP1N6gZfVQzy2Fw1ZvGBNg==}
@@ -4845,8 +4845,8 @@ packages:
     peerDependencies:
       eslint: '>=8'
 
-  eslint-plugin-github-action@0.3.0:
-    resolution: {integrity: sha512-o61vth6qynHGFUu1xa2wxcSn9nxHT4HUBzv6BOze5m5mHuwJmq6C2kgMru4tW7FqVtCB2UvyciXRq2YfBaYGUA==}
+  eslint-plugin-github-action@0.4.0:
+    resolution: {integrity: sha512-VQQYQuLrjZI1QW3IydLUearNcZh6fMvo4Sr9EsW8lv2ljUG38XjKMwgyVsZrMxy1MxZOSBK+JyDufmFYDF9qLg==}
     engines: {node: ^22.13.0 || >=24}
     peerDependencies:
       eslint: ^9.5.0 || ^10.0.0
@@ -7283,8 +7283,8 @@ packages:
     resolution: {integrity: sha512-b7zoBQvpWp0vuN5q2vK2RRBR2SvuruQAs50DApdDveBSn3eSYd84IaHodFqQIMlvY9K2VnyBUEXgwOBuGU9GBg==}
     engines: {node: '>=14'}
 
-  uncase@0.2.0:
-    resolution: {integrity: sha512-Y87FEnnNw6TNUMVx0kpatPwg1E4ya4rzRWUgb75PKCfUWk7nf14/fai5ASXa1g0sP6+RGylTXMLfnsYleeWKqA==}
+  uncase@0.3.0:
+    resolution: {integrity: sha512-8CUer3k7QgMltjQidnNKSLAwGiZdtN4y5k+jEPk7kvLsUTG2SLfcVBoK7L2WD2rDFaGQIkWdaISuYHINMbLMqA==}
 
   underscore@1.13.8:
     resolution: {integrity: sha512-DXtD3ZtEQzc7M8m4cXotyHR+FAS18C64asBYY5vqZexfYryNNnDc02W4hKg3rdQuqOYas1jkseX0+nZXjTXnvQ==}
@@ -8844,7 +8844,7 @@ snapshots:
     dependencies:
       semver: 7.8.5
 
-  '@ntnyq/utils@0.15.0': {}
+  '@ntnyq/utils@0.22.0': {}
 
   '@one-ini/wasm@0.2.1': {}
 
@@ -11106,13 +11106,11 @@ snapshots:
       eslint: 10.9.1(jiti@2.7.0)(supports-color@7.2.0)
       eslint-compat-utils: 0.5.1(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
 
-  eslint-plugin-github-action@0.3.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0)):
+  eslint-plugin-github-action@0.4.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0)):
     dependencies:
-      '@eslint/core': 1.2.1
-      '@ntnyq/utils': 0.15.0
-      '@types/json-schema': 7.0.15
+      '@ntnyq/utils': 0.22.0
       eslint: 10.9.1(jiti@2.7.0)(supports-color@7.2.0)
-      uncase: 0.2.0
+      uncase: 0.3.0
       yaml-eslint-parser: 2.1.0
 
   eslint-plugin-jsdoc@64.2.1(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0):
@@ -14021,7 +14019,7 @@ snapshots:
 
   unbash@4.0.10: {}
 
-  uncase@0.2.0:
+  uncase@0.3.0:
     dependencies:
       change-case: 5.4.4
 
