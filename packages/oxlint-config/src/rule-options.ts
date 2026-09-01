@@ -1,6 +1,9 @@
 import type { AllowWarnDeny } from 'oxlint';
 
+import type { RuleName as TwoDigitsRuleName } from '@2digits/oxlint-plugin';
+
 type RuleWithOptions<T> = AllowWarnDeny | [AllowWarnDeny, T];
+type TwoDigitsRuleMap = Partial<Record<`2digits/${TwoDigitsRuleName}`, AllowWarnDeny>>;
 
 interface NoConflictingChecksOptions {
   readonly checkConfusingCases?: boolean;
@@ -14,7 +17,7 @@ interface NoConflictingChecksOptions {
  * Keep these declarations synchronized with the configured plugin versions.
  */
 declare module 'oxlint' {
-  interface DummyRuleMap {
+  interface DummyRuleMap extends TwoDigitsRuleMap {
     'stylistic/jsx-curly-newline'?: AllowWarnDeny;
     'stylistic/jsx-newline'?: RuleWithOptions<{
       readonly allowMultilines?: boolean;

@@ -492,11 +492,11 @@ export default twoDigits({
           const configPath = path.join(tempDir, 'eslint.config.ts');
 
           yield* fs.writeFileString(configPath, 'test');
-          yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(configPath, 0o444)));
+          yield* fs.chmod(configPath, 0o444);
 
           const result = yield* Effect.result(fs.writeFileString(configPath, 'new content'));
 
-          yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(configPath, 0o644)));
+          yield* fs.chmod(configPath, 0o644);
 
           expect(result._tag).toBe('Failure');
         }),
