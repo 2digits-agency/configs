@@ -402,8 +402,8 @@ catalogs:
       specifier: 3.3.0
       version: 3.3.0
     knip:
-      specifier: 6.33.0
-      version: 6.33.0
+      specifier: 6.34.0
+      version: 6.34.0
     local-pkg:
       specifier: 1.2.1
       version: 1.2.1
@@ -551,7 +551,7 @@ importers:
         version: 10.9.1(jiti@2.7.0)(supports-color@7.2.0)
       knip:
         specifier: 'catalog:'
-        version: 6.33.0
+        version: 6.34.0
       node:
         specifier: runtime:24.20.0
         version: runtime:24.20.0
@@ -5742,8 +5742,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@6.33.0:
-    resolution: {integrity: sha512-gMXWV2bqgJcdZKsaRgl1oH5V2J0VumhJ2ujfP4M6b9ftpca2BNpvlX3Dq++vVtEey7sU67EXCvZGNkQfG2w1RQ==}
+  knip@6.34.0:
+    resolution: {integrity: sha512-bbHIrnGspYwe4EBPjjx+lvkUor0F2qfKQc5BPzPI4SOAImYA+k2ueVpIcF7d/W1LEVT7XoJUPt6zELeGZhXBgA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -9807,7 +9807,7 @@ snapshots:
       fs-extra: 11.4.0
       toml-eslint-parser: 1.0.3
       upath: 3.0.8
-      zod: 4.4.3
+      zod: 4.5.4
 
   '@renovatebot/good-enough-parser@2.0.1':
     dependencies:
@@ -12340,7 +12340,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.33.0:
+  knip@6.34.0:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.7)
       formatly: 0.7.0
@@ -12354,7 +12354,7 @@ snapshots:
       tinyglobby: 0.2.17
       unbash: 4.0.10
       yaml: 2.9.0
-      zod: 4.4.3
+      zod: 4.5.4
 
   kubernetes-types@1.30.0: {}
 
