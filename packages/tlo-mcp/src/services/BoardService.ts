@@ -1,10 +1,10 @@
-import * as Array from 'effect/Array';
+import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Match from 'effect/Match';
 import * as Schema from 'effect/Schema';
-import * as String from 'effect/String';
+import * as Str from 'effect/String';
 
 import {
   GetBoardTodosResponse,
@@ -85,7 +85,7 @@ export const BoardServiceLive = Layer.effect(
         const response = yield* client.post(
           '/ajax/pln/GetProjects',
           {
-            STATE: Array.join(states, '|'),
+            STATE: Arr.join(states, '|'),
             COLUMNS:
               'ID|PROJECT_NAME|NAME|STATE|OWNER_NAME|START_DT|END_DT|BILLING_BUDGET|BILLING_MODE|BILLING_REMAINING|CLIENT_NAME|CLIENT_ID|FOLDERID|FOLDER_NAME|EXTID|CALC_TOTAL|CALC_DONE|CALC_PLANNED',
             limit: params.limit ?? 100,
@@ -94,7 +94,7 @@ export const BoardServiceLive = Layer.effect(
           GetProjectsResponse,
         );
 
-        return Array.map(projectFromRaw)(response.Records);
+        return Arr.map(projectFromRaw)(response.Records);
       }),
 
       getProjectDetails: Effect.fn('BoardService.getProjectDetails')(function* (params: GetProjectDetailsParams) {
@@ -126,7 +126,7 @@ export const BoardServiceLive = Layer.effect(
           GetMessagesResponse,
         );
 
-        return Array.map(messageFromRaw)(messages);
+        return Arr.map(messageFromRaw)(messages);
       }),
 
       getTasks: Effect.fn('BoardService.getTasks')(function* (params: GetTasksParams) {
@@ -136,7 +136,7 @@ export const BoardServiceLive = Layer.effect(
           '/ajax/pln/GetTasks',
           {
             PROJECTID: params.projectId,
-            STATE: Array.join(states, '|'),
+            STATE: Arr.join(states, '|'),
             COLUMNS: 'ID|PROJECTID|NAME|STATE|OWNER_NAME|START_DT|END_DT|BUDGET',
             limit: params.limit ?? 100,
             page: params.page ?? 1,
@@ -144,7 +144,7 @@ export const BoardServiceLive = Layer.effect(
           GetTasksResponse,
         );
 
-        return Array.map(taskFromRaw)(response.Records);
+        return Arr.map(taskFromRaw)(response.Records);
       }),
 
       getTasksForUser: Effect.fn('BoardService.getTasksForUser')(function* (params: GetTasksForUserParams) {
@@ -158,7 +158,7 @@ export const BoardServiceLive = Layer.effect(
           GetTasksForUserResponse,
         );
 
-        return Array.map(taskForUserFromRaw)(response.Records);
+        return Arr.map(taskForUserFromRaw)(response.Records);
       }),
 
       getTodoDetail: Effect.fn('BoardService.getTodoDetail')(function* (params: GetTodoDetailParams) {
@@ -175,15 +175,15 @@ export const BoardServiceLive = Layer.effect(
           },
           GetBoardTodosResponse,
         );
-        const todos = Array.map(todoSummaryFromRaw)(response.Records);
+        const todos = Arr.map(todoSummaryFromRaw)(response.Records);
 
         return Match.value(params.query).pipe(
           Match.when(Match.nonEmptyString, (query) => {
-            const normalizedQuery = String.toLowerCase(query);
+            const normalizedQuery = Str.toLowerCase(query);
 
             // oxlint-disable-next-line unicorn/no-array-method-this-argument -- Effect Array.filter is data-first.
-            return Array.filter(todos, (todo) =>
-              todo.name === undefined ? false : String.includes(normalizedQuery)(String.toLowerCase(todo.name)),
+            return Arr.filter(todos, (todo) =>
+              todo.name === undefined ? false : Str.includes(normalizedQuery)(Str.toLowerCase(todo.name)),
             );
           }),
           Match.orElse(() => todos),

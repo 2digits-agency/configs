@@ -1,15 +1,15 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as Array from 'effect/Array';
+import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Match from 'effect/Match';
-import * as Option from 'effect/Option';
+import * as Opt from 'effect/Option';
 import * as Path from 'effect/Path';
-import * as Predicate from 'effect/Predicate';
-import * as Record from 'effect/Record';
+import * as P from 'effect/Predicate';
+import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 import * as Struct from 'effect/Struct';
 
@@ -36,7 +36,7 @@ type TaskCategory = 'build' | 'test' | 'lint' | 'typecheck' | 'dev' | 'other';
 function categorizeTask(taskName: string): TaskCategory {
   const lower = taskName.toLowerCase();
 
-  if (Array.contains(['build', 'compile', 'bundle'], lower)) {
+  if (Arr.contains(['build', 'compile', 'bundle'], lower)) {
     return 'build';
   }
 
@@ -48,11 +48,11 @@ function categorizeTask(taskName: string): TaskCategory {
     return 'lint';
   }
 
-  if (Array.contains(['typecheck', 'types', 'tsc'], lower)) {
+  if (Arr.contains(['typecheck', 'types', 'tsc'], lower)) {
     return 'typecheck';
   }
 
-  if (Array.contains(['dev', 'start', 'serve'], lower)) {
+  if (Arr.contains(['dev', 'start', 'serve'], lower)) {
     return 'dev';
   }
 
@@ -84,7 +84,7 @@ function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): Tu
   const tasks = { ...existingConfig.tasks };
 
   for (const taskName of detectedTasks) {
-    if (Predicate.isTruthy(tasks[taskName])) {
+    if (P.isTruthy(tasks[taskName])) {
       continue;
     }
 
@@ -128,7 +128,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
           { concurrency: 'unbounded' },
         );
 
-        return new Set(Array.flatten(tasksPerWorkspace));
+        return new Set(Arr.flatten(tasksPerWorkspace));
       });
 
       /**
@@ -141,7 +141,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
         const exists = yield* fs.exists(turboPath).pipe(Effect.orElseSucceed(() => false));
 
         if (!exists) {
-          return Option.none();
+          return Opt.none();
         }
 
         const content = yield* fs.readFileString(turboPath).pipe(
@@ -164,7 +164,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
           ),
         );
 
-        return Option.some(config);
+        return Opt.some(config);
       });
 
       /**
@@ -210,7 +210,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
             'Some',
             Effect.fn('TurborepoSetupService.mergeExistingTurboConfig')(function* ({
               value: existingConfig,
-            }: Option.Some<TurboConfig>) {
+            }: Opt.Some<TurboConfig>) {
               yield* writeTurboConfig(mergeTasks(existingConfig, detectedTasks));
               yield* Effect.logInfo(`📦 Merged ${detectedTasks.size} detected task(s) into turbo.json`);
             }),
@@ -271,10 +271,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
         const root = yield* pm.resolveRoot();
         const packageJson = yield* pm.readPackageJson({ id: root });
 
-        if (
-          Record.has(packageJson.dependencies ?? {}, 'turbo') ||
-          Record.has(packageJson.devDependencies ?? {}, 'turbo')
-        ) {
+        if (R.has(packageJson.dependencies ?? {}, 'turbo') || R.has(packageJson.devDependencies ?? {}, 'turbo')) {
           yield* Effect.logInfo('✅ Turbo already installed');
         } else {
           yield* Effect.logInfo('Installing turbo...');
@@ -320,7 +317,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
         }
 
         yield* Effect.logInfo(
-          `Found ${detectedTasks.size} unique task(s): ${Array.join(Array.fromIterable(detectedTasks), ', ')}`,
+          `Found ${detectedTasks.size} unique task(s): ${Arr.join(Arr.fromIterable(detectedTasks), ', ')}`,
         );
 
         // Merge tasks into turbo.json

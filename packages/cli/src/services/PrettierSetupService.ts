@@ -1,7 +1,7 @@
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
-import * as Predicate from 'effect/Predicate';
+import * as P from 'effect/Predicate';
 
 import { PackageManagerService, type PackageJson } from './PackageManagerService';
 
@@ -18,7 +18,7 @@ export class PrettierSetupService extends Context.Service<PrettierSetupService>(
 
         const packageJson: PackageJson = yield* pm.readPackageJson({ id: root });
 
-        if (!Predicate.isTruthy(packageJson.prettier)) {
+        if (!P.isTruthy(packageJson.prettier)) {
           packageJson.prettier = '@2digits/prettier-config';
           yield* Effect.logInfo('✅ Added prettier config to package.json');
         }

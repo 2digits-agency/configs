@@ -1,13 +1,13 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as Array from 'effect/Array';
+import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
-import * as Option from 'effect/Option';
+import * as Opt from 'effect/Option';
 import * as Path from 'effect/Path';
-import * as Record from 'effect/Record';
+import * as R from 'effect/Record';
 
 import { PackageManagerService } from './PackageManagerService';
 
@@ -44,12 +44,12 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
           Effect.fn('EslintDetectionService.checkConfig')(function* (file) {
             const configPath = path.join(targetDir, file);
 
-            return (yield* fs.exists(configPath)) ? Option.some(configPath) : Option.none();
+            return (yield* fs.exists(configPath)) ? Opt.some(configPath) : Opt.none();
           }),
           { concurrency: 'unbounded' },
         );
 
-        return Array.getSomes(configs);
+        return Arr.getSomes(configs);
       });
 
       /**
@@ -63,10 +63,7 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
 
         const packageJson = yield* pm.readPackageJson({ id: pkgPath });
 
-        return (
-          Record.has(packageJson.dependencies ?? {}, 'eslint') ||
-          Record.has(packageJson.devDependencies ?? {}, 'eslint')
-        );
+        return R.has(packageJson.dependencies ?? {}, 'eslint') || R.has(packageJson.devDependencies ?? {}, 'eslint');
       });
 
       /**
@@ -78,7 +75,7 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
 
         const existingConfigs = yield* findExistingConfigs(targetDir, [...ESLINT_CONFIG_FILES, 'eslint.config.ts']);
 
-        return Array.isReadonlyArrayNonEmpty(existingConfigs);
+        return Arr.isReadonlyArrayNonEmpty(existingConfigs);
       });
 
       /**

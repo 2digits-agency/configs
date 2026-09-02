@@ -3,7 +3,7 @@ import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import { describe, expect, layer } from '@effect/vitest';
 import { strictEqual } from '@effect/vitest/utils';
-import * as Array from 'effect/Array';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
@@ -224,7 +224,7 @@ describe(TurborepoSetupService, () => {
 
           yield* service.ensureTurboInstalled();
 
-          const executed = yield* getExecutedCommands.pipe(Effect.map(Array.map((e) => e.command)));
+          const executed = yield* getExecutedCommands.pipe(Effect.map(Arr.map((e) => e.command)));
 
           expect(executed).toHaveLength(1);
           expect(executed).toMatchInlineSnapshot(`
@@ -251,7 +251,7 @@ describe(TurborepoSetupService, () => {
 
           yield* service.ensureTurboInstalled();
 
-          const executed = yield* getExecutedCommands.pipe(Effect.map(Array.map((e) => e.command)));
+          const executed = yield* getExecutedCommands.pipe(Effect.map(Arr.map((e) => e.command)));
 
           expect(executed).toHaveLength(0);
         }),
@@ -303,7 +303,7 @@ describe(TurborepoSetupService, () => {
 
           strictEqual(turboExistsAfter, true);
 
-          const executed = yield* getExecutedCommands.pipe(Effect.map(Array.map((e) => e.command)));
+          const executed = yield* getExecutedCommands.pipe(Effect.map(Arr.map((e) => e.command)));
 
           expect(executed).toMatchInlineSnapshot(`
             [

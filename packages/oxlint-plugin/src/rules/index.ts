@@ -16,6 +16,7 @@ import { noAlreadyStartedPromise } from './effect/no-already-started-promise';
 import { noAsyncEffectTry } from './effect/no-async-effect-try';
 import { noDiscardedRunPromise } from './effect/no-discarded-run-promise';
 import { noDiscardedSchemaChecks } from './effect/no-discarded-schema-checks';
+import { noEffectAlchemyBarrelImports } from './effect/no-effect-alchemy-barrel-imports';
 import { noEmptyEffectCallback } from './effect/no-empty-effect-callback';
 import { noEmptySchemaStruct } from './effect/no-empty-schema-struct';
 import { noFunctionConfigDefault } from './effect/no-function-config-default';
@@ -28,11 +29,23 @@ import { noOverwrittenDiscriminant } from './effect/no-overwritten-discriminant'
 import { noServiceOptionGetOrThrow } from './effect/no-service-option-get-or-throw';
 import { noThrowInEffectCallback } from './effect/no-throw-in-effect-callback';
 import { noZeroRetryTimes } from './effect/no-zero-retry-times';
+import { preferEffectAlchemyNamespaceImports } from './effect/prefer-effect-alchemy-namespace-imports';
+import { preferEffectArraySort } from './effect/prefer-effect-array-sort';
+import { preferEffectDateTime } from './effect/prefer-effect-datetime';
+import { preferEffectDuration } from './effect/prefer-effect-duration';
+import { preferEffectEncoding } from './effect/prefer-effect-encoding';
+import { preferEffectFileSystem } from './effect/prefer-effect-filesystem';
+import { preferEffectFilter } from './effect/prefer-effect-filter';
+import { preferEffectHeaders } from './effect/prefer-effect-headers';
+import { preferEffectMatch } from './effect/prefer-effect-match';
+import { preferEffectPath } from './effect/prefer-effect-path';
+import { preferEffectUrl } from './effect/prefer-effect-url';
 import { preferUninterruptible } from './effect/prefer-uninterruptible';
 import { preferWithSpan } from './effect/prefer-with-span';
 import { preferYieldNow } from './effect/prefer-yield-now';
 import { preserveCaughtError } from './effect/preserve-caught-error';
 import { requireSchemaClassBrand } from './effect/require-schema-class-brand';
+import { requireTryPromiseAbortSignal } from './effect/require-try-promise-abort-signal';
 import { throwInEffectGen } from './effect/throw-in-effect-gen';
 
 export const rules = {
@@ -56,6 +69,7 @@ export const rules = {
   'no-discarded-schema-checks': noDiscardedSchemaChecks,
   'no-empty-effect-callback': noEmptyEffectCallback,
   'no-empty-schema-struct': noEmptySchemaStruct,
+  'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,
   'no-function-config-default': noFunctionConfigDefault,
   'no-hash-as-identity': noHashAsIdentity,
   'no-logging-in-catch': noLoggingInCatch,
@@ -66,10 +80,22 @@ export const rules = {
   'no-service-option-get-or-throw': noServiceOptionGetOrThrow,
   'no-throw-in-effect-callback': noThrowInEffectCallback,
   'no-zero-retry-times': noZeroRetryTimes,
+  'prefer-effect-alchemy-namespace-imports': preferEffectAlchemyNamespaceImports,
+  'prefer-effect-array-sort': preferEffectArraySort,
+  'prefer-effect-datetime': preferEffectDateTime,
+  'prefer-effect-duration': preferEffectDuration,
+  'prefer-effect-encoding': preferEffectEncoding,
+  'prefer-effect-filesystem': preferEffectFileSystem,
+  'prefer-effect-filter': preferEffectFilter,
+  'prefer-effect-headers': preferEffectHeaders,
+  'prefer-effect-match': preferEffectMatch,
+  'prefer-effect-path': preferEffectPath,
+  'prefer-effect-url': preferEffectUrl,
   'prefer-uninterruptible': preferUninterruptible,
   'prefer-with-span': preferWithSpan,
   'prefer-yield-now': preferYieldNow,
   'preserve-caught-error': preserveCaughtError,
   'require-schema-class-brand': requireSchemaClassBrand,
+  'require-try-promise-abort-signal': requireTryPromiseAbortSignal,
   'throw-in-effect-gen': throwInEffectGen,
 } as const;

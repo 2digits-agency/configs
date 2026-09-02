@@ -2,8 +2,8 @@ import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Match from 'effect/Match';
-import * as Option from 'effect/Option';
-import * as Record from 'effect/Record';
+import * as Opt from 'effect/Option';
+import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as HttpBody from 'effect/unstable/http/HttpBody';
@@ -39,12 +39,12 @@ const JsonFromString = Schema.fromJsonString(Schema.Unknown);
  */
 const MALFORMED_ERROR_REGEX = /\{MSG:'([^']*)',\s*err:(\d+)\}/;
 
-function parseMalformedJson(text: string): Option.Option<{ readonly MSG: string; readonly err: number }> {
+function parseMalformedJson(text: string): Opt.Option<{ readonly MSG: string; readonly err: number }> {
   const match = MALFORMED_ERROR_REGEX.exec(text);
 
   return Match.value(match).pipe(
-    Match.when(Match.defined, (groups) => Option.some({ MSG: groups[1] ?? 'Unknown error', err: Number(groups[2]) })),
-    Match.orElse(() => Option.none()),
+    Match.when(Match.defined, (groups) => Opt.some({ MSG: groups[1] ?? 'Unknown error', err: Number(groups[2]) })),
+    Match.orElse(() => Opt.none()),
   );
 }
 
@@ -61,7 +61,7 @@ export const TeamLeaderClientLive = Layer.effect(
           body: Record<string, string | number | boolean | undefined>,
           schema: TSchema,
         ) {
-          const bodyWithToken = Record.set(body, 't', Redacted.value(config.sessionToken));
+          const bodyWithToken = R.set(body, 't', Redacted.value(config.sessionToken));
           const urlParams = UrlParams.fromInput(bodyWithToken);
           const response = yield* client.post(path, { body: HttpBody.urlParams(urlParams) });
           const text = yield* response.text;

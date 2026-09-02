@@ -185,6 +185,8 @@ describe('oxlint config', () => {
     expect(plugin?.name).toBe('2digits');
     expect(plugin?.specifier).toContain('oxlint-plugin/dist/index.mjs');
     expect(twoDigitsPluginConfig.rules).toStrictEqual(recommendedRules);
+    expect(recommendedRules['2digits/prefer-effect-filesystem']).toBeUndefined();
+    expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {

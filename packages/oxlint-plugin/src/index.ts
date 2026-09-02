@@ -6,9 +6,13 @@ export { rules } from './rules';
 
 export type RuleName = keyof typeof rules;
 
+const rulesCoveredByEffectTsgo = new Set<RuleName>(['prefer-effect-filesystem', 'prefer-effect-path']);
+
 export const recommendedRules = Object.fromEntries(
-  Object.keys(rules).map((rule) => [`2digits/${rule}`, 'error'] as const),
-) as Record<`2digits/${RuleName}`, 'error'>;
+  (Object.keys(rules) as Array<RuleName>)
+    .filter((rule) => !rulesCoveredByEffectTsgo.has(rule))
+    .map((rule) => [`2digits/${rule}`, 'error'] as const),
+) as Partial<Record<`2digits/${RuleName}`, 'error'>>;
 
 const plugin: Plugin = eslintCompatPlugin({
   meta: { name: '@2digits/oxlint-plugin' },

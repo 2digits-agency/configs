@@ -1,11 +1,11 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as Array from 'effect/Array';
+import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
-import * as Option from 'effect/Option';
+import * as Opt from 'effect/Option';
 import * as Path from 'effect/Path';
 
 import { PackageManagerService } from './PackageManagerService';
@@ -39,12 +39,12 @@ export class ProjectDetectionService extends Context.Service<ProjectDetectionSer
               fs.exists(packageJsonPath).pipe(Effect.orElseSucceed(() => false)),
             ]);
 
-            return hasPackageJson && stat?.type === 'Directory' ? Option.some(entryPath) : Option.none();
+            return hasPackageJson && stat?.type === 'Directory' ? Opt.some(entryPath) : Opt.none();
           }),
           { concurrency: 'unbounded' },
         );
 
-        return Array.getSomes(workspaces);
+        return Arr.getSomes(workspaces);
       });
 
       /**
@@ -70,11 +70,11 @@ export class ProjectDetectionService extends Context.Service<ProjectDetectionSer
       const discoverWorkspaces = Effect.fn('ProjectDetectionService.discoverWorkspaces')(function* () {
         const root = yield* pm.resolveRoot();
         const workspaceDirectories = yield* Effect.all(
-          Array.map([path.join(root, 'apps'), path.join(root, 'packages')], discoverWorkspaceDirectory),
+          Arr.map([path.join(root, 'apps'), path.join(root, 'packages')], discoverWorkspaceDirectory),
           { concurrency: 'unbounded' },
         );
 
-        return Array.flatten(workspaceDirectories);
+        return Arr.flatten(workspaceDirectories);
       });
 
       /**

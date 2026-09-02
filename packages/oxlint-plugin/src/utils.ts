@@ -4,6 +4,7 @@ import {
   type ESTree,
   type Rule,
   type RuleMeta,
+  type Scope,
   type Visitor,
   type VisitorWithHooks,
 } from '@oxlint/plugins';
@@ -184,6 +185,24 @@ export function staticPath(node: ESTree.Node): ReadonlyArray<string> | undefined
   }
 
   return current.type === 'Identifier' ? [current.name, ...path] : undefined;
+}
+
+export function isGlobalIdentifier(node: ESTree.Node, context: Context, name: string): boolean {
+  if (node.type !== 'Identifier' || node.name !== name) {
+    return false;
+  }
+
+  let scope: Scope | null = context.sourceCode.getScope(node);
+
+  while (scope !== null) {
+    if (scope.set.has(name)) {
+      return false;
+    }
+
+    scope = scope.upper;
+  }
+
+  return true;
 }
 
 export function canonicalPath(node: ESTree.Node, state: FileState): ReadonlyArray<string> | undefined {
