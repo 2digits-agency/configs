@@ -140,6 +140,7 @@ export const unicornConfig = defineConfig({
     'unicorn/switch-case-braces': 'error',
     'unicorn/switch-case-break-position': 'error',
     'unicorn/text-encoding-identifier-case': 'error',
+    // Effect's `Schema.TaggedError` class factory is a valid base class, but this rule reports the call expression.
     'unicorn/throw-new-error': 'off',
   },
 });

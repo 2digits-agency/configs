@@ -1,6 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
+import * as Schema from 'effect/Schema';
 import { describe, expect, it } from 'vite-plus/test';
 
 import eslintTwoDigits from '@2digits/eslint-config';
@@ -14,7 +15,8 @@ import { unicornConfig } from '../src/configs/unicorn';
 import { vitestConfig } from '../src/configs/vitest';
 import { zodConfig } from '../src/configs/zod';
 
-const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
+const effectFixtureDirectory = fileURLToPath(new URL('fixtures/effect', import.meta.url));
+const zodFixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
 
 const reactCompilerRules = [
@@ -180,9 +182,20 @@ describe('oxlint config', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
 
+  it('accepts Effect v4 tagged errors', () => {
+    expect(Schema.TaggedError).toBeTypeOf('function');
+
+    const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'valid.ts'], {
+      cwd: effectFixtureDirectory,
+      encoding: 'utf8',
+    });
+
+    expect(result.status, `${result.stdout}${result.stderr}`).toBe(0);
+  });
+
   it('loads and executes eslint-plugin-zod', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
-      cwd: fixtureDirectory,
+      cwd: zodFixtureDirectory,
       encoding: 'utf8',
     });
 

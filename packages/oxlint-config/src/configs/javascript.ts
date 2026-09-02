@@ -180,7 +180,7 @@ export const javascriptConfig = defineConfig({
     'no-warning-comments': undefined,
     'no-with': 'error',
     'object-shorthand': ['error', 'always', { avoidQuotes: true, ignoreConstructors: false }],
-    'one-var': undefined,
+    'one-var': ['error', { initialized: 'never' }],
     'operator-assignment': ['error', 'always'],
     'prefer-arrow-callback': ['error', { allowNamedFunctions: true, allowUnboundThis: true }],
     'prefer-const': ['error', { destructuring: 'all', ignoreReadBeforeAssign: true }],
