@@ -1,3 +1,29 @@
+## @2digits/eslint-config@5.7.0
+
+### Update ESLint global definitions to 17.12.0
+
+
+
+### Update JSDoc lint rules to 64.3.4
+
+
+
+### Update Next.js ESLint support to 16.3.4
+
+
+
+### Enforce blank lines in pnpm workspace files
+
+- Added the `pnpm/yaml-blank-lines` rule to the `pnpm-workspace.yaml` configuration
+
+### Update React ESLint support to 5.18.7
+
+
+
+### Update TypeScript ESLint utilities to 8.69.0
+
+- Refreshed generated rule option types for the updated TypeScript ESLint APIs
+
 ## @2digits/eslint-config@5.6.5
 
 ### Update Node.js to 24.20.0
