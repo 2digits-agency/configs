@@ -1,3 +1,19 @@
+## @2digits/config-monorepo@0.0.10
+
+### Update Knip to 6.34.0
+
+
+
+### Update pnpm to 11.25.0
+
+
+
+### Update Effect TypeScript tooling to 0.39.0
+
+- Refreshed generated Effect TypeScript diagnostics for the newer tooling release
+
+### Update the TypeScript ESLint type override to 8.69.0
+
 ## @2digits/config-monorepo@0.0.9
 
 ### Update Node.js to 24.20.0

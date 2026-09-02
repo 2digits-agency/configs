@@ -1,3 +1,9 @@
+## @2digits/eslint-plugin@4.0.27
+
+### Update TypeScript ESLint utilities to 8.69.0
+
+- Refreshed generated rule option types for the updated TypeScript ESLint APIs
+
 ## @2digits/eslint-plugin@4.0.26
 
 ### Update `typescript-eslint` packages to 8.68.0
