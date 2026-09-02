@@ -450,8 +450,8 @@ catalogs:
       specifier: 44.56.3
       version: 44.56.3
     tailwind-csstree:
-      specifier: 0.3.3
-      version: 0.3.3
+      specifier: 0.4.0
+      version: 0.4.0
     tegami:
       specifier: 1.4.0
       version: 1.4.0
@@ -789,7 +789,7 @@ importers:
         version: 2.3.1
       tailwind-csstree:
         specifier: 'catalog:'
-        version: 0.3.3(@eslint/css@1.4.0)
+        version: 0.4.0(@eslint/css@1.4.0)
       typescript-eslint:
         specifier: 'catalog:'
         version: 8.69.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
@@ -7221,8 +7221,8 @@ packages:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
     engines: {node: '>=20'}
 
-  tailwind-csstree@0.3.3:
-    resolution: {integrity: sha512-je9J5UYRsTJqAjYrIBMMlge8T/rreRd44pJxgG5Zx/zeo4kAC/liUKqzztRZrGlYRJLvIf2Cb1DVJMTXSzEShA==}
+  tailwind-csstree@0.4.0:
+    resolution: {integrity: sha512-EBQfcsJBrRhGLsV/dBc7qIeLzCkOtSb31wNlU6//DUlHO74dcbvyl5sugoI/FeuxtENH5exS+6F5nffe1deDog==}
     engines: {node: '>=18.18'}
     peerDependencies:
       '@eslint/css': '>=1.0.0'
@@ -14094,7 +14094,7 @@ snapshots:
 
   tagged-tag@1.0.0: {}
 
-  tailwind-csstree@0.3.3(@eslint/css@1.4.0):
+  tailwind-csstree@0.4.0(@eslint/css@1.4.0):
     optionalDependencies:
       '@eslint/css': 1.4.0
 
