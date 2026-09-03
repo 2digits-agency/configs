@@ -1,10 +1,6 @@
----
-packages:
-  'npm:@2digits/oxlint-plugin': patch
-  'npm:@2digits/oxlint-config': minor
----
+## @2digits/oxlint-plugin@0.0.1
 
-## Add custom Oxlint rules
+### Add custom Oxlint rules
 
 Added a JavaScript plugin with default Effect correctness and API-usage rules, including syntax-safe diagnostics proposed
 for `@effect/tsgo`.

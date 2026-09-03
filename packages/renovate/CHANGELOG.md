@@ -1,3 +1,16 @@
+## @2digits/renovate-config@1.2.104
+
+### Run TypeScript scripts with oxnode
+
+- Replaced `tsx` with `@oxc-node/cli` (`oxnode`) for the `@2digits/cli` bin script, the renovate config build script, and the root `tegami` script
+- Removed `tsx` from the catalog
+
+### Update Renovate to 44.60.1
+
+
+
+### Update Renovate to 44.61.1
+
 ## @2digits/renovate-config@1.2.103
 
 ### Update Renovate to 44.56.3
