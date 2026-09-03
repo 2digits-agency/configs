@@ -1,3 +1,20 @@
+## @2digits/oxlint-config@1.1.0
+
+### Add custom Oxlint rules
+
+Added a JavaScript plugin with default Effect correctness and API-usage rules, including syntax-safe diagnostics proposed
+for `@effect/tsgo`.
+
+Effect projects now receive guidance toward the v4 Array, DateTime, Duration, Encoding, FileSystem, Filter, Headers,
+Match, Path, and Url APIs. Promise thunks must acknowledge Effect's interruption signal, and Effect/Alchemy imports use
+consistent submodule namespaces and aliases while leaving `@effect/vitest` imports unchanged.
+
+The FileSystem and Path rules remain opt-in because the existing `@effect/tsgo/nodeBuiltinImport` diagnostic already
+enforces those migrations without duplicate reports.
+
+The default Oxlint configuration now also catches unsafe Alchemy v2 migrations, runtime configuration, secret, lifecycle,
+and deprecated API patterns.
+
 ## @2digits/oxlint-config@1.0.3
 
 ### Update Oxlint to 1.81.0

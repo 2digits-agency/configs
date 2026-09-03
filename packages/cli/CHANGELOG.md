@@ -1,3 +1,12 @@
+## @2digits/cli@2.0.17
+
+### Run TypeScript scripts with oxnode
+
+- Replaced `tsx` with `@oxc-node/cli` (`oxnode`) for the `@2digits/cli` bin script, the renovate config build script, and the root `tegami` script
+- Removed `tsx` from the catalog
+
+### Update pkg-types to 2.3.2
+
 ## @2digits/cli@2.0.16
 
 ### Update `effect` to 4.0.0-rc.112

@@ -1,3 +1,7 @@
+## @2digits/opencode-plugin@0.2.32
+
+### Update the OpenCode plugin API to 1.18.27
+
 ## @2digits/opencode-plugin@0.2.31
 
 ### Update the OpenCode plugin API to 1.18.26

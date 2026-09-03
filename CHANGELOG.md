@@ -1,3 +1,25 @@
+## @2digits/config-monorepo@0.1.0
+
+### Run TypeScript scripts with oxnode
+
+- Replaced `tsx` with `@oxc-node/cli` (`oxnode`) for the `@2digits/cli` bin script, the renovate config build script, and the root `tegami` script
+- Removed `tsx` from the catalog
+
+### Enforce stricter Effect diagnostics and import aliases
+
+- Enabled the `allOfMapToForEach`, `catchConditionalRefailToCatchIf`, `catchDieToOrDie`, `flatMapConditionalToFilterOrFail`, `mapSomeToAsSome`, and `unsupportedServiceAccessors` diagnostics
+- Added `Equal`, `Predicate`, and `Record` import aliases and disabled the `importFromBarrel` diagnostic
+- Updated the CLI and TLO MCP packages to comply with the new rules
+
+### Enforce the raceFirstWithSleepToTimeout diagnostic
+
+- Enabled the `raceFirstWithSleepToTimeout` diagnostic as an error, added in `@effect/tsgo` 0.40.0
+
+### Refresh tsdown and turborepo skill references
+
+- Updated the tsdown and tsdown-migrate skill references for the latest release, adding a `copy` option guide and documenting new dependency, log-level, and CLI options
+- Updated the turborepo skill references to 2.10.13, including the `TURBO_SCM_BASE` replacement for `--affected-base` and the `--parallel` deprecation
+
 ## @2digits/config-monorepo@0.0.10
 
 ### Update Knip to 6.34.0
