@@ -10,12 +10,13 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "node --experimental-strip-types build.ts",
+    "build": "oxnode build.ts",
     "test": "renovate-config-validator ./default.json ./src/*.json --strict",
     "types": "tsgo --noEmit"
   },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
+    "@oxc-node/cli": "catalog:",
     "@types/node": "catalog:",
     "@typescript/native-preview": "catalog:",
     "nolyfill": "catalog:",

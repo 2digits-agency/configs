@@ -22,7 +22,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "bin": "tsx ./src/bin.ts",
+    "bin": "oxnode ./src/bin.ts",
     "build": "vp pack --minify --config-loader unconfig",
     "dev": "vp pack --watch --config-loader unconfig",
     "test": "vp test run",
@@ -40,9 +40,9 @@
     "@arethetypeswrong/core": "catalog:",
     "@effect/language-service": "catalog:",
     "@effect/vitest": "catalog:",
+    "@oxc-node/cli": "catalog:",
     "@typescript/native": "catalog:",
     "publint": "catalog:",
-    "tsx": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
   }
