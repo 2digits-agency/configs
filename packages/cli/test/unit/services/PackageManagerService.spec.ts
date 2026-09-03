@@ -254,15 +254,16 @@ describe(PackageManagerService, () => {
 
       it.effect('writePackageJson fails on readonly file', () =>
         Effect.gen(function* () {
+          const fs = yield* FileSystem.FileSystem;
+          const path = yield* Path.Path;
+
           const tempDir = yield* withTempTestEnv('PackageManagerService');
 
           yield* copyFixture('single-package');
 
-          const path = yield* Path.Path;
-
           const pkgPath = path.join(tempDir, 'package.json');
 
-          yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(pkgPath, 0o444)));
+          yield* fs.chmod(pkgPath, 0o444);
 
           const service = yield* PackageManagerService;
           const result = yield* Effect.result(
@@ -274,7 +275,7 @@ describe(PackageManagerService, () => {
             }),
           );
 
-          yield* Effect.promise(() => import('node:fs/promises').then((fs) => fs.chmod(pkgPath, 0o644)));
+          yield* fs.chmod(pkgPath, 0o644);
 
           expect(result._tag).toBe('Failure');
         }),

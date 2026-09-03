@@ -31,7 +31,7 @@ export const GetProjectsResponse = Schema.Struct({
 export type GetProjectDetailsResponse = typeof GetProjectDetailsResponse.Type;
 export const GetProjectDetailsResponse = Schema.Union([ProjectRaw, Schema.Struct({ Record: ProjectRaw })]);
 
-export class Project extends Schema.Class<Project>('Project')({
+export class Project extends Schema.Class<Project, { readonly brand: unique symbol }>('Project')({
   id: Schema.Finite,
   name: Schema.String,
   state: Schema.optional(Schema.String),
@@ -95,7 +95,7 @@ export const MessageRaw = Schema.Struct({
 export type GetMessagesResponse = typeof GetMessagesResponse.Type;
 export const GetMessagesResponse = Schema.Array(MessageRaw);
 
-export class Message extends Schema.Class<Message>('Message')({
+export class Message extends Schema.Class<Message, { readonly brand: unique symbol }>('Message')({
   id: Schema.Finite,
   ownerId: Schema.optional(Schema.Finite),
   ownerName: Schema.optional(Schema.String),
@@ -153,7 +153,7 @@ export const GetTasksResponse = Schema.Struct({
   RecordCount: Schema.optional(Schema.Finite),
 });
 
-export class Task extends Schema.Class<Task>('Task')({
+export class Task extends Schema.Class<Task, { readonly brand: unique symbol }>('Task')({
   id: Schema.Finite,
   projectId: Schema.optional(Schema.Finite),
   name: Schema.optional(Schema.String),
@@ -216,7 +216,7 @@ export const TaskForUserRaw = Schema.Struct({
 export type GetTasksForUserResponse = typeof GetTasksForUserResponse.Type;
 export const GetTasksForUserResponse = Schema.Struct({ Records: Schema.Array(TaskForUserRaw) });
 
-export class TaskForUser extends Schema.Class<TaskForUser>('TaskForUser')({
+export class TaskForUser extends Schema.Class<TaskForUser, { readonly brand: unique symbol }>('TaskForUser')({
   id: Schema.Finite,
   workload: Schema.optional(Schema.Finite),
   total: Schema.optional(Schema.Finite),
@@ -270,7 +270,7 @@ export const GetBoardTodosResponse = Schema.Struct({
   RecordCount: Schema.optional(Schema.Finite),
 });
 
-export class TodoSummary extends Schema.Class<TodoSummary>('TodoSummary')({
+export class TodoSummary extends Schema.Class<TodoSummary, { readonly brand: unique symbol }>('TodoSummary')({
   id: Schema.Finite,
   name: Schema.optional(Schema.String),
   boardListId: Schema.optional(Schema.Finite),

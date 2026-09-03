@@ -1,4 +1,4 @@
-import * as Array from 'effect/Array';
+import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
@@ -65,7 +65,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
             });
           }
 
-          yield* Effect.logDebug(`Added ${dependencyType}: ${Array.join(dependencies, ', ')}`);
+          yield* Effect.logDebug(`Added ${dependencyType}: ${Arr.join(dependencies, ', ')}`);
         },
         Effect.scoped,
         (effect, _command, dependencyType) =>
@@ -89,7 +89,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
         const cwd = yield* cwdService.cwd;
 
         return yield* Effect.tryPromise({
-          try: () => pkgTypes.findWorkspaceDir(cwd),
+          try: (_signal) => pkgTypes.findWorkspaceDir(cwd),
           catch: (cause) => PackageManagerError.make({ operation: 'resolveRoot', cause }),
         }).pipe(Effect.map(path.normalize));
       });
@@ -107,7 +107,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
         const pkgPath = path.resolve(options?.id ?? cwd, 'package.json');
 
         const packageJson: PackageJson = yield* Effect.tryPromise({
-          try: () => pkgTypes.readPackageJSON(pkgPath),
+          try: (_signal) => pkgTypes.readPackageJSON(pkgPath),
           catch: (cause) => PackageManagerError.make({ operation: 'readPackageJson', cause }),
         });
 
@@ -132,7 +132,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
         const pkgPath = path.resolve(options.id ?? cwd, 'package.json');
 
         return yield* Effect.tryPromise({
-          try: () => pkgTypes.writePackageJSON(pkgPath, options.content),
+          try: (_signal) => pkgTypes.writePackageJSON(pkgPath, options.content),
           catch: (cause) => PackageManagerError.make({ operation: 'writePackageJson', cause }),
         });
       });
@@ -156,7 +156,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
         const devDependencies = options.devDependencies ?? [];
         const dependencies = options.dependencies ?? [];
 
-        if (Array.isReadonlyArrayNonEmpty(devDependencies)) {
+        if (Arr.isReadonlyArrayNonEmpty(devDependencies)) {
           const devDepsCmd = ChildProcess.make(
             nypm.addDependencyCommand(pm.name, devDependencies, { workspace, dev: true, short: true }),
             { shell: true },
@@ -165,7 +165,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
           yield* runAddCommand(devDepsCmd, 'devDependencies', devDependencies);
         }
 
-        if (Array.isReadonlyArrayNonEmpty(dependencies)) {
+        if (Arr.isReadonlyArrayNonEmpty(dependencies)) {
           const depsCmd = ChildProcess.make(
             nypm.addDependencyCommand(pm.name, dependencies, { workspace, short: true }),
             { shell: true },
@@ -179,7 +179,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
         const root = yield* resolveRoot();
 
         const pm = yield* Effect.tryPromise({
-          try: () => nypm.detectPackageManager(root),
+          try: (_signal) => nypm.detectPackageManager(root),
           catch: (cause) => PackageManagerError.make({ operation: 'getPackageManager', cause }),
         });
 

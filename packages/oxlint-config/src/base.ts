@@ -2,6 +2,7 @@ import { defineConfig } from 'oxlint';
 
 import { ignorePatterns } from '@2digits/constants';
 
+import { twoDigitsPluginConfig } from './configs/2digits';
 import { importConfig } from './configs/import';
 import { javascriptConfig } from './configs/javascript';
 import { jsdocConfig } from './configs/jsdoc';
@@ -28,6 +29,15 @@ export const baseConfig = defineConfig({
     restriction: 'off',
     suspicious: 'off',
   },
-  extends: [javascriptConfig, unicornConfig, importConfig, nodeConfig, oxcConfig, jsdocConfig, zodConfig],
+  extends: [
+    javascriptConfig,
+    unicornConfig,
+    importConfig,
+    nodeConfig,
+    oxcConfig,
+    jsdocConfig,
+    zodConfig,
+    twoDigitsPluginConfig,
+  ],
   ignorePatterns,
 });

@@ -4,8 +4,10 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vite-plus/test';
 
 import eslintTwoDigits from '@2digits/eslint-config';
+import { recommendedRules } from '@2digits/oxlint-plugin';
 
 import withTwoDigits, { twoDigits, type TwoDigitsConfig } from '../src';
+import { twoDigitsPluginConfig } from '../src/configs/2digits';
 import { javascriptConfig } from '../src/configs/javascript';
 import { nodeConfig } from '../src/configs/node';
 import { reactConfig } from '../src/configs/react';
@@ -15,6 +17,7 @@ import { vitestConfig } from '../src/configs/vitest';
 import { zodConfig } from '../src/configs/zod';
 
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
+const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
 
 const reactCompilerRules = [
@@ -176,7 +179,17 @@ describe('oxlint config', () => {
     expect(zodConfig.rules['zod/array-style']).toStrictEqual(['error', { style: 'function' }]);
   });
 
-  it('keeps the Effect rules out of the default preset', () => {
+  it('configures every recommended 2digits rule', () => {
+    const plugin = twoDigitsPluginConfig.jsPlugins.at(0);
+
+    expect(plugin?.name).toBe('2digits');
+    expect(plugin?.specifier).toContain('oxlint-plugin/dist/index.mjs');
+    expect(twoDigitsPluginConfig.rules).toStrictEqual(recommendedRules);
+    expect(recommendedRules['2digits/prefer-effect-filesystem']).toBeUndefined();
+    expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
+  });
+
+  it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
 
@@ -190,5 +203,17 @@ describe('oxlint config', () => {
 
     expect(result.status).toBe(1);
     expect(output).toContain('zod(array-style)');
+  });
+
+  it('loads and executes @2digits/oxlint-plugin', () => {
+    const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
+      cwd: twoDigitsFixtureDirectory,
+      encoding: 'utf8',
+    });
+
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output).toContain('2digits(no-empty-schema-struct)');
   });
 });

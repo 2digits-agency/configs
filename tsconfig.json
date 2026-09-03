@@ -19,9 +19,12 @@
         "importAliases": {
           "Array": "Arr",
           "Boolean": "Bool",
+          "Equal": "Eq",
           "Function": "Fn",
           "Number": "Num",
           "Option": "Opt",
+          "Predicate": "P",
+          "Record": "R",
           "String": "Str"
         },
         "includeSuggestionsInTsc": true,
@@ -70,6 +73,7 @@
           "effectMapVoid": "error",
           "effectSucceedWithVoid": "error",
           "extendsNativeError": "error",
+          "flatMapConditionalToFilterOrFail": "error",
           "flatMapToMap": "error",
           "floatingEffect": "error",
           "floatingEffectInVitest": "error",
@@ -86,7 +90,7 @@
           "globalRandomInEffect": "error",
           "globalTimers": "error",
           "globalTimersInEffect": "error",
-          "importFromBarrel": "error",
+          "importFromBarrel": "off",
           "instanceOfSchema": "error",
           "layerMergeAllWithDependencies": "error",
           "lazyEffect": "error",
@@ -120,6 +124,7 @@
           "processEnv": "off",
           "processEnvInEffect": "error",
           "promiseInEffectSuccess": "error",
+          "raceFirstWithSleepToTimeout": "error",
           "redundantMapError": "error",
           "redundantOrDie": "error",
           "redundantSchemaTagIdentifier": "error",
@@ -144,7 +149,8 @@
           "unnecessaryPipe": "error",
           "unnecessaryPipeChain": "error",
           "unnecessaryTypeofType": "error",
-          "unsafeEffectTypeAssertion": "error"
+          "unsafeEffectTypeAssertion": "error",
+          "unsupportedServiceAccessors": "error"
         },
         "keyPatterns": [
           {

@@ -1,6 +1,6 @@
 import * as Console from 'effect/Console';
 import * as Effect from 'effect/Effect';
-import * as Option from 'effect/Option';
+import * as Opt from 'effect/Option';
 import * as Command from 'effect/unstable/cli/Command';
 import * as Flag from 'effect/unstable/cli/Flag';
 
@@ -12,17 +12,17 @@ import { TurborepoSetupService } from './services/TurborepoSetupService';
 const command = Command.make('2d', {
   prettier: Flag.boolean('prettier').pipe(
     Flag.optional,
-    Flag.withDefault(Option.some(true)),
+    Flag.withDefault(Opt.some(true)),
     Flag.withDescription('Setup Prettier with @2digits/prettier-config'),
   ),
   eslint: Flag.boolean('eslint').pipe(
     Flag.optional,
-    Flag.withDefault(Option.none()),
+    Flag.withDefault(Opt.none()),
     Flag.withDescription('Setup ESLint with @2digits/eslint-config'),
   ),
   turbo: Flag.boolean('turbo').pipe(
     Flag.optional,
-    Flag.withDefault(Option.none()),
+    Flag.withDefault(Opt.none()),
     Flag.withDescription('Setup Turborepo configuration for monorepo'),
   ),
 }).pipe(
@@ -54,17 +54,17 @@ const command = Command.make('2d', {
           yield* turborepoSetupService.setup();
         });
 
-        yield* Option.match(prettier, {
+        yield* Opt.match(prettier, {
           onNone: setupPrettier,
           onSome: (skip) => (skip ? Effect.logDebug('Skipping Prettier setup') : setupPrettier()),
         });
 
-        yield* Option.match(eslint, {
+        yield* Opt.match(eslint, {
           onNone: () => Effect.logDebug('Skipping ESLint setup'),
           onSome: (setup) => (setup ? setupEslint() : Effect.logDebug('Skipping ESLint setup')),
         });
 
-        yield* Option.match(turbo, {
+        yield* Opt.match(turbo, {
           onNone: () => Effect.logDebug('Skipping Turborepo setup'),
           onSome: (setup) => (setup ? setupTurborepo() : Effect.logDebug('Skipping Turborepo setup')),
         });

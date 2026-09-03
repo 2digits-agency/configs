@@ -1,4 +1,4 @@
-import * as Array from 'effect/Array';
+import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
@@ -61,7 +61,7 @@ export const TimeServiceLive = Layer.effect(
           GetWeekResponse,
         );
 
-        return Array.map(activityFromRaw)(response.ACTIVITIES);
+        return Arr.map(activityFromRaw)(response.ACTIVITIES);
       }),
 
       createActivity: Effect.fn('TimeService.createActivity')(function* (params: CreateActivityParams) {

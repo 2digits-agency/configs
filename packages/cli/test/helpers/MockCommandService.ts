@@ -1,5 +1,5 @@
 /* eslint-disable react-extra/rules-of-hooks -- Effect service accessors are not React hooks. */
-import * as Array from 'effect/Array';
+import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
@@ -47,7 +47,7 @@ export class MockCommandExecutor extends Context.Service<MockCommandExecutor>()(
       const recordCommand = Effect.fn('MockCommandExecutor.recordCommand')(function* (command: ChildProcess.Command) {
         if (command._tag === 'StandardCommand') {
           yield* Ref.update(executed, (commands) =>
-            Array.append(commands, {
+            Arr.append(commands, {
               command: command.command,
               args: command.args,
               shell: command.options.shell ?? false,

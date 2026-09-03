@@ -42,7 +42,7 @@ export const ActivityRaw = Schema.Struct({
 });
 export type ActivityRaw = typeof ActivityRaw.Type;
 
-export class Activity extends Schema.Class<Activity>('Activity')({
+export class Activity extends Schema.Class<Activity, { readonly brand: unique symbol }>('Activity')({
   id: Schema.Finite,
   projectId: Schema.optional(Schema.String),
   folderId: Schema.optional(Schema.String),

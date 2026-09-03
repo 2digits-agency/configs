@@ -1,0 +1,53 @@
+{
+  "name": "@2digits/oxlint-plugin",
+  "version": "0.0.0",
+  "description": "Custom Oxlint rules for 2digits projects.",
+  "keywords": [
+    "2digits",
+    "oxlint",
+    "oxlint-plugin"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2digits-agency/configs.git",
+    "directory": "packages/oxlint-plugin"
+  },
+  "files": [
+    "NOTICE",
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./package.json": "./package.json"
+    },
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vp pack --minify",
+    "dev": "vp pack --watch",
+    "test": "vp test run",
+    "types": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@oxlint/plugins": "catalog:"
+  },
+  "devDependencies": {
+    "@2digits/tsconfig": "workspace:*",
+    "@arethetypeswrong/core": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "oxlint": "catalog:",
+    "publint": "catalog:",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "public": true
+}

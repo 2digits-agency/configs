@@ -1,15 +1,15 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
-import * as Array from 'effect/Array';
+import * as Arr from 'effect/Array';
 import * as Clock from 'effect/Clock';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Match from 'effect/Match';
-import * as Option from 'effect/Option';
+import * as Opt from 'effect/Option';
 import * as Path from 'effect/Path';
-import * as Record from 'effect/Record';
+import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 
 import { type TurboConfig, TurboConfigJson } from '../schemas/TurboConfig';
@@ -122,7 +122,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         const existingConfigs = yield* eslintDetect.detectExistingConfigs(targetDir);
 
-        if (Array.isReadonlyArrayEmpty(existingConfigs)) {
+        if (Arr.isReadonlyArrayEmpty(existingConfigs)) {
           return [];
         }
 
@@ -170,7 +170,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
         const exists = yield* fs.exists(turboPath).pipe(Effect.orElseSucceed(() => false));
 
         if (!exists) {
-          return Option.none();
+          return Opt.none();
         }
 
         const content = yield* fs
@@ -191,7 +191,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
           ),
         );
 
-        return Option.some(config);
+        return Opt.some(config);
       });
 
       /**
@@ -229,8 +229,8 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
           const packageJson = yield* pm.readPackageJson();
 
           if (
-            Record.has(packageJson.dependencies ?? {}, ESLINT_CONFIG_PACKAGE) ||
-            Record.has(packageJson.devDependencies ?? {}, ESLINT_CONFIG_PACKAGE)
+            R.has(packageJson.dependencies ?? {}, ESLINT_CONFIG_PACKAGE) ||
+            R.has(packageJson.devDependencies ?? {}, ESLINT_CONFIG_PACKAGE)
           ) {
             yield* Effect.logInfo('✅ Dependencies already installed');
           } else {
@@ -288,7 +288,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
         yield* Effect.logInfo('Discovering workspaces...');
         const workspaces = yield* projectDetect.discoverWorkspaces();
 
-        if (Array.isReadonlyArrayNonEmpty(workspaces)) {
+        if (Arr.isReadonlyArrayNonEmpty(workspaces)) {
           yield* Effect.logInfo(`Found ${workspaces.length} workspace(s)`);
 
           for (const workspacePath of workspaces) {
@@ -320,8 +320,8 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
             'Some',
             Effect.fn('EslintSetupService.updateExistingTurboConfig')(function* ({
               value: turboConfig,
-            }: Option.Some<TurboConfig>) {
-              const hasLintTask = turboConfig.tasks !== undefined && Record.has(turboConfig.tasks, 'lint');
+            }: Opt.Some<TurboConfig>) {
+              const hasLintTask = turboConfig.tasks !== undefined && R.has(turboConfig.tasks, 'lint');
 
               yield* hasLintTask
                 ? Effect.logInfo('✅ Lint tasks already exist in turbo.json')
@@ -340,11 +340,11 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
         yield* Effect.logInfo('Validating setup...');
         const finalPackageJson = yield* pm.readPackageJson();
         const hasEslint =
-          Record.has(finalPackageJson.dependencies ?? {}, 'eslint') ||
-          Record.has(finalPackageJson.devDependencies ?? {}, 'eslint');
+          R.has(finalPackageJson.dependencies ?? {}, 'eslint') ||
+          R.has(finalPackageJson.devDependencies ?? {}, 'eslint');
         const has2DigitsConfig =
-          Record.has(finalPackageJson.dependencies ?? {}, ESLINT_CONFIG_PACKAGE) ||
-          Record.has(finalPackageJson.devDependencies ?? {}, ESLINT_CONFIG_PACKAGE);
+          R.has(finalPackageJson.dependencies ?? {}, ESLINT_CONFIG_PACKAGE) ||
+          R.has(finalPackageJson.devDependencies ?? {}, ESLINT_CONFIG_PACKAGE);
 
         if (!hasEslint || !has2DigitsConfig) {
           yield* Effect.logError('⚠️  Warning: Dependencies may not be fully installed');
