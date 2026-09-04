@@ -366,8 +366,8 @@ catalogs:
       specifier: 19.1.0-rc.2
       version: 19.1.0-rc.2
     eslint-plugin-regexp:
-      specifier: 3.2.0
-      version: 3.2.0
+      specifier: 3.3.0
+      version: 3.3.0
     eslint-plugin-sonarjs:
       specifier: 4.2.0
       version: 4.2.0
@@ -753,7 +753,7 @@ importers:
         version: 19.1.0-rc.2(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)
       eslint-plugin-regexp:
         specifier: 'catalog:'
-        version: 3.2.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
+        version: 3.3.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-sonarjs:
         specifier: 'catalog:'
         version: 4.2.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
@@ -3578,6 +3578,7 @@ packages:
   '@smithy/node-http-handler@4.12.0':
     resolution: {integrity: sha512-0mq1pHadfyXCYCqm2cNpbjNIT+fbaUpNxewZb/YNr2L0IrEVMOb8gM/Fl4K6XvHCW3uSNDFwPl/+iKm0bx9jYg==}
     engines: {node: '>=18.0.0'}
+    deprecated: Depreacted due to a memory leak issue https://github.com/smithy-lang/smithy-typescript/issues/2258
 
   '@smithy/signature-v4@5.6.12':
     resolution: {integrity: sha512-I6KLtq3H0qqSuV9vLglfi8puHqzygzWHOnI4z/Rdoo+q50vvo18vBRdPAvvEtcaKROz7Zn6qnPa14kRfPH6PcQ==}
@@ -5156,8 +5157,8 @@ packages:
       eslint: '*'
       typescript: '*'
 
-  eslint-plugin-regexp@3.2.0:
-    resolution: {integrity: sha512-4yq47CnLxyfHFKJEo5kvNaiJ0aDtBxSJWk4M2LiamplUXdWxdlzDYqImb/ZVCp+2BqkQjBAmw4Xc07Q8SXVDZg==}
+  eslint-plugin-regexp@3.3.0:
+    resolution: {integrity: sha512-TT0JTQbW7CRKohntpGAsMdQ1K3MsmJK4gdAhKJtIwlJ0JvuYxauymFgJdvqxIY4lqNj0EuRZWVrymQtEdJYEFg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -5792,10 +5793,6 @@ packages:
   js-yaml@4.3.1:
     resolution: {integrity: sha512-CY6crGq313MX8GkwvB7tzgp99vjQxY1++5y10/BKN/GUfHqWaOGQMNZkBvqSzsZKWk/ijwHlWzzkLulsGHhjWQ==}
     hasBin: true
-
-  jsdoc-type-pratt-parser@9.0.0:
-    resolution: {integrity: sha512-gZvnVGWqgA9L/L2NLdcff6Rezp6ymKBqJDqfg+qWL9QyZA5prn5irUCkSGDEvuse1SjiFhlV2WQsgGBaIlPLWg==}
-    engines: {node: ^22.22.2 || >=24.15.0}
 
   jsdoc-type-pratt-parser@9.1.2:
     resolution: {integrity: sha512-9EXymowgk1mb9RY1VxuwKc+AhaxfBk2CV0dWxgGM+l5RURTtiUoAx7MlKwcsiVcEXK5HEPa7FeH/tsRpqjEPRg==}
@@ -11756,13 +11753,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-regexp@3.2.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0)):
+  eslint-plugin-regexp@3.3.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0)):
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.1(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
+      '@eslint-community/eslint-utils': 4.10.1(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
       '@eslint-community/regexpp': 4.12.2
       comment-parser: 1.4.8
       eslint: 10.9.1(jiti@2.7.0)(supports-color@7.2.0)
-      jsdoc-type-pratt-parser: 9.0.0
+      jsdoc-type-pratt-parser: 9.1.2
       refa: 0.12.1
       regexp-ast-analysis: 0.7.1
       scslre: 0.3.0
@@ -12486,10 +12483,6 @@ snapshots:
   js-yaml@4.3.1:
     dependencies:
       argparse: 2.0.1
-
-  jsdoc-type-pratt-parser@9.0.0:
-    dependencies:
-      '@types/estree': 1.0.9
 
   jsdoc-type-pratt-parser@9.1.2:
     dependencies:
