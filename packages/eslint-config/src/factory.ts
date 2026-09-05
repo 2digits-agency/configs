@@ -3,40 +3,34 @@ import { FlatConfigComposer } from 'eslint-flat-config-utils';
 import { isPackageExists } from 'local-pkg';
 import { findWorkspaceDir } from 'pkg-types';
 
-import {
-  antfu,
-  boolean,
-  comments,
-  css,
-  depend,
-  drizzle,
-  githubActions,
-  graphql,
-  ignores,
-  javascript,
-  jsdoc,
-  jsonc,
-  markdown,
-  markdownDisables,
-  next,
-  node,
-  pnpm,
-  prettier,
-  react,
-  regexp,
-  sonar,
-  storybook,
-  tailwind,
-  tanstackQuery,
-  tanstackRouter,
-  toml,
-  turbo,
-  typescript,
-  unicorn,
-  vitest,
-  yaml,
-  zod,
-} from './configs';
+import { antfu } from './configs/antfu';
+import { boolean } from './configs/boolean';
+import { comments } from './configs/comments';
+import { drizzle } from './configs/drizzle';
+import { githubActions } from './configs/github-actions';
+import { graphql } from './configs/graphql';
+import { ignores } from './configs/ignores';
+import { javascript } from './configs/javascript';
+import { jsdoc } from './configs/jsdoc';
+import { jsonc } from './configs/jsonc';
+import { markdown, markdownDisables } from './configs/markdown';
+import { next } from './configs/next';
+import { node } from './configs/node';
+import { pnpm } from './configs/pnpm';
+import { prettier } from './configs/prettier';
+import { regexp } from './configs/regexp';
+import { sonar } from './configs/sonar';
+import { storybook } from './configs/storybook';
+import { tailwind } from './configs/tailwind';
+import { tanstackQuery } from './configs/tanstackQuery';
+import { tanstackRouter } from './configs/tanstackRouter';
+import { toml } from './configs/toml';
+import { turbo } from './configs/turbo';
+import { typescript } from './configs/typescript';
+import { unicorn } from './configs/unicorn';
+import { vitest } from './configs/vitest';
+import { yaml } from './configs/yaml';
+import { zod } from './configs/zod';
 import { PluginNameMap, storybookPackages } from './constants';
 import type {
   ConfigNames,
@@ -76,12 +70,15 @@ interface ESLint2DigitsOptions {
   zod?: SharedOptions | boolean;
 }
 
-export function enabled<T extends SharedOptions>(options: T | boolean | undefined, defaults?: boolean): options is T {
+export function enabled<T extends SharedOptions>(
+  options: T | boolean | undefined,
+  defaults?: boolean | (() => boolean),
+): options is T {
   if (typeof options === 'boolean') {
     return options;
   }
 
-  return options?.enable ?? defaults ?? false;
+  return options?.enable ?? (typeof defaults === 'function' ? defaults() : defaults) ?? false;
 }
 
 export function extractConfig<T>(options: SharedOptions<T> | undefined | boolean): T {
@@ -124,33 +121,35 @@ export async function twoDigits(
   );
 
   if (enabled(options.css)) {
-    composer = composer.append(css(extractConfig(options.css)));
+    composer = composer.append(import('./configs/css').then(({ css }) => css(extractConfig(options.css))));
   }
 
   if (enabled(options.depend, true)) {
-    composer = composer.append(depend());
+    composer = composer.append(import('./configs/depend').then(({ depend }) => depend()));
   }
 
-  if (enabled(options.turbo, isPackageExists('turbo'))) {
+  if (enabled(options.turbo, () => isPackageExists('turbo'))) {
     composer = composer.append(turbo(extractConfig(options.turbo)));
   }
 
   const { overrides, ...typescriptOptions } = extractConfig(options.ts);
 
-  if (enabled(options.ts, isPackageExists('typescript'))) {
+  if (enabled(options.ts, () => isPackageExists('typescript'))) {
     composer = composer.append(typescript(extractConfig(options.ts)));
   }
 
-  if (enabled(options.react, isPackageExists('react'))) {
+  if (enabled(options.react, () => isPackageExists('react'))) {
     composer = composer.append(
-      react({
-        ...extractConfig(options.react),
-        ...typescriptOptions,
-      }),
+      import('./configs/react').then(({ react }) =>
+        react({
+          ...extractConfig(options.react),
+          ...typescriptOptions,
+        }),
+      ),
     );
   }
 
-  if (enabled(options.next, isPackageExists('next'))) {
+  if (enabled(options.next, () => isPackageExists('next'))) {
     composer = composer.append(
       next({
         ...extractConfig(options.next),
@@ -159,12 +158,7 @@ export async function twoDigits(
     );
   }
 
-  if (
-    enabled(
-      options.storybook,
-      storybookPackages.some((pkg) => isPackageExists(pkg)),
-    )
-  ) {
+  if (enabled(options.storybook, () => storybookPackages.some((pkg) => isPackageExists(pkg)))) {
     composer = composer.append(
       storybook({
         ...extractConfig(options.storybook),
@@ -173,18 +167,19 @@ export async function twoDigits(
     );
   }
 
-  if (enabled(options.vitest, isPackageExists('vitest'))) {
+  if (enabled(options.vitest, () => isPackageExists('vitest'))) {
     composer = composer.append(vitest(extractConfig(options.vitest)));
   }
 
-  if (enabled(options.tailwind, isPackageExists('tailwindcss'))) {
+  if (enabled(options.tailwind, () => isPackageExists('tailwindcss'))) {
     composer = composer.append(tailwind(extractConfig(options.tailwind)));
   }
 
   if (
     enabled(
       options.tanstackQuery,
-      isPackageExists('react-query') ||
+      () =>
+        isPackageExists('react-query') ||
         isPackageExists('@tanstack/react-query') ||
         isPackageExists('@tanstack/react-query-devtools'),
     )
@@ -192,19 +187,19 @@ export async function twoDigits(
     composer = composer.append(tanstackQuery(extractConfig(options.tanstackQuery)));
   }
 
-  if (enabled(options.tanstackRouter, isPackageExists('@tanstack/react-router'))) {
+  if (enabled(options.tanstackRouter, () => isPackageExists('@tanstack/react-router'))) {
     composer = composer.append(tanstackRouter(extractConfig(options.tanstackRouter)));
   }
 
-  if (enabled(options.drizzle, isPackageExists('drizzle-kit') || isPackageExists('drizzle-orm'))) {
+  if (enabled(options.drizzle, () => isPackageExists('drizzle-kit') || isPackageExists('drizzle-orm'))) {
     composer = composer.append(drizzle(extractConfig(options.drizzle)));
   }
 
-  if (enabled(options.zod, isPackageExists('zod'))) {
+  if (enabled(options.zod, () => isPackageExists('zod'))) {
     composer = composer.append(zod(extractConfig(options.zod)));
   }
 
-  if (enabled(options.graphql, isPackageExists('graphql'))) {
+  if (enabled(options.graphql, () => isPackageExists('graphql'))) {
     composer = composer.append(graphql(extractConfig(options.graphql)));
   }
 
@@ -218,7 +213,9 @@ export async function twoDigits(
     composer = composer.append(prettier());
   }
 
-  composer = composer.append(markdownDisables());
+  const configs = await composer.renamePlugins(PluginNameMap).toConfigs();
+  // Include user-supplied React plugins, without loading React just to disable absent rules.
+  const hasReact = configs.some((config) => !!config.plugins?.['react-extra']);
 
-  return composer.renamePlugins(PluginNameMap).toConfigs();
+  return [...configs, ...(await markdownDisables(hasReact))];
 }

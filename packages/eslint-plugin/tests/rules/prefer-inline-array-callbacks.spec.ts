@@ -15,6 +15,7 @@ const valids: Array<ValidTestCase> = [
   typescript`const arr = [1, 2, 3]; arr.findIndex(Boolean)`,
   typescript`const arr = [1, 2, 3]; arr.some(Boolean)`,
   typescript`const arr = [1, 2, 3]; arr.every(Boolean)`,
+  typescript`function filter() { return [1, 2, 3].filter(Boolean); }`,
 
   typescript`const arr = ['a', 'b']; arr.map(String)`,
   typescript`const arr = ['1', '2']; arr.map(Number)`,
@@ -128,6 +129,11 @@ const invalids: Array<InvalidTestCase> = [
   {
     code: typescript`const Boolean = (x) => x > 0; [0, 1, -1].filter(Boolean)`,
     output: typescript`const Boolean = (x) => x > 0; [0, 1, -1].filter((element) => Boolean(element))`,
+    errors: [{ messageId: 'noCallbackReference', data: { name: 'Boolean', method: 'filter' } }],
+  },
+  {
+    code: typescript`function filter(Boolean: (value: number) => boolean) { return [0, 1].filter(Boolean); }`,
+    output: typescript`function filter(Boolean: (value: number) => boolean) { return [0, 1].filter((element) => Boolean(element)); }`,
     errors: [{ messageId: 'noCallbackReference', data: { name: 'Boolean', method: 'filter' } }],
   },
   {

@@ -125,13 +125,19 @@ export const preferInlineHandlers = createRule<[], MessageId>({
         return;
       }
 
-      const reads = variable.references.filter((ref) => ref.isRead() && ref.identifier !== identifier);
+      let ref: (typeof variable.references)[number] | undefined;
 
-      if (reads.length !== 1) {
-        return;
+      for (const reference of variable.references) {
+        if (!reference.isRead() || reference.identifier === identifier) {
+          continue;
+        }
+
+        if (ref) {
+          return;
+        }
+
+        ref = reference;
       }
-
-      const [ref] = reads;
 
       if (!ref) {
         return;
