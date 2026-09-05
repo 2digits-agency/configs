@@ -453,8 +453,8 @@ catalogs:
       specifier: 19.2.8
       version: 19.2.8
     renovate:
-      specifier: 44.61.1
-      version: 44.61.1
+      specifier: 44.65.5
+      version: 44.65.5
     tailwind-csstree:
       specifier: 0.4.0
       version: 0.4.0
@@ -1120,7 +1120,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 44.61.1(supports-color@7.2.0)(typanion@3.14.0)
+        version: 44.65.5(supports-color@7.2.0)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -3507,8 +3507,8 @@ packages:
     peerDependencies:
       '@redis/client': ^6.2.1
 
-  '@renovatebot/detect-tools@4.0.11':
-    resolution: {integrity: sha512-rQ8McuE2JQkg4jmUl7l0MxwZTENOY/Z/UFWT5PYi5SzaNMXfGL/iqAMMLBYrp437pAT1rF7bwzM8xaGNOp088A==}
+  '@renovatebot/detect-tools@4.0.13':
+    resolution: {integrity: sha512-jyAb1xJeqQpVB06kGMNLzvoPwLWp2O2yMEIj7tTjOyQ8Ga332O46BjWre9vQpxMgemDvW8LFSBhLU7pIBwo1/w==}
     engines: {node: '>=22.12.0', pnpm: '>=10.0.0'}
 
   '@renovatebot/good-enough-parser@2.0.1':
@@ -3523,12 +3523,12 @@ packages:
     resolution: {integrity: sha512-btStcVTVmUaJ89qwdPlI+1yMyXTZSEpTMdgJv/77MsDzhOvVTNtoaDu6k0PHSPFoUfQ2X5WvZGRq2+CxUSqLPQ==}
     engines: {node: '>=22.12.0', pnpm: '>=10.0.0'}
 
-  '@renovatebot/pep440@5.0.0':
-    resolution: {integrity: sha512-91cFM32/pnOAvC7W1W1kPPI9QM2y6OrYCeomz7pop4A+3Ksh2XnZXGznUMlzR7YbOQlg7X/MNlF27s9Yt9hhTA==}
+  '@renovatebot/pep440@5.0.1':
+    resolution: {integrity: sha512-KmMz+X68YvrS6aN6TJWtDiH8aCIL2Igcvceh17STHxMUN3KxXsC24COoOXjMOl/Gb+okBwwduMm8PY/WY/0Cpg==}
     engines: {node: ^22.11.0 || >=24.10.0, pnpm: '>=10.0.0'}
 
-  '@renovatebot/pgp@1.3.17':
-    resolution: {integrity: sha512-iDx7AR53Xhz6PfYEdIoiPYWq5KAvVjGUk0zVJ4U6CchbbTvSKuJ3nRLKsgA8sFKZTTuSlJLkqcL8peimkiZ27g==}
+  '@renovatebot/pgp@1.3.18':
+    resolution: {integrity: sha512-A9THGqZbWTC7E/XO/jBnwtq5G8YehyWWHxIuHyiv0zBhTuZmb434QmeTtR2jFqT12gt9rFt4TEszAMI7QL49vQ==}
     engines: {node: ^22.11.0 || >=24.10.0, pnpm: '>=10.0.0'}
 
   '@renovatebot/ruby-semver@5.0.0':
@@ -3578,6 +3578,7 @@ packages:
   '@smithy/node-http-handler@4.12.0':
     resolution: {integrity: sha512-0mq1pHadfyXCYCqm2cNpbjNIT+fbaUpNxewZb/YNr2L0IrEVMOb8gM/Fl4K6XvHCW3uSNDFwPl/+iKm0bx9jYg==}
     engines: {node: '>=18.0.0'}
+    deprecated: Depreacted due to a memory leak issue https://github.com/smithy-lang/smithy-typescript/issues/2258
 
   '@smithy/signature-v4@5.6.12':
     resolution: {integrity: sha512-I6KLtq3H0qqSuV9vLglfi8puHqzygzWHOnI4z/Rdoo+q50vvo18vBRdPAvvEtcaKROz7Zn6qnPa14kRfPH6PcQ==}
@@ -6049,8 +6050,8 @@ packages:
     resolution: {integrity: sha512-ayF7iT+44LXdxJLTrTd3TLQpFDDvPCBxXxbv+pMUSuHA5Q8zyAfwkRP6aHHwNVFBUFWtxAHqwNJxF8vMZLAbVg==}
     engines: {node: '>=18'}
 
-  markdown-it@14.3.0:
-    resolution: {integrity: sha512-RCEsPjR+sr0x+AuYp601tKTkgFG4YEPLCzHST3cQ/fhlJkqAkz1L2/Qbp1j9qw5SBwQHFBoW8+hoN5xssOF0Tw==}
+  markdown-it@14.3.1:
+    resolution: {integrity: sha512-4Ej49aYTDFIQ+uBkfX8GBvJGccoARxxPep+7aWTs55ozbjQJpW9M26Fe53vnGgvLeVzva/amzjQQaQu9w0vMhA==}
     hasBin: true
 
   markdown-table@3.0.4:
@@ -6707,6 +6708,10 @@ packages:
     resolution: {integrity: sha512-I4Prw6ivkd6p8PiYR1tXASOAOBzIJwu0TB7fqaX0c/8c3QAehNYmX57EijyGGGBt3c/BIowGwV03RVBtXvHEVg==}
     engines: {node: '>=18'}
 
+  p-map@7.0.7:
+    resolution: {integrity: sha512-VaWRu2i4FJNRtiRWCuuQRgfQ1B7a6+gMSrO+3j0EQi/k0ULfS9kosRxGoiqwzIjZTDI02tGfk5mXXltLg6QtfQ==}
+    engines: {node: '>=18'}
+
   p-queue@9.3.3:
     resolution: {integrity: sha512-NXAOdnEe5FsZJfT4oK84lE1Y5cFFdWlRuOo5tww8DyNMxyRXwn39fIkUtNLKppcPC+UYU/bXujNCUGDv01y7CA==}
     engines: {node: '>=20'}
@@ -7099,8 +7104,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@44.61.1:
-    resolution: {integrity: sha512-q1UFgOCinXHHN7dfC3W1rfy/YY/k7D+ufWCarK/3mvHYwbBaijtqFFMllVFMbtzZYTh0t4cR/cWnh9z08IEgWQ==}
+  renovate@44.65.5:
+    resolution: {integrity: sha512-vZrrAL/+Rr+v9cGv24hYlLy1HnpUdH6h69KH+VQWtUvtImlYuM2jnzqerUa54gEAu5GDXIiugu5fgT59SXxx3w==}
     engines: {node: ^24.11.0, pnpm: ^11.0.0}
     hasBin: true
 
@@ -7377,6 +7382,10 @@ packages:
 
   tar@7.5.13:
     resolution: {integrity: sha512-tOG/7GyXpFevhXVh8jOPJrmtRpOTsYqUIkVdVooZYJS/z8WhfQUX8RJILmeuJNinGAMSu1veBr4asSHFt5/hng==}
+    engines: {node: '>=18'}
+
+  tar@7.5.22:
+    resolution: {integrity: sha512-MFO/QzvtAOmJbkhOaCTvbGcFN9L9b+JunIsDwaKljSOdcLMea3NJ1k9Usz/rjdfSXTq4dfzfeS7W4p4YOAAHeA==}
     engines: {node: '>=18'}
 
   tegami@1.4.0:
@@ -7855,8 +7864,8 @@ packages:
   zod@4.1.8:
     resolution: {integrity: sha512-5R1P+WwQqmmMIEACyzSvo4JXHY5WiAFHRMg+zBZKgKS+Q1viRa0C1hmUKtHltoIFKtIdki3pRxkmpP74jnNYHQ==}
 
-  zod@4.4.3:
-    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+  zod@4.5.2:
+    resolution: {integrity: sha512-XkYXCol10+ba/6F/cueWV+TezUeOqXW0hdeJt5CdXjTYeAgAQg5N03RQdJ80mhfFE72+pblvYMW4wy2Qp4Qbrg==}
 
   zod@4.5.4:
     resolution: {integrity: sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA==}
@@ -10045,7 +10054,7 @@ snapshots:
     dependencies:
       '@redis/client': 6.2.1(@opentelemetry/api@1.9.1)
 
-  '@renovatebot/detect-tools@4.0.11':
+  '@renovatebot/detect-tools@4.0.13':
     dependencies:
       fs-extra: 11.4.0
       toml-eslint-parser: 1.0.3
@@ -10076,9 +10085,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@renovatebot/pep440@5.0.0': {}
+  '@renovatebot/pep440@5.0.1': {}
 
-  '@renovatebot/pgp@1.3.17': {}
+  '@renovatebot/pgp@1.3.18': {}
 
   '@renovatebot/ruby-semver@5.0.0': {}
 
@@ -12711,7 +12720,7 @@ snapshots:
       type-fest: 4.41.0
       web-worker: 1.5.0
 
-  markdown-it@14.3.0:
+  markdown-it@14.3.1:
     dependencies:
       argparse: 2.0.1
       entities: 4.5.0
@@ -13621,6 +13630,8 @@ snapshots:
 
   p-map@7.0.6: {}
 
+  p-map@7.0.7: {}
+
   p-queue@9.3.3:
     dependencies:
       eventemitter3: 5.0.4
@@ -13969,7 +13980,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@44.61.1(supports-color@7.2.0)(typanion@3.14.0):
+  renovate@44.65.5(supports-color@7.2.0)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1117.0
       '@aws-sdk/client-ec2': 3.1117.0
@@ -14002,11 +14013,11 @@ snapshots:
       '@pnpm/parse-overrides': 1001.0.4
       '@qnighy/marshal': 0.1.3
       '@redis/client': 5.12.1(@opentelemetry/api@1.9.1)
-      '@renovatebot/detect-tools': 4.0.11
+      '@renovatebot/detect-tools': 4.0.13
       '@renovatebot/good-enough-parser': 2.0.1
       '@renovatebot/osv-offline': 3.0.10(supports-color@7.2.0)
-      '@renovatebot/pep440': 5.0.0
-      '@renovatebot/pgp': 1.3.17
+      '@renovatebot/pep440': 5.0.1
+      '@renovatebot/pgp': 1.3.18
       '@renovatebot/ruby-semver': 5.0.0
       '@sindresorhus/is': 8.1.0
       '@yarnpkg/core': 4.9.1(typanion@3.14.0)
@@ -14055,7 +14066,7 @@ snapshots:
       klona: 2.0.6
       lru-cache: 11.5.2
       luxon: 3.7.2
-      markdown-it: 14.3.0
+      markdown-it: 14.3.1
       markdown-table: 3.0.4
       minimatch: 10.2.6
       moo: 0.5.3
@@ -14063,7 +14074,7 @@ snapshots:
       neotraverse: 0.6.18
       node-html-parser: 7.1.0
       p-all: 5.0.1
-      p-map: 7.0.6
+      p-map: 7.0.7
       p-queue: 9.3.3
       p-throttle: 8.1.0
       parse-link-header: 2.0.0
@@ -14083,6 +14094,7 @@ snapshots:
       slugify: 1.6.9
       source-map-support: 0.5.21
       strip-json-comments: 5.0.3
+      tar: 7.5.22
       toml-eslint-parser: 1.0.3
       tslib: 2.8.1
       upath: 3.0.8
@@ -14091,7 +14103,7 @@ snapshots:
       xmldoc: 2.0.3
       yaml: 2.9.0
       yauzl: 3.4.0
-      zod: 4.4.3
+      zod: 4.5.2
     optionalDependencies:
       openpgp: 6.3.1
       re2: 1.26.1
@@ -14359,6 +14371,14 @@ snapshots:
   tapable@2.2.3: {}
 
   tar@7.5.13:
+    dependencies:
+      '@isaacs/fs-minipass': 4.0.1
+      chownr: 3.0.0
+      minipass: 7.1.3
+      minizlib: 3.1.0
+      yallist: 5.0.0
+
+  tar@7.5.22:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
@@ -14977,7 +14997,7 @@ snapshots:
 
   zod@4.1.8: {}
 
-  zod@4.4.3: {}
+  zod@4.5.2: {}
 
   zod@4.5.4: {}
 
