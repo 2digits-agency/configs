@@ -36,6 +36,13 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+## Automatic fixes
+
+Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
+`no-effect-alchemy-barrel-imports`, `prefer-effect-alchemy-namespace-imports`,
+`alchemy-no-v1-worker-properties`, and `alchemy-no-deprecated-docker-constraints`.
+Fixes skip ambiguous bindings, conflicting properties, and unsupported import references.
+
 ## Adding a rule
 
 Oxlint's JavaScript plugin API is currently alpha and does not expose type information. Keep rules syntax-safe and leave

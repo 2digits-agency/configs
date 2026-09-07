@@ -8,6 +8,7 @@ interface RuleCase {
   readonly invalid: string;
   readonly messageId: string;
   readonly valid: string;
+  readonly output?: string | null;
 }
 
 RuleTester.describe = describe;
@@ -29,6 +30,7 @@ export function testRule(name: RuleName, rule: Rule, ruleCase: RuleCase): void {
         code: ruleCase.invalid,
         filename: 'invalid.ts',
         errors: [{ messageId: ruleCase.messageId }],
+        ...(ruleCase.output === undefined ? {} : { output: ruleCase.output }),
       },
     ],
   });

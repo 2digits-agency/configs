@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 
+import { importedApi, namespaceImport } from '../../fixes';
 import { argumentAt, canonicalPath, defineEffectRule, ruleMeta } from '../../utils';
 
 const durationApis = new Set([
@@ -14,14 +15,17 @@ const durationApis = new Set([
 ]);
 
 export const preferEffectDuration: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Prefer explicit Effect Duration constructors over ambiguous millisecond literals.',
-    {
-      effectDuration: 'Wrap this number with Duration.millis or use a more descriptive Duration constructor.',
-    },
-    'https://www.effect.website/docs/v4/api/effect/Duration',
-  ),
+  {
+    ...ruleMeta(
+      'suggestion',
+      'Prefer explicit Effect Duration constructors over ambiguous millisecond literals.',
+      {
+        effectDuration: 'Wrap this number with Duration.millis or use a more descriptive Duration constructor.',
+      },
+      'https://www.effect.website/docs/v4/api/effect/Duration',
+    ),
+    fixable: 'code',
+  },
   (context, getState) => ({
     CallExpression(node) {
       const path = canonicalPath(node.callee, getState());
@@ -33,7 +37,21 @@ export const preferEffectDuration: Rule = defineEffectRule(
       const duration = argumentAt(node, node.arguments.length - 1);
 
       if (duration?.type === 'Literal' && typeof duration.value === 'number') {
-        context.report({ node: duration, messageId: 'effectDuration' });
+        context.report({
+          node: duration,
+          messageId: 'effectDuration',
+          fix(fixer) {
+            if (!importedApi(context, node.callee)) {
+              return;
+            }
+            const imported = namespaceImport(context, node, 'effect/Duration', 'Duration', fixer);
+
+            return [
+              ...imported.fixes,
+              fixer.replaceText(duration, `${imported.name}.millis(${context.sourceCode.getText(duration)})`),
+            ];
+          },
+        });
       }
     },
   }),

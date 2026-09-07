@@ -1,6 +1,7 @@
 import type { Rule } from '@oxlint/plugins';
 
 import { defineSyntaxRule, ruleMeta } from '../../utils';
+import { fixBarrel } from './import-fixes';
 import { barrelModuleSource, isTypeOnlyImport, namespaceAlias } from './import-style-utils';
 
 function importedName(specifier: Parameters<typeof isTypeOnlyImport>[1]): string | undefined {
@@ -12,14 +13,18 @@ function importedName(specifier: Parameters<typeof isTypeOnlyImport>[1]): string
 }
 
 export const noEffectAlchemyBarrelImports: Rule = defineSyntaxRule(
-  ruleMeta(
-    'suggestion',
-    'Import Effect and Alchemy module namespaces from their submodule entrypoints instead of root barrels.',
-    {
-      barrelImport: 'Import this module as `import * as {{alias}} from "{{source}}"` instead of from the root barrel.',
-    },
-    'https://github.com/Effect-TS/language-service/blob/main/packages/language-service/src/diagnostics/importFromBarrel.ts',
-  ),
+  {
+    ...ruleMeta(
+      'suggestion',
+      'Import Effect and Alchemy module namespaces from their submodule entrypoints instead of root barrels.',
+      {
+        barrelImport:
+          'Import this module as `import * as {{alias}} from "{{source}}"` instead of from the root barrel.',
+      },
+      'https://github.com/Effect-TS/language-service/blob/main/packages/language-service/src/diagnostics/importFromBarrel.ts',
+    ),
+    fixable: 'code',
+  },
   (context) => ({
     ImportDeclaration(node) {
       for (const specifier of node.specifiers) {
@@ -36,6 +41,7 @@ export const noEffectAlchemyBarrelImports: Rule = defineSyntaxRule(
             node: specifier,
             messageId: 'barrelImport',
             data: { alias: namespaceAlias(name), source },
+            fix: (fixer) => fixBarrel(context, node, fixer),
           });
         }
       }

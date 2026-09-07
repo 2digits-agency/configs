@@ -1,17 +1,21 @@
 import type { Rule } from '@oxlint/plugins';
 
+import { importedApi, plainOptions } from '../../fixes';
 import { argumentAt, defineEffectRule, objectProperty, ruleMeta } from '../../utils';
 import { isCloudflareWorker } from './utils';
 
 export const alchemyNoV1WorkerProperties: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow Alchemy v1 Cloudflare Worker property names.',
-    {
-      property: 'Cloudflare.Worker {{old}} was replaced in v2. Use {{replacement}}.',
-    },
-    'https://alchemy.run/migrating-from-v1',
-  ),
+  {
+    ...ruleMeta(
+      'problem',
+      'Disallow Alchemy v1 Cloudflare Worker property names.',
+      {
+        property: 'Cloudflare.Worker {{old}} was replaced in v2. Use {{replacement}}.',
+      },
+      'https://alchemy.run/migrating-from-v1',
+    ),
+    fixable: 'code',
+  },
   (context, getState) => ({
     CallExpression(node) {
       if (!isCloudflareWorker(node.callee, getState())) {
@@ -31,7 +35,18 @@ export const alchemyNoV1WorkerProperties: Rule = defineEffectRule(
         const property = objectProperty(options, old);
 
         if (property !== undefined) {
-          context.report({ node: property, messageId: 'property', data: { old, replacement } });
+          context.report({
+            node: property,
+            messageId: 'property',
+            data: { old, replacement },
+            fix(fixer) {
+              if (!importedApi(context, node.callee) || !plainOptions(options, replacement)) {
+                return;
+              }
+
+              return fixer.replaceText(property.key, property.shorthand ? `${replacement}: ${old}` : replacement);
+            },
+          });
         }
       }
     },
