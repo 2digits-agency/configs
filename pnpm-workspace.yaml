@@ -42,8 +42,6 @@ catalog:
   '@typescript-eslint/parser': 8.69.0
   '@typescript-eslint/scope-manager': 8.69.0
   '@typescript-eslint/utils': 8.69.0
-  '@typescript/native-preview': 7.0.0-dev.20260707.2
-  '@typescript/native': 'npm:typescript@7.0.2'
   '@vitest/eslint-plugin': 1.6.27
   dedent: 1.7.2
   defu: 6.1.7
@@ -101,7 +99,7 @@ catalog:
   ts-api-utils: 2.5.0
   turbo: 2.10.12
   typescript-eslint: 8.69.0
-  typescript: 6.0.3
+  typescript: 7.0.2
   vite-plus: 0.3.0
   vite: npm:@voidzero-dev/vite-plus-core@0.3.0
   vitest: 4.1.11
@@ -117,7 +115,8 @@ overrides:
   baseline-browser-mapping: 2.11.21
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
   '@typescript-eslint/types': 8.69.0
-  eslint-plugin-sonarjs>typescript: 'catalog:'
+  eslint-plugin-sonarjs>typescript: 'catalog:eslint'
+  eslint-plugin-zod>typescript: 'catalog:eslint'
   globalthis: npm:@nolyfill/globalthis@1.0.44
   hasown: npm:@nolyfill/hasown@1.0.44
   is-arguments: npm:@nolyfill/is-arguments@1.0.44
@@ -137,6 +136,12 @@ overrides:
   vite: 'catalog:'
   which-typed-array: npm:@nolyfill/which-typed-array@1.0.44
 
+packageExtensions:
+  # The Zod plugin also brings typescript-eslint into the TypeScript 7 Oxlint package.
+  eslint-plugin-zod:
+    dependencies:
+      typescript: '*'
+
 peerDependencyRules:
   allowAny:
     - vite
@@ -152,5 +157,7 @@ savePrefix: ''
 verifyDepsBeforeRun: warn
 
 catalogs:
-  conflicts_typescript_7_0_2:
-    typescript: 7.0.2
+  # typescript-eslint still requires the TypeScript 6 compiler API.
+  eslint:
+    '@typescript/native-preview': 7.0.0-dev.20260707.2
+    typescript: 6.0.3
