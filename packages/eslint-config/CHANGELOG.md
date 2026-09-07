@@ -1,3 +1,27 @@
+## @2digits/eslint-config@5.7.2
+
+### Update @eslint/compat to 2.1.1
+
+
+
+### Update eslint to 10.10.0
+
+
+
+### Update eslint-plugin-jsdoc to 64.3.6
+
+- Added `preferConstToLiteralTuples` to the generated options for `jsdoc/no-unnecessary-type-assertion`
+
+### Update @eslint-react/kit to 5.19.0
+
+
+
+### Update @eslint-react/eslint-plugin to 5.19.0
+
+
+
+### Update eslint-plugin-regexp to 3.3.0
+
 ## @2digits/eslint-config@5.7.1
 
 ### Update catalog dependencies
