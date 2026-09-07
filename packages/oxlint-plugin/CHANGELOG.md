@@ -1,3 +1,9 @@
+## @2digits/oxlint-plugin@0.0.2
+
+### Add automatic fixes for six rules
+
+Add fixes for Effect duration literals, empty Effect callbacks, barrel and namespace imports, Alchemy Worker property names, and Docker placement constraints. Fixes preserve local bindings and skip unsupported or conflicting code.
+
 ## @2digits/oxlint-plugin@0.0.1
 
 ### Add custom Oxlint rules

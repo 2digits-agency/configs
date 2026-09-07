@@ -1,80 +1,35 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.41.0\n"
-    filename: 2026-09-07-amber-otters-drift.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n  \"@2digits/oxlint-config\":\n    type: patch\n---\n\n### Support Effect tooling annotations in JSDoc\n\nAllow custom tags used by `@effect/tsgo` and `@effect/language-service`, including `@effect-expect-leaking`, while retaining validation of unknown tags and redundant TypeScript annotations.\n"
+    filename: 2026-09-07-a71c9e.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm/action-setup to 6.1.0\n"
-    filename: 2026-09-07-blue-larches-mist.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update baseline-browser-mapping to 2.11.21\n"
-    filename: 2026-09-07-crisp-willows-dawn.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update tegami to 1.5.0\n"
-    filename: 2026-09-07-golden-wrens-harbor.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 12.3.4\n"
-    filename: 2026-09-07-lucky-puffins-breeze.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update voidzero-dev/setup-vp to 1.19.0\n"
-    filename: 2026-09-07-soft-falcons-ridge.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint/compat to 2.1.1\n"
-    filename: 2026-09-07-brisk-herons-meadow.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update eslint to 10.10.0\n"
-    filename: 2026-09-07-gentle-pines-comet.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 64.3.6\n\n- Added `preferConstToLiteralTuples` to the generated options for `jsdoc/no-unnecessary-type-assertion`\n"
-    filename: 2026-09-07-mellow-ravens-spark.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/kit to 5.19.0\n"
-    filename: 2026-09-07-quiet-maples-glow.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/eslint-plugin to 5.19.0\n"
-    filename: 2026-09-07-silver-finches-bloom.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-regexp to 3.3.0\n"
-    filename: 2026-09-07-violet-foxes-trail.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update @opencode-ai/plugin to 1.18.29\n"
-    filename: 2026-09-07-coral-badgers-orbit.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Add automatic fixes for six rules\n\nAdd fixes for Effect duration literals, empty Effect callbacks, barrel and namespace imports, Alchemy Worker property names, and Docker placement constraints. Fixes preserve local bindings and skip unsupported or conflicting code.\n"
+    filename: 2026-09-07-c8f2a1.md
     v: 0.0.0
 core:packages:
-  - changelogIds:
-      - 2026-09-07-amber-otters-drift.md
-      - 2026-09-07-blue-larches-mist.md
-      - 2026-09-07-crisp-willows-dawn.md
-      - 2026-09-07-golden-wrens-harbor.md
-      - 2026-09-07-lucky-puffins-breeze.md
-      - 2026-09-07-soft-falcons-ridge.md
-    id: npm:@2digits/config-monorepo
-    updated: true
+  - id: npm:@2digits/config-monorepo
+    updated: false
   - id: npm:@2digits/cli
     updated: false
-  - changelogIds:
-      - 2026-09-07-brisk-herons-meadow.md
-      - 2026-09-07-gentle-pines-comet.md
-      - 2026-09-07-mellow-ravens-spark.md
-      - 2026-09-07-quiet-maples-glow.md
-      - 2026-09-07-silver-finches-bloom.md
-      - 2026-09-07-violet-foxes-trail.md
-    id: npm:@2digits/eslint-config
-    updated: true
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-09-07-gentle-pines-comet.md
-    id: npm:@2digits/eslint-plugin
+      - 2026-09-07-a71c9e.md
+    id: npm:@2digits/eslint-config
     updated: true
-  - changelogIds:
-      - 2026-09-07-coral-badgers-orbit.md
-    id: npm:@2digits/opencode-plugin
-    updated: true
+  - id: npm:@2digits/eslint-plugin
+    updated: false
+  - id: npm:@2digits/opencode-plugin
+    updated: false
   - id: npm:@2digits/oxfmt-config
     updated: false
-  - id: npm:@2digits/oxlint-config
-    updated: false
-  - id: npm:@2digits/oxlint-plugin
-    updated: false
+  - changelogIds:
+      - 2026-09-07-a71c9e.md
+    id: npm:@2digits/oxlint-config
+    updated: true
+  - changelogIds:
+      - 2026-09-07-c8f2a1.md
+    id: npm:@2digits/oxlint-plugin
+    updated: true
   - id: npm:@2digits/prettier-config
     updated: false
   - id: npm:@2digits/renovate-config
@@ -86,8 +41,8 @@ core:packages:
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
-  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/constants
+  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config

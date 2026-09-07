@@ -1,3 +1,9 @@
+## @2digits/oxlint-config@1.1.1
+
+### Support Effect tooling annotations in JSDoc
+
+Allow custom tags used by `@effect/tsgo` and `@effect/language-service`, including `@effect-expect-leaking`, while retaining validation of unknown tags and redundant TypeScript annotations.
+
 ## @2digits/oxlint-config@1.1.0
 
 ### Add custom Oxlint rules
