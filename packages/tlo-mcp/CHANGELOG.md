@@ -1,3 +1,11 @@
+## @2digits/tlo-mcp@0.1.33
+
+### Adopt TypeScript 7 while preserving ESLint compatibility
+
+- Migrated non-ESLint package type checks and declaration builds to TypeScript 7.0.2, replacing native-preview and alias dependencies.
+- Retained fast `tsgo` type checks for the ESLint config and plugin while keeping their TypeScript compiler API dependencies on TypeScript 6.0.3 through the named `eslint` catalog.
+- Expanded the shared tsconfig's TypeScript peer range to support both TypeScript 6 and 7.
+
 ## @2digits/tlo-mcp@0.1.32
 
 ### Update `effect` to 4.0.0-rc.112

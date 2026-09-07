@@ -1,48 +1,59 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n  \"@2digits/oxlint-config\":\n    type: patch\n---\n\n### Support Effect tooling annotations in JSDoc\n\nAllow custom tags used by `@effect/tsgo` and `@effect/language-service`, including `@effect-expect-leaking`, while retaining validation of unknown tags and redundant TypeScript annotations.\n"
-    filename: 2026-09-07-a71c9e.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Add automatic fixes for six rules\n\nAdd fixes for Effect duration literals, empty Effect callbacks, barrel and namespace imports, Alchemy Worker property names, and Docker placement constraints. Fixes preserve local bindings and skip unsupported or conflicting code.\n"
-    filename: 2026-09-07-c8f2a1.md
+  - content: "---\npackages:\n  \"@2digits/constants\":\n    type: patch\n  \"@2digits/eslint-config\":\n    type: patch\n  \"@2digits/eslint-plugin\":\n    type: patch\n  \"@2digits/opencode-plugin\":\n    type: patch\n  \"@2digits/oxfmt-config\":\n    type: patch\n  \"@2digits/oxlint-config\":\n    type: patch\n  \"@2digits/oxlint-plugin\":\n    type: patch\n  \"@2digits/prettier-config\":\n    type: patch\n  \"@2digits/tlo-mcp\":\n    type: patch\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Adopt TypeScript 7 while preserving ESLint compatibility\n\n- Migrated non-ESLint package type checks and declaration builds to TypeScript 7.0.2, replacing native-preview and alias dependencies.\n- Retained fast `tsgo` type checks for the ESLint config and plugin while keeping their TypeScript compiler API dependencies on TypeScript 6.0.3 through the named `eslint` catalog.\n- Expanded the shared tsconfig's TypeScript peer range to support both TypeScript 6 and 7.\n"
+    filename: 2026-09-07-e73c2a.md
     v: 0.0.0
 core:packages:
   - id: npm:@2digits/config-monorepo
     updated: false
   - id: npm:@2digits/cli
     updated: false
-  - id: npm:@2digits/constants
-    updated: false
   - changelogIds:
-      - 2026-09-07-a71c9e.md
+      - 2026-09-07-e73c2a.md
     id: npm:@2digits/eslint-config
     updated: true
-  - id: npm:@2digits/eslint-plugin
-    updated: false
-  - id: npm:@2digits/opencode-plugin
-    updated: false
-  - id: npm:@2digits/oxfmt-config
-    updated: false
   - changelogIds:
-      - 2026-09-07-a71c9e.md
+      - 2026-09-07-e73c2a.md
+    id: npm:@2digits/constants
+    updated: true
+  - changelogIds:
+      - 2026-09-07-e73c2a.md
+    id: npm:@2digits/eslint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-09-07-e73c2a.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
+  - changelogIds:
+      - 2026-09-07-e73c2a.md
+    id: npm:@2digits/oxfmt-config
+    updated: true
+  - changelogIds:
+      - 2026-09-07-e73c2a.md
     id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-09-07-c8f2a1.md
+      - 2026-09-07-e73c2a.md
     id: npm:@2digits/oxlint-plugin
     updated: true
-  - id: npm:@2digits/prettier-config
-    updated: false
+  - changelogIds:
+      - 2026-09-07-e73c2a.md
+    id: npm:@2digits/prettier-config
+    updated: true
   - id: npm:@2digits/renovate-config
     updated: false
-  - id: npm:@2digits/tlo-mcp
-    updated: false
-  - id: npm:@2digits/tsconfig
-    updated: false
+  - changelogIds:
+      - 2026-09-07-e73c2a.md
+    id: npm:@2digits/tlo-mcp
+    updated: true
+  - changelogIds:
+      - 2026-09-07-e73c2a.md
+    id: npm:@2digits/tsconfig
+    updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
-  - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-config
+  - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
