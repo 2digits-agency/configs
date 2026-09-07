@@ -1,82 +1,84 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Run TypeScript scripts with oxnode\n\n- Replaced `tsx` with `@oxc-node/cli` (`oxnode`) for the `@2digits/cli` bin script, the renovate config build script, and the root `tegami` script\n- Removed `tsx` from the catalog\n"
-    filename: 2026-09-03-oxnode-swap-scripts.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.41.0\n"
+    filename: 2026-09-07-amber-otters-drift.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: minor\n---\n\n## Enforce stricter Effect diagnostics and import aliases\n\n- Enabled the `allOfMapToForEach`, `catchConditionalRefailToCatchIf`, `catchDieToOrDie`, `flatMapConditionalToFilterOrFail`, `mapSomeToAsSome`, and `unsupportedServiceAccessors` diagnostics\n- Added `Equal`, `Predicate`, and `Record` import aliases and disabled the `importFromBarrel` diagnostic\n- Updated the CLI and TLO MCP packages to comply with the new rules\n"
-    filename: 2026-09-03-tsconfig-amber-diagnostics.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm/action-setup to 6.1.0\n"
+    filename: 2026-09-07-blue-larches-mist.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: minor\n---\n\n## Enforce the raceFirstWithSleepToTimeout diagnostic\n\n- Enabled the `raceFirstWithSleepToTimeout` diagnostic as an error, added in `@effect/tsgo` 0.40.0\n"
-    filename: 2026-09-03-tsconfig-racefirst-diagnostic.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update baseline-browser-mapping to 2.11.21\n"
+    filename: 2026-09-07-crisp-willows-dawn.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Refresh tsdown and turborepo skill references\n\n- Updated the tsdown and tsdown-migrate skill references for the latest release, adding a `copy` option guide and documenting new dependency, log-level, and CLI options\n- Updated the turborepo skill references to 2.10.13, including the `TURBO_SCM_BASE` replacement for `--affected-base` and the `--parallel` deprecation\n"
-    filename: 2026-09-03-tsdown-turbo-skills.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update tegami to 1.5.0\n"
+    filename: 2026-09-07-golden-wrens-harbor.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update pkg-types to 2.3.2\n"
-    filename: 2026-09-03-pkg-types-catalog-bump.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 12.3.4\n"
+    filename: 2026-09-07-lucky-puffins-breeze.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update catalog dependencies\n\n- Updated `@eslint/css` to 2.0.0, `tailwind-csstree` to 0.4.0, and `@effect/tsgo` to 0.39.1\n- Refreshed the generated ESLint rule option types for the updated Effect TypeScript tooling\n"
-    filename: 2026-09-03-eslint-frost-catalog-bumps.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update voidzero-dev/setup-vp to 1.19.0\n"
+    filename: 2026-09-07-soft-falcons-ridge.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-storybook to 10.6.0\n"
-    filename: 2026-09-03-storybook-plugin-bump.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint/compat to 2.1.1\n"
+    filename: 2026-09-07-brisk-herons-meadow.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update the OpenCode plugin API to 1.18.27\n"
-    filename: 2026-09-03-opencode-orbit-api-bump.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update eslint to 10.10.0\n"
+    filename: 2026-09-07-gentle-pines-comet.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n## Add custom Oxlint rules\n\nAdded a JavaScript plugin with default Effect correctness and API-usage rules, including syntax-safe diagnostics proposed\nfor `@effect/tsgo`.\n\nEffect projects now receive guidance toward the v4 Array, DateTime, Duration, Encoding, FileSystem, Filter, Headers,\nMatch, Path, and Url APIs. Promise thunks must acknowledge Effect's interruption signal, and Effect/Alchemy imports use\nconsistent submodule namespaces and aliases while leaving `@effect/vitest` imports unchanged.\n\nThe FileSystem and Path rules remain opt-in because the existing `@effect/tsgo/nodeBuiltinImport` diagnostic already\nenforces those migrations without duplicate reports.\n\nThe default Oxlint configuration now also catches unsafe Alchemy v2 migrations, runtime configuration, secret, lifecycle,\nand deprecated API patterns.\n"
-    filename: 2026-09-01-oxlint-plugin.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 64.3.6\n\n- Added `preferConstToLiteralTuples` to the generated options for `jsdoc/no-unnecessary-type-assertion`\n"
+    filename: 2026-09-07-mellow-ravens-spark.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update Renovate to 44.60.1\n"
-    filename: 2026-09-03-renovate-nova-bump.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/kit to 5.19.0\n"
+    filename: 2026-09-07-quiet-maples-glow.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update Renovate to 44.61.1\n"
-    filename: 2026-09-03-renovate-psi-bump.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/eslint-plugin to 5.19.0\n"
+    filename: 2026-09-07-silver-finches-bloom.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-regexp to 3.3.0\n"
+    filename: 2026-09-07-violet-foxes-trail.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update @opencode-ai/plugin to 1.18.29\n"
+    filename: 2026-09-07-coral-badgers-orbit.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-09-03-oxnode-swap-scripts.md
-      - 2026-09-03-tsconfig-amber-diagnostics.md
-      - 2026-09-03-tsconfig-racefirst-diagnostic.md
-      - 2026-09-03-tsdown-turbo-skills.md
+      - 2026-09-07-amber-otters-drift.md
+      - 2026-09-07-blue-larches-mist.md
+      - 2026-09-07-crisp-willows-dawn.md
+      - 2026-09-07-golden-wrens-harbor.md
+      - 2026-09-07-lucky-puffins-breeze.md
+      - 2026-09-07-soft-falcons-ridge.md
     id: npm:@2digits/config-monorepo
     updated: true
+  - id: npm:@2digits/cli
+    updated: false
   - changelogIds:
-      - 2026-09-03-oxnode-swap-scripts.md
-      - 2026-09-03-pkg-types-catalog-bump.md
-    id: npm:@2digits/cli
+      - 2026-09-07-brisk-herons-meadow.md
+      - 2026-09-07-gentle-pines-comet.md
+      - 2026-09-07-mellow-ravens-spark.md
+      - 2026-09-07-quiet-maples-glow.md
+      - 2026-09-07-silver-finches-bloom.md
+      - 2026-09-07-violet-foxes-trail.md
+    id: npm:@2digits/eslint-config
     updated: true
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-09-03-eslint-frost-catalog-bumps.md
-      - 2026-09-03-pkg-types-catalog-bump.md
-      - 2026-09-03-storybook-plugin-bump.md
-    id: npm:@2digits/eslint-config
+      - 2026-09-07-gentle-pines-comet.md
+    id: npm:@2digits/eslint-plugin
     updated: true
-  - id: npm:@2digits/eslint-plugin
-    updated: false
   - changelogIds:
-      - 2026-09-03-opencode-orbit-api-bump.md
+      - 2026-09-07-coral-badgers-orbit.md
     id: npm:@2digits/opencode-plugin
     updated: true
   - id: npm:@2digits/oxfmt-config
     updated: false
-  - changelogIds:
-      - 2026-09-01-oxlint-plugin.md
-    id: npm:@2digits/oxlint-config
-    updated: true
+  - id: npm:@2digits/oxlint-config
+    updated: false
+  - id: npm:@2digits/oxlint-plugin
+    updated: false
   - id: npm:@2digits/prettier-config
     updated: false
-  - changelogIds:
-      - 2026-09-01-oxlint-plugin.md
-    id: npm:@2digits/oxlint-plugin
-    updated: true
-  - changelogIds:
-      - 2026-09-03-oxnode-swap-scripts.md
-      - 2026-09-03-renovate-nova-bump.md
-      - 2026-09-03-renovate-psi-bump.md
-    id: npm:@2digits/renovate-config
-    updated: true
+  - id: npm:@2digits/renovate-config
+    updated: false
   - id: npm:@2digits/tlo-mcp
     updated: false
   - id: npm:@2digits/tsconfig
@@ -84,14 +86,14 @@ core:packages:
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
-  - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-config
+  - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
-  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/oxlint-plugin
+  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig

@@ -1,3 +1,27 @@
+## @2digits/config-monorepo@0.1.1
+
+### Update @effect/tsgo to 0.41.0
+
+
+
+### Update pnpm/action-setup to 6.1.0
+
+
+
+### Update baseline-browser-mapping to 2.11.21
+
+
+
+### Update tegami to 1.5.0
+
+
+
+### Update pnpm to 12.3.4
+
+
+
+### Update voidzero-dev/setup-vp to 1.19.0
+
 ## @2digits/config-monorepo@0.1.0
 
 ### Run TypeScript scripts with oxnode
