@@ -9,7 +9,7 @@ on:
 
 jobs:
   publish:
-    name: ✉️ Tegami
+    name: 📦 pnpm releases
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -34,11 +34,82 @@ jobs:
           cache: true
           registry-url: 'https://registry.npmjs.org'
 
+      - name: 🪄 Version packages from changesets and update the lockfile
+        id: version
+        shell: bash
+        run: |
+          vp run release:version
+          if [ -n "$(git status --porcelain)" ]; then
+            echo 'pending=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'pending=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 📨 Create or update the release PR
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
+          branch: release/main
+          base: main
+          delete-branch: true
+          commit-message: 'chore: version packages'
+          title: 'chore: version packages'
+          body: |
+            This PR consumes pending `.changeset/*.md` files with pnpm's native versioning.
+
+            Review the package versions, changelogs, lockfile, and `.changeset/ledger.yaml`.
+            Merging publishes the new versions to npm on the next release workflow run.
+          add-paths: |
+            .changeset/
+            package.json
+            CHANGELOG.md
+            packages/*/package.json
+            packages/*/CHANGELOG.md
+            pnpm-lock.yaml
+
       - name: 🏗️ Build packages
+        if: steps.version.outputs.pending == 'false'
         run: vp run build --force
 
-      - name: 🪄 Version or publish packages
-        run: vp run tegami ci
+      - name: 🚀 Publish un-published versions
+        if: steps.version.outputs.pending == 'false'
+        run: vp run release:publish
         env:
-          GITHUB_TOKEN: ${{ github.token }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: 🏷️ Create package tags and GitHub releases
+        if: steps.version.outputs.pending == 'false'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const { readFile, readdir } = require('node:fs/promises');
+            // After a successful recursive publish every public manifest version is on npm.
+            // Check all of them so a rerun also repairs a failed GitHub release step.
+            for (const dir of await readdir('packages')) {
+              const path = `packages/${dir}`;
+              const pkg = JSON.parse(await readFile(`${path}/package.json`, 'utf8'));
+              if (pkg.private) continue;
+              const tag = `${pkg.name}@${pkg.version}`;
+              try {
+                await github.rest.repos.getReleaseByTag({ ...context.repo, tag });
+                continue;
+              } catch (error) {
+                if (error.status !== 404) throw error;
+              }
+              const changelog = await readFile(`${path}/CHANGELOG.md`, 'utf8');
+              // Support both native pnpm headings and the existing release history.
+              const section = changelog.split(/^## /m).find((entry) => {
+                const heading = entry.split('\n', 1)[0].trim();
+                return heading === pkg.version || heading === tag;
+              });
+              if (!section) throw new Error(`Missing changelog for ${tag}`);
+              await github.rest.repos.createRelease({
+                ...context.repo,
+                tag_name: tag,
+                target_commitish: context.sha,
+                name: tag,
+                body: section.slice(section.indexOf('\n') + 1).trim(),
+                prerelease: pkg.version.includes('-'),
+                make_latest: 'false',
+              });
+            }

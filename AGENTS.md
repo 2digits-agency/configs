@@ -132,38 +132,31 @@ For GitHub Actions, consider using [`voidzero-dev/setup-vp`](https://github.com/
 
 # Release workflow
 
-This repository uses [Tegami](https://tegami.fuma-nama.dev) for versioning and publishing.
+This repository uses [pnpm's native release management](https://pnpm.io/versioning) with Changesets-format change intents.
+No separate Changesets CLI is needed. Use the Vite+ wrappers below with the repository's pinned pnpm version.
 
-## Write changelog files
+## Write changesets
 
-Create pending changelog files under `.tegami/` as `YYYY-MM-DD-{hash}.md`.
-
-See the [changelog format docs](https://tegami.fuma-nama.dev/changelog) for details.
-
-### Example
+Run `vp run changeset`, or create `.changeset/<three-random-words>.md` with package names mapped directly to bump types:
 
 ```md
 ---
-packages:
-  'npm:@acme/ui': patch
+'@2digits/eslint-config': patch
 ---
 
-### Fix button hover state
-
-The hover color now matches the design system.
+Fix the configuration behavior and describe its user-facing impact.
 ```
 
-### Package references
+Use `patch` for fixes, `minor` for features, and `major` for breaking changes. Keep unrelated changes in separate files.
+Use names from package manifests, not `npm:` ids or groups. Private packages can be versioned but are never published.
+Repository-only tooling changes do not need a package release.
 
-Use package names, ids, or groups in frontmatter. For example:
+## Preview and release
 
-- `"@acme/ui"` — package name
-- `"npm:@acme/ui"` — package id
-- `"group:acme"` — every package in a group
+- `vp run release:status` previews pending changes; `vp pm version -- -r --dry-run` previews versioning without writes.
+- `vp run release:version` consumes changesets, updates versions and committed changelogs, and refreshes the lockfile.
+- Commit generated `.changeset/ledger.yaml` changes along with the versions, changelogs, lockfile, and consumed-file deletions.
+- The release workflow opens/updates a version PR on `main`; after merge, it builds and runs native recursive pnpm publishing.
+- Do not manually edit the ledger or generated package `CHANGELOG.md` files, or run versioning/publishing unless requested.
 
-Rules:
-
-- Include YAML frontmatter with `packages`
-- Include at least one `#`, `##`, or `###` heading in the body
-- Write user-facing release notes under each heading
-- Do not edit the publish lock file (`.tegami/publish-lock.yaml`) or package `CHANGELOG.md` files directly
+See [.changeset/README.md](.changeset/README.md) for CI permissions, authentication, and the manual release procedure.
