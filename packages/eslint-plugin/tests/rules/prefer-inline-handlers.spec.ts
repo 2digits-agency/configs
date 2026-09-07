@@ -27,6 +27,16 @@ const valids: Array<ValidTestCase> = [
 
   tsx`
     export function MyComponent() {
+      const handleClick = () => console.log("clicked");
+      void handleClick;
+      void handleClick;
+
+      return <button onClick={handleClick}>Click</button>;
+    }
+  `,
+
+  tsx`
+    export function MyComponent() {
       const handleClick = () => {
         console.log("clicked");
       };

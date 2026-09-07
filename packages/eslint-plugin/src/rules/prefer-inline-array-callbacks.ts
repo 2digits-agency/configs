@@ -1,4 +1,4 @@
-import { ScopeType } from '@typescript-eslint/scope-manager';
+import { type Reference, type Scope, ScopeType } from '@typescript-eslint/scope-manager';
 import { AST_NODE_TYPES, ESLintUtils, type TSESLint, type TSESTree } from '@typescript-eslint/utils';
 import * as tsutils from 'ts-api-utils';
 import type ts from 'typescript';
@@ -41,6 +41,7 @@ function isIgnoredCallback(
   methodName: string,
   callback: TSESTree.Node,
   sourceCode: Readonly<TSESLint.SourceCode>,
+  referencesByScope: WeakMap<Scope, Map<TSESTree.Node, Reference>>,
 ): boolean {
   if (callback.type !== AST_NODE_TYPES.Identifier) {
     return false;
@@ -53,7 +54,19 @@ function isIgnoredCallback(
   }
 
   const scope = sourceCode.getScope(callback);
-  const reference = scope.references.find((ref) => ref.identifier === callback);
+  let references = referencesByScope.get(scope);
+
+  if (!references) {
+    references = new Map<TSESTree.Node, Reference>();
+
+    for (const reference of scope.references) {
+      references.set(reference.identifier, reference);
+    }
+
+    referencesByScope.set(scope, references);
+  }
+
+  const reference = references.get(callback);
 
   if (!reference?.resolved) {
     return true;
@@ -135,6 +148,7 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
   },
   create(context) {
     const parserServices = ESLintUtils.getParserServices(context, true);
+    const referencesByScope = new WeakMap<Scope, Map<TSESTree.Node, Reference>>();
 
     if (!parserServices.program || !('getTypeAtLocation' in parserServices)) {
       return {};
@@ -167,7 +181,7 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
         return;
       }
 
-      if (isIgnoredCallback(methodName, callback, context.sourceCode)) {
+      if (isIgnoredCallback(methodName, callback, context.sourceCode, referencesByScope)) {
         return;
       }
 
