@@ -1,3 +1,9 @@
+## @2digits/eslint-config@5.7.3
+
+### Support Effect tooling annotations in JSDoc
+
+Allow custom tags used by `@effect/tsgo` and `@effect/language-service`, including `@effect-expect-leaking`, while retaining validation of unknown tags and redundant TypeScript annotations.
+
 ## @2digits/eslint-config@5.7.2
 
 ### Update @eslint/compat to 2.1.1
