@@ -1,115 +1,161 @@
 name: 💠 Publish
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
 on:
   push:
     branches:
       - main
 
+permissions: {}
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
-  publish:
-    name: 📦 pnpm releases
+  select-mode:
+    name: 📝 Plan release
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      id-token: write
-      contents: write
-      pull-requests: write
-    env:
-      FORCE_COLOR: 1
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-
+      contents: read
+    outputs:
+      mode: ${{ steps.select-mode.outputs.mode }}
+      publish-plan-artifact-id: ${{ steps.select-mode.outputs.publish-plan-artifact-id }}
     steps:
       - name: 🗃️ Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
+          persist-credentials: false
 
       - name: ⚡Setup Vite+
         uses: voidzero-dev/setup-vp@49c3e4e92c52e7f8392712a9267bbe71c5ab30e5 # v1.19.0
         with:
+          version: 0.3.0
           node-version-file: package.json
-          cache: true
-          registry-url: 'https://registry.npmjs.org'
+          run-install: false
 
-      - name: 🪄 Version packages from changesets and update the lockfile
-        id: version
-        shell: bash
-        run: |
-          vp run release:version
-          if [ -n "$(git status --porcelain)" ]; then
-            echo 'pending=true' >> "$GITHUB_OUTPUT"
-          else
-            echo 'pending=false' >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: 📨 Create or update the release PR
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+      - name: 🛸 Expose pnpm for Changesets
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         with:
-          token: ${{ secrets.RELEASE_TOKEN || github.token }}
-          branch: release/main
-          base: main
-          delete-branch: true
-          commit-message: 'chore: version packages'
-          title: 'chore: version packages'
-          body: |
-            This PR consumes pending `.changeset/*.md` files with pnpm's native versioning.
+          run_install: false
 
-            Review the package versions, changelogs, lockfile, and `.changeset/ledger.yaml`.
-            Merging publishes the new versions to npm on the next release workflow run.
-          add-paths: |
-            .changeset/
-            package.json
-            CHANGELOG.md
-            packages/*/package.json
-            packages/*/CHANGELOG.md
-            pnpm-lock.yaml
+      - name: 📥 Install release tooling without lifecycle scripts
+        run: vp install --frozen-lockfile --ignore-scripts
+
+      - name: 📝 Select Changesets mode
+        id: select-mode
+        uses: changesets/action/select-mode@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+
+  version:
+    name: 📨 Version PR
+    needs: select-mode
+    if: needs.select-mode.outputs.mode == 'version'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: 🗃️ Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: ⚡Setup Vite+
+        uses: voidzero-dev/setup-vp@49c3e4e92c52e7f8392712a9267bbe71c5ab30e5 # v1.19.0
+        with:
+          version: 0.3.0
+          node-version-file: package.json
+          run-install: false
+
+      - name: 🛸 Expose pnpm for Changesets
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          run_install: false
+
+      - name: 📥 Install release tooling without lifecycle scripts
+        run: vp install --frozen-lockfile --ignore-scripts
+
+      - name: 🪄 Version packages and create the release PR
+        uses: changesets/action/version@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          script: vp run release:version
+          commit-message: 'chore: version packages'
+          pr-title: 'chore: version packages'
+          github-token: ${{ secrets.RELEASE_TOKEN || github.token }}
+
+  pack:
+    name: 📦 Build and pack
+    needs: select-mode
+    if: needs.select-mode.outputs.mode == 'publish'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    outputs:
+      pack-dir-artifact-id: ${{ steps.pack.outputs.pack-dir-artifact-id }}
+    env:
+      FORCE_COLOR: 1
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - name: 🗃️ Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: ⚡Setup Vite+
+        uses: voidzero-dev/setup-vp@49c3e4e92c52e7f8392712a9267bbe71c5ab30e5 # v1.19.0
+        with:
+          version: 0.3.0
+          node-version-file: package.json
+
+      - name: 🛸 Expose pnpm for Changesets
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          run_install: false
 
       - name: 🏗️ Build packages
-        if: steps.version.outputs.pending == 'false'
         run: vp run build --force
 
-      - name: 🚀 Publish un-published versions
-        if: steps.version.outputs.pending == 'false'
-        run: vp run release:publish
+      - name: 📦 Pack the publish plan
+        id: pack
+        uses: changesets/action/pack@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          publish-plan-artifact-id: ${{ needs.select-mode.outputs.publish-plan-artifact-id }}
+
+  publish:
+    name: 🚀 Publish packed artifacts
+    needs: pack
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: 🗃️ Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: ⚡Setup Vite+
+        uses: voidzero-dev/setup-vp@49c3e4e92c52e7f8392712a9267bbe71c5ab30e5 # v1.19.0
+        with:
+          version: 0.3.0
+          node-version-file: package.json
+          run-install: false
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: 🛸 Expose pnpm for Changesets
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          run_install: false
+
+      - name: 📥 Install release tooling without lifecycle scripts
+        run: vp install --frozen-lockfile --ignore-scripts
+
+      - name: 🚀 Publish, tag, and create GitHub releases
+        uses: changesets/action/publish@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          pack-dir-artifact-id: ${{ needs.pack.outputs.pack-dir-artifact-id }}
+          github-token: ${{ github.token }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: 🏷️ Create package tags and GitHub releases
-        if: steps.version.outputs.pending == 'false'
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        with:
-          script: |
-            const { readFile, readdir } = require('node:fs/promises');
-            // After a successful recursive publish every public manifest version is on npm.
-            // Check all of them so a rerun also repairs a failed GitHub release step.
-            for (const dir of await readdir('packages')) {
-              const path = `packages/${dir}`;
-              const pkg = JSON.parse(await readFile(`${path}/package.json`, 'utf8'));
-              if (pkg.private) continue;
-              const tag = `${pkg.name}@${pkg.version}`;
-              try {
-                await github.rest.repos.getReleaseByTag({ ...context.repo, tag });
-                continue;
-              } catch (error) {
-                if (error.status !== 404) throw error;
-              }
-              const changelog = await readFile(`${path}/CHANGELOG.md`, 'utf8');
-              // Support both native pnpm headings and the existing release history.
-              const section = changelog.split(/^## /m).find((entry) => {
-                const heading = entry.split('\n', 1)[0].trim();
-                return heading === pkg.version || heading === tag;
-              });
-              if (!section) throw new Error(`Missing changelog for ${tag}`);
-              await github.rest.repos.createRelease({
-                ...context.repo,
-                tag_name: tag,
-                target_commitish: context.sha,
-                name: tag,
-                body: section.slice(section.indexOf('\n') + 1).trim(),
-                prerelease: pkg.version.includes('-'),
-                make_latest: 'false',
-              });
-            }

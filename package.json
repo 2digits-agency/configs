@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
-    "changeset": "vp exec pnpm change",
+    "changeset": "vp exec changeset",
     "check": "turbo run test lint:root types format lint:pkg lint:oxlint knip --continue",
     "check:watch": "turbo watch test lint:root types format lint:pkg",
     "clean": "find . -name node_modules -o -name .turbo -o -name dist -type d -prune | xargs rm -rf",
@@ -27,9 +27,8 @@
     "lint:pkg:fix": "manypkg fix",
     "lint:root": "eslint .",
     "prepare": "effect-tsgo patch --typescript",
-    "release:publish": "vp pm publish -- -r --access public --provenance",
-    "release:status": "vp exec pnpm change status",
-    "release:version": "vp pm version -- -r && vp install --lockfile-only",
+    "release:status": "vp exec changeset status",
+    "release:version": "vp exec changeset version && vp install --lockfile-only",
     "test": "turbo test",
     "types": "turbo types"
   },
@@ -38,6 +37,7 @@
     "@2digits/oxfmt-config": "workspace:*",
     "@2digits/oxlint-config": "workspace:*",
     "@2digits/tsconfig": "workspace:*",
+    "@changesets/cli": "catalog:",
     "@effect/language-service": "catalog:",
     "@effect/tsgo": "catalog:",
     "@manypkg/cli": "catalog:",

@@ -132,8 +132,8 @@ For GitHub Actions, consider using [`voidzero-dev/setup-vp`](https://github.com/
 
 # Release workflow
 
-This repository uses [pnpm's native release management](https://pnpm.io/versioning) with Changesets-format change intents.
-No separate Changesets CLI is needed. Use the Vite+ wrappers below with the repository's pinned pnpm version.
+This repository uses [Changesets v3](https://changesets.dev/guide/migration) with pnpm and the official Changesets v2 CI actions.
+Use the Vite+ wrappers below. Release configuration lives in `.changeset/config.json`.
 
 ## Write changesets
 
@@ -153,10 +153,11 @@ Repository-only tooling changes do not need a package release.
 
 ## Preview and release
 
-- `vp run release:status` previews pending changes; `vp pm version -- -r --dry-run` previews versioning without writes.
+- `vp run release:status` previews pending changes without versioning.
 - `vp run release:version` consumes changesets, updates versions and committed changelogs, and refreshes the lockfile.
-- Commit generated `.changeset/ledger.yaml` changes along with the versions, changelogs, lockfile, and consumed-file deletions.
-- The release workflow opens/updates a version PR on `main`; after merge, it builds and runs native recursive pnpm publishing.
-- Do not manually edit the ledger or generated package `CHANGELOG.md` files, or run versioning/publishing unless requested.
+- Commit the versions, changelogs, lockfile, and consumed-file deletions together. Changesets does not use a pnpm ledger.
+- CLI v3 exits 1 when versioning has no work; CI uses `select-mode` before invoking `version`.
+- The official actions open a release PR, build/pack without publishing permissions, then publish with pnpm in a separate OIDC job.
+- Do not manually edit generated package `CHANGELOG.md` files, or run versioning/publishing unless requested.
 
 See [.changeset/README.md](.changeset/README.md) for CI permissions, authentication, and the manual release procedure.

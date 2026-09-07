@@ -1,10 +1,6 @@
 packages:
   - packages/*
 
-versioning:
-  changelog:
-    storage: repository
-
 allowBuilds:
   '@parcel/watcher': true
   better-sqlite3: true
@@ -110,6 +106,7 @@ catalog:
   vitest: 4.1.11
   yaml-eslint-parser: 2.1.0
   zod: 4.5.4
+  '@changesets/cli': 3.0.2
 
 overrides:
   array-includes: npm:@nolyfill/array-includes@1.0.44

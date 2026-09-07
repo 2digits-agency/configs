@@ -1,19 +1,20 @@
 # Releases
 
-We use [pnpm's native release management](https://pnpm.io/versioning), which reads and writes
-[Changesets-format files](https://pnpm.io/using-changesets). The pinned pnpm version handles version planning,
-dependent bumps, changelogs, and publishing; neither Tegami nor `@changesets/cli` is required.
+We use [Changesets v3](https://changesets.dev/guide/migration) with pnpm and Vite+.
+Changesets plans versions and generates changelogs; its pnpm adapter packs and publishes packages.
+Configuration lives in `.changeset/config.json`, not pnpm's native `versioning` settings.
 
-## Record a change
+## Record and preview changes
 
-Run `vp run changeset` from the repository root and commit the generated `.changeset/*.md` file with the code change.
-For a non-interactive entry:
+Run `vp run changeset` and commit the generated `.changeset/*.md` alongside the code change.
+Changesets v3 also supports non-interactive entries:
 
 ```sh
-vp run changeset @2digits/eslint-config --bump patch --summary 'Fix configuration behavior.'
+vp run changeset --patch @2digits/eslint-config --message 'Fix configuration behavior.'
+vp run release:status
 ```
 
-Or write a file directly:
+Use `--minor` for features or `--major` for breaking changes. For a manual entry, map package names directly to bump types:
 
 ```md
 ---
@@ -24,43 +25,37 @@ Or write a file directly:
 Describe the shared user-facing fix.
 ```
 
-Use `patch`, `minor`, or `major`. Names must match package manifests, without `npm:` prefixes or a `packages:` wrapper.
-Private packages can have change intents and changelogs, but recursive publishing skips them. Repository-only tooling
-changes do not require a package release.
+Private packages are explicitly opted into versioning, but not tagging or publishing. Repository-only tooling changes
+do not require package bumps; `vp run changeset --empty` can record that decision. Keep unrelated release notes separate.
 
-Preview with `vp run release:status` or `vp pm version -- -r --dry-run` (no writes).
-The read-only **Changeset PR** check also puts the release preview in its GitHub Actions job summary, including for forks.
+## Official CI actions
 
-## Automated releases
+The release workflow uses the [Changesets v2 split actions](https://changesets.dev/guide/automating), paired with CLI v3:
 
-On pushes to `main`, `.github/workflows/release.yml`:
+1. **select-mode** chooses versioning, publishing, or no work using the actual Changesets and registry state.
+2. **version** updates a `changeset-release/main` PR with bumped manifests, changelogs, and the refreshed pnpm lockfile.
+3. **pack** builds and packs the publish plan in a job without npm credentials or OIDC permission.
+4. **publish** consumes that artifact in a separate OIDC-enabled job and handles package tags and GitHub releases.
 
-1. Computes the native pnpm release plan. Pending intents produce a `release/main` PR containing bumped manifests,
-   repository changelogs, the refreshed lockfile, and pnpm's `.changeset/ledger.yaml` consumption record.
-2. When no pending release remains (normally after that PR merges), builds and publishes manifest versions not already
-   on npm with `pnpm publish -r --access public --provenance`, through Vite+.
-3. Creates missing `package-name@version` tags and GitHub releases from the committed changelogs. Existing releases are
-   left untouched; rerunning a failed release step repairs missing releases without republishing existing npm versions.
+All actions are pinned to commits. Release jobs do not reuse dependency caches. Planning, versioning, and publishing
+installs skip lifecycle scripts; build/pack scripts run only in the pack job. Generated-note formatting is disabled so
+versioning does not need to build or execute the repository's formatter configuration.
 
-Do not edit the generated ledger or changelogs manually. Commit the ledger and consumed intent deletions with each release.
-Repository changelog storage is configured in `pnpm-workspace.yaml`; existing release history is retained unchanged.
-There are no pending pre-migration notes to convert: the old publish lock's notes were already versioned into the manifests
-and changelogs. Any of those versions still missing on npm will be picked up by recursive publishing without another bump.
+The **pr-status** and **pr-comment** actions maintain a non-blocking release-preview comment, including for forks.
+Their `pull_request_target` workflow uses a trusted base checkout, never installs dependencies or runs PR code, and
+separates read-only status generation from comment-write permissions. Release PRs are skipped.
 
-### GitHub and npm setup
+### Authentication and permissions
 
-- Allow GitHub Actions to create pull requests. The workflow requests `contents: write` and `pull-requests: write`.
-- Optionally set `RELEASE_TOKEN` to a bot token with repository contents and pull-request write permissions so generated
-  release PRs trigger CI. With the default `GITHUB_TOKEN`, GitHub suppresses those events; a maintainer must close and reopen
-  the PR to trigger required checks before merging. No automatic merge is configured.
-- Keep npm trusted publishers pointing to `2digits-agency/configs`, workflow **`release.yml`**. The filename and
-  `id-token: write` permission are unchanged. Native pnpm uses OIDC for each public package; the existing `NPM_TOKEN` secret
-  remains an optional fallback through the setup-generated npm auth configuration.
-- Only the `main` workflow publishes. PR previews have read-only permissions and never receive publishing credentials.
+- Allow GitHub Actions to create PRs. Optional `RELEASE_TOKEN` enables CI events on generated release PRs; with the default
+  `GITHUB_TOKEN`, a maintainer must close and reopen the PR to trigger required checks. No auto-merge is configured.
+- Keep npm trusted publishers pointing to `2digits-agency/configs`, workflow **`release.yml`**. Only the publish job has
+  `id-token: write`. pnpm handles OIDC and automatic provenance for eligible public packages. The existing `NPM_TOKEN`
+  remains an optional fallback through setup-vp's npm auth configuration.
+- The publish action uses its built-in artifact path, not a custom publish script, so Changesets can report publication,
+  tags, and GitHub releases correctly. Do not replace it with a bare `pnpm publish -r` command.
 
-## Manual release
-
-From a clean, up-to-date checkout of `main`, preview first, then prepare the version commit:
+## Manual verification and versioning
 
 ```sh
 vp install --frozen-lockfile
@@ -68,14 +63,18 @@ vp run release:status
 vp run release:version
 ```
 
-Review and commit the generated changes in a release PR. Merging it lets CI build, publish, and create GitHub releases.
-`vp run release:publish` is intended for the authorized GitHub Actions environment: provenance requires supported CI.
-For local packaging verification without uploading anything:
+Versioning consumes changesets and updates manifests/changelogs. Commit those changes and the lockfile in a release PR;
+do not edit generated changelogs manually. Unlike v2, `changeset version` exits 1 when there is nothing to release.
+The CI mode-selection action handles that condition. There is no pnpm consumption ledger in this workflow.
+
+To verify the exact plan/pack path without publishing, build first and use an output directory outside the repository:
 
 ```sh
 vp run build
-vp pm publish -- -r --dry-run --no-git-checks
+vp exec changeset publish-plan --output /tmp/configs-publish-plan.json
+vp exec changeset pack --from-publish-plan /tmp/configs-publish-plan.json --out-dir /tmp/configs-release-pack
 ```
 
-The `vp pm` separator is significant: use `--` before native pnpm flags. `vp run changeset` wraps `vp exec pnpm change`
-because this version of Vite+ does not yet expose `change` through `vp pm`.
+No existing package versions are bumped by the tooling migration. Already-versioned packages missing on npm are included
+in the publish plan without another bump. Their release notes are retained; the pending Oxlint plugin release's heading
+is converted once to Changesets' `## version` format so the official action can extract its notes.

@@ -1,4 +1,4 @@
-## @2digits/oxlint-plugin@0.0.2
+## 0.0.2
 
 ### Add automatic fixes for six rules
 

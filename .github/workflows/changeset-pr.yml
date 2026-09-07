@@ -1,35 +1,47 @@
 name: 📝 Changeset PR
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - opened
       - synchronize
       - reopened
 
+permissions: {}
+
+concurrency: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+
 jobs:
-  preview:
+  status:
     name: 📝 Release preview
+    if: ${{ !startsWith(github.head_ref, 'changeset-release/') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     permissions:
       contents: read
+    outputs:
+      comment-body: ${{ steps.status.outputs.comment-body }}
     steps:
+      # Keep the trusted base checkout. The action reads the PR's data in a worktree;
+      # never install dependencies or execute PR code in pull_request_target.
       - name: 🗃️ Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
+          persist-credentials: false
 
-      - name: ⚡Setup Vite+
-        uses: voidzero-dev/setup-vp@49c3e4e92c52e7f8392712a9267bbe71c5ab30e5 # v1.19.0
+      - name: 📝 Generate Changesets status
+        id: status
+        uses: changesets/action/pr-status@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+
+  comment:
+    name: 💬 Comment release preview
+    needs: status
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+    steps:
+      - name: 💬 Create or update the preview comment
+        uses: changesets/action/pr-comment@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          node-version-file: package.json
-          cache: true
-
-      - name: 📝 Preview pending changesets
-        shell: bash
-        run: |
-          echo '## Release preview' >> "$GITHUB_STEP_SUMMARY"
-          echo '```text' >> "$GITHUB_STEP_SUMMARY"
-          vp run release:status | tee -a "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          body: ${{ needs.status.outputs.comment-body }}

@@ -1,8 +1,8 @@
 ---
-description: Generate pnpm changesets from code changes
+description: Generate Changesets v3 release notes from code changes
 ---
 
-Write Changesets-format change intents in `.changeset/` for pnpm's native release flow.
+Write Changesets v3 release notes in `.changeset/` for the pnpm release flow.
 
 ## Gather
 
@@ -26,7 +26,7 @@ Allow schema comments in mise TOML files.
 
 - Quoted package names directly mapped to bump types; `patch` fixes/refactors/bumps, `minor` new features, `major` breaking
 - Imperative summary ("Fix X"), past-tense bullets ("Added", "Removed"), backticks for code
-- Plain summaries are sufficient; pnpm generates the changelog headings. Add bullets only when the detail is worth reading
+- Plain summaries are sufficient; Changesets generates the changelog headings. Add bullets only when the detail is worth reading
 
 ## Granularity
 
