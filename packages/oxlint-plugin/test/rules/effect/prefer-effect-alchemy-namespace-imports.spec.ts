@@ -10,11 +10,13 @@ testRule('prefer-effect-alchemy-namespace-imports', preferEffectAlchemyNamespace
     import { deepStrictEqual } from '@effect/vitest/utils'
   `,
   invalid: `import { sort } from 'effect/Array'`,
+  output: `import * as Arr from 'effect/Array';`,
   messageId: 'namespace',
 });
 
 testRule('prefer-effect-alchemy-namespace-imports', preferEffectAlchemyNamespaceImports, {
   valid: `import * as P from 'effect/Predicate'`,
   invalid: `import * as Predicate from 'effect/Predicate'`,
+  output: `import * as P from 'effect/Predicate';`,
   messageId: 'alias',
 });

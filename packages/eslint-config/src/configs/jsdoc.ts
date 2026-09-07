@@ -15,7 +15,21 @@ export function jsdoc(): Array<TypedFlatConfigItem> {
         'jsdoc/check-access': 'error',
         'jsdoc/check-param-names': 'error',
         'jsdoc/check-property-names': 'error',
-        'jsdoc/check-tag-names': ['error', { typed: true }],
+        'jsdoc/check-tag-names': [
+          'error',
+          {
+            typed: true,
+            definedTags: [
+              'effect-codegens',
+              'effect-diagnostics',
+              'effect-diagnostics-next-line',
+              'effect-expect-leaking',
+              'effect-identifier',
+              'effect-leakable-service',
+              'effect-schema-codegenerated',
+            ],
+          },
+        ],
         'jsdoc/check-types': 'error',
         'jsdoc/empty-tags': 'error',
         'jsdoc/implements-on-classes': 'error',

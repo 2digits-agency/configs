@@ -12,4 +12,9 @@ testRule('prefer-effect-duration', preferEffectDuration, {
     Effect.sleep(5000)
   `,
   messageId: 'effectDuration',
+  output: `
+    import * as Duration from 'effect/Duration';
+import * as Effect from 'effect/Effect'
+    Effect.sleep(Duration.millis(5000))
+  `,
 });

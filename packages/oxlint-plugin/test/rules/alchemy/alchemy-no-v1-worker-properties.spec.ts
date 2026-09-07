@@ -11,4 +11,8 @@ testRule('alchemy-no-v1-worker-properties', alchemyNoV1WorkerProperties, {
     CF.Worker('Worker', { entrypoint: './worker.ts' })
   `,
   messageId: 'property',
+  output: `
+    import * as CF from 'alchemy/Cloudflare'
+    CF.Worker('Worker', { main: './worker.ts' })
+  `,
 });

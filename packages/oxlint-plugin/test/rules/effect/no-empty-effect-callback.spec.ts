@@ -11,4 +11,8 @@ testRule('no-empty-effect-callback', noEmptyEffectCallback, {
     const blocked = Fx.callback(() => {})
   `,
   messageId: 'emptyCallback',
+  output: `
+    import * as Fx from 'effect/Effect'
+    const blocked = Fx.never
+  `,
 });

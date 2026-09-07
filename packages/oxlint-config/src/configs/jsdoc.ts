@@ -5,7 +5,21 @@ export const jsdocConfig = defineConfig({
   rules: {
     'jsdoc/check-access': 'error',
     'jsdoc/check-property-names': 'error',
-    'jsdoc/check-tag-names': ['error', { typed: true }],
+    'jsdoc/check-tag-names': [
+      'error',
+      {
+        typed: true,
+        definedTags: [
+          'effect-codegens',
+          'effect-diagnostics',
+          'effect-diagnostics-next-line',
+          'effect-expect-leaking',
+          'effect-identifier',
+          'effect-leakable-service',
+          'effect-schema-codegenerated',
+        ],
+      },
+    ],
     'jsdoc/empty-tags': 'error',
     'jsdoc/implements-on-classes': 'error',
     'jsdoc/no-defaults': 'error',
@@ -16,14 +30,5 @@ export const jsdocConfig = defineConfig({
     'jsdoc/require-property-name': 'error',
     'jsdoc/require-returns-description': 'error',
     'jsdoc/require-yields': 'error',
-    'jsdoc/require-param-description': undefined,
-    'jsdoc/require-param-type': undefined,
-    'jsdoc/require-property-type': undefined,
-    'jsdoc/require-returns': undefined,
-    'jsdoc/require-returns-type': undefined,
-    'jsdoc/require-throws-description': undefined,
-    'jsdoc/require-throws-type': undefined,
-    'jsdoc/require-yields-description': undefined,
-    'jsdoc/require-yields-type': undefined,
   },
 });

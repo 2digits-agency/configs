@@ -9,11 +9,13 @@ testRule('no-effect-alchemy-barrel-imports', noEffectAlchemyBarrelImports, {
     import * as Alchemy from 'alchemy'
   `,
   invalid: `import { Array as Arr } from 'effect'`,
+  output: `import * as Arr from 'effect/Array';`,
   messageId: 'barrelImport',
 });
 
 testRule('no-effect-alchemy-barrel-imports', noEffectAlchemyBarrelImports, {
   valid: `import * as Cloudflare from 'alchemy/Cloudflare'`,
   invalid: `import { Cloudflare } from 'alchemy'`,
+  output: `import * as Cloudflare from 'alchemy/Cloudflare';`,
   messageId: 'barrelImport',
 });

@@ -11,4 +11,8 @@ testRule('alchemy-no-deprecated-docker-constraints', alchemyNoDeprecatedDockerCo
     Docker.Service('Api', { constraints: ['node.role==worker'] })
   `,
   messageId: 'constraints',
+  output: `
+    import * as Docker from 'alchemy/Docker'
+    Docker.Service('Api', { placement: { constraints: ['node.role==worker'] } })
+  `,
 });
