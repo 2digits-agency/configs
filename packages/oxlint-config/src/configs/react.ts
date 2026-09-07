@@ -39,6 +39,7 @@ export const reactConfig = defineConfig({
     'react/self-closing-comp': 'error',
     'react/void-dom-elements-no-children': 'error',
     'react-perf/jsx-no-jsx-as-prop': 'error',
+
     'stylistic/jsx-curly-newline': 'off',
     'stylistic/jsx-newline': ['error', { prevent: false }],
 

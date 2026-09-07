@@ -3279,7 +3279,7 @@ Backward pagination arguments
    */
   'react-extra/globals'?: Linter.RuleEntry<[]>
   /**
-   * Validates against passing functions that mutate captured local variables into frozen contexts such as JSX props, hook arguments, and hook return values.
+   * Validates against mutating props, state, and other immutable values, including through functions passed into frozen contexts such as JSX props, hook arguments, and hook return values.
    * @see https://eslint-react.xyz/docs/rules/immutability
    */
   'react-extra/immutability'?: Linter.RuleEntry<[]>
@@ -3638,7 +3638,7 @@ Backward pagination arguments
    */
   'react-extra/x-globals'?: Linter.RuleEntry<[]>
   /**
-   * Validates against passing functions that mutate captured local variables into frozen contexts such as JSX props, hook arguments, and hook return values.
+   * Validates against mutating props, state, and other immutable values, including through functions passed into frozen contexts such as JSX props, hook arguments, and hook return values.
    * @see https://eslint-react.xyz/docs/rules/immutability
    */
   'react-extra/x-immutability'?: Linter.RuleEntry<[]>
@@ -11409,6 +11409,8 @@ type JsdocNoUnnecessaryTypeAssertion = []|[{
   checkLiteralConstAssertions?: boolean
   
   enableFixer?: boolean
+  
+  preferConstToLiteralTuples?: boolean
   
   treatAnyAsRedundant?: boolean
   
