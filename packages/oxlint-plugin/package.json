@@ -35,7 +35,7 @@
     "build": "vp pack --minify",
     "dev": "vp pack --watch",
     "test": "vp test run",
-    "types": "tsgo --noEmit"
+    "types": "tsc --noEmit"
   },
   "dependencies": {
     "@oxlint/plugins": "catalog:"
@@ -43,7 +43,6 @@
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "oxlint": "catalog:",
     "publint": "catalog:",
     "typescript": "catalog:",
