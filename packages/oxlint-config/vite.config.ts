@@ -4,7 +4,7 @@ export default defineConfig({
   pack: {
     entry: ['src/index.ts', 'src/base.ts', 'src/typescript.ts'],
     dts: {
-      tsgo: true,
+      generator: 'tsgo',
       sourcemap: true,
     },
     fixedExtension: true,
