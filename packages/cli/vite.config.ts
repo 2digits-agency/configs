@@ -8,10 +8,10 @@ import pkg from './package.json';
 export default defineConfig({
   pack: {
     entry: ['src/bin.ts'],
-    dts: true,
+    // This private executable has no library API to emit or validate declarations for.
+    dts: false,
     fixedExtension: true,
     exports: true,
-    attw: { profile: 'esm-only', level: 'error' },
     publint: { strict: true },
     plugins: [
       {
