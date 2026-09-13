@@ -309,8 +309,8 @@ catalogs:
       specifier: 1.0.44
       version: 1.0.44
     nypm:
-      specifier: 0.6.9
-      version: 0.6.9
+      specifier: 0.6.10
+      version: 0.6.10
     oxfmt:
       specifier: 0.66.0
       version: 0.66.0
@@ -501,7 +501,7 @@ importers:
         version: 4.0.0-rc.112
       nypm:
         specifier: 'catalog:'
-        version: 0.6.9
+        version: 0.6.10
       pkg-types:
         specifier: 'catalog:'
         version: 2.3.2
@@ -6425,8 +6425,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nypm@0.6.9:
-    resolution: {integrity: sha512-zxlE2yvSWZWmHcNdT3+5zV2lrCogeE9YOklHrR3dFjqutq5wO7GFDYLFDRXLsYnJzwvy/im9fYoxePvS0VTW0w==}
+  nypm@0.6.10:
+    resolution: {integrity: sha512-W72Hrj1petq+b3Hk2aAC+9zswetlIFTnDW4s5djseZh2nYqBbyQLOtj472HwcbcWykPBUW1WpWpjOd4nK6gMRw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -13129,11 +13129,11 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nypm@0.6.9:
+  nypm@0.6.10:
     dependencies:
       citty: 0.2.2
       pathe: 2.0.3
-      tinyexec: 1.3.0
+      tinyexec: 1.3.1
 
   object-assign@4.1.1: {}
 
