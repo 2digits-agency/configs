@@ -10,13 +10,17 @@
       "ignoreDependencies": ["react", "@types/react"]
     },
     "packages/cli": {
-      "ignore": ["test/fixtures/**"]
+      "ignore": ["test/fixtures/**"],
+      "ignoreDependencies": ["@effect/language-service"]
     },
     "packages/oxfmt-config": {
       "ignore": ["test/fixtures/**"]
     },
     "packages/oxlint-config": {
       "ignore": ["test/fixtures/**"]
+    },
+    "packages/tsconfig": {
+      "ignoreDependencies": ["@effect/tsgo"]
     }
   }
 }
