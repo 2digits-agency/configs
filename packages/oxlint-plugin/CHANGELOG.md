@@ -1,3 +1,11 @@
+## @2digits/oxlint-plugin@0.0.4
+
+### Configure declaration generation with the current Vite+ API
+
+- Replaced `dts.tsgo` with `dts.generator: 'tsgo'` in package builds.
+
+### Update `@oxlint/plugins` to `1.83.0`
+
 ## @2digits/oxlint-plugin@0.0.3
 
 ### Adopt TypeScript 7 while preserving ESLint compatibility

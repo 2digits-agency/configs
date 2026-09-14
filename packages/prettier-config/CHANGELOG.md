@@ -1,3 +1,9 @@
+## @2digits/prettier-config@4.0.48
+
+### Configure declaration generation with the current Vite+ API
+
+- Replaced `dts.tsgo` with `dts.generator: 'tsgo'` in package builds.
+
 ## @2digits/prettier-config@4.0.47
 
 ### Adopt TypeScript 7 while preserving ESLint compatibility

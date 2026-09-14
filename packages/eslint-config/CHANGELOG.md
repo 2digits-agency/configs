@@ -1,3 +1,59 @@
+## @2digits/eslint-config@5.8.0
+
+### Update `eslint-plugin-turbo` to `2.10.13`
+
+
+
+### Update `@typescript-eslint/utils` to `8.70.0`
+
+
+
+### Update `@eslint-react/kit` to `5.19.1`
+
+
+
+### Update `@typescript-eslint/parser` to `8.70.0`
+
+
+
+### Prefer boolean Zod validation for success-only checks
+
+- Enabled `zod/prefer-validate` as an error for parse results used only to check success.
+
+### Update `@eslint-community/eslint-plugin-eslint-comments` to `4.8.1`
+
+- Added generated option types for `additionalDirectives` and custom directive names in comment rules.
+
+### Update `typescript-eslint` to `8.70.0`
+
+- Added generated rule types for `ts/no-generated-empty-object-type`.
+
+### Disallow function-scoped Zod schema construction
+
+- Enabled `zod/no-function-scoped-schema` as an error in the Zod presets.
+
+### Update `@next/eslint-plugin-next` to `16.3.5`
+
+
+
+### Update `eslint-plugin-jsdoc` to `64.4.0`
+
+
+
+### Update `eslint-plugin-zod` to `4.13.0`
+
+
+
+### Update `@eslint-react/eslint-plugin` to `5.19.1`
+
+
+
+### Require static values in Zod schema expressions
+
+- Enabled `zod/no-dynamic-schema-value` as an error in the Zod presets.
+
+### Update `pkg-types` to `2.3.3`
+
 ## @2digits/eslint-config@5.7.4
 
 ### Adopt TypeScript 7 while preserving ESLint compatibility

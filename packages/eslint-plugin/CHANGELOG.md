@@ -1,3 +1,11 @@
+## @2digits/eslint-plugin@4.0.30
+
+### Update `@typescript-eslint/utils` to `8.70.0`
+
+
+
+### Update `@typescript-eslint/scope-manager` to `8.70.0`
+
 ## @2digits/eslint-plugin@4.0.29
 
 ### Adopt TypeScript 7 while preserving ESLint compatibility

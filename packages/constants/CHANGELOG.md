@@ -1,3 +1,9 @@
+## @2digits/constants@1.1.20
+
+### Configure declaration generation with the current Vite+ API
+
+- Replaced `dts.tsgo` with `dts.generator: 'tsgo'` in package builds.
+
 ## @2digits/constants@1.1.19
 
 ### Adopt TypeScript 7 while preserving ESLint compatibility
