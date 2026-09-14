@@ -1,3 +1,7 @@
+## @2digits/renovate-config@1.2.105
+
+### Update `renovate` to `44.89.1`
+
 ## @2digits/renovate-config@1.2.104
 
 ### Run TypeScript scripts with oxnode

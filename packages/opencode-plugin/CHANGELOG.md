@@ -1,3 +1,15 @@
+## @2digits/opencode-plugin@0.2.35
+
+### Configure declaration generation with the current Vite+ API
+
+- Replaced `dts.tsgo` with `dts.generator: 'tsgo'` in package builds.
+
+### Update `posthog-node` to `5.52.2`
+
+
+
+### Update `@opencode-ai/plugin` to `1.18.31`
+
 ## @2digits/opencode-plugin@0.2.34
 
 ### Adopt TypeScript 7 while preserving ESLint compatibility

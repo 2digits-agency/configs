@@ -1,3 +1,23 @@
+## @2digits/tlo-mcp@0.1.34
+
+### Keep MCP diagnostics on stderr with current Effect APIs
+
+- Replaced the removed `consolePretty` stderr option with `Logger.LogToStderr`, keeping stdout reserved for MCP protocol messages.
+
+### Update `@effect/platform-node` to `4.0.0-rc.115`
+
+
+
+### Fix Teamleader environment configuration with current Effect APIs
+
+- Replaced `Config.string` and `Config.redacted` with `Config.String` and `Config.Redacted`, preserving default values and session-token redaction.
+
+### Configure declaration generation with the current Vite+ API
+
+- Replaced `dts.tsgo` with `dts.generator: 'tsgo'` in package builds.
+
+### Update `effect` to `4.0.0-rc.115`
+
 ## @2digits/tlo-mcp@0.1.33
 
 ### Adopt TypeScript 7 while preserving ESLint compatibility

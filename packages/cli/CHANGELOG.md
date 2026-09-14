@@ -1,3 +1,27 @@
+## @2digits/cli@2.0.18
+
+### Update `@effect/platform-node` to `4.0.0-rc.115`
+
+
+
+### Fix CLI flag construction with current Effect APIs
+
+- Replaced `Flag.boolean` with `Flag.Boolean` while preserving existing flag defaults and behavior.
+
+### Stop generating declarations for the private CLI executable
+
+- Removed the declaration entry point and type-package validation from the executable-only build.
+
+### Update `nypm` to `0.6.10`
+
+
+
+### Update `effect` to `4.0.0-rc.115`
+
+
+
+### Update `pkg-types` to `2.3.3`
+
 ## @2digits/cli@2.0.17
 
 ### Run TypeScript scripts with oxnode

@@ -1,59 +1,230 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/constants\":\n    type: patch\n  \"@2digits/eslint-config\":\n    type: patch\n  \"@2digits/eslint-plugin\":\n    type: patch\n  \"@2digits/opencode-plugin\":\n    type: patch\n  \"@2digits/oxfmt-config\":\n    type: patch\n  \"@2digits/oxlint-config\":\n    type: patch\n  \"@2digits/oxlint-plugin\":\n    type: patch\n  \"@2digits/prettier-config\":\n    type: patch\n  \"@2digits/tlo-mcp\":\n    type: patch\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Adopt TypeScript 7 while preserving ESLint compatibility\n\n- Migrated non-ESLint package type checks and declaration builds to TypeScript 7.0.2, replacing native-preview and alias dependencies.\n- Retained fast `tsgo` type checks for the ESLint config and plugin while keeping their TypeScript compiler API dependencies on TypeScript 6.0.3 through the named `eslint` catalog.\n- Expanded the shared tsconfig's TypeScript peer range to support both TypeScript 6 and 7.\n"
-    filename: 2026-09-07-e73c2a.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `voidzero-dev/setup-vp` to `1.20.0`\n"
+    filename: 2026-09-14-amber-larches-wind.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Enforce additional Effect diagnostics\n\n- Enabled `catchAllTagDispatchToCatchTag`, `matchEffectToMapBoth`, `matchEffectToMatch`, `obsoleteMatchImport`, and `obsoleteSchemaImport` as errors.\n- Enabled `provideLayerSucceedToProvideService`, `runOfExitToRunExit`, `schemaSync`, and `timeoutCatchTagToTimeoutOrElse` as errors.\n"
+    filename: 2026-09-14-blue-birches-flame.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `pnpm` to `12.4.1`\n"
+    filename: 2026-09-14-bright-maples-snow.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `knip` to `6.35.1`\n\n- Excluded machine-local `mise.local.toml` configuration from unused-code analysis.\n"
+    filename: 2026-09-14-coral-otters-cloud.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `baseline-browser-mapping` to `2.11.23`\n"
+    filename: 2026-09-14-crisp-herons-pond.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the `@typescript-eslint/types` override to `8.70.0`\n"
+    filename: 2026-09-14-gentle-badgers-leaf.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the `vite` alias to `@voidzero-dev/vite-plus-core@0.3.2`\n"
+    filename: 2026-09-14-lucky-foxes-grove.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `turbo` to `2.10.13`\n"
+    filename: 2026-09-14-mellow-pines-river.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the Node.js development runtime to `24.21.0`\n\n- Updated `devEngines.runtime.version` to `24.21.0` and the root `engines.node` declaration to `24.20.1`.\n"
+    filename: 2026-09-14-quiet-falcons-hill.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Run package tests with standalone Vitest 5\n\n- Switched test scripts to `vitest run` and watch scripts to `vitest`, avoiding the older runtime bundled with Vite+ and restoring compatibility with `@effect/vitest`.\n"
+    filename: 2026-09-14-silver-badger-willow.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `@effect/tsgo` to `0.45.0`\n"
+    filename: 2026-09-14-soft-cedars-moon.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `vite-plus` to `0.3.2`\n"
+    filename: 2026-09-14-violet-wrens-peak.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `@effect/platform-node` to `4.0.0-rc.115`\n"
+    filename: 2026-09-14-blue-otters-dawn.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n## Fix CLI flag construction with current Effect APIs\n\n- Replaced `Flag.boolean` with `Flag.Boolean` while preserving existing flag defaults and behavior.\n"
+    filename: 2026-09-14-brisk-otter-lantern.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n## Stop generating declarations for the private CLI executable\n\n- Removed the declaration entry point and type-package validation from the executable-only build.\n"
+    filename: 2026-09-14-brisk-ravens-cove.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n## Update `nypm` to `0.6.10`\n"
+    filename: 2026-09-14-calm-sparrows-stone.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `effect` to `4.0.0-rc.115`\n"
+    filename: 2026-09-14-quiet-maple-comet.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `pkg-types` to `2.3.3`\n"
+    filename: 2026-09-14-warm-pandas-shore.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/constants:\n    type: patch\n  npm:@2digits/opencode-plugin:\n    type: patch\n  npm:@2digits/oxfmt-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/prettier-config:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Configure declaration generation with the current Vite+ API\n\n- Replaced `dts.tsgo` with `dts.generator: 'tsgo'` in package builds.\n"
+    filename: 2026-09-14-calm-willows-star.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-turbo` to `2.10.13`\n"
+    filename: 2026-09-14-amber-herons-brook.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update `@typescript-eslint/utils` to `8.70.0`\n"
+    filename: 2026-09-14-bright-falcons-breeze.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@eslint-react/kit` to `5.19.1`\n"
+    filename: 2026-09-14-coral-wrens-harbor.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@typescript-eslint/parser` to `8.70.0`\n"
+    filename: 2026-09-14-crisp-willows-mist.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: minor\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n## Prefer boolean Zod validation for success-only checks\n\n- Enabled `zod/prefer-validate` as an error for parse results used only to check success.\n"
+    filename: 2026-09-14-golden-otters-moss.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@eslint-community/eslint-plugin-eslint-comments` to `4.8.1`\n\n- Added generated option types for `additionalDirectives` and custom directive names in comment rules.\n"
+    filename: 2026-09-14-golden-pines-drift.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `typescript-eslint` to `8.70.0`\n\n- Added generated rule types for `ts/no-generated-empty-object-type`.\n"
+    filename: 2026-09-14-golden-starlings-rain.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: minor\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n## Disallow function-scoped Zod schema construction\n\n- Enabled `zod/no-function-scoped-schema` as an error in the Zod presets.\n"
+    filename: 2026-09-14-green-falcons-island.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@next/eslint-plugin-next` to `16.3.5`\n"
+    filename: 2026-09-14-mellow-foxes-ridge.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-jsdoc` to `64.4.0`\n"
+    filename: 2026-09-14-quiet-badgers-orbit.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-zod` to `4.13.0`\n"
+    filename: 2026-09-14-silver-cedars-field.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@eslint-react/eslint-plugin` to `5.19.1`\n"
+    filename: 2026-09-14-soft-ravens-bloom.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: minor\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n## Require static values in Zod schema expressions\n\n- Enabled `zod/no-dynamic-schema-value` as an error in the Zod presets.\n"
+    filename: 2026-09-14-warm-herons-dune.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update `@typescript-eslint/scope-manager` to `8.70.0`\n"
+    filename: 2026-09-14-gentle-larches-glow.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `posthog-node` to `5.52.2`\n"
+    filename: 2026-09-14-green-robins-fern.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `@opencode-ai/plugin` to `1.18.31`\n"
+    filename: 2026-09-14-violet-maples-spark.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update `oxfmt` to `0.68.0`\n"
+    filename: 2026-09-14-brisk-birches-lake.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `oxlint` to `1.83.0`\n"
+    filename: 2026-09-14-blue-finch-valley.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n## Prefer Zod collection size checks in Oxlint\n\n- Enabled `zod/prefer-map-set-size-over-min-max` as an error, matching the ESLint Zod preset.\n"
+    filename: 2026-09-14-soft-maples-shell.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Update `@oxlint/plugins` to `1.83.0`\n"
+    filename: 2026-09-14-lucky-puffins-trail.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update `renovate` to `44.89.1`\n"
+    filename: 2026-09-14-silver-puffins-sand.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Keep MCP diagnostics on stderr with current Effect APIs\n\n- Replaced the removed `consolePretty` stderr option with `Logger.LogToStderr`, keeping stdout reserved for MCP protocol messages.\n"
+    filename: 2026-09-14-amber-finch-cloud.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Fix Teamleader environment configuration with current Effect APIs\n\n- Replaced `Config.string` and `Config.redacted` with `Config.String` and `Config.Redacted`, preserving default values and session-token redaction.\n"
+    filename: 2026-09-14-calm-heron-meadow.md
     v: 0.0.0
 core:packages:
-  - id: npm:@2digits/config-monorepo
-    updated: false
-  - id: npm:@2digits/cli
-    updated: false
   - changelogIds:
-      - 2026-09-07-e73c2a.md
-    id: npm:@2digits/eslint-config
+      - 2026-09-14-amber-larches-wind.md
+      - 2026-09-14-blue-birches-flame.md
+      - 2026-09-14-bright-maples-snow.md
+      - 2026-09-14-coral-otters-cloud.md
+      - 2026-09-14-crisp-herons-pond.md
+      - 2026-09-14-gentle-badgers-leaf.md
+      - 2026-09-14-lucky-foxes-grove.md
+      - 2026-09-14-mellow-pines-river.md
+      - 2026-09-14-quiet-falcons-hill.md
+      - 2026-09-14-silver-badger-willow.md
+      - 2026-09-14-soft-cedars-moon.md
+      - 2026-09-14-violet-wrens-peak.md
+    id: npm:@2digits/config-monorepo
     updated: true
   - changelogIds:
-      - 2026-09-07-e73c2a.md
+      - 2026-09-14-blue-otters-dawn.md
+      - 2026-09-14-brisk-otter-lantern.md
+      - 2026-09-14-brisk-ravens-cove.md
+      - 2026-09-14-calm-sparrows-stone.md
+      - 2026-09-14-quiet-maple-comet.md
+      - 2026-09-14-warm-pandas-shore.md
+    id: npm:@2digits/cli
+    updated: true
+  - changelogIds:
+      - 2026-09-14-calm-willows-star.md
     id: npm:@2digits/constants
     updated: true
   - changelogIds:
-      - 2026-09-07-e73c2a.md
+      - 2026-09-14-amber-herons-brook.md
+      - 2026-09-14-bright-falcons-breeze.md
+      - 2026-09-14-coral-wrens-harbor.md
+      - 2026-09-14-crisp-willows-mist.md
+      - 2026-09-14-golden-otters-moss.md
+      - 2026-09-14-golden-pines-drift.md
+      - 2026-09-14-golden-starlings-rain.md
+      - 2026-09-14-green-falcons-island.md
+      - 2026-09-14-mellow-foxes-ridge.md
+      - 2026-09-14-quiet-badgers-orbit.md
+      - 2026-09-14-silver-cedars-field.md
+      - 2026-09-14-soft-ravens-bloom.md
+      - 2026-09-14-warm-herons-dune.md
+      - 2026-09-14-warm-pandas-shore.md
+    id: npm:@2digits/eslint-config
+    updated: true
+  - changelogIds:
+      - 2026-09-14-bright-falcons-breeze.md
+      - 2026-09-14-gentle-larches-glow.md
     id: npm:@2digits/eslint-plugin
     updated: true
   - changelogIds:
-      - 2026-09-07-e73c2a.md
+      - 2026-09-14-calm-willows-star.md
+      - 2026-09-14-green-robins-fern.md
+      - 2026-09-14-violet-maples-spark.md
     id: npm:@2digits/opencode-plugin
     updated: true
   - changelogIds:
-      - 2026-09-07-e73c2a.md
+      - 2026-09-14-brisk-birches-lake.md
+      - 2026-09-14-calm-willows-star.md
     id: npm:@2digits/oxfmt-config
     updated: true
   - changelogIds:
-      - 2026-09-07-e73c2a.md
+      - 2026-09-14-blue-finch-valley.md
+      - 2026-09-14-calm-willows-star.md
+      - 2026-09-14-golden-otters-moss.md
+      - 2026-09-14-green-falcons-island.md
+      - 2026-09-14-silver-cedars-field.md
+      - 2026-09-14-soft-maples-shell.md
+      - 2026-09-14-warm-herons-dune.md
     id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-09-07-e73c2a.md
+      - 2026-09-14-calm-willows-star.md
+      - 2026-09-14-lucky-puffins-trail.md
     id: npm:@2digits/oxlint-plugin
     updated: true
   - changelogIds:
-      - 2026-09-07-e73c2a.md
+      - 2026-09-14-calm-willows-star.md
     id: npm:@2digits/prettier-config
     updated: true
-  - id: npm:@2digits/renovate-config
-    updated: false
   - changelogIds:
-      - 2026-09-07-e73c2a.md
+      - 2026-09-14-silver-puffins-sand.md
+    id: npm:@2digits/renovate-config
+    updated: true
+  - changelogIds:
+      - 2026-09-14-amber-finch-cloud.md
+      - 2026-09-14-blue-otters-dawn.md
+      - 2026-09-14-calm-heron-meadow.md
+      - 2026-09-14-calm-willows-star.md
+      - 2026-09-14-quiet-maple-comet.md
     id: npm:@2digits/tlo-mcp
     updated: true
-  - changelogIds:
-      - 2026-09-07-e73c2a.md
-    id: npm:@2digits/tsconfig
-    updated: true
+  - id: npm:@2digits/tsconfig
+    updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
-  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/constants
+  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config

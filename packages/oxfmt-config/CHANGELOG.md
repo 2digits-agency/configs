@@ -1,3 +1,13 @@
+## @2digits/oxfmt-config@0.3.25
+
+### Update `oxfmt` to `0.68.0`
+
+
+
+### Configure declaration generation with the current Vite+ API
+
+- Replaced `dts.tsgo` with `dts.generator: 'tsgo'` in package builds.
+
 ## @2digits/oxfmt-config@0.3.24
 
 ### Adopt TypeScript 7 while preserving ESLint compatibility

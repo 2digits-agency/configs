@@ -1,3 +1,33 @@
+## @2digits/oxlint-config@1.2.0
+
+### Update `oxlint` to `1.83.0`
+
+
+
+### Configure declaration generation with the current Vite+ API
+
+- Replaced `dts.tsgo` with `dts.generator: 'tsgo'` in package builds.
+
+### Prefer boolean Zod validation for success-only checks
+
+- Enabled `zod/prefer-validate` as an error for parse results used only to check success.
+
+### Disallow function-scoped Zod schema construction
+
+- Enabled `zod/no-function-scoped-schema` as an error in the Zod presets.
+
+### Update `eslint-plugin-zod` to `4.13.0`
+
+
+
+### Prefer Zod collection size checks in Oxlint
+
+- Enabled `zod/prefer-map-set-size-over-min-max` as an error, matching the ESLint Zod preset.
+
+### Require static values in Zod schema expressions
+
+- Enabled `zod/no-dynamic-schema-value` as an error in the Zod presets.
+
 ## @2digits/oxlint-config@1.1.2
 
 ### Adopt TypeScript 7 while preserving ESLint compatibility

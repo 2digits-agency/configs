@@ -1,3 +1,52 @@
+## @2digits/config-monorepo@0.1.2
+
+### Update `voidzero-dev/setup-vp` to `1.20.0`
+
+
+
+### Enforce additional Effect diagnostics
+
+- Enabled `catchAllTagDispatchToCatchTag`, `matchEffectToMapBoth`, `matchEffectToMatch`, `obsoleteMatchImport`, and `obsoleteSchemaImport` as errors.
+- Enabled `provideLayerSucceedToProvideService`, `runOfExitToRunExit`, `schemaSync`, and `timeoutCatchTagToTimeoutOrElse` as errors.
+
+### Update `pnpm` to `12.4.1`
+
+
+
+### Update `knip` to `6.35.1`
+
+- Excluded machine-local `mise.local.toml` configuration from unused-code analysis.
+
+### Update `baseline-browser-mapping` to `2.11.23`
+
+
+
+### Update the `@typescript-eslint/types` override to `8.70.0`
+
+
+
+### Update the `vite` alias to `@voidzero-dev/vite-plus-core@0.3.2`
+
+
+
+### Update `turbo` to `2.10.13`
+
+
+
+### Update the Node.js development runtime to `24.21.0`
+
+- Updated `devEngines.runtime.version` to `24.21.0` and the root `engines.node` declaration to `24.20.1`.
+
+### Run package tests with standalone Vitest 5
+
+- Switched test scripts to `vitest run` and watch scripts to `vitest`, avoiding the older runtime bundled with Vite+ and restoring compatibility with `@effect/vitest`.
+
+### Update `@effect/tsgo` to `0.45.0`
+
+
+
+### Update `vite-plus` to `0.3.2`
+
 ## @2digits/config-monorepo@0.1.1
 
 ### Update @effect/tsgo to 0.41.0
