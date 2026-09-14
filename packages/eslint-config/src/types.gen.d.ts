@@ -6819,6 +6819,11 @@ Backward pagination arguments
    */
   'ts/no-for-in-array'?: Linter.RuleEntry<[]>
   /**
+   * Disallow type operations that resolve to the "empty object" type
+   * @see https://typescript-eslint.io/rules/no-generated-empty-object-type
+   */
+  'ts/no-generated-empty-object-type'?: Linter.RuleEntry<[]>
+  /**
    * Disallow the use of `eval()`-like functions
    * @see https://typescript-eslint.io/rules/no-implied-eval
    */
@@ -9997,10 +10002,12 @@ type CommentsDisableEnablePair = []|[{
 type CommentsNoRestrictedDisable = string[]
 // ----- comments/no-use -----
 type CommentsNoUse = []|[{
-  allow?: ("eslint" | "eslint-disable" | "eslint-disable-line" | "eslint-disable-next-line" | "eslint-enable" | "eslint-env" | "exported" | "global" | "globals")[]
+  additionalDirectives?: string[]
+  allow?: string[]
 }]
 // ----- comments/require-description -----
 type CommentsRequireDescription = []|[{
+  additionalDirectives?: string[]
   ignore?: ("eslint" | "eslint-disable" | "eslint-disable-line" | "eslint-disable-next-line" | "eslint-enable" | "eslint-env" | "exported" | "global" | "globals")[]
 }]
 // ----- complexity -----

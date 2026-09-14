@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/knip/schema.json",
+  "ignore": ["mise.local.toml"],
   "ignoreDependencies": ["vite", "@arethetypeswrong/core", "publint", "pkg-pr-new"],
   "tsdown": { "config": "vite.config.ts" },
   "vitest": { "config": ["vite.config.ts"] },

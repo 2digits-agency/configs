@@ -16,7 +16,6 @@
   ],
   "type": "module",
   "sideEffects": false,
-  "types": "./dist/bin.d.mts",
   "exports": {
     ".": "./dist/bin.mjs",
     "./package.json": "./package.json"
@@ -37,7 +36,6 @@
   },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
-    "@arethetypeswrong/core": "catalog:",
     "@effect/language-service": "catalog:",
     "@effect/vitest": "catalog:",
     "@oxc-node/cli": "catalog:",
