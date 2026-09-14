@@ -24,7 +24,9 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
           { checkConfusingCases: true, checkImpossibleCases: true, checkInapplicableChecks: true },
         ],
         'zod/no-duplicate-schema-methods': 'error',
+        'zod/no-dynamic-schema-value': 'error',
         'zod/no-empty-custom-schema': 'error',
+        'zod/no-function-scoped-schema': 'error',
         'zod/no-native-enum': 'error',
         'zod/no-number-schema-with-finite': 'error',
         'zod/no-number-schema-with-int': 'error',
@@ -50,6 +52,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/prefer-top-level-string-formats': 'error',
         'zod/prefer-trim-before-string-length-checks': 'error',
         'zod/prefer-tuple-over-array-length': 'error',
+        'zod/prefer-validate': 'error',
         'zod/require-brand-type-parameter': 'error',
         'zod/schema-error-property-style': [
           'error',

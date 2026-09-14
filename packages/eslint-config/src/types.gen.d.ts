@@ -9689,10 +9689,20 @@ Backward pagination arguments
    */
   'zod/no-duplicate-schema-methods'?: Linter.RuleEntry<[]>
   /**
+   * Disallow non-static values passed as arguments in a Zod schema expression
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-dynamic-schema-value.md
+   */
+  'zod/no-dynamic-schema-value'?: Linter.RuleEntry<[]>
+  /**
    * Disallow usage of `z.custom()` without arguments
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-empty-custom-schema.md
    */
   'zod/no-empty-custom-schema'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow constructing a Zod schema inside a function body
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-function-scoped-schema.md
+   */
+  'zod/no-function-scoped-schema'?: Linter.RuleEntry<[]>
   /**
    * Disallow deprecated `z.nativeEnum()` in favor of `z.enum()`.
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/no-native-enum.md
@@ -9834,6 +9844,11 @@ Backward pagination arguments
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-tuple-over-array-length.md
    */
   'zod/prefer-tuple-over-array-length'?: Linter.RuleEntry<[]>
+  /**
+   * Prefer boolean validation when only the success of parsing is used
+   * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/prefer-validate.md
+   */
+  'zod/prefer-validate'?: Linter.RuleEntry<[]>
   /**
    * Require type parameter on `.brand()` functions
    * @see https://github.com/marcalexiei/eslint-zod/blob/HEAD/plugins/eslint-plugin-zod/docs/rules/require-brand-type-parameter.md
