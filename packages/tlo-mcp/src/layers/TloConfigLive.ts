@@ -9,9 +9,9 @@ import { TloConfig, type TloConfigShape } from '../services/TloConfig.js';
 const DEFAULT_BASE_URL = 'https://socialbrothers.orbit.teamleader.eu';
 
 export const TloConfigFromEnv = Effect.gen(function* () {
-  const sessionToken = yield* Config.redacted('TLO_SESSION_TOKEN');
-  const baseUrl = yield* Config.string('TLO_BASE_URL').pipe(Config.withDefault(DEFAULT_BASE_URL));
-  const cookieHeader = yield* Config.string('TLO_COOKIES').pipe(Config.withDefault(''));
+  const sessionToken = yield* Config.Redacted('TLO_SESSION_TOKEN');
+  const baseUrl = yield* Config.String('TLO_BASE_URL').pipe(Config.withDefault(DEFAULT_BASE_URL));
+  const cookieHeader = yield* Config.String('TLO_COOKIES').pipe(Config.withDefault(''));
   const cookies = yield* Effect.fromResult(
     Cookies.setAll(Cookies.empty, R.toEntries(Cookies.parseHeader(cookieHeader))),
   );

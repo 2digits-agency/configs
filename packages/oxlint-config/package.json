@@ -44,7 +44,7 @@
   "scripts": {
     "build": "vp pack --minify",
     "dev": "vp pack --watch",
-    "test": "vp test run",
+    "test": "vitest run",
     "types": "tsc --noEmit"
   },
   "dependencies": {
@@ -64,6 +64,7 @@
     "publint": "catalog:",
     "typescript": "catalog:",
     "vite-plus": "catalog:",
+    "vitest": "catalog:",
     "zod": "catalog:"
   },
   "peerDependencies": {

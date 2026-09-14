@@ -30,8 +30,8 @@
     "dev": "vp pack --watch --config-loader unconfig",
     "docs": "eslint-config-inspector build",
     "docs:dev": "eslint-config-inspector",
-    "test": "vp test run",
-    "test:watch": "vp test",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "types": "tsgo --noEmit"
   },
   "dependencies": {

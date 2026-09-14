@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vite-plus/test';
+import { describe, expect, it } from 'vitest';
 
 import eslintTwoDigits from '@2digits/eslint-config';
 import { recommendedRules } from '@2digits/oxlint-plugin';

@@ -10,6 +10,11 @@ interface McpServerOptions {
   readonly version: string;
 }
 
+export const McpLoggerLayer = Layer.merge(
+  Logger.layer([Logger.consolePretty()]),
+  Layer.succeed(Logger.LogToStderr, true),
+);
+
 export function makeMcpServerLayer(options: McpServerOptions) {
   return McpServer.toolkit(TloToolkit).pipe(
     Layer.provide(TloToolkitHandlers),
@@ -19,6 +24,6 @@ export function makeMcpServerLayer(options: McpServerOptions) {
         protocols: [McpProtocol.v2025_06_18],
       }),
     ),
-    Layer.provide(Logger.layer([Logger.consolePretty({ stderr: true })])),
+    Layer.provide(McpLoggerLayer),
   );
 }
