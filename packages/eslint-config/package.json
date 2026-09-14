@@ -26,6 +26,8 @@
     "access": "public"
   },
   "scripts": {
+    "bench:pack": "node benchmarks/pack.ts",
+    "bench:startup": "node benchmarks/startup.ts",
     "build": "vp pack --minify --config-loader unconfig",
     "dev": "vp pack --watch --config-loader unconfig",
     "docs": "eslint-config-inspector build",

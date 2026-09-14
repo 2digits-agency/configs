@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vite-plus/test';
 
 import { enabled, extractConfig } from '../src/factory';
 
@@ -34,6 +34,24 @@ describe(enabled, () => {
   it('object enable property takes precedence over default', () => {
     expect(enabled({ enable: true }, false)).toBeTruthy();
     expect(enabled({ enable: false }, true)).toBeFalsy();
+  });
+
+  it('does not detect packages for explicit options', () => {
+    const detect = vi.fn<() => boolean>(() => true);
+
+    expect(enabled(true, detect)).toBeTruthy();
+    expect(enabled(false, detect)).toBeFalsy();
+    expect(enabled({ enable: true }, detect)).toBeTruthy();
+    expect(enabled({ enable: false }, detect)).toBeFalsy();
+    expect(detect).not.toHaveBeenCalled();
+  });
+
+  it('detects packages when enable is unspecified', () => {
+    const detect = vi.fn<() => boolean>(() => true);
+
+    expect(enabled(undefined, detect)).toBeTruthy();
+    expect(enabled({}, detect)).toBeTruthy();
+    expect(detect).toHaveBeenCalledTimes(2);
   });
 });
 
