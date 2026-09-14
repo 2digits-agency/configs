@@ -24,8 +24,8 @@
     "bin": "oxnode ./src/bin.ts",
     "build": "vp pack --minify --config-loader unconfig",
     "dev": "vp pack --watch --config-loader unconfig",
-    "test": "vp test run",
-    "test:watch": "vp test",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "types": "tsc --noEmit"
   },
   "dependencies": {

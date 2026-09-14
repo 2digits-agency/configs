@@ -37,7 +37,7 @@
   "scripts": {
     "build": "vp pack --minify --config-loader unconfig",
     "dev": "vp pack --watch --config-loader unconfig",
-    "test": "vp test run",
+    "test": "vitest run",
     "types": "tsc --noEmit"
   },
   "dependencies": {

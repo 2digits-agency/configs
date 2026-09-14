@@ -10,17 +10,17 @@ import { PrettierSetupService } from './services/PrettierSetupService';
 import { TurborepoSetupService } from './services/TurborepoSetupService';
 
 const command = Command.make('2d', {
-  prettier: Flag.boolean('prettier').pipe(
+  prettier: Flag.Boolean('prettier').pipe(
     Flag.optional,
     Flag.withDefault(Opt.some(true)),
     Flag.withDescription('Setup Prettier with @2digits/prettier-config'),
   ),
-  eslint: Flag.boolean('eslint').pipe(
+  eslint: Flag.Boolean('eslint').pipe(
     Flag.optional,
     Flag.withDefault(Opt.none()),
     Flag.withDescription('Setup ESLint with @2digits/eslint-config'),
   ),
-  turbo: Flag.boolean('turbo').pipe(
+  turbo: Flag.Boolean('turbo').pipe(
     Flag.optional,
     Flag.withDefault(Opt.none()),
     Flag.withDescription('Setup Turborepo configuration for monorepo'),
