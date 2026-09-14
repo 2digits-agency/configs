@@ -1099,6 +1099,9 @@ importers:
 
   packages/tsconfig:
     devDependencies:
+      '@effect/tsgo':
+        specifier: 'catalog:'
+        version: 0.45.0
       typescript:
         specifier: 'catalog:'
         version: 7.0.2

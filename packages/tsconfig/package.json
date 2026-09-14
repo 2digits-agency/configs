@@ -13,11 +13,13 @@
     "directory": "packages/tsconfig"
   },
   "files": [
+    "effect.json",
     "tsconfig.json"
   ],
   "exports": {
     "./package.json": "./package.json",
     ".": "./tsconfig.json",
+    "./effect.json": "./effect.json",
     "./tsconfig.json": "./tsconfig.json"
   },
   "publishConfig": {
@@ -25,9 +27,16 @@
   },
   "scripts": {},
   "devDependencies": {
+    "@effect/tsgo": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {
+    "@effect/tsgo": "^0.45.0",
     "typescript": "^6.0.3 || ^7.0.2"
+  },
+  "peerDependenciesMeta": {
+    "@effect/tsgo": {
+      "optional": true
+    }
   }
 }
