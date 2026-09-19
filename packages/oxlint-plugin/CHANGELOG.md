@@ -1,3 +1,9 @@
+## @2digits/oxlint-plugin@0.0.5
+
+### Satisfy the updated lint rules
+
+- Refactored guard clauses and filter expressions across rule implementations and services to comply with the updated linting rules
+
 ## @2digits/oxlint-plugin@0.0.4
 
 ### Configure declaration generation with the current Vite+ API

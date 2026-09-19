@@ -1,3 +1,13 @@
+## @2digits/cli@2.0.19
+
+### Update Effect to 4.0.0-rc.116
+
+
+
+### Satisfy the updated lint rules
+
+- Refactored guard clauses and filter expressions across rule implementations and services to comply with the updated linting rules
+
 ## @2digits/cli@2.0.18
 
 ### Update `@effect/platform-node` to `4.0.0-rc.115`

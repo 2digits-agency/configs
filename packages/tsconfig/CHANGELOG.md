@@ -1,3 +1,9 @@
+## @2digits/tsconfig@0.9.0
+
+### Add an Effect TypeScript configuration preset
+
+- Added `@2digits/tsconfig/effect.json`, extending the base config with Effect language-service and tsgo plugin settings, diagnostics, import aliases, and test overrides.
+
 ## @2digits/tsconfig@0.8.8
 
 ### Adopt TypeScript 7 while preserving ESLint compatibility

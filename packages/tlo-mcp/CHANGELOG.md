@@ -1,3 +1,13 @@
+## @2digits/tlo-mcp@0.1.35
+
+### Update Effect to 4.0.0-rc.116
+
+
+
+### Satisfy the updated lint rules
+
+- Refactored guard clauses and filter expressions across rule implementations and services to comply with the updated linting rules
+
 ## @2digits/tlo-mcp@0.1.34
 
 ### Keep MCP diagnostics on stderr with current Effect APIs

@@ -1,3 +1,11 @@
+## @2digits/oxlint-config@1.2.1
+
+### Update eslint-plugin-zod to 4.14.1
+
+
+
+### Update oxlint-tsgolint to 7.0.2002
+
 ## @2digits/oxlint-config@1.2.0
 
 ### Update `oxlint` to `1.83.0`
