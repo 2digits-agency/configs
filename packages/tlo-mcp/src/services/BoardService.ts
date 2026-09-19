@@ -181,9 +181,10 @@ export const BoardServiceLive = Layer.effect(
           Match.when(Match.nonEmptyString, (query) => {
             const normalizedQuery = Str.toLowerCase(query);
 
-            // oxlint-disable-next-line unicorn/no-array-method-this-argument -- Effect Array.filter is data-first.
-            return Arr.filter(todos, (todo) =>
-              todo.name === undefined ? false : Str.includes(normalizedQuery)(Str.toLowerCase(todo.name)),
+            return Arr.filter(
+              // oxlint-disable-next-line unicorn/no-array-method-this-argument -- Effect Array.filter is data-first.
+              todos,
+              (todo) => todo.name !== undefined && Str.includes(normalizedQuery)(Str.toLowerCase(todo.name)),
             );
           }),
           Match.orElse(() => todos),

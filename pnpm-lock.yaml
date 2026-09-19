@@ -402,8 +402,8 @@ catalogs:
       specifier: 19.3.0
       version: 19.3.0
     renovate:
-      specifier: 44.103.2
-      version: 44.103.2
+      specifier: 44.103.3
+      version: 44.103.3
     tailwind-csstree:
       specifier: 0.4.0
       version: 0.4.0
@@ -1061,7 +1061,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 44.103.2(supports-color@7.2.0)(typanion@3.14.0)
+        version: 44.103.3(supports-color@7.2.0)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -6490,8 +6490,8 @@ packages:
     resolution: {integrity: sha512-NXAOdnEe5FsZJfT4oK84lE1Y5cFFdWlRuOo5tww8DyNMxyRXwn39fIkUtNLKppcPC+UYU/bXujNCUGDv01y7CA==}
     engines: {node: '>=20'}
 
-  p-throttle@8.1.0:
-    resolution: {integrity: sha512-c1wmXavsHZIC4g1OLhOsafK6jZSAeMo0Ap3yivj59PUcCkpacy5YgWdgIp/dB4vp1JZrfBSsPCR0YuADB+ENLQ==}
+  p-throttle@8.1.1:
+    resolution: {integrity: sha512-xxWFBUyvbrQ10XC3VAr0SoXoOCKXqCX/yvbFIkBE98upphHFwjIKR6AId13ZH3jngFfF6yK43QTOtrngYAmFMA==}
     engines: {node: '>=20'}
 
   p-timeout@7.0.1:
@@ -6882,8 +6882,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@44.103.2:
-    resolution: {integrity: sha512-TkZoIxEKl6gTfubDAq6czX5BC4fIx0ts1Ct8Lf+Y2x4zPDRYTenZsIssXZJCYs8tZsEx6OF2MOjP15L8ZvDHNg==}
+  renovate@44.103.3:
+    resolution: {integrity: sha512-PqauesudLvJWCcgZk58wuT9nwXrh5UZiszkdNQe8av9szEXt67obH3aWQYx3ICK+kmm98Ha3EQQWyukD/eeNzA==}
     engines: {node: ^24.11.0, pnpm: ^11.0.0}
     hasBin: true
 
@@ -10078,7 +10078,7 @@ snapshots:
       '@typescript-eslint/utils': 8.69.0(eslint@10.11.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       '@typescript-eslint/visitor-keys': 8.69.0
       eslint: 10.11.0(jiti@2.7.0)(supports-color@7.2.0)
-      ignore: 7.0.8
+      ignore: 7.0.9
       natural-compare: 1.4.0
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
@@ -13384,7 +13384,7 @@ snapshots:
       eventemitter3: 5.0.4
       p-timeout: 7.0.1
 
-  p-throttle@8.1.0: {}
+  p-throttle@8.1.1: {}
 
   p-timeout@7.0.1: {}
 
@@ -13504,7 +13504,7 @@ snapshots:
   postcss-load-config@4.0.2(postcss@8.5.16):
     dependencies:
       lilconfig: 3.1.3
-      yaml: 2.9.0
+      yaml: 2.9.1
     optionalDependencies:
       postcss: 8.5.16
 
@@ -13732,7 +13732,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@44.103.2(supports-color@7.2.0)(typanion@3.14.0):
+  renovate@44.103.3(supports-color@7.2.0)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1117.0
       '@aws-sdk/client-ec2': 3.1117.0
@@ -13829,7 +13829,7 @@ snapshots:
       p-all: 5.0.1
       p-map: 7.0.7
       p-queue: 9.3.3
-      p-throttle: 8.1.0
+      p-throttle: 8.1.1
       parse-link-header: 2.0.0
       prettier: 3.9.6
       protobufjs: 8.8.0

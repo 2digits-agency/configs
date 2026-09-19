@@ -601,15 +601,17 @@ describe(TurborepoSetupService, () => {
 
           const configOption = yield* service.readTurboConfig();
 
-          if (configOption._tag === 'Some') {
-            const { value: config } = configOption;
-
-            expect(config.tasks?.build).toHaveProperty('dependsOn');
-            expect(config.tasks?.build).toHaveProperty('outputs');
-            expect(config.tasks?.test).toHaveProperty('dependsOn');
-            expect(config.tasks?.dev).toHaveProperty('persistent', true);
-            expect(config.tasks?.dev).toHaveProperty('cache', false);
+          if (configOption._tag !== 'Some') {
+            return;
           }
+
+          const { value: config } = configOption;
+
+          expect(config.tasks?.build).toHaveProperty('dependsOn');
+          expect(config.tasks?.build).toHaveProperty('outputs');
+          expect(config.tasks?.test).toHaveProperty('dependsOn');
+          expect(config.tasks?.dev).toHaveProperty('persistent', true);
+          expect(config.tasks?.dev).toHaveProperty('cache', false);
         }),
       );
 

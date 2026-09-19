@@ -41,11 +41,11 @@ export const noDiscardedSchemaChecks: Rule = defineEffectRule(
 
       const method = staticPropertyName(node.callee);
 
-      if (method === undefined || !['mapElements', 'mapFields', 'mapMembers'].includes(method)) {
-        return;
-      }
-
-      if (methodCall(node.callee.object, 'check') === undefined) {
+      if (
+        method === undefined ||
+        !['mapElements', 'mapFields', 'mapMembers'].includes(method) ||
+        methodCall(node.callee.object, 'check') === undefined
+      ) {
         return;
       }
 

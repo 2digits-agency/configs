@@ -253,11 +253,13 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
       const migrateExistingConfigs = Effect.fn('EslintSetupService.migrateExistingConfigs')(function* (root: string) {
         const hasExistingConfig = yield* eslintDetect.hasEslintConfig(root);
 
-        if (hasExistingConfig) {
-          yield* Effect.logInfo('Detected existing ESLint configuration, backing up...');
-          yield* backupExistingConfigs(root);
-          yield* removeOldConfigs(root);
+        if (!hasExistingConfig) {
+          return;
         }
+
+        yield* Effect.logInfo('Detected existing ESLint configuration, backing up...');
+        yield* backupExistingConfigs(root);
+        yield* removeOldConfigs(root);
       });
 
       /**
@@ -270,7 +272,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
         yield* Effect.logInfo('Generating root ESLint configuration...');
         const rootConfigPath = path.join(root, 'eslint.config.ts');
         const rootConfigExists = yield* fs.exists(rootConfigPath).pipe(Effect.orElseSucceed(() => false));
-        const uses2Digits = rootConfigExists ? yield* eslintDetect.uses2DigitsConfig(rootConfigPath) : false;
+        const uses2Digits = rootConfigExists && (yield* eslintDetect.uses2DigitsConfig(rootConfigPath));
 
         if (!rootConfigExists || !uses2Digits) {
           const rootConfig = generateRootConfig(isMonorepo);

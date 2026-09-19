@@ -47,24 +47,26 @@ export const typeParamNames = createRule<[], MessageId>({
           } = param;
           const messageId = getMessageId(name);
 
-          if (messageId) {
-            const suggestion = getSuggestion(name);
-
-            context.report({
-              node: param,
-              messageId,
-              data: { name },
-              suggest: [
-                {
-                  messageId: 'suggestRename',
-                  data: { suggestion },
-                  fix(fixer) {
-                    return fixer.replaceText(param.name, suggestion);
-                  },
-                },
-              ],
-            });
+          if (!messageId) {
+            continue;
           }
+
+          const suggestion = getSuggestion(name);
+
+          context.report({
+            node: param,
+            messageId,
+            data: { name },
+            suggest: [
+              {
+                messageId: 'suggestRename',
+                data: { suggestion },
+                fix(fixer) {
+                  return fixer.replaceText(param.name, suggestion);
+                },
+              },
+            ],
+          });
         }
       },
     };
