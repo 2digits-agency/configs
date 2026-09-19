@@ -148,10 +148,12 @@ const plugin: Plugin = async (ctx) => {
 
     state.getOrCreateGenerationState(info);
 
-    if (state.shouldCompleteAssistantMessage(info)) {
-      state.markAssistantMessageCompleted(info.id);
-      await completeAssistantMessage(info);
+    if (!state.shouldCompleteAssistantMessage(info)) {
+      return;
     }
+
+    state.markAssistantMessageCompleted(info.id);
+    await completeAssistantMessage(info);
   }
 
   return {

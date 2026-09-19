@@ -29,7 +29,7 @@ export function unicorn(): Array<TypedFlatConfigItem> {
         'unicorn/prefer-await': 'off',
         'unicorn/prefer-module': 'off',
         'unicorn/prefer-number-coercion': 'off',
-        'unicorn/prefer-ternary': ['error', 'only-single-line'],
+        'unicorn/prefer-ternary': 'off',
         'unicorn/prefer-top-level-await': 'off',
         'unicorn/require-array-sort-compare': 'off',
         'unicorn/single-line-block-comment-style': 'off',

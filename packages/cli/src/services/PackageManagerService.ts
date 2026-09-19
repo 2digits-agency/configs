@@ -165,14 +165,16 @@ export class PackageManagerService extends Context.Service<PackageManagerService
           yield* runAddCommand(devDepsCmd, 'devDependencies', devDependencies);
         }
 
-        if (Arr.isReadonlyArrayNonEmpty(dependencies)) {
-          const depsCmd = ChildProcess.make(
-            nypm.addDependencyCommand(pm.name, dependencies, { workspace, short: true }),
-            { shell: true },
-          );
-
-          yield* runAddCommand(depsCmd, 'dependencies', dependencies);
+        if (!Arr.isReadonlyArrayNonEmpty(dependencies)) {
+          return;
         }
+
+        const depsCmd = ChildProcess.make(
+          nypm.addDependencyCommand(pm.name, dependencies, { workspace, short: true }),
+          { shell: true },
+        );
+
+        yield* runAddCommand(depsCmd, 'dependencies', dependencies);
       });
 
       const getPackageManager = Effect.fn('PackageManagerService.getPackageManager')(function* () {

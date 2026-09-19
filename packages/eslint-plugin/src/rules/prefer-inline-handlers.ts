@@ -168,19 +168,12 @@ export const preferInlineHandlers = createRule<[], MessageId>({
     return {
       'VariableDeclarator[init.type=ArrowFunctionExpression], VariableDeclarator[init.type=FunctionExpression]':
         function VariableDeclaratorChecker(node: TSESTree.VariableDeclarator) {
-          if (node.id.type !== AST_NODE_TYPES.Identifier) {
-            return;
-          }
-
-          if (!node.init) {
-            return;
-          }
-
-          if (!getComponentBoundary(node)) {
-            return;
-          }
-
-          if (isWrappedInMemoHook(node.init)) {
+          if (
+            node.id.type !== AST_NODE_TYPES.Identifier ||
+            !node.init ||
+            !getComponentBoundary(node) ||
+            isWrappedInMemoHook(node.init)
+          ) {
             return;
           }
 
@@ -190,11 +183,7 @@ export const preferInlineHandlers = createRule<[], MessageId>({
         },
 
       FunctionDeclaration(node: TSESTree.FunctionDeclaration) {
-        if (!node.id) {
-          return;
-        }
-
-        if (!getComponentBoundary(node)) {
+        if (!node.id || !getComponentBoundary(node)) {
           return;
         }
 

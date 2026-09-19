@@ -28,11 +28,13 @@ export const alchemyNoV1Import: Rule = defineSyntaxRule(
 
       const provider = /^alchemy\/(aws|cloudflare)$/.exec(source)?.[1];
 
-      if (provider !== undefined) {
-        const replacement = `alchemy/${provider === 'aws' ? 'AWS' : 'Cloudflare'}`;
-
-        context.report({ node: node.source, messageId: 'providerImport', data: { replacement } });
+      if (provider === undefined) {
+        return;
       }
+
+      const replacement = `alchemy/${provider === 'aws' ? 'AWS' : 'Cloudflare'}`;
+
+      context.report({ node: node.source, messageId: 'providerImport', data: { replacement } });
     },
   }),
 );

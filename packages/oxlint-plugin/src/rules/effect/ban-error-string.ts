@@ -78,15 +78,17 @@ export const banErrorString: Rule = defineSyntaxRule(
       }
 
       if (
-        node.callee.type === 'MemberExpression' &&
-        staticPath(node.callee)?.at(-1) === 'toString' &&
-        node.arguments.length === 0
+        node.callee.type !== 'MemberExpression' ||
+        staticPath(node.callee)?.at(-1) !== 'toString' ||
+        node.arguments.length > 0
       ) {
-        const name = errorLikeName(node.callee.object);
+        return;
+      }
 
-        if (name !== undefined) {
-          context.report({ node, messageId: 'errorString', data: { name } });
-        }
+      const name = errorLikeName(node.callee.object);
+
+      if (name !== undefined) {
+        context.report({ node, messageId: 'errorString', data: { name } });
       }
     },
     TemplateLiteral(node) {

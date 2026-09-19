@@ -159,15 +159,13 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
 
       const [callback] = nodeArgs;
 
-      if (!callback || callback.type === AST_NODE_TYPES.SpreadElement) {
-        return;
-      }
-
-      if (isInlineFunction(callback) || isBindCall(callback)) {
-        return;
-      }
-
-      if (isIgnoredCallback(methodName, callback, context.sourceCode)) {
+      if (
+        !callback ||
+        callback.type === AST_NODE_TYPES.SpreadElement ||
+        isInlineFunction(callback) ||
+        isBindCall(callback) ||
+        isIgnoredCallback(methodName, callback, context.sourceCode)
+      ) {
         return;
       }
 

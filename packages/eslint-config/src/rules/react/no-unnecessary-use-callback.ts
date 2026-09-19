@@ -113,11 +113,7 @@ function getUseEffectOnlyReport(
   for (const usage of usages) {
     const effect = findParent(usage.identifier, isUseEffectLikeCall);
 
-    if (!effect) {
-      return;
-    }
-
-    if (effects.add(effect).size > 1) {
+    if (!effect || effects.add(effect).size > 1) {
       return;
     }
   }
