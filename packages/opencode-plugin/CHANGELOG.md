@@ -1,3 +1,13 @@
+## @2digits/opencode-plugin@0.2.36
+
+### Update posthog-node to 5.52.4
+
+
+
+### Satisfy the updated lint rules
+
+- Refactored guard clauses and filter expressions across rule implementations and services to comply with the updated linting rules
+
 ## @2digits/opencode-plugin@0.2.35
 
 ### Configure declaration generation with the current Vite+ API

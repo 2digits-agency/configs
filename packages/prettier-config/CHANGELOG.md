@@ -1,3 +1,11 @@
+## @2digits/prettier-config@4.0.49
+
+### Update prettier to 3.9.8
+
+
+
+### Update @prettier/plugin-oxc to 0.2.3
+
 ## @2digits/prettier-config@4.0.48
 
 ### Configure declaration generation with the current Vite+ API

@@ -1,3 +1,13 @@
+## @2digits/eslint-plugin@4.0.31
+
+### Update eslint to 10.11.0
+
+
+
+### Satisfy the updated lint rules
+
+- Refactored guard clauses and filter expressions across rule implementations and services to comply with the updated linting rules
+
 ## @2digits/eslint-plugin@4.0.30
 
 ### Update `@typescript-eslint/utils` to `8.70.0`

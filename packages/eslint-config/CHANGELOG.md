@@ -1,3 +1,47 @@
+## @2digits/eslint-config@5.8.1
+
+### Update eslint-plugin-unicorn to 76.0.0
+
+- Turned off `unicorn/prefer-ternary`
+
+### Update eslint-plugin-zod to 4.14.1
+
+
+
+### Update graphql-config to 5.1.7
+
+
+
+### Update @eslint-react to 5.20.0
+
+
+
+### Update empathic to 2.1.0
+
+
+
+### Update eslint-plugin-sonarjs to 4.2.1
+
+
+
+### Update @tanstack/eslint-plugin-query to 5.103.1
+
+
+
+### Update eslint to 10.11.0
+
+
+
+### Update eslint-plugin-turbo to 2.11.2
+
+
+
+### Satisfy the updated lint rules
+
+- Refactored guard clauses and filter expressions across rule implementations and services to comply with the updated linting rules
+
+### Update eslint-plugin-jsdoc to 64.5.4
+
 ## @2digits/eslint-config@5.8.0
 
 ### Update `eslint-plugin-turbo` to `2.10.13`
