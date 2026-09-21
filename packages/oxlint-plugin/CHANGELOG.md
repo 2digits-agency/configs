@@ -1,3 +1,7 @@
+## @2digits/oxlint-plugin@0.0.6
+
+### Update @oxlint/plugins to 1.84.0
+
 ## @2digits/oxlint-plugin@0.0.5
 
 ### Satisfy the updated lint rules

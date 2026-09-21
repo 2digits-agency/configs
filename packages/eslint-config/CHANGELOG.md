@@ -1,3 +1,27 @@
+## @2digits/eslint-config@5.8.2
+
+### Update eslint-plugin-de-morgan to 2.2.0
+
+- Added generated types for the `enforceForMixedOperators` option on `boolean/no-negated-disjunction`
+
+### Update eslint-plugin-zod to 4.14.2
+
+
+
+### Update @eslint-react/kit to 5.20.5
+
+
+
+### Update eslint-plugin-regexp to 3.3.1
+
+
+
+### Update @tanstack/eslint-plugin-query to 5.103.2
+
+
+
+### Update @eslint-react/eslint-plugin to 5.20.5
+
 ## @2digits/eslint-config@5.8.1
 
 ### Update eslint-plugin-unicorn to 76.0.0

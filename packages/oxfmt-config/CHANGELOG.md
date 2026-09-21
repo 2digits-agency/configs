@@ -1,3 +1,7 @@
+## @2digits/oxfmt-config@0.3.27
+
+### Update oxfmt to 0.69.0
+
 ## @2digits/oxfmt-config@0.3.26
 
 ### Update prettier to 3.9.8
