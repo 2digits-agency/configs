@@ -143,7 +143,7 @@ export interface RuleOptions {
    * Transforms the negation of a disjunction !(A || B) into the equivalent !A && !B according to De Morgan’s law
    * @see https://github.com/azat-io/eslint-plugin-de-morgan/blob/main/docs/no-negated-disjunction.md
    */
-  'boolean/no-negated-disjunction'?: Linter.RuleEntry<[]>
+  'boolean/no-negated-disjunction'?: Linter.RuleEntry<BooleanNoNegatedDisjunction>
   /**
    * Enforce consistent brace style for blocks
    * @see https://eslint.org/docs/latest/rules/brace-style
@@ -10135,6 +10135,11 @@ type ArrowSpacing = []|[{
 }]
 // ----- block-spacing -----
 type BlockSpacing = []|[("always" | "never")]
+// ----- boolean/no-negated-disjunction -----
+type BooleanNoNegatedDisjunction = []|[{
+  
+  enforceForMixedOperators?: boolean
+}]
 // ----- brace-style -----
 type BraceStyle = []|[("1tbs" | "stroustrup" | "allman")]|[("1tbs" | "stroustrup" | "allman"), {
   allowSingleLine?: boolean
