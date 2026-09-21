@@ -1,3 +1,7 @@
+## @2digits/opencode-plugin@0.2.37
+
+### Update posthog-node to 5.52.5
+
 ## @2digits/opencode-plugin@0.2.36
 
 ### Update posthog-node to 5.52.4

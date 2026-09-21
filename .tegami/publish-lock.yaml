@@ -1,139 +1,105 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update repository tooling\n\n- Bumped `pnpm` to 12.5.1\n- Updated `vite-plus` to 0.3.3, including `vitest` 5.0.1\n- Updated `knip` to 6.37.0, `turbo` to 2.11.2, and `@types/node` to 24.13.6\n- Updated `@oxc-node/cli` to 0.1.3\n- Updated the `voidzero-dev/setup-vp` GitHub action to v1.21.0\n- Bumped the `baseline-browser-mapping` override to 2.11.25\n"
-    filename: 2026-09-19-fresh-herons-tooling.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the Turborepo skill to 2.11.3-canary.2\n\n- Updated guidance for circular package dependencies and experimental task commands\n- Corrected the dependency-only filter syntax to `pkg^...`\n"
+    filename: 2026-09-21-tidy-geckos-climb.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update Effect to 4.0.0-rc.116\n"
-    filename: 2026-09-19-calm-otters-effect.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update effect to 4.0.0-rc.117\n"
+    filename: 2026-09-21-bright-otters-glide.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n  npm:@2digits/opencode-plugin:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Satisfy the updated lint rules\n\n- Refactored guard clauses and filter expressions across rule implementations and services to comply with the updated linting rules\n"
-    filename: 2026-09-19-taut-ferrets-lint.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/platform-node to 4.0.0-rc.117\n"
+    filename: 2026-09-21-calm-foxes-drift.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-unicorn to 76.0.0\n\n- Turned off `unicorn/prefer-ternary`\n"
-    filename: 2026-09-19-bold-badgers-unicorn.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-de-morgan to 2.2.0\n\n- Added generated types for the `enforceForMixedOperators` option on `boolean/no-negated-disjunction`\n"
+    filename: 2026-09-21-bold-lynxes-leap.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update eslint-plugin-zod to 4.14.1\n"
-    filename: 2026-09-19-brisk-falcons-zod.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update eslint-plugin-zod to 4.14.2\n"
+    filename: 2026-09-21-fresh-mantas-turn.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update graphql-config to 5.1.7\n"
-    filename: 2026-09-19-brisk-mantas-graphql.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/kit to 5.20.5\n"
+    filename: 2026-09-21-gentle-badgers-roam.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react to 5.20.0\n"
-    filename: 2026-09-19-eager-newts-react.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-regexp to 3.3.1\n"
+    filename: 2026-09-21-mild-wolves-rest.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update empathic to 2.1.0\n"
-    filename: 2026-09-19-gentle-lynx-empathic.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @tanstack/eslint-plugin-query to 5.103.2\n"
+    filename: 2026-09-21-neat-ravens-perch.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-sonarjs to 4.2.1\n"
-    filename: 2026-09-19-livid-geckos-sonar.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/eslint-plugin to 5.20.5\n"
+    filename: 2026-09-21-quiet-finches-soar.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @tanstack/eslint-plugin-query to 5.103.1\n"
-    filename: 2026-09-19-quiet-plovers-query.md
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update posthog-node to 5.52.5\n"
+    filename: 2026-09-21-eager-doves-flutter.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update eslint to 10.11.0\n"
-    filename: 2026-09-19-silent-herons-eslint.md
+  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update oxfmt to 0.69.0\n"
+    filename: 2026-09-21-silent-moles-dig.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-turbo to 2.11.2\n"
-    filename: 2026-09-19-spry-tapirs-turbo.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Update @oxlint/plugins to 1.84.0\n"
+    filename: 2026-09-21-swift-herons-dive.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 64.5.4\n"
-    filename: 2026-09-19-wry-ibex-jsdoc.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update posthog-node to 5.52.4\n"
-    filename: 2026-09-19-swift-moles-posthog.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update oxlint-tsgolint to 7.0.2002\n"
-    filename: 2026-09-19-neat-wolves-tsgo.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/prettier-config:\n    type: patch\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update prettier to 3.9.8\n"
-    filename: 2026-09-19-mild-doves-prettier.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/prettier-config:\n    type: patch\n---\n\n## Update @prettier/plugin-oxc to 0.2.3\n"
-    filename: 2026-09-19-steady-voles-oxc.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.103.3\n"
-    filename: 2026-09-19-tidy-ravens-renovate.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: minor\n---\n\n## Add an Effect TypeScript configuration preset\n\n- Added `@2digits/tsconfig/effect.json`, extending the base config with Effect language-service and tsgo plugin settings, diagnostics, import aliases, and test overrides.\n"
-    filename: 2026-09-14-effect-tsconfig.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update oxlint to 1.84.0\n"
+    filename: 2026-09-21-steady-newts-swim.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-09-19-fresh-herons-tooling.md
+      - 2026-09-21-tidy-geckos-climb.md
     id: npm:@2digits/config-monorepo
-    updated: true
-  - changelogIds:
-      - 2026-09-19-calm-otters-effect.md
-      - 2026-09-19-taut-ferrets-lint.md
-    id: npm:@2digits/cli
     updated: true
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-09-19-bold-badgers-unicorn.md
-      - 2026-09-19-brisk-falcons-zod.md
-      - 2026-09-19-brisk-mantas-graphql.md
-      - 2026-09-19-eager-newts-react.md
-      - 2026-09-19-gentle-lynx-empathic.md
-      - 2026-09-19-livid-geckos-sonar.md
-      - 2026-09-19-quiet-plovers-query.md
-      - 2026-09-19-silent-herons-eslint.md
-      - 2026-09-19-spry-tapirs-turbo.md
-      - 2026-09-19-taut-ferrets-lint.md
-      - 2026-09-19-wry-ibex-jsdoc.md
+      - 2026-09-21-bright-otters-glide.md
+      - 2026-09-21-calm-foxes-drift.md
+    id: npm:@2digits/cli
+    updated: true
+  - changelogIds:
+      - 2026-09-21-bold-lynxes-leap.md
+      - 2026-09-21-fresh-mantas-turn.md
+      - 2026-09-21-gentle-badgers-roam.md
+      - 2026-09-21-mild-wolves-rest.md
+      - 2026-09-21-neat-ravens-perch.md
+      - 2026-09-21-quiet-finches-soar.md
     id: npm:@2digits/eslint-config
     updated: true
+  - id: npm:@2digits/eslint-plugin
+    updated: false
   - changelogIds:
-      - 2026-09-19-silent-herons-eslint.md
-      - 2026-09-19-taut-ferrets-lint.md
-    id: npm:@2digits/eslint-plugin
-    updated: true
-  - changelogIds:
-      - 2026-09-19-swift-moles-posthog.md
-      - 2026-09-19-taut-ferrets-lint.md
+      - 2026-09-21-eager-doves-flutter.md
     id: npm:@2digits/opencode-plugin
     updated: true
   - changelogIds:
-      - 2026-09-19-brisk-falcons-zod.md
-      - 2026-09-19-neat-wolves-tsgo.md
-    id: npm:@2digits/oxlint-config
-    updated: true
-  - changelogIds:
-      - 2026-09-19-mild-doves-prettier.md
+      - 2026-09-21-silent-moles-dig.md
     id: npm:@2digits/oxfmt-config
     updated: true
   - changelogIds:
-      - 2026-09-19-taut-ferrets-lint.md
+      - 2026-09-21-swift-herons-dive.md
     id: npm:@2digits/oxlint-plugin
     updated: true
   - changelogIds:
-      - 2026-09-19-mild-doves-prettier.md
-      - 2026-09-19-steady-voles-oxc.md
-    id: npm:@2digits/prettier-config
+      - 2026-09-21-fresh-mantas-turn.md
+      - 2026-09-21-steady-newts-swim.md
+    id: npm:@2digits/oxlint-config
     updated: true
+  - id: npm:@2digits/prettier-config
+    updated: false
+  - id: npm:@2digits/tsconfig
+    updated: false
   - changelogIds:
-      - 2026-09-19-tidy-ravens-renovate.md
-    id: npm:@2digits/renovate-config
-    updated: true
-  - changelogIds:
-      - 2026-09-19-calm-otters-effect.md
-      - 2026-09-19-taut-ferrets-lint.md
+      - 2026-09-21-bright-otters-glide.md
+      - 2026-09-21-calm-foxes-drift.md
     id: npm:@2digits/tlo-mcp
     updated: true
-  - changelogIds:
-      - 2026-09-14-effect-tsconfig.md
-    id: npm:@2digits/tsconfig
-    updated: true
+  - id: npm:@2digits/renovate-config
+    updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
-  - id: npm:@2digits/cli
   - id: npm:@2digits/constants
+  - id: npm:@2digits/cli
   - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
-  - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-plugin
+  - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/prettier-config
-  - id: npm:@2digits/renovate-config
-  - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig
+  - id: npm:@2digits/tlo-mcp
+  - id: npm:@2digits/renovate-config

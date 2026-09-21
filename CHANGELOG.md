@@ -1,3 +1,10 @@
+## @2digits/config-monorepo@0.1.4
+
+### Update the Turborepo skill to 2.11.3-canary.2
+
+- Updated guidance for circular package dependencies and experimental task commands
+- Corrected the dependency-only filter syntax to `pkg^...`
+
 ## @2digits/config-monorepo@0.1.3
 
 ### Update repository tooling
