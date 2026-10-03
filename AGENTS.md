@@ -1,5 +1,19 @@
 # Agent Guidelines for @2digits/configs
 
+## Agent skills
+
+### Issue tracker
+
+Track issues in GitHub Issues for `2digits-agency/configs`. Before issue operations, read `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the five default triage labels. Before triaging, read `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: root `GLOSSARY.md` and `docs/adr/`. Before exploring, read `docs/agents/domain.md`.
+
 ## Commands
 
 - **Build**: `pnpm build` | **Test**: `pnpm test` | **Single test**: `vitest run path/to/test.ts`
