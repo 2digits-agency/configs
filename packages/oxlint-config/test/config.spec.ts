@@ -216,4 +216,32 @@ describe('oxlint config', () => {
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
   });
+
+  it('keeps stale evolve diagnostics out of the production defaults', () => {
+    const result = spawnSync(
+      'vp',
+      ['lint', '--config=evolve-default.config.mjs', '--format=default', '--no-ignore', 'evolve.mjs'],
+      { cwd: twoDigitsFixtureDirectory, encoding: 'utf8' },
+    );
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(collectPluginsAndRules(twoDigits)).not.toContain('2digits/no-stale-struct-evolve-keys');
+    expect(result.status).toBe(0);
+    expect(output).not.toContain('2digits(no-stale-struct-evolve-keys)');
+    expect(output).toContain('Found 0 warnings and 0 errors');
+  });
+
+  it('executes stale evolve diagnostics when opted in through the production config', () => {
+    const result = spawnSync(
+      'vp',
+      ['lint', '--config=evolve-opt-in.config.mjs', '--format=default', '--no-ignore', 'evolve.mjs'],
+      { cwd: twoDigitsFixtureDirectory, encoding: 'utf8' },
+    );
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output).toContain('2digits(no-stale-struct-evolve-keys)');
+    expect(output).toContain('Updater key "zipCode"');
+    expect(output).toContain('Found 0 warnings and 1 error');
+  });
 });
