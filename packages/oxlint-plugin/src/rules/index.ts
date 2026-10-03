@@ -9,6 +9,7 @@ import { alchemyNoV1Import } from './alchemy/alchemy-no-v1-import';
 import { alchemyNoV1WorkerProperties } from './alchemy/alchemy-no-v1-worker-properties';
 import { avoidDataTaggedError } from './effect/avoid-data-tagged-error';
 import { banErrorString } from './effect/ban-error-string';
+import { configDefaultOutsideLiterals } from './effect/config-default-outside-literals';
 import { corsCredentialsWithWildcard } from './effect/cors-credentials-with-wildcard';
 import { dualNumericArityWithOptionalParameter } from './effect/dual-numeric-arity-with-optional-parameter';
 import { effectPromiseVsTryPromise } from './effect/effect-promise-vs-trypromise';
@@ -60,6 +61,7 @@ export const rules = {
   'alchemy-no-v1-worker-properties': alchemyNoV1WorkerProperties,
   'avoid-data-tagged-error': avoidDataTaggedError,
   'ban-error-string': banErrorString,
+  'config-default-outside-literals': configDefaultOutsideLiterals,
   'cors-credentials-with-wildcard': corsCredentialsWithWildcard,
   'dual-numeric-arity-with-optional-parameter': dualNumericArityWithOptionalParameter,
   'effect-promise-vs-trypromise': effectPromiseVsTryPromise,
