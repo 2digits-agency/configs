@@ -18,7 +18,10 @@ import { zodConfig } from '../src/configs/zod';
 
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
+const cleanupTapsFixtureDirectory = fileURLToPath(new URL('fixtures/cleanup-taps', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+// Exercise standalone Oxlint configs even when the suite runs under vp test.
+const oxlintEnvironment = { ...process.env, VP_VERSION: undefined };
 
 const reactCompilerRules = [
   'react/capitalized-calls',
@@ -189,6 +192,11 @@ describe('oxlint config', () => {
     expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
+  it('keeps the cleanup taps diagnostic out of recommended and default rules', () => {
+    expect(recommendedRules['2digits/no-interruption-unsafe-cleanup-taps']).toBeUndefined();
+    expect(collectPluginsAndRules(twoDigits)).not.toContain('2digits/no-interruption-unsafe-cleanup-taps');
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -197,6 +205,7 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: fixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnvironment,
     });
 
     const output = `${result.stdout}${result.stderr}`;
@@ -209,11 +218,29 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: twoDigitsFixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnvironment,
     });
 
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+  });
+
+  it.for([
+    ['oxlint.config.mjs', 'invalid.mjs', 1, ['2digits(no-interruption-unsafe-cleanup-taps)']],
+    ['oxlint.config.mjs', 'valid.mjs', 0, []],
+    ['default.config.mjs', 'invalid.mjs', 0, []],
+  ] as const)('cleanup taps with %s and %s exits %i', ([config, fixture, status, expectedCodes]) => {
+    const result = spawnSync(process.execPath, [oxlintBinary, `--config=${config}`, '--format=json', fixture], {
+      cwd: cleanupTapsFixtureDirectory,
+      encoding: 'utf8',
+      env: oxlintEnvironment,
+    });
+
+    expect(result.status).toBe(status);
+    const diagnostics = JSON.parse(result.stdout) as { diagnostics: Array<{ code: string }> };
+
+    expect(diagnostics.diagnostics.map(({ code }) => code)).toStrictEqual(expectedCodes);
   });
 });
