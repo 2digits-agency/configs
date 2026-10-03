@@ -19,6 +19,8 @@ import { zodConfig } from '../src/configs/zod';
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+// These are standalone Oxlint configs, even when the tests run inside Vite+.
+const oxlintEnv = { ...process.env, VP_VERSION: '' };
 
 const reactCompilerRules = [
   'react/capitalized-calls',
@@ -189,6 +191,11 @@ describe('oxlint config', () => {
     expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
+  it('keeps selective JSON assertion checking opt-in and broad assertion checking off', () => {
+    expect(recommendedRules['2digits/no-json-boundary-type-assertion']).toBeUndefined();
+    expect(typescriptRulesConfig.rules['typescript/no-unsafe-type-assertion']).toBe('off');
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -197,6 +204,7 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: fixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnv,
     });
 
     const output = `${result.stdout}${result.stderr}`;
@@ -209,11 +217,31 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: twoDigitsFixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnv,
     });
 
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+  });
+
+  it('executes the opt-in JSON rule from the built plugin and isolates files', () => {
+    const result = spawnSync(
+      process.execPath,
+      [oxlintBinary, '--config=oxlint.config.mjs', '--format=json', 'json-shadow.ts', 'json-boundary.ts'],
+      { cwd: twoDigitsFixtureDirectory, encoding: 'utf8', env: oxlintEnv },
+    );
+    const output = JSON.parse(result.stdout) as {
+      diagnostics: Array<{ code: string; filename: string; message: string }>;
+    };
+
+    expect(result.status).toBe(1);
+    expect(output.diagnostics).toHaveLength(2);
+    expect(output.diagnostics.every(({ filename }) => filename.endsWith('json-boundary.ts'))).toBeTruthy();
+    expect(output.diagnostics.map(({ code }) => code)).toStrictEqual([
+      '2digits(no-json-boundary-type-assertion)',
+      '2digits(no-json-boundary-type-assertion)',
+    ]);
   });
 });

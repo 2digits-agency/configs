@@ -1,0 +1,25 @@
+async function json<T>(provider: string, response: Response): Promise<T> {
+  if (!response.ok) {
+    throw IntegrationError.make({
+      provider,
+      status: response.status,
+      retryable: response.status === 429 || response.status >= 500,
+      message: `${provider} returned HTTP ${response.status}`,
+    });
+  }
+
+  return (await response.json()) as T;
+}
+
+class MailBlueProbe {
+  async contactByEmail(email: string): Promise<MailBlueContact | null> {
+    const response = await this.http.request(
+      `${this.baseUrl}contacts?filters%5Bemail%5D=${encodeURIComponent(email.toLowerCase())}`,
+      { provider: 'mailblue', headers: this.headers() },
+    );
+
+    const result = await json<{ contacts: ReadonlyArray<MailBlueContact> }>('mailblue', response);
+
+    return result.contacts[0] ?? null;
+  }
+}

@@ -47,6 +47,7 @@ import { preserveCaughtError } from './effect/preserve-caught-error';
 import { requireSchemaClassBrand } from './effect/require-schema-class-brand';
 import { requireTryPromiseAbortSignal } from './effect/require-try-promise-abort-signal';
 import { throwInEffectGen } from './effect/throw-in-effect-gen';
+import { noJsonBoundaryTypeAssertion } from './no-json-boundary-type-assertion';
 
 export const rules = {
   'alchemy-no-cloudflare-init-finalizer': alchemyNoCloudflareInitFinalizer,
@@ -72,6 +73,7 @@ export const rules = {
   'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,
   'no-function-config-default': noFunctionConfigDefault,
   'no-hash-as-identity': noHashAsIdentity,
+  'no-json-boundary-type-assertion': noJsonBoundaryTypeAssertion,
   'no-logging-in-catch': noLoggingInCatch,
   'no-multi-shot-effect-callback': noMultiShotEffectCallback,
   'no-non-json-schema-annotation': noNonJsonSchemaAnnotation,

@@ -195,7 +195,10 @@ export function isGlobalIdentifier(node: ESTree.Node, context: Context, name: st
   let scope: Scope | null = context.sourceCode.getScope(node);
 
   while (scope !== null) {
-    if (scope.set.has(name)) {
+    const variable = scope.set.get(name);
+
+    // Configured globals have no authored definitions; only bindings shadow a built-in.
+    if (variable !== undefined && variable.defs.length > 0) {
       return false;
     }
 
