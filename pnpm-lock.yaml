@@ -387,8 +387,8 @@ catalogs:
       specifier: 5.52.5
       version: 5.52.5
     prettier:
-      specifier: 3.9.8
-      version: 3.9.8
+      specifier: 3.9.9
+      version: 3.9.9
     prettier-plugin-jsdoc:
       specifier: 1.8.1
       version: 1.8.1
@@ -905,7 +905,7 @@ importers:
         version: 0.69.0(vite-plus@1.0.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.13.6)(@vitest/ui@5.0.1)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.24)(tsx@4.23.13)(typescript@7.0.2)(yaml@2.9.0))
       prettier:
         specifier: 'catalog:'
-        version: 3.9.8
+        version: 3.9.9
       publint:
         specifier: 'catalog:'
         version: 0.3.24
@@ -1006,22 +1006,22 @@ importers:
         version: link:../constants
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 'catalog:'
-        version: 4.7.1(@prettier/plugin-oxc@0.2.3)(prettier@3.9.8)(supports-color@7.2.0)
+        version: 4.7.1(@prettier/plugin-oxc@0.2.3)(prettier@3.9.9)(supports-color@7.2.0)
       '@prettier/plugin-oxc':
         specifier: 'catalog:'
         version: 0.2.3
       '@prettier/plugin-xml':
         specifier: 'catalog:'
-        version: 3.4.2(prettier@3.9.8)
+        version: 3.4.2(prettier@3.9.9)
       local-pkg:
         specifier: 'catalog:'
         version: 1.2.1
       prettier-plugin-jsdoc:
         specifier: 'catalog:'
-        version: 1.8.1(prettier@3.9.8)(supports-color@7.2.0)
+        version: 1.8.1(prettier@3.9.9)(supports-color@7.2.0)
       prettier-plugin-tailwindcss:
         specifier: 'catalog:'
-        version: 0.8.1(@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.3)(prettier@3.9.8)(supports-color@7.2.0))(@prettier/plugin-oxc@0.2.3)(prettier-plugin-jsdoc@1.8.1(prettier@3.9.8)(supports-color@7.2.0))(prettier@3.9.8)
+        version: 0.8.1(@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.3)(prettier@3.9.9)(supports-color@7.2.0))(@prettier/plugin-oxc@0.2.3)(prettier-plugin-jsdoc@1.8.1(prettier@3.9.9)(supports-color@7.2.0))(prettier@3.9.9)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -1034,7 +1034,7 @@ importers:
         version: 24.13.6
       prettier:
         specifier: 'catalog:'
-        version: 3.9.8
+        version: 3.9.9
       publint:
         specifier: 'catalog:'
         version: 0.3.24
@@ -6953,8 +6953,8 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  prettier@3.9.8:
-    resolution: {integrity: sha512-WRFq3Wn3WId7LLROfMLdH7xaFr2jR62wU8nLO6rQUOLOxNZUviyJQs1M0iIhLexSFy+L+w0ch66wtoO2jRjG0A==}
+  prettier@3.9.9:
+    resolution: {integrity: sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -9081,13 +9081,13 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.3)(prettier@3.9.8)(supports-color@7.2.0)':
+  '@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.3)(prettier@3.9.9)(supports-color@7.2.0)':
     dependencies:
       '@babel/generator': 7.28.5
       '@babel/parser': 7.28.6
       '@babel/traverse': 7.28.3(supports-color@7.2.0)
       '@babel/types': 7.28.6
-      prettier: 3.9.8
+      prettier: 3.9.9
       semver: 7.8.5
     optionalDependencies:
       '@prettier/plugin-oxc': 0.2.3
@@ -10052,10 +10052,10 @@ snapshots:
     dependencies:
       oxc-parser: 0.139.0
 
-  '@prettier/plugin-xml@3.4.2(prettier@3.9.8)':
+  '@prettier/plugin-xml@3.4.2(prettier@3.9.9)':
     dependencies:
       '@xml-tools/parser': 1.0.11
-      prettier: 3.9.8
+      prettier: 3.9.9
 
   '@protobufjs/aspromise@1.1.2': {}
 
@@ -13820,26 +13820,26 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-jsdoc@1.8.1(prettier@3.9.8)(supports-color@7.2.0):
+  prettier-plugin-jsdoc@1.8.1(prettier@3.9.9)(supports-color@7.2.0):
     dependencies:
       binary-searching: 2.0.5
       comment-parser: 1.4.7
       mdast-util-from-markdown: 2.0.3(supports-color@7.2.0)
-      prettier: 3.9.8
+      prettier: 3.9.9
     transitivePeerDependencies:
       - supports-color
 
-  prettier-plugin-tailwindcss@0.8.1(@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.3)(prettier@3.9.8)(supports-color@7.2.0))(@prettier/plugin-oxc@0.2.3)(prettier-plugin-jsdoc@1.8.1(prettier@3.9.8)(supports-color@7.2.0))(prettier@3.9.8):
+  prettier-plugin-tailwindcss@0.8.1(@ianvs/prettier-plugin-sort-imports@4.7.1(@prettier/plugin-oxc@0.2.3)(prettier@3.9.9)(supports-color@7.2.0))(@prettier/plugin-oxc@0.2.3)(prettier-plugin-jsdoc@1.8.1(prettier@3.9.9)(supports-color@7.2.0))(prettier@3.9.9):
     dependencies:
-      prettier: 3.9.8
+      prettier: 3.9.9
     optionalDependencies:
-      '@ianvs/prettier-plugin-sort-imports': 4.7.1(@prettier/plugin-oxc@0.2.3)(prettier@3.9.8)(supports-color@7.2.0)
+      '@ianvs/prettier-plugin-sort-imports': 4.7.1(@prettier/plugin-oxc@0.2.3)(prettier@3.9.9)(supports-color@7.2.0)
       '@prettier/plugin-oxc': 0.2.3
-      prettier-plugin-jsdoc: 1.8.1(prettier@3.9.8)(supports-color@7.2.0)
+      prettier-plugin-jsdoc: 1.8.1(prettier@3.9.9)(supports-color@7.2.0)
 
   prettier@3.9.6: {}
 
-  prettier@3.9.8: {}
+  prettier@3.9.9: {}
 
   pretty-format@27.5.1:
     dependencies:
