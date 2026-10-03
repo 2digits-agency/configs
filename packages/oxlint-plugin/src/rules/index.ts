@@ -19,6 +19,7 @@ import { noDiscardedSchemaChecks } from './effect/no-discarded-schema-checks';
 import { noEffectAlchemyBarrelImports } from './effect/no-effect-alchemy-barrel-imports';
 import { noEmptyEffectCallback } from './effect/no-empty-effect-callback';
 import { noEmptySchemaStruct } from './effect/no-empty-schema-struct';
+import { noErasedErrorAnnotation } from './effect/no-erased-error-annotation';
 import { noFunctionConfigDefault } from './effect/no-function-config-default';
 import { noHashAsIdentity } from './effect/no-hash-as-identity';
 import { noLoggingInCatch } from './effect/no-logging-in-catch';
@@ -70,6 +71,7 @@ export const rules = {
   'no-empty-effect-callback': noEmptyEffectCallback,
   'no-empty-schema-struct': noEmptySchemaStruct,
   'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,
+  'no-erased-error-annotation': noErasedErrorAnnotation,
   'no-function-config-default': noFunctionConfigDefault,
   'no-hash-as-identity': noHashAsIdentity,
   'no-logging-in-catch': noLoggingInCatch,

@@ -19,6 +19,9 @@
     "packages/oxlint-config": {
       "ignore": ["test/fixtures/**"]
     },
+    "packages/oxlint-plugin": {
+      "ignore": ["test/fixtures/erased-error-annotation/**"]
+    },
     "packages/tsconfig": {
       "ignoreDependencies": ["@effect/tsgo"]
     }
