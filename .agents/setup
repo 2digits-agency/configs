@@ -4,6 +4,14 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$repo_root"
 
+export PATH="$HOME/.local/bin:$PATH"
+if ! command -v but >/dev/null 2>&1; then
+  started_at=$SECONDS
+  printf 'Installing GitButler CLI...\n'
+  curl -fsSL https://gitbutler.com/install.sh | sh
+  printf 'Installed GitButler CLI in %ss.\n' "$((SECONDS - started_at))"
+fi
+
 export VP_HOME="${VP_HOME:-$HOME/.vite-plus}"
 
 if [[ ! -x "$VP_HOME/bin/vp" || ! -f "$VP_HOME/env" ]]; then
