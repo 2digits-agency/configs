@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 
+import { importedApi } from '../../fixes';
 import { argumentAt, defineEffectRule, isApi, ruleMeta } from '../../utils';
 
 export const noEmptySchemaStruct: Rule = defineEffectRule(
@@ -16,7 +17,9 @@ export const noEmptySchemaStruct: Rule = defineEffectRule(
       const fields = argumentAt(node, 0);
 
       if (
+        node.arguments.length === 1 &&
         isApi(node.callee, getState(), 'Schema', 'Struct') &&
+        importedApi(context, node.callee) &&
         fields?.type === 'ObjectExpression' &&
         fields.properties.length === 0
       ) {

@@ -36,6 +36,22 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+### Empty Schema.Struct calls
+
+`no-empty-schema-struct` reports one diagnostic at the whole call only when an Effect `Struct` runtime import resolves
+at that use site and the complete argument list is a single empty object literal. Namespace, root `Schema`, and named
+`Struct` aliases are supported; shadowed bindings and unrelated APIs are ignored.
+
+Extra arguments and argument spreads are conservatively ignored, including explicit records, record identifiers, and
+rest record arguments. Nonempty field bags, field identifiers, and object spreads are also ignored. Type correctness
+remains the compiler's responsibility.
+
+The `Struct(fields, ...records)` overload is supported by Effect v3: tests pin `effect@3.19.14` and verify numeric record
+values decode, wrong values fail, and sole-empty `Struct({})` accepts `42`. This is not evidence of a v4 record overload
+or a recommendation for constructing records in v4.
+
+The rule is diagnostic-only. It offers no schema autofix because the intended validation contract requires user judgment.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,

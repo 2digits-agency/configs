@@ -214,6 +214,6 @@ describe('oxlint config', () => {
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
-    expect(output).toContain('2digits(no-empty-schema-struct)');
+    expect(output.match(/2digits\(no-empty-schema-struct\)/gu)).toHaveLength(1);
   });
 });
