@@ -189,6 +189,11 @@ describe('oxlint config', () => {
     expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
+  it('keeps the fresh layer rule opt-in', () => {
+    expect(recommendedRules['2digits/no-duplicate-fresh-layer-factory']).toBeUndefined();
+    expect(collectPluginsAndRules(twoDigits)).not.toContain('2digits/no-duplicate-fresh-layer-factory');
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -215,5 +220,23 @@ describe('oxlint config', () => {
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+  });
+
+  it('executes the opt-in fresh layer rule and respects deliberate-isolation suppression', () => {
+    const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'duplicate-layer.mjs'], {
+      cwd: twoDigitsFixtureDirectory,
+      encoding: 'utf8',
+    });
+
+    expect(result.status).toBe(1);
+    expect(`${result.stdout}${result.stderr}`).toContain('2digits(no-duplicate-fresh-layer-factory)');
+
+    const suppressed = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'isolated-layer.mjs'], {
+      cwd: twoDigitsFixtureDirectory,
+      encoding: 'utf8',
+    });
+
+    expect(suppressed.status).toBe(0);
+    expect(`${suppressed.stdout}${suppressed.stderr}`).not.toContain('2digits(no-duplicate-fresh-layer-factory)');
   });
 });

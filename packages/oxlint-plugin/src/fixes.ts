@@ -9,7 +9,7 @@ import { staticPath } from './utils';
  * @param node Edit site.
  * @param name Local binding name.
  */
-function binding(context: Context, node: ESTree.Node, name: string): Variable | undefined {
+export function binding(context: Context, node: ESTree.Node, name: string): Variable | undefined {
   let scope: Scope | null = context.sourceCode.getScope(node);
 
   while (scope !== null) {
