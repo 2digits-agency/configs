@@ -189,6 +189,15 @@ describe('oxlint config', () => {
     expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
+  it('keeps the async runSync rule opt-in while accepting an explicit override', () => {
+    expect(recommendedRules['2digits/no-async-constructor-in-run-sync']).toBeUndefined();
+    expect(
+      withTwoDigits({ rules: { '2digits/no-async-constructor-in-run-sync': 'error' } }).rules?.[
+        '2digits/no-async-constructor-in-run-sync'
+      ],
+    ).toBe('error');
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -215,5 +224,15 @@ describe('oxlint config', () => {
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+    expect(output).toContain('2digits(no-async-constructor-in-run-sync)');
+  });
+
+  it('does not report immediate callback, timeout or zero durations with the opt-in rule enabled', () => {
+    const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'valid.mjs'], {
+      cwd: twoDigitsFixtureDirectory,
+      encoding: 'utf8',
+    });
+
+    expect(result.status, `${result.stdout}${result.stderr}`).toBe(0);
   });
 });

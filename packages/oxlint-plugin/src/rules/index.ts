@@ -13,6 +13,7 @@ import { corsCredentialsWithWildcard } from './effect/cors-credentials-with-wild
 import { dualNumericArityWithOptionalParameter } from './effect/dual-numeric-arity-with-optional-parameter';
 import { effectPromiseVsTryPromise } from './effect/effect-promise-vs-trypromise';
 import { noAlreadyStartedPromise } from './effect/no-already-started-promise';
+import { noAsyncConstructorInRunSync } from './effect/no-async-constructor-in-run-sync';
 import { noAsyncEffectTry } from './effect/no-async-effect-try';
 import { noDiscardedRunPromise } from './effect/no-discarded-run-promise';
 import { noDiscardedSchemaChecks } from './effect/no-discarded-schema-checks';
@@ -64,6 +65,7 @@ export const rules = {
   'dual-numeric-arity-with-optional-parameter': dualNumericArityWithOptionalParameter,
   'effect-promise-vs-trypromise': effectPromiseVsTryPromise,
   'no-already-started-promise': noAlreadyStartedPromise,
+  'no-async-constructor-in-run-sync': noAsyncConstructorInRunSync,
   'no-async-effect-try': noAsyncEffectTry,
   'no-discarded-run-promise': noDiscardedRunPromise,
   'no-discarded-schema-checks': noDiscardedSchemaChecks,
