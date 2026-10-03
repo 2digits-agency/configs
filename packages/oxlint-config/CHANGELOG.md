@@ -1,3 +1,17 @@
+## @2digits/oxlint-config@1.2.3
+
+### Update oxlint to 1.86.0
+
+Update the Oxlint peer dependency from 1.84.0 to 1.86.0, including rule correctness fixes and Vite+ configuration discovery changes.
+
+### Update eslint-plugin-zod to 5.0.0
+
+- Removed the deprecated `zod/no-string-schema-with-uuid` rule from the ESLint rule types.
+
+### Update oxlint-tsgolint to 7.0.2003
+
+Update the type-aware linting peer dependency from 7.0.2002 to 7.0.2003, including fixes to diagnostics and suggestions.
+
 ## @2digits/oxlint-config@1.2.2
 
 ### Update eslint-plugin-zod to 4.14.2

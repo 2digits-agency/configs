@@ -1,3 +1,9 @@
+## @2digits/prettier-config@4.0.50
+
+### Update prettier to 3.9.9
+
+Update the Prettier peer dependency from 3.9.8 to 3.9.9, fixing Markdown text containing dollar signs being incorrectly parsed as math.
+
 ## @2digits/prettier-config@4.0.49
 
 ### Update prettier to 3.9.8

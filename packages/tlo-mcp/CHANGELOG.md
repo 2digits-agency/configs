@@ -1,3 +1,19 @@
+## @2digits/tlo-mcp@0.1.37
+
+### Update Effect to 4.0.0
+
+
+
+### Update `@effect/platform-node` to 4.0.0
+
+
+
+### Fix Effect 4 module imports
+
+- Replaced removed `effect/unstable` import paths with the Effect 4 entrypoints.
+
+### Update `@effect/language-service` to 0.87.3
+
 ## @2digits/tlo-mcp@0.1.36
 
 ### Update effect to 4.0.0-rc.117

@@ -1,3 +1,49 @@
+## @2digits/config-monorepo@0.1.5
+
+### Update pnpm to 12.9.0
+
+
+
+### Update vite-plus to 1.0.0
+
+
+
+### Update @voidzero-dev/vite-plus-core to 1.0.0
+
+
+
+### Update oxfmt to 0.71.0
+
+
+
+### Update turbo to 2.11.7
+
+Update repository task orchestration from 2.11.2 to 2.11.7, including SDKROOT forwarding and cache-input handling fixes.
+
+### Update voidzero-dev/setup-vp to 1.21.1
+
+
+
+### Update publint to 0.3.25
+
+Update development-only package validation from 0.3.24 to 0.3.25, fixing JSX extension detection and browser-field package references.
+
+### Update @types/node to 24.19.1
+
+Update the repository's development-only Node.js type definitions from 24.13.6 to 24.19.1.
+
+### Update knip to 6.39.0
+
+Update repository dependency analysis from 6.37.0 to 6.39.0, adding Turborepo detection and support for Oxlint configuration inheritance.
+
+### Update baseline-browser-mapping to 2.11.27
+
+
+
+### Update the `@typescript-eslint/types` override from 8.70.0 to 8.71.0
+
+Keep shared TypeScript AST types aligned with the updated parser, scope manager, and rule utilities throughout the workspace.
+
 ## @2digits/config-monorepo@0.1.4
 
 ### Update the Turborepo skill to 2.11.3-canary.2
