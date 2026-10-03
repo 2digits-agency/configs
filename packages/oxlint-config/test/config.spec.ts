@@ -215,5 +215,6 @@ describe('oxlint config', () => {
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+    expect(output.match(/2digits\(no-function-config-default\)/g)).toHaveLength(2);
   });
 });
