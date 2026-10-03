@@ -12,6 +12,32 @@ const effectImportAliases: Readonly<Record<string, string>> = {
   String: 'Str',
 };
 
+// Verified namespace exports and provider module entrypoints in Alchemy 2.0.0-beta.79.
+// Keep this explicit: PascalCase names also include Config values and service identifiers.
+const alchemyModules = new Set([
+  'AdoptPolicy',
+  'AWS',
+  'Axiom',
+  'Cloudflare',
+  'Docker',
+  'Drift',
+  'Fly',
+  'GitHub',
+  'Hetzner',
+  'Kubernetes',
+  'Neon',
+  'Plan',
+  'Planetscale',
+  'ProviderMode',
+  'Railway',
+  'RemovalPolicy',
+  'Report',
+  'Schema',
+  'Server',
+  'Stripe',
+  'Telemetry',
+]);
+
 function isEffectVitestSource(source: string): boolean {
   return source === '@effect/vitest' || source.startsWith('@effect/vitest/');
 }
@@ -25,7 +51,11 @@ export function namespaceAlias(moduleName: string): string {
 }
 
 export function barrelModuleSource(source: string, moduleName: string): string | undefined {
-  if (source === 'effect' || source === 'alchemy') {
+  if (source === 'alchemy') {
+    return alchemyModules.has(moduleName) ? `alchemy/${moduleName}` : undefined;
+  }
+
+  if (source === 'effect') {
     return `${source}/${moduleName}`;
   }
 

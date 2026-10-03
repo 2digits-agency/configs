@@ -105,6 +105,7 @@ catalog:
   vitest: 5.0.3
   yaml-eslint-parser: 2.1.0
   zod: 4.6.5
+  alchemy: 2.0.0-beta.79
 
 overrides:
   array-includes: npm:@nolyfill/array-includes@1.0.44
@@ -157,6 +158,9 @@ savePrefix: ''
 verifyDepsBeforeRun: warn
 
 catalogs:
+  # Alchemy beta.79's own Effect pin, isolated to semantic regression tests.
+  alchemy:
+    effect: 4.0.0-rc.115
   # typescript-eslint still requires the TypeScript 6 compiler API.
   eslint:
     '@typescript/native-preview': 7.0.0-dev.20260707.2

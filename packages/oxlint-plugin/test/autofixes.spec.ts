@@ -72,6 +72,18 @@ for (const [name, messageId, invalid, output] of [
   ],
   ['no-effect-alchemy-barrel-imports', 'barrelImport', `import { /* keep */ Array } from 'effect'`, null],
   [
+    'no-effect-alchemy-barrel-imports',
+    'barrelImport',
+    `import { RuntimeContext, /* retain value */ AdoptPolicy } from 'alchemy'`,
+    null,
+  ],
+  [
+    'no-effect-alchemy-barrel-imports',
+    'barrelImport',
+    `import { AdoptPolicy, ALCHEMY_DEV, RuntimeContext } from 'alchemy' with { type: 'json' }`,
+    null,
+  ],
+  [
     'prefer-effect-alchemy-namespace-imports',
     'namespace',
     `import { sort } from 'effect/Array'; sort(xs); const o = { sort }; function f(sort) { sort(xs) }`,

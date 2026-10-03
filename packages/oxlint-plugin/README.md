@@ -43,6 +43,17 @@ Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effe
 `alchemy-no-v1-worker-properties`, and `alchemy-no-deprecated-docker-constraints`.
 Fixes skip ambiguous bindings, conflicting properties, and unsupported import references.
 
+`no-effect-alchemy-barrel-imports` converts only explicitly known Alchemy namespace exports and provider modules
+with verified submodule entrypoints. Config values such as `ALCHEMY_DEV`, service identifiers such as `RuntimeContext`,
+and unknown exports stay as named root imports without a diagnostic from this rule. Mixed imports retain those
+bindings and their references while splitting out supported modules. Type-only imports remain exempt.
+
+The Alchemy recognition list is checked against `alchemy@2.0.0-beta.79`; lint runs do not discover subpaths from the
+filesystem or installed package versions. When adding a module, verify its export kind and matching entrypoint first.
+`test/fixtures/alchemy-barrel` contains before/after fixtures tested with that exact Alchemy version and its upstream
+`effect@4.0.0-rc.115` pin (test-only dependencies). RuleTester verifies the exact transformation; package typechecks and
+runtime tests verify Config evaluation, service identity, and a real `AdoptPolicy` namespace conversion.
+
 ## Adding a rule
 
 Oxlint's JavaScript plugin API is currently alpha and does not expose type information. Keep rules syntax-safe and leave
