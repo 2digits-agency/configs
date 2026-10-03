@@ -64,10 +64,10 @@ const eslintConfig = await eslintTwoDigits({
 });
 const eslintJavascriptConfig = eslintConfig.find(({ name }) => name === '2digits:javascript');
 
-// Oxlint's core rule also covers TypeScript, so it carries the TypeScript `_` ignore patterns.
+// Oxlint carries TypeScript `_` ignore patterns and preserves case-sensitive Fallow directives.
 const sharedJavascriptRuleNames = new Set(
   Object.entries(javascriptConfig.rules)
-    .filter(([rule, value]) => value !== undefined && rule !== 'no-unused-vars')
+    .filter(([rule, value]) => value !== undefined && rule !== 'no-unused-vars' && rule !== 'capitalized-comments')
     .map(([rule]) => rule),
 );
 const sharedEslintJavascriptRules = Object.fromEntries(
@@ -112,6 +112,17 @@ describe('oxlint config', () => {
   it('matches all shared ESLint JavaScript rules', () => {
     expect(eslintJavascriptConfig?.rules).toBeDefined();
     expect(javascriptConfig.rules).toMatchObject(sharedEslintJavascriptRules);
+  });
+
+  it('exposes the Fallow directive exception through the shared preset', () => {
+    const config = withTwoDigits();
+    const javascript = config.extends?.find((child) => child.rules?.['capitalized-comments'] !== undefined);
+
+    expect(javascript?.rules?.['capitalized-comments']).toStrictEqual([
+      'error',
+      'always',
+      { ignorePattern: String.raw`^\s*fallow-ignore(?:-|\b)` },
+    ]);
   });
 
   it('uses every native React Compiler rule', ({ expect }) => {
