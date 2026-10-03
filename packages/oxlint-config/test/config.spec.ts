@@ -19,6 +19,8 @@ import { zodConfig } from '../src/configs/zod';
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+// These consumer fixtures use native Oxlint configs, not the Vite+ `lint` field.
+const oxlintEnvironment = { ...process.env, VP_VERSION: undefined };
 
 const reactCompilerRules = [
   'react/capitalized-calls',
@@ -135,6 +137,7 @@ describe('oxlint config', () => {
       'typescript/no-confusing-void-expression': 'off',
       'typescript/no-explicit-any': ['error'],
       'typescript/no-extraneous-class': 'error',
+      'typescript/no-floating-promises': 'error',
       'typescript/no-import-type-side-effects': ['error'],
       'typescript/no-misused-promises': 'off',
       'typescript/no-namespace': 'error',
@@ -189,6 +192,10 @@ describe('oxlint config', () => {
     expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
+  it('keeps the Effect runner boundary rule recommended', () => {
+    expect(recommendedRules['2digits/no-discarded-run-promise']).toBe('error');
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -197,6 +204,7 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: fixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnvironment,
     });
 
     const output = `${result.stdout}${result.stderr}`;
@@ -209,11 +217,14 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: twoDigitsFixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnvironment,
     });
 
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+    expect(output).toContain('2digits(no-discarded-run-promise)');
+    expect(output).toContain('discarded Effect runner Promise chain');
   });
 });

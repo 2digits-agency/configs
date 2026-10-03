@@ -6,6 +6,7 @@ export default {
     },
   ],
   rules: {
+    '2digits/no-discarded-run-promise': 'error',
     '2digits/no-empty-schema-struct': 'error',
   },
 };

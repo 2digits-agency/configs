@@ -265,7 +265,7 @@ export function objectProperty(node: ESTree.ObjectExpression, name: string): EST
   return undefined;
 }
 
-function isWrapperExpression(node: ESTree.Expression): node is WrapperExpression {
+export function isWrapperExpression(node: ESTree.Node): node is WrapperExpression {
   return [
     'ParenthesizedExpression',
     'TSAsExpression',

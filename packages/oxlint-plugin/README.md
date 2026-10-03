@@ -36,6 +36,50 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+### `no-discarded-run-promise`
+
+Reports discarded imported `Effect.runPromise(...)` and immediately invoked `Effect.runPromiseWith(context)(effect)`
+results, including visible contiguous `.then` / `.finally` / `.catch` chains without explicit rejection handling.
+Namespace, barrel and named import aliases are resolved by scope binding; shadowed local values are not Effect APIs.
+The outermost Promise is discarded in a bare statement, under `void`, or as a non-final comma operand. Parentheses
+and TypeScript expression wrappers do not change that boundary. Awaiting, returning (including implicit arrow
+returns), assigning, or passing that Promise to a consumer transfers responsibility and is outside this diagnostic.
+
+```ts
+import * as Effect from 'effect/Effect';
+
+// Reported: success callbacks and cleanup propagate rejection to the returned Promise.
+void Effect.runPromise(task).then(onSuccess);
+void Effect.runPromise(task).finally(cleanup);
+void Effect.runPromise(task).then(onSuccess, undefined);
+
+// Explicit rejection handling, or responsibility transferred to a consumer.
+// eslint-disable-next-line unicorn/prefer-then-catch -- Both rejection-handling forms are supported by this rule.
+void Effect.runPromise(task).then(onSuccess, onFailure);
+void Effect.runPromise(task).finally(cleanup).catch(onFailure);
+await Effect.runPromise(task).then(onSuccess);
+```
+
+Inline callbacks and same-file function handlers in `.catch(handler)` or `.then(onSuccess, handler)` suppress the
+diagnostic. Missing callbacks, literal `null`, and unshadowed `undefined` are not handlers, including in `.catch`.
+Other rejection-handler expressions are skipped conservatively: an unresolved binding or arbitrary property is not
+proven callable. Spread arguments and optional/computed or non-contiguous chains are also skipped. Hoisted runner
+aliases, arbitrary Promise APIs, ManagedRuntime receivers, `runPromiseExit*`, and interprocedural flows are not matched.
+
+This detects **absence of explicit failure handling**, not all unhandled rejections. A catch or second-then handler
+can throw or return another rejected Promise; later success callbacks or cleanup can also reject. These effects are
+not inferred. `test/run-promise-rejections.spec.ts` independently observes exactly two unhandled events for success-only
+and finally-only chains, none for its two handling controls, and one each for throwing/rejecting catch controls.
+
+This checker-free rule complements native `typescript/no-floating-promises`. With type-aware linting and default
+`ignoreVoid`, the native rule reports bare success-only/finally chains but ignores their `void` variants. Setting
+`ignoreVoid: false` also catches the `void` cases; without type-aware linting the native rule reports none. The agency
+config retains the native defaults. This plugin checks the narrow imported-Effect boundary without a type checker.
+
+Chain diagnostics have **no autofix**. Await/return the chain, add deliberate rejection handling, or manually redesign
+fire-and-forget work with fibers. Renaming the callee to `runFork` breaks Promise chains; deleting callbacks loses
+their side effects and comments.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
