@@ -1,8 +1,8 @@
 import * as Console from 'effect/Console';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
-import * as Command from 'effect/unstable/cli/Command';
-import * as Flag from 'effect/unstable/cli/Flag';
+import * as Command from 'effect/cli/Command';
+import * as Flag from 'effect/cli/Flag';
 
 import { moduleVersion } from './internal/version';
 import { EslintSetupService } from './services/EslintSetupService';

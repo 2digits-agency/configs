@@ -2,7 +2,7 @@ import { describe, expect, it } from '@effect/vitest';
 import * as ConfigProvider from 'effect/ConfigProvider';
 import * as Effect from 'effect/Effect';
 import * as Redacted from 'effect/Redacted';
-import * as Cookies from 'effect/unstable/http/Cookies';
+import * as Cookies from 'effect/http/Cookies';
 
 import { TloConfigFromEnv } from '../src/layers/TloConfigLive.js';
 

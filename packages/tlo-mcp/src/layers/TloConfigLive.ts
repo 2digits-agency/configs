@@ -2,25 +2,30 @@ import * as Config from 'effect/Config';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as R from 'effect/Record';
-import * as Cookies from 'effect/unstable/http/Cookies';
+import * as Cookies from 'effect/http/Cookies';
 
 import { TloConfig, type TloConfigShape } from '../services/TloConfig.js';
 
 const DEFAULT_BASE_URL = 'https://socialbrothers.orbit.teamleader.eu';
 
-export const TloConfigFromEnv = Effect.gen(function* () {
-  const sessionToken = yield* Config.Redacted('TLO_SESSION_TOKEN');
-  const baseUrl = yield* Config.String('TLO_BASE_URL').pipe(Config.withDefault(DEFAULT_BASE_URL));
-  const cookieHeader = yield* Config.String('TLO_COOKIES').pipe(Config.withDefault(''));
-  const cookies = yield* Effect.fromResult(
-    Cookies.setAll(Cookies.empty, R.toEntries(Cookies.parseHeader(cookieHeader))),
-  );
+export const TloConfigFromEnv: Effect.Effect<TloConfigShape, Config.ConfigError | Cookies.CookiesError> = Effect.gen(
+  function* () {
+    const sessionToken = yield* Config.Redacted('TLO_SESSION_TOKEN');
+    const baseUrl = yield* Config.String('TLO_BASE_URL').pipe(Config.withDefault(DEFAULT_BASE_URL));
+    const cookieHeader = yield* Config.String('TLO_COOKIES').pipe(Config.withDefault(''));
+    const cookies = yield* Effect.fromResult(
+      Cookies.setAll(Cookies.empty, R.toEntries(Cookies.parseHeader(cookieHeader))),
+    );
 
-  return {
-    baseUrl,
-    sessionToken,
-    cookies,
-  } satisfies TloConfigShape;
-});
+    return {
+      baseUrl,
+      sessionToken,
+      cookies,
+    } satisfies TloConfigShape;
+  },
+);
 
-export const TloConfigLive = Layer.effect(TloConfig, TloConfigFromEnv);
+export const TloConfigLive: Layer.Layer<TloConfig, Config.ConfigError | Cookies.CookiesError> = Layer.effect(
+  TloConfig,
+  TloConfigFromEnv,
+);
