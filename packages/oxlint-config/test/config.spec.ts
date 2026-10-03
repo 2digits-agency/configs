@@ -216,4 +216,27 @@ describe('oxlint config', () => {
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
   });
+
+  it('reports duplicate HTTP API registrations from the built plugin', () => {
+    const result = spawnSync(
+      process.execPath,
+      [oxlintBinary, '--format=json', '--config=oxlint.config.mjs', 'duplicate-endpoints.mjs'],
+      {
+        cwd: twoDigitsFixtureDirectory,
+        encoding: 'utf8',
+      },
+    );
+
+    expect(recommendedRules['2digits/no-duplicate-http-api-endpoints']).toBe('error');
+    expect(result.status).toBe(1);
+    expect(JSON.parse(result.stdout)).toMatchObject({
+      diagnostics: [
+        {
+          code: '2digits(no-duplicate-http-api-endpoints)',
+          message: 'Endpoint GET "/users" is already registered in this group at 4:8.',
+          labels: [{ span: { line: 5, column: 8 } }],
+        },
+      ],
+    });
+  });
 });

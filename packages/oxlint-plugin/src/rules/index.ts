@@ -16,6 +16,7 @@ import { noAlreadyStartedPromise } from './effect/no-already-started-promise';
 import { noAsyncEffectTry } from './effect/no-async-effect-try';
 import { noDiscardedRunPromise } from './effect/no-discarded-run-promise';
 import { noDiscardedSchemaChecks } from './effect/no-discarded-schema-checks';
+import { noDuplicateHttpApiEndpoints } from './effect/no-duplicate-http-api-endpoints';
 import { noEffectAlchemyBarrelImports } from './effect/no-effect-alchemy-barrel-imports';
 import { noEmptyEffectCallback } from './effect/no-empty-effect-callback';
 import { noEmptySchemaStruct } from './effect/no-empty-schema-struct';
@@ -67,6 +68,7 @@ export const rules = {
   'no-async-effect-try': noAsyncEffectTry,
   'no-discarded-run-promise': noDiscardedRunPromise,
   'no-discarded-schema-checks': noDiscardedSchemaChecks,
+  'no-duplicate-http-api-endpoints': noDuplicateHttpApiEndpoints,
   'no-empty-effect-callback': noEmptyEffectCallback,
   'no-empty-schema-struct': noEmptySchemaStruct,
   'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,
