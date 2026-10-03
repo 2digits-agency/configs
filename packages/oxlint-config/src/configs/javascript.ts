@@ -7,7 +7,8 @@ export const javascriptConfig = defineConfig({
     'array-callback-return': 'error',
     'arrow-body-style': ['error', 'as-needed', { requireReturnForObjectLiteral: false }],
     'block-scoped-var': 'error',
-    'capitalized-comments': 'error',
+    // Fallow suppression directives are case-sensitive, not prose.
+    'capitalized-comments': ['error', 'always', { ignorePattern: String.raw`^\s*fallow-ignore(?:-|\b)` }],
     'class-methods-use-this': undefined,
     'constructor-super': 'error',
     'default-case': undefined,
