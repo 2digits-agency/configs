@@ -185,8 +185,11 @@ describe('oxlint config', () => {
     expect(plugin?.name).toBe('2digits');
     expect(plugin?.specifier).toContain('oxlint-plugin/dist/index.mjs');
     expect(twoDigitsPluginConfig.rules).toStrictEqual(recommendedRules);
-    expect(recommendedRules['2digits/prefer-effect-filesystem']).toBeUndefined();
-    expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
+    expect(recommendedRules['2digits/no-throw-in-effect-callback']).toBe('error');
+    expect([
+      recommendedRules['2digits/prefer-effect-filesystem'],
+      recommendedRules['2digits/prefer-effect-path'],
+    ]).toStrictEqual([undefined, undefined]);
   });
 
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
@@ -215,5 +218,18 @@ describe('oxlint config', () => {
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+  });
+
+  it('reports only the escaping Effect callback throw in the built plugin', () => {
+    const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'effect-throws.mjs'], {
+      cwd: twoDigitsFixtureDirectory,
+      encoding: 'utf8',
+    });
+
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output.match(/2digits\(no-throw-in-effect-callback\)/gu)).toHaveLength(1);
+    expect(output).toContain("throw 'escaping';");
   });
 });

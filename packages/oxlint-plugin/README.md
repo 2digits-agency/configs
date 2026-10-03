@@ -36,6 +36,35 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+### Locally handled throws in Effect callbacks
+
+`no-throw-in-effect-callback` checks explicit throws in `andThen`, `map`, `mapError`, `tap`, `tapError`, and
+`tapErrorCause` callbacks, and in `Effect.try` / `Effect.tryPromise` catch mappers. It ignores a throw only when a catch
+within that same lexical callback is conservatively proven to consume it:
+
+```ts
+Effect.try({
+  try: () => work(),
+  catch: (error) => {
+    try {
+      throw error;
+    } catch (error_) {
+      return error_;
+    }
+  },
+});
+```
+
+The initial proof accepts empty blocks/statements and simple returns of literals, the current callback's parameters,
+or simple identifier catch bindings. Outer function parameters are not proof of safety during default initialization.
+The catch binding must be an identifier or omitted, and any finalizer must also be proven nonthrowing.
+Calls, property reads, destructuring, other variable bindings, and more complex control flow are not proof of safety.
+An escaping conditional rethrow or throwing finalizer retains diagnostics. A try's catch does not protect its own
+catch/finally bodies, but an outer consuming catch in the same callback can. Nested functions have separate ownership;
+an outer try surrounding an Effect callback does not protect that callback's throws. Effect import aliases are supported,
+and shadowed/unrelated APIs are excluded. This precision check does not infer implicit exceptions or analyze helper
+functions. No autofix rewrites the callback's error contract.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
