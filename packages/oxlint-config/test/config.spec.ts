@@ -18,6 +18,7 @@ import { zodConfig } from '../src/configs/zod';
 
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
+const withSpanFixtureDirectory = fileURLToPath(new URL('fixtures/with-span', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
 
 const reactCompilerRules = [
@@ -215,5 +216,46 @@ describe('oxlint config', () => {
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+  });
+
+  it('keeps used, shadowed, unsupported, and explicitly suppressed span calls clean in the CLI', () => {
+    const result = spawnSync(
+      process.execPath,
+      [oxlintBinary, '--config=oxlint.config.mjs', '--format=json', 'valid.mjs'],
+      {
+        cwd: withSpanFixtureDirectory,
+        encoding: 'utf8',
+        // Exercise standalone Oxlint even when the tests run through vp test.
+        env: { ...process.env, VP_VERSION: undefined },
+      },
+    );
+
+    expect(recommendedRules['2digits/prefer-with-span']).toBe('error');
+    expect(result).toMatchObject({ status: 0, stderr: '' });
+    expect(JSON.parse(result.stdout)).toMatchObject({ diagnostics: [], number_of_files: 1, number_of_rules: 1 });
+  });
+
+  it('reports only the four genuinely unused span bindings in the CLI', () => {
+    const result = spawnSync(
+      process.execPath,
+      [oxlintBinary, '--config=oxlint.config.mjs', '--format=json', 'invalid.mjs'],
+      {
+        cwd: withSpanFixtureDirectory,
+        encoding: 'utf8',
+        env: { ...process.env, VP_VERSION: undefined },
+      },
+    );
+
+    expect(result).toMatchObject({ status: 1, stderr: '' });
+    expect(JSON.parse(result.stdout)).toMatchObject({
+      diagnostics: [4, 5, 6, 7].map((line) => ({
+        code: '2digits(prefer-with-span)',
+        severity: 'error',
+        filename: 'invalid.mjs',
+        labels: [{ span: { line } }],
+      })),
+      number_of_files: 1,
+      number_of_rules: 1,
+    });
   });
 });
