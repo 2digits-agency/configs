@@ -216,4 +216,19 @@ describe('oxlint config', () => {
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
   });
+
+  it('reports only the unconditional service unwrap through the real plugin', () => {
+    const result = spawnSync(
+      process.execPath,
+      [oxlintBinary, '--config=service-option.config.json', 'required-service.mjs', 'optional-services.mjs'],
+      { cwd: twoDigitsFixtureDirectory, encoding: 'utf8' },
+    );
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output.match(/2digits\(no-service-option-get-or-throw\)/gu)).toHaveLength(1);
+    expect(output).toContain('required-service.mjs');
+    expect(output).not.toContain('optional-services.mjs:');
+    expect(recommendedRules['2digits/no-service-option-get-or-throw']).toBe('error');
+  });
 });

@@ -36,6 +36,35 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+### Required services and optional services
+
+`no-service-option-get-or-throw` reports `Option.getOrThrow` / `getOrThrowWith` applied directly to a yielded
+`Effect.serviceOption`, and a first `.pipe(Effect.map(Option.getOrThrow))` step. It also reports an adjacent,
+single-use immutable binding in an inline `Effect.gen` generator:
+
+```ts
+import * as Fx from 'effect/Effect';
+import * as Opt from 'effect/Option';
+
+Fx.gen(function* () {
+  const logger = yield* Fx.serviceOption(Logger);
+
+  return Opt.getOrThrow(logger); // Reported: acquire the required service with Fx.service(Logger).
+});
+```
+
+The bound form requires a simple, single `const` declaration in the generator body and an unconditional unwrap in the
+next executable statement (a return, expression statement, or single variable initializer). Comments and empty statements
+do not break adjacency. Namespace and named aliases must resolve to runtime imports; shadowed imports or local bindings
+do not match. Multiple reads, mutations, intervening statements, nested callbacks, guards, storage, forwarding, and genuine
+Option transformations are outside this matcher. Optional budget dependencies and explicitly guarded WorkflowScope
+initialization remain valid; optional services are not banned.
+
+This rule is diagnostic-only. `Effect.service` exposes the dependency in the requirements channel `R`, while an absent
+`serviceOption` unconditionally unwrapped with `getOrThrow` becomes an untyped defect. No automatic fix is offered because
+switching APIs changes requirements and can remove custom absence-error behavior. Non-adjacent and cross-file flow are
+not analyzed, and the plugin does not use a TypeScript checker.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
