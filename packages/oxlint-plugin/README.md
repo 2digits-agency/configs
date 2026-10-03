@@ -36,6 +36,33 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+## Endpoint header schema keys
+
+`no-uppercase-http-api-header` reports each static ASCII-uppercase key in a direct Effect v4 endpoint `headers`
+fields object. Incoming headers are lowercase, and schema decoding looks up keys exactly:
+
+```ts
+import { HttpApiEndpoint } from 'effect/unstable/httpapi';
+import * as Schema from 'effect/Schema';
+
+// Diagnosed: the required header is missing to the decoder even when it arrived.
+HttpApiEndpoint.get('me', '/me', { headers: { 'X-Api-Key': Schema.String } });
+// Valid: the schema matches the lowercase incoming key.
+HttpApiEndpoint.get('me', '/me', { headers: { 'x-api-key': Schema.String } });
+```
+
+The rule checks options at argument 2 of `get`, `post`, `put`, `patch`, `delete`, `head`, and `options`.
+It resolves lexical import bindings from `effect/unstable/httpapi` and its `HttpApiEndpoint` submodule, including
+named aliases and namespace imports, and ignores shadowed bindings. Referenced schemas, computed keys, spreads,
+duplicate keys, accessors, and ambiguous options objects are outside this initial slice. Curried `make(method)`,
+v3 `setHeaders`, native Request/Response/fetch headers, outgoing setters, and native `Headers.get`/`has` are not checked.
+Only ASCII uppercase letters are diagnosed; the rule does not normalize non-ASCII names.
+
+There is **no autofix**: renaming a header schema key changes typed contracts and may collide with a lowercase key.
+Review the schema and its consumers together. Runtime controls are pinned to Effect 4.0.0-rc.117 through a test-only
+dependency alias; this does not change the workspace's Effect version. This is preventive guidance: the historical
+agency scan found **zero bad sites and seven valid endpoint schemas**, not seven defects or a runtime outage.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
