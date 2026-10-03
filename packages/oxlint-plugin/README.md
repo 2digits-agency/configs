@@ -36,6 +36,52 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+## Opt-in packed layer override diagnostic
+
+`no-ignored-layer-override` is excluded from `recommendedRules` while its precision is established. Enable it explicitly:
+
+```ts
+export default {
+  rules: {
+    ...recommendedRules,
+    '2digits/no-ignored-layer-override': 'error',
+  },
+};
+```
+
+The rule proves a same-file graph using immutable local bindings and scope-resolved tag identity, including aliases:
+
+```ts
+const Db = Context.Service<{ read: Effect.Effect<string> }>('Db');
+const Reader = Context.Service<{ read: Effect.Effect<string> }>('Reader');
+const DbProd = Layer.succeed(Db, { read: Effect.succeed('production') });
+const DbMock = Layer.succeed(Db, { read: Effect.succeed('mock') });
+const ReaderCore = Layer.effect(
+  Reader,
+  Effect.gen(function* () {
+    const db = yield* Db;
+
+    return { read: db.read };
+  }),
+);
+const ReaderPacked = ReaderCore.pipe(Layer.provide(DbProd));
+
+ReaderPacked.pipe(Layer.provide(DbMock)); // Reports: the constructor still receives DbProd.
+ReaderCore.pipe(Layer.provide(DbMock)); // Open construction receives DbMock.
+```
+
+It recognizes named and namespace Effect imports, local `Context.Service` keys (including empty service classes),
+direct unconditional `yield* Tag` statements/initializers in `Effect.gen`, and `Layer.provide` in data-first or `.pipe`
+form. It reports once at the ignored outer provider and names the tag and packed/open layers.
+
+Re-provision of the same layer, unused providers, dependencies accessed only by later methods, different tag bindings, mutable bindings or aliases,
+cycles, imports of unknown layers/tags, arbitrary factories, arrays, merges, and unknown composition operators are
+not inferred. It does not inspect types or other files, or guess dependencies from `.Default`, `.layer`, or `.testLayer`.
+Choose the open layer or rebuild the composition yourself: no autofix or suggestion removes/replaces packed resources.
+
+The issue's pinned application audit found zero confirmed violations; the production/mock example is a synthetic,
+independently asserted Effect 4.0.0 runtime control, not evidence of an existing application defect.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
@@ -54,7 +100,8 @@ policy for handwritten imports.
 
 1. Add one rule file under `src/rules/alchemy` or `src/rules/effect` with `defineRule` through `defineSyntaxRule` or
    `defineEffectRule`.
-2. Register it in `src/rules/index.ts`. `src/index.ts` automatically includes it in `recommendedRules`.
+2. Register it in `src/rules/index.ts`. `src/index.ts` automatically includes it in `recommendedRules` unless explicitly
+   excluded as opt-in or covered by Effect tsgo.
 3. Add a matching test file under `test/rules` with valid and invalid `RuleTester` cases.
 4. Run `vp test`, `vp check`, and `vp run build`.
 

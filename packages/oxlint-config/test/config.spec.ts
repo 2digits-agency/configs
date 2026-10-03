@@ -216,4 +216,30 @@ describe('oxlint config', () => {
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
   });
+
+  it('keeps the built packed override rule out of recommended defaults', () => {
+    const result = spawnSync(process.execPath, [oxlintBinary, '--config=packed-layer.config.mjs', 'packed-layer.mjs'], {
+      cwd: twoDigitsFixtureDirectory,
+      encoding: 'utf8',
+      env: { ...process.env, TEST_PACKED_OVERRIDE: '0' },
+    });
+
+    expect(recommendedRules['2digits/no-ignored-layer-override']).toBeUndefined();
+    expect(result.status).toBe(0);
+    expect(`${result.stdout}${result.stderr}`).toContain('Found 0 warnings and 0 errors');
+  });
+
+  it('loads the built packed override rule when explicitly enabled', () => {
+    const result = spawnSync(process.execPath, [oxlintBinary, '--config=packed-layer.config.mjs', 'packed-layer.mjs'], {
+      cwd: twoDigitsFixtureDirectory,
+      encoding: 'utf8',
+      env: { ...process.env, TEST_PACKED_OVERRIDE: '1' },
+    });
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output).toContain('2digits(no-ignored-layer-override)');
+    expect(output).toContain('Found 0 warnings and 1 error');
+    expect(output).toContain('ReaderPacked already supplies Db');
+  });
 });
