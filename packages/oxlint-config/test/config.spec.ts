@@ -1,4 +1,6 @@
 import { spawnSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
@@ -216,4 +218,50 @@ describe('oxlint config', () => {
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
   });
+
+  it.for([
+    [
+      'invalid.mjs',
+      1,
+      [
+        {
+          code: '2digits(no-omit-required-encoded-key)',
+          severity: 'error',
+          message:
+            'SchemaGetter.omit() removes this required encoded key, so encoding the Struct fails with MissingKey. Choose an optional encoded key contract or a non-omitting encoder.',
+          labels: [{ span: { line: 7, column: 21, length: 13 } }],
+        },
+      ],
+    ],
+    ['valid.mjs', 0, []],
+  ] as const)(
+    'checks %s through the production config without rewriting its contract',
+    ([filename, status, diagnostics]) => {
+      const directory = fileURLToPath(new URL('fixtures/omit-required-encoded-key/', import.meta.url));
+      const config = path.join(directory, 'oxlint.config.mjs');
+      const temporary = mkdtempSync(path.join(directory, 'run-'));
+
+      try {
+        const source = readFileSync(path.join(directory, filename), 'utf8');
+        const file = path.join(temporary, filename);
+
+        writeFileSync(file, source);
+        const result = spawnSync(
+          process.execPath,
+          [oxlintBinary, `--config=${config}`, '--no-ignore', '--fix', '--format=json', file],
+          {
+            cwd: directory,
+            encoding: 'utf8',
+          },
+        );
+
+        expect(result.stderr).toBe('');
+        expect(result.status).toBe(status);
+        expect(JSON.parse(result.stdout)).toMatchObject({ diagnostics });
+        expect(readFileSync(file, 'utf8')).toBe(source);
+      } finally {
+        rmSync(temporary, { recursive: true, force: true });
+      }
+    },
+  );
 });

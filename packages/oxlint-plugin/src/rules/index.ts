@@ -24,6 +24,7 @@ import { noHashAsIdentity } from './effect/no-hash-as-identity';
 import { noLoggingInCatch } from './effect/no-logging-in-catch';
 import { noMultiShotEffectCallback } from './effect/no-multi-shot-effect-callback';
 import { noNonJsonSchemaAnnotation } from './effect/no-non-json-schema-annotation';
+import { noOmitRequiredEncodedKey } from './effect/no-omit-required-encoded-key';
 import { noOptionOfService } from './effect/no-option-of-service';
 import { noOverwrittenDiscriminant } from './effect/no-overwritten-discriminant';
 import { noServiceOptionGetOrThrow } from './effect/no-service-option-get-or-throw';
@@ -75,6 +76,7 @@ export const rules = {
   'no-logging-in-catch': noLoggingInCatch,
   'no-multi-shot-effect-callback': noMultiShotEffectCallback,
   'no-non-json-schema-annotation': noNonJsonSchemaAnnotation,
+  'no-omit-required-encoded-key': noOmitRequiredEncodedKey,
   'no-option-of-service': noOptionOfService,
   'no-overwritten-discriminant': noOverwrittenDiscriminant,
   'no-service-option-get-or-throw': noServiceOptionGetOrThrow,

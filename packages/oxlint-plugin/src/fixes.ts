@@ -29,8 +29,9 @@ function binding(context: Context, node: ESTree.Node, name: string): Variable | 
  *
  * @param context Rule context.
  * @param node API expression.
+ * @param sources Allowed module entrypoints, when the caller requires exact imports.
  */
-export function importedApi(context: Context, node: ESTree.Node): boolean {
+export function importedApi(context: Context, node: ESTree.Node, sources?: ReadonlyArray<string>): boolean {
   const name = staticPath(node)?.[0];
   const variable = name === undefined ? undefined : binding(context, node, name);
 
@@ -42,6 +43,8 @@ export function importedApi(context: Context, node: ESTree.Node): boolean {
         definition.type === 'ImportBinding' &&
         specifier.parent?.type === 'ImportDeclaration' &&
         specifier.parent.importKind !== 'type' &&
+        (sources === undefined ||
+          (sources.includes(specifier.parent.source.value) && specifier.type !== 'ImportDefaultSpecifier')) &&
         (specifier.type !== 'ImportSpecifier' || specifier.importKind !== 'type')
       );
     }) === true

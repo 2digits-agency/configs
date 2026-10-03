@@ -17,7 +17,8 @@
       "ignore": ["test/fixtures/**"]
     },
     "packages/oxlint-config": {
-      "ignore": ["test/fixtures/**"]
+      "ignore": ["test/fixtures/**"],
+      "ignoreDependencies": ["effect"]
     },
     "packages/tsconfig": {
       "ignoreDependencies": ["@effect/tsgo"]

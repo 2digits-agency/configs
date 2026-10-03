@@ -36,6 +36,40 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+## `no-omit-required-encoded-key`
+
+Reports an Effect 4 Struct field whose encode-side `SchemaGetter.omit()` removes a required primitive encoded key.
+Encoding fails with `MissingKey` even when decoding with a default succeeds:
+
+```ts
+import * as Effect from 'effect/Effect';
+import * as Schema from 'effect/Schema';
+import * as SchemaGetter from 'effect/SchemaGetter';
+
+const bad = Schema.Struct({
+  b: Schema.String.pipe(
+    Schema.encodeTo(Schema.String, {
+      decode: SchemaGetter.withDefault(Effect.succeed('default')),
+      encode: SchemaGetter.omit(),
+    }),
+  ),
+});
+```
+
+The diagnostic highlights the target `Schema.String`. Choose `Schema.optionalKey(Schema.String)` only if an omitted
+encoded key is permitted by the downstream contract; otherwise supply a non-omitting encoder. There is no autofix or
+suggestion because making a required key optional changes that contract.
+
+The rule recognizes direct `Schema.String`, `Schema.Number`, and `Schema.Boolean` receivers and targets, actual Effect
+namespace/barrel/subpath/member imports (including aliases), and direct zero-argument `SchemaGetter.omit()` calls in
+unambiguous options objects. Tests verify each primitive on pinned Effect `4.0.0-rc.117` and catalog Effect `4.0.0`:
+decoding succeeds, required encoding reports `MissingKey` at `b`, and optional-key encoding produces `{}`.
+
+This is a syntax-only preventive check, not general optionality inference. It ignores optional wrappers, shadowed or
+unrelated bindings, target identifiers/custom constructors, arbitrary `.pipe` receivers, spreads/duplicate/computed
+properties, subsequent field modifiers, decode-side omission, custom getters, and non-Struct positions. Effect 3
+transformations without this Effect 4 getter pairing are unaffected. No current agency encoding defect is claimed.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
