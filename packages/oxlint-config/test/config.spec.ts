@@ -19,6 +19,8 @@ import { zodConfig } from '../src/configs/zod';
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+// The fixtures are native Oxlint configs, not Vite+ configs with a `lint` field.
+const oxlintEnvironment = { ...process.env, VP_VERSION: '' };
 
 const reactCompilerRules = [
   'react/capitalized-calls',
@@ -189,6 +191,15 @@ describe('oxlint config', () => {
     expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
+  it('leaves runtime ownership opt-in and accepts consumer enablement', () => {
+    expect(recommendedRules['2digits/require-managed-runtime-disposal']).toBeUndefined();
+    expect(
+      withTwoDigits({ rules: { '2digits/require-managed-runtime-disposal': 'error' } }).rules?.[
+        '2digits/require-managed-runtime-disposal'
+      ],
+    ).toBe('error');
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -197,6 +208,7 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: fixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnvironment,
     });
 
     const output = `${result.stdout}${result.stderr}`;
@@ -209,11 +221,42 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: twoDigitsFixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnvironment,
     });
 
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+  });
+
+  it('requires explicit opt-in for built-plugin runtime ownership diagnostics and honors lifetime suppression', () => {
+    const args = [oxlintBinary, '--config=oxlint.config.mjs', '-A', 'all'];
+    const options = { cwd: twoDigitsFixtureDirectory, encoding: 'utf8' as const, env: oxlintEnvironment };
+    const defaultResult = spawnSync(process.execPath, [...args, 'managed-runtime.mjs'], options);
+    const enabled = spawnSync(
+      process.execPath,
+      [oxlintBinary, '--config=managed-runtime.config.mjs', '--format=json', 'managed-runtime.mjs'],
+      options,
+    );
+    const suppressed = spawnSync(
+      process.execPath,
+      [oxlintBinary, '--config=managed-runtime.config.mjs', 'managed-runtime-suppressed.mjs'],
+      options,
+    );
+
+    expect(defaultResult.status).toBe(0);
+    expect(enabled.status).toBe(1);
+    const diagnostics: unknown = JSON.parse(enabled.stdout);
+
+    expect(diagnostics).toMatchObject({
+      diagnostics: [
+        {
+          code: '2digits(require-managed-runtime-disposal)',
+          labels: [{ span: { line: 3, column: 17, length: 26 } }],
+        },
+      ],
+    });
+    expect(suppressed.status).toBe(0);
   });
 });

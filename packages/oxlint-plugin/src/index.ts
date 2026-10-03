@@ -6,11 +6,17 @@ export { rules } from './rules';
 
 export type RuleName = keyof typeof rules;
 
-const rulesCoveredByEffectTsgo = new Set<RuleName>(['prefer-effect-filesystem', 'prefer-effect-path']);
+const optInRules = new Set<RuleName>([
+  // These import checks overlap with the configured Effect tsgo diagnostic.
+  'prefer-effect-filesystem',
+  'prefer-effect-path',
+  // Intentional process lifetimes require a project-specific ownership policy.
+  'require-managed-runtime-disposal',
+]);
 
 export const recommendedRules = Object.fromEntries(
   (Object.keys(rules) as Array<RuleName>)
-    .filter((rule) => !rulesCoveredByEffectTsgo.has(rule))
+    .filter((rule) => !optInRules.has(rule))
     .map((rule) => [`2digits/${rule}`, 'error'] as const),
 ) as Partial<Record<`2digits/${RuleName}`, 'error'>>;
 
