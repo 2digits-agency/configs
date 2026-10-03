@@ -36,6 +36,51 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+## JSON parsing in Effect callbacks
+
+`no-throw-in-effect-callback` reports unguarded global `JSON.parse` in `Effect.andThen`, `map`, `mapError`, `tap`,
+`tapError`, and `tapErrorCause` callbacks. It covers inline execution and direct mappers such as
+`Effect.map(source, JSON.parse)` and `source.pipe(Effect.map(JSON.parse))`, including Effect import aliases.
+The diagnostic points at the parse call or direct mapper reference. Shadowed `JSON` and Effect APIs are excluded.
+Exact local `const parse = JSON.parse` aliases are supported when their lexical binding has no subsequent writes;
+mutable, destructured, chained, and imported parser aliases are not followed.
+
+Malformed JSON in a mapping callback creates a defect, not a typed failure recovered by `Effect.catch`. Put parsing
+inside `Effect.try` and compose the resulting Effect, choosing the application's error contract explicitly:
+
+```ts
+const parsed = source.pipe(
+  Effect.flatMap((raw) =>
+    Effect.try({
+      try: () => JSON.parse(raw),
+      catch: toParseError,
+    }),
+  ),
+);
+```
+
+Here `toParseError` is an application-supplied mapper to the chosen error type. Parsing alone does not validate a domain
+schema. The rule offers **no autofix**: selecting an error type or changing composition changes the program's contract.
+
+The parser check stops at nested/deferred functions and attributes nested combinator callbacks to their own combinator;
+it does not inspect arbitrary helper bodies. An inner `Effect.try` parser is therefore excluded. Within the mapper,
+try bodies with a catch are conservatively skipped, even when the catch rethrows. This parser-only policy does not
+change explicit-throw diagnostics. Parses after that try, in its catch/finally, or in a try with only finally still
+report unless another local catch guards them. A try around Effect construction does not guard its eventual callback.
+The one-argument `JSON.parse(JSON.stringify(value))` clone idiom is also excluded; this is not a guarantee that
+stringification cannot throw. Ordinary Promise callbacks and unknown custom parsers are outside this check.
+
+Intentional parser defects require an explicit suppression, including in tests:
+
+```ts
+// oxlint-disable-next-line 2digits/no-throw-in-effect-callback -- Intentionally exercise defect handling.
+const defective = source.pipe(Effect.map(JSON.parse));
+```
+
+The [historical audit in #2741](https://github.com/2digits-agency/configs/issues/2741) found zero mapping defects among
+28 reviewed parse calls at pinned application snapshots. This is preventive coverage, not evidence of a current
+malformed-request incident.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
