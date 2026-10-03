@@ -189,6 +189,11 @@ describe('oxlint config', () => {
     expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
+  it('keeps the constructor-fork rule opt-in', () => {
+    expect(recommendedRules['2digits/fork-in-layer-constructor-not-scoped']).toBeUndefined();
+    expect(collectPluginsAndRules(twoDigits)).not.toContain('2digits/fork-in-layer-constructor-not-scoped');
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -215,5 +220,19 @@ describe('oxlint config', () => {
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+  });
+
+  it('executes the opt-in constructor-fork rule', () => {
+    const result = spawnSync(
+      process.execPath,
+      [oxlintBinary, '--config=constructor.config.json', '--format=json', 'constructor.mjs'],
+      { cwd: twoDigitsFixtureDirectory, encoding: 'utf8' },
+    );
+    const output = JSON.parse(result.stdout) as { diagnostics: Array<{ code: string; message: string }> };
+
+    expect(result.status).toBe(1);
+    expect(output.diagnostics).toHaveLength(1);
+    expect(output.diagnostics[0]?.code).toBe('2digits(fork-in-layer-constructor-not-scoped)');
+    expect(output.diagnostics[0]?.message).toContain('Effect.forkScoped');
   });
 });

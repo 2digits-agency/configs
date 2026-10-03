@@ -7,10 +7,11 @@ export { rules } from './rules';
 export type RuleName = keyof typeof rules;
 
 const rulesCoveredByEffectTsgo = new Set<RuleName>(['prefer-effect-filesystem', 'prefer-effect-path']);
+const optInRules = new Set<RuleName>(['fork-in-layer-constructor-not-scoped']);
 
 export const recommendedRules = Object.fromEntries(
   (Object.keys(rules) as Array<RuleName>)
-    .filter((rule) => !rulesCoveredByEffectTsgo.has(rule))
+    .filter((rule) => !rulesCoveredByEffectTsgo.has(rule) && !optInRules.has(rule))
     .map((rule) => [`2digits/${rule}`, 'error'] as const),
 ) as Partial<Record<`2digits/${RuleName}`, 'error'>>;
 

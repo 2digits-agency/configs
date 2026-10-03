@@ -12,6 +12,7 @@ import { banErrorString } from './effect/ban-error-string';
 import { corsCredentialsWithWildcard } from './effect/cors-credentials-with-wildcard';
 import { dualNumericArityWithOptionalParameter } from './effect/dual-numeric-arity-with-optional-parameter';
 import { effectPromiseVsTryPromise } from './effect/effect-promise-vs-trypromise';
+import { forkInLayerConstructorNotScoped } from './effect/fork-in-layer-constructor-not-scoped';
 import { noAlreadyStartedPromise } from './effect/no-already-started-promise';
 import { noAsyncEffectTry } from './effect/no-async-effect-try';
 import { noDiscardedRunPromise } from './effect/no-discarded-run-promise';
@@ -63,6 +64,7 @@ export const rules = {
   'cors-credentials-with-wildcard': corsCredentialsWithWildcard,
   'dual-numeric-arity-with-optional-parameter': dualNumericArityWithOptionalParameter,
   'effect-promise-vs-trypromise': effectPromiseVsTryPromise,
+  'fork-in-layer-constructor-not-scoped': forkInLayerConstructorNotScoped,
   'no-already-started-promise': noAlreadyStartedPromise,
   'no-async-effect-try': noAsyncEffectTry,
   'no-discarded-run-promise': noDiscardedRunPromise,
