@@ -36,6 +36,63 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+## Opt-in TestClock deadlock diagnostic
+
+`2digits/no-testclock-sleep-before-advance` reports a direct positive-duration `Effect.sleep` that blocks the same
+generator before a later `TestClock.adjust` or `TestClock.setTime`. It is **not** in `recommendedRules` or the default
+`@2digits/oxlint-config` preset. Enable it explicitly:
+
+```ts
+import withTwoDigits from '@2digits/oxlint-config';
+
+export default withTwoDigits({
+  rules: { '2digits/no-testclock-sleep-before-advance': 'error' },
+});
+```
+
+The rule resolves runtime imports and aliases from `effect`, `effect/Effect`, `effect/TestClock`,
+`effect/testing`, and `effect/testing/TestClock`. It requires an inline `Effect.gen(function* () { ... })` returned
+directly by an imported `@effect/vitest` `it.effect` callback, or an inline explicit
+`Effect.provide(generator, TestClock.layer())` / `generator.pipe(Effect.provide(TestClock.layer()))`.
+Explicit provision is recognized at top level or directly returned by a Vitest `it`/`test` callback.
+Block callbacks must contain only the return statement.
+
+```ts
+import * as Effect from 'effect/Effect';
+import * as Fiber from 'effect/Fiber';
+import * as TestClock from 'effect/testing/TestClock';
+import { it } from '@effect/vitest';
+
+it.effect('blocked', () =>
+  Effect.gen(function* () {
+    yield* Effect.sleep('1 second'); // Reported: this fiber cannot reach adjust.
+    yield* TestClock.adjust('1 second');
+  }),
+);
+
+it.effect('safe', () =>
+  Effect.gen(function* () {
+    const fiber = yield* Effect.forkChild(Effect.sleep('1 second'));
+
+    yield* TestClock.adjust('1 second');
+    yield* Fiber.join(fiber);
+  }),
+);
+```
+
+This deliberately narrow, checker-free subset accepts only straight-line expression statements delegating directly
+to these sleep/advance APIs, each with exactly one literal argument. This excludes clock-driving work nested in
+arguments. Sleep durations must be finite positive numeric millisecond literals or decimal strings
+with Effect units (`nano` through `week`, singular or plural); values rounding to zero nanoseconds are excluded.
+The whole generator is skipped if it contains other statements or calls, including branches, returns, forks,
+unknown sleeps, helper effects, or nested generators. It does not follow local effect variables or combine events
+across callbacks. `withLive`, live test bodies, wrapping pipelines, and ambiguous concurrent contexts are excluded.
+This favors precision over coverage; it does not diagnose all scheduling deadlocks or native fake-timer code.
+
+There is **no autofix**: introducing fork/join changes concurrency and ownership. Review those choices manually.
+The runtime regression uses Effect 4.0.0, an independent real-time watchdog, and explicit interruption for cleanup;
+a pending poll alone is not proof of an infinite hang.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
@@ -54,7 +111,8 @@ policy for handwritten imports.
 
 1. Add one rule file under `src/rules/alchemy` or `src/rules/effect` with `defineRule` through `defineSyntaxRule` or
    `defineEffectRule`.
-2. Register it in `src/rules/index.ts`. `src/index.ts` automatically includes it in `recommendedRules`.
+2. Register it in `src/rules/index.ts`. `src/index.ts` includes it in `recommendedRules` unless
+   `meta.docs.recommended` is `false` or another diagnostic already covers it.
 3. Add a matching test file under `test/rules` with valid and invalid `RuleTester` cases.
 4. Run `vp test`, `vp check`, and `vp run build`.
 

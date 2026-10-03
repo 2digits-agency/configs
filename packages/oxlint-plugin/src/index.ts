@@ -10,7 +10,7 @@ const rulesCoveredByEffectTsgo = new Set<RuleName>(['prefer-effect-filesystem', 
 
 export const recommendedRules = Object.fromEntries(
   (Object.keys(rules) as Array<RuleName>)
-    .filter((rule) => !rulesCoveredByEffectTsgo.has(rule))
+    .filter((rule) => !rulesCoveredByEffectTsgo.has(rule) && rules[rule].meta?.docs?.recommended !== false)
     .map((rule) => [`2digits/${rule}`, 'error'] as const),
 ) as Partial<Record<`2digits/${RuleName}`, 'error'>>;
 

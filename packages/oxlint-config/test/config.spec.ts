@@ -19,6 +19,8 @@ import { zodConfig } from '../src/configs/zod';
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+// These smoke fixtures use native Oxlint config, not Vite+'s { lint: ... } config wrapper.
+const oxlintEnvironment = { ...process.env, VP_VERSION: '' };
 
 const reactCompilerRules = [
   'react/capitalized-calls',
@@ -189,6 +191,14 @@ describe('oxlint config', () => {
     expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
+  it('keeps the TestClock diagnostic opt-in while accepting an explicit override', () => {
+    expect(recommendedRules['2digits/no-testclock-sleep-before-advance']).toBeUndefined();
+    expect(collectPluginsAndRules(twoDigits)).not.toContain('2digits/no-testclock-sleep-before-advance');
+    expect(withTwoDigits({ rules: { '2digits/no-testclock-sleep-before-advance': 'error' } }).rules).toMatchObject({
+      '2digits/no-testclock-sleep-before-advance': 'error',
+    });
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -197,6 +207,7 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: fixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnvironment,
     });
 
     const output = `${result.stdout}${result.stderr}`;
@@ -209,11 +220,13 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: twoDigitsFixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnvironment,
     });
 
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+    expect(output).toContain('2digits(no-testclock-sleep-before-advance)');
   });
 });
