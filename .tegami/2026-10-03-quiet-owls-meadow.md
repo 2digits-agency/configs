@@ -5,4 +5,5 @@ packages:
 
 ## Fix Effect diagnostic configuration
 
-- Removed unsupported diagnostic names and kept unstable-API notices visible as non-blocking messages.
+- Removed unsupported options and diagnostic names, and enabled new simplification diagnostics.
+- Kept experimental- and unstable-API notices visible as non-blocking suggestions.
