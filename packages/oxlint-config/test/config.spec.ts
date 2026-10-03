@@ -216,4 +216,25 @@ describe('oxlint config', () => {
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
   });
+
+  it('loads the opt-in dynamic record diagnostic through the production config', () => {
+    const result = spawnSync(
+      process.execPath,
+      [oxlintBinary, '--config=oxlint.config.mjs', '--format=json', 'invalid.ts'],
+      {
+        cwd: fileURLToPath(new URL('fixtures/dynamic-record', import.meta.url)),
+        encoding: 'utf8',
+      },
+    );
+    const output = JSON.parse(result.stdout) as {
+      diagnostics: Array<{ code: string; labels: Array<{ span: { line: number } }> }>;
+    };
+
+    expect(result.status).toBe(1);
+    expect(
+      output.diagnostics
+        .filter(({ code }) => code === '2digits(no-unsafe-dynamic-record-key)')
+        .map(({ labels }) => labels[0]?.span.line),
+    ).toStrictEqual([4, 17]);
+  });
 });

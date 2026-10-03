@@ -195,7 +195,9 @@ export function isGlobalIdentifier(node: ESTree.Node, context: Context, name: st
   let scope: Scope | null = context.sourceCode.getScope(node);
 
   while (scope !== null) {
-    if (scope.set.has(name)) {
+    const variable = scope.set.get(name);
+
+    if (variable && variable.defs.length > 0) {
       return false;
     }
 
