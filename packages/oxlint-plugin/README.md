@@ -36,6 +36,26 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+### `prefer-with-span` checks lexical span usage
+
+For imported `Effect.useSpan(name, callback)` and `Effect.useSpan(name, options, callback)`, this rule reports an inline
+callback only when its first parameter's bindings are unused (or it declares no parameter). Namespace and named import
+aliases are supported. Reads of `_span`, destructured bindings, shorthand properties, and captured closure references
+count as usage. Object keys, strings, comments, and references to a different shadowed binding do not.
+
+Shadowed or unresolved APIs, type-only imports, non-inline callbacks, spread arguments, and unsupported parameter shapes
+(defaults, rest bindings, or computed destructuring keys) are skipped. The rule uses local lexical scopes, not TypeScript
+type information or whole-program inference.
+
+This is diagnostic-only advice, enabled as an error in the recommended configuration. `useSpan` leaves the current parent
+span unchanged; `withSpan` installs its span as the parent of nested spans. Replacing one with the other can intentionally
+change tracing behavior, so there is no autofix. When a standalone span is deliberate, suppress this rule explicitly:
+
+```text
+// oxlint-disable-next-line 2digits/prefer-with-span -- Deliberately keep the existing parent span.
+Effect.useSpan('standalone', () => program);
+```
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
