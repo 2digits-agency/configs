@@ -36,6 +36,43 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+### Hashes are bucket hints, not identity
+
+`no-hash-as-identity` reports sole hash equality/inequality, hash-number keys passed to `.get`, `.set`, `.has`, or
+`.delete`, and computed dictionary keys. It follows runtime Effect Hash imports and simple, unreassigned local API/value
+aliases by lexical binding. Shadowed names, unrelated Hash APIs, type-only imports, destructuring, and reassigned bindings
+do not carry that provenance. Method receivers are not type-checked: a known hash key still reports on an unknown receiver.
+
+A narrow full-comparison path is allowed:
+
+```ts
+import * as Equal from 'effect/Equal';
+import * as Hash from 'effect/Hash';
+
+function equals(a: unknown, b: unknown): boolean {
+  if (Hash.hash(a) !== Hash.hash(b)) {
+    return false;
+  }
+
+  return Equal.equals(a, b);
+}
+
+const inBucket = (a: unknown, b: unknown) => Hash.hash(a) === Hash.hash(b) && Equal.equals(a, b);
+```
+
+The guard must sit directly in the function body and return `false` (optionally in a single-statement block), followed
+immediately by a returned full comparison. The explicit bucket prefilter must use `&&`. Both compare the same two
+unreassigned identifier bindings, in either order;
+simple hash-value and `Equal.equals` aliases are supported. The unshadowed external `fullEquality(a, b)` helper from the
+rule's contract is also recognized as an explicit full comparator; its implementation is the caller's responsibility.
+Unknown comparators, intervening statements, other control flow, changed inputs, and property/call inputs do not prove
+this exception. Sole hash `!==` is still unsafe: colliding unequal values return `false`.
+
+Effect 4 structurally compares plain objects and arrays. Effect HashMap uses Hash/Equal to distinguish colliding keys;
+native Map with numeric hash keys cannot, and native Map with object keys uses reference identity. This rule offers no
+autofix or collection/equality substitution because changing those semantics can change cache behavior. It remains in
+the recommended error-level set.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,

@@ -19,6 +19,8 @@ import { zodConfig } from '../src/configs/zod';
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+// These fixtures export standalone Oxlint configs, not Vite+'s { lint } config shape.
+const oxlintEnvironment = { ...process.env, VP_VERSION: undefined };
 
 const reactCompilerRules = [
   'react/capitalized-calls',
@@ -197,6 +199,7 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: fixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnvironment,
     });
 
     const output = `${result.stdout}${result.stderr}`;
@@ -209,11 +212,31 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: twoDigitsFixtureDirectory,
       encoding: 'utf8',
+      env: oxlintEnvironment,
     });
 
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+  });
+
+  it('preserves safe hash rejection and binding precision in the built plugin', () => {
+    expect(recommendedRules['2digits/no-hash-as-identity']).toBe('error');
+
+    const valid = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'valid-hash.mjs'], {
+      cwd: twoDigitsFixtureDirectory,
+      encoding: 'utf8',
+      env: oxlintEnvironment,
+    });
+    const invalid = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid-hash.mjs'], {
+      cwd: twoDigitsFixtureDirectory,
+      encoding: 'utf8',
+      env: oxlintEnvironment,
+    });
+
+    expect(valid.status, `${valid.stdout}${valid.stderr}`).toBe(0);
+    expect(invalid.status, `${invalid.stdout}${invalid.stderr}`).toBe(1);
+    expect(invalid.stdout.match(/2digits\(no-hash-as-identity\)/g)).toHaveLength(3);
   });
 });
