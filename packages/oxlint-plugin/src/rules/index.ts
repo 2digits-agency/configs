@@ -21,6 +21,7 @@ import { noEmptyEffectCallback } from './effect/no-empty-effect-callback';
 import { noEmptySchemaStruct } from './effect/no-empty-schema-struct';
 import { noFunctionConfigDefault } from './effect/no-function-config-default';
 import { noHashAsIdentity } from './effect/no-hash-as-identity';
+import { noIgnoredResponseOnlyRetryPredicate } from './effect/no-ignored-response-only-retry-predicate';
 import { noLoggingInCatch } from './effect/no-logging-in-catch';
 import { noMultiShotEffectCallback } from './effect/no-multi-shot-effect-callback';
 import { noNonJsonSchemaAnnotation } from './effect/no-non-json-schema-annotation';
@@ -72,6 +73,7 @@ export const rules = {
   'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,
   'no-function-config-default': noFunctionConfigDefault,
   'no-hash-as-identity': noHashAsIdentity,
+  'no-ignored-response-only-retry-predicate': noIgnoredResponseOnlyRetryPredicate,
   'no-logging-in-catch': noLoggingInCatch,
   'no-multi-shot-effect-callback': noMultiShotEffectCallback,
   'no-non-json-schema-annotation': noNonJsonSchemaAnnotation,

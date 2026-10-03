@@ -1,4 +1,7 @@
 import { spawnSync } from 'node:child_process';
+import { copyFileSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
@@ -18,6 +21,7 @@ import { zodConfig } from '../src/configs/zod';
 
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
+const retryFixtureDirectory = fileURLToPath(new URL('fixtures/retry-transient', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
 
 const reactCompilerRules = [
@@ -189,6 +193,10 @@ describe('oxlint config', () => {
     expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
+  it('recommends the response-only retry predicate diagnostic', () => {
+    expect(recommendedRules['2digits/no-ignored-response-only-retry-predicate']).toBe('error');
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -197,6 +205,7 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: fixtureDirectory,
       encoding: 'utf8',
+      env: { ...process.env, VP_VERSION: undefined },
     });
 
     const output = `${result.stdout}${result.stderr}`;
@@ -209,11 +218,57 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: twoDigitsFixtureDirectory,
       encoding: 'utf8',
+      env: { ...process.env, VP_VERSION: undefined },
     });
 
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+  });
+
+  it.for([
+    {
+      filename: 'response-only.mjs',
+      status: 1,
+      diagnostics: [
+        {
+          code: '2digits(no-ignored-response-only-retry-predicate)',
+          severity: 'error',
+          labels: [{ span: { line: 6, column: 3 } }],
+        },
+      ],
+    },
+    { filename: 'errors-only.mjs', status: 0, diagnostics: [] },
+  ])('loads $filename through the production config without policy edits', ({ filename, status, diagnostics }) => {
+    const directory = mkdtempSync(path.join(tmpdir(), 'retry-transient-'));
+
+    try {
+      const original = path.join(retryFixtureDirectory, filename);
+      const target = path.join(directory, filename);
+
+      copyFileSync(original, target);
+      const result = spawnSync(
+        process.execPath,
+        [
+          oxlintBinary,
+          `--config=${path.join(retryFixtureDirectory, 'oxlint.config.mjs')}`,
+          '--no-ignore',
+          '--fix',
+          '--format=json',
+          target,
+        ],
+        { cwd: directory, encoding: 'utf8', env: { ...process.env, VP_VERSION: undefined } },
+      );
+
+      expect(result.error).toBeUndefined();
+      expect(result.status).toBe(status);
+      expect(readFileSync(target, 'utf8')).toBe(readFileSync(original, 'utf8'));
+      const report: unknown = JSON.parse(result.stdout);
+
+      expect(report).toMatchObject({ diagnostics });
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
   });
 });

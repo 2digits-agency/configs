@@ -36,6 +36,36 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
 
+### Ignored response-only retry predicates
+
+`no-ignored-response-only-retry-predicate` reports one diagnostic at `while` when an imported Effect v4
+`HttpClient.retryTransient` receives direct options with literal `retryOn: 'response-only'` and a `while` property.
+It recognizes named/namespace aliases from `effect/unstable/http`, `effect/unstable/http/HttpClient`,
+`effect/http`, and `effect/http/HttpClient`, rejecting shadowed and type-only bindings. Options must be argument 0
+in the pipeable form or argument 1 in the data-first form:
+
+```ts
+import * as HttpClient from 'effect/http/HttpClient';
+
+client.pipe(HttpClient.retryTransient({ retryOn: 'response-only', while: predicate }));
+HttpClient.retryTransient(client, { retryOn: 'response-only', while: predicate });
+```
+
+In this mode, response retries use Effect's transient-status check and never invoke `while`. Review the intended
+policy manually: changing to `errors-and-responses` still does not apply `while` to response retries. There is no
+autofix or suggestion because removing the predicate or changing modes can broaden retries or lose intended policy.
+
+The rule skips variable options, nonliteral modes, any spread/computed/duplicate key, unsupported
+arities, older `mode` spelling, and v3 `@effect/platform` imports. Default, `errors-only`, and `errors-and-responses`
+remain silent, as do `Effect.retry`, unrelated clients, and manual 401 recovery. Both `while: predicate` and
+`'while': predicate`, as well as method-style `while() { ... }`, are supported; `{ while }` shorthand is not legal
+JS/TS because `while` is a reserved word.
+
+No-network tests execute the current `effect@4.0.0` barrel/subpath APIs in both arities: a client returning 503 with
+two retries and a false predicate makes three attempts and zero predicate calls; a non-transient error client in
+`errors-only` makes one attempt and one predicate call. The issue's earlier rc.117 reproduction and zero matches
+in pinned agency repositories are historical evidence, not a fresh agency audit or evidence of a current incident.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
