@@ -189,6 +189,11 @@ describe('oxlint config', () => {
     expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
   });
 
+  it('keeps the timing diagnostic opt-in in both recommended rules and the default preset', () => {
+    expect(recommendedRules['2digits/no-eager-effect-mutation']).toBeUndefined();
+    expect(collectPluginsAndRules(twoDigits)).not.toContain('2digits/no-eager-effect-mutation');
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -197,6 +202,8 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: fixtureDirectory,
       encoding: 'utf8',
+      // Fixtures use standalone Oxlint configs, regardless of whether the test runner is Vite+.
+      env: { ...process.env, VP_VERSION: '' },
     });
 
     const output = `${result.stdout}${result.stderr}`;
@@ -209,11 +216,30 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: twoDigitsFixtureDirectory,
       encoding: 'utf8',
+      env: { ...process.env, VP_VERSION: '' },
     });
 
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+    expect(output).not.toContain('2digits(no-eager-effect-mutation)');
+  });
+
+  it('executes the opt-in timing diagnostic and honors deliberate instrumentation suppression', () => {
+    const result = spawnSync(
+      process.execPath,
+      [oxlintBinary, '--format=unix', '--config=eager.oxlint.config.mjs', 'invalid.mjs'],
+      {
+        cwd: twoDigitsFixtureDirectory,
+        encoding: 'utf8',
+        env: { ...process.env, VP_VERSION: '' },
+      },
+    );
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output.match(/2digits\(no-eager-effect-mutation\)/gu)).toHaveLength(1);
+    expect(output).toContain('invalid.mjs:9:3: This mutation happens when the function is called');
   });
 });
