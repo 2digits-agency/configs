@@ -16,6 +16,12 @@ fi
 # shellcheck disable=SC1091
 source "$VP_HOME/env"
 
+export PATH="$HOME/.local/bin:$PATH"
+if ! command -v but >/dev/null 2>&1; then
+  printf 'Installing GitButler CLI...\n'
+  curl -fsSL https://gitbutler.com/install.sh | sh
+fi
+
 started_at=$SECONDS
 printf 'Installing workspace dependencies...\n'
 vp install --frozen-lockfile
