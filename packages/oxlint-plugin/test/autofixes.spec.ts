@@ -33,6 +33,12 @@ for (const [name, messageId, invalid, output] of [
   ['no-empty-effect-callback', 'emptyCallback', `${effect} Effect.callback(() => { /* keep */ })`, null],
   ['no-empty-effect-callback', 'emptyCallback', `${effect} function f(Effect) { Effect.callback(() => {}) }`, null],
   [
+    'no-empty-effect-callback',
+    'unusedResume',
+    `${effect} Effect.callback((_resume) => { server.listen(port); return Effect.sync(cleanup); })`,
+    null,
+  ],
+  [
     'alchemy-no-v1-worker-properties',
     'property',
     `${worker} CF.Worker('w', { entrypoint })`,

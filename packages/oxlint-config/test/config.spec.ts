@@ -185,8 +185,15 @@ describe('oxlint config', () => {
     expect(plugin?.name).toBe('2digits');
     expect(plugin?.specifier).toContain('oxlint-plugin/dist/index.mjs');
     expect(twoDigitsPluginConfig.rules).toStrictEqual(recommendedRules);
-    expect(recommendedRules['2digits/prefer-effect-filesystem']).toBeUndefined();
-    expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
+    expect({
+      filesystem: recommendedRules['2digits/prefer-effect-filesystem'],
+      path: recommendedRules['2digits/prefer-effect-path'],
+      callback: recommendedRules['2digits/no-empty-effect-callback'],
+    }).toStrictEqual({
+      filesystem: undefined,
+      path: undefined,
+      callback: 'error',
+    });
   });
 
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
@@ -197,6 +204,8 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: fixtureDirectory,
       encoding: 'utf8',
+      // Standalone Oxlint fixtures must not inherit Vite+'s config-loader mode.
+      env: { ...process.env, VP_VERSION: '' },
     });
 
     const output = `${result.stdout}${result.stderr}`;
@@ -209,11 +218,14 @@ describe('oxlint config', () => {
     const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
       cwd: twoDigitsFixtureDirectory,
       encoding: 'utf8',
+      env: { ...process.env, VP_VERSION: '' },
     });
 
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+    expect(output).toContain('2digits(no-empty-effect-callback)');
+    expect(output.matchAll(/2digits\(no-empty-effect-callback\)/g).toArray()).toHaveLength(1);
   });
 });

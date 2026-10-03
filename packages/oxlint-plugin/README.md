@@ -43,6 +43,49 @@ Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effe
 `alchemy-no-v1-worker-properties`, and `alchemy-no-deprecated-docker-constraints`.
 Fixes skip ambiguous bindings, conflicting properties, and unsupported import references.
 
+## Effect callback completion
+
+`2digits/no-empty-effect-callback` keeps its existing empty-body diagnostic and safe `Effect.never` fix. It also reports
+inline, nonempty `Effect.callback` registrations (and the existing v3 `Effect.async` spelling) whose first Identifier
+parameter has **zero references to its binding**. Namespace and named-import aliases are supported; shadowed imports
+are excluded from the new diagnostic. An underscore-prefixed completion parameter is still checked.
+
+```ts
+import * as Effect from 'effect/Effect';
+
+const blocked = Effect.callback((_resume) => {
+  server.listen(port);
+
+  return Effect.sync(cleanup);
+});
+```
+
+Invoking, capturing, forwarding, aliasing, returning, or exporting the completion binding counts as use, including
+inside nested functions. Same-spelled shadowing does not. Even an error-only reference is outside this check: a report
+is **not proof that every branch hangs**, and absence of a report does not prove completion on every path. The rule
+does not perform typechecking, cross-file analysis, or success-path inference.
+
+The new diagnostic skips omitted/destructured/default first parameters, async/generator registrations, `arguments`
+capture, direct `eval` (including nested capture), and direct unconditional throws after straight-line statements.
+It offers **no fix**: replacing the registration with `Effect.never` could delete side effects and interrupt cleanup.
+
+For deliberate completion-free adapters, prefer `Effect.never` when no registration is needed, or manage the resource
+with `Effect.acquireRelease` and a scope. When a callback adapter is intentional, preserve its registration and cleanup
+and document a suppression:
+
+```ts
+// oxlint-disable-next-line 2digits/no-empty-effect-callback -- Scope-managed listener intentionally never completes.
+const listener = Effect.callback((_resume) => {
+  server.listen(port);
+
+  return Effect.sync(cleanup);
+});
+```
+
+The independent runtime controls in `test/effect-callback-runtime.spec.ts` use Effect 4.0.0: unused completion reaches a
+timeout and runs its interrupt cleanup; a microtask-resumed control returns `done` and runs resource cleanup. Run them
+from this package with `vp test test/effect-callback-runtime.spec.ts`.
+
 ## Adding a rule
 
 Oxlint's JavaScript plugin API is currently alpha and does not expose type information. Keep rules syntax-safe and leave
