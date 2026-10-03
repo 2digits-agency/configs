@@ -32,9 +32,55 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
   and no root-barrel module imports. `@effect/vitest` and lowercase unstable barrels are intentionally exempt.
 - Alchemy v2 practices: every `alchemy-*` rule.
+- Native reference-key lookups: `no-fresh-native-collection-lookup-key`.
 
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
+
+## Fresh native collection lookup keys
+
+`2digits/no-fresh-native-collection-lookup-key` reports direct object/array literals passed to `Map`/`WeakMap.get`
+or native `Map`/`Set`/`WeakMap`/`WeakSet.has` and `.delete`. Equal-looking fields do not make native references equal:
+
+```ts
+const key = { id: 7 };
+const map = new Map([[key, 'stored']]);
+
+map.get({ id: 7 }); // Reported: undefined, not 'stored'.
+map.get(key); // Valid: reuse the stored reference.
+```
+
+The receiver must resolve to a same-file variable initialized directly by an unshadowed built-in constructor.
+Shadowed constructors/receivers, reassigned bindings and direct member writes are excluded. The rule accepts stable
+identifiers and primitive keys, insertion/constructor values, arbitrary constructed keys (including `Data.Class`),
+unknown/custom receivers, aliases and wrapper calls. It skips literals containing top-level spreads, computed
+properties, methods, accessors or `__proto__`. It does not use parser services or infer Equal/Hash protocols.
+Indirect mutation/escape analysis and patched native prototypes are outside this syntax-only matcher.
+
+Effect v4 `HashMap`, `MutableHashMap` and `HashSet` support fresh structural keys and are entirely excluded.
+`Cache.get`, `Atom.family` and other loading-on-miss APIs are also excluded. Runtime controls use actual Effect 4.0.0
+APIs, including `Data.Class`, not the removed `Data.struct`/`Data.array` exports.
+The same structural-hit and native `Data.Class` reference controls were also executed against the published
+4.0.0-rc.115 and 4.0.0-rc.117 packages during implementation.
+
+No automatic fix or representation-changing suggestion is offered. Reusing a stable key or choosing a value-key
+design is a contract decision for the caller.
+
+### Recommended enablement is backed by the restricted matcher
+
+Recommended enablement follows the binding/literal negative fixtures and an executed Oxlint 1.86.0 matcher scan on
+2026-10-03, not the broad upstream Effect proposal. The scan included first-party apps/packages TS/TSX and authored
+tests, excluding hidden/generated/dist directories:
+
+| Pinned corpus                                                                                                      | Files scanned | Rule diagnostics / observed false positives |
+| ------------------------------------------------------------------------------------------------------------------ | ------------: | ------------------------------------------: |
+| [Mezaldy](https://github.com/2digits-agency/mezaldy-shopify-ois/commit/a27cccac8966fadc875c2fa17026eaf42154a401)   |           219 |                                       0 / 0 |
+| [ByLotte](https://github.com/2digits-agency/bylotte-shopify-exact/commit/90ebd6bb1d6628564fe44edee97e77fabc7ee8b7) |            91 |                                       0 / 0 |
+| [BillyBird](https://github.com/2digits-agency/billybird-api/commit/db538e385ef431a3fbbfc9e821d65bb4a9a0b18c)       |           438 |                                       0 / 0 |
+
+These are actual rule diagnostics, distinct from the ticket's historical zero textual misuse matches. They do not
+establish an alias/interprocedural census or a current production defect. Keep broader matchers opt-in until their
+own corpus and negative controls establish precision.
 
 ## Automatic fixes
 
@@ -52,7 +98,7 @@ Oxfmt formats imports but does not enforce package-specific import architecture.
 `namespaceImportPackages` and `importAliases` settings guide generated auto-imports only, so the plugin enforces the same
 policy for handwritten imports.
 
-1. Add one rule file under `src/rules/alchemy` or `src/rules/effect` with `defineRule` through `defineSyntaxRule` or
+1. Add one rule file under `src/rules` (or its `alchemy`/`effect` directories) with `defineRule` through `defineSyntaxRule` or
    `defineEffectRule`.
 2. Register it in `src/rules/index.ts`. `src/index.ts` automatically includes it in `recommendedRules`.
 3. Add a matching test file under `test/rules` with valid and invalid `RuleTester` cases.

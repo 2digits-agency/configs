@@ -47,6 +47,7 @@ import { preserveCaughtError } from './effect/preserve-caught-error';
 import { requireSchemaClassBrand } from './effect/require-schema-class-brand';
 import { requireTryPromiseAbortSignal } from './effect/require-try-promise-abort-signal';
 import { throwInEffectGen } from './effect/throw-in-effect-gen';
+import { noFreshNativeCollectionLookupKey } from './no-fresh-native-collection-lookup-key';
 
 export const rules = {
   'alchemy-no-cloudflare-init-finalizer': alchemyNoCloudflareInitFinalizer,
@@ -70,6 +71,7 @@ export const rules = {
   'no-empty-effect-callback': noEmptyEffectCallback,
   'no-empty-schema-struct': noEmptySchemaStruct,
   'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,
+  'no-fresh-native-collection-lookup-key': noFreshNativeCollectionLookupKey,
   'no-function-config-default': noFunctionConfigDefault,
   'no-hash-as-identity': noHashAsIdentity,
   'no-logging-in-catch': noLoggingInCatch,
