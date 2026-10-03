@@ -1,15 +1,18 @@
 import * as Layer from 'effect/Layer';
-import * as FetchHttpClient from 'effect/unstable/http/FetchHttpClient';
+import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 
-import { BoardServiceLive } from '../services/BoardService.js';
-import { TeamLeaderClientLive } from '../services/TeamLeaderClient.js';
-import { TimeServiceLive } from '../services/TimeService.js';
+import { type BoardService, BoardServiceLive } from '../services/BoardService.js';
+import { type TeamLeaderClient, TeamLeaderClientLive } from '../services/TeamLeaderClient.js';
+import { type TimeService, TimeServiceLive } from '../services/TimeService.js';
+import type { TloConfig } from '../services/TloConfig.js';
 import { TloHttpClientLive } from '../services/TloHttpClient.js';
 
 export const TloServicesLive = Layer.mergeAll(TimeServiceLive, BoardServiceLive);
 
-export const TloClientLive = TeamLeaderClientLive.pipe(
+export const TloClientLive: Layer.Layer<TeamLeaderClient, never, TloConfig> = TeamLeaderClientLive.pipe(
   Layer.provide(TloHttpClientLive.pipe(Layer.provide(FetchHttpClient.layer))),
 );
 
-export const TloLive = TloServicesLive.pipe(Layer.provide(TloClientLive));
+export const TloLive: Layer.Layer<TimeService | BoardService, never, TloConfig> = TloServicesLive.pipe(
+  Layer.provide(TloClientLive),
+);

@@ -6,9 +6,9 @@ import * as Opt from 'effect/Option';
 import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
-import * as HttpBody from 'effect/unstable/http/HttpBody';
-import type * as HttpClientError from 'effect/unstable/http/HttpClientError';
-import * as UrlParams from 'effect/unstable/http/UrlParams';
+import * as HttpBody from 'effect/http/HttpBody';
+import type * as HttpClientError from 'effect/http/HttpClientError';
+import * as UrlParams from 'effect/http/UrlParams';
 
 import { TloApiError, TloNetworkError, TloParseError, type TloError } from '../schemas/errors.js';
 import { TloConfig } from './TloConfig.js';

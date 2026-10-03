@@ -4,9 +4,9 @@ import * as Layer from 'effect/Layer';
 import * as Match from 'effect/Match';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
-import * as Cookies from 'effect/unstable/http/Cookies';
-import * as HttpClient from 'effect/unstable/http/HttpClient';
-import * as HttpClientResponse from 'effect/unstable/http/HttpClientResponse';
+import * as Cookies from 'effect/http/Cookies';
+import * as HttpClient from 'effect/http/HttpClient';
+import * as HttpClientResponse from 'effect/http/HttpClientResponse';
 
 import { TeamLeaderClient, TeamLeaderClientLive } from '../src/services/TeamLeaderClient.js';
 import { TloConfig } from '../src/services/TloConfig.js';

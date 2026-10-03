@@ -1,6 +1,6 @@
 import * as Context from 'effect/Context';
 import type * as Redacted from 'effect/Redacted';
-import type * as Cookies from 'effect/unstable/http/Cookies';
+import type * as Cookies from 'effect/http/Cookies';
 
 export interface TloConfigShape {
   readonly baseUrl: string;

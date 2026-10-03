@@ -6,8 +6,8 @@ import * as Layer from 'effect/Layer';
 import * as Ref from 'effect/Ref';
 import * as Sink from 'effect/Sink';
 import * as Stream from 'effect/Stream';
-import type * as ChildProcess from 'effect/unstable/process/ChildProcess';
-import * as ChildProcessSpawner from 'effect/unstable/process/ChildProcessSpawner';
+import type * as ChildProcess from 'effect/process/ChildProcess';
+import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 
 /**
  * Represents a command that was executed during a test.

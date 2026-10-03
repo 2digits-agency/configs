@@ -2,7 +2,7 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Path from 'effect/Path';
 import * as Result from 'effect/Result';
-import * as Url from 'effect/unstable/http/Url';
+import * as Url from 'effect/http/Url';
 
 /**
  * Creates a scoped temp directory and switches cwd to it. Automatically cleans up temp dir and restores cwd when scope

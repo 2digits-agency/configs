@@ -1,7 +1,7 @@
 import * as Layer from 'effect/Layer';
 import * as Logger from 'effect/Logger';
-import * as McpProtocol from 'effect/unstable/ai/McpProtocol';
-import * as McpServer from 'effect/unstable/ai/McpServer';
+import * as McpProtocol from 'effect/ai/McpProtocol';
+import * as McpServer from 'effect/ai/McpServer';
 
 import { TloToolkit, TloToolkitHandlers } from './handlers.js';
 

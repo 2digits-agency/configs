@@ -1,5 +1,5 @@
 import * as Schema from 'effect/Schema';
-import * as Tool from 'effect/unstable/ai/Tool';
+import * as Tool from 'effect/ai/Tool';
 
 import { Message, Project, Task, TaskForUser, TodoDetail, TodoSummary } from '../schemas/board.js';
 import { TloErrorSchema } from '../schemas/errors.js';

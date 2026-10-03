@@ -6,7 +6,7 @@ import * as Match from 'effect/Match';
 import * as Path from 'effect/Path';
 import * as Schema from 'effect/Schema';
 import * as Stream from 'effect/Stream';
-import * as ChildProcess from 'effect/unstable/process/ChildProcess';
+import * as ChildProcess from 'effect/process/ChildProcess';
 import * as nypm from 'nypm';
 import * as pkgTypes from 'pkg-types';
 
