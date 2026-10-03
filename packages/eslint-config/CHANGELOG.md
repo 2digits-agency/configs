@@ -1,3 +1,78 @@
+## @2digits/eslint-config@5.8.3
+
+### Update eslint-plugin-unicorn to 77.0.0
+
+- Adopted the updated recommended rules and added types for new rules and options.
+- Marked CSS rules moved to `eslint-cssicorn` as deprecated in the rule types.
+
+### Update `tailwind-csstree` from 0.4.0 to 0.4.1
+
+CSS linting now understands leading and trailing important modifiers in Tailwind `@apply` utilities. Tailwind 4 `@utility` and `@variant` declarations also accept CSS-wide values such as `inherit`, `unset`, and `revert-layer`.
+
+### Allow top-level side effects in exported modules
+
+- Disabled `unicorn/no-top-level-side-effects`.
+
+### Update `eslint-plugin-turbo` from 2.11.2 to 2.11.7
+
+Refresh Turborepo environment-variable linting and bundled dependencies while retaining the `turbo/no-undeclared-env-vars` check.
+
+### Update `eslint-plugin-sonarjs` from 4.2.1 to 4.2.2
+
+Refresh SonarJS rule fixes, including more precise Window message-handler detection, recognition of type imports used by Vue generic script blocks, and dependency lookup when linting from nested directories. The configured rule set is unchanged.
+
+### Update eslint-plugin-jsdoc to 65.0.2
+
+- Updated rule option types, including `allowNoSpaceAfterAsterisk` for `jsdoc/check-indentation`.
+
+### Update `@tanstack/eslint-plugin-query` from 5.103.2 to 5.104.1
+
+Refresh the Query lint plugin and its declarations without changing its runtime rules or configured defaults.
+
+### Update ESLint from 10.11.0 to 10.12.0
+
+Update the configuration's ESLint peer requirement. Enabled core rules gain Unicode identifier fixes, fewer `prefer-arrow-callback` and `no-loss-of-precision` false positives, and a corrected exponentiation autofix for async function expressions.
+
+### Update `@next/eslint-plugin-next` from 16.3.5 to 16.3.8
+
+Align the Next.js lint plugin with the latest patch release; its rule implementation is unchanged. This does not update an application's Next.js runtime or apply its security fixes.
+
+### Allow asterisk prefixes in documentation comments
+
+- Disabled `unicorn/no-asterisk-prefix-in-documentation-comments`.
+
+### Update typescript-eslint tooling from 8.70.0 to 8.71.0
+
+Update `typescript-eslint`, `@typescript-eslint/parser`, `@typescript-eslint/scope-manager`, and `@typescript-eslint/utils` in the packages that use them at runtime.
+
+The strict type-checked preset now enables `ts/no-unsafe-enum-assignment`: plain numeric values and unsafe arithmetic assigned to enum-typed locations may produce new errors. Generated configuration types expose the rule; Markdown code blocks keep it disabled with the other type-aware checks.
+
+### Update `eslint-plugin-n` from 18.3.0 to 18.4.1
+
+Refresh Node.js linting with pnpm workspace support in the optional `no-extraneous` rules, corrected import-extension mappings, and cached TypeScript configuration resolution. The configured rule set is unchanged.
+
+### Update eslint-plugin-zod to 5.0.0
+
+- Removed the deprecated `zod/no-string-schema-with-uuid` rule from the ESLint rule types.
+
+### Update `globals` from 17.12.0 to 17.13.0
+
+Recognize `SpeechRecognitionAlternative`, `SpeechRecognitionResult`, and `SpeechRecognitionResultList` as read-only browser globals, avoiding undefined-global errors for these APIs.
+
+### Update the Node.js target to 24.21.0
+
+- Updated the required Node.js version and the default Node.js lint settings.
+
+### Update `eslint-plugin-storybook` from 10.6.0 to 10.6.1
+
+Align the Storybook lint plugin with the latest patch release without changing its rule implementation or configured defaults.
+
+### Update `@eslint-react/eslint-plugin` and `@eslint-react/kit` from 5.20.5 to 5.23.5
+
+- React checks now catch more props/state rebinding, destructured mutations, aliased impure calls, and render-time ref exposure. `static-components` also follows logical and sequence expressions, so existing code may receive new errors.
+- Directly returning `useState()` from custom hooks is now allowed. Ref-derived state updates and effect cleanup helpers receive fewer false positives; leaked resources are matched by scope rather than variable name.
+- React 19.3 DOM properties are recognized. Async Server Components without a `use client` directive are exempt from purity checks; impure `useRef` initializers remain checked.
+
 ## @2digits/eslint-config@5.8.2
 
 ### Update eslint-plugin-de-morgan to 2.2.0

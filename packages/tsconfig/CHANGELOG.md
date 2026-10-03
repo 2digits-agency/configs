@@ -1,3 +1,14 @@
+## @2digits/tsconfig@0.9.1
+
+### Update `@effect/tsgo` to 0.48.0
+
+
+
+### Fix Effect diagnostic configuration
+
+- Removed unsupported options and diagnostic names, and enabled new simplification diagnostics.
+- Kept experimental- and unstable-API notices visible as non-blocking suggestions.
+
 ## @2digits/tsconfig@0.9.0
 
 ### Add an Effect TypeScript configuration preset

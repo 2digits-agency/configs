@@ -1,3 +1,13 @@
+## @2digits/opencode-plugin@0.2.38
+
+### Update `posthog-node` to 5.55.0
+
+Update the analytics dependency from 5.52.5 to 5.55.0. Upstream changes add feature flag runtime and evaluation metadata, fix holdout evaluation and cached flag payload compatibility, and allow disabling automatic flag polling. The plugin continues using the existing event capture APIs.
+
+### Update `@opencode-ai/plugin` to 1.18.34
+
+Update the plugin dependency from 1.18.31 to 1.18.34, keeping its OpenCode SDK dependency aligned. Upstream plugin and SDK interfaces are unchanged in this release range.
+
 ## @2digits/opencode-plugin@0.2.37
 
 ### Update posthog-node to 5.52.5
