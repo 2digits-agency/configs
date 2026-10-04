@@ -36,6 +36,22 @@ tester.run('padding-line-between-statements', rule, {
     { code: 'type A = { a: string; b: number };', options: [{ ...always, prev: 'ts-method', next: 'ts-method' }] },
   ],
   invalid: [
+    {
+      code: 'foo();\nfunction f() {\na();\nb();\n}\nbar();',
+      output: 'foo();\nfunction f() {\na();\n\nb();\n}\nbar();',
+      options: [{ ...always, prev: 'expression', next: 'expression' }],
+      errors: [{ messageId: 'expectedBlankLine' }],
+    },
+    {
+      code: 'if (x) {\na();\nb();\n}\nfoo();',
+      output: 'if (x) {\na();\n\nb();\n}\n\nfoo();',
+      options: [
+        { ...always, prev: 'expression', next: 'expression' },
+        { ...always, prev: { selector: 'BlockStatement' } },
+        { ...always, prev: { selector: 'IfStatement:has(BlockStatement)' } },
+      ],
+      errors: [{ messageId: 'expectedBlankLine' }, { messageId: 'expectedBlankLine' }],
+    },
     ...(
       [
         ['foo();\nbar();', 'foo();\n\nbar();'],

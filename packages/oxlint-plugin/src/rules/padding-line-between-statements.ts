@@ -2,15 +2,18 @@
 /* oxlint-disable unicorn/no-null -- Oxlint AST/token APIs and no-fix results use null. */
 /* eslint-disable unicorn/no-null -- Oxlint AST/token APIs and no-fix results use null. */
 import {
-  defineRule,
-  type Comment,
-  type Context,
+  Rule,
+  RuleContext,
+  Visitor,
+  type OxlintComment as Comment,
   type ESTree,
   type Location,
-  type SourceCode,
-  type Token as SyntaxToken,
-  type Visitor,
-} from '@oxlint/plugins';
+  type OxlintSourceCode as SourceCode,
+  type OxlintToken as SyntaxToken,
+} from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import * as Ref from 'effect/Ref';
 
 type Token = SyntaxToken | Comment;
 type NodeTest = (node: ESTree.Node, sourceCode: SourceCode) => boolean;
@@ -404,18 +407,24 @@ function getPaddingLineSequences(
   return pairs;
 }
 
-function verifyPair(context: Context, prevNode: ESTree.Node, nextNode: ESTree.Node, padding: PaddingType): void {
+function verifyPair(
+  context: RuleContext['Service'],
+  prevNode: ESTree.Node,
+  nextNode: ESTree.Node,
+  padding: PaddingType,
+): Effect.Effect<void> {
   if (padding === 'any') {
-    return;
+    return Effect.void;
   }
   const sourceCode = context.sourceCode;
   const pairs = getPaddingLineSequences(prevNode, nextNode, sourceCode);
 
   if (padding === 'never') {
     if (pairs.length === 0) {
-      return;
+      return Effect.void;
     }
-    context.report({
+
+    return context.report({
       node: nextNode,
       messageId: 'unexpectedBlankLine',
       loc: getReportLoc(nextNode, sourceCode),
@@ -438,13 +447,12 @@ function verifyPair(context: Context, prevNode: ESTree.Node, nextNode: ESTree.No
         );
       },
     });
-
-    return;
   }
   if (pairs.length > 0) {
-    return;
+    return Effect.void;
   }
-  context.report({
+
+  return context.report({
     node: nextNode,
     messageId: 'expectedBlankLine',
     loc: getReportLoc(nextNode, sourceCode),
@@ -469,41 +477,47 @@ function verifyPair(context: Context, prevNode: ESTree.Node, nextNode: ESTree.No
   });
 }
 
-function createVisitor(context: Context, options: ReadonlyArray<PaddingLineOption>): Visitor {
+function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<PaddingLineOption>) {
   const sourceCode = context.sourceCode;
-  const matchedNodes = new Map<string, Set<ESTree.Node>>();
-  const pendingPairs: Array<{ prevNode: ESTree.Node; nextNode: ESTree.Node }> = [];
+  const selectors = new Set(
+    options.flatMap((option) =>
+      [option.prev, option.next].flat().flatMap((matcher) => (typeof matcher === 'string' ? [] : matcher.selector)),
+    ),
+  );
+  // Collections are mutated only inside Ref updates, avoiding quadratic copies during traversal.
+  const matches = yield* Ref.make<Map<string, Set<ESTree.Node>>>(
+    new Map(Array.from(selectors, (selector) => [selector, new Set<ESTree.Node>()])),
+  );
+  const pendingPairs = yield* Ref.make<Array<{ prevNode: ESTree.Node; nextNode: ESTree.Node }>>([]);
 
-  for (const option of options) {
-    for (const matcher of [option.prev, option.next].flat()) {
-      if (typeof matcher !== 'string') {
-        matchedNodes.set(matcher.selector, new Set());
-      }
-    }
-  }
   interface Scope {
-    upper: Scope | null;
-    prevNode: ESTree.Node | null;
+    readonly upper: Opt.Option<Scope>;
+    readonly prevNode: Opt.Option<ESTree.Node>;
   }
-  let scope: Scope | null = null;
+  const scope = yield* Ref.make<Opt.Option<Scope>>(Opt.none());
 
-  function enterScope(): void {
-    scope = { upper: scope, prevNode: null };
+  function enterScope(): Effect.Effect<void> {
+    return Ref.update(scope, (upper) => Opt.some({ upper, prevNode: Opt.none() }));
   }
-  function exitScope(): void {
-    if (scope) {
-      scope = scope.upper;
-    }
+  function exitScope(): Effect.Effect<void> {
+    return Ref.update(
+      scope,
+      Opt.flatMap((current) => current.upper),
+    );
   }
 
-  function match(node: ESTree.Node, matcher: StatementOption): boolean {
+  function match(
+    node: ESTree.Node,
+    matcher: StatementOption,
+    matchedNodes: ReadonlyMap<string, ReadonlySet<ESTree.Node>>,
+  ): boolean {
     let inner = node;
 
     while (inner.type === 'LabeledStatement') {
       inner = inner.body;
     }
     if (Array.isArray(matcher)) {
-      return matcher.some((item) => match(inner, item));
+      return matcher.some((item) => match(inner, item, matchedNodes));
     }
     if (typeof matcher !== 'string') {
       return (
@@ -524,9 +538,13 @@ function createVisitor(context: Context, options: ReadonlyArray<PaddingLineOptio
 
   const reversedOptions = options.toReversed();
 
-  function getPaddingType(prevNode: ESTree.Node, nextNode: ESTree.Node): PaddingType {
+  function getPaddingType(
+    prevNode: ESTree.Node,
+    nextNode: ESTree.Node,
+    matchedNodes: ReadonlyMap<string, ReadonlySet<ESTree.Node>>,
+  ): PaddingType {
     for (const option of reversedOptions) {
-      if (match(prevNode, option.prev) && match(nextNode, option.next)) {
+      if (match(prevNode, option.prev, matchedNodes) && match(nextNode, option.next, matchedNodes)) {
         return option.blankLine;
       }
     }
@@ -534,7 +552,7 @@ function createVisitor(context: Context, options: ReadonlyArray<PaddingLineOptio
     return 'any';
   }
 
-  function verify(node: ESTree.Node): void {
+  function verify(node: ESTree.Node): Effect.Effect<void> {
     if (
       !node.parent ||
       ![
@@ -548,30 +566,44 @@ function createVisitor(context: Context, options: ReadonlyArray<PaddingLineOptio
         'TSTypeLiteral',
       ].includes(node.parent.type)
     ) {
-      return;
+      return Effect.void;
     }
-    if (scope === null) {
-      throw new Error('Padding rule invariant: statement scope is missing');
-    }
-    if (scope.prevNode) {
-      pendingPairs.push({ prevNode: scope.prevNode, nextNode: node });
-    }
-    scope.prevNode = node;
-  }
 
-  function verifyThenEnterScope(node: ESTree.Node): void {
-    verify(node);
-    enterScope();
-  }
+    return Effect.gen(function* () {
+      const current = yield* Ref.get(scope);
 
-  const visitor: Visitor = {
-    Program: enterScope,
-    'Program:exit': () => {
-      for (const { prevNode, nextNode } of pendingPairs) {
-        verifyPair(context, prevNode, nextNode, getPaddingType(prevNode, nextNode));
+      if (Opt.isNone(current)) {
+        return yield* Effect.die(new Error('Padding rule invariant: statement scope is missing'));
       }
-      exitScope();
-    },
+      if (Opt.isSome(current.value.prevNode)) {
+        const prevNode = current.value.prevNode.value;
+
+        yield* Ref.update(pendingPairs, (pairs) => {
+          pairs.push({ prevNode, nextNode: node });
+
+          return pairs;
+        });
+      }
+      yield* Ref.set(scope, Opt.some({ upper: current.value.upper, prevNode: Opt.some(node) }));
+    });
+  }
+
+  function verifyThenEnterScope(node: ESTree.Node): Effect.Effect<void> {
+    return Effect.andThen(verify(node), enterScope());
+  }
+
+  const visitor: Visitor.EffectVisitor = {
+    Program: enterScope,
+    'Program:exit': () =>
+      Effect.gen(function* () {
+        const pairs = yield* Ref.get(pendingPairs);
+        const matchedNodes = yield* Ref.get(matches);
+
+        for (const { prevNode, nextNode } of pairs) {
+          yield* verifyPair(context, prevNode, nextNode, getPaddingType(prevNode, nextNode, matchedNodes));
+        }
+        yield* exitScope();
+      }),
     BlockStatement: enterScope,
     'BlockStatement:exit': exitScope,
     SwitchStatement: enterScope,
@@ -594,22 +626,25 @@ function createVisitor(context: Context, options: ReadonlyArray<PaddingLineOptio
   };
 
   // Compose colliding selectors instead of replacing the rule's scope/statement listeners.
-  for (const [selector, nodes] of matchedNodes) {
-    const existing = visitor[selector];
+  return Visitor.merge(
+    visitor,
+    ...Array.from(selectors, (selector) =>
+      Visitor.on(selector, (node) =>
+        Ref.update(matches, (matchedNodes) => {
+          matchedNodes.get(selector)?.add(node);
 
-    visitor[selector] = (node) => {
-      existing?.(node);
-      nodes.add(node);
-    };
-  }
-
-  return visitor;
+          return matchedNodes;
+        }),
+      ),
+    ),
+  );
 }
 
 /**
  * Opt-in, comment-aware statement spacing with TypeScript and AST-selector matchers.
  */
-export const paddingLineBetweenStatements = defineRule({
+export const paddingLineBetweenStatements = Rule.define({
+  name: 'padding-line-between-statements',
   meta: {
     type: 'layout',
     docs: {
@@ -656,7 +691,10 @@ export const paddingLineBetweenStatements = defineRule({
     },
   },
   // Create keeps options, selector matches and scope state isolated per file.
-  create(context) {
-    return createVisitor(context, parseOptions(context.options));
+  *create() {
+    const context = yield* RuleContext;
+
+    // Rule.define's options schema decodes only options[0]; this rule accepts a policy list.
+    return yield* createVisitor(context, parseOptions(context.options));
   },
 });
