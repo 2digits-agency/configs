@@ -22,10 +22,14 @@ import { noEmptySchemaStruct } from './effect/no-empty-schema-struct';
 import { noFunctionConfigDefault } from './effect/no-function-config-default';
 import { noHashAsIdentity } from './effect/no-hash-as-identity';
 import { noLoggingInCatch } from './effect/no-logging-in-catch';
+import { noManualEffectErrorTag } from './effect/no-manual-effect-error-tag';
+import { noManualTagComparison } from './effect/no-manual-tag-comparison';
+import { noManualTaggedConstruction } from './effect/no-manual-tagged-construction';
 import { noMultiShotEffectCallback } from './effect/no-multi-shot-effect-callback';
 import { noNonJsonSchemaAnnotation } from './effect/no-non-json-schema-annotation';
 import { noOptionOfService } from './effect/no-option-of-service';
 import { noOverwrittenDiscriminant } from './effect/no-overwritten-discriminant';
+import { noServiceConstructorImports } from './effect/no-service-constructor-imports';
 import { noServiceOptionGetOrThrow } from './effect/no-service-option-get-or-throw';
 import { noThrowInEffectCallback } from './effect/no-throw-in-effect-callback';
 import { noUppercaseHttpApiHeader } from './effect/no-uppercase-http-api-header';
@@ -74,11 +78,15 @@ export const rules = {
   'no-function-config-default': noFunctionConfigDefault,
   'no-hash-as-identity': noHashAsIdentity,
   'no-logging-in-catch': noLoggingInCatch,
+  'no-manual-effect-error-tag': noManualEffectErrorTag,
+  'no-manual-tag-comparison': noManualTagComparison,
+  'no-manual-tagged-construction': noManualTaggedConstruction,
   'no-multi-shot-effect-callback': noMultiShotEffectCallback,
   'no-non-json-schema-annotation': noNonJsonSchemaAnnotation,
   'no-option-of-service': noOptionOfService,
   'no-overwritten-discriminant': noOverwrittenDiscriminant,
   'no-service-option-get-or-throw': noServiceOptionGetOrThrow,
+  'no-service-constructor-imports': noServiceConstructorImports,
   'no-throw-in-effect-callback': noThrowInEffectCallback,
   'no-uppercase-http-api-header': noUppercaseHttpApiHeader,
   'no-zero-retry-times': noZeroRetryTimes,

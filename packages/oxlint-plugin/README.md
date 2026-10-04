@@ -89,6 +89,24 @@ Imported, mutable, or otherwise composed configs remain unknown and retain the d
 general inference of `Config<A>`. Parameterized function defaults remain excluded. There is no autofix: eagerly evaluating
 or unwrapping a thunk could change side effects or an intentional function value.
 
+## anti-slop Effect rules
+
+Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/main/src/effect/rules):
+
+- `no-manual-effect-error-tag`: prefer tagged handlers for `_tag` comparisons/switches in broad Effect catches.
+- `no-manual-tag-comparison`: prefer Match/Predicate for literal `_tag` comparisons and switches outside those catches.
+- `no-manual-tagged-construction`: prefer existing constructors over literal string `_tag` objects; direct
+  `Match.when`/`Match.not` pattern objects are exempt.
+- `no-service-constructor-imports`: reject relative named `make[A-Z]` imports outside `.test`/`.spec` files.
+- `prefer-effect-match`: also reports chained literal ternaries comparing the same source expression, while retaining
+  the existing Effect-file switch diagnostic.
+
+All are included in `recommendedRules`, without autofixes. Like upstream, these are syntactic policies: they do not
+require Effect imports, infer tagged types, or prove that constructors exist. Catch and pattern exemptions recognize
+the literal `Effect`/`Match` identifiers, not aliases or shadowing. Constructor imports are matched by imported name
+(including aliases), not return type; package/absolute imports are excluded. The switch rules can overlap with the
+existing `prefer-effect-match` diagnostic.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,

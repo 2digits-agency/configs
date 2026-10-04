@@ -4,9 +4,11 @@ import * as Command from 'effect/cli/Command';
 
 import { TloConfigLive } from '../layers/TloConfigLive.js';
 import { TloLive } from '../layers/TloLive.js';
+// oxlint-disable-next-line 2digits/no-service-constructor-imports -- This composition root builds the owning server Layer, not a service instance.
 import { makeMcpServerLayer } from '../mcp/server.js';
 
 const NAME = 'tlo-mcp';
+
 const VERSION = '0.0.0';
 
 const tloMcpCommand = Command.make(
