@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
 /* eslint-disable sonar/no-duplicate-string -- Keep exact source/fix fixtures readable. */
 import { RuleTester } from 'oxlint/plugins-dev';
-import { describe, it } from 'vite-plus/test';
+import { describe, expectTypeOf, it } from 'vite-plus/test';
 
 import { rules, type PaddingLineOption } from '../../src';
 
@@ -17,6 +17,22 @@ const always = { blankLine: 'always', prev: '*', next: '*' } satisfies PaddingLi
 
 const never = { blankLine: 'never', prev: '*', next: '*' } satisfies PaddingLineOption;
 
+const declarationMatchers: readonly ['const', 'let'] = ['const', 'let'];
+
+describe('padding-line-between-statements types', () => {
+  it('accepts readonly non-empty matchers without widening statement names', () => {
+    type MatcherOption = PaddingLineOption['prev'];
+
+    expectTypeOf<typeof declarationMatchers>().toExtend<MatcherOption>();
+
+    expectTypeOf<readonly []>().not.toExtend<MatcherOption>();
+
+    expectTypeOf<ReadonlyArray<string>>().not.toExtend<MatcherOption>();
+
+    expectTypeOf<'unknown-statement'>().not.toExtend<MatcherOption>();
+  });
+});
+
 const rule = rules['padding-line-between-statements'];
 
 tester.run('padding-line-between-statements', rule, {
@@ -27,7 +43,7 @@ tester.run('padding-line-between-statements', rule, {
     { code: 'foo();\n\nbar();', options: [{ ...always, blankLine: 'any' }] },
     {
       code: 'const a = 1;\nconst b = 2;',
-      options: [always, { blankLine: 'any', prev: ['const', 'let'], next: ['const', 'let'] }],
+      options: [always, { blankLine: 'any', prev: [...declarationMatchers], next: [...declarationMatchers] }],
     },
     { code: 'foo();\n// comment\nbar();', options: [never] },
     { code: 'foo();\n\n// comment\nbar();', options: [always] },
@@ -40,6 +56,33 @@ tester.run('padding-line-between-statements', rule, {
     { code: 'type A = { a: string; b: number };', options: [{ ...always, prev: 'ts-method', next: 'ts-method' }] },
   ],
   invalid: [
+    ...(
+      [
+        ['singleline-block-like', 'if (x) {}\nfoo();'],
+        ['multiline-block-like', 'if (x) {\nbar();\n}\nfoo();'],
+        ['singleline-expression', 'bar();\nfoo();'],
+        ['multiline-expression', 'bar(\n1\n);\nfoo();'],
+        ['singleline-return', 'function f() {\nreturn 1;\nfoo();\n}'],
+        ['multiline-return', 'function f() {\nreturn (\n1\n);\nfoo();\n}'],
+        ['singleline-export', 'export const a = 1;\nfoo();'],
+        ['multiline-export', 'export const a = {\nb: 1\n};\nfoo();'],
+        ['singleline-var', 'var a = 1;\nfoo();'],
+        ['multiline-var', 'var a = {\nb: 1\n};\nfoo();'],
+        ['singleline-let', 'let a = 1;\nfoo();'],
+        ['multiline-let', 'let a = {\nb: 1\n};\nfoo();'],
+        ['singleline-const', 'const a = 1;\nfoo();'],
+        ['multiline-const', 'const a = {\nb: 1\n};\nfoo();'],
+        ['singleline-using', 'using a = resource;\nfoo();'],
+        ['multiline-using', 'using a = acquire(\nresource\n);\nfoo();'],
+        ['singleline-type', 'type A = string;\nfoo();'],
+        ['multiline-type', 'type A = {\na: string\n};\nfoo();'],
+      ] satisfies Array<[PaddingLineOption['prev'], string]>
+    ).map(([prev, code]) => ({
+      code,
+      output: code.replace('\nfoo();', '\n\nfoo();'),
+      options: [{ ...always, prev }],
+      errors: [{ messageId: 'expectedBlankLine' }],
+    })),
     {
       code: 'foo();\nfunction f() {\na();\nb();\n}\nbar();',
       output: 'foo();\nfunction f() {\na();\n\nb();\n}\nbar();',
