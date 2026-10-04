@@ -269,6 +269,9 @@ catalogs:
     effect-httpapi-rc:
       specifier: npm:effect@4.0.0-rc.117
       version: 4.0.0-rc.117
+    effect-oxlint:
+      specifier: 0.4.0
+      version: 0.4.0
     empathic:
       specifier: 2.1.0
       version: 2.1.0
@@ -979,6 +982,12 @@ importers:
       '@oxlint/plugins':
         specifier: 'catalog:'
         version: 1.86.0
+      effect:
+        specifier: 'catalog:'
+        version: 4.0.0
+      effect-oxlint:
+        specifier: 'catalog:'
+        version: 0.4.0(effect@4.0.0)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -4920,6 +4929,11 @@ packages:
     resolution: {integrity: sha512-T0ix8GhtxyKVfUFEcvdNDt3YGqlwkFHbD4/5bgFUDgFmxhI/cSRAeJ87/Sz//Cq8Eam6JX/e23RkoFO71P7aAA==}
     engines: {node: '>=20'}
     hasBin: true
+
+  effect-oxlint@0.4.0:
+    resolution: {integrity: sha512-IA3ihFKGK0JoZVSPPgPP58988jj4PZ5/asFOhaSYHwDyRRRbkBJn7FX8RiPi++MFpXQvb+3fQpKdPzOvUK9xPQ==}
+    peerDependencies:
+      effect: ^4.0.0
 
   effect@4.0.0:
     resolution: {integrity: sha512-ooc1TG5t+FfzgYnFz2ff6BBKyZ7EwBRVXC7c4RhQUAD6/TZ2gTXXMeb4WX7a19ozQo4J73/QW+S00YAIresoMQ==}
@@ -11555,6 +11569,11 @@ snapshots:
       commander: 14.0.3
       minimatch: 10.2.6
       semver: 7.8.5
+
+  effect-oxlint@0.4.0(effect@4.0.0):
+    dependencies:
+      '@oxlint/plugins': 1.86.0
+      effect: 4.0.0
 
   effect@4.0.0: {}
 

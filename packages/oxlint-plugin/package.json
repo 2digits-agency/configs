@@ -38,7 +38,9 @@
     "types": "tsc --noEmit"
   },
   "dependencies": {
-    "@oxlint/plugins": "catalog:"
+    "@oxlint/plugins": "catalog:",
+    "effect": "catalog:",
+    "effect-oxlint": "catalog:"
   },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
