@@ -15,7 +15,9 @@ export const noDiscardedRunPromise: Rule = defineEffectRule(
   (context, getState) => ({
     CallExpression(node) {
       const state = getState();
+
       const direct = isApi(node.callee, state, 'Effect', 'runPromise');
+
       const withRuntime =
         node.callee.type === 'CallExpression' && isApi(node.callee.callee, state, 'Effect', 'runPromiseWith');
 

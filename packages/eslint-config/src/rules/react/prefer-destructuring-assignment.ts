@@ -12,6 +12,7 @@ function preferDestructuringAssignmentImpl(context: RuleContext, { collect }: Ru
   function programExit(program: TSESTree.Program) {
     for (const { node } of query.all(program)) {
       const { params } = node;
+
       const [props] = params;
 
       if (props === undefined || props.type !== AST_NODE_TYPES.Identifier) {
@@ -23,11 +24,13 @@ function preferDestructuringAssignmentImpl(context: RuleContext, { collect }: Ru
 
       for (const reference of propReferences) {
         const { identifier } = reference;
+
         const { parent } = identifier;
 
         if (parent.type !== AST_NODE_TYPES.MemberExpression) {
           continue;
         }
+
         context.report({
           message: 'Use destructuring assignment for component props.',
           node: parent,

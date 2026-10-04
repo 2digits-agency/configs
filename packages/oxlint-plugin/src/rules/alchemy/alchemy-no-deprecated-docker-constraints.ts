@@ -22,6 +22,7 @@ export const alchemyNoDeprecatedDockerConstraints: Rule = defineEffectRule(
       }
 
       const options = argumentAt(node, 1);
+
       const constraints = options?.type === 'ObjectExpression' ? objectProperty(options, 'constraints') : undefined;
 
       if (constraints !== undefined) {

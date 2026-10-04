@@ -38,6 +38,7 @@ export const throwInEffectGen: Rule = defineEffectRule(
   (context, getState) => ({
     ThrowStatement(node) {
       const state = getState();
+
       let callback: ESTree.Node | undefined = node.parent;
 
       while (callback && !isFunctionNode(callback)) {
@@ -49,9 +50,12 @@ export const throwInEffectGen: Rule = defineEffectRule(
       }
 
       const call = callbackCall(callback);
+
       const direct =
         call !== undefined && ['fn', 'fnUntraced', 'gen'].some((method) => isApi(call.callee, state, 'Effect', method));
+
       const outerCallee = call?.callee;
+
       const curried =
         outerCallee?.type === 'CallExpression' &&
         ['fn', 'fnUntraced'].some((method) => isApi(outerCallee.callee, state, 'Effect', method));

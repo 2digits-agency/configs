@@ -100,6 +100,7 @@ export async function runAutofixFixture({
   sourceDir: string;
 }): Promise<AutofixFixtureResult> {
   await fs.rm(cwd, { recursive: true, force: true });
+
   await fs.cp(sourceDir, cwd, {
     recursive: true,
     filter(sourcePath) {
@@ -118,6 +119,7 @@ export async function runAutofixFixture({
     cwd,
     ignore: ['node_modules', 'eslint.config.ts'],
   });
+
   const changedFiles: Record<string, string> = {};
 
   const results = await Promise.all(
@@ -167,6 +169,7 @@ function serializeLanguageOptions(
   }
 
   const serialized: NonNullable<SerializedConfig['languageOptions']> = {};
+
   const { parser, parserOptions, globals, ecmaVersion, sourceType } = languageOptions;
 
   if (parser && typeof parser === 'object' && 'meta' in parser) {
@@ -207,6 +210,7 @@ function serializeRules(rules: TypedFlatConfigItem['rules']): Array<string> | un
     .toSorted(([leftName], [rightName]) => leftName.localeCompare(rightName))
     .map(([name, _value]) => {
       const value = _value as (typeof rules)[keyof typeof rules];
+
       const severity = Array.isArray(value) ? value[0] : value;
 
       return severity === 'off' || severity === 0 ? `- ${name}` : name;

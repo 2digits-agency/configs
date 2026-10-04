@@ -20,16 +20,21 @@ export class PrettierSetupService extends Context.Service<PrettierSetupService>(
 
         if (!P.isTruthy(packageJson.prettier)) {
           packageJson.prettier = '@2digits/prettier-config';
+
           yield* Effect.logInfo('✅ Added prettier config to package.json');
         }
 
         packageJson.scripts ??= {};
+
         if (packageJson.scripts.format === undefined || packageJson.scripts.format === '') {
           packageJson.scripts.format = 'prettier . --ignore-unknown --check --cache';
+
           yield* Effect.logInfo('✅ Added format script');
         }
+
         if (packageJson.scripts['format:fix'] === undefined || packageJson.scripts['format:fix'] === '') {
           packageJson.scripts['format:fix'] = 'prettier . --ignore-unknown --write --cache';
+
           yield* Effect.logInfo('✅ Added format:fix script');
         }
 
@@ -40,10 +45,13 @@ export class PrettierSetupService extends Context.Service<PrettierSetupService>(
         });
 
         const formatCmd = yield* pm.runScriptCommand({ script: 'format' });
+
         const formatFixCmd = yield* pm.runScriptCommand({ script: 'format:fix' });
 
         yield* Effect.logInfo('🎉 Prettier setup complete!');
+
         yield* Effect.logInfo(`Run '${formatCmd}' to check formatting`);
+
         yield* Effect.logInfo(`Run '${formatFixCmd}' to fix formatting issues`);
       });
 

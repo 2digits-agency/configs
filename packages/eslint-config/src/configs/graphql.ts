@@ -15,7 +15,9 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<Array<Typ
   ]);
 
   const { configs } = gql;
+
   const { 'flat/operations-recommended': flatOperationsRecommended } = configs;
+
   const { rules: flatRecommended } = flatOperationsRecommended;
 
   let rules = {} as typeof flatRecommended;
@@ -32,6 +34,7 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<Array<Typ
       ) {
         continue;
       }
+
       rules[rule] = flatRecommended[rule] as never;
     }
   }

@@ -11,18 +11,26 @@ import {
   type OxlintSourceCode as SourceCode,
   type OxlintToken as SyntaxToken,
 } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
+import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as Ref from 'effect/Ref';
 
 type Token = SyntaxToken | Comment;
+
 type NodeTest = (node: ESTree.Node, sourceCode: SourceCode) => boolean;
+
 type PaddingType = 'any' | 'never' | 'always';
+
 type LineMode = 'any' | 'singleline' | 'multiline';
+
 interface SelectorOption {
   readonly selector: string;
   readonly lineMode?: LineMode;
 }
+
 type MultilineStatementType =
   | 'block-like'
   | 'expression'
@@ -33,6 +41,7 @@ type MultilineStatementType =
   | 'const'
   | 'using'
   | 'type';
+
 type BasicStatementType =
   | '*'
   | 'exports'
@@ -63,12 +72,15 @@ type BasicStatementType =
   | 'enum'
   | 'interface'
   | 'function-overload';
+
 type StatementType =
   | BasicStatementType
   | MultilineStatementType
   | `singleline-${MultilineStatementType}`
   | `multiline-${MultilineStatementType}`;
+
 type StatementMatcher = StatementType | SelectorOption;
+
 type StatementOption = StatementMatcher | [StatementMatcher, ...Array<StatementMatcher>];
 
 /**
@@ -82,11 +94,14 @@ export interface PaddingLineOption {
 
 // Treat CRLF as one terminator; the upstream character class could split it during removal.
 const lineTerminator = String.raw`(?:\r\n|\r(?!\n)|[\n\u2028\u2029])`;
+
 const horizontalWhitespace = String.raw`[^\S\r\n\u2028\u2029]*`;
+
 const paddingLineSequence = new RegExp(
   `^(${horizontalWhitespace}${lineTerminator})(?:${horizontalWhitespace}${lineTerminator})+(${horizontalWhitespace};?)$`,
   'u',
 );
+
 const cjsExport = /^(?:module\s*\.\s*)?exports(?:\s*\.|\s*\[|$)/u;
 
 function isSemicolonToken(token: Token): boolean {
@@ -123,14 +138,17 @@ function isIIFEStatement(node: ESTree.Node): boolean {
   if (node.type !== 'ExpressionStatement') {
     return false;
   }
+
   let expression = skipChainExpression(node.expression);
 
   if (expression.type === 'UnaryExpression') {
     expression = skipChainExpression(expression.argument);
   }
+
   if (expression.type !== 'CallExpression') {
     return false;
   }
+
   let callee: ESTree.Node = expression.callee;
 
   while (callee.type === 'SequenceExpression') {
@@ -139,6 +157,7 @@ function isIIFEStatement(node: ESTree.Node): boolean {
     if (last === undefined) {
       throw new Error('Padding rule invariant: sequence expression is empty');
     }
+
     callee = last;
   }
 
@@ -149,11 +168,13 @@ function isCJSRequire(node: ESTree.Node): boolean {
   if (node.type !== 'VariableDeclaration') {
     return false;
   }
+
   let call = node.declarations[0]?.init;
 
   if (call == null) {
     return false;
   }
+
   while (call.type === 'MemberExpression') {
     call = call.object;
   }
@@ -165,7 +186,9 @@ function isBlockLikeStatement(node: ESTree.Node, sourceCode: SourceCode): boolea
   if ((node.type === 'DoWhileStatement' && node.body.type === 'BlockStatement') || isIIFEStatement(node)) {
     return true;
   }
+
   const last = sourceCode.getLastToken(node, (token) => !isSemicolonToken(token));
+
   const belongingNode =
     last?.type === 'Punctuator' && last.value === '}' ? sourceCode.getNodeByRangeIndex(last.range[0]) : null;
 
@@ -187,10 +210,12 @@ function isDirectivePrologue(node: ESTree.Node, sourceCode: SourceCode): boolean
   if (!isDirective(node, sourceCode) || !node.parent || !('body' in node.parent) || !Array.isArray(node.parent.body)) {
     return false;
   }
+
   for (const sibling of node.parent.body) {
     if (sibling === node) {
       break;
     }
+
     if (!isDirective(sibling, sourceCode)) {
       return false;
     }
@@ -203,11 +228,13 @@ function isCJSExport(node: ESTree.Node): boolean {
   if (node.type !== 'ExpressionStatement' || node.expression.type !== 'AssignmentExpression') {
     return false;
   }
+
   let left = node.expression.left;
 
   if (left.type !== 'MemberExpression') {
     return false;
   }
+
   while (left.object.type === 'MemberExpression') {
     left = left.object;
   }
@@ -225,7 +252,9 @@ function getActualLastToken(node: ESTree.Node, sourceCode: SourceCode): Token {
   if (last === null) {
     throw new Error('Padding rule invariant: statement has no token');
   }
+
   const prev = sourceCode.getTokenBefore(last);
+
   const next = sourceCode.getTokenAfter(last);
 
   // Ignore the leading semicolon belonging to the next statement in semicolon-free code.
@@ -243,7 +272,9 @@ function getReportLoc(node: ESTree.Node, sourceCode: SourceCode): Location {
   if (isSingleLine(node)) {
     return node.loc;
   }
+
   const line = node.loc.start.line;
+
   const sourceLine = sourceCode.lines[line - 1];
 
   if (sourceLine === undefined) {
@@ -328,6 +359,7 @@ function parseMatcher(value: unknown): StatementMatcher {
   if (isStatementType(value)) {
     return value;
   }
+
   if (
     typeof value === 'object' &&
     value !== null &&
@@ -338,11 +370,13 @@ function parseMatcher(value: unknown): StatementMatcher {
     if (!('lineMode' in value)) {
       return { selector: value.selector };
     }
+
     // eslint-disable-next-line unicorn/prefer-includes-over-repeated-comparisons -- Equality checks narrow the parsed union.
     if (value.lineMode === 'any' || value.lineMode === 'singleline' || value.lineMode === 'multiline') {
       return { selector: value.selector, lineMode: value.lineMode };
     }
   }
+
   throw new Error('Invalid padding-line-between-statements statement matcher');
 }
 
@@ -350,7 +384,9 @@ function parseStatementOption(value: unknown): StatementOption {
   if (!Array.isArray(value)) {
     return parseMatcher(value);
   }
+
   const matchers: ReadonlyArray<unknown> = value;
+
   const first = matchers[0];
 
   if (first === undefined) {
@@ -388,6 +424,7 @@ function getPaddingLineSequences(
   sourceCode: SourceCode,
 ): Array<[Token, Token]> {
   const pairs: Array<[Token, Token]> = [];
+
   let prevToken = getActualLastToken(prevNode, sourceCode);
 
   if (nextNode.loc.start.line - prevToken.loc.end.line >= 2) {
@@ -397,9 +434,11 @@ function getPaddingLineSequences(
       if (token === null) {
         throw new Error('Padding rule invariant: next statement token is missing');
       }
+
       if (token.loc.start.line - prevToken.loc.end.line >= 2) {
         pairs.push([prevToken, token]);
       }
+
       prevToken = token;
     } while (prevToken.range[0] < nextNode.range[0]);
   }
@@ -416,7 +455,9 @@ function verifyPair(
   if (padding === 'any') {
     return Effect.void;
   }
+
   const sourceCode = context.sourceCode;
+
   const pairs = getPaddingLineSequences(prevNode, nextNode, sourceCode);
 
   if (padding === 'never') {
@@ -433,12 +474,15 @@ function verifyPair(
         if (pairs.length >= 2) {
           return null;
         }
+
         const pair = pairs[0];
 
         if (pair === undefined) {
           throw new Error('Padding rule invariant: reported padding pair is missing');
         }
+
         const start = pair[0].range[1];
+
         const end = pair[1].range[0];
 
         return fixer.replaceTextRange(
@@ -448,6 +492,7 @@ function verifyPair(
       },
     });
   }
+
   if (pairs.length > 0) {
     return Effect.void;
   }
@@ -458,6 +503,7 @@ function verifyPair(
     loc: getReportLoc(nextNode, sourceCode),
     fix(fixer) {
       let prevToken = getActualLastToken(prevNode, sourceCode);
+
       const nextToken =
         sourceCode.getFirstTokenBetween(prevToken, nextNode, {
           includeComments: true,
@@ -479,26 +525,33 @@ function verifyPair(
 
 function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<PaddingLineOption>) {
   const sourceCode = context.sourceCode;
+
   const selectors = new Set(
     options.flatMap((option) =>
       [option.prev, option.next].flat().flatMap((matcher) => (typeof matcher === 'string' ? [] : matcher.selector)),
     ),
   );
+
   // Collections are mutated only inside Ref updates, avoiding quadratic copies during traversal.
   const matches = yield* Ref.make<Map<string, Set<ESTree.Node>>>(
     new Map(Array.from(selectors, (selector) => [selector, new Set<ESTree.Node>()])),
   );
-  const pendingPairs = yield* Ref.make<Array<{ prevNode: ESTree.Node; nextNode: ESTree.Node }>>([]);
+
+  const pendingPairs = yield* Ref.make<Array<{ prevNode: ESTree.Node; nextNode: ESTree.Node }>>(
+    Arr.empty<{ prevNode: ESTree.Node; nextNode: ESTree.Node }>(),
+  );
 
   interface Scope {
     readonly upper: Opt.Option<Scope>;
     readonly prevNode: Opt.Option<ESTree.Node>;
   }
-  const scope = yield* Ref.make<Opt.Option<Scope>>(Opt.none());
+
+  const scope = yield* Ref.make(Opt.none<Scope>());
 
   function enterScope(): Effect.Effect<void> {
     return Ref.update(scope, (upper) => Opt.some({ upper, prevNode: Opt.none() }));
   }
+
   function exitScope(): Effect.Effect<void> {
     return Ref.update(
       scope,
@@ -516,9 +569,11 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
     while (inner.type === 'LabeledStatement') {
       inner = inner.body;
     }
+
     if (Array.isArray(matcher)) {
       return matcher.some((item) => match(inner, item, matchedNodes));
     }
+
     if (typeof matcher !== 'string') {
       return (
         matchedNodes.get(matcher.selector)?.has(inner) === true &&
@@ -527,6 +582,7 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
           : matcher.lineMode !== 'multiline' || !isSingleLine(inner))
       );
     }
+
     const test = statementTypes[matcher];
 
     if (test === undefined) {
@@ -552,41 +608,47 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
     return 'any';
   }
 
-  function verify(node: ESTree.Node): Effect.Effect<void> {
-    if (
-      !node.parent ||
-      ![
-        'BlockStatement',
-        'Program',
-        'StaticBlock',
-        'SwitchCase',
-        'SwitchStatement',
-        'TSInterfaceBody',
-        'TSModuleBlock',
-        'TSTypeLiteral',
-      ].includes(node.parent.type)
-    ) {
-      return Effect.void;
-    }
+  const verify = Match.type<ESTree.Node>().pipe(
+    Match.when({ parent: Match.null }, Fn.constant(Effect.void)),
+    Match.not(
+      {
+        parent: {
+          type: Match.is(
+            'BlockStatement',
+            'Program',
+            'StaticBlock',
+            'SwitchCase',
+            'SwitchStatement',
+            'TSInterfaceBody',
+            'TSModuleBlock',
+            'TSTypeLiteral',
+          ),
+        },
+      },
+      Fn.constant(Effect.void),
+    ),
+    Match.orElse((node) =>
+      Effect.gen(function* () {
+        const current = yield* Ref.get(scope);
 
-    return Effect.gen(function* () {
-      const current = yield* Ref.get(scope);
+        if (Opt.isNone(current)) {
+          return yield* Effect.die(new Error('Padding rule invariant: statement scope is missing'));
+        }
 
-      if (Opt.isNone(current)) {
-        return yield* Effect.die(new Error('Padding rule invariant: statement scope is missing'));
-      }
-      if (Opt.isSome(current.value.prevNode)) {
-        const prevNode = current.value.prevNode.value;
+        if (Opt.isSome(current.value.prevNode)) {
+          const prevNode = current.value.prevNode.value;
 
-        yield* Ref.update(pendingPairs, (pairs) => {
-          pairs.push({ prevNode, nextNode: node });
+          yield* Ref.update(pendingPairs, (pairs) => {
+            pairs.push({ prevNode, nextNode: node });
 
-          return pairs;
-        });
-      }
-      yield* Ref.set(scope, Opt.some({ upper: current.value.upper, prevNode: Opt.some(node) }));
-    });
-  }
+            return pairs;
+          });
+        }
+
+        yield* Ref.set(scope, Opt.some({ upper: current.value.upper, prevNode: Opt.some(node) }));
+      }),
+    ),
+  );
 
   function verifyThenEnterScope(node: ESTree.Node): Effect.Effect<void> {
     return Effect.andThen(verify(node), enterScope());
@@ -597,11 +659,13 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
     'Program:exit': () =>
       Effect.gen(function* () {
         const pairs = yield* Ref.get(pendingPairs);
+
         const matchedNodes = yield* Ref.get(matches);
 
         for (const { prevNode, nextNode } of pairs) {
           yield* verifyPair(context, prevNode, nextNode, getPaddingType(prevNode, nextNode, matchedNodes));
         }
+
         yield* exitScope();
       }),
     BlockStatement: enterScope,
@@ -650,7 +714,7 @@ export const paddingLineBetweenStatements = Rule.define({
     docs: {
       description: 'Require or disallow padding lines between statements',
       url: 'https://eslint.style/rules/padding-line-between-statements',
-      recommended: false,
+      recommended: true,
     },
     fixable: 'whitespace',
     schema: {

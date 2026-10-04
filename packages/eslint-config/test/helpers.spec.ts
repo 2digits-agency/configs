@@ -17,22 +17,27 @@ describe(enabled, () => {
 
   it('returns default value when passed undefined', () => {
     expect(enabled(undefined, true)).toBeTruthy();
+
     expect(enabled(undefined, false)).toBeFalsy();
   });
 
   it('returns enable property from object', () => {
     expect(enabled({ enable: true })).toBeTruthy();
+
     expect(enabled({ enable: false })).toBeFalsy();
   });
 
   it('uses default when object has no enable property', () => {
     expect(enabled({}, true)).toBeTruthy();
+
     expect(enabled({}, false)).toBeFalsy();
+
     expect(enabled({})).toBeFalsy();
   });
 
   it('object enable property takes precedence over default', () => {
     expect(enabled({ enable: true }, false)).toBeTruthy();
+
     expect(enabled({ enable: false }, true)).toBeFalsy();
   });
 });
@@ -52,6 +57,7 @@ describe(extractConfig, () => {
 
   it('strips enable property from object', () => {
     expect(extractConfig({ enable: true, foo: 'bar' })).toStrictEqual({ foo: 'bar' });
+
     expect(extractConfig({ enable: false, foo: 'bar' })).toStrictEqual({ foo: 'bar' });
   });
 

@@ -8,7 +8,9 @@ describe('tloErrors', () => {
       const error = TloApiError.make({ message: 'API failed', endpoint: '/test' });
 
       expect(error._tag).toBe('TloApiError');
+
       expect(error.message).toBe('API failed');
+
       expect(error.endpoint).toBe('/test');
     });
   });
@@ -18,6 +20,7 @@ describe('tloErrors', () => {
       const error = TloAuthError.make({ message: 'Session expired' });
 
       expect(error._tag).toBe('TloAuthError');
+
       expect(error.message).toBe('Session expired');
     });
   });
@@ -31,7 +34,9 @@ describe('tloErrors', () => {
       });
 
       expect(error._tag).toBe('TloNetworkError');
+
       expect(error.message).toBe('Connection refused');
+
       expect(error.endpoint).toBe('/api');
     });
   });
@@ -41,6 +46,7 @@ describe('tloErrors', () => {
       const error = TloParseError.make({ message: 'Invalid JSON' });
 
       expect(error._tag).toBe('TloParseError');
+
       expect(error.message).toBe('Invalid JSON');
     });
   });

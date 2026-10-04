@@ -54,6 +54,7 @@ export function buildGenerationProperties(input: {
   toolCallCount?: number;
 }): Record<string, unknown> {
   const { config, errorMessage, generation, info, output, pending, toolCallCount, toolsCalled, traceState } = input;
+
   const generationLatency = Math.max(0, info.time.completed - info.time.created) / 1000;
 
   return {
@@ -117,6 +118,7 @@ export function buildToolSpanProperties(input: {
 
 export function createCaptureManager(config: Config) {
   let client: PostHog | undefined;
+
   let shutdownRegistered = false;
 
   function ensureClient(): PostHog | undefined {
@@ -177,6 +179,7 @@ export function createCaptureManager(config: Config) {
     }
 
     await client.shutdown();
+
     client = undefined;
   }
 
@@ -184,14 +187,17 @@ export function createCaptureManager(config: Config) {
     if (shutdownRegistered) {
       return;
     }
+
     shutdownRegistered = true;
 
     process.once('beforeExit', () => {
       void onShutdown();
     });
+
     process.once('SIGINT', () => {
       void onShutdown();
     });
+
     process.once('SIGTERM', () => {
       void onShutdown();
     });

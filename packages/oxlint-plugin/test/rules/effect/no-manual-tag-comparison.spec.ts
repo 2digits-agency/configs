@@ -2,6 +2,7 @@ import { rules } from '../../../src';
 import { testRule } from '../../rule-tester';
 
 const name = 'no-manual-tag-comparison';
+
 const rule = rules[name];
 
 for (const invalid of [

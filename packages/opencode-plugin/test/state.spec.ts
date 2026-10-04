@@ -48,10 +48,13 @@ describe(createSessionState, () => {
     beginPromptForSession(state);
 
     const trace = state.getTraceState('session-1');
+
     const pending = state.getActiveMessage('session-1');
 
     expect(trace?.agentName).toBe('agent-1');
+
     expect(trace?.traceName).toBe('hello world');
+
     expect(pending?.prompt).toBe('hello world');
   });
 
@@ -73,6 +76,7 @@ describe(createSessionState, () => {
     const generation = createGenerationForSession(state);
 
     state.recordGenerationToolCall(generation.generation.spanID, 'bash');
+
     state.recordGenerationToolCall(generation.generation.spanID, 'read');
 
     expect(state.getGenerationToolProperties(generation.generation.spanID)).toStrictEqual({
@@ -116,7 +120,9 @@ describe(createSessionState, () => {
     });
 
     expect(errorMessage).toBeUndefined();
+
     expect(state.getAssistantOutputForMessage('assistant-1')).toBe('response');
+
     expect(resolved.traceState).toMatchObject({
       totalCostUsd: 1.5,
       totalInputTokens: 10,
@@ -134,7 +140,9 @@ describe(createSessionState, () => {
     state.clearSessionState('session-1');
 
     expect(state.getTraceState('session-1')).toBeUndefined();
+
     expect(state.getActiveMessage('session-1')).toBeUndefined();
+
     expect(state.getTraceSessionIDs()).toStrictEqual([]);
   });
 });

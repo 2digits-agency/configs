@@ -15,11 +15,13 @@ export const preferUninterruptible: Rule = defineEffectRule(
   (context, getState) => ({
     CallExpression(node) {
       const state = getState();
+
       const method = isApi(node.callee, state, 'Effect', 'uninterruptibleMask')
         ? 'uninterruptible'
         : isApi(node.callee, state, 'Effect', 'interruptibleMask')
           ? 'interruptible'
           : undefined;
+
       const callback = argumentAt(node, 0);
 
       if (

@@ -29,6 +29,7 @@ export function functionProperty(node: FunctionNode, name: string): ESTree.CallE
   }
 
   const object = property.parent;
+
   const call = object.parent;
 
   return object.type === 'ObjectExpression' && call?.type === 'CallExpression' ? call : undefined;

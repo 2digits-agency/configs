@@ -28,6 +28,7 @@ function zeroDuration(node: ESTree.Expression, state: FileState): boolean {
 
   if (expression.type === 'CallExpression') {
     const path = canonicalPath(expression.callee, state);
+
     const amount = argumentAt(expression, 0);
 
     return amount !== undefined && path?.[0] === 'Duration' && isLiteral(amount, 0);
@@ -49,6 +50,7 @@ export const preferYieldNow: Rule = defineEffectRule(
   (context, getState) => ({
     CallExpression(node) {
       const state = getState();
+
       const duration = argumentAt(node, 0);
 
       if (duration !== undefined && isApi(node.callee, state, 'Effect', 'sleep') && zeroDuration(duration, state)) {

@@ -43,6 +43,7 @@ export const noEmptyEffectCallback: Rule = defineEffectRule(
             ) {
               return;
             }
+
             const imported = namespaceImport(context, node, 'effect/Effect', 'Effect', fixer);
 
             return [...imported.fixes, fixer.replaceText(node, `${imported.name}.never`)];

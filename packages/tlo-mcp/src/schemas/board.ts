@@ -1,6 +1,7 @@
 import * as Schema from 'effect/Schema';
 
 export type ProjectRaw = typeof ProjectRaw.Type;
+
 export const ProjectRaw = Schema.Struct({
   ID: Schema.Finite,
   PROJECT_NAME: Schema.optional(Schema.String),
@@ -23,12 +24,14 @@ export const ProjectRaw = Schema.Struct({
 });
 
 export type GetProjectsResponse = typeof GetProjectsResponse.Type;
+
 export const GetProjectsResponse = Schema.Struct({
   Records: Schema.Array(ProjectRaw),
   RecordCount: Schema.optional(Schema.Finite),
 });
 
 export type GetProjectDetailsResponse = typeof GetProjectDetailsResponse.Type;
+
 export const GetProjectDetailsResponse = Schema.Union([ProjectRaw, Schema.Struct({ Record: ProjectRaw })]);
 
 export class Project extends Schema.Class<Project, { readonly brand: unique symbol }>('Project')({
@@ -74,6 +77,7 @@ export function projectFromRaw(raw: ProjectRaw): Project {
 }
 
 export type MessageRaw = typeof MessageRaw.Type;
+
 export const MessageRaw = Schema.Struct({
   ID: Schema.Finite,
   OWNERID: Schema.optional(Schema.Finite),
@@ -93,6 +97,7 @@ export const MessageRaw = Schema.Struct({
 });
 
 export type GetMessagesResponse = typeof GetMessagesResponse.Type;
+
 export const GetMessagesResponse = Schema.Array(MessageRaw);
 
 export class Message extends Schema.Class<Message, { readonly brand: unique symbol }>('Message')({
@@ -136,6 +141,7 @@ export function messageFromRaw(raw: MessageRaw): Message {
 export type TaskState = 'OPEN' | 'COMPLETED' | 'DRAFT' | 'CLOSED';
 
 export type TaskRaw = typeof TaskRaw.Type;
+
 export const TaskRaw = Schema.Struct({
   ID: Schema.Finite,
   PROJECTID: Schema.optional(Schema.Finite),
@@ -148,6 +154,7 @@ export const TaskRaw = Schema.Struct({
 });
 
 export type GetTasksResponse = typeof GetTasksResponse.Type;
+
 export const GetTasksResponse = Schema.Struct({
   Records: Schema.Array(TaskRaw),
   RecordCount: Schema.optional(Schema.Finite),
@@ -198,6 +205,7 @@ export interface GetProjectsParams {
 }
 
 export type TaskForUserRaw = typeof TaskForUserRaw.Type;
+
 export const TaskForUserRaw = Schema.Struct({
   ID: Schema.Finite,
   WORKLOAD: Schema.optional(Schema.Finite),
@@ -214,6 +222,7 @@ export const TaskForUserRaw = Schema.Struct({
 });
 
 export type GetTasksForUserResponse = typeof GetTasksForUserResponse.Type;
+
 export const GetTasksForUserResponse = Schema.Struct({ Records: Schema.Array(TaskForUserRaw) });
 
 export class TaskForUser extends Schema.Class<TaskForUser, { readonly brand: unique symbol }>('TaskForUser')({
@@ -249,9 +258,11 @@ export function taskForUserFromRaw(raw: TaskForUserRaw): TaskForUser {
 }
 
 export type TodoDetail = typeof TodoDetail.Type;
+
 export const TodoDetail = Schema.Record(Schema.String, Schema.Unknown);
 
 type TodoSummaryRaw = typeof TodoSummaryRaw.Type;
+
 const TodoSummaryRaw = Schema.Struct({
   ID: Schema.Finite,
   NAME: Schema.optional(Schema.String),
@@ -265,6 +276,7 @@ const TodoSummaryRaw = Schema.Struct({
 });
 
 export type GetBoardTodosResponse = typeof GetBoardTodosResponse.Type;
+
 export const GetBoardTodosResponse = Schema.Struct({
   Records: Schema.Array(TodoSummaryRaw),
   RecordCount: Schema.optional(Schema.Finite),

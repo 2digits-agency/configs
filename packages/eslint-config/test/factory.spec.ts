@@ -6,6 +6,7 @@ import { fixtureSnapshotPath, serializeConfigs, snapshotJson, withDeterministicO
 import { factoryConfigPresets } from './presets';
 
 const workspaceRoot = fileURLToPath(new URL('../../..', import.meta.url));
+
 const detectedPackages = new Set(['turbo', 'typescript', 'vitest']);
 
 const optionalConfigNames: Record<string, string> = {
@@ -44,16 +45,21 @@ const { twoDigits } = await import('../src');
 describe('factory', () => {
   it.for(factoryConfigPresets)('preset: $name', { timeout: 30_000 }, async ({ name, options }, { expect }) => {
     const config = await twoDigits(withDeterministicOptions(options, workspaceRoot));
+
     const serialized = serializeConfigs(config);
+
     const configNames = serialized.map((entry) => entry.name).filter((name) => name !== undefined);
 
     expect(configNames).toContain('2digits:ignores');
+
     expect(configNames).toContain('2digits:typescript/setup');
 
     const optionalEntries = Object.entries(optionalConfigNames);
+
     const enabledConfigNames = optionalEntries
       .filter(([optionName]) => isOptionEnabled(options, optionName))
       .map(([, configName]) => configName);
+
     const disabledConfigNames = optionalEntries
       .filter(([optionName]) => !isOptionEnabled(options, optionName))
       .map(([, configName]) => configName);

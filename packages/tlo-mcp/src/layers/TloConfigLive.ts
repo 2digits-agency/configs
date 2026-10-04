@@ -11,8 +11,11 @@ const DEFAULT_BASE_URL = 'https://socialbrothers.orbit.teamleader.eu';
 export const TloConfigFromEnv: Effect.Effect<TloConfigShape, Config.ConfigError | Cookies.CookiesError> = Effect.gen(
   function* () {
     const sessionToken = yield* Config.Redacted('TLO_SESSION_TOKEN');
+
     const baseUrl = yield* Config.String('TLO_BASE_URL').pipe(Config.withDefault(DEFAULT_BASE_URL));
+
     const cookieHeader = yield* Config.String('TLO_COOKIES').pipe(Config.withDefault(''));
+
     const cookies = yield* Effect.fromResult(
       Cookies.setAll(Cookies.empty, R.toEntries(Cookies.parseHeader(cookieHeader))),
     );

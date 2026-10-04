@@ -43,6 +43,7 @@ export function submoduleName(source: string): string | undefined {
 
   const isSubmodule =
     source.startsWith('effect/') || source.startsWith('alchemy/') || /^@effect\/[^/]+\//u.test(source);
+
   const name = isSubmodule ? source.split('/').at(-1) : undefined;
 
   return name !== undefined && /^\p{Lu}/u.test(name) ? name : undefined;

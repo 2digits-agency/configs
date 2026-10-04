@@ -24,9 +24,13 @@ function preferNamespaceImportImpl(context: RuleContext, { settings }: RuleToolk
       context.report({
         fix(fixer) {
           const importText = context.sourceCode.getText(node);
+
           const semi = importText.endsWith(';') ? ';' : '';
+
           const quote = node.source.raw.at(0) ?? "'";
+
           const importPrefix = `import${node.importKind === 'type' ? ' type' : ''}`;
+
           const quotedSource = `${quote}${settings.importSource}${quote}`;
 
           if (node.specifiers.length === 1) {

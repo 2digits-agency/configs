@@ -32,6 +32,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
   {
     make: Effect.gen(function* () {
       const path = yield* Path.Path;
+
       const cwdService = yield* CurrentWorkingDirService;
 
       const runAddCommand = Effect.fn('PackageManagerService.runAddCommand')(
@@ -41,6 +42,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
           dependencies: ReadonlyArray<string>,
         ) {
           const childProcess = yield* command;
+
           const { exitCode, stderr } = yield* Effect.all({
             stdout: childProcess.stdout.pipe(
               Stream.decodeText(),
@@ -104,6 +106,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
         id?: string;
       }) {
         const cwd = yield* cwdService.cwd;
+
         const pkgPath = path.resolve(options?.id ?? cwd, 'package.json');
 
         const packageJson: PackageJson = yield* Effect.tryPromise({
@@ -129,6 +132,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
         content: pkgTypes.PackageJson;
       }) {
         const cwd = yield* cwdService.cwd;
+
         const pkgPath = path.resolve(options.id ?? cwd, 'package.json');
 
         return yield* Effect.tryPromise({
@@ -153,7 +157,9 @@ export class PackageManagerService extends Context.Service<PackageManagerService
         const pm = yield* getPackageManager();
 
         const workspace = options.workspace ?? true;
+
         const devDependencies = options.devDependencies ?? [];
+
         const dependencies = options.dependencies ?? [];
 
         if (Arr.isReadonlyArrayNonEmpty(devDependencies)) {

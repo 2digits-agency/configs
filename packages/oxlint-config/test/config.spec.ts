@@ -20,11 +20,17 @@ import { vitestConfig } from '../src/configs/vitest';
 import { zodConfig } from '../src/configs/zod';
 
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
+
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
+
 const headerFixtureDirectory = fileURLToPath(new URL('fixtures/http-api-headers', import.meta.url));
+
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+
 const oxlintConfigArgument = '--config=oxlint.config.mjs';
+
 const invalidFixture = 'invalid.mjs';
+
 // Explicit Oxlint CLI fixtures use standalone configs, regardless of the parent test runner.
 const oxlintEnvironment = { ...process.env, VP_VERSION: '' };
 
@@ -70,6 +76,7 @@ const eslintConfig = await eslintTwoDigits({
   vitest: false,
   zod: false,
 });
+
 const eslintJavascriptConfig = eslintConfig.find(({ name }) => name === '2digits:javascript');
 
 // Oxlint carries TypeScript `_` ignore patterns and preserves case-sensitive Fallow directives.
@@ -78,6 +85,7 @@ const sharedJavascriptRuleNames = new Set(
     .filter(([rule, value]) => value !== undefined && rule !== 'no-unused-vars' && rule !== 'capitalized-comments')
     .map(([rule]) => rule),
 );
+
 const sharedEslintJavascriptRules = Object.fromEntries(
   Object.entries(eslintJavascriptConfig?.rules ?? {}).filter(
     ([rule, value]) => value !== undefined && sharedJavascriptRuleNames.has(rule),
@@ -112,18 +120,23 @@ describe('oxlint config', () => {
     );
 
     expect(config.env).toMatchObject({ browser: true, node: true });
+
     expect(config.ignorePatterns).toContain('**/fixtures/**');
+
     expect(config.rules?.['eslint/no-console']).toBe('off');
+
     expect(twoDigits.env).toMatchObject({ browser: true, node: true });
   });
 
   it('matches all shared ESLint JavaScript rules', () => {
     expect(eslintJavascriptConfig?.rules).toBeDefined();
+
     expect(javascriptConfig.rules).toMatchObject(sharedEslintJavascriptRules);
   });
 
   it('exposes the Fallow directive exception through the shared preset', () => {
     const config = withTwoDigits();
+
     const javascript = config.extends?.find((child) => child.rules?.['capitalized-comments'] !== undefined);
 
     expect(javascript?.rules?.['capitalized-comments']).toStrictEqual([
@@ -149,6 +162,7 @@ describe('oxlint config', () => {
       node: ['error', '^(err|error)$'],
       react: 'error',
     });
+
     expect(typescriptRulesConfig.rules).toMatchObject({
       'typescript/consistent-type-exports': ['error'],
       'typescript/no-confusing-void-expression': 'off',
@@ -170,6 +184,7 @@ describe('oxlint config', () => {
         },
       ],
     });
+
     expect(unicornConfig.rules).toMatchObject({
       'unicorn/prefer-at': 'error',
       'unicorn/prefer-object-from-entries': 'error',
@@ -177,6 +192,7 @@ describe('oxlint config', () => {
       'unicorn/switch-case-braces': 'error',
       'unicorn/throw-new-error': 'off',
     });
+
     expect(vitestConfig.rules).toMatchObject({
       'vitest/consistent-test-it': ['error', { fn: 'it', withinDescribe: 'it' }],
       'vitest/expect-expect': [
@@ -194,7 +210,9 @@ describe('oxlint config', () => {
     const plugin = zodConfig.jsPlugins.at(0);
 
     expect(plugin?.name).toBe('zod');
+
     expect(plugin?.specifier).toContain('eslint-plugin-zod');
+
     expect(zodConfig.rules['zod/array-style']).toStrictEqual(['error', { style: 'function' }]);
   });
 
@@ -202,10 +220,14 @@ describe('oxlint config', () => {
     const plugin = twoDigitsPluginConfig.jsPlugins.at(0);
 
     expect(plugin?.name).toBe('2digits');
+
     expect(plugin?.specifier).toContain('oxlint-plugin/dist/index.mjs');
     expect(twoDigitsPluginConfig.rules).toStrictEqual(recommendedRules);
-    expect(recommendedRules['2digits/prefer-effect-filesystem']).toBeUndefined();
-    expect(recommendedRules['2digits/prefer-effect-path']).toBeUndefined();
+
+    expect([
+      recommendedRules['2digits/prefer-effect-filesystem'],
+      recommendedRules['2digits/prefer-effect-path'],
+    ]).toStrictEqual([undefined, undefined]);
   });
 
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
@@ -221,6 +243,7 @@ describe('oxlint config', () => {
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
+
     expect(output).toContain('zod(array-style)');
   });
 
@@ -233,7 +256,9 @@ describe('oxlint config', () => {
     const output = `${result.stdout}${result.stderr}`;
 
     expect(result.status).toBe(1);
+
     expect(output).toContain('2digits(no-empty-schema-struct)');
+
     expect(output.match(/2digits\(no-function-config-default\)/g)).toHaveLength(2);
   });
 
@@ -243,6 +268,7 @@ describe('oxlint config', () => {
       encoding: 'utf8',
       env: oxlintEnvironment,
     });
+
     const good = spawnSync(process.execPath, [oxlintBinary, oxlintConfigArgument, 'valid.mjs'], {
       cwd: headerFixtureDirectory,
       encoding: 'utf8',
@@ -250,18 +276,24 @@ describe('oxlint config', () => {
     });
 
     expect(recommendedRules['2digits/no-uppercase-http-api-header']).toBe('error');
+
     expect(bad.status, `${bad.stdout}${bad.stderr}`).toBe(1);
+
     expect(bad.stdout.match(/2digits\(no-uppercase-http-api-header\)/gu)).toHaveLength(2);
+
     expect(good.status, `${good.stdout}${good.stderr}`).toBe(0);
   });
 
   it('never edits header contracts or lowercase collisions under --fix', () => {
     const temporaryDirectory = mkdtempSync(path.join(tmpdir(), '2digits-http-api-headers-'));
+
     const fixture = path.join(headerFixtureDirectory, invalidFixture);
+
     const target = path.join(temporaryDirectory, invalidFixture);
 
     try {
       copyFileSync(fixture, target);
+
       const result = spawnSync(
         process.execPath,
         [oxlintBinary, `--config=${path.join(headerFixtureDirectory, 'oxlint.config.mjs')}`, '--fix', target],
@@ -269,7 +301,9 @@ describe('oxlint config', () => {
       );
 
       expect(result.status, `${result.stdout}${result.stderr}`).toBe(1);
+
       expect(result.stdout.match(/2digits\(no-uppercase-http-api-header\)/gu)).toHaveLength(2);
+
       expect(readFileSync(target, 'utf8')).toBe(readFileSync(fixture, 'utf8'));
     } finally {
       rmSync(temporaryDirectory, { recursive: true, force: true });

@@ -23,6 +23,7 @@ export const dualNumericArityWithOptionalParameter: Rule = defineEffectRule(
   (context, getState) => ({
     CallExpression(node) {
       const arity = argumentAt(node, 0);
+
       const implementation = argumentAt(node, 1);
 
       if (

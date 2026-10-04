@@ -67,7 +67,9 @@ export class BoardService extends Context.Service<BoardService, BoardServiceShap
 
 function formatRequestDate(d: Date): string {
   const year = d.getFullYear();
+
   const month = (d.getMonth() + 1).toString().padStart(2, '0');
+
   const day = d.getDate().toString().padStart(2, '0');
 
   return `${year}-${month}-${day}`;
@@ -103,6 +105,7 @@ export const BoardServiceLive = Layer.effect(
           { ID: params.projectId },
           GetProjectDetailsResponse,
         );
+
         const project = Match.value(response).pipe(
           Match.when({ Record: Match.any }, ({ Record }) => Record),
           Match.orElse((project) => project),
@@ -175,6 +178,7 @@ export const BoardServiceLive = Layer.effect(
           },
           GetBoardTodosResponse,
         );
+
         const todos = Arr.map(todoSummaryFromRaw)(response.Records);
 
         return Match.value(params.query).pipe(

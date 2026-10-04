@@ -1,31 +1,51 @@
-import * as Effect from 'effect-httpapi-rc/Effect';
-import * as Exit from 'effect-httpapi-rc/Exit';
-import * as Schema from 'effect-httpapi-rc/Schema';
-import * as HttpApiEndpoint from 'effect-httpapi-rc/unstable/httpapi/HttpApiEndpoint';
-import { describe, expect, it } from 'vite-plus/test';
+import { describe, expect, it } from '@effect/vitest';
+import * as Effect from 'effect/Effect';
+import * as Exit from 'effect/Exit';
+import * as Schema from 'effect/Schema';
+import * as HttpApiEndpoint from 'effect/http-api/HttpApiEndpoint';
 
-// The test-only alias pins the independently reproduced v4 API to Effect 4.0.0-rc.117.
-describe('effect v4 endpoint header decoding (rc.117)', () => {
-  it('fails a required mixed-case key even when the header arrived', () => {
-    const endpoint = HttpApiEndpoint.get('me', '/me', { headers: { 'X-Api-Key': Schema.String } });
+describe('effect v4 endpoint header decoding', () => {
+  it.effect('fails a required mixed-case key even when the header arrived', () =>
+    Effect.gen(function* () {
+      const endpoint = HttpApiEndpoint.get('me', '/me', { headers: { 'X-Api-Key': Schema.String } });
 
-    // Endpoint erases decoder services; these literal field schemas need none.
-    const headers = endpoint.headers as unknown as Schema.ConstraintDecoder<unknown>;
+      const headers = endpoint.headers;
 
-    const result = Effect.runSyncExit(Schema.decodeUnknownEffect(headers)({ 'x-api-key': 'present' }));
+      expect(headers).toBeDefined();
 
-    expect(result._tag).toBe('Failure');
-  });
+      if (headers === undefined) {
+        return yield* Effect.die('Endpoint headers are missing');
+      }
 
-  it('decodes the same required header with a lowercase schema key', () => {
-    const endpoint = HttpApiEndpoint.get('me', '/me', { headers: { 'x-api-key': Schema.String } });
+      // Rebuild the endpoint AST: this fixture contains only service-free string fields.
+      const decoder = Schema.make<Schema.Codec<unknown, unknown>>(headers.ast);
 
-    const headers = endpoint.headers as unknown as Schema.ConstraintDecoder<unknown>;
+      const result = yield* Effect.exit(Schema.decodeEffect(decoder)({ 'x-api-key': 'present' }));
 
-    const result = Effect.runSyncExit(Schema.decodeUnknownEffect(headers)({ 'x-api-key': 'present' }));
+      expect(Exit.isFailure(result)).toBeTruthy();
+    }),
+  );
 
-    expect(result).toStrictEqual(Exit.succeed({ 'x-api-key': 'present' }));
-  });
+  it.effect('decodes the same required header with a lowercase schema key', () =>
+    Effect.gen(function* () {
+      const endpoint = HttpApiEndpoint.get('me', '/me', { headers: { 'x-api-key': Schema.String } });
+
+      const headers = endpoint.headers;
+
+      expect(headers).toBeDefined();
+
+      if (headers === undefined) {
+        return yield* Effect.die('Endpoint headers are missing');
+      }
+
+      // Rebuild the endpoint AST: this fixture contains only service-free string fields.
+      const decoder = Schema.make<Schema.Codec<unknown, unknown>>(headers.ast);
+
+      const result = yield* Schema.decodeEffect(decoder)({ 'x-api-key': 'present' });
+
+      expect(result).toStrictEqual({ 'x-api-key': 'present' });
+    }),
+  );
 
   it('keeps native header lookup case-insensitive', () => {
     const headers = new Headers({ 'X-Api-Key': 'present' });

@@ -16,6 +16,7 @@ export const alchemyNoRuntimeConfig: Rule = defineEffectRule(
   (context, getState) => ({
     YieldExpression(node) {
       const state = getState();
+
       const argument = node.argument;
 
       if (argument?.type !== 'CallExpression' || canonicalPath(argument.callee, state)?.[0] !== 'Config') {
@@ -23,6 +24,7 @@ export const alchemyNoRuntimeConfig: Rule = defineEffectRule(
       }
 
       const program = containingEffectGen(node, state);
+
       const handler = program === undefined ? undefined : containingHandler(program);
 
       if (program !== undefined && handler !== undefined && containingWorker(program, state) !== undefined) {

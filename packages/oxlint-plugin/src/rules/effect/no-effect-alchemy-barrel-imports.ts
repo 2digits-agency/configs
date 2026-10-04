@@ -33,6 +33,7 @@ export const noEffectAlchemyBarrelImports: Rule = defineSyntaxRule(
         }
 
         const name = importedName(specifier);
+
         const source =
           name === undefined || !/^\p{Lu}/u.test(name) ? undefined : barrelModuleSource(node.source.value, name);
 

@@ -33,6 +33,7 @@ const mockSetActivityResponse: SetActivityResponse = {
 };
 
 const weekDate = DateTime.makeUnsafe('2025-01-15').pipe(DateTime.toDateUtc);
+
 const activityStartDate = DateTime.makeZonedUnsafe(
   { year: 2025, month: 1, day: 15, hour: 10 },
   { timeZone: DateTime.zoneMakeLocal(), adjustForTimeZone: true },
@@ -59,11 +60,15 @@ describe(TimeService, () => {
       it.effect('returns transformed activities', () =>
         Effect.gen(function* () {
           const service = yield* TimeService;
+
           const activities = yield* service.getWeek(weekDate, 'user1');
 
           expect(activities).toHaveLength(1);
+
           expect(activities[0]?.id).toBe(1);
+
           expect(activities[0]?.description).toBe('Morning work');
+
           expect(activities[0]?.durationMinutes).toBe(60);
         }),
       );
@@ -77,6 +82,7 @@ describe(TimeService, () => {
       it.effect('returns created activity ID', () =>
         Effect.gen(function* () {
           const service = yield* TimeService;
+
           const id = yield* service.createActivity({
             startDate: activityStartDate,
             durationMinutes: 30,

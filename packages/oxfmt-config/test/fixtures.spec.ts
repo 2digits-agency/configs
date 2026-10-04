@@ -30,6 +30,7 @@ const fixtureCases: Array<FixtureCase> = [
 ];
 
 const matchingFixtureCases = fixtureCases.filter((fixture) => fixture.expectation === 'match');
+
 const knownDifferenceFixtureCases = fixtureCases.filter((fixture) => fixture.expectation === 'known-difference');
 
 async function readFixture(fixture: FixtureCase): Promise<string> {
@@ -75,6 +76,7 @@ describe('prettier parity', () => {
     const outputs = await formatFixture(await readFixture(fixture), fixture);
 
     expect(fixture.reason).toBeDefined();
+
     expect(outputs.oxfmt).not.toBe(outputs.prettier);
   });
 });

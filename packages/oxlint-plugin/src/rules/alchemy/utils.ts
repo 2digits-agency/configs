@@ -36,6 +36,7 @@ export function containingWorker(node: ESTree.Node, state: FileState): ESTree.Ca
     if (parent.type === 'CallExpression' && isCloudflareWorker(parent.callee, state)) {
       return parent;
     }
+
     parent = parent.parent;
   }
 
@@ -44,6 +45,7 @@ export function containingWorker(node: ESTree.Node, state: FileState): ESTree.Ca
 
 export function containingEffectGen(node: ESTree.Node, state: FileState): ESTree.CallExpression | undefined {
   const callback = enclosingFunction(node);
+
   const call = callback === undefined ? undefined : callbackCall(callback);
 
   return call !== undefined && isApi(call.callee, state, 'Effect', 'gen') ? call : undefined;

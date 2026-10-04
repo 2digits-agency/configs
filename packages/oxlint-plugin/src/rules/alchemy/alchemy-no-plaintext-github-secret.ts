@@ -45,6 +45,7 @@ export const alchemyNoPlaintextGithubSecret: Rule = defineEffectRule(
       }
 
       const options = argumentAt(node, 1);
+
       const value = options?.type === 'ObjectExpression' ? objectProperty(options, 'value') : undefined;
 
       if (value !== undefined && isPlaintextSecret(value.value, state)) {

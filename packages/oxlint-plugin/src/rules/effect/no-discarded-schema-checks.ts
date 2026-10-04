@@ -50,6 +50,7 @@ export const noDiscardedSchemaChecks: Rule = defineEffectRule(
       }
 
       const options = node.arguments.find((argument) => argument.type === 'ObjectExpression');
+
       const preserve =
         options?.type === 'ObjectExpression' ? objectProperty(options, 'unsafePreserveChecks') : undefined;
 

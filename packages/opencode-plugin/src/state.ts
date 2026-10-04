@@ -32,9 +32,13 @@ function updateTraceStateFromAssistantMessage(
   },
 ): string | undefined {
   traceState.agentName = info.mode || pending.agentName;
+
   traceState.lastActivityAt = info.time.completed;
+
   traceState.totalCostUsd += info.cost;
+
   traceState.totalInputTokens += info.tokens.input;
+
   traceState.totalOutputTokens += info.tokens.output;
 
   const errorMessage = getErrorMessage(info.error);
@@ -43,6 +47,7 @@ function updateTraceStateFromAssistantMessage(
 
   if (errorMessage) {
     traceState.hasError = true;
+
     traceState.errorMessage = errorMessage;
   }
 
@@ -51,18 +56,28 @@ function updateTraceStateFromAssistantMessage(
 
 export function createSessionState(config: Config) {
   const pendingMessages = new Map<string, PendingMessage>();
+
   const activeMessages = new Map<string, PendingMessage>();
+
   const traceStates = new Map<string, TraceState>();
+
   const toolCalls = new Map<string, ToolCallState>();
+
   const generationTools = new Map<string, Array<string>>();
+
   const assistantOutputs = new Map<string, { order: Array<string>; parts: Map<string, string> }>();
+
   const generationStates = new Map<string, GenerationState>();
+
   const currentGenerationIDs = new Map<string, string>();
+
   const completedAssistantMessages = new Set<string>();
 
   function clearSessionState(sessionID: string): void {
     traceStates.delete(sessionID);
+
     activeMessages.delete(sessionID);
+
     currentGenerationIDs.delete(sessionID);
 
     for (const [pendingKey, pending] of pendingMessages) {
@@ -79,8 +94,11 @@ export function createSessionState(config: Config) {
       }
 
       generationSpanIDs.add(generation.spanID);
+
       generationStates.delete(assistantMessageID);
+
       assistantOutputs.delete(assistantMessageID);
+
       completedAssistantMessages.delete(assistantMessageID);
     }
 
@@ -122,7 +140,9 @@ export function createSessionState(config: Config) {
     };
 
     traceState.agentName = agentName ?? traceState.agentName;
+
     traceState.lastActivityAt = startedAt;
+
     traceStates.set(sessionID, traceState);
 
     return traceState;
@@ -133,8 +153,11 @@ export function createSessionState(config: Config) {
     output: { message: { id: string }; parts: Array<{ type: string; text?: string; synthetic?: boolean }> },
   ): void {
     const startedAt = Date.now();
+
     const traceState = getOrCreateTraceState(input.sessionID, input.agent, startedAt);
+
     const prompt = getPrompt(output.parts);
+
     const pending: PendingMessage = {
       agentName: input.agent ?? config.projectName,
       prompt,
@@ -146,10 +169,13 @@ export function createSessionState(config: Config) {
     };
 
     traceState.inputState ??= prompt;
+
     traceState.traceName ??= getTraceName(prompt);
 
     pendingMessages.set(getPendingKey(input.sessionID, output.message.id), pending);
+
     activeMessages.set(input.sessionID, pending);
+
     currentGenerationIDs.delete(input.sessionID);
   }
 
@@ -159,7 +185,9 @@ export function createSessionState(config: Config) {
     if (!state.parts.has(part.id)) {
       state.order.push(part.id);
     }
+
     state.parts.set(part.id, part.text);
+
     assistantOutputs.set(part.messageID, state);
   }
 
@@ -175,7 +203,9 @@ export function createSessionState(config: Config) {
     }
 
     traceState.hasError = true;
+
     traceState.errorMessage = getErrorMessage(error);
+
     traceState.lastActivityAt = Date.now();
   }
 
@@ -185,7 +215,9 @@ export function createSessionState(config: Config) {
     sessionID: string;
   }): { pending: PendingMessage; pendingKey: string; traceState: TraceState } | undefined {
     const pendingKey = getPendingKey(info.sessionID, info.parentID);
+
     const pending = pendingMessages.get(pendingKey) ?? activeMessages.get(info.sessionID);
+
     const traceState = traceStates.get(info.sessionID);
 
     if (!pending || !traceState) {
@@ -213,7 +245,9 @@ export function createSessionState(config: Config) {
     }
 
     const currentGenerationID = currentGenerationIDs.get(info.sessionID);
+
     const spanID = currentGenerationID && currentGenerationID !== info.id ? randomUUID() : resolved.pending.spanID;
+
     const generation: GenerationState = {
       assistantMessageID: info.id,
       pendingKey: resolved.pendingKey,
@@ -223,7 +257,9 @@ export function createSessionState(config: Config) {
     };
 
     resolved.pending.spanID = spanID;
+
     generationStates.set(info.id, generation);
+
     currentGenerationIDs.set(info.sessionID, info.id);
 
     return { generation, ...resolved };
@@ -239,6 +275,7 @@ export function createSessionState(config: Config) {
 
   function cleanupAssistantMessage(messageID: string, generationSpanID: string): void {
     assistantOutputs.delete(messageID);
+
     generationTools.delete(generationSpanID);
   }
 
@@ -252,6 +289,7 @@ export function createSessionState(config: Config) {
 
   function takeToolCall(sessionID: string, callID: string): ToolCallState | undefined {
     const toolKey = getToolKey(sessionID, callID);
+
     const toolCall = toolCalls.get(toolKey);
 
     if (!toolCall) {
@@ -267,6 +305,7 @@ export function createSessionState(config: Config) {
     const tools = generationTools.get(spanID) ?? [];
 
     tools.push(tool);
+
     generationTools.set(spanID, tools);
   }
 

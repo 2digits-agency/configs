@@ -25,9 +25,11 @@ describe(ProjectDetectionService, () => {
       it.effect('detects monorepo with turbo.json', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('ProjectDetectionService');
+
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* ProjectDetectionService;
+
           const result = yield* service.isMonorepo();
 
           strictEqual(result, true);
@@ -37,9 +39,11 @@ describe(ProjectDetectionService, () => {
       it.effect('does not detect monorepo without turbo.json', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('ProjectDetectionService');
+
           yield* copyFixture('single-package');
 
           const service = yield* ProjectDetectionService;
+
           const result = yield* service.isMonorepo();
 
           strictEqual(result, false);
@@ -51,9 +55,11 @@ describe(ProjectDetectionService, () => {
       it.effect('is an alias for isMonorepo', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('ProjectDetectionService');
+
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* ProjectDetectionService;
+
           const result = yield* service.isTurborepoProject();
 
           strictEqual(result, true);
@@ -69,10 +75,12 @@ describe(ProjectDetectionService, () => {
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* ProjectDetectionService;
+
           const workspaces = yield* service.discoverWorkspaces();
 
           // Should find the packages/app workspace
           strictEqual(workspaces.length, 1);
+
           strictEqual(workspaces[0]?.includes('packages/app'), true);
 
           expect(workspaces.at(0)).toMatch(`${testDir}/packages/app`);
@@ -82,9 +90,11 @@ describe(ProjectDetectionService, () => {
       it.effect('returns empty array for single package project', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('ProjectDetectionService');
+
           yield* copyFixture('single-package');
 
           const service = yield* ProjectDetectionService;
+
           const workspaces = yield* service.discoverWorkspaces();
 
           deepStrictEqual(workspaces, []);
@@ -96,9 +106,11 @@ describe(ProjectDetectionService, () => {
       it.effect('returns correct package.json path', () =>
         Effect.gen(function* () {
           const service = yield* ProjectDetectionService;
+
           const path = yield* Path.Path;
 
           const workspacePath = '/root/packages/app';
+
           const result = service.getWorkspacePackageJsonPath(workspacePath);
 
           const expected = path.join(workspacePath, 'package.json');

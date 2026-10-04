@@ -44,6 +44,7 @@ export const preferEffectDuration: Rule = defineEffectRule(
             if (!importedApi(context, node.callee)) {
               return;
             }
+
             const imported = namespaceImport(context, node, 'effect/Duration', 'Duration', fixer);
 
             return [

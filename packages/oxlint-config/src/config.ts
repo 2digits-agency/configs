@@ -41,6 +41,7 @@ export function withTwoDigits(...configs: Array<TwoDigitsConfig>): TwoDigitsConf
 
   for (const { overrides = [], ...rest } of configs) {
     config = defu(rest, config);
+
     extraOverrides.push(...overrides);
   }
 

@@ -54,6 +54,7 @@ describe('property builders', () => {
       startedAt: 10,
       userMessageID: 'user-1',
     };
+
     const generation: GenerationState = {
       assistantMessageID: 'assistant-1',
       pendingKey: 'session-1:user-1',
@@ -127,6 +128,7 @@ describe('property builders', () => {
     });
 
     expect(properties.$ai_input_state).toBe('{"token":"[REDACTED]","keep":"ok"}');
+
     expect(properties.$ai_output_state).toBe('{"password":"[REDACTED]","result":"ok"}');
   });
 });

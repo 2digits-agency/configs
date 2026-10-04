@@ -15,7 +15,9 @@ export const noOptionOfService: Rule = defineEffectRule(
   (context, getState) => ({
     CallExpression(node) {
       const state = getState();
+
       const wrapper = isApi(node.callee, state, 'Effect', 'option') || isApi(node.callee, state, 'Effect', 'either');
+
       const wrapped = argumentAt(node, 0);
 
       if (wrapper && wrapped?.type === 'CallExpression' && isApi(wrapped.callee, state, 'Effect', 'service')) {
@@ -29,6 +31,7 @@ export const noOptionOfService: Rule = defineEffectRule(
       }
 
       const source = unwrapExpression(node.callee.object);
+
       const operator = argumentAt(node, 0);
 
       if (

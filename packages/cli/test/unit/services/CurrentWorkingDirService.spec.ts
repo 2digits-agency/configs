@@ -14,7 +14,9 @@ describe(CurrentWorkingDirService, () => {
     it('returns process.cwd()', () =>
       Effect.gen(function* () {
         const service = yield* CurrentWorkingDirService;
+
         const cwd = yield* service.cwd;
+
         const expected = process.cwd();
 
         strictEqual(cwd, expected);
@@ -23,7 +25,9 @@ describe(CurrentWorkingDirService, () => {
     it('returns an absolute path', () =>
       Effect.gen(function* () {
         const service = yield* CurrentWorkingDirService;
+
         const path = yield* Path.Path;
+
         const cwd = yield* service.cwd;
 
         assertTrue(path.isAbsolute(cwd));
@@ -32,6 +36,7 @@ describe(CurrentWorkingDirService, () => {
     it('returns a non-empty string', () =>
       Effect.gen(function* () {
         const service = yield* CurrentWorkingDirService;
+
         const cwd = yield* service.cwd;
 
         assertTrue(cwd.length > 0);
@@ -40,7 +45,9 @@ describe(CurrentWorkingDirService, () => {
     it('is consistent across multiple calls', () =>
       Effect.gen(function* () {
         const service = yield* CurrentWorkingDirService;
+
         const cwd1 = yield* service.cwd;
+
         const cwd2 = yield* service.cwd;
 
         strictEqual(cwd1, cwd2);

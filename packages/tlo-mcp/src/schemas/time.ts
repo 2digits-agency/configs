@@ -40,6 +40,7 @@ export const ActivityRaw = Schema.Struct({
   READONLY: Schema.Finite.pipe(Schema.NullOr, Schema.optional),
   TASK_WORKLOAD: Schema.Finite.pipe(Schema.NullOr, Schema.optional),
 });
+
 export type ActivityRaw = typeof ActivityRaw.Type;
 
 export class Activity extends Schema.Class<Activity, { readonly brand: unique symbol }>('Activity')({
@@ -122,6 +123,7 @@ export function activityFromRaw(raw: ActivityRaw): Activity {
 export const GetWeekResponse = Schema.Struct({
   ACTIVITIES: Schema.Array(ActivityRaw),
 });
+
 export type GetWeekResponse = typeof GetWeekResponse.Type;
 
 export const SetActivityResponse = Schema.Struct({
@@ -133,6 +135,7 @@ export const SetActivityResponse = Schema.Struct({
   CLIENT_COLOR: Schema.optional(Schema.String),
   FOLDERID: Schema.optional(Schema.Union([Schema.String, Schema.Finite])),
 });
+
 export type SetActivityResponse = typeof SetActivityResponse.Type;
 
 export interface CreateActivityParams {

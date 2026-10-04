@@ -64,6 +64,7 @@ function modulePath(source: string): ReadonlyArray<string> | undefined {
 
 function collectState(program: ESTree.Program): FileState {
   const bindings = new Map<string, ReadonlyArray<string>>();
+
   let hasEffectImport = false;
 
   for (const statement of program.body) {
@@ -86,6 +87,7 @@ function collectState(program: ESTree.Program): FileState {
     for (const specifier of statement.specifiers) {
       if (specifier.type === 'ImportNamespaceSpecifier' || specifier.type === 'ImportDefaultSpecifier') {
         bindings.set(specifier.local.name, path);
+
         continue;
       }
 
@@ -117,15 +119,18 @@ export function defineEffectRule(
       let currentState = emptyState;
 
       const visitor = create(context, () => currentState);
+
       const { before, Program, ...rest } = visitor;
 
       return {
         before() {
           currentState = emptyState;
+
           before?.();
         },
         Program(node) {
           currentState = collectState(node);
+
           Program?.(node);
         },
         ...rest,
@@ -166,11 +171,13 @@ export function staticPropertyName(node: ESTree.MemberExpression): string | unde
 
 export function staticPath(node: ESTree.Node): ReadonlyArray<string> | undefined {
   const path: Array<string> = [];
+
   let current = node;
 
   while (current.type === 'ChainExpression' || current.type === 'MemberExpression') {
     if (current.type === 'ChainExpression') {
       current = current.expression;
+
       continue;
     }
 
@@ -181,6 +188,7 @@ export function staticPath(node: ESTree.Node): ReadonlyArray<string> | undefined
     }
 
     path.unshift(property);
+
     current = current.object;
   }
 
@@ -207,6 +215,7 @@ export function isGlobalIdentifier(node: ESTree.Node, context: Context, name: st
 
 export function canonicalPath(node: ESTree.Node, state: FileState): ReadonlyArray<string> | undefined {
   const path = staticPath(node);
+
   const first = path?.[0];
 
   if (path === undefined || first === undefined) {
@@ -303,6 +312,7 @@ function appendNodeChildren(value: object, pending: Array<unknown>): void {
 
 export function walkNodes(root: ESTree.Node, visit: (node: ESTree.Node) => boolean | undefined): boolean {
   const pending: Array<unknown> = [root];
+
   const seen = new WeakSet<object>();
 
   while (pending.length > 0) {
@@ -313,6 +323,7 @@ export function walkNodes(root: ESTree.Node, visit: (node: ESTree.Node) => boole
     }
 
     seen.add(value);
+
     const record = value as Record<string, unknown>;
 
     if (typeof record.type === 'string' && visit(value as ESTree.Node) === true) {
@@ -352,6 +363,7 @@ export function enclosingFunction(node: ESTree.Node): FunctionNode | undefined {
     if (isFunctionNode(parent)) {
       return parent;
     }
+
     parent = parent.parent;
   }
 

@@ -1,11 +1,15 @@
 import { createRule } from '../utils';
 
 const VALID_TYPE_PARAM = /^[T$][A-Z][a-z]+\d*$/;
+
 const HAS_PREFIX = /^[T$]/;
+
 const HAS_INITIAL = /^[T$][A-Z]/;
+
 const HAS_REMAINDER = /^[T$][A-Z][a-z]/;
 
 type MessageId = (typeof MessageId)[keyof typeof MessageId];
+
 const MessageId = {
   prefix: 'prefix',
   initial: 'initial',
@@ -45,6 +49,7 @@ export const typeParamNames = createRule<[], MessageId>({
           const {
             name: { name },
           } = param;
+
           const messageId = getMessageId(name);
 
           if (!messageId) {
@@ -101,6 +106,7 @@ function getSuggestion(name: string): string {
   }
 
   const prefix = name.charAt(0);
+
   const rest = name.slice(1);
 
   if (rest.length === 0) {

@@ -7,6 +7,7 @@ const endpointMethods = new Set(['get', 'post', 'put', 'patch', 'delete', 'head'
 
 function isEndpointImport(definition: Definition, path: ReadonlyArray<string>): boolean {
   const declaration = definition.parent;
+
   const specifier = definition.node;
 
   if (
@@ -37,7 +38,9 @@ function isEndpointImport(definition: Definition, path: ReadonlyArray<string>): 
 
 function isEndpointCall(node: ESTree.CallExpression, context: Context): boolean {
   const path = staticPath(node.callee);
+
   const root = path?.[0];
+
   const method = path?.at(-1);
 
   if (path === undefined || root === undefined || method === undefined || !endpointMethods.has(method)) {
@@ -67,6 +70,7 @@ function directProperties(node: ESTree.Expression | undefined): Array<ESTree.Obj
   }
 
   const names = new Set<string>();
+
   const properties: Array<ESTree.ObjectProperty> = [];
 
   for (const property of node.properties) {
@@ -85,6 +89,7 @@ function directProperties(node: ESTree.Expression | undefined): Array<ESTree.Obj
     }
 
     names.add(name);
+
     properties.push(property);
   }
 
@@ -108,6 +113,7 @@ export const noUppercaseHttpApiHeader: Rule = defineSyntaxRule(
       }
 
       const options = directProperties(argumentAt(node, 2));
+
       const headers = directProperties(options?.find((property) => propertyName(property) === 'headers')?.value);
 
       if (headers === undefined) {

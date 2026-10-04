@@ -15,7 +15,9 @@ export class ProjectDetectionService extends Context.Service<ProjectDetectionSer
   {
     make: Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
+
       const path = yield* Path.Path;
+
       const pm = yield* PackageManagerService;
 
       const discoverWorkspaceDirectory = Effect.fn('ProjectDetectionService.discoverWorkspaceDirectory')(function* (
@@ -28,12 +30,15 @@ export class ProjectDetectionService extends Context.Service<ProjectDetectionSer
         }
 
         const entries = yield* fs.readDirectory(directoryPath).pipe(Effect.orElseSucceed(() => []));
+
         // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
         const workspaces = yield* Effect.forEach(
           entries,
           Effect.fn('ProjectDetectionService.inspectWorkspace')(function* (entry) {
             const entryPath = path.join(directoryPath, entry);
+
             const packageJsonPath = path.join(entryPath, 'package.json');
+
             const [stat, hasPackageJson] = yield* Effect.all([
               fs.stat(entryPath).pipe(Effect.orElseSucceed(() => undefined)),
               fs.exists(packageJsonPath).pipe(Effect.orElseSucceed(() => false)),
@@ -52,6 +57,7 @@ export class ProjectDetectionService extends Context.Service<ProjectDetectionSer
        */
       const isMonorepo = Effect.fn('ProjectDetectionService.isMonorepo')(function* () {
         const root = yield* pm.resolveRoot();
+
         const turboPath = path.join(root, 'turbo.json');
 
         return yield* fs.exists(turboPath);
@@ -69,6 +75,7 @@ export class ProjectDetectionService extends Context.Service<ProjectDetectionSer
        */
       const discoverWorkspaces = Effect.fn('ProjectDetectionService.discoverWorkspaces')(function* () {
         const root = yield* pm.resolveRoot();
+
         const workspaceDirectories = yield* Effect.all(
           Arr.map([path.join(root, 'apps'), path.join(root, 'packages')], discoverWorkspaceDirectory),
           { concurrency: 'unbounded' },

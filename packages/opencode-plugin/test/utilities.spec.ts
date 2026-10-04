@@ -47,6 +47,7 @@ describe(serializeAttribute, () => {
 describe(parseNumber, () => {
   it('falls back for invalid numbers', () => {
     expect(parseNumber('nope', 7)).toBe(7);
+
     expect(parseNumber('12', 7)).toBe(12);
   });
 });
@@ -54,7 +55,9 @@ describe(parseNumber, () => {
 describe(parseCustomProperties, () => {
   it('returns parsed records and ignores invalid values', () => {
     expect(parseCustomProperties('{"foo":"bar"}')).toStrictEqual({ foo: 'bar' });
+
     expect(parseCustomProperties('{')).toStrictEqual({});
+
     expect(parseCustomProperties('[]')).toStrictEqual({});
   });
 });
@@ -62,8 +65,11 @@ describe(parseCustomProperties, () => {
 describe(isValidCustomPropertiesJson, () => {
   it('accepts valid record json including an empty object', () => {
     expect(isValidCustomPropertiesJson('{"foo":"bar"}')).toBeTruthy();
+
     expect(isValidCustomPropertiesJson('{}')).toBeTruthy();
+
     expect(isValidCustomPropertiesJson('{')).toBeFalsy();
+
     expect(isValidCustomPropertiesJson('[]')).toBeFalsy();
   });
 });
@@ -71,6 +77,7 @@ describe(isValidCustomPropertiesJson, () => {
 describe(getErrorMessage, () => {
   it('extracts message from nested error shapes', () => {
     expect(getErrorMessage({ data: { message: 'bad' } })).toBe('bad');
+
     expect(getErrorMessage({ name: 'Boom' })).toBe('Boom');
   });
 });
@@ -91,6 +98,7 @@ describe(getPrompt, () => {
 describe(mapStopReason, () => {
   it('maps tool-calls and errors', () => {
     expect(mapStopReason('tool-calls', false)).toBe('tool_calls');
+
     expect(mapStopReason('stop', true)).toBe('error');
   });
 });
@@ -104,11 +112,13 @@ describe(getTraceName, () => {
 describe('message builders', () => {
   it('omits content in privacy mode', () => {
     expect(buildInputMessages('hello', true)).toBeUndefined();
+
     expect(buildOutputChoices('hi', 'err', true)).toBeUndefined();
   });
 
   it('builds user and assistant messages when privacy mode is off', () => {
     expect(buildInputMessages('hello', false)).toStrictEqual([{ role: 'user', content: 'hello' }]);
+
     expect(buildOutputChoices('hi', undefined, false)).toStrictEqual([{ role: 'assistant', content: 'hi' }]);
   });
 });

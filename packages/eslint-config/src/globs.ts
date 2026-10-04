@@ -1,25 +1,33 @@
 export const GLOB_SRC = '**/*.?([cm])[jt]s?(x)';
 
 export const GLOB_TS = '**/*.?([cm])ts';
+
 export const GLOB_TSX = '**/*.?([cm])tsx';
 
 export const GLOB_STORIES = '**/*.stories.tsx';
+
 export const GLOB_TESTS = '**/*.{test,spec}.ts?(x)';
 
 export const GLOB_JSON = '**/*.json';
+
 export const GLOB_JSON5 = '**/*.json5';
+
 export const GLOB_JSONC = '**/*.jsonc';
 
 export const GLOB_CSS = '**/*.css';
 
 export const GLOB_YAML = '**/*.y?(a)ml';
+
 export const GLOB_TOML = '**/*.toml';
+
 export const GLOB_MISE_TOML = '**/{mise,.mise}?(.*).toml';
 
 export const GLOB_GITHUB_ACTIONS = '.github/workflows/*.y?(a)ml';
 
 export const GLOB_MARKDOWN = '**/*.md';
+
 export const GLOB_MARKDOWN_IN_MARKDOWN = '**/*.md/*.md';
+
 export const GLOB_MARKDOWN_CODE = `${GLOB_MARKDOWN}/${GLOB_SRC}`;
 
 export const GLOB_EXCLUDE = [

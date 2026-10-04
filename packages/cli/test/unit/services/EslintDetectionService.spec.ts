@@ -25,9 +25,11 @@ describe(EslintDetectionService, () => {
       it.effect('detects eslint in devDependencies', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('EslintDetectionService');
+
           yield* copyFixture('existing-configs');
 
           const service = yield* EslintDetectionService;
+
           const result = yield* service.isEslintInstalled();
 
           strictEqual(result, true);
@@ -37,9 +39,11 @@ describe(EslintDetectionService, () => {
       it.effect('returns false when eslint not installed', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('EslintDetectionService');
+
           yield* copyFixture('single-package');
 
           const service = yield* EslintDetectionService;
+
           const result = yield* service.isEslintInstalled();
 
           strictEqual(result, false);
@@ -51,9 +55,11 @@ describe(EslintDetectionService, () => {
       it.effect('detects existing eslint config file', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('EslintDetectionService');
+
           yield* copyFixture('existing-configs');
 
           const service = yield* EslintDetectionService;
+
           const result = yield* service.hasEslintConfig();
 
           strictEqual(result, true);
@@ -63,9 +69,11 @@ describe(EslintDetectionService, () => {
       it.effect('returns false when no config exists', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('EslintDetectionService');
+
           yield* copyFixture('single-package');
 
           const service = yield* EslintDetectionService;
+
           const result = yield* service.hasEslintConfig();
 
           strictEqual(result, false);
@@ -77,12 +85,15 @@ describe(EslintDetectionService, () => {
       it.effect('returns list of existing config files', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('EslintDetectionService');
+
           yield* copyFixture('existing-configs');
 
           const service = yield* EslintDetectionService;
+
           const configs = yield* service.detectExistingConfigs();
 
           assertTrue(configs.length > 0);
+
           assertTrue(configs.some((path) => path.includes('eslint.config.js')));
         }),
       );
@@ -90,9 +101,11 @@ describe(EslintDetectionService, () => {
       it.effect('returns empty array when no configs exist', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('EslintDetectionService');
+
           yield* copyFixture('single-package');
 
           const service = yield* EslintDetectionService;
+
           const configs = yield* service.detectExistingConfigs();
 
           strictEqual(configs.length, 0);
@@ -104,7 +117,9 @@ describe(EslintDetectionService, () => {
       it.effect('detects @2digits/eslint-config in config file', () =>
         Effect.gen(function* () {
           const service = yield* EslintDetectionService;
+
           const path = yield* Path.Path;
+
           const fixturesDir = yield* fixturesBasePath;
 
           // For this test, we need to create a fixture with @2digits/eslint-config
@@ -121,9 +136,11 @@ describe(EslintDetectionService, () => {
       it.effect('returns false when config file does not exist', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('EslintDetectionService');
+
           yield* copyFixture('single-package');
 
           const service = yield* EslintDetectionService;
+
           const result = yield* service.uses2DigitsConfig();
 
           strictEqual(result, false);

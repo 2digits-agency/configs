@@ -25,6 +25,7 @@ const plugin: Plugin = async (ctx) => {
   }
 
   const state = createSessionState(config);
+
   const capture = createCaptureManager(config);
 
   async function captureTrace(traceState: NonNullable<ReturnType<typeof state.getTraceState>>): Promise<void> {
@@ -39,6 +40,7 @@ const plugin: Plugin = async (ctx) => {
       traceState.sessionID,
       buildTraceProperties(config, traceState, latency),
     );
+
     traceState.lastTraceCapturedAt = traceState.lastActivityAt;
   }
 
@@ -50,6 +52,7 @@ const plugin: Plugin = async (ctx) => {
     }
 
     await captureTrace(traceState);
+
     state.clearSessionState(sessionID);
   }
 
@@ -69,7 +72,9 @@ const plugin: Plugin = async (ctx) => {
     }
 
     const { generation, pending, traceState } = resolved;
+
     const output = state.getAssistantOutputForMessage(info.id);
+
     const errorMessage = state.updateTraceStateFromAssistantMessage(traceState, pending, {
       mode: info.mode,
       time: { completed: info.time.completed },
@@ -81,6 +86,7 @@ const plugin: Plugin = async (ctx) => {
       output,
       error: info.error,
     });
+
     const { toolsCalled, toolCallCount } = state.getGenerationToolProperties(generation.spanID);
 
     capture.capture(
@@ -98,6 +104,7 @@ const plugin: Plugin = async (ctx) => {
         toolCallCount,
       }),
     );
+
     await captureTrace(traceState);
 
     state.cleanupAssistantMessage(info.id, generation.spanID);
@@ -106,6 +113,7 @@ const plugin: Plugin = async (ctx) => {
   async function onEvent(event: Parameters<NonNullable<Hooks['event']>>[0]['event']) {
     if (event.type === 'message.part.updated') {
       const { properties } = event;
+
       const { part } = properties;
 
       if (part.type === 'text') {
@@ -117,6 +125,7 @@ const plugin: Plugin = async (ctx) => {
 
     if (event.type === 'session.deleted') {
       const { properties } = event;
+
       const { info } = properties;
 
       await flushTrace(info.id);
@@ -126,6 +135,7 @@ const plugin: Plugin = async (ctx) => {
 
     if (event.type === 'session.error') {
       const { properties } = event;
+
       const { error, sessionID } = properties;
 
       if (sessionID) {
@@ -140,6 +150,7 @@ const plugin: Plugin = async (ctx) => {
     }
 
     const { properties } = event;
+
     const { info } = properties;
 
     if (info.role !== 'assistant') {
@@ -153,13 +164,16 @@ const plugin: Plugin = async (ctx) => {
     }
 
     state.markAssistantMessageCompleted(info.id);
+
     await completeAssistantMessage(info);
   }
 
   return {
     'chat.message': async (input, output) => {
       const startedAt = Date.now();
+
       const existingTrace = state.getTraceState(input.sessionID);
+
       const sessionWindowMs = config.sessionWindowMinutes * 60_000;
 
       if (existingTrace && config.traceGrouping === 'message') {
@@ -191,6 +205,7 @@ const plugin: Plugin = async (ctx) => {
         startedAt: Date.now(),
         traceID: pending.traceID,
       });
+
       state.recordGenerationToolCall(pending.spanID, input.tool);
 
       return Promise.resolve();

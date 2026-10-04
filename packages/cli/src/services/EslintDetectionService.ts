@@ -31,7 +31,9 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
   {
     make: Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
+
       const path = yield* Path.Path;
+
       const pm = yield* PackageManagerService;
 
       const findExistingConfigs = Effect.fn('EslintDetectionService.findExistingConfigs')(function* (
@@ -59,6 +61,7 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
         packageJsonPath?: string,
       ) {
         const root = yield* pm.resolveRoot();
+
         const pkgPath = packageJsonPath ?? path.join(root, 'package.json');
 
         const packageJson = yield* pm.readPackageJson({ id: pkgPath });
@@ -71,6 +74,7 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
        */
       const hasEslintConfig = Effect.fn('EslintDetectionService.hasEslintConfig')(function* (dir?: string) {
         const root = yield* pm.resolveRoot();
+
         const targetDir = dir ?? root;
 
         const existingConfigs = yield* findExistingConfigs(targetDir, [...ESLINT_CONFIG_FILES, 'eslint.config.ts']);
@@ -83,6 +87,7 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
        */
       const detectExistingConfigs = Effect.fn('EslintDetectionService.detectExistingConfigs')(function* (dir?: string) {
         const root = yield* pm.resolveRoot();
+
         const targetDir = dir ?? root;
 
         return yield* findExistingConfigs(targetDir, ESLINT_CONFIG_FILES);
@@ -93,6 +98,7 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
        */
       const uses2DigitsConfig = Effect.fn('EslintDetectionService.uses2DigitsConfig')(function* (configPath?: string) {
         const root = yield* pm.resolveRoot();
+
         const targetPath = configPath ?? path.join(root, 'eslint.config.ts');
 
         const exists = yield* fs.exists(targetPath).pipe(Effect.orElseSucceed(() => false));

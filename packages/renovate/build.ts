@@ -8,6 +8,7 @@ type NolyfillConfig = typeof Nolyfill;
 
 async function main() {
   const nolyfillConfig = await readFile('./src/nolyfill.json', 'utf8');
+
   const nolyfill = JSON.parse(nolyfillConfig) as NolyfillConfig;
 
   nolyfill.packageRules = [{ groupName: 'Nolyfill', matchPackageNames: allPackages }];

@@ -1,18 +1,22 @@
-/* oxlint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
 /* eslint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
 /* eslint-disable sonar/no-duplicate-string -- Keep exact source/fix fixtures readable. */
 import { RuleTester } from 'oxlint/plugins-dev';
-import { describe, expect, it } from 'vite-plus/test';
+import { describe, it } from 'vite-plus/test';
 
-import { recommendedRules, rules, type PaddingLineOption } from '../../src';
+import { rules, type PaddingLineOption } from '../../src';
 
 RuleTester.describe = describe;
+
 RuleTester.it = it;
+
 RuleTester.itOnly = it.only;
 
 const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+
 const always = { blankLine: 'always', prev: '*', next: '*' } satisfies PaddingLineOption;
+
 const never = { blankLine: 'never', prev: '*', next: '*' } satisfies PaddingLineOption;
+
 const rule = rules['padding-line-between-statements'];
 
 tester.run('padding-line-between-statements', rule, {
@@ -154,10 +158,4 @@ tester.run('padding-line-between-statements', rule, {
       errors: [{ messageId: 'expectedBlankLine' }],
     },
   ],
-});
-
-describe('statement spacing policy', () => {
-  it('keeps statement spacing opt-in', () => {
-    expect(Object.hasOwn(recommendedRules, '2digits/padding-line-between-statements')).toBeFalsy();
-  });
 });
