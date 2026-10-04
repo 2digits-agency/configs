@@ -1,5 +1,12 @@
 # @2digits/oxlint-config
 
+The default preset enables `2digits/padding-line-between-statements`: statements require a blank line between them,
+including variable declarations, control flow, and returns. Consecutive imports may stay grouped; existing import
+group spacing is preserved. Run Oxlint with `--fix` to insert missing blank lines.
+
+Override the rule through `lint({ rules: { '2digits/padding-line-between-statements': 'off' } })`, or supply your own
+spacing policies in its rule options.
+
 The shared preset keeps `capitalized-comments` enabled for ordinary prose, but preserves case-sensitive
 `fallow-ignore` suppression directives, including `fallow-ignore-next-line` and `fallow-ignore-file`.
 The exception matches the directive family at the start of a comment; prose mentioning a directive remains checked.

@@ -219,10 +219,15 @@ describe('oxlint config', () => {
   it('configures every recommended 2digits rule', () => {
     const plugin = twoDigitsPluginConfig.jsPlugins.at(0);
 
+    const { '2digits/padding-line-between-statements': _spacing, ...otherRecommendedRules } = recommendedRules;
+
     expect(plugin?.name).toBe('2digits');
 
     expect(plugin?.specifier).toContain('oxlint-plugin/dist/index.mjs');
-    expect(twoDigitsPluginConfig.rules).toStrictEqual(recommendedRules);
+
+    expect(twoDigitsPluginConfig.rules).toMatchObject(otherRecommendedRules);
+
+    expect(twoDigitsPluginConfig.rules['2digits/padding-line-between-statements'][0]).toBe('error');
 
     expect([
       recommendedRules['2digits/prefer-effect-filesystem'],

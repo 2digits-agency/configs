@@ -2,6 +2,9 @@ import { defineConfig } from 'oxlint';
 
 import { recommendedRules } from '@2digits/oxlint-plugin';
 
+/**
+ * Shared plugin defaults, including statement spacing with grouped imports.
+ */
 export const twoDigitsPluginConfig = defineConfig({
   jsPlugins: [
     {
@@ -9,5 +12,12 @@ export const twoDigitsPluginConfig = defineConfig({
       specifier: import.meta.resolve('@2digits/oxlint-plugin'),
     },
   ],
-  rules: recommendedRules,
+  rules: {
+    ...recommendedRules,
+    '2digits/padding-line-between-statements': [
+      'error',
+      { blankLine: 'always', prev: '*', next: '*' },
+      { blankLine: 'any', prev: 'import', next: 'import' },
+    ],
+  },
 });
