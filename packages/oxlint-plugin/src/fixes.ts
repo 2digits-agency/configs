@@ -18,6 +18,7 @@ function binding(context: Context, node: ESTree.Node, name: string): Variable | 
     if (variable !== undefined) {
       return variable;
     }
+
     scope = scope.upper;
   }
 
@@ -32,6 +33,7 @@ function binding(context: Context, node: ESTree.Node, name: string): Variable | 
  */
 export function importedApi(context: Context, node: ESTree.Node): boolean {
   const name = staticPath(node)?.[0];
+
   const variable = name === undefined ? undefined : binding(context, node, name);
 
   return (
@@ -74,6 +76,7 @@ export function namespaceImport(
     ) {
       continue;
     }
+
     for (const specifier of statement.specifiers) {
       if (
         specifier.type === 'ImportNamespaceSpecifier' &&
@@ -83,19 +86,24 @@ export function namespaceImport(
       }
     }
   }
+
   const names = new Set(
     context.sourceCode.scopeManager.scopes.flatMap((scope) => [
       ...scope.variables.map((variable) => variable.name),
       ...scope.references.map((reference) => reference.identifier.name),
     ]),
   );
+
   let name = preferred;
+
   let suffix = 2;
 
   while (names.has(name)) {
     name = `${preferred}${suffix++}`;
   }
+
   const text = `import * as ${name} from '${source}';\n`;
+
   const first = program.body.find(
     (statement) =>
       statement.type !== 'ExpressionStatement' ||
@@ -122,16 +130,17 @@ export function plainOptions(node: ESTree.ObjectExpression, destination: string)
     if (property.type !== 'Property' || property.computed || property.method || property.kind !== 'init') {
       return false;
     }
-    const name =
-      property.key.type === 'Identifier'
-        ? property.key.name
-        : property.key.type === 'Literal'
-          ? String(property.key.value)
-          : undefined;
 
-    if (name === undefined || name === destination || names.has(name)) {
+    if (property.key.type !== 'Identifier' && property.key.type !== 'Literal') {
       return false;
     }
+
+    const name = property.key.type === 'Identifier' ? property.key.name : String(property.key.value);
+
+    if (name === destination || names.has(name)) {
+      return false;
+    }
+
     names.add(name);
 
     return true;

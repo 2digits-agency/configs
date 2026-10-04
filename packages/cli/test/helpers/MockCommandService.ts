@@ -3,6 +3,7 @@ import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as P from 'effect/Predicate';
 import * as Ref from 'effect/Ref';
 import * as Sink from 'effect/Sink';
 import * as Stream from 'effect/Stream';
@@ -45,7 +46,7 @@ export class MockCommandExecutor extends Context.Service<MockCommandExecutor>()(
       const executed = yield* Ref.make<Array<ExecutedCommand>>([]);
 
       const recordCommand = Effect.fn('MockCommandExecutor.recordCommand')(function* (command: ChildProcess.Command) {
-        if (command._tag === 'StandardCommand') {
+        if (P.isTagged(command, 'StandardCommand')) {
           yield* Ref.update(executed, (commands) =>
             Arr.append(commands, {
               command: command.command,
