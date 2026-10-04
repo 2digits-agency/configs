@@ -20,6 +20,8 @@ import * as Ref from 'effect/Ref';
 
 type Token = SyntaxToken | Comment;
 
+type NodeType = ESTree.Node['type'];
+
 type NodeTest = (node: ESTree.Node, sourceCode: SourceCode) => boolean;
 
 type PaddingType = 'any' | 'never' | 'always';
@@ -81,7 +83,16 @@ type StatementType =
 
 type StatementMatcher = StatementType | SelectorOption;
 
-type StatementOption = StatementMatcher | [StatementMatcher, ...Array<StatementMatcher>];
+type StatementOption = StatementMatcher | Arr.NonEmptyReadonlyArray<StatementMatcher>;
+
+interface StatementPair {
+  readonly prevNode: ESTree.Node;
+  readonly nextNode: ESTree.Node;
+}
+
+type PaddingLineSequence = readonly [Token, Token];
+
+type SelectorMatches = ReadonlyMap<string, ReadonlySet<ESTree.Node>>;
 
 /**
  * A spacing policy; later matching entries override earlier entries.
@@ -108,7 +119,7 @@ function isSemicolonToken(token: Token): boolean {
   return token.type === 'Punctuator' && token.value === ';';
 }
 
-function isTokenOnSameLine(left: { loc: Location }, right: { loc: Location }): boolean {
+function isTokenOnSameLine(left: { readonly loc: Location }, right: { readonly loc: Location }): boolean {
   return left.loc.end.line === right.loc.start.line;
 }
 
@@ -124,14 +135,18 @@ function skipChainExpression(node: ESTree.Node): ESTree.Node {
   return node.type === 'ChainExpression' ? node.expression : node;
 }
 
-function keywordTester(types: string | Array<string>, keyword: string): NodeTest {
+function keywordTester(types: NodeType | ReadonlyArray<NodeType>, keyword: string): NodeTest {
   return (node, sourceCode) =>
     sourceCode.getFirstToken(node)?.value === keyword &&
-    (Array.isArray(types) ? types.includes(node.type) : types === node.type);
+    (Arr.isArray(types) ? types.includes(node.type) : types === node.type);
 }
 
-function nodeTypeTester(type: string): NodeTest {
+function nodeTypeTester(type: NodeType): NodeTest {
   return (node) => node.type === type;
+}
+
+function lineModeTester(test: NodeTest, lineMode: Exclude<LineMode, 'any'>): NodeTest {
+  return (node, sourceCode) => test(node, sourceCode) && isSingleLine(node) === (lineMode === 'singleline');
 }
 
 function isIIFEStatement(node: ESTree.Node): boolean {
@@ -334,25 +349,36 @@ const baseStatementTypes: Record<BasicStatementType, NodeTest> = {
   'function-overload': nodeTypeTester('TSDeclareFunction'),
 };
 
-const statementTypes: Record<string, NodeTest> = {
+// Explicit keys let TypeScript verify every supported statement type without assertions.
+const statementTypes: Record<StatementType, NodeTest> = {
   ...baseStatementTypes,
-  ...Object.fromEntries(
-    Object.entries(multilineStatementTypes).flatMap(([key, test]) => [
-      [key, test],
-      [
-        `singleline-${key}`,
-        (node: ESTree.Node, sourceCode: SourceCode) => test(node, sourceCode) && isSingleLine(node),
-      ],
-      [
-        `multiline-${key}`,
-        (node: ESTree.Node, sourceCode: SourceCode) => test(node, sourceCode) && !isSingleLine(node),
-      ],
-    ]),
-  ),
+  ...multilineStatementTypes,
+  'singleline-block-like': lineModeTester(multilineStatementTypes['block-like'], 'singleline'),
+  'multiline-block-like': lineModeTester(multilineStatementTypes['block-like'], 'multiline'),
+  'singleline-expression': lineModeTester(multilineStatementTypes.expression, 'singleline'),
+  'multiline-expression': lineModeTester(multilineStatementTypes.expression, 'multiline'),
+  'singleline-return': lineModeTester(multilineStatementTypes.return, 'singleline'),
+  'multiline-return': lineModeTester(multilineStatementTypes.return, 'multiline'),
+  'singleline-export': lineModeTester(multilineStatementTypes.export, 'singleline'),
+  'multiline-export': lineModeTester(multilineStatementTypes.export, 'multiline'),
+  'singleline-var': lineModeTester(multilineStatementTypes.var, 'singleline'),
+  'multiline-var': lineModeTester(multilineStatementTypes.var, 'multiline'),
+  'singleline-let': lineModeTester(multilineStatementTypes.let, 'singleline'),
+  'multiline-let': lineModeTester(multilineStatementTypes.let, 'multiline'),
+  'singleline-const': lineModeTester(multilineStatementTypes.const, 'singleline'),
+  'multiline-const': lineModeTester(multilineStatementTypes.const, 'multiline'),
+  'singleline-using': lineModeTester(multilineStatementTypes.using, 'singleline'),
+  'multiline-using': lineModeTester(multilineStatementTypes.using, 'multiline'),
+  'singleline-type': lineModeTester(multilineStatementTypes.type, 'singleline'),
+  'multiline-type': lineModeTester(multilineStatementTypes.type, 'multiline'),
 };
 
 function isStatementType(value: unknown): value is StatementType {
   return typeof value === 'string' && Object.hasOwn(statementTypes, value);
+}
+
+function isMatcherArray(value: StatementOption): value is Arr.NonEmptyReadonlyArray<StatementMatcher> {
+  return Array.isArray(value);
 }
 
 function parseMatcher(value: unknown): StatementMatcher {
@@ -422,8 +448,8 @@ function getPaddingLineSequences(
   prevNode: ESTree.Node,
   nextNode: ESTree.Node,
   sourceCode: SourceCode,
-): Array<[Token, Token]> {
-  const pairs: Array<[Token, Token]> = [];
+): Array<PaddingLineSequence> {
+  const pairs: Array<PaddingLineSequence> = [];
 
   let prevToken = getActualLastToken(prevNode, sourceCode);
 
@@ -537,9 +563,7 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
     new Map(Array.from(selectors, (selector) => [selector, new Set<ESTree.Node>()])),
   );
 
-  const pendingPairs = yield* Ref.make<Array<{ prevNode: ESTree.Node; nextNode: ESTree.Node }>>(
-    Arr.empty<{ prevNode: ESTree.Node; nextNode: ESTree.Node }>(),
-  );
+  const pendingPairs = yield* Ref.make(Arr.empty<StatementPair>());
 
   interface Scope {
     readonly upper: Opt.Option<Scope>;
@@ -559,18 +583,14 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
     );
   }
 
-  function match(
-    node: ESTree.Node,
-    matcher: StatementOption,
-    matchedNodes: ReadonlyMap<string, ReadonlySet<ESTree.Node>>,
-  ): boolean {
+  function match(node: ESTree.Node, matcher: StatementOption, matchedNodes: SelectorMatches): boolean {
     let inner = node;
 
     while (inner.type === 'LabeledStatement') {
       inner = inner.body;
     }
 
-    if (Array.isArray(matcher)) {
+    if (isMatcherArray(matcher)) {
       return matcher.some((item) => match(inner, item, matchedNodes));
     }
 
@@ -583,22 +603,12 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
       );
     }
 
-    const test = statementTypes[matcher];
-
-    if (test === undefined) {
-      throw new Error(`Padding rule invariant: unsupported statement type ${matcher}`);
-    }
-
-    return test(inner, sourceCode);
+    return statementTypes[matcher](inner, sourceCode);
   }
 
   const reversedOptions = options.toReversed();
 
-  function getPaddingType(
-    prevNode: ESTree.Node,
-    nextNode: ESTree.Node,
-    matchedNodes: ReadonlyMap<string, ReadonlySet<ESTree.Node>>,
-  ): PaddingType {
+  function getPaddingType(prevNode: ESTree.Node, nextNode: ESTree.Node, matchedNodes: SelectorMatches): PaddingType {
     for (const option of reversedOptions) {
       if (match(prevNode, option.prev, matchedNodes) && match(nextNode, option.next, matchedNodes)) {
         return option.blankLine;
