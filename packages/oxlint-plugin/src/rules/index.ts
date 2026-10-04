@@ -28,6 +28,7 @@ import { noOptionOfService } from './effect/no-option-of-service';
 import { noOverwrittenDiscriminant } from './effect/no-overwritten-discriminant';
 import { noServiceOptionGetOrThrow } from './effect/no-service-option-get-or-throw';
 import { noThrowInEffectCallback } from './effect/no-throw-in-effect-callback';
+import { noUppercaseHttpApiHeader } from './effect/no-uppercase-http-api-header';
 import { noZeroRetryTimes } from './effect/no-zero-retry-times';
 import { preferEffectAlchemyNamespaceImports } from './effect/prefer-effect-alchemy-namespace-imports';
 import { preferEffectArraySort } from './effect/prefer-effect-array-sort';
@@ -79,6 +80,7 @@ export const rules = {
   'no-overwritten-discriminant': noOverwrittenDiscriminant,
   'no-service-option-get-or-throw': noServiceOptionGetOrThrow,
   'no-throw-in-effect-callback': noThrowInEffectCallback,
+  'no-uppercase-http-api-header': noUppercaseHttpApiHeader,
   'no-zero-retry-times': noZeroRetryTimes,
   'prefer-effect-alchemy-namespace-imports': preferEffectAlchemyNamespaceImports,
   'prefer-effect-array-sort': preferEffectArraySort,

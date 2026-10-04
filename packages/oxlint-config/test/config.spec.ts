@@ -1,7 +1,10 @@
 import { spawnSync } from 'node:child_process';
+import { copyFileSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vite-plus/test';
 
 import eslintTwoDigits from '@2digits/eslint-config';
 import { recommendedRules } from '@2digits/oxlint-plugin';
@@ -18,7 +21,12 @@ import { zodConfig } from '../src/configs/zod';
 
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
+const headerFixtureDirectory = fileURLToPath(new URL('fixtures/http-api-headers', import.meta.url));
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+const oxlintConfigArgument = '--config=oxlint.config.mjs';
+const invalidFixture = 'invalid.mjs';
+// Explicit Oxlint CLI fixtures use standalone configs, regardless of the parent test runner.
+const oxlintEnvironment = { ...process.env, VP_VERSION: '' };
 
 const reactCompilerRules = [
   'react/capitalized-calls',
@@ -205,7 +213,7 @@ describe('oxlint config', () => {
   });
 
   it('loads and executes eslint-plugin-zod', () => {
-    const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
+    const result = spawnSync(process.execPath, [oxlintBinary, oxlintConfigArgument, invalidFixture], {
       cwd: fixtureDirectory,
       encoding: 'utf8',
     });
@@ -217,7 +225,7 @@ describe('oxlint config', () => {
   });
 
   it('loads and executes @2digits/oxlint-plugin', () => {
-    const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'invalid.mjs'], {
+    const result = spawnSync(process.execPath, [oxlintBinary, oxlintConfigArgument, invalidFixture], {
       cwd: twoDigitsFixtureDirectory,
       encoding: 'utf8',
     });
@@ -226,5 +234,44 @@ describe('oxlint config', () => {
 
     expect(result.status).toBe(1);
     expect(output).toContain('2digits(no-empty-schema-struct)');
+  });
+
+  it('diagnoses endpoint header keys through the production config and built plugin', () => {
+    const bad = spawnSync(process.execPath, [oxlintBinary, oxlintConfigArgument, invalidFixture], {
+      cwd: headerFixtureDirectory,
+      encoding: 'utf8',
+      env: oxlintEnvironment,
+    });
+    const good = spawnSync(process.execPath, [oxlintBinary, oxlintConfigArgument, 'valid.mjs'], {
+      cwd: headerFixtureDirectory,
+      encoding: 'utf8',
+      env: oxlintEnvironment,
+    });
+
+    expect(recommendedRules['2digits/no-uppercase-http-api-header']).toBe('error');
+    expect(bad.status, `${bad.stdout}${bad.stderr}`).toBe(1);
+    expect(bad.stdout.match(/2digits\(no-uppercase-http-api-header\)/gu)).toHaveLength(2);
+    expect(good.status, `${good.stdout}${good.stderr}`).toBe(0);
+  });
+
+  it('never edits header contracts or lowercase collisions under --fix', () => {
+    const temporaryDirectory = mkdtempSync(path.join(tmpdir(), '2digits-http-api-headers-'));
+    const fixture = path.join(headerFixtureDirectory, invalidFixture);
+    const target = path.join(temporaryDirectory, invalidFixture);
+
+    try {
+      copyFileSync(fixture, target);
+      const result = spawnSync(
+        process.execPath,
+        [oxlintBinary, `--config=${path.join(headerFixtureDirectory, 'oxlint.config.mjs')}`, '--fix', target],
+        { cwd: headerFixtureDirectory, encoding: 'utf8', env: oxlintEnvironment },
+      );
+
+      expect(result.status, `${result.stdout}${result.stderr}`).toBe(1);
+      expect(result.stdout.match(/2digits\(no-uppercase-http-api-header\)/gu)).toHaveLength(2);
+      expect(readFileSync(target, 'utf8')).toBe(readFileSync(fixture, 'utf8'));
+    } finally {
+      rmSync(temporaryDirectory, { recursive: true, force: true });
+    }
   });
 });
