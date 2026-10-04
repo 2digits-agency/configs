@@ -48,6 +48,7 @@ import { preserveCaughtError } from './effect/preserve-caught-error';
 import { requireSchemaClassBrand } from './effect/require-schema-class-brand';
 import { requireTryPromiseAbortSignal } from './effect/require-try-promise-abort-signal';
 import { throwInEffectGen } from './effect/throw-in-effect-gen';
+import { paddingLineBetweenStatements } from './padding-line-between-statements';
 
 export const rules = {
   'alchemy-no-cloudflare-init-finalizer': alchemyNoCloudflareInitFinalizer,
@@ -82,6 +83,7 @@ export const rules = {
   'no-throw-in-effect-callback': noThrowInEffectCallback,
   'no-uppercase-http-api-header': noUppercaseHttpApiHeader,
   'no-zero-retry-times': noZeroRetryTimes,
+  'padding-line-between-statements': paddingLineBetweenStatements,
   'prefer-effect-alchemy-namespace-imports': preferEffectAlchemyNamespaceImports,
   'prefer-effect-array-sort': preferEffectArraySort,
   'prefer-effect-datetime': preferEffectDateTime,

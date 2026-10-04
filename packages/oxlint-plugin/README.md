@@ -65,6 +65,33 @@ agency scan found **zero bad sites and seven valid endpoint schemas**, not seven
 
 ## Automatic fixes
 
+### Statement spacing (opt-in)
+
+`padding-line-between-statements` adapts anti-slop's vendored ESLint Stylistic rule. It is excluded from
+`recommendedRules`: enable it with an explicit policy. Later matching entries override earlier entries.
+
+```ts
+export default {
+  rules: {
+    '2digits/padding-line-between-statements': [
+      'error',
+      { blankLine: 'always', prev: '*', next: 'return' },
+      { blankLine: 'always', prev: ['const', 'let'], next: '*' },
+      { blankLine: 'any', prev: ['const', 'let'], next: ['const', 'let'] },
+    ],
+  },
+};
+```
+
+Options accept `always`, `never`, or `any`, statement names (including TypeScript declarations and
+`singleline-*`/`multiline-*` variants), arrays, or `{ selector: 'ExpressionStatement', lineMode: 'multiline' }` AST selectors.
+Selectors must match statement nodes (for example `ExpressionStatement[expression.type="CallExpression"]`), not their
+nested expressions. See the [upstream statement names](https://eslint.style/rules/padding-line-between-statements).
+Autofixes preserve trailing comments and avoid collapsing multiple blank-line gaps separated by comments.
+The exported `PaddingLineOption` type describes each configuration entry. No options means no diagnostics.
+
+### Other fixes
+
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
 `no-effect-alchemy-barrel-imports`, `prefer-effect-alchemy-namespace-imports`,
 `alchemy-no-v1-worker-properties`, and `alchemy-no-deprecated-docker-constraints`.

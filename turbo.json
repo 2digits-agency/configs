@@ -31,6 +31,9 @@
       "inputs": ["$TURBO_DEFAULT$", "vitest.config.ts"],
       "outputLogs": "new-only"
     },
+    "@2digits/oxlint-plugin#test": {
+      "dependsOn": ["^test", "build"]
+    },
     "test:watch": {
       "persistent": true,
       "cache": false,

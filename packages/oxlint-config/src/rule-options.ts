@@ -1,9 +1,11 @@
 import type { AllowWarnDeny } from 'oxlint';
 
-import type { RuleName as TwoDigitsRuleName } from '@2digits/oxlint-plugin';
+import type { PaddingLineOption, RuleName as TwoDigitsRuleName } from '@2digits/oxlint-plugin';
 
 type RuleWithOptions<T> = AllowWarnDeny | [AllowWarnDeny, T];
-type TwoDigitsRuleMap = Partial<Record<`2digits/${TwoDigitsRuleName}`, AllowWarnDeny>>;
+type TwoDigitsRuleMap = Partial<
+  Record<`2digits/${Exclude<TwoDigitsRuleName, 'padding-line-between-statements'>}`, AllowWarnDeny>
+>;
 
 interface NoConflictingChecksOptions {
   readonly checkConfusingCases?: boolean;
@@ -18,6 +20,7 @@ interface NoConflictingChecksOptions {
  */
 declare module 'oxlint' {
   interface DummyRuleMap extends TwoDigitsRuleMap {
+    '2digits/padding-line-between-statements'?: AllowWarnDeny | [AllowWarnDeny, ...Array<PaddingLineOption>];
     'stylistic/jsx-curly-newline'?: AllowWarnDeny;
     'stylistic/jsx-newline'?: RuleWithOptions<{
       readonly allowMultilines?: boolean;
