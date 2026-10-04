@@ -22,8 +22,11 @@ async function resolveTailwindSyntax(options?: OptionsCss) {
 
   try {
     const info = await getPackageInfo('tailwindcss');
+
     const version = info?.version ?? '';
+
     const [majorVersion = '0'] = version.split('.', 1);
+
     const major = Number.parseInt(majorVersion, 10);
 
     if (Number.isFinite(major) && major >= 4) {

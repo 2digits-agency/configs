@@ -18,6 +18,7 @@ export const noServiceOptionGetOrThrow: Rule = defineEffectRule(
 
       if (isApi(node.callee, state, 'Option', 'getOrThrow') || isApi(node.callee, state, 'Option', 'getOrThrowWith')) {
         const option = argumentAt(node, 0);
+
         const yielded = option?.type === 'YieldExpression' ? option.argument : option;
 
         if (yielded?.type === 'CallExpression' && isApi(yielded.callee, state, 'Effect', 'serviceOption')) {
@@ -32,6 +33,7 @@ export const noServiceOptionGetOrThrow: Rule = defineEffectRule(
       }
 
       const source = unwrapExpression(node.callee.object);
+
       const map = argumentAt(node, 0);
 
       if (

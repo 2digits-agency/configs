@@ -19,6 +19,7 @@ function resultBranch(node: ESTree.Expression, state: FileState, member: string)
 
 function checkFilter(context: Context, node: FunctionNode, state: FileState): void {
   const parameter = firstIdentifierParameter(node);
+
   const result = functionResult(node);
 
   if (parameter === undefined || result?.type !== 'ConditionalExpression') {
@@ -26,6 +27,7 @@ function checkFilter(context: Context, node: FunctionNode, state: FileState): vo
   }
 
   const success = resultBranch(result.consequent, state, 'succeed');
+
   const failure = resultBranch(result.alternate, state, 'fail');
 
   if (

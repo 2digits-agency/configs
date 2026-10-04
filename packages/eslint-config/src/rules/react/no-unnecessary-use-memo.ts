@@ -41,6 +41,7 @@ function noUnnecessaryUseMemoImpl(context: RuleContext, { ast, is }: RuleToolkit
         id.name,
         is.useEffectLikeCall,
       );
+
       const { block: component } = sourceCode.getScope(init);
 
       if (!isFunction(component)) {
@@ -48,6 +49,7 @@ function noUnnecessaryUseMemoImpl(context: RuleContext, { ast, is }: RuleToolkit
       }
 
       const { arguments: initArguments } = init;
+
       const [fn, deps] = initArguments;
 
       if (fn === undefined || deps === undefined) {
@@ -67,6 +69,7 @@ function noUnnecessaryUseMemoImpl(context: RuleContext, { ast, is }: RuleToolkit
       }
 
       const memoReferences = getScopes(sourceCode.getScope(memoNode)).flatMap((scope) => scope.references);
+
       const referencesComponentScope = memoReferences.some(
         (reference) => reference.resolved?.scope.block === component,
       );
@@ -102,6 +105,7 @@ function getUseEffectOnlyReport(
   }
 
   const references = sourceCode.getDeclaredVariables(node.parent)[0]?.references ?? [];
+
   const usages = references.filter((reference) => !reference.init);
 
   if (usages.length === 0) {

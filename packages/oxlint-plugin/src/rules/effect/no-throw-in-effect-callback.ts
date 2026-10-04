@@ -24,7 +24,9 @@ export const noThrowInEffectCallback: Rule = defineEffectRule(
       }
 
       const state = getState();
+
       const path = callbackApi(callback, state);
+
       const optionsCall = functionProperty(callback, 'catch');
 
       if (

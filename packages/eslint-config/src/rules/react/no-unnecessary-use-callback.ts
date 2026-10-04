@@ -49,6 +49,7 @@ function noUnnecessaryUseCallbackImpl(context: RuleContext, { ast, is }: RuleToo
       }
 
       const { arguments: initArguments } = init;
+
       const [fn, deps] = initArguments;
 
       if (!fn || !deps) {
@@ -102,6 +103,7 @@ function getUseEffectOnlyReport(
   }
 
   const references = sourceCode.getDeclaredVariables(node.parent)[0]?.references ?? [];
+
   const usages = references.filter((reference) => !reference.init);
 
   if (usages.length === 0) {

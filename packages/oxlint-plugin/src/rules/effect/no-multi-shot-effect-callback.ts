@@ -16,6 +16,7 @@ import {
 
 function isMultiShotRegistration(node: ESTree.CallExpression, resume: string): boolean {
   const path = staticPath(node.callee);
+
   const method = path?.at(-1);
 
   if (method === undefined || !['addEventListener', 'on', 'setInterval'].includes(method)) {
@@ -62,6 +63,7 @@ export const noMultiShotEffectCallback: Rule = defineEffectRule(
       }
 
       const resume = firstIdentifierParameter(register)?.name;
+
       const body = register.body;
 
       if (

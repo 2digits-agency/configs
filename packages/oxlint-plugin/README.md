@@ -59,9 +59,14 @@ v3 `setHeaders`, native Request/Response/fetch headers, outgoing setters, and na
 Only ASCII uppercase letters are diagnosed; the rule does not normalize non-ASCII names.
 
 There is **no autofix**: renaming a header schema key changes typed contracts and may collide with a lowercase key.
-Review the schema and its consumers together. Runtime controls are pinned to Effect 4.0.0-rc.117 through a test-only
-dependency alias; this does not change the workspace's Effect version. This is preventive guidance: the historical
-agency scan found **zero bad sites and seven valid endpoint schemas**, not seven defects or a runtime outage.
+Review the schema and its consumers together. Runtime controls use the workspace's Effect version with `@effect/vitest`.
+This is preventive guidance: the historical agency scan found **zero bad sites and seven valid endpoint schemas**,
+not seven defects or a runtime outage.
+
+### Tests
+
+Use `@effect/vitest` for tests exercising Effect code. Run effects with `it.effect` (or `it.live` when live runtime
+services are required), not manual `Effect.run*` calls. RuleTester and synchronous CLI tests use regular `it`.
 
 ### Function-valued Config defaults
 

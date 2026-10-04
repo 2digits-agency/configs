@@ -33,7 +33,9 @@ export const preferEffectEncoding: Rule = defineEffectRule(
       }
 
       const path = staticPath(node.callee);
+
       const bufferFrom = path?.join('.') === 'Buffer.from' && isEncodingArgument(argumentAt(node, 1));
+
       const bufferToString = path?.at(-1) === 'toString' && isEncodingArgument(argumentAt(node, 0));
 
       if (bufferFrom || bufferToString) {

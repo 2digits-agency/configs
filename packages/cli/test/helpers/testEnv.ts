@@ -14,6 +14,7 @@ import * as Url from 'effect/http/Url';
  */
 export const withTempTestEnv = Effect.fn('withTempTestEnv')(function* (prefix: string) {
   const fs = yield* FileSystem.FileSystem;
+
   const tempDir = yield* fs.makeTempDirectoryScoped({ prefix: `test-${prefix}-` });
 
   // Change to temp directory within the same scope
@@ -35,6 +36,7 @@ export const fixturesBasePath = Effect.gen(function* () {
   const path = yield* Path.Path;
 
   const __filename = yield* path.fromFileUrl(Result.getOrThrow(Url.fromString(import.meta.url)));
+
   const __dirname = path.dirname(__filename);
 
   return path.join(__dirname, '../fixtures/');
@@ -51,9 +53,11 @@ type Fixture = 'existing-configs' | 'monorepo-turborepo' | 'single-package' | 'm
  */
 export const copyFixture = Effect.fn('copyFixture')(function* (fixtureName: Fixture) {
   const fs = yield* FileSystem.FileSystem;
+
   const path = yield* Path.Path;
 
   const fixturesBaseDir = yield* fixturesBasePath;
+
   const fixtureDir = path.join(fixturesBaseDir, fixtureName);
 
   const fixtureDirExists = yield* fs.exists(fixtureDir);

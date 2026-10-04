@@ -31,6 +31,7 @@ describe(PackageManagerService, () => {
           yield* copyFixture('monorepo-turborepo');
 
           const service = yield* PackageManagerService;
+
           const root = yield* service.resolveRoot();
 
           assertTrue(root.includes(dir));
@@ -42,9 +43,11 @@ describe(PackageManagerService, () => {
       it.effect('reads package.json from current directory', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('PackageManagerService');
+
           yield* copyFixture('single-package');
 
           const service = yield* PackageManagerService;
+
           const pkg = yield* service.readPackageJson();
 
           expect(pkg).toMatchObject({
@@ -78,9 +81,11 @@ describe(PackageManagerService, () => {
       it.effect('detects pnpm package manager', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('PackageManagerService');
+
           yield* copyFixture('single-package');
 
           const service = yield* PackageManagerService;
+
           const pm = yield* service.getPackageManager();
 
           strictEqual(pm.name, 'pnpm');
@@ -92,7 +97,9 @@ describe(PackageManagerService, () => {
       it.effect('executes command to add dev dependencies', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('PackageManagerService');
+
           yield* copyFixture('single-package');
+
           yield* clearExecutedCommands;
 
           const service = yield* PackageManagerService;
@@ -119,7 +126,9 @@ describe(PackageManagerService, () => {
       it.effect('executes separate commands for dependencies and devDependencies', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('PackageManagerService');
+
           yield* copyFixture('single-package');
+
           yield* clearExecutedCommands;
 
           const service = yield* PackageManagerService;
@@ -148,13 +157,16 @@ describe(PackageManagerService, () => {
       it.effect('returns command string for running script', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('PackageManagerService');
+
           yield* copyFixture('single-package');
 
           const service = yield* PackageManagerService;
+
           const cmd = yield* service.runScriptCommand({ script: 'test' });
 
           // Should return a pnpm command
           assertTrue(cmd.includes('pnpm'));
+
           assertTrue(cmd.includes('test'));
 
           expect(cmd).toMatchInlineSnapshot(`"pnpm run test"`);
@@ -166,6 +178,7 @@ describe(PackageManagerService, () => {
       it.effect('writes package.json to current directory', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('PackageManagerService');
+
           yield* copyFixture('single-package');
 
           const service = yield* PackageManagerService;
@@ -183,7 +196,9 @@ describe(PackageManagerService, () => {
           const pkg = yield* service.readPackageJson();
 
           strictEqual(pkg.name, 'test-updated');
+
           strictEqual(pkg.version, '2.0.0');
+
           strictEqual(pkg.scripts?.test, 'vitest');
         }),
       );
@@ -208,6 +223,7 @@ describe(PackageManagerService, () => {
           const pkg = yield* service.readPackageJson({ id: tempDir });
 
           strictEqual(pkg.name, 'monorepo-updated');
+
           strictEqual(pkg.private, true);
         }),
       );
@@ -215,9 +231,11 @@ describe(PackageManagerService, () => {
       it.effect('preserves existing fields when updating', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('PackageManagerService');
+
           yield* copyFixture('single-package');
 
           const service = yield* PackageManagerService;
+
           const original = yield* service.readPackageJson();
 
           yield* service.writePackageJson({
@@ -233,7 +251,9 @@ describe(PackageManagerService, () => {
           const updated = yield* service.readPackageJson();
 
           strictEqual(updated.name, original.name);
+
           strictEqual(updated.version, original.version);
+
           strictEqual(updated.scripts?.newScript, 'echo "new"');
         }),
       );
@@ -255,6 +275,7 @@ describe(PackageManagerService, () => {
       it.effect('writePackageJson fails on readonly file', () =>
         Effect.gen(function* () {
           const fs = yield* FileSystem.FileSystem;
+
           const path = yield* Path.Path;
 
           const tempDir = yield* withTempTestEnv('PackageManagerService');
@@ -266,6 +287,7 @@ describe(PackageManagerService, () => {
           yield* fs.chmod(pkgPath, 0o444);
 
           const service = yield* PackageManagerService;
+
           const result = yield* Effect.result(
             service.writePackageJson({
               content: {
@@ -286,6 +308,7 @@ describe(PackageManagerService, () => {
           yield* withTempTestEnv('PackageManagerService');
 
           const service = yield* PackageManagerService;
+
           const result = yield* Effect.result(
             service.writePackageJson({
               id: '/nonexistent/directory',
@@ -305,6 +328,7 @@ describe(PackageManagerService, () => {
           yield* withTempTestEnv('PackageManagerService');
 
           const service = yield* PackageManagerService;
+
           const result = yield* Effect.result(service.resolveRoot());
 
           expect(result._tag).toBe('Failure');
@@ -318,6 +342,7 @@ describe(PackageManagerService, () => {
           const tempDir = yield* withTempTestEnv('PackageManagerService');
 
           const fs = yield* FileSystem.FileSystem;
+
           const path = yield* Path.Path;
 
           yield* fs.writeFileString(
@@ -329,6 +354,7 @@ describe(PackageManagerService, () => {
           );
 
           const service = yield* PackageManagerService;
+
           const pkg = yield* service.readPackageJson();
 
           strictEqual(pkg.scripts, undefined);
@@ -340,6 +366,7 @@ describe(PackageManagerService, () => {
           const tempDir = yield* withTempTestEnv('PackageManagerService');
 
           const fs = yield* FileSystem.FileSystem;
+
           const path = yield* Path.Path;
 
           yield* fs.writeFileString(
@@ -352,6 +379,7 @@ describe(PackageManagerService, () => {
           );
 
           const service = yield* PackageManagerService;
+
           const pkg = yield* service.readPackageJson();
 
           expect(pkg.scripts).toStrictEqual({});
@@ -361,7 +389,9 @@ describe(PackageManagerService, () => {
       it.effect('addDependencies handles empty arrays', () =>
         Effect.gen(function* () {
           yield* withTempTestEnv('PackageManagerService');
+
           yield* copyFixture('single-package');
+
           yield* clearExecutedCommands;
 
           const service = yield* PackageManagerService;

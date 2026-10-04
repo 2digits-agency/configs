@@ -61,11 +61,15 @@ describe(BoardService, () => {
       it.effect('returns transformed projects', () =>
         Effect.gen(function* () {
           const service = yield* BoardService;
+
           const projects = yield* service.getProjects();
 
           expect(projects).toHaveLength(1);
+
           expect(projects[0]?.id).toBe(123);
+
           expect(projects[0]?.name).toBe('Test Project');
+
           expect(projects[0]?.state).toBe('OPEN');
         }),
       );
@@ -73,6 +77,7 @@ describe(BoardService, () => {
       it.effect('returns projects with filter params', () =>
         Effect.gen(function* () {
           const service = yield* BoardService;
+
           const projects = yield* service.getProjects({ limit: 50, page: 2, states: ['OPEN'] });
 
           expect(projects).toHaveLength(1);
@@ -88,13 +93,16 @@ describe(BoardService, () => {
       it.effect('returns transformed messages', () =>
         Effect.gen(function* () {
           const service = yield* BoardService;
+
           const messages = yield* service.getMessages({
             objectType: 'PROJECT',
             objectId: 123,
           });
 
           expect(messages).toHaveLength(1);
+
           expect(messages[0]?.content).toBe('Test message');
+
           expect(messages[0]?.ownerName).toBe('John Doe');
         }),
       );

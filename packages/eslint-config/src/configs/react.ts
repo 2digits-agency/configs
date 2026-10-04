@@ -23,9 +23,11 @@ export async function react(
   ]);
 
   const { configs } = pluginReact;
+
   const {
     all: { plugins },
   } = configs;
+
   const reactExtraPlugin = plugins?.['@eslint-react'] ?? {};
 
   const recommended = renamePluginsInRules(

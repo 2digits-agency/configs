@@ -4,7 +4,9 @@ import { rules } from '../src';
 import { testRule } from './rule-tester';
 
 const effect = `import * as Effect from 'effect/Effect';`;
+
 const worker = `import * as CF from 'alchemy/Cloudflare';`;
+
 const docker = `import * as Docker from 'alchemy/Docker';`;
 
 for (const [name, messageId, invalid, output] of [

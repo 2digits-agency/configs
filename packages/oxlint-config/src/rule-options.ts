@@ -3,6 +3,7 @@ import type { AllowWarnDeny } from 'oxlint';
 import type { PaddingLineOption, RuleName as TwoDigitsRuleName } from '@2digits/oxlint-plugin';
 
 type RuleWithOptions<T> = AllowWarnDeny | [AllowWarnDeny, T];
+
 type TwoDigitsRuleMap = Partial<
   Record<`2digits/${Exclude<TwoDigitsRuleName, 'padding-line-between-statements'>}`, AllowWarnDeny>
 >;

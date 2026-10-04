@@ -28,6 +28,7 @@ export const noAsyncEffectTry: Rule = defineEffectRule(
       }
 
       const first = argumentAt(node, 0);
+
       let thunk: FunctionNode | undefined = first !== undefined && isFunctionNode(first) ? first : undefined;
 
       if (thunk === undefined && first?.type === 'ObjectExpression') {

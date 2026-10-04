@@ -3,15 +3,12 @@ import { eslintCompatPlugin, type Plugin } from '@oxlint/plugins';
 import { rules } from './rules';
 
 export { rules } from './rules';
+
 export type { PaddingLineOption } from './rules/padding-line-between-statements';
 
 export type RuleName = keyof typeof rules;
 
-const optInRules = new Set<RuleName>([
-  'prefer-effect-filesystem',
-  'prefer-effect-path',
-  'padding-line-between-statements',
-]);
+const optInRules = new Set<RuleName>(['prefer-effect-filesystem', 'prefer-effect-path']);
 
 export const recommendedRules = Object.fromEntries(
   (Object.keys(rules) as Array<RuleName>)

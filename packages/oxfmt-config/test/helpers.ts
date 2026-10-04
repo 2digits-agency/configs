@@ -33,6 +33,7 @@ export async function formatFixture(source: string, fixture: FixtureCase): Promi
     ...prettierConfig,
     filepath: path.join(fixture.name, fixture.fileName),
   });
+
   const result = await formatOxfmt(path.join(fixture.name, fixture.fileName), source, twoDigits);
 
   expect(result.errors).toStrictEqual([]);

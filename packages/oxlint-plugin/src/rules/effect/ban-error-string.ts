@@ -9,7 +9,9 @@ function errorLikeName(node: ESTree.Node | undefined): string | undefined {
 }
 
 function isStringCall(node: ESTree.CallExpression): boolean;
+
 function isStringCall(node: ESTree.Node): node is ESTree.CallExpression;
+
 function isStringCall(node: ESTree.Node): boolean {
   if (node.type !== 'CallExpression' || node.arguments.length !== 1) {
     return false;
@@ -43,6 +45,7 @@ export const banErrorString: Rule = defineSyntaxRule(
       }
 
       const cause = context.sourceCode.getText(causeArgument);
+
       const replacement = `'Error occurred', { cause: ${cause} }`;
 
       context.report({
@@ -93,6 +96,7 @@ export const banErrorString: Rule = defineSyntaxRule(
     },
     TemplateLiteral(node) {
       const [first, last] = node.quasis;
+
       const name = errorLikeName(node.expressions[0]);
 
       if (name !== undefined && node.quasis.length === 2 && first?.value.raw === '' && last?.value.raw === '') {

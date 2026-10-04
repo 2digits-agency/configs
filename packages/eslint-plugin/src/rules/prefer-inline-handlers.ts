@@ -23,13 +23,16 @@ function getComponentBoundary(node: TSESTree.Node): TSESTree.Node | undefined {
   }
 
   let { parent: current } = node;
+
   let result: TSESTree.Node | undefined;
 
   while (current) {
     if (FUNCTION_NODE_TYPES.has(current.type)) {
       result = current;
+
       break;
     }
+
     current = current.parent;
   }
 
@@ -61,6 +64,7 @@ function findVariable(scope: Scope, name: string): Variable | undefined {
     if (found) {
       return found;
     }
+
     currentScope = currentScope.upper;
   }
 
@@ -73,7 +77,9 @@ function getHandlerText(
 ): string {
   if (handlerNode.type === AST_NODE_TYPES.FunctionDeclaration) {
     const params = handlerNode.params.map((p) => sourceCode.getText(p)).join(', ');
+
     const body = sourceCode.getText(handlerNode.body);
+
     const asyncPrefix = handlerNode.async ? 'async ' : '';
 
     return `${asyncPrefix}(${params}) => ${body}`;
@@ -119,6 +125,7 @@ export const preferInlineHandlers = createRule<[], MessageId>({
       handlerNode: TSESTree.ArrowFunctionExpression | TSESTree.FunctionExpression | TSESTree.FunctionDeclaration,
     ) {
       const scope = sourceCode.getScope(declarationNode);
+
       const variable = findVariable(scope, identifier.name);
 
       if (!variable) {
@@ -138,6 +145,7 @@ export const preferInlineHandlers = createRule<[], MessageId>({
       }
 
       const { identifier: refNode } = ref;
+
       const { parent } = refNode;
 
       const isJsxPropValue =
@@ -153,7 +161,9 @@ export const preferInlineHandlers = createRule<[], MessageId>({
         data: { name: identifier.name },
         fix(fixer) {
           const handlerText = getHandlerText(sourceCode, handlerNode);
+
           const declarationStatement = getDeclarationStatement(declarationNode);
+
           const fixes: Array<TSESLint.RuleFix> = [fixer.replaceText(refNode, handlerText)];
 
           if (declarationStatement) {

@@ -13,6 +13,7 @@ import {
 
 function resolveConst(node: ESTree.Expression, context: Context): ESTree.Expression | undefined {
   let expression = unwrapExpression(node);
+
   const seen = new Set<Variable>();
 
   while (expression.type === 'Identifier') {
@@ -21,8 +22,11 @@ function resolveConst(node: ESTree.Expression, context: Context): ESTree.Express
     while (scope !== null && !scope.set.has(expression.name)) {
       scope = scope.upper;
     }
+
     const variable = scope?.set.get(expression.name);
+
     const definition = variable?.defs.length === 1 ? variable.defs[0] : undefined;
+
     const declaration = definition?.node;
 
     if (
@@ -37,7 +41,9 @@ function resolveConst(node: ESTree.Expression, context: Context): ESTree.Express
     ) {
       return undefined;
     }
+
     seen.add(variable);
+
     expression = unwrapExpression(declaration.init);
   }
 
@@ -48,6 +54,7 @@ function receivingConfig(node: ESTree.CallExpression): ESTree.Expression | undef
   if (node.arguments.length === 2) {
     return argumentAt(node, 0);
   }
+
   const parent = node.parent;
 
   // Earlier pipe operations may change the success value, so only prove the first operation.
@@ -81,7 +88,9 @@ export const noFunctionConfigDefault: Rule = defineEffectRule(
       }
 
       const fallback = argumentAt(node, node.arguments.length - 1);
+
       const config = receivingConfig(node);
+
       const receiver = config === undefined ? undefined : resolveConst(config, context);
 
       if (

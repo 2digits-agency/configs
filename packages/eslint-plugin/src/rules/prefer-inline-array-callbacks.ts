@@ -6,6 +6,7 @@ import type ts from 'typescript';
 import { createRule } from '../utils';
 
 type MessageId = (typeof MessageId)[keyof typeof MessageId];
+
 const MessageId = {
   noCallbackReference: 'noCallbackReference',
 } as const;
@@ -53,6 +54,7 @@ function isIgnoredCallback(
   }
 
   const scope = sourceCode.getScope(callback);
+
   const reference = scope.references.find((ref) => ref.identifier === callback);
 
   if (!reference?.resolved) {
@@ -173,9 +175,11 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
 
       if (isArray === undefined) {
         const tsNode = parserServices.esTreeNodeToTSNodeMap.get(object);
+
         const objectType = checker.getTypeAtLocation(tsNode);
 
         isArray = isArrayType(checker, objectType);
+
         arrayTypeCache.set(object, isArray);
       }
 
@@ -184,12 +188,17 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
       }
 
       const callbackName = getCallbackName(callback);
+
       const callbackText = context.sourceCode.getText(callback);
+
       const wrappedCallback = needsParentheses(callback) ? `(${callbackText})` : callbackText;
 
       const isReduceMethod = REDUCE_METHODS.has(methodName);
+
       const isCompareMethod = COMPARE_METHODS.has(methodName);
+
       const params = isReduceMethod ? '(acc, element)' : isCompareMethod ? '(a, b)' : '(element)';
+
       const args = isReduceMethod ? 'acc, element' : isCompareMethod ? 'a, b' : 'element';
 
       const body = methodName === 'forEach' ? `{ ${wrappedCallback}(${args}); }` : `${wrappedCallback}(${args})`;

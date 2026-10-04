@@ -19,7 +19,9 @@ export const TloHttpClientLive = Layer.effect(
   TloHttpClient,
   Effect.gen(function* () {
     const config = yield* TloConfig;
+
     const baseClient = yield* HttpClient.HttpClient;
+
     const cookieHeader = Cookies.toCookieHeader(config.cookies);
 
     const client = baseClient.pipe(

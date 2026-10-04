@@ -20,8 +20,11 @@ describe('tlo environment configuration', () => {
       });
 
       expect(config.baseUrl).toBe('https://teamleader.test');
+
       expect(Cookies.toRecord(config.cookies)).toStrictEqual({ session: 'abc123', preference: 'compact' });
+
       expect(Redacted.value(config.sessionToken)).toBe('secret-token');
+
       expect(Redacted.isRedacted(config.sessionToken)).toBeTruthy();
     }),
   );
@@ -31,6 +34,7 @@ describe('tlo environment configuration', () => {
       const config = yield* provideConfig({ TLO_SESSION_TOKEN: 'secret-token' });
 
       expect(config.baseUrl).toBe('https://socialbrothers.orbit.teamleader.eu');
+
       expect(Cookies.toRecord(config.cookies)).toStrictEqual({});
     }),
   );

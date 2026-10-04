@@ -17,7 +17,9 @@ const errorHandlerMethods = new Set(['catch', 'catchAll', 'mapError']);
 
 function wrapperDropsCause(node: FunctionNode, state: FileState): boolean {
   const callPath = callbackApi(node, state);
+
   const optionsCall = functionProperty(node, 'catch');
+
   const isHandler =
     (callPath?.[0] === 'Effect' && callPath[1] !== undefined && errorHandlerMethods.has(callPath[1])) ||
     (optionsCall !== undefined &&

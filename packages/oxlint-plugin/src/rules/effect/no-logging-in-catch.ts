@@ -14,6 +14,7 @@ const catchMethods = new Set([
   'orElseFail',
   'orElseSucceed',
 ]);
+
 const logMethods = new Set(['log', 'logDebug', 'logError', 'logInfo', 'logTrace', 'logWarning']);
 
 function catchCallback(node: ESTree.Node, state: FileState): { readonly method: string } | undefined {
@@ -25,6 +26,7 @@ function catchCallback(node: ESTree.Node, state: FileState): { readonly method: 
 
       if (call?.arguments.at(-1) === parent) {
         const path = canonicalPath(call.callee, state);
+
         const method = path?.[1];
 
         if (method !== undefined && path?.[0] === 'Effect' && catchMethods.has(method)) {
@@ -32,6 +34,7 @@ function catchCallback(node: ESTree.Node, state: FileState): { readonly method: 
         }
       }
     }
+
     parent = parent.parent;
   }
 
@@ -45,7 +48,9 @@ export const noLoggingInCatch: Rule = defineEffectRule(
   (context, getState) => ({
     CallExpression(node) {
       const state = getState();
+
       const path = canonicalPath(node.callee, state);
+
       const logger =
         path?.[1] !== undefined && path[0] === 'Effect' && logMethods.has(path[1]) ? path.join('.') : undefined;
 

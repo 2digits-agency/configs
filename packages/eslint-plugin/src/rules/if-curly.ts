@@ -25,6 +25,7 @@ export const ifCurly = createRule<[], MessageId>({
 
     function getIndent(node: TSESTree.Node): string {
       const line = sourceCode.lines[node.loc.start.line - 1] ?? '';
+
       const match = /^(\s*)/.exec(line);
 
       return match?.[1] ?? '';
@@ -45,6 +46,7 @@ export const ifCurly = createRule<[], MessageId>({
         messageId: 'missingCurly',
         fix(fixer) {
           const statementText = sourceCode.getText(node);
+
           const indent = getIndent(node);
 
           return fixer.replaceText(node, `{\n${indent}  ${statementText}\n${indent}}`);

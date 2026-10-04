@@ -22,6 +22,7 @@ async function readGitEmail(ctx: PluginInput): Promise<string | undefined> {
 
 export async function buildConfig(ctx: PluginInput): Promise<Config> {
   const projectName = getProjectName(ctx.worktree || ctx.directory);
+
   const customProperties = parseCustomProperties(process.env.POSTHOG_LLMA_CUSTOM_PROPERTIES);
 
   if (!isValidCustomPropertiesJson(process.env.POSTHOG_LLMA_CUSTOM_PROPERTIES)) {

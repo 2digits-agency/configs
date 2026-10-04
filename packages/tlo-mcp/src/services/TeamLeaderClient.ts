@@ -52,6 +52,7 @@ export const TeamLeaderClientLive = Layer.effect(
   TeamLeaderClient,
   Effect.gen(function* () {
     const config = yield* TloConfig;
+
     const { client } = yield* TloHttpClient;
 
     return TeamLeaderClient.of({
@@ -62,9 +63,13 @@ export const TeamLeaderClientLive = Layer.effect(
           schema: TSchema,
         ) {
           const bodyWithToken = R.set(body, 't', Redacted.value(config.sessionToken));
+
           const urlParams = UrlParams.fromInput(bodyWithToken);
+
           const response = yield* client.post(path, { body: HttpBody.urlParams(urlParams) });
+
           const text = yield* response.text;
+
           const malformedError = parseMalformedJson(text);
 
           yield* Match.value(malformedError).pipe(

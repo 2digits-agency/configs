@@ -6,6 +6,7 @@ import { noUppercaseHttpApiHeader } from '../../../src/rules/effect/no-uppercase
 import { testRule } from '../../rule-tester';
 
 const ruleName = 'no-uppercase-http-api-header';
+
 const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
 
 testRule(ruleName, noUppercaseHttpApiHeader, {

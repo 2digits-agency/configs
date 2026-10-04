@@ -23,6 +23,7 @@ export function truncate(value: string, maxLength: number): string {
   if (maxLength <= 0) {
     return '';
   }
+
   if (value.length <= maxLength) {
     return value;
   }
@@ -36,12 +37,15 @@ export function redactSensitive(value: unknown, seen: WeakSet<object>, depth: nu
   if (depth > 8) {
     return '[DepthLimit]';
   }
+
   if (value === null || value === undefined) {
     return value;
   }
+
   if (typeof value !== 'object') {
     return value;
   }
+
   if (seen.has(value)) {
     return '[Circular]';
   }
@@ -159,9 +163,11 @@ export function mapStopReason(finish: string | undefined, hasError: boolean): st
   if (hasError) {
     return 'error';
   }
+
   if (!finish) {
     return undefined;
   }
+
   if (finish === 'tool-calls') {
     return 'tool_calls';
   }
@@ -173,13 +179,16 @@ export function getErrorMessage(error: unknown): string | undefined {
   if (!error) {
     return undefined;
   }
+
   if (isRecord(error)) {
     if (typeof error.message === 'string') {
       return error.message;
     }
+
     if (isRecord(error.data) && typeof error.data.message === 'string') {
       return error.data.message;
     }
+
     if (typeof error.name === 'string') {
       return error.name;
     }
@@ -230,9 +239,11 @@ export function buildOutputChoices(
   if (privacyMode) {
     return undefined;
   }
+
   if (output) {
     return [{ role: 'assistant', content: output }];
   }
+
   if (errorMessage) {
     return [{ role: 'assistant', content: errorMessage }];
   }

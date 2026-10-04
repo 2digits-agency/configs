@@ -29,6 +29,7 @@ export const alchemyNoDeprecatedResource: Rule = defineEffectRule(
       }
 
       const api = path.join('.');
+
       const replacement = deprecatedResources.get(api);
 
       if (replacement !== undefined) {

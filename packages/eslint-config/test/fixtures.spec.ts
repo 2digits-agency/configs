@@ -7,6 +7,7 @@ import { fixtureSnapshotPath, runAutofixFixture, snapshotJson } from './helpers'
 import { configPresets } from './presets';
 
 const fixturesInputDir = fileURLToPath(new URL('../fixtures/input/', import.meta.url));
+
 const tmpDir = fileURLToPath(new URL('../_fixtures/', import.meta.url));
 
 describe('fixtures', () => {
@@ -26,6 +27,7 @@ describe('fixtures', () => {
     });
 
     expect(Object.keys(result.changedFiles).length).toBeGreaterThan(0);
+
     await expect(snapshotJson(result)).toMatchFileSnapshot(fixtureSnapshotPath('fixtures', name));
   });
 });

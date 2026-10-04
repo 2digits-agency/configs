@@ -58,6 +58,7 @@ export const noAlreadyStartedPromise: Rule = defineEffectRule(
       },
       CallExpression(node) {
         const thunk = promiseThunk(node, getState());
+
         const result = thunk === undefined ? undefined : functionResult(thunk);
 
         if (result?.type === 'Identifier' && prestartedPromises.has(result.name)) {

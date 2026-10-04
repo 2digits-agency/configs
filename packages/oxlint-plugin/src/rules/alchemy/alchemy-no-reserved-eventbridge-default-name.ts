@@ -19,6 +19,7 @@ export const alchemyNoReservedEventbridgeDefaultName: Rule = defineEffectRule(
       }
 
       const options = argumentAt(node, 1);
+
       const name = options?.type === 'ObjectExpression' ? objectProperty(options, 'name') : undefined;
 
       if (name !== undefined && isLiteral(name.value, 'default')) {

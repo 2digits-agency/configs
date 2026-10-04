@@ -74,7 +74,9 @@ testRule(name, noFunctionConfigDefault, {
 });
 
 const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+
 const configImport = `import * as Config from 'effect/Config';`;
+
 const thunk = '() => fallback()';
 
 tester.run('no-function-config-default binding proof', noFunctionConfigDefault, {
@@ -136,8 +138,11 @@ tester.run('no-function-config-default binding proof', noFunctionConfigDefault, 
 describe('no-function-config-default metadata', () => {
   it('keeps the rule registered, recommended and diagnostic-only', () => {
     expect(rules[name]).toBe(noFunctionConfigDefault);
+
     expect(recommendedRules['2digits/no-function-config-default']).toBe('error');
+
     expect(noFunctionConfigDefault.meta?.fixable).toBeUndefined();
+
     expect(noFunctionConfigDefault.meta?.hasSuggestions).toBeUndefined();
   });
 });

@@ -10,9 +10,11 @@ describe('mcp logging', () => {
       yield* Effect.log('MCP diagnostic').pipe(Effect.provide(McpLoggerLayer));
 
       const stderr = yield* TestConsole.errorLines;
+
       const stdout = yield* TestConsole.logLines;
 
       expect(stderr.join('\n')).toContain('MCP diagnostic');
+
       expect(stdout).toStrictEqual([]);
     }),
   );

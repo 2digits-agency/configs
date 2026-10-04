@@ -20,6 +20,7 @@ export const noOverwrittenDiscriminant: Rule = defineEffectRule(
       }
 
       const laterSpread = node.properties.slice(tagIndex + 1).some((property) => property.type === 'SpreadElement');
+
       const tag = node.properties[tagIndex];
 
       if (laterSpread && tag?.type === 'Property') {

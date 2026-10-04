@@ -24,6 +24,7 @@ describe(PrettierSetupService, () => {
       it.effect('adds prettier config and scripts to package.json', () =>
         Effect.gen(function* () {
           const service = yield* PrettierSetupService;
+
           const pm = yield* PackageManagerService;
 
           const tempDir = yield* withTempTestEnv('PrettierSetupService');
@@ -62,6 +63,7 @@ describe(PrettierSetupService, () => {
       it.effect('preserves existing prettier config', () =>
         Effect.gen(function* () {
           const service = yield* PrettierSetupService;
+
           const pm = yield* PackageManagerService;
 
           const tempDir = yield* withTempTestEnv('PrettierSetupService');
@@ -94,6 +96,7 @@ describe(PrettierSetupService, () => {
       it.effect('preserves existing scripts', () =>
         Effect.gen(function* () {
           const service = yield* PrettierSetupService;
+
           const pm = yield* PackageManagerService;
 
           const tempDir = yield* withTempTestEnv('PrettierSetupService');
@@ -103,6 +106,7 @@ describe(PrettierSetupService, () => {
           const pkg = yield* pm.readPackageJson({ id: tempDir });
 
           pkg.scripts = { ...pkg.scripts };
+
           pkg.scripts.format = 'custom-format-command';
 
           yield* pm.writePackageJson({ id: tempDir, content: pkg });

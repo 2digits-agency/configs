@@ -19,6 +19,7 @@ describe('statement spacing configuration types', () => {
     expect(config.rules?.['2digits/padding-line-between-statements']).toStrictEqual(
       rules['2digits/padding-line-between-statements'],
     );
+
     expectTypeOf<PaddingLineOption['blankLine']>().toEqualTypeOf<'always' | 'any' | 'never'>();
   });
 });

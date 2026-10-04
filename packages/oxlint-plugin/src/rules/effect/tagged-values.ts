@@ -3,6 +3,7 @@ import type { ESTree } from '@oxlint/plugins';
 import { staticPropertyName } from '../../utils';
 
 const equalityOperators = new Set(['==', '===', '!=', '!==']);
+
 const broadEffectCatchMethods = new Set(['catch', 'catchAll', 'catchIf']);
 
 /**
@@ -32,9 +33,11 @@ export function tagMemberFromComparison(node: ESTree.BinaryExpression): ESTree.M
   if (!equalityOperators.has(node.operator)) {
     return undefined;
   }
+
   if (isTagMember(node.left) && isStringLiteral(node.right)) {
     return node.left;
   }
+
   if (isTagMember(node.right) && isStringLiteral(node.left)) {
     return node.right;
   }
@@ -65,6 +68,7 @@ export function isInsideBroadEffectHandler(node: ESTree.Node): boolean {
         broadEffectCatchMethods.has(call.callee.property.name)
       );
     }
+
     current = current.parent;
   }
 

@@ -82,6 +82,7 @@ export const noNonJsonSchemaAnnotation: Rule = defineEffectRule(
       }
 
       const directPath = canonicalPath(node.callee, state);
+
       const method =
         node.callee.type === 'MemberExpression'
           ? staticPropertyName(node.callee)
