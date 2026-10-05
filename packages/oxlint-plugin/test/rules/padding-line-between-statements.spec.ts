@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
-/* eslint-disable sonar/no-duplicate-string -- Keep exact source/fix fixtures readable. */
+
 import { describe, expectTypeOf, it } from '@effect/vitest';
 import ts from 'dedent';
 import { RuleTester } from 'oxlint/plugins-dev';
