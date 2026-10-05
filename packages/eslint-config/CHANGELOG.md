@@ -1,3 +1,15 @@
+## @2digits/eslint-config@5.8.4
+
+### Update eslint-plugin-jsdoc to 65.1.0
+
+- Added typed support for the `enableFixer` option on `jsdoc/check-syntax`.
+
+### Update @eslint-react/kit to 5.24.4
+
+
+
+### Update @eslint-react/eslint-plugin to 5.24.4
+
 ## @2digits/eslint-config@5.8.3
 
 ### Update eslint-plugin-unicorn to 77.0.0

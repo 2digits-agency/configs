@@ -1,3 +1,42 @@
+## @2digits/oxlint-plugin@0.1.0
+
+### Diagnose uppercase Effect v4 endpoint header schema keys
+
+- Added the recommended `no-uppercase-http-api-header` diagnostic for direct endpoint header field objects with
+  import and lexical binding checks. Native headers, v3 schemas, and ambiguous objects remained excluded.
+- Kept the rule diagnostic-only: renaming keys can change contracts or introduce lowercase collisions.
+- Added preventive guidance backed by pinned rc.117 runtime controls. The historical agency scan found zero bad
+  sites and seven valid schemas; no existing outage was claimed.
+
+### Allow defaults for locally proven function-valued Configs
+
+- Fixed `no-function-config-default` false positives for `Config.succeed(functionLiteral)`, immutable local receiver
+  aliases, and the first operation in a proven receiver's pipe.
+- Preserved diagnostics for value-config thunks and unknown receivers without offering an eager-evaluation autofix.
+
+### Add anti-slop Effect rules
+
+Add recommended rules for manual tagged error handling, tag comparisons, tagged construction, and relative service
+constructor imports. Extend `prefer-effect-match` to detect chained literal ternaries. Adapted from Dillon Mulroy's
+MIT-licensed anti-slop project; all new diagnostics are syntax-only and have no automatic fixes.
+
+### Improve statement spacing types
+
+Accept readonly non-empty matcher lists and strengthen statement matching types without changing spacing diagnostics or autofixes.
+
+### Migrate statement spacing to effect-oxlint
+
+Use Effect-based visitors and file-local state for statement spacing while preserving configuration, diagnostics, and autofixes.
+
+### Add configurable statement spacing
+
+Add the opt-in `padding-line-between-statements` rule, adapted from anti-slop's ESLint Stylistic vendor.
+Supports TypeScript statements, AST selectors, and comment-aware whitespace autofixes.
+
+### Refactor statement spacing effects
+
+- Routed spacing checks through the Effect rule context without changing diagnostics or autofixes.
+
 ## @2digits/oxlint-plugin@0.0.7
 
 ### Update @oxlint/plugins to 1.86.0
