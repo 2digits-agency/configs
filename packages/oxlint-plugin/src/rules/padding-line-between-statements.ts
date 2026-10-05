@@ -1,5 +1,4 @@
 // Adapted from anti-slop's ESLint Stylistic vendor. See NOTICE and padding-line-upstream.md.
-/* oxlint-disable unicorn/no-null -- Oxlint AST/token APIs and no-fix results use null. */
 /* eslint-disable unicorn/no-null -- Oxlint AST/token APIs and no-fix results use null. */
 import {
   Rule,
@@ -473,79 +472,82 @@ function getPaddingLineSequences(
 }
 
 function verifyPair(
-  context: RuleContext['Service'],
   prevNode: ESTree.Node,
   nextNode: ESTree.Node,
   padding: PaddingType,
-): Effect.Effect<void> {
-  if (padding === 'any') {
-    return Effect.void;
-  }
-
-  const sourceCode = context.sourceCode;
-
-  const pairs = getPaddingLineSequences(prevNode, nextNode, sourceCode);
-
-  if (padding === 'never') {
-    if (pairs.length === 0) {
-      return Effect.void;
+): Effect.Effect<void, never, RuleContext> {
+  return Effect.gen(function* () {
+    if (padding === 'any') {
+      return yield* Effect.void;
     }
 
-    return context.report({
+    const context = yield* RuleContext;
+
+    const sourceCode = context.sourceCode;
+
+    const pairs = getPaddingLineSequences(prevNode, nextNode, sourceCode);
+
+    if (padding === 'never') {
+      if (pairs.length === 0) {
+        return yield* Effect.void;
+      }
+
+      return yield* context.report({
+        node: nextNode,
+        messageId: 'unexpectedBlankLine',
+        loc: getReportLoc(nextNode, sourceCode),
+        fix(fixer) {
+          // Multiple gaps separated by comments cannot be safely collapsed together.
+          if (pairs.length >= 2) {
+            return null;
+          }
+
+          const pair = pairs[0];
+
+          if (pair === undefined) {
+            throw new Error('Padding rule invariant: reported padding pair is missing');
+          }
+
+          const start = pair[0].range[1];
+
+          const end = pair[1].range[0];
+
+          return fixer.replaceTextRange(
+            [start, end],
+            sourceCode.text.slice(start, end).replace(paddingLineSequence, '$1$2'),
+          );
+        },
+      });
+    }
+
+    if (pairs.length > 0) {
+      return yield* Effect.void;
+    }
+
+    return yield* context.report({
       node: nextNode,
-      messageId: 'unexpectedBlankLine',
+      messageId: 'expectedBlankLine',
       loc: getReportLoc(nextNode, sourceCode),
       fix(fixer) {
-        // Multiple gaps separated by comments cannot be safely collapsed together.
-        if (pairs.length >= 2) {
-          return null;
-        }
+        let prevToken = getActualLastToken(prevNode, sourceCode);
 
-        const pair = pairs[0];
+        const nextToken =
+          sourceCode.getFirstTokenBetween(prevToken, nextNode, {
+            includeComments: true,
+            filter(token) {
+              if (isTokenOnSameLine(prevToken, token)) {
+                prevToken = token;
 
-        if (pair === undefined) {
-          throw new Error('Padding rule invariant: reported padding pair is missing');
-        }
+                return false;
+              }
 
-        const start = pair[0].range[1];
+              return true;
+            },
+          }) ?? nextNode;
 
-        const end = pair[1].range[0];
-
-        return fixer.replaceTextRange(
-          [start, end],
-          sourceCode.text.slice(start, end).replace(paddingLineSequence, '$1$2'),
-        );
+        return fixer.insertTextAfter(prevToken, isTokenOnSameLine(prevToken, nextToken) ? '\n\n' : '\n');
       },
     });
-  }
-
-  if (pairs.length > 0) {
-    return Effect.void;
-  }
-
-  return context.report({
-    node: nextNode,
-    messageId: 'expectedBlankLine',
-    loc: getReportLoc(nextNode, sourceCode),
-    fix(fixer) {
-      let prevToken = getActualLastToken(prevNode, sourceCode);
-
-      const nextToken =
-        sourceCode.getFirstTokenBetween(prevToken, nextNode, {
-          includeComments: true,
-          filter(token) {
-            if (isTokenOnSameLine(prevToken, token)) {
-              prevToken = token;
-
-              return false;
-            }
-
-            return true;
-          },
-        }) ?? nextNode;
-
-      return fixer.insertTextAfter(prevToken, isTokenOnSameLine(prevToken, nextToken) ? '\n\n' : '\n');
-    },
   });
 }
 
@@ -666,18 +668,20 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
 
   const visitor: Visitor.EffectVisitor = {
     Program: enterScope,
-    'Program:exit': () =>
-      Effect.gen(function* () {
-        const pairs = yield* Ref.get(pendingPairs);
+    'Program:exit': Effect.fn("'Program:exit'")(function* () {
+      const matchedNodes = yield* Ref.get(matches);
 
-        const matchedNodes = yield* Ref.get(matches);
+      yield* Ref.get(pendingPairs).pipe(
+        Effect.flatMap(
+          // oxlint-disable-next-line unicorn/no-array-for-each
+          Effect.forEach(({ prevNode, nextNode }) =>
+            verifyPair(prevNode, nextNode, getPaddingType(prevNode, nextNode, matchedNodes)),
+          ),
+        ),
+      );
 
-        for (const { prevNode, nextNode } of pairs) {
-          yield* verifyPair(context, prevNode, nextNode, getPaddingType(prevNode, nextNode, matchedNodes));
-        }
-
-        yield* exitScope();
-      }),
+      yield* exitScope();
+    }),
     BlockStatement: enterScope,
     'BlockStatement:exit': exitScope,
     SwitchStatement: enterScope,

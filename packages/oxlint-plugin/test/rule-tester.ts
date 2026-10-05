@@ -1,6 +1,6 @@
+import { describe, it } from '@effect/vitest';
 import type { Rule } from '@oxlint/plugins';
 import { RuleTester } from 'oxlint/plugins-dev';
-import { describe, it } from 'vitest';
 
 import type { RuleName } from '../src';
 
