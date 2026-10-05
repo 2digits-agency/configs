@@ -1,3 +1,27 @@
+## @2digits/oxlint-config@1.3.0
+
+### Preserve Fallow suppression directives during comment autofix
+
+Keep case-sensitive `fallow-ignore` directives unchanged while continuing to capitalize ordinary prose comments.
+
+### Diagnose uppercase Effect v4 endpoint header schema keys
+
+- Added the recommended `no-uppercase-http-api-header` diagnostic for direct endpoint header field objects with
+  import and lexical binding checks. Native headers, v3 schemas, and ambiguous objects remained excluded.
+- Kept the rule diagnostic-only: renaming keys can change contracts or introduce lowercase collisions.
+- Added preventive guidance backed by pinned rc.117 runtime controls. The historical agency scan found zero bad
+  sites and seven valid schemas; no existing outage was claimed.
+
+### Enable statement spacing by default
+
+The default Oxlint preset now requires blank lines between statements, while keeping consecutive imports grouped.
+Use `--fix` to insert missing blank lines, or override `2digits/padding-line-between-statements` in your project config.
+
+### Add configurable statement spacing
+
+Add the opt-in `padding-line-between-statements` rule, adapted from anti-slop's ESLint Stylistic vendor.
+Supports TypeScript statements, AST selectors, and comment-aware whitespace autofixes.
+
 ## @2digits/oxlint-config@1.2.3
 
 ### Update oxlint to 1.86.0
