@@ -1,5 +1,5 @@
+import { describe, expect, it } from '@effect/vitest';
 import { RuleTester } from 'oxlint/plugins-dev';
-import { describe, expect, it } from 'vite-plus/test';
 
 import { recommendedRules, rules } from '../../../src';
 

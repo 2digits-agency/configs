@@ -1,7 +1,7 @@
 /* oxlint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
 /* eslint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
+import { describe, expect, it } from '@effect/vitest';
 import { RuleTester } from 'oxlint/plugins-dev';
-import { describe, expect, it } from 'vite-plus/test';
 
 import { recommendedRules, rules } from '../../../src';
 import { noFunctionConfigDefault } from '../../../src/rules/effect/no-function-config-default';
