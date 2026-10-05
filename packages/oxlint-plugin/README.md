@@ -63,6 +63,32 @@ Review the schema and its consumers together. Runtime controls are pinned to Eff
 dependency alias; this does not change the workspace's Effect version. This is preventive guidance: the historical
 agency scan found **zero bad sites and seven valid endpoint schemas**, not seven defects or a runtime outage.
 
+### Function-valued Config defaults
+
+`no-function-config-default` reports inline zero-parameter functions passed to Effect's eager `Config.withDefault` API,
+except when the receiving config is locally proven to hold a function:
+
+```ts
+import * as Config from 'effect/Config';
+
+Config.withDefault(
+  Config.succeed(() => 1),
+  () => 2,
+);
+const config = Config.succeed(() => {
+  return 1;
+});
+
+config.pipe(Config.withDefault(() => 2));
+```
+
+The proof follows same-file `const` receiver aliases with no reassignment and recognizes runtime Config imports from
+`effect` and `effect/Config`, including aliases and lexical shadowing. The `succeed` argument must be a function literal;
+a nonfunction object containing a function does not qualify. In `.pipe(...)`, only the first operation can use the proof.
+Imported, mutable, or otherwise composed configs remain unknown and retain the diagnostic. This is syntax proof, not
+general inference of `Config<A>`. Parameterized function defaults remain excluded. There is no autofix: eagerly evaluating
+or unwrapping a thunk could change side effects or an intentional function value.
+
 ## Automatic fixes
 
 Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
