@@ -84,7 +84,7 @@ export const vitestConfig = defineConfig({
     'vitest/require-to-throw-message': 'error',
     'vitest/require-top-level-describe': 'error',
     'vitest/valid-describe-callback': 'error',
-    'vitest/valid-expect': 'error',
+    'vitest/valid-expect': ['error', { maxArgs: 2 }],
     'vitest/valid-expect-in-promise': 'error',
     'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
     'vitest/warn-todo': 'error',
