@@ -1,24 +1,66 @@
 # @2digits/tlo-mcp
 
-MCP (Model Context Protocol) server for TeamLeader Orbit (TLO) - project management and time tracking.
+Local MCP proxy for Teamleader Orbit. OAuth runs locally; your MCP client only needs stdio.
 
 ## Installation
 
 ```bash
-pnpm add @2digits/tlo-mcp
+vp add @2digits/tlo-mcp
 ```
 
 ## Usage
 
-### As MCP Server
+### Login once
 
 ```bash
-TLO_COOKIE="your-session-cookie" npx @2digits/tlo-mcp
+vp exec tlo-mcp login
 ```
 
-### Configuration
+Login opens your browser and listens on an ephemeral `127.0.0.1` callback. Each login uses fresh state and PKCE S256.
+The proxy registers its own OAuth client; never reuse an existing authorization URL or another application's client ID.
 
-Set the `TLO_COOKIE` environment variable to your TeamLeader Orbit session cookie.
+### Start the MCP server
+
+```bash
+vp exec tlo-mcp
+```
+
+Configure your MCP client to run `tlo-mcp` without arguments, or `node /absolute/path/to/dist/bin.mjs`.
+No OAuth configuration, cookies or tokens belong in the client's config.
+
+- Tools, descriptions, input/output schemas and annotations are discovered from the official MCP, including all pages.
+- Access tokens refresh before expiry; rotated refresh tokens are saved before use.
+- Official server instructions, tool content, structured results and `isError` are preserved.
+- JSON and SSE responses are supported. Tool calls are never automatically replayed after failures or rate limits.
+- Only tools are proxied; resources, prompts, sampling and upstream notification subscriptions are not currently forwarded.
+- Tool discovery runs at startup; restart the proxy to discover changes upstream.
+- Orbit's own availability and account permissions still apply.
+
+### Credentials and logout
+
+macOS stores credentials in Keychain under `@2digits/tlo-mcp/orbit`; Keychain errors never fall back to plaintext.
+Other platforms use `~/.config/2digits/tlo-mcp/session.json` with file mode `0600` and directory mode `0700`.
+Windows ACL hardening is not provided; restrict access to your user profile.
+Tokens never appear in process arguments or normal stdout. MCP diagnostics go to stderr.
+
+```bash
+vp exec tlo-mcp logout
+```
+
+Logout deletes local credentials; it does not revoke the upstream grant (Orbit advertises no revocation endpoint).
+Concurrent refresh/login is protected by a local lock. After a crashed process, confirm it is no longer running before
+removing `~/.config/2digits/tlo-mcp/session.lock`. Do not remove a live process's lock.
+
+### Legacy cookie adapter
+
+The previous 14-tool adapter remains available explicitly:
+
+```bash
+TLO_SESSION_TOKEN="your-session-token" TLO_COOKIES="session=..." vp exec tlo-mcp legacy
+```
+
+`TLO_BASE_URL` defaults to `https://socialbrothers.orbit.teamleader.eu`.
+The following data model and tool names apply to **legacy mode only**.
 
 ## Data Model
 

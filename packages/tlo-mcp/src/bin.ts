@@ -6,4 +6,4 @@ import * as Effect from 'effect/Effect';
 import { run } from './cli/command.js';
 
 // oxlint-disable-next-line effecttsgo/strict-effect-provide -- the process entry point is where the layer belongs
-run(process.argv).pipe(Effect.provide(NodeServices.layer), NodeRuntime.runMain);
+run(process.argv.slice(2)).pipe(Effect.provide(NodeServices.layer), NodeRuntime.runMain);
