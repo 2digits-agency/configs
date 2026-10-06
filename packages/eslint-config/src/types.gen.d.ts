@@ -14101,7 +14101,9 @@ type ReactCompilerReactCompiler = []|[{
 }]
 // ----- react-extra/dom-no-unknown-property -----
 type ReactExtraDomNoUnknownProperty = []|[{
+  
   ignore?: string[]
+  
   requireDataLowercase?: boolean
 }]
 // ----- react-extra/exhaustive-deps -----
