@@ -42,8 +42,8 @@ See each rule's `meta.docs.url` for its upstream rule, issue, or framework docum
 fields object. Incoming headers are lowercase, and schema decoding looks up keys exactly:
 
 ```ts
-import { HttpApiEndpoint } from 'effect/unstable/httpapi';
 import * as Schema from 'effect/Schema';
+import { HttpApiEndpoint } from 'effect/unstable/httpapi';
 
 // Diagnosed: the required header is missing to the decoder even when it arrived.
 HttpApiEndpoint.get('me', '/me', { headers: { 'X-Api-Key': Schema.String } });

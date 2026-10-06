@@ -5,11 +5,7 @@ import type ts from 'typescript';
 
 import { createRule } from '../utils';
 
-type MessageId = (typeof MessageId)[keyof typeof MessageId];
-
-const MessageId = {
-  noCallbackReference: 'noCallbackReference',
-} as const;
+type MessageId = 'noCallbackReference';
 
 export const RULE_NAME = 'prefer-inline-array-callbacks';
 

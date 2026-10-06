@@ -86,7 +86,7 @@ export async function vitest(options: OptionsWithVitest & OptionsOverrides = {})
         'vitest/require-to-throw-message': 'error',
         'vitest/require-top-level-describe': 'error',
         'vitest/valid-describe-callback': 'error',
-        'vitest/valid-expect': 'error',
+        'vitest/valid-expect': ['error', { maxArgs: 2 }],
         'vitest/valid-expect-in-promise': 'error',
         'vitest/valid-title': 'error',
         'vitest/warn-todo': 'error',
