@@ -1,3 +1,11 @@
+## @2digits/oxlint-plugin@0.1.1
+
+### Update @oxlint/plugins to 1.87.0
+
+
+
+### Update effect to 4.0.1
+
 ## @2digits/oxlint-plugin@0.1.0
 
 ### Diagnose uppercase Effect v4 endpoint header schema keys

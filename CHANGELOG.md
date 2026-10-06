@@ -1,3 +1,31 @@
+## @2digits/config-monorepo@0.1.7
+
+### Update @effect/tsgo to 0.48.1
+
+
+
+### Update pnpm to 12.10.0
+
+
+
+### Update oxlint to 1.87.0
+
+
+
+### Update oxfmt to 0.72.0
+
+
+
+### Update @effect/vitest to 4.0.1
+
+
+
+### Update GitButler agent guidance to 0.5.2217
+
+- Added guidance for creating linked worktrees at the workspace base or a selected commit.
+
+### Update pkg-pr-new to 0.0.90
+
 ## @2digits/config-monorepo@0.1.6
 
 ### Update pnpm to 12.9.1
