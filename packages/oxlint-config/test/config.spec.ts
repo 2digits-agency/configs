@@ -4,12 +4,12 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vite-plus/test';
+import { describe, expect, it } from 'vitest';
 
 import eslintTwoDigits from '@2digits/eslint-config';
 import { recommendedRules } from '@2digits/oxlint-plugin';
 
-import withTwoDigits, { twoDigits, type TwoDigitsConfig } from '../src';
+import withTwoDigits, { twoDigits, type OxlintConfig } from '../src';
 import { twoDigitsPluginConfig } from '../src/configs/2digits';
 import { javascriptConfig } from '../src/configs/javascript';
 import { nodeConfig } from '../src/configs/node';
@@ -92,7 +92,7 @@ const sharedEslintJavascriptRules = Object.fromEntries(
   ),
 );
 
-function collectPluginsAndRules(config: TwoDigitsConfig): Array<string> {
+function collectPluginsAndRules(config: OxlintConfig): Array<string> {
   const nested = config.extends ?? [];
 
   return [
