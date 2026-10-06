@@ -7,7 +7,7 @@ import * as McpSchema from 'effect/ai/McpSchema';
 import * as McpServer from 'effect/ai/McpServer';
 
 import { OrbitClient } from './OrbitClient.js';
-import { McpLoggerLayer } from './server.js';
+import { McpLoggerLayer } from './logger.js';
 
 export const OrbitProxyLive = Layer.unwrap(
   Effect.gen(function* () {

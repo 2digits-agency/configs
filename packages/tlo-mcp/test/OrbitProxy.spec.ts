@@ -9,8 +9,8 @@ import * as McpServer from 'effect/ai/McpServer';
 import { afterEach, vi } from 'vite-plus/test';
 
 import { OrbitClient, OrbitMcpError, type OrbitClientShape } from '../src/mcp/OrbitClient.js';
+import { McpLoggerLayer } from '../src/mcp/logger.js';
 import { OrbitProxyLive } from '../src/mcp/proxy.js';
-import { McpLoggerLayer } from '../src/mcp/server.js';
 
 vi.mock(import('effect/ai/McpServer'), (importOriginal) =>
   importOriginal().then((original) => ({ ...original, layerStdio: vi.fn<typeof McpServer.layerStdio>() })),

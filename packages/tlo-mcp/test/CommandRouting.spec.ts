@@ -11,31 +11,6 @@ import { run } from '../src/cli/command.js';
 
 const routing = vi.hoisted((): { routes: Array<string> } => ({ routes: [] }));
 
-vi.mock(import('../src/layers/TloConfigLive.js'), () =>
-  Promise.all([
-    import('effect/Layer'),
-    import('effect/Redacted'),
-    import('effect/http/Cookies'),
-    import('../src/services/TloConfig.js'),
-  ]).then(([Layer, Redacted, Cookies, { TloConfig }]) => ({
-    TloConfigLive: Layer.mock(TloConfig, {
-      baseUrl: 'https://teamleader.test',
-      sessionToken: Redacted.make('routing-test'),
-      cookies: Cookies.empty,
-    }),
-  })),
-);
-
-vi.mock(import('../src/layers/TloLive.js'), () =>
-  Promise.all([
-    import('effect/Layer'),
-    import('../src/services/TimeService.js'),
-    import('../src/services/BoardService.js'),
-  ]).then(([Layer, { TimeService }, { BoardService }]) => ({
-    TloLive: Layer.merge(Layer.mock(TimeService, {}), Layer.mock(BoardService, {})),
-  })),
-);
-
 vi.mock(import('../src/mcp/OrbitClient.js'), (importOriginal) =>
   Promise.all([importOriginal(), import('effect/Layer')]).then(([original, Layer]) => ({
     ...original,
@@ -50,17 +25,6 @@ vi.mock(import('../src/mcp/proxy.js'), () =>
         routing.routes.push('stdio');
       }).pipe(Effect.andThen(Effect.die('server stopped'))),
     ),
-  })),
-);
-
-vi.mock(import('../src/mcp/server.js'), () =>
-  Promise.all([import('effect/Effect'), import('effect/Layer')]).then(([Effect, Layer]) => ({
-    makeMcpServerLayer: () =>
-      Layer.effectDiscard(
-        Effect.sync(() => {
-          routing.routes.push('legacy');
-        }).pipe(Effect.andThen(Effect.die('server stopped'))),
-      ),
   })),
 );
 
@@ -89,7 +53,6 @@ describe('command routing', () => {
     { args: [], route: 'stdio' },
     { args: ['login'], route: 'login' },
     { args: ['logout'], route: 'logout' },
-    { args: ['legacy'], route: 'legacy' },
   ]) {
     it.effect(`routes explicit arguments to ${route}, not Stdio arguments`, () =>
       Effect.gen(function* () {
@@ -99,7 +62,7 @@ describe('command routing', () => {
 
         expect(routing.routes).toStrictEqual([route]);
 
-        if (route === 'stdio' || route === 'legacy') {
+        if (route === 'stdio') {
           expect(Exit.isFailure(exit)).toBeTruthy();
 
           if (Exit.isFailure(exit)) {
@@ -116,15 +79,17 @@ describe('command routing', () => {
     );
   }
 
-  it.effect('rejects unknown commands without starting any handler', () =>
-    Effect.gen(function* () {
-      routing.routes.length = 0;
+  for (const command of ['legacy', 'unknown-command']) {
+    it.effect(`rejects ${command} without starting any handler`, () =>
+      Effect.gen(function* () {
+        routing.routes.length = 0;
 
-      const exit = yield* run(['unknown-command']).pipe(Effect.exit);
+        const exit = yield* run([command]).pipe(Effect.exit);
 
-      expect(Exit.isFailure(exit)).toBeTruthy();
+        expect(Exit.isFailure(exit)).toBeTruthy();
 
-      expect(routing.routes).toStrictEqual([]);
-    }).pipe(Effect.provide(Layer.merge(NodeServices.layer, Stdio.layerTest({})))),
-  );
+        expect(routing.routes).toStrictEqual([]);
+      }).pipe(Effect.provide(Layer.merge(NodeServices.layer, Stdio.layerTest({})))),
+    );
+  }
 });
