@@ -1,6 +1,8 @@
 import * as Brand from 'effect/Brand';
 import * as DateTime from 'effect/DateTime';
+import * as Effect from 'effect/Effect';
 import * as Schema from 'effect/Schema';
+import * as SchemaIssue from 'effect/SchemaIssue';
 import * as SchemaTransformation from 'effect/SchemaTransformation';
 
 /**
@@ -8,44 +10,44 @@ import * as SchemaTransformation from 'effect/SchemaTransformation';
  */
 export const TloDateString = Schema.String.pipe(
   Schema.check(Schema.isPattern(/^\d{14}$/)),
+  Schema.check(
+    Schema.makeFilter((value) => {
+      const year = Number.parseInt(value.slice(0, 4), 10);
+
+      const normalizedYear = year <= 99 ? year + 1900 : year;
+
+      const month = Number.parseInt(value.slice(4, 6), 10);
+
+      const day = Number.parseInt(value.slice(6, 8), 10);
+
+      const hour = Number.parseInt(value.slice(8, 10), 10);
+
+      const minute = Number.parseInt(value.slice(10, 12), 10);
+
+      const second = Number.parseInt(value.slice(12, 14), 10);
+
+      // Check calendar components in UTC so local daylight-saving transitions do not affect validation.
+      const date = DateTime.toDateUtc(DateTime.makeUnsafe(0));
+
+      date.setUTCFullYear(normalizedYear, month - 1, day);
+
+      date.setUTCHours(hour, minute, second, 0);
+
+      return (
+        (date.getUTCFullYear() === normalizedYear &&
+          date.getUTCMonth() === month - 1 &&
+          date.getUTCDate() === day &&
+          date.getUTCHours() === hour &&
+          date.getUTCMinutes() === minute &&
+          date.getUTCSeconds() === second) ||
+        'Expected a valid YYYYMMDDHHMMSS date'
+      );
+    }),
+  ),
   Schema.brand('TloDateString'),
 );
 
 export type TloDateString = typeof TloDateString.Type;
-
-/**
- * Parse YYYYMMDDHHMMSS string to Date.
- *
- * @param dateString - String to parse.
- */
-function parseTloDate(dateString: string): Date {
-  const year = Number.parseInt(dateString.slice(0, 4), 10);
-
-  const month = Number.parseInt(dateString.slice(4, 6), 10);
-
-  const day = Number.parseInt(dateString.slice(6, 8), 10);
-
-  const hour = Number.parseInt(dateString.slice(8, 10), 10);
-
-  const minute = Number.parseInt(dateString.slice(10, 12), 10);
-
-  const second = Number.parseInt(dateString.slice(12, 14), 10);
-
-  return DateTime.makeZonedUnsafe(
-    {
-      year: year <= 99 ? year + 1900 : year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-    },
-    {
-      timeZone: DateTime.zoneMakeLocal(),
-      adjustForTimeZone: true,
-    },
-  ).pipe(DateTime.toDateUtc);
-}
 
 /**
  * Format Date to YYYYMMDDHHMMSS string.
@@ -74,9 +76,35 @@ function formatTloDate(date: Date): TloDateString {
 export const TloDate = TloDateString.pipe(
   Schema.decodeTo(
     Schema.Date,
-    SchemaTransformation.transform({
-      decode: parseTloDate,
-      encode: formatTloDate,
+    SchemaTransformation.transformEffect({
+      decode: (value, options) =>
+        Effect.try({
+          try: () => {
+            const year = Number.parseInt(value.slice(0, 4), 10);
+
+            return DateTime.makeZonedUnsafe(
+              {
+                year: year <= 99 ? year + 1900 : year,
+                month: Number.parseInt(value.slice(4, 6), 10),
+                day: Number.parseInt(value.slice(6, 8), 10),
+                hour: Number.parseInt(value.slice(8, 10), 10),
+                minute: Number.parseInt(value.slice(10, 12), 10),
+                second: Number.parseInt(value.slice(12, 14), 10),
+              },
+              {
+                timeZone: DateTime.zoneMakeLocal(),
+                adjustForTimeZone: true,
+              },
+            ).pipe(DateTime.toDateUtc);
+          },
+          catch: () => new SchemaIssue.InvalidValue({ message: 'Invalid TLO date' }, value, options),
+        }),
+      encode: (value, options) =>
+        Effect.try({
+          try: () => formatTloDate(value),
+          catch: () =>
+            new SchemaIssue.InvalidValue({ message: 'Date cannot be encoded as YYYYMMDDHHMMSS' }, value, options),
+        }),
     }),
   ),
 );
@@ -100,7 +128,9 @@ export const TloIdSchema = Schema.String.pipe(Schema.fromBrand('TloId', TloId));
  *
  * @param dataSchema - Data schema to wrap.
  */
-export function TloResponse<T>(dataSchema: Schema.Schema<T>) {
+export function TloResponse<T, TEncoded = unknown, TDecodingServices = unknown, TEncodingServices = unknown>(
+  dataSchema: Schema.Codec<T, TEncoded, TDecodingServices, TEncodingServices>,
+) {
   return Schema.Struct({
     success: Schema.Boolean,
     ID: Schema.optional(Schema.Finite),

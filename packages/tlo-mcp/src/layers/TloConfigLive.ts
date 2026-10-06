@@ -2,6 +2,7 @@ import * as Config from 'effect/Config';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as R from 'effect/Record';
+import * as Schema from 'effect/Schema';
 import * as Cookies from 'effect/http/Cookies';
 
 import { TloConfig, type TloConfigShape } from '../services/TloConfig.js';
@@ -12,7 +13,11 @@ export const TloConfigFromEnv: Effect.Effect<TloConfigShape, Config.ConfigError 
   function* () {
     const sessionToken = yield* Config.Redacted('TLO_SESSION_TOKEN');
 
-    const baseUrl = yield* Config.String('TLO_BASE_URL').pipe(Config.withDefault(DEFAULT_BASE_URL));
+    // Validate without URL serialization, preserving the spelling used for endpoint concatenation.
+    const baseUrl = yield* Config.schema(
+      Schema.String.check(Schema.makeFilter((value) => URL.canParse(value), { expected: 'a valid URL string' })),
+      'TLO_BASE_URL',
+    ).pipe(Config.withDefault(DEFAULT_BASE_URL));
 
     const cookieHeader = yield* Config.String('TLO_COOKIES').pipe(Config.withDefault(''));
 
