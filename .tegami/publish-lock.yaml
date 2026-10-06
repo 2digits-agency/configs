@@ -1,97 +1,135 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 12.9.1\n"
-    filename: 2026-10-05-brisk-herons-copper.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.48.1\n"
+    filename: 2026-10-06-bold-robins-cedar.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 65.1.0\n\n- Added typed support for the `enableFixer` option on `jsdoc/check-syntax`.\n"
-    filename: 2026-10-05-fresh-lynxes-willow.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 12.10.0\n"
+    filename: 2026-10-06-clear-finches-amber.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/kit to 5.24.4\n"
-    filename: 2026-10-05-quiet-falcons-amber.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update oxlint to 1.87.0\n"
+    filename: 2026-10-06-proud-cranes-oak.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/eslint-plugin to 5.24.4\n"
-    filename: 2026-10-05-silver-badgers-meadow.md
+  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update oxfmt to 0.72.0\n"
+    filename: 2026-10-06-quick-seals-flint.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n### Preserve Fallow suppression directives during comment autofix\n\nKeep case-sensitive `fallow-ignore` directives unchanged while continuing to capitalize ordinary prose comments.\n"
-    filename: 2026-10-03-a2685f.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update @effect/vitest to 4.0.1\n"
+    filename: 2026-10-06-steady-gulls-slate.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: minor\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n## Diagnose uppercase Effect v4 endpoint header schema keys\n\n- Added the recommended `no-uppercase-http-api-header` diagnostic for direct endpoint header field objects with\n  import and lexical binding checks. Native headers, v3 schemas, and ambiguous objects remained excluded.\n- Kept the rule diagnostic-only: renaming keys can change contracts or introduce lowercase collisions.\n- Added preventive guidance backed by pinned rc.117 runtime controls. The historical agency scan found zero bad\n  sites and seven valid schemas; no existing outage was claimed.\n"
-    filename: 2026-10-03-a27e4b.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update GitButler agent guidance to 0.5.2217\n\n- Added guidance for creating linked worktrees at the workspace base or a selected commit.\n"
+    filename: 2026-10-06-still-beavers-hazel.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: minor\n---\n\n### Enable statement spacing by default\n\nThe default Oxlint preset now requires blank lines between statements, while keeping consecutive imports grouped.\nUse `--fix` to insert missing blank lines, or override `2digits/padding-line-between-statements` in your project config.\n"
-    filename: 2026-10-04-a8d2f7.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pkg-pr-new to 0.0.90\n"
+    filename: 2026-10-06-tidy-pandas-quartz.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n  \"@2digits/oxlint-config\":\n    type: patch\n---\n\n### Add configurable statement spacing\n\nAdd the opt-in `padding-line-between-statements` rule, adapted from anti-slop's ESLint Stylistic vendor.\nSupports TypeScript statements, AST selectors, and comment-aware whitespace autofixes.\n"
-    filename: 2026-10-04-e8a61c.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/platform-node to 4.0.1\n"
+    filename: 2026-10-06-calm-foxes-birch.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Allow defaults for locally proven function-valued Configs\n\n- Fixed `no-function-config-default` false positives for `Config.succeed(functionLiteral)`, immutable local receiver\n  aliases, and the first operation in a proven receiver's pipe.\n- Preserved diagnostics for value-config thunks and unknown receivers without offering an eager-evaluation autofix.\n"
-    filename: 2026-10-03-a9c2735.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Update effect to 4.0.1\n"
+    filename: 2026-10-06-warm-deer-moss.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Add anti-slop Effect rules\n\nAdd recommended rules for manual tagged error handling, tag comparisons, tagged construction, and relative service\nconstructor imports. Extend `prefer-effect-match` to detect chained literal ternaries. Adapted from Dillon Mulroy's\nMIT-licensed anti-slop project; all new diagnostics are syntax-only and have no automatic fixes.\n"
-    filename: 2026-10-04-a17e510.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/eslint-plugin to 5.24.6\n"
+    filename: 2026-10-06-bright-moles-elm.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Improve statement spacing types\n\nAccept readonly non-empty matcher lists and strengthen statement matching types without changing spacing diagnostics or autofixes.\n"
-    filename: 2026-10-04-b94c72.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/kit to 5.24.6\n"
+    filename: 2026-10-06-crisp-wrens-jade.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Migrate statement spacing to effect-oxlint\n\nUse Effect-based visitors and file-local state for statement spacing while preserving configuration, diagnostics, and autofixes.\n"
-    filename: 2026-10-04-c34e20.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update @typescript-eslint/utils to 8.71.1\n"
+    filename: 2026-10-06-fresh-swans-pearl.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Refactor statement spacing effects\n\n- Routed spacing checks through the Effect rule context without changing diagnostics or autofixes.\n"
-    filename: 2026-10-05-calm-otters-lantern.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @typescript-eslint/parser to 8.71.1\n"
+    filename: 2026-10-06-neat-lynxes-opal.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Allow custom messages in Vitest assertions\n\n- Allowed a second argument to `expect` by setting `vitest/valid-expect` to `maxArgs: 2`.\n"
+    filename: 2026-10-06-quiet-otters-maple.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update typescript-eslint to 8.71.1\n"
+    filename: 2026-10-06-sunny-larks-topaz.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update @typescript-eslint/scope-manager to 8.71.1\n"
+    filename: 2026-10-06-kind-ravens-ash.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Simplify inline array callback message types\n\n- Replaced the message-id constant with a literal type without changing rule behavior.\n"
+    filename: 2026-10-06-soft-badgers-willow.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: major\n---\n\n## Replace TwoDigitsConfig with OxlintConfig\n\n- Removed the exported `TwoDigitsConfig` type; use `OxlintConfig` instead.\n- Changed `withTwoDigits` to accept and return `OxlintConfig`, removing the custom allowance for binary-patched `effecttsgo` plugins.\n"
+    filename: 2026-10-06-brisk-herons-copper.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Update @oxlint/plugins to 1.87.0\n"
+    filename: 2026-10-06-merry-hawks-pine.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.138.1\n"
+    filename: 2026-10-06-gentle-kites-spruce.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-10-05-brisk-herons-copper.md
+      - 2026-10-06-bold-robins-cedar.md
+      - 2026-10-06-clear-finches-amber.md
+      - 2026-10-06-proud-cranes-oak.md
+      - 2026-10-06-quick-seals-flint.md
+      - 2026-10-06-steady-gulls-slate.md
+      - 2026-10-06-still-beavers-hazel.md
+      - 2026-10-06-tidy-pandas-quartz.md
     id: npm:@2digits/config-monorepo
     updated: true
-  - id: npm:@2digits/cli
-    updated: false
-  - id: npm:@2digits/eslint-plugin
-    updated: false
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-10-05-fresh-lynxes-willow.md
-      - 2026-10-05-quiet-falcons-amber.md
-      - 2026-10-05-silver-badgers-meadow.md
+      - 2026-10-06-calm-foxes-birch.md
+      - 2026-10-06-warm-deer-moss.md
+    id: npm:@2digits/cli
+    updated: true
+  - changelogIds:
+      - 2026-10-06-bright-moles-elm.md
+      - 2026-10-06-crisp-wrens-jade.md
+      - 2026-10-06-fresh-swans-pearl.md
+      - 2026-10-06-neat-lynxes-opal.md
+      - 2026-10-06-quiet-otters-maple.md
+      - 2026-10-06-sunny-larks-topaz.md
     id: npm:@2digits/eslint-config
     updated: true
-  - id: npm:@2digits/oxfmt-config
-    updated: false
+  - changelogIds:
+      - 2026-10-06-fresh-swans-pearl.md
+      - 2026-10-06-kind-ravens-ash.md
+      - 2026-10-06-soft-badgers-willow.md
+    id: npm:@2digits/eslint-plugin
+    updated: true
   - id: npm:@2digits/opencode-plugin
     updated: false
   - changelogIds:
-      - 2026-10-03-a2685f.md
-      - 2026-10-03-a27e4b.md
-      - 2026-10-04-a8d2f7.md
-      - 2026-10-04-e8a61c.md
+      - 2026-10-06-quick-seals-flint.md
+    id: npm:@2digits/oxfmt-config
+    updated: true
+  - changelogIds:
+      - 2026-10-06-brisk-herons-copper.md
+      - 2026-10-06-proud-cranes-oak.md
+      - 2026-10-06-quiet-otters-maple.md
     id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-10-03-a27e4b.md
-      - 2026-10-03-a9c2735.md
-      - 2026-10-04-a17e510.md
-      - 2026-10-04-b94c72.md
-      - 2026-10-04-c34e20.md
-      - 2026-10-04-e8a61c.md
-      - 2026-10-05-calm-otters-lantern.md
+      - 2026-10-06-merry-hawks-pine.md
+      - 2026-10-06-warm-deer-moss.md
     id: npm:@2digits/oxlint-plugin
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
-  - id: npm:@2digits/renovate-config
-    updated: false
-  - id: npm:@2digits/tlo-mcp
-    updated: false
+  - changelogIds:
+      - 2026-10-06-gentle-kites-spruce.md
+    id: npm:@2digits/renovate-config
+    updated: true
+  - changelogIds:
+      - 2026-10-06-calm-foxes-birch.md
+      - 2026-10-06-warm-deer-moss.md
+    id: npm:@2digits/tlo-mcp
+    updated: true
   - id: npm:@2digits/tsconfig
     updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
-  - id: npm:@2digits/cli
-  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/constants
+  - id: npm:@2digits/cli
   - id: npm:@2digits/eslint-config
-  - id: npm:@2digits/oxfmt-config
+  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
+  - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/prettier-config

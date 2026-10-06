@@ -1,3 +1,18 @@
+## @2digits/oxlint-config@2.0.0
+
+### Replace TwoDigitsConfig with OxlintConfig
+
+- Removed the exported `TwoDigitsConfig` type; use `OxlintConfig` instead.
+- Changed `withTwoDigits` to accept and return `OxlintConfig`, removing the custom allowance for binary-patched `effecttsgo` plugins.
+
+### Update oxlint to 1.87.0
+
+
+
+### Allow custom messages in Vitest assertions
+
+- Allowed a second argument to `expect` by setting `vitest/valid-expect` to `maxArgs: 2`.
+
 ## @2digits/oxlint-config@1.3.0
 
 ### Preserve Fallow suppression directives during comment autofix

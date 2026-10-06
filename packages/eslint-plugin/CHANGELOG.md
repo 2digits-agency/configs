@@ -1,3 +1,17 @@
+## @2digits/eslint-plugin@4.0.33
+
+### Update @typescript-eslint/utils to 8.71.1
+
+
+
+### Update @typescript-eslint/scope-manager to 8.71.1
+
+
+
+### Simplify inline array callback message types
+
+- Replaced the message-id constant with a literal type without changing rule behavior.
+
 ## @2digits/eslint-plugin@4.0.32
 
 ### Update typescript-eslint tooling from 8.70.0 to 8.71.0

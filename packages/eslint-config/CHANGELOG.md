@@ -1,3 +1,27 @@
+## @2digits/eslint-config@5.8.5
+
+### Update @eslint-react/eslint-plugin to 5.24.6
+
+
+
+### Update @eslint-react/kit to 5.24.6
+
+
+
+### Update @typescript-eslint/utils to 8.71.1
+
+
+
+### Update @typescript-eslint/parser to 8.71.1
+
+
+
+### Allow custom messages in Vitest assertions
+
+- Allowed a second argument to `expect` by setting `vitest/valid-expect` to `maxArgs: 2`.
+
+### Update typescript-eslint to 8.71.1
+
 ## @2digits/eslint-config@5.8.4
 
 ### Update eslint-plugin-jsdoc to 65.1.0
