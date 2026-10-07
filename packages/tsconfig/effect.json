@@ -74,7 +74,7 @@
           "effectMapFlatten": "error",
           "effectMapVoid": "error",
           "effectSucceedWithVoid": "error",
-          "experimentalApiUsage": "suggestion",
+          "experimentalApiUsage": "off",
           "extendsNativeError": "error",
           "flatMapConditionalToFilterOrFail": "error",
           "flatMapIgnoredParamToAndThen": "error",
@@ -160,7 +160,8 @@
           "unnecessaryPipeChain": "error",
           "unnecessaryTypeofType": "error",
           "unsafeEffectTypeAssertion": "error",
-          "unstableApiUsage": "suggestion"
+          "unstableApiUsage": "off",
+          "apiStabilityLeak": "off"
         },
         "keyPatterns": [
           {
