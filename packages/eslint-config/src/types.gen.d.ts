@@ -11433,6 +11433,8 @@ type InitDeclarations = ([]|["always"] | []|["never"]|["never", {
 // ----- jsdoc/check-alignment -----
 type JsdocCheckAlignment = []|[{
   
+  ignoreEmptyLines?: boolean
+  
   innerIndent?: number
 }]
 // ----- jsdoc/check-examples -----
