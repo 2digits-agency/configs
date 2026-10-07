@@ -1,3 +1,23 @@
+## @2digits/eslint-config@5.8.6
+
+### Update @eslint-react/kit to 5.24.8
+
+
+
+### Update eslint-plugin-jsdoc to 65.2.0
+
+- Added the `ignoreEmptyLines` option to the generated `jsdoc/check-alignment` rule types.
+
+### Update @eslint-react/eslint-plugin to 5.24.8
+
+
+
+### Update graphql-config to 5.1.8
+
+
+
+### Update @next/eslint-plugin-next to 16.4.0
+
 ## @2digits/eslint-config@5.8.5
 
 ### Update @eslint-react/eslint-plugin to 5.24.6

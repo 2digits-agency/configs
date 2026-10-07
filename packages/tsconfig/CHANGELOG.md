@@ -1,3 +1,13 @@
+## @2digits/tsconfig@0.9.2
+
+### Update @effect/tsgo to 0.51.0
+
+
+
+### Disable Effect API stability diagnostics
+
+- Disabled `experimentalApiUsage`, `unstableApiUsage` and `apiStabilityLeak` in the Effect TypeScript configuration.
+
 ## @2digits/tsconfig@0.9.1
 
 ### Update `@effect/tsgo` to 0.48.0

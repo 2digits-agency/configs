@@ -1,3 +1,43 @@
+## @2digits/config-monorepo@0.1.8
+
+### Update actions/upload-artifact to 7.0.2
+
+
+
+### Update @voidzero-dev/vite-plus-core to 1.1.0
+
+
+
+### Update @effect/tsgo to 0.51.0
+
+
+
+### Update @oxc-node/cli to 0.1.4
+
+
+
+### Update knip to 6.40.0
+
+
+
+### Update @typescript-eslint/types to 8.71.1
+
+
+
+### Update actions/download-artifact to 8.0.2
+
+
+
+### Update pkg-pr-new to 0.0.91
+
+
+
+### Update pnpm to 12.10.1
+
+
+
+### Update vite-plus to 1.1.0
+
 ## @2digits/config-monorepo@0.1.7
 
 ### Update @effect/tsgo to 0.48.1
