@@ -51,94 +51,14 @@ Logout deletes local credentials; it does not revoke the upstream grant (Orbit a
 Concurrent refresh/login is protected by a local lock. After a crashed process, confirm it is no longer running before
 removing `~/.config/2digits/tlo-mcp/session.lock`. Do not remove a live process's lock.
 
-### Legacy cookie adapter
+## Migrate from the cookie adapter
 
-The previous 14-tool adapter remains available explicitly:
+The cookie adapter, `legacy` command and hand-written tools have been removed, including their exported services,
+schemas and layers. Only the official Orbit tools are available; discover their names and schemas through your MCP client.
 
-```bash
-TLO_SESSION_TOKEN="your-session-token" TLO_COOKIES="session=..." vp exec tlo-mcp legacy
-```
-
-`TLO_BASE_URL` defaults to `https://socialbrothers.orbit.teamleader.eu`.
-The following data model and tool names apply to **legacy mode only**.
-
-## Data Model
-
-```text
-FOLDER (workspace, e.g., "2DIGITS | Projects")
-  └── PROJECT (e.g., "I amsterdam | doorontwikkeling")
-       ├── TASK (work items with budget/workload)
-       │    └── ACTIVITY (time entries)
-       └── BOARD (kanban)
-            └── BOARDLIST (column)
-                 └── TODO (card)
-```
-
-### Key IDs
-
-- `folderId` - Workspace containing projects
-- `projectId` - Project within a folder
-- `taskId` - Work item within project
-- `todoId` - Kanban card
-- `contactId` - User identifier
-
-## Available Tools
-
-### Projects
-
-| Tool                  | Description                                         |
-| --------------------- | --------------------------------------------------- |
-| `get_projects`        | List all projects with client, owner, dates, budget |
-| `get_project_details` | Get single project with billing rates               |
-| `get_tasks`           | Get tasks within a project                          |
-| `get_tasks_for_user`  | Get tasks assigned to a user                        |
-| `set_task_state`      | Change task state (DRAFT/OPEN/COMPLETED/CLOSED)     |
-
-### Time Tracking
-
-| Tool                  | Description                     |
-| --------------------- | ------------------------------- |
-| `get_week_activities` | Get all time entries for a week |
-| `create_activity`     | Log time against project/task   |
-| `update_activity`     | Modify existing time entry      |
-| `delete_activity`     | Remove time entry               |
-
-### Kanban
-
-| Tool              | Description                            |
-| ----------------- | -------------------------------------- |
-| `get_todo_detail` | Get kanban card with columns and links |
-| `move_todo`       | Move card between columns              |
-
-### Messages
-
-| Tool           | Description                        |
-| -------------- | ---------------------------------- |
-| `get_messages` | Get comments on project/board/todo |
-| `post_message` | Add comment to project/board/todo  |
-
-## Common Workflows
-
-### View someone's week
-
-```text
-get_week_activities(date: "2025-01-20", contactId: "1699127")
-```
-
-### Log time
-
-```text
-1. get_projects() → find folderId
-2. get_tasks(projectId) → optionally find taskId
-3. create_activity(folderId, startDate, durationMinutes, contactId)
-```
-
-### Move kanban card
-
-```text
-1. get_todo_detail(todoId) → get boardId and BOARDLISTS
-2. move_todo(id, boardId, boardListId, sortIndex: 0)
-```
+Remove `legacy` from your command arguments and remove `TLO_SESSION_TOKEN`, `TLO_COOKIES` and `TLO_BASE_URL` from your
+configuration. Run `tlo-mcp login`, then start `tlo-mcp` without arguments. Update workflows to use official Orbit tool
+names and input schemas instead of the old snake_case tool names.
 
 ## License
 

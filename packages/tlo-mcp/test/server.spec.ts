@@ -2,7 +2,7 @@ import { describe, expect, it } from '@effect/vitest';
 import * as Effect from 'effect/Effect';
 import * as TestConsole from 'effect/testing/TestConsole';
 
-import { McpLoggerLayer } from '../src/mcp/server.js';
+import { McpLoggerLayer } from '../src/mcp/logger.js';
 
 describe('mcp logging', () => {
   it.effect('routes logs to stderr without writing to stdout', () =>
