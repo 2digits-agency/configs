@@ -216,8 +216,8 @@ catalogs:
       specifier: 16.3.8
       version: 16.3.8
     '@opencode-ai/plugin':
-      specifier: 1.18.34
-      version: 1.18.34
+      specifier: 1.18.35
+      version: 1.18.35
     '@oxc-node/cli':
       specifier: 0.1.3
       version: 0.1.3
@@ -858,7 +858,7 @@ importers:
     dependencies:
       '@opencode-ai/plugin':
         specifier: 'catalog:'
-        version: 1.18.34
+        version: 1.18.35
       posthog-node:
         specifier: 'catalog:'
         version: 5.55.0
@@ -2199,8 +2199,8 @@ packages:
   '@one-ini/wasm@0.2.1':
     resolution: {integrity: sha512-TUqERXGNTifZ9y2g3wPxQrw3HpHv/02DsW3D90T9x0hhonrL1ZqpSmNrU2XkoIq0fP1N6gZfVQzy2Fw1ZvGBNg==}
 
-  '@opencode-ai/plugin@1.18.34':
-    resolution: {integrity: sha512-bC1EBL/QJ6LpC7liKZXr5JA+oa9qDAwTzpEgPxPsx1pbIUdhKOqg3/yoPEQgoa4YdO3hsgCWNFmbDE/DeOl/Ug==}
+  '@opencode-ai/plugin@1.18.35':
+    resolution: {integrity: sha512-mjM0N4tceFiNy+t28VKnU9XAOhflWsyzLDZWrf3D3HLpSF3dX3dFc/0xf/PaRK76V7hIIkA3vWy/ZvLk8SZBKw==}
     peerDependencies:
       '@opentui/core': '>=0.4.5'
       '@opentui/keymap': '>=0.4.5'
@@ -2213,8 +2213,8 @@ packages:
       '@opentui/solid':
         optional: true
 
-  '@opencode-ai/sdk@1.18.34':
-    resolution: {integrity: sha512-R9QWUpcngtdQ6FCixz7NC6n1WsSho6CEuRUzYHz/CzZcp3miSklDzXkm0oDwXVCnuEu+ANoeM0f6RDp51kOMzQ==}
+  '@opencode-ai/sdk@1.18.35':
+    resolution: {integrity: sha512-cp3IFKwnqgeUbflrrwz/WmG/dALVyM2k0LA1aqCvWe58Tu4utNTNw+BwZzQEML1HxDaLrIB+Fc4Ztb8S16Ijcw==}
 
   '@opentelemetry/api-logs@0.222.0':
     resolution: {integrity: sha512-9mb1If+IF6u0ZVXkHQ6ogEae5HwA6ajIVUgpSDQyRASxft6BSXHvBvPooRle3yFN/fKnCdSOnuu0OC3PLcF6+g==}
@@ -9393,14 +9393,14 @@ snapshots:
 
   '@one-ini/wasm@0.2.1': {}
 
-  '@opencode-ai/plugin@1.18.34':
+  '@opencode-ai/plugin@1.18.35':
     dependencies:
       '@ai-sdk/provider': 3.0.8
-      '@opencode-ai/sdk': 1.18.34
+      '@opencode-ai/sdk': 1.18.35
       effect: 4.0.0-beta.83
       zod: 4.1.8
 
-  '@opencode-ai/sdk@1.18.34':
+  '@opencode-ai/sdk@1.18.35':
     dependencies:
       cross-spawn: 7.0.6
 
