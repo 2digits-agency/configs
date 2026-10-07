@@ -257,6 +257,9 @@ catalogs:
     '@vitest/eslint-plugin':
       specifier: 1.6.27
       version: 1.6.27
+    '@yielded/oauth':
+      specifier: 0.1.0-beta.23
+      version: 0.1.0-beta.23
     dedent:
       specifier: 1.7.2
       version: 1.7.2
@@ -1089,6 +1092,9 @@ importers:
       '@effect/platform-node':
         specifier: 'catalog:'
         version: 4.0.1(effect@4.0.1)(redis@6.2.1(@opentelemetry/api@1.9.1))
+      '@yielded/oauth':
+        specifier: 'catalog:'
+        version: 0.1.0-beta.23(effect@4.0.1)
       effect:
         specifier: 'catalog:'
         version: 4.0.1
@@ -4253,6 +4259,21 @@ packages:
     resolution: {integrity: sha512-5igwsHbPtSAlLdmMdKqU3atXjwhtLFQXsYAG0sn1XcPb3yF8WxxtWxN6fycBoUvFyIHFz1G0KeRefnAy8n6gdw==}
     engines: {node: '>=18.12.0'}
     hasBin: true
+
+  '@yielded/crypto@0.1.0-beta.23':
+    resolution: {integrity: sha512-0byuVDWvFFXR7drv9VVO+WxXmZDIbP02HvzlbkKy0kPqv7334R6a+RQkxtfeQM9kJVwCMBfm36Zq/MpdkZkGDQ==}
+    peerDependencies:
+      effect: ^4.0.0
+
+  '@yielded/jose@0.1.0-beta.23':
+    resolution: {integrity: sha512-7DW3u23N2/OWLjpHyTTANbQ6P9xGR/mCHaN2NYjs90e2/NCkHgI5+szQ3Ym364K40MSTLMXoBAdj2RuwaM2RPA==}
+    peerDependencies:
+      effect: ^4.0.0
+
+  '@yielded/oauth@0.1.0-beta.23':
+    resolution: {integrity: sha512-mQKcmyDmlFyD6PbxcZRLbXJb0yUPAyBDzDuVwEbGVVnfuZzluNQlRWYBI8JE1k2jfgcBdhnZ1x2apey5UBt5gg==}
+    peerDependencies:
+      effect: ^4.0.0
 
   '@yuku-codegen/binding-android-arm64@0.9.5':
     resolution: {integrity: sha512-jrOY5WM+AaAqkv51fHP1x28ifto4WgcZVzodLUyMU1jMWn5Sq+VciRdk/n8E0Ey5w4p4cWWE+m5GfXWOYh7Kzw==}
@@ -11083,6 +11104,20 @@ snapshots:
       tslib: 2.8.1
     transitivePeerDependencies:
       - typanion
+
+  '@yielded/crypto@0.1.0-beta.23(effect@4.0.1)':
+    dependencies:
+      effect: 4.0.1
+
+  '@yielded/jose@0.1.0-beta.23(effect@4.0.1)':
+    dependencies:
+      '@yielded/crypto': 0.1.0-beta.23(effect@4.0.1)
+      effect: 4.0.1
+
+  '@yielded/oauth@0.1.0-beta.23(effect@4.0.1)':
+    dependencies:
+      '@yielded/jose': 0.1.0-beta.23(effect@4.0.1)
+      effect: 4.0.1
 
   '@yuku-codegen/binding-android-arm64@0.9.5':
     optional: true

@@ -2,15 +2,13 @@ import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Match from 'effect/Match';
-import * as Opt from 'effect/Option';
 import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as HttpBody from 'effect/http/HttpBody';
-import type * as HttpClientError from 'effect/http/HttpClientError';
 import * as UrlParams from 'effect/http/UrlParams';
 
-import { TloApiError, TloNetworkError, TloParseError, type TloError } from '../schemas/errors.js';
+import { TloApiError, TloAuthError, TloNetworkError, TloParseError, type TloError } from '../schemas/errors.js';
 import { TloConfig } from './TloConfig.js';
 import { TloHttpClient } from './TloHttpClient.js';
 
@@ -34,19 +32,10 @@ const TloApiErrorResponse = Schema.Struct({
 const JsonFromString = Schema.fromJsonString(Schema.Unknown);
 
 /**
- * TLO sometimes returns malformed "JSON" with single quotes: {MSG:'...', err:1} This regex detects and extracts the
- * error message from such responses.
+ * TLO sometimes returns malformed "JSON" with single quotes: {MSG:'...', err:1} Only match a complete legacy envelope
+ * after JSON decoding fails, never legacy-looking text embedded in a valid JSON response.
  */
-const MALFORMED_ERROR_REGEX = /\{MSG:'([^']*)',\s*err:(\d+)\}/;
-
-function parseMalformedJson(text: string): Opt.Option<{ readonly MSG: string; readonly err: number }> {
-  const match = MALFORMED_ERROR_REGEX.exec(text);
-
-  return Match.value(match).pipe(
-    Match.when(Match.defined, (groups) => Opt.some({ MSG: groups[1] ?? 'Unknown error', err: Number(groups[2]) })),
-    Match.orElse(() => Opt.none()),
-  );
-}
+const MALFORMED_ERROR_REGEX = /^\s*\{MSG:'([^']*)',\s*err:(\d+)\}\s*$/;
 
 export const TeamLeaderClientLive = Layer.effect(
   TeamLeaderClient,
@@ -70,22 +59,15 @@ export const TeamLeaderClientLive = Layer.effect(
 
           const text = yield* response.text;
 
-          const malformedError = parseMalformedJson(text);
-
-          yield* Match.value(malformedError).pipe(
-            Match.tag('Some', ({ value }) =>
-              value.err === 0
-                ? Effect.void
-                : TloApiError.make({
-                    message: value.MSG,
-                    endpoint: path,
-                  }),
-            ),
-            Match.tag('None', () => Effect.void),
-            Match.exhaustive,
-          );
-
           const json = yield* Schema.decodeEffect(JsonFromString)(text).pipe(
+            Effect.catchTag('SchemaError', (cause) =>
+              Match.value(MALFORMED_ERROR_REGEX.exec(text)).pipe(
+                Match.when(Match.defined, (groups) =>
+                  Effect.succeed({ MSG: groups[1] ?? 'Unknown error', err: Number(groups[2]) }),
+                ),
+                Match.orElse(() => Effect.fail(cause)),
+              ),
+            ),
             Effect.mapError((cause) =>
               TloParseError.make({
                 message: 'Invalid JSON response',
@@ -118,21 +100,24 @@ export const TeamLeaderClientLive = Layer.effect(
         Effect.scoped,
         (effect, path) =>
           effect.pipe(
-            Effect.mapError((error): TloError =>
-              Match.value(error).pipe(
-                Match.when(Schema.is(TloApiError), (error) => error),
-                Match.when(Schema.is(TloParseError), (error) => error),
-                Match.orElse((error: HttpClientError.HttpClientError) =>
-                  TloNetworkError.make({
-                    message:
-                      error.response === undefined
-                        ? `Request failed: ${error.message}`
-                        : `HTTP ${error.response.status}`,
-                    cause: error,
-                    endpoint: path,
-                  }),
-                ),
-              ),
+            Effect.catchReason(
+              'HttpClientError',
+              'StatusCodeError',
+              (reason, error): Effect.Effect<never, TloAuthError | TloNetworkError> =>
+                reason.response.status === 401
+                  ? TloAuthError.make({ message: 'HTTP 401' })
+                  : TloNetworkError.make({
+                      message: `HTTP ${reason.response.status}`,
+                      cause: error,
+                      endpoint: path,
+                    }),
+              (_reason, error) =>
+                TloNetworkError.make({
+                  message:
+                    error.response === undefined ? `Request failed: ${error.message}` : `HTTP ${error.response.status}`,
+                  cause: error,
+                  endpoint: path,
+                }),
             ),
           ),
       ),

@@ -1,9 +1,10 @@
 import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
+import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 
-import type { TloError } from '../schemas/errors.js';
+import { TloParseError, type TloError } from '../schemas/errors.js';
 import {
   activityFromRaw,
   GetWeekResponse,
@@ -14,22 +15,6 @@ import {
   type UpdateActivityParams,
 } from '../schemas/time.js';
 import { TeamLeaderClient } from './TeamLeaderClient.js';
-
-function formatRequestDate(d: Date): string {
-  const year = d.getFullYear();
-
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-
-  const day = String(d.getDate()).padStart(2, '0');
-
-  const hour = String(d.getHours()).padStart(2, '0');
-
-  const minute = String(d.getMinutes()).padStart(2, '0');
-
-  const second = String(d.getSeconds()).padStart(2, '0');
-
-  return `${year}-${month}-${day}T${hour}:${minute}:${second}`;
-}
 
 export interface TimeServiceShape {
   readonly getWeek: (
@@ -60,9 +45,17 @@ export const TimeServiceLive = Layer.effect(
         contactId: string,
         timezone = 'Europe/Amsterdam',
       ) {
+        const timeZone = yield* DateTime.zoneMakeNamedEffect(timezone).pipe(
+          Effect.mapError((cause) => TloParseError.make({ message: `Invalid timezone: ${timezone}`, cause })),
+        );
+
         const response = yield* client.post(
           '/ajax/pln/GetWeek',
-          { DT: formatRequestDate(date), CONTACTID: contactId, tmz: timezone },
+          {
+            DT: DateTime.makeZonedUnsafe(date, { timeZone }).pipe(DateTime.formatIsoOffset).slice(0, 19),
+            CONTACTID: contactId,
+            tmz: timezone,
+          },
           GetWeekResponse,
         );
 
@@ -75,7 +68,10 @@ export const TimeServiceLive = Layer.effect(
           {
             ID: 0,
             ACTION: 'CREATE',
-            DT: formatRequestDate(params.startDate),
+            // Preserve local-time writes until the account timezone contract is established.
+            DT: DateTime.makeZonedUnsafe(params.startDate, { timeZone: DateTime.zoneMakeLocal() })
+              .pipe(DateTime.formatIsoOffset)
+              .slice(0, 19),
             DURATION: params.durationMinutes,
             FOLDERID: params.folderId,
             TASKID: params.taskId,
@@ -96,7 +92,12 @@ export const TimeServiceLive = Layer.effect(
           {
             ID: params.id,
             ACTION: 'MOVE',
-            DT: params.startDate === undefined ? undefined : formatRequestDate(params.startDate),
+            DT:
+              params.startDate === undefined
+                ? undefined
+                : DateTime.makeZonedUnsafe(params.startDate, { timeZone: DateTime.zoneMakeLocal() })
+                    .pipe(DateTime.formatIsoOffset)
+                    .slice(0, 19),
             DURATION: params.durationMinutes,
             DESCRIPTION: params.description,
           },
