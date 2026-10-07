@@ -1,3 +1,7 @@
+## @2digits/cli@2.0.23
+
+### Update @effect/language-service to 0.87.4
+
 ## @2digits/cli@2.0.22
 
 ### Update @effect/platform-node to 4.0.1

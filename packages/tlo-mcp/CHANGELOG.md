@@ -1,3 +1,69 @@
+## @2digits/tlo-mcp@1.0.0
+
+### Remove the legacy cookie adapter
+
+- Removed the `legacy` command, hand-written cookie tools and their exported services, schemas and layers.
+- Removed support for `TLO_SESSION_TOKEN`, `TLO_COOKIES` and `TLO_BASE_URL`. Existing integrations must run `tlo-mcp login`, start `tlo-mcp` without arguments and migrate to official Orbit tool names and schemas.
+
+### Authenticate with Orbit using local OAuth
+
+- Added `tlo-mcp login` with browser authorization, PKCE and automatic token refresh, plus `tlo-mcp logout` to remove local credentials.
+- Bounded browser startup and registration timeouts, and allowed later discovery attempts after temporary failures.
+
+### Encode week requests in the requested timezone
+
+- Aligned `getWeek` dates with the supplied timezone, defaulting to `Europe/Amsterdam` instead of the host timezone.
+
+### Reject invalid TLO calendar dates
+
+- Rejected impossible dates and out-of-range times in `TloDateString` instead of silently normalizing them.
+- Returned typed schema failures when `TloDate` conversion failed.
+
+### Preserve codec types in TLO response envelopes
+
+- Retained encoded representations and encoding/decoding service requirements in `TloResponse`.
+
+### Store Orbit credentials securely
+
+- Added macOS Keychain storage and private atomic credential files on other platforms.
+- Serialized credential updates and distinguished existing locks from filesystem permission failures.
+
+### Decode valid JSON before checking legacy error envelopes
+
+- Restricted malformed legacy error parsing to complete envelopes after JSON decoding failed, preventing false errors from ordinary response strings.
+
+### Validate the legacy base URL during configuration loading
+
+- Rejected malformed `TLO_BASE_URL` values before sending requests, preserving the default URL and configured trailing slashes.
+
+### Expose official Orbit tools over local stdio
+
+- Added paginated tool discovery and JSON/SSE response handling, preserving upstream schemas, annotations, instructions and results.
+- Scoped HTTP requests to release resources on interruption and timeout, without automatically replaying tool calls.
+
+### Honor explicit CLI arguments
+
+- Routed arguments passed to `run` through `Command.runWith` instead of ignoring them.
+
+### Classify legacy HTTP 401 responses as authentication failures
+
+- Returned `TloAuthError` for HTTP 401 while preserving HTTP 403 and other failure classifications without replaying requests.
+
+### Use the official Orbit proxy as the default MCP server
+
+- Replaced the default cookie adapter with the OAuth-backed proxy. Run `tlo-mcp login` before starting `tlo-mcp`.
+- Moved the previous cookie-based tools to `tlo-mcp legacy`; existing cookie configurations must add the `legacy` argument.
+
+### Add `@yielded/oauth` 0.1.0-beta.23
+
+
+
+### Update @effect/language-service to 0.87.4
+
+
+
+### Update @yielded/oauth to 0.1.0-beta.28
+
 ## @2digits/tlo-mcp@0.1.38
 
 ### Update @effect/platform-node to 4.0.1
