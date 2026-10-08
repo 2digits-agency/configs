@@ -10,4 +10,7 @@ ignored_config_paths = ["**/fixtures/**"]
 idiomatic_version_file_enable_tools = ["node", "pnpm"]
 
 [hooks]
-enter = "mise i -q"
+enter = "mise i -q && mise exec -- pitchfork start tlo-mcp --quiet"
+
+[tools]
+pitchfork = "2.30.1"

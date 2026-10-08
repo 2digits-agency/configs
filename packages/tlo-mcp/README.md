@@ -5,7 +5,29 @@ Only Orbit tools are exposed. No local Executor, cookie adapter, Amp plugin, Ver
 
 ## Run
 
-Requires Node.js 24+. From this package:
+Requires Node.js 24+. In this repository, the root `pitchfork.toml` runs the gateway in the background.
+With `mise activate` enabled in your shell, entering the repository installs the pinned Pitchfork version and
+starts the gateway automatically. It keeps running after you leave the repository or close the terminal.
+The Mac must stay awake. Pitchfork retries failed processes up to three times and waits for the public tunnel
+to be ready, not just the local HTTP port. Each start builds the CLI; source edits need a restart.
+
+From the repository root:
+
+```bash
+mise exec -- pitchfork status tlo-mcp
+mise exec -- pitchfork logs tlo-mcp --tail
+mise exec -- pitchfork restart tlo-mcp
+mise exec -- pitchfork stop tlo-mcp
+```
+
+The public endpoint and Executor connection prompt are in the logs; the gateway key is never printed.
+Stopping the log viewer does not stop the gateway. Stop any manually started gateway before enabling Pitchfork,
+since both use port `4790`. First-time Orbit login still requires completing the browser flow.
+To keep the gateway stopped across repository visits, use `mise exec -- pitchfork disable tlo-mcp`;
+resume with `mise exec -- pitchfork enable tlo-mcp` followed by `mise exec -- pitchfork start tlo-mcp`.
+This setup starts on repository entry, not automatically at macOS login.
+
+To run in the foreground instead, first stop/disable the Pitchfork daemon. From this package:
 
 ```bash
 vp run run
@@ -67,7 +89,9 @@ vp exec tlo-mcp login
 vp exec tlo-mcp logout
 ```
 
-Stop the running gateway before either command. Logout removes local OAuth credentials, not the upstream grant,
+Disable and stop the Pitchfork daemon (or stop the foreground gateway) before either command. After login,
+enable and start it again. Leave it disabled after logout to avoid automatic re-login on repository entry.
+Logout removes local OAuth credentials, not the upstream grant,
 gateway key or tunnel identity. An expired/rejected existing grant fails visibly; re-login explicitly rather than
 silently registering replacement clients. OAuth credential locks fail closed; never remove a live process's lock.
 
