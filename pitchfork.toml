@@ -1,0 +1,12 @@
+#:schema https://pitchfork.jdx.dev/schema.json
+
+[daemons.tlo-mcp]
+dir = "packages/tlo-mcp"
+run = 'vp run build && exec vp exec node ./dist/bin.mjs --port "$PORT"'
+mise = true
+port = 4790
+proxy = false
+ready_output = { pattern = "TLO gateway ready:", timeout = "240s" }
+auto = ["start"]
+retry = 3
+stop_signal = { signal = "SIGINT", timeout = "10s" }
