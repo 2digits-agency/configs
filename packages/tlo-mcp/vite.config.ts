@@ -2,13 +2,11 @@ import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
   pack: {
-    entry: ['src/index.ts', 'src/bin.ts'],
-    dts: {
-      generator: 'tsgo',
-    },
+    entry: ['src/bin.ts'],
+    dts: false,
+    noExternal: [/^@opentunnel\//],
     fixedExtension: true,
-    exports: true,
-    attw: { profile: 'esm-only', level: 'error' },
+    exports: false,
     publint: { strict: true },
   },
   test: {

@@ -1,14 +1,14 @@
 import * as Effect from 'effect/Effect';
-import * as Layer from 'effect/Layer';
+import * as Schema from 'effect/Schema';
 import * as Command from 'effect/cli/Command';
+import * as Flag from 'effect/cli/Flag';
 
-import { OrbitClientLive } from '../mcp/OrbitClient.js';
-import { OrbitProxyLive } from '../mcp/proxy.js';
 import { OrbitAuth, OrbitAuthLive } from '../oauth/OrbitAuth.js';
+import { connect } from './connect.js';
 
 const NAME = 'tlo-mcp';
 
-const VERSION = '0.1.38';
+const VERSION = '1.0.0';
 
 const loginCommand = Command.make(
   'login',
@@ -38,8 +38,15 @@ const logoutCommand = Command.make(
   ),
 );
 
-const tloMcpCommand = Command.make(NAME, {}, () =>
-  OrbitProxyLive.pipe(Layer.provide(OrbitClientLive), Layer.provide(OrbitAuthLive), Layer.launch),
+const tloMcpCommand = Command.make(
+  NAME,
+  {
+    port: Flag.Int('port').pipe(
+      Flag.withSchema(Schema.Int.check(Schema.isBetween({ minimum: 1024, maximum: 65_535 }))),
+      Flag.withDefault(4790),
+    ),
+  },
+  ({ port }) => connect(port),
 ).pipe(Command.withSubcommands([loginCommand, logoutCommand]));
 
 export const run = Effect.fn('TloMcp.run')(function* (args: ReadonlyArray<string>) {

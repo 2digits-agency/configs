@@ -14,25 +14,20 @@
   ],
   "type": "module",
   "sideEffects": false,
-  "types": "./dist/index.d.mts",
-  "exports": {
-    ".": "./dist/index.mjs",
-    "./bin": "./dist/bin.mjs",
-    "./package.json": "./package.json"
-  },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "vp pack --minify --config-loader unconfig",
     "dev": "vp pack --watch --config-loader unconfig",
-    "run": "oxnode ./src/bin.ts",
+    "run": "vp run build && node ./dist/bin.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "types": "tsc --noEmit"
   },
   "dependencies": {
     "@effect/platform-node": "catalog:",
+    "@opentunnel/client": "catalog:",
     "@yielded/oauth": "catalog:",
     "effect": "catalog:"
   },
@@ -40,11 +35,13 @@
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
     "@effect/vitest": "catalog:",
-    "@oxc-node/cli": "catalog:",
     "publint": "catalog:",
     "typescript": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=24"
   },
   "public": true
 }

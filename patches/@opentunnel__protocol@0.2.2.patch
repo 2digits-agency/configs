@@ -1,0 +1,45 @@
+diff --git a/src/api/api.ts b/src/api/api.ts
+index fe4103d23a4d89d0cbd267f41df1874256cbb51c..58ba15f34a199741b32ee129c1dd36db1481c597 100644
+--- a/src/api/api.ts
++++ b/src/api/api.ts
+@@ -1,4 +1,4 @@
+-import { HttpApi, OpenApi } from "effect/unstable/httpapi";
++import { HttpApi, OpenApi } from "effect/http-api";
+ import { TunnelGroup } from "./tunnel.js";
+ 
+ export const Api = HttpApi.make("opentunnel")
+diff --git a/src/api/auth.ts b/src/api/auth.ts
+index a31c7ba39706d1c49c91133a6c24b1fc96ef6dee..972932717183e4831e9def9e9959901a2e756879 100644
+--- a/src/api/auth.ts
++++ b/src/api/auth.ts
+@@ -1,5 +1,5 @@
+ import { Context } from "effect";
+-import { HttpApiMiddleware, HttpApiSecurity } from "effect/unstable/httpapi";
++import { HttpApiMiddleware, HttpApiSecurity } from "effect/http-api";
+ import { Tunnel } from "../tunnel.js";
+ import { UnauthorizedError } from "./errors.js";
+ 
+diff --git a/src/api/tunnel.ts b/src/api/tunnel.ts
+index 7957e81f7af02c458a2d322d9cb4a0036f087b2d..f16f26645380b0746b42ac2bb137b9334106e6ae 100644
+--- a/src/api/tunnel.ts
++++ b/src/api/tunnel.ts
+@@ -1,5 +1,5 @@
+ import { Schema } from "effect";
+-import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema, OpenApi } from "effect/unstable/httpapi";
++import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema, OpenApi } from "effect/http-api";
+ import { Certificate } from "../certificate.js";
+ import { CSR } from "../csr.js";
+ import { Tunnel } from "../tunnel.js";
+diff --git a/src/newtype.ts b/src/newtype.ts
+index ae83d5fd95d3e1ddbf34e6163c232a597470ee4c..7031950df80a2ea1f4bde0d48fbc7b3a2648acb1 100644
+--- a/src/newtype.ts
++++ b/src/newtype.ts
+@@ -14,7 +14,7 @@ import { Schema } from "effect";
+  */
+ export function Newtype<Self>() {
+   return <const Tag extends string, S extends Schema.Top>(
+-    tag: Tag,
++    _tag: Tag,
+     schema: S,
+   ) => {
+     abstract class Base {
