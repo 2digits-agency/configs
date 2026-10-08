@@ -6,15 +6,11 @@ import * as Layer from 'effect/Layer';
 import * as Logger from 'effect/Logger';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as McpServer from 'effect/ai/McpServer';
-import { afterEach, vi } from 'vite-plus/test';
+import { vi } from 'vite-plus/test';
 
 import { OrbitClient, OrbitMcpError, type OrbitClientShape } from '../src/mcp/OrbitClient.js';
 import { McpLoggerLayer } from '../src/mcp/logger.js';
-import { OrbitProxyLive } from '../src/mcp/proxy.js';
-
-vi.mock(import('effect/ai/McpServer'), (importOriginal) =>
-  importOriginal().then((original) => ({ ...original, layerStdio: vi.fn<typeof McpServer.layerStdio>() })),
-);
+import { OrbitToolsLive } from '../src/mcp/proxy.js';
 
 type Registration = Parameters<Context.Service.Shape<typeof McpServer.McpServer>['addTool']>[0];
 
@@ -66,10 +62,9 @@ const register = Effect.fn('OrbitProxy.test.register')(function* (callTool: Orbi
     }),
   );
 
-  const stdio = vi.mocked(McpServer.layerStdio).mockReturnValue(transport);
-
   yield* Layer.build(
-    OrbitProxyLive.pipe(
+    OrbitToolsLive.pipe(
+      Layer.provide(transport),
       Layer.provide(Layer.succeed(OrbitClient, { tools: [tool], instructions: 'Official instructions', callTool })),
       Layer.provide(NodeServices.layer),
     ),
@@ -81,7 +76,7 @@ const register = Effect.fn('OrbitProxy.test.register')(function* (callTool: Orbi
     return yield* Effect.die('Missing proxy registration');
   }
 
-  return { registration, registrations, stdio };
+  return { registration, registrations };
 });
 
 const requestContext = Layer.succeed(McpSchema.McpRequestContext, {
@@ -91,8 +86,6 @@ const requestContext = Layer.succeed(McpSchema.McpRequestContext, {
 });
 
 describe('orbit MCP proxy', () => {
-  afterEach(() => vi.restoreAllMocks());
-
   it.effect('preserves upstream metadata, instructions, content and error results without replay', () =>
     Effect.gen(function* () {
       const result = McpSchema.CallToolResult.make({
@@ -107,13 +100,11 @@ describe('orbit MCP proxy', () => {
 
       const calls: Array<{ readonly name: string; readonly args: unknown }> = [];
 
-      const { registration, registrations, stdio } = yield* register((name, args) => {
+      const { registration, registrations } = yield* register((name, args) => {
         calls.push({ name, args });
 
         return Effect.succeed(result);
       });
-
-      expect(stdio).toHaveBeenCalledWith(expect.objectContaining({ instructions: 'Official instructions' }));
 
       expect(registrations).toHaveLength(1);
 

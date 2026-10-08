@@ -1,0 +1,145 @@
+diff --git a/package.json b/package.json
+index d759f775004c34f9d93cdff7e0828c31665873b9..c3023eb7a84cf2f18d59b153288b16521b46a2c3 100644
+--- a/package.json
++++ b/package.json
+@@ -21,7 +21,7 @@
+     "access": "public"
+   },
+   "engines": {
+-    "bun": ">=1.4.0"
++    "node": ">=24"
+   },
+   "scripts": {
+     "build": "tsc --build",
+diff --git a/src/effect/api.ts b/src/effect/api.ts
+index d435c3492937110702368b0b38f6ff92c7b21534..c634feb2dd4f2a692bc7def4efa78381831a2400 100644
+--- a/src/effect/api.ts
++++ b/src/effect/api.ts
+@@ -1,7 +1,7 @@
+ import { Effect, Layer, Context } from "effect";
+-import { FetchHttpClient, HttpClient, HttpClientRequest } from "effect/unstable/http";
++import { FetchHttpClient, HttpClient, HttpClientRequest } from "effect/http";
+ import pkg from "../../package.json" with { type: "json" };
+-import { HttpApiClient } from "effect/unstable/httpapi";
++import { HttpApiClient } from "effect/http-api";
+ import { Api } from "@opentunnel/protocol/api/api";
+ import { Tunnel } from "@opentunnel/protocol/tunnel";
+ 
+diff --git a/src/effect/tunnel.ts b/src/effect/tunnel.ts
+index 6bdb4318b11a068b897493d1d1dbae377b518ee1..17351e4e93dfcdcd16afb67a530df5ee06001313 100644
+--- a/src/effect/tunnel.ts
++++ b/src/effect/tunnel.ts
+@@ -4,13 +4,7 @@ import { Duplex } from "node:stream";
+ import * as Tls from "node:tls";
+ import { BridgeProtocol } from "@opentunnel/protocol/bridge-protocol";
+ import { Names } from "@opentunnel/protocol/names";
+-import { USER_AGENT } from "./api.js";
+ 
+-/** Bun's WebSocket also takes options with request headers, which the DOM typings don't know about. */
+-const BunWebSocket = WebSocket as unknown as new (
+-  url: URL,
+-  options: { readonly protocols: string[]; readonly headers: Record<string, string> },
+-) => WebSocket;
+ import type {
+   OpenTunnelClientEvent,
+   OpenTunnelIdentity,
+@@ -41,8 +35,10 @@ type SessionEnd =
+   | { readonly type: "retry"; readonly error: string; readonly attached: boolean };
+ 
+ export class OpenTunnelAttachError extends Error {
+-  constructor(readonly code: string) {
++  readonly code: string;
++  constructor(code: string) {
+     super(`Bridge attach failed: ${code}`);
++    this.code = code;
+   }
+ }
+ 
+@@ -107,7 +103,9 @@ export class Tunnel {
+   readonly ready: Promise<void>;
+   readonly closed: Promise<void>;
+ 
+-  constructor(private readonly options: TunnelOptions) {
++  private readonly options: TunnelOptions;
++  constructor(options: TunnelOptions) {
++    this.options = options;
+     validateRoutes(options.routes);
+     this.routes = { ...options.routes };
+     this.identity = options.identity;
+@@ -300,12 +298,21 @@ class Session {
+   private lastReceived = Date.now();
+   private attached = false;
+ 
++  private readonly options: TunnelOptions;
++  private readonly routes: OpenTunnelRoutes;
++  private readonly secureContext: () => Tls.SecureContext;
++  private readonly hooks: SessionHooks;
+   constructor(
+-    private readonly options: TunnelOptions,
+-    private readonly routes: OpenTunnelRoutes,
+-    private readonly secureContext: () => Tls.SecureContext,
+-    private readonly hooks: SessionHooks,
+-  ) {}
++    options: TunnelOptions,
++    routes: OpenTunnelRoutes,
++    secureContext: () => Tls.SecureContext,
++    hooks: SessionHooks,
++  ) {
++    this.options = options;
++    this.routes = routes;
++    this.secureContext = secureContext;
++    this.hooks = hooks;
++  }
+ 
+   run(): Promise<SessionEnd> {
+     return new Promise((resolve) => {
+@@ -315,10 +322,7 @@ class Session {
+         this.options.api,
+       );
+       url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
+-      const socket = new BunWebSocket(url, {
+-        protocols: [BridgeProtocol.WEBSOCKET_SUBPROTOCOL],
+-        headers: { "user-agent": USER_AGENT },
+-      });
++      const socket = new WebSocket(url, [BridgeProtocol.WEBSOCKET_SUBPROTOCOL]);
+       socket.binaryType = "arraybuffer";
+       this.socket = socket;
+       this.attachTimeout = setTimeout(
+@@ -343,6 +347,9 @@ class Session {
+         const reason = `${event.code} ${event.reason}`.trim();
+         this.end({ type: "retry", error: `bridge closed: ${reason}`, attached: this.attached });
+       });
++      socket.addEventListener("error", () => {
++        this.end({ type: "retry", error: "bridge WebSocket failed", attached: this.attached });
++      });
+     });
+   }
+ 
+@@ -465,18 +472,24 @@ class Session {
+ 
+ /** Terminates TLS for one public connection and forwards it to the target. */
+ class Channel {
++  readonly conn: number;
++  readonly route: string;
++  private readonly session: Session;
+   private readonly raw: Duplex;
+   private readonly tls: Tls.TLSSocket;
+   private upstream: Net.Socket | undefined;
+   private done = false;
+ 
+   constructor(
+-    readonly conn: number,
+-    readonly route: string,
++    conn: number,
++    route: string,
+     target: { readonly host: string; readonly port: number },
+     secureContext: Tls.SecureContext,
+-    private readonly session: Session,
++    session: Session,
+   ) {
++    this.conn = conn;
++    this.route = route;
++    this.session = session;
+     this.raw = new Duplex({
+       allowHalfOpen: true,
+       read() {},

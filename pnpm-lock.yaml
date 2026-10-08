@@ -218,6 +218,9 @@ catalogs:
     '@opencode-ai/plugin':
       specifier: 1.18.35
       version: 1.18.35
+    '@opentunnel/client':
+      specifier: 0.2.2
+      version: 0.2.2
     '@oxc-node/cli':
       specifier: 0.1.4
       version: 0.1.4
@@ -455,6 +458,8 @@ catalogs:
       version: 6.0.3
 
 overrides:
+  '@opentunnel/client>effect': 4.0.1
+  '@opentunnel/protocol>effect': 4.0.1
   array-includes: npm:@nolyfill/array-includes@1.0.44
   array.prototype.findlast: npm:@nolyfill/array.prototype.findlast@1.0.44
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
@@ -485,6 +490,10 @@ overrides:
   which-typed-array: npm:@nolyfill/which-typed-array@1.0.44
 
 packageExtensionsChecksum: sha256-D6cSxaAW0Ip5Y+S9R849Wj2WmfbHdh/gL/FTmL2H2v4=
+
+patchedDependencies:
+  '@opentunnel/client@0.2.2': 6d5b07d749a343fcdef714e101334e95b3c3ed6d1b2096cea8b9510b23ef6913
+  '@opentunnel/protocol@0.2.2': 1639c7b8cebcaca6ed99c47bc48173a0d6e0c61d41cc1780ecabfaab40864f0c
 
 importers:
 
@@ -1092,6 +1101,9 @@ importers:
       '@effect/platform-node':
         specifier: 'catalog:'
         version: 4.0.1(effect@4.0.1)(redis@6.2.1(@opentelemetry/api@1.9.1))
+      '@opentunnel/client':
+        specifier: 'catalog:'
+        version: 0.2.2(patch_hash=6d5b07d749a343fcdef714e101334e95b3c3ed6d1b2096cea8b9510b23ef6913)
       '@yielded/oauth':
         specifier: 'catalog:'
         version: 0.1.0-beta.28(effect@4.0.1)
@@ -1108,9 +1120,6 @@ importers:
       '@effect/vitest':
         specifier: 'catalog:'
         version: 4.0.1(effect@4.0.1)(vitest@5.0.3)
-      '@oxc-node/cli':
-        specifier: 'catalog:'
-        version: 0.1.4
       publint:
         specifier: 'catalog:'
         version: 0.3.25
@@ -2390,6 +2399,13 @@ packages:
   '@opentelemetry/semantic-conventions@1.43.0':
     resolution: {integrity: sha512-eSYWTm620tTk45EKSedaUL8MFYI8hW164hIXsgIHyxu3VobUB3fFCu5t0hQby6OoWRPsG1KkKUG2M5UadiLiVg==}
     engines: {node: '>=14'}
+
+  '@opentunnel/client@0.2.2':
+    resolution: {integrity: sha512-NaYit/xsYibMsrHs1QaXZxNIUfz+FC46IeGivvI4zZDUyrvwmuhJn5nZERDUbuV4MX3YHMJpLyyCZcpx8U66qw==}
+    engines: {bun: '>=1.4.0'}
+
+  '@opentunnel/protocol@0.2.2':
+    resolution: {integrity: sha512-++5Yz4L/dBLBQtq/NLAba6AkOD8XUB9Jtvg2Pvb/+8TLsVCklL4jPd2P2V5hltpnU/hgosOGGbFGkCxJNWGvbA==}
 
   '@ota-meshi/ast-token-store@0.3.0':
     resolution: {integrity: sha512-XRO0zi2NIUKq2lUk3T1ecFSld1fMWRKE6naRFGkgkdeosx7IslyUKNv5Dcb5PJTja9tHJoFu0v/7yEpAkrkrTg==}
@@ -9263,6 +9279,15 @@ snapshots:
       '@opentelemetry/semantic-conventions': 1.43.0
 
   '@opentelemetry/semantic-conventions@1.43.0': {}
+
+  '@opentunnel/client@0.2.2(patch_hash=6d5b07d749a343fcdef714e101334e95b3c3ed6d1b2096cea8b9510b23ef6913)':
+    dependencies:
+      '@opentunnel/protocol': 0.2.2(patch_hash=1639c7b8cebcaca6ed99c47bc48173a0d6e0c61d41cc1780ecabfaab40864f0c)
+      effect: 4.0.1
+
+  '@opentunnel/protocol@0.2.2(patch_hash=1639c7b8cebcaca6ed99c47bc48173a0d6e0c61d41cc1780ecabfaab40864f0c)':
+    dependencies:
+      effect: 4.0.1
 
   '@ota-meshi/ast-token-store@0.3.0': {}
 

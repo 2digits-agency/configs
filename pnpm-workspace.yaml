@@ -107,8 +107,11 @@ catalog:
   zod: 4.6.5
   effect-oxlint: 0.4.0
   '@yielded/oauth': 0.1.0-beta.28
+  '@opentunnel/client': 0.2.2
 
 overrides:
+  '@opentunnel/client>effect': 'catalog:'
+  '@opentunnel/protocol>effect': 'catalog:'
   array-includes: npm:@nolyfill/array-includes@1.0.44
   array.prototype.findlast: npm:@nolyfill/array.prototype.findlast@1.0.44
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
@@ -163,3 +166,7 @@ catalogs:
   eslint:
     '@typescript/native-preview': 7.0.0-dev.20260707.2
     typescript: 6.0.3
+
+patchedDependencies:
+  '@opentunnel/client@0.2.2': patches/@opentunnel__client@0.2.2.patch
+  '@opentunnel/protocol@0.2.2': patches/@opentunnel__protocol@0.2.2.patch

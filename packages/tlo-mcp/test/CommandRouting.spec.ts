@@ -11,20 +11,13 @@ import { run } from '../src/cli/command.js';
 
 const routing = vi.hoisted((): { routes: Array<string> } => ({ routes: [] }));
 
-vi.mock(import('../src/mcp/OrbitClient.js'), (importOriginal) =>
-  Promise.all([importOriginal(), import('effect/Layer')]).then(([original, Layer]) => ({
-    ...original,
-    OrbitClientLive: Layer.mock(original.OrbitClient, { tools: [], instructions: undefined }),
-  })),
-);
+vi.mock(import('../src/cli/connect.js'), () =>
+  import('effect/Effect').then((Effect) => ({
+    connect: Effect.fn('test.connect')(function* (_port: number) {
+      routing.routes.push('gateway');
 
-vi.mock(import('../src/mcp/proxy.js'), () =>
-  Promise.all([import('effect/Effect'), import('effect/Layer')]).then(([Effect, Layer]) => ({
-    OrbitProxyLive: Layer.effectDiscard(
-      Effect.sync(() => {
-        routing.routes.push('stdio');
-      }).pipe(Effect.andThen(Effect.die('server stopped'))),
-    ),
+      return yield* Effect.die('server stopped');
+    }),
   })),
 );
 
@@ -50,7 +43,7 @@ vi.mock(import('../src/oauth/OrbitAuth.js'), (importOriginal) =>
 
 describe('command routing', () => {
   for (const { args, route } of [
-    { args: [], route: 'stdio' },
+    { args: [], route: 'gateway' },
     { args: ['login'], route: 'login' },
     { args: ['logout'], route: 'logout' },
   ]) {
@@ -62,7 +55,7 @@ describe('command routing', () => {
 
         expect(routing.routes).toStrictEqual([route]);
 
-        if (route === 'stdio') {
+        if (route === 'gateway') {
           expect(Exit.isFailure(exit)).toBeTruthy();
 
           if (Exit.isFailure(exit)) {
