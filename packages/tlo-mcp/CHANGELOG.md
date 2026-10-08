@@ -1,3 +1,26 @@
+## @2digits/tlo-mcp@2.0.0
+
+### Add deployable Orbit OAuth discovery proxy
+
+Add a stateless Vercel adapter for MCP clients that cannot discover Orbit authentication correctly.
+Each client retains its own Orbit login; no shared account or server-side token storage is required.
+
+### Update @yielded/oauth to 0.1.0-beta.30
+
+- Bumped `@yielded/oauth` to 0.1.0-beta.30
+
+### Update effect to 4.0.2
+
+- Bumped `effect` and `@effect/platform-node` to 4.0.2
+
+### One-command personal Orbit gateway
+
+Running `tlo-mcp` now sets up local Orbit login, an API-key-protected HTTP MCP endpoint and an OpenTunnel connection,
+then prints a credential-free prompt for connecting Executor Cloud. Requires Node.js 24+.
+
+The stdio server, library exports, Amp plugin and Vercel adapter have been removed. Existing clients must connect
+to the printed HTTPS endpoint using the separate gateway API key; Orbit OAuth credentials remain local.
+
 ## @2digits/tlo-mcp@1.0.0
 
 ### Remove the legacy cookie adapter
