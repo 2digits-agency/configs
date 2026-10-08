@@ -1,3 +1,9 @@
+## @2digits/eslint-config@5.8.7
+
+### Update eslint-react to 5.24.9
+
+- Bumped `@eslint-react/eslint-plugin` and `@eslint-react/kit` to 5.24.9
+
 ## @2digits/eslint-config@5.8.6
 
 ### Update @eslint-react/kit to 5.24.8

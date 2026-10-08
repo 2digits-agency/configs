@@ -1,3 +1,9 @@
+## @2digits/renovate-config@1.2.108
+
+### Update renovate to 44.145.3
+
+- Bumped `renovate` to 44.145.3
+
 ## @2digits/renovate-config@1.2.107
 
 ### Update renovate to 44.138.1

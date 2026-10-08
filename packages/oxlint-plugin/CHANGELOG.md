@@ -1,3 +1,9 @@
+## @2digits/oxlint-plugin@0.1.2
+
+### Update effect to 4.0.2
+
+- Bumped `effect` and `@effect/platform-node` to 4.0.2
+
 ## @2digits/oxlint-plugin@0.1.1
 
 ### Update @oxlint/plugins to 1.87.0
