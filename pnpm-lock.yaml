@@ -261,8 +261,8 @@ catalogs:
       specifier: 1.6.27
       version: 1.6.27
     '@yielded/oauth':
-      specifier: 0.1.0-beta.28
-      version: 0.1.0-beta.28
+      specifier: 0.1.0-beta.30
+      version: 0.1.0-beta.30
     dedent:
       specifier: 1.7.2
       version: 1.7.2
@@ -1106,7 +1106,7 @@ importers:
         version: 0.2.2(patch_hash=6d5b07d749a343fcdef714e101334e95b3c3ed6d1b2096cea8b9510b23ef6913)
       '@yielded/oauth':
         specifier: 'catalog:'
-        version: 0.1.0-beta.28(effect@4.0.1)
+        version: 0.1.0-beta.30(effect@4.0.1)
       effect:
         specifier: 'catalog:'
         version: 4.0.1
@@ -4042,18 +4042,18 @@ packages:
     engines: {node: '>=18.12.0'}
     hasBin: true
 
-  '@yielded/crypto@0.1.0-beta.28':
-    resolution: {integrity: sha512-m0E9AFGMtrWSxAppLbNlzrhZzw0q/z+t/yvZqtkqHRuqB2D0meFjw/14OHkJ/iy4gdZfKhyG/pmfNgEwbtvyiw==}
+  '@yielded/crypto@0.1.0-beta.30':
+    resolution: {integrity: sha512-nhFs81uOByGy2PL0ru+McyOB+Y8WlvKbYrZAqzFHN9tToxjPC2fjiPlJG4FIm2oniTQPPybOa1o/1oD4qvdtHQ==}
     peerDependencies:
       effect: ^4.0.0
 
-  '@yielded/jose@0.1.0-beta.28':
-    resolution: {integrity: sha512-EhagvlE02RBZb6lpVDOdeFiBEsO8+CU/5UKgrOFbQpvC9ut1NvEvZ6HwOSbD5q+SBTXL0WKpGFHpsAi/2sgXKQ==}
+  '@yielded/jose@0.1.0-beta.30':
+    resolution: {integrity: sha512-zdBGguKwEPT7UDZBE/p5MU11nhILx+DPjh8vHxhGMeqkoz5GUAmS29QsW1+44DaNYqz/CsZCtjYS262FYIRWCw==}
     peerDependencies:
       effect: ^4.0.0
 
-  '@yielded/oauth@0.1.0-beta.28':
-    resolution: {integrity: sha512-i2YYFriUKC5cUxlaIisPcf2jCvufv9MimTO+GeNZa9DegwfHyBE6mlc0FmG1k8NCz4m3uDCXZQFLO+gOjo7b1w==}
+  '@yielded/oauth@0.1.0-beta.30':
+    resolution: {integrity: sha512-8eGkHCUWxB93HvCVSScLjyc7oINpXdrIQ7oMay4Vb2O8EtvGMTxEE/zk2lA9IK07Y/zhr6O1bv46v6qXdgcDHw==}
     peerDependencies:
       effect: ^4.0.0
 
@@ -10608,18 +10608,18 @@ snapshots:
     transitivePeerDependencies:
       - typanion
 
-  '@yielded/crypto@0.1.0-beta.28(effect@4.0.1)':
+  '@yielded/crypto@0.1.0-beta.30(effect@4.0.1)':
     dependencies:
       effect: 4.0.1
 
-  '@yielded/jose@0.1.0-beta.28(effect@4.0.1)':
+  '@yielded/jose@0.1.0-beta.30(effect@4.0.1)':
     dependencies:
-      '@yielded/crypto': 0.1.0-beta.28(effect@4.0.1)
+      '@yielded/crypto': 0.1.0-beta.30(effect@4.0.1)
       effect: 4.0.1
 
-  '@yielded/oauth@0.1.0-beta.28(effect@4.0.1)':
+  '@yielded/oauth@0.1.0-beta.30(effect@4.0.1)':
     dependencies:
-      '@yielded/jose': 0.1.0-beta.28(effect@4.0.1)
+      '@yielded/jose': 0.1.0-beta.30(effect@4.0.1)
       effect: 4.0.1
 
   '@yuku-codegen/binding-android-arm64@0.9.5':
