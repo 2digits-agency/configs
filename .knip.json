@@ -5,6 +5,9 @@
   "tsdown": { "config": "vite.config.ts" },
   "vitest": { "config": ["vite.config.ts"] },
   "workspaces": {
+    "packages/tlo-mcp": {
+      "entry": ["executor/index.ts"]
+    },
     "packages/eslint-config": {
       "ignore": ["fixtures/**"],
       "ignoreDependencies": ["react", "@types/react"]

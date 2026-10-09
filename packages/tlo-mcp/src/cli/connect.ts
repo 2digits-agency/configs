@@ -17,11 +17,12 @@ import { SessionStore, SessionStoreLive } from '../oauth/store.js';
 export function connectionPrompt(endpoint: string): string {
   return `Connect my personal Teamleader Orbit MCP to Executor Cloud.
 Endpoint: ${endpoint}
-Transport: Streamable HTTP. Authentication: API key in Authorization: Bearer <key>.
-Register an MCP integration named Teamleader Orbit (slug tlo_mcp) with a bearer-header API-key template, not OAuth.
+Use the Teamleader Orbit Executor app from packages/tlo-mcp/executor; its secure account form accepts url and token.
+Transport: Streamable HTTP. Authentication: gateway API key in Authorization: Bearer <key>, not OAuth.
 Use a secure credential handoff so I enter the gateway key directly in Executor; never ask me to paste it into chat.
+Enter the endpoint as url and the contents of gateway.key as token. Never use an OpenTunnel identity/private signing key.
 Create a personal connection, discover tools, and verify with one read-only tool. Do not change business data.
-If this endpoint already exists, reuse its integration/connection instead of creating duplicates.
+Reuse the existing Teamleader Orbit app/profile instead of creating duplicates.
 Orbit login and refresh are handled on my Mac; do not register another Orbit OAuth client.
 `;
 }

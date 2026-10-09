@@ -10,7 +10,8 @@
     "tlo-mcp": "./dist/bin.mjs"
   },
   "files": [
-    "dist"
+    "dist",
+    "executor"
   ],
   "type": "module",
   "sideEffects": false,
@@ -23,7 +24,7 @@
     "run": "vp run build && node ./dist/bin.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "types": "tsc --noEmit"
+    "types": "tsc --noEmit && tsc --noEmit -p executor/tsconfig.json"
   },
   "dependencies": {
     "@effect/platform-node": "catalog:",
@@ -35,6 +36,8 @@
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
     "@effect/vitest": "catalog:",
+    "@modelcontextprotocol/sdk": "catalog:",
+    "apps": "catalog:",
     "publint": "catalog:",
     "typescript": "catalog:",
     "vite-plus": "catalog:",

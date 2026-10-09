@@ -54,8 +54,31 @@ The first tunnel certificate can take several minutes. Failed startup closes acq
 
 ## Connect Executor Cloud
 
-Paste the printed prompt into an agent with Executor tools. It registers a Streamable HTTP MCP integration with
-API-key auth: `Authorization: Bearer <gateway-key>`. **Do not configure Orbit OAuth in Executor.**
+The Executor app source lives in [`executor/`](./executor/). Its secure account form asks for:
+
+- `url`: the HTTPS OpenTunnel URL printed by the gateway (with or without `/mcp`).
+- `token`: the contents of `gateway.key`, not an OpenTunnel identity/signing key or Orbit OAuth token.
+
+Paste the printed prompt into an agent with Executor tools, or open the existing Teamleader Orbit app and connect
+an account. The app imports the Orbit tools using Streamable HTTP and `Authorization: Bearer <gateway-key>`.
+It checks MCP initialization/tool discovery with and without credentials before saving; no business tool runs during
+this check. Tools not explicitly marked read-only, and destructive tools, require approval.
+**Do not configure Orbit OAuth in Executor.** Changing the tunnel URL or key requires reconnecting the account.
+
+The app validates that the destination is a gateway HTTPS URL under `tlo.<id>.opentunnel.xyz` before sending the key.
+Executor stores the key securely, but this app reads it server-side: its host wildcard restriction cannot express
+the two dynamic tunnel labels. Never enter the key into chat.
+
+### Deploy or update the app
+
+Type-check from this package with `vp run types`. Deploy only the `executor/` directory, not the gateway package.
+Use the current Executor beta CLI (`vp dlx -- executor@beta apps …` if the installed CLI has no `apps` command).
+Sign in once with `executor apps login --host https://api.executor.sh`. For an existing app, save a source commit
+with `executor apps commit --host https://api.executor.sh --app <app-id> --files ./executor --expected <commit>
+--message "Update gateway connection"`, then deploy the returned commit with `executor apps deploy
+--host https://api.executor.sh --app <app-id> --commit <new-commit>`. For a new app, use `executor apps create
+--host https://api.executor.sh --name "Teamleader Orbit" --files ./executor`, then deploy its first source commit.
+Keep the pinned `apps` version when updating; upgrading it is an explicit app change.
 
 The key is stored at `~/.config/2digits/tlo-mcp/gateway.key` (mode `0600`, directory `0700`).
 On macOS, copy it without printing it:
@@ -64,7 +87,7 @@ On macOS, copy it without printing it:
 pbcopy < ~/.config/2digits/tlo-mcp/gateway.key
 ```
 
-Enter it directly in Executor's secure credential form, never in agent chat. On other platforms, open the private
+Enter it directly as `token` in Executor's secure credential form, never in agent chat. On other platforms, open the private
 file locally and copy it into that form. The agent prompt contains no credentials. Executor must use its secure
 handoff for the API key and verify one read-only tool after connecting.
 
