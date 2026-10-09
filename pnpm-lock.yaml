@@ -393,8 +393,8 @@ catalogs:
       specifier: 2.3.3
       version: 2.3.3
     posthog-node:
-      specifier: 5.55.0
-      version: 5.55.0
+      specifier: 5.55.1
+      version: 5.55.1
     prettier:
       specifier: 3.9.9
       version: 3.9.9
@@ -873,7 +873,7 @@ importers:
         version: 1.18.35
       posthog-node:
         specifier: 'catalog:'
-        version: 5.55.0
+        version: 5.55.1
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -3230,11 +3230,11 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@posthog/core@1.55.3':
-    resolution: {integrity: sha512-XnmG9jo7WlxTeN4oCNWH4ESLQHR6ZPZ+mcq+8JxU62k5i1BAe3BSrybnmXHjqKp7e3rUvLK2bOzGZGSlfHvlNA==}
+  '@posthog/core@1.57.3':
+    resolution: {integrity: sha512-lag+QZE61kcYSjYN9lKwri6P4/DACOtyRsA41MSI6tdKHbSIyrPfQPkDQiPbq413AMbTXFjcN/N6bqxPhei93Q==}
 
-  '@posthog/types@1.413.0':
-    resolution: {integrity: sha512-tYAVzNojWckuG/wxBB0fwE70sFruQQq4xbhkci7eH2ARU3mMfUTkvpN1HwBMpm0AtbxidLiH0IFvagmdJ8opPw==}
+  '@posthog/types@1.415.2':
+    resolution: {integrity: sha512-BIIHPyXcPZuNTImrR1qLqLKFw7j9o8co6LG/9OpLtpWJ3RT0y89Lx6VCtd37N9/dkr/qW7y0uPjJxAxjsALHtw==}
 
   '@prettier/plugin-oxc@0.2.3':
     resolution: {integrity: sha512-6TYRFBxthmW0IULsZjik2Gu62jc17xPILlcSIXTXfrhDH4etIcissalZ+RO5oweMWidM3jJ38QJbkD2C6J0/LA==}
@@ -6755,8 +6755,8 @@ packages:
     resolution: {integrity: sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-node@5.55.0:
-    resolution: {integrity: sha512-8dFtlDTqs0CKGZ8t4mUnk4NdShAgzru3B9D0MfM/NTBzlRyAjctivzWINLtMLRQxYjvgBohxy7RTwiQf4mPycQ==}
+  posthog-node@5.55.1:
+    resolution: {integrity: sha512-YLnILmFn1zxGYBuCaBldqMjTq9OZBNNbHIr2F0am3iLfU+6ZTvuRmUbTmys//+LnCA6DfZNGgqTb4goFa93u+Q==}
     engines: {node: ^20.20.0 || >=22.22.0}
     peerDependencies:
       rxjs: ^7.0.0
@@ -9793,11 +9793,11 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@posthog/core@1.55.3':
+  '@posthog/core@1.57.3':
     dependencies:
-      '@posthog/types': 1.413.0
+      '@posthog/types': 1.415.2
 
-  '@posthog/types@1.413.0': {}
+  '@posthog/types@1.415.2': {}
 
   '@prettier/plugin-oxc@0.2.3':
     dependencies:
@@ -13474,9 +13474,9 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  posthog-node@5.55.0:
+  posthog-node@5.55.1:
     dependencies:
-      '@posthog/core': 1.55.3
+      '@posthog/core': 1.57.3
 
   prelude-ls@1.2.1: {}
 
