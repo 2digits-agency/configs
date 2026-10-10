@@ -411,8 +411,8 @@ catalogs:
       specifier: 19.3.0
       version: 19.3.0
     renovate:
-      specifier: 44.145.3
-      version: 44.145.3
+      specifier: 44.149.2
+      version: 44.149.2
     tailwind-csstree:
       specifier: 0.4.1
       version: 0.4.1
@@ -1091,7 +1091,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 44.145.3(supports-color@7.2.0)(typanion@3.14.0)
+        version: 44.149.2(supports-color@7.2.0)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1430,8 +1430,8 @@ packages:
     resolution: {integrity: sha512-y7/yvZ2TPAnR9+jnc00klvNNLkJiXFFrQA/hlLCcxA9a2A4zQIOimyFQ9XfwYKiGD1fb5GY8vbKIIgO8d5Tb2A==}
     engines: {node: '>= 20.12.0'}
 
-  '@containerbase/base@14.29.0':
-    resolution: {integrity: sha512-5bSi1+8i6l9CwmKuXiIPZ3t7y2N5t7Y+2L13XLkPf9zu19I/Q6WAZb478PS1tmLbTw268v34bSb/aAwisIzE4g==}
+  '@containerbase/base@14.31.0':
+    resolution: {integrity: sha512-EALZw+nZZGasgeSYWykt3FiHu7w/TE5G2xpI1A3SgnMIMn0DPaStliBhFP89LC+wcUG+0+lE4ag7N6H3IBxw/w==}
     engines: {node: '>=24.10.0'}
     peerDependencies:
       zod: ^4.0.0
@@ -3330,8 +3330,8 @@ packages:
     peerDependencies:
       '@redis/client': ^6.2.1
 
-  '@renovatebot/base-image@13.116.1':
-    resolution: {integrity: sha512-UcDjpM8nbG2srcEWavsFGVOkBnPKhWfN0CNRGCmCfRHWIUANgRWOMPL9PBgOPKVGGLvzylvpBPTmx6ideevRNQ==}
+  '@renovatebot/base-image@13.118.1':
+    resolution: {integrity: sha512-KG38mjrLmRhbkm3vbJxlfkquO55B7Cn5cmXUFEKJL51RYvHaBVGoQNa5gjquFicw0mErxKRxyITbnfDqY8uS0Q==}
     engines: {node: '>=24.10.0'}
     peerDependencies:
       zod: ^4.0.0
@@ -5507,8 +5507,8 @@ packages:
       ocache:
         optional: true
 
-  handlebars@4.7.9:
-    resolution: {integrity: sha512-4E71E0rpOaQuJR2A3xDZ+GM1HyWYv1clR58tC8emQNeQe3RH7MAzSbat+V0wG78LQBo6m6bzSG/L4pBuCsgnUQ==}
+  handlebars@4.7.10:
+    resolution: {integrity: sha512-P5VJMVM7qgBn6vjXMw8WG9uVI+ncf2pi72j4de4yz5ZULLj2RGqLYaKOYGsgyrViQ0tePOVlN1tDCCXXtFqXKg==}
     engines: {node: '>=0.4.7'}
     hasBin: true
 
@@ -5573,8 +5573,8 @@ packages:
     resolution: {integrity: sha512-HpbUakT7xp5miBUywCHf36ZEuAJNklBJDDsGpUIjMzOSmM8ELSfA9Sa/QDPeNeqeoN31u+UTCkL4klCOVvRm4Q==}
     engines: {node: '>= 4'}
 
-  ignore@7.0.11:
-    resolution: {integrity: sha512-YChdK5txDjwGUvgR7oCJcLGkwi3LDh8Zx8tS7ndYciLEg/oOCL26VUBSUEtgS7EjiybcBqFxh5j0rAdDX7/bbg==}
+  ignore@7.0.12:
+    resolution: {integrity: sha512-/8UvqAPU9DGTI9k4mxtf49U37Isfwr8Uts96+SBHIkFxPJnHS0Ew4f00sM4Scd8V8EjM0jUNtVDdv1kPdt35lg==}
     engines: {node: '>= 4'}
 
   ignore@7.0.8:
@@ -6976,8 +6976,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@44.145.3:
-    resolution: {integrity: sha512-Eaca+EOk9/j0g9VCAOpItAh21NIv7xJ2bj2zsfVnuuLaaL4MaQdL8ZdiKBUlcm3Fa3tVdK6kGahet0WpxMmUBA==}
+  renovate@44.149.2:
+    resolution: {integrity: sha512-au1se2M3ROUrDAvHAXBPLUbsbAXxtxb3a/VArzwWsfPOiKaHAnUJ6KNo61mEQzppAVbT7hzRmaj2QBaJik9tOw==}
     engines: {node: ^24.11.0, pnpm: ^11.0.0}
     hasBin: true
 
@@ -8235,7 +8235,7 @@ snapshots:
       fast-wrap-ansi: 0.2.2
       sisteransi: 1.0.5
 
-  '@containerbase/base@14.29.0(zod@4.6.5)':
+  '@containerbase/base@14.31.0(zod@4.6.5)':
     optionalDependencies:
       zod: 4.6.5
 
@@ -9864,9 +9864,9 @@ snapshots:
     dependencies:
       '@redis/client': 6.2.1(@opentelemetry/api@1.9.1)
 
-  '@renovatebot/base-image@13.116.1(zod@4.6.5)':
+  '@renovatebot/base-image@13.118.1(zod@4.6.5)':
     dependencies:
-      '@containerbase/base': 14.29.0(zod@4.6.5)
+      '@containerbase/base': 14.31.0(zod@4.6.5)
     optionalDependencies:
       zod: 4.6.5
 
@@ -12150,7 +12150,7 @@ snapshots:
     optionalDependencies:
       crossws: 0.4.12(srvx@1.0.5)
 
-  handlebars@4.7.9:
+  handlebars@4.7.10:
     dependencies:
       minimist: 1.2.8
       neo-async: 2.6.2
@@ -12212,7 +12212,7 @@ snapshots:
 
   ignore@7.0.10: {}
 
-  ignore@7.0.11: {}
+  ignore@7.0.12: {}
 
   ignore@7.0.8: {}
 
@@ -13682,7 +13682,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@44.145.3(supports-color@7.2.0)(typanion@3.14.0):
+  renovate@44.149.2(supports-color@7.2.0)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1139.0
       '@aws-sdk/client-ec2': 3.1139.0
@@ -13715,7 +13715,7 @@ snapshots:
       '@pnpm/parse-overrides': 1001.0.4
       '@qnighy/marshal': 0.1.3
       '@redis/client': 6.3.0(@opentelemetry/api@1.9.1)
-      '@renovatebot/base-image': 13.116.1(zod@4.6.5)
+      '@renovatebot/base-image': 13.118.1(zod@4.6.5)
       '@renovatebot/detect-tools': 4.0.21
       '@renovatebot/good-enough-parser': 2.0.1
       '@renovatebot/osv-offline': 3.0.12(supports-color@7.2.0)
@@ -13759,8 +13759,8 @@ snapshots:
       google-auth-library: 11.1.0(supports-color@7.2.0)
       got: 16.0.0
       graph-data-structure: 4.5.0
-      handlebars: 4.7.9
-      ignore: 7.0.11
+      handlebars: 4.7.10
+      ignore: 7.0.12
       ini: 6.0.0
       json-dup-key-validator: 1.0.3
       json-stringify-pretty-compact: 4.0.0
