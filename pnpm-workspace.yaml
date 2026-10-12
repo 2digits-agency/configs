@@ -14,12 +14,12 @@ allowBuilds:
 catalog:
   '@arethetypeswrong/core': 0.18.5
   '@effect/language-service': 0.87.4
-  '@effect/platform-node': 4.0.2
+  '@effect/platform-node': 4.0.3
   '@effect/tsgo': 0.51.1
-  '@effect/vitest': 4.0.2
+  '@effect/vitest': 4.0.3
   '@eslint-community/eslint-plugin-eslint-comments': 4.8.1
-  '@eslint-react/eslint-plugin': 5.24.9
-  '@eslint-react/kit': 5.24.9
+  '@eslint-react/eslint-plugin': 5.26.1
+  '@eslint-react/kit': 5.26.1
   '@eslint/compat': 2.1.1
   '@eslint/config-inspector': 3.5.0
   '@eslint/css': 2.0.0
@@ -29,15 +29,15 @@ catalog:
   '@ianvs/prettier-plugin-sort-imports': 4.7.1
   '@manypkg/cli': 0.25.1
   '@next/eslint-plugin-next': 16.4.0
-  '@opencode-ai/plugin': 1.18.35
-  '@oxc-node/cli': 0.1.4
+  '@opencode-ai/plugin': 1.19.0
+  '@oxc-node/cli': 0.1.6
   '@oxlint/plugins': 1.87.0
   '@prettier/plugin-oxc': 0.2.3
   '@prettier/plugin-xml': 3.4.2
   '@stylistic/eslint-plugin': 5.10.0
-  '@tanstack/eslint-plugin-query': 5.104.1
+  '@tanstack/eslint-plugin-query': 5.104.2
   '@tanstack/eslint-plugin-router': 1.162.0
-  '@types/node': 24.19.1
+  '@types/node': 24.19.2
   '@types/react': 19.3.0
   '@typescript-eslint/parser': 8.71.1
   '@typescript-eslint/scope-manager': 8.71.1
@@ -45,7 +45,7 @@ catalog:
   '@vitest/eslint-plugin': 1.6.27
   dedent: 1.7.2
   defu: 6.1.7
-  effect: 4.0.2
+  effect: 4.0.3
   empathic: 2.1.0
   eslint-config-flat-gitignore: 2.4.0
   eslint-config-prettier: 10.1.8
@@ -56,7 +56,7 @@ catalog:
   eslint-plugin-depend: 1.5.0
   eslint-plugin-drizzle: 0.2.3
   eslint-plugin-github-action: 0.4.0
-  eslint-plugin-jsdoc: 65.2.0
+  eslint-plugin-jsdoc: 65.3.0
   eslint-plugin-jsonc: 3.4.2
   eslint-plugin-n: 18.4.1
   eslint-plugin-pnpm: 1.9.1
@@ -68,7 +68,7 @@ catalog:
   eslint-plugin-toml: 1.5.0
   eslint-plugin-turbo: 2.11.7
   eslint-plugin-unicorn: 77.0.0
-  eslint-plugin-yml: 3.8.1
+  eslint-plugin-yml: 3.9.0
   eslint-plugin-zod: 5.0.0
   eslint-typegen: 2.3.1
   eslint-vitest-rule-tester: 3.2.0
@@ -76,22 +76,22 @@ catalog:
   globals: 17.13.0
   graphql-config: 5.1.8
   jsonc-eslint-parser: 3.3.0
-  knip: 6.40.0
+  knip: 6.41.0
   local-pkg: 1.2.1
   nolyfill: 1.0.44
   nypm: 0.6.10
   oxfmt: 0.72.0
-  oxlint-tsgolint: 7.0.2003
+  oxlint-tsgolint: 7.0.2004
   oxlint: 1.87.0
   pkg-pr-new: 0.0.91
   pkg-types: 2.3.3
-  posthog-node: 5.55.0
+  posthog-node: 5.55.2
   prettier-plugin-jsdoc: 1.8.1
   prettier-plugin-tailwindcss: 0.8.1
-  prettier: 3.9.9
+  prettier: 3.9.10
   publint: 0.3.25
   react: 19.3.0
-  renovate: 44.145.3
+  renovate: 44.151.4
   tailwind-csstree: 0.4.1
   tegami: 1.5.0
   tinyexec: 1.3.1
@@ -102,12 +102,12 @@ catalog:
   typescript: 7.0.2
   vite-plus: 1.1.0
   vite: npm:@voidzero-dev/vite-plus-core@1.1.0
-  vitest: 5.0.3
+  vitest: 5.0.4
   yaml-eslint-parser: 2.1.0
-  zod: 4.6.5
+  zod: 4.6.6
   effect-oxlint: 0.4.0
-  '@yielded/oauth': 0.1.0-beta.30
-  '@opentunnel/client': 0.2.2
+  '@yielded/oauth': 0.1.0-beta.37
+  '@opentunnel/client': 0.5.0
 
 overrides:
   '@opentunnel/client>effect': 'catalog:'
@@ -117,7 +117,7 @@ overrides:
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
   array.prototype.flatmap: npm:@nolyfill/array.prototype.flatmap@1.0.44
   array.prototype.tosorted: npm:@nolyfill/array.prototype.tosorted@1.0.44
-  baseline-browser-mapping: 2.11.27
+  baseline-browser-mapping: 2.11.28
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
   '@typescript-eslint/types': 8.71.1
   eslint-plugin-sonarjs>typescript: 'catalog:eslint'
@@ -166,7 +166,3 @@ catalogs:
   eslint:
     '@typescript/native-preview': 7.0.0-dev.20260707.2
     typescript: 6.0.3
-
-patchedDependencies:
-  '@opentunnel/client@0.2.2': patches/@opentunnel__client@0.2.2.patch
-  '@opentunnel/protocol@0.2.2': patches/@opentunnel__protocol@0.2.2.patch

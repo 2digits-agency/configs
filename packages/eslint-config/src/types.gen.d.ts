@@ -3257,7 +3257,7 @@ Backward pagination arguments
    * Disallows 'target="_blank"' without 'rel="noreferrer noopener"'.
    * @see https://eslint-react.xyz/docs/rules/dom-no-unsafe-target-blank
    */
-  'react-extra/dom-no-unsafe-target-blank'?: Linter.RuleEntry<[]>
+  'react-extra/dom-no-unsafe-target-blank'?: Linter.RuleEntry<ReactExtraDomNoUnsafeTargetBlank>
   /**
    * Replaces usage of 'useFormState' with 'useActionState'.
    * @see https://eslint-react.xyz/docs/rules/dom-no-use-form-state
@@ -11782,6 +11782,8 @@ type JsdocNoUnnecessaryTypeAssertion = []|[{
   
   enableFixer?: boolean
   
+  fixTypeChangingCasts?: boolean
+  
   preferConstToLiteralTuples?: boolean
   
   treatAnyAsRedundant?: boolean
@@ -14107,6 +14109,11 @@ type ReactExtraDomNoUnknownProperty = []|[{
   ignore?: string[]
   
   requireDataLowercase?: boolean
+}]
+// ----- react-extra/dom-no-unsafe-target-blank -----
+type ReactExtraDomNoUnsafeTargetBlank = []|[{
+  
+  allowReferrer?: boolean
 }]
 // ----- react-extra/exhaustive-deps -----
 type ReactExtraExhaustiveDeps = []|[{
