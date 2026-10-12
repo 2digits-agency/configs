@@ -1,3 +1,27 @@
+## @2digits/eslint-config@5.8.8
+
+### Update @eslint-react to 5.26.1
+
+- `react-extra/dom-no-unsafe-target-blank` now accepts an `allowReferrer` option
+
+### Update @tanstack/eslint-plugin-query to 5.104.2
+
+
+
+### Update eslint-plugin-jsdoc to 65.3.0
+
+- `jsdoc/no-unnecessary-type-assertion` now accepts a `fixTypeChangingCasts` option
+
+### Update eslint-plugin-yml to 3.9.0
+
+
+
+### Update eslint-plugin-jsdoc to 65.3.1
+
+
+
+### Update eslint-plugin-de-morgan to 2.2.1
+
 ## @2digits/eslint-config@5.8.7
 
 ### Update eslint-react to 5.24.9

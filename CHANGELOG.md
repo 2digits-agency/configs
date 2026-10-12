@@ -1,3 +1,33 @@
+## @2digits/config-monorepo@0.1.9
+
+### Update pnpm to 12.12.1
+
+- Aligned `devEngines.packageManager` with `packageManager`
+
+### Update pnpm to 12.11.2
+
+- Aligned `devEngines.packageManager` with `packageManager`
+
+### Update knip to 6.41.0
+
+
+
+### Update voidzero-dev/setup-vp to 1.21.2
+
+
+
+### Update @oxc-node/cli to 0.1.6
+
+
+
+### Update baseline-browser-mapping to 2.11.28
+
+
+
+### Stop auto-starting the TLO gateway on mise enter
+
+- Removed `pitchfork` from `mise.toml` tools and the `enter` hook
+
 ## @2digits/config-monorepo@0.1.8
 
 ### Update actions/upload-artifact to 7.0.2

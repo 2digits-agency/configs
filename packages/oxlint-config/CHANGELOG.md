@@ -1,3 +1,7 @@
+## @2digits/oxlint-config@2.0.2
+
+### Update oxlint-tsgolint to 7.0.2004
+
 ## @2digits/oxlint-config@2.0.0
 
 ### Replace TwoDigitsConfig with OxlintConfig

@@ -1,3 +1,21 @@
+## @2digits/tlo-mcp@2.0.1
+
+### Update effect to 4.0.3
+
+
+
+### Update @effect/platform-node to 4.0.3
+
+
+
+### Update @yielded/oauth to 0.1.0-beta.37
+
+
+
+### Update @opentunnel/client to 0.5.0
+
+- Removed the local `@opentunnel/client` and `@opentunnel/protocol` 0.2.2 patches, which no longer apply
+
 ## @2digits/tlo-mcp@2.0.0
 
 ### Add deployable Orbit OAuth discovery proxy
