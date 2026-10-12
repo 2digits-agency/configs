@@ -1,3 +1,7 @@
+## @2digits/prettier-config@4.0.51
+
+### Update prettier to 3.9.10
+
 ## @2digits/prettier-config@4.0.50
 
 ### Update prettier to 3.9.9
