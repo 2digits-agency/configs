@@ -50,6 +50,8 @@ tester.run(ruleName, preferEffectDurationConstants, {
     // Already typed as a Duration.
     `${effect} import * as Duration from 'effect/Duration'; const TIMEOUT_MS: Duration.Input = 5000; Effect.sleep(TIMEOUT_MS);`,
     `${effect} import { Duration } from 'effect'; const TIMEOUT_MS: Duration.Duration | number = 5000;`,
+    `${effect} import type * as D from 'effect/Duration'; const TIMEOUT_MS: D.Input = 5000;`,
+    `${effect} import type { Input } from 'effect/Duration'; const TIMEOUT_MS: Input = 5000;`,
     // Zero and negative sentinels.
     `${effect} const POLL_MS = 0;`,
     `${effect} const TIMEOUT_MS = -1;`,
@@ -80,6 +82,8 @@ tester.run(ruleName, preferEffectDurationConstants, {
       [`${effect} const ttlInMinutes = 90;`, 'ttlInMinutes', 'Duration.minutes(90)'],
       [`${effect} const wait = 10 ** 3; Effect.sleep(wait);`, 'wait', 'Duration.seconds(1)'],
       [`${effect} const wait = 5000 % 3000; Effect.sleep(wait);`, 'wait', 'Duration.seconds(2)'],
+      // A local type named Duration is not Effect's.
+      [`${effect} type Duration = number; const TIMEOUT_MS: Duration = 5000;`, 'TIMEOUT_MS', 'Duration.seconds(5)'],
       [`${effect} const SESSION_WINDOW_MINUTES = 15;`, 'SESSION_WINDOW_MINUTES', 'Duration.minutes(15)'],
       [`${effect} const RETENTION_DAYS = 14;`, 'RETENTION_DAYS', 'Duration.weeks(2)'],
       [`${effect} const ONE_SECOND = 1000;`, 'ONE_SECOND', generic],

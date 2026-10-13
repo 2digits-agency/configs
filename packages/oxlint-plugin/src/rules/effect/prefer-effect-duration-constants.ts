@@ -1,6 +1,6 @@
 import type { Context, ESTree, Rule, Scope } from '@oxlint/plugins';
 
-import { containsIdentifier, defineEffectRule, ruleMeta, unwrapExpression } from '../../utils';
+import { defineEffectRule, ruleMeta, unwrapExpression, walkNodes, type FileState } from '../../utils';
 import { durationArgument, durationConstructor, numericValue, timeArithmetic, type DurationUnit } from './duration';
 
 type NumericDeclarator = ESTree.VariableDeclarator & {
@@ -103,6 +103,42 @@ function nameUnit(name: string): NameUnit {
   return undefined;
 }
 
+function typeNamePath(node: ESTree.Node): Array<string> | undefined {
+  if (node.type === 'Identifier') {
+    return [node.name];
+  }
+
+  if (node.type === 'TSQualifiedName') {
+    const left = typeNamePath(node.left);
+
+    return left === undefined ? undefined : [...left, node.right.name];
+  }
+
+  return undefined;
+}
+
+/**
+ * Whether an annotation references a type from Effect's Duration module through its import binding, such as
+ * `Duration.Input`, `D.Duration` from `import type * as D from 'effect/Duration'`, or `Duration.Duration` from
+ * `effect`.
+ *
+ * @param annotation Type annotation to inspect.
+ * @param state Effect import bindings for the file.
+ */
+function durationAnnotation(annotation: ESTree.Node, state: FileState): boolean {
+  return walkNodes(annotation, (node) => {
+    if (node.type !== 'TSTypeReference') {
+      return false;
+    }
+
+    const [root, ...rest] = typeNamePath(node.typeName) ?? [];
+
+    const imported = root === undefined ? undefined : state.bindings.get(root);
+
+    return imported !== undefined && [...imported, ...rest][0] === 'Duration';
+  });
+}
+
 function numericDeclarator(node: ESTree.VariableDeclarator): node is NumericDeclarator {
   return (
     node.parent.type === 'VariableDeclaration' &&
@@ -149,7 +185,7 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
 
     function durationUnit(node: NumericDeclarator, passedAsDuration: boolean): DurationUnit | 'none' | undefined {
       // `const TIMEOUT: Duration.Input = 5000` already opts into Duration.
-      if (node.id.typeAnnotation && containsIdentifier(node.id.typeAnnotation, 'Duration')) {
+      if (node.id.typeAnnotation && durationAnnotation(node.id.typeAnnotation, getState())) {
         return 'none';
       }
 
