@@ -1,11 +1,34 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+
 import * as findUp from 'empathic/find';
 import { findWorkspaceDir } from 'pkg-types';
 
 import { GLOB_SRC } from '../globs';
-import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
+import type { OptionsWithTailwind, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
-export async function tailwind(options: OptionsOverrides = {}): Promise<Array<TypedFlatConfigItem>> {
+/**
+ * The v4 plugin only loads CSS entrypoints, so expose a discovered `tailwind.config.*` through `@config`. The
+ * entrypoint lives in the project's `node_modules/.cache` so `@import 'tailwindcss'` resolves from the project.
+ *
+ * @param configPath - Absolute path to the discovered `tailwind.config.*`.
+ *
+ * @returns Absolute path to the generated CSS entrypoint.
+ */
+async function writeConfigEntrypoint(configPath: string): Promise<string> {
+  const cacheDir = path.join(path.dirname(configPath), 'node_modules', '.cache', '@2digits', 'eslint-config');
+
+  const entrypoint = path.join(cacheDir, 'tailwind.css');
+
+  await mkdir(cacheDir, { recursive: true });
+
+  await writeFile(entrypoint, `@import 'tailwindcss';\n@config ${JSON.stringify(configPath)};\n`);
+
+  return entrypoint;
+}
+
+export async function tailwind(options: OptionsWithTailwind = {}): Promise<Array<TypedFlatConfigItem>> {
   const { overrides = {} } = options;
 
   const [tailwindcss, { tailwindFunctions }, last] = await Promise.all([
@@ -14,7 +37,17 @@ export async function tailwind(options: OptionsOverrides = {}): Promise<Array<Ty
     findWorkspaceDir().catch(() => undefined),
   ]);
 
-  const config = findUp.file('tailwind.config.ts', { last }) ?? findUp.file('tailwind.config.js', { last });
+  let { cssConfigPath } = options;
+
+  if (!cssConfigPath) {
+    const config = findUp.file('tailwind.config.ts', { last }) ?? findUp.file('tailwind.config.js', { last });
+
+    if (!config) {
+      return [];
+    }
+
+    cssConfigPath = await writeConfigEntrypoint(config);
+  }
 
   return [
     {
@@ -25,8 +58,8 @@ export async function tailwind(options: OptionsOverrides = {}): Promise<Array<Ty
       },
       settings: {
         tailwindcss: {
-          callees: tailwindFunctions,
-          config,
+          functions: tailwindFunctions,
+          cssConfigPath,
         },
       },
       rules: {

@@ -15,7 +15,7 @@ function preferDestructuringAssignmentImpl(context: RuleContext, { collect }: Ru
 
       const [props] = params;
 
-      if (props === undefined || props.type !== AST_NODE_TYPES.Identifier) {
+      if (props?.type !== AST_NODE_TYPES.Identifier) {
         continue;
       }
 

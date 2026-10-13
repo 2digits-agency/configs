@@ -293,12 +293,12 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         const uses2Digits = rootConfigExists && (yield* eslintDetect.uses2DigitsConfig(rootConfigPath));
 
-        if (!rootConfigExists || !uses2Digits) {
+        if (uses2Digits) {
+          yield* Effect.logInfo(`✅ Root config already uses ${ESLINT_CONFIG_PACKAGE}`);
+        } else {
           const rootConfig = generateRootConfig(isMonorepo);
 
           yield* writeEslintConfig(rootConfigPath, rootConfig);
-        } else {
-          yield* Effect.logInfo(`✅ Root config already uses ${ESLINT_CONFIG_PACKAGE}`);
         }
       });
 
@@ -442,9 +442,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         const isMonorepo = yield* projectDetect.isMonorepo();
 
-        yield* isMonorepo
-          ? Effect.logInfo('✅ Detected Turborepo monorepo')
-          : Effect.logInfo('✅ Detected single-package project');
+        yield* Effect.logInfo(isMonorepo ? '✅ Detected Turborepo monorepo' : '✅ Detected single-package project');
 
         // Install dependencies
         yield* ensureDependencies();

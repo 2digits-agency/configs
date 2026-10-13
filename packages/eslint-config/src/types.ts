@@ -95,6 +95,17 @@ export interface OptionsWithReact extends OptionsWithFiles {
   reactCompiler?: boolean;
 }
 
+export interface OptionsWithTailwind extends OptionsOverrides {
+  /**
+   * Tailwind CSS v4 stylesheet entrypoint, absolute or relative to the project root.
+   *
+   * When omitted, a `tailwind.config.ts` (preferred) or `tailwind.config.js` is discovered by walking up to the
+   * workspace root and loaded through Tailwind v4's `@config` directive. When none is found, the Tailwind config is not
+   * enabled.
+   */
+  cssConfigPath?: string;
+}
+
 export interface OptionsWithIgnores {
   /**
    * Options to pass to eslint-config-flat-gitignore.

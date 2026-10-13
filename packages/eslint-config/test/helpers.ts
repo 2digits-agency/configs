@@ -81,6 +81,7 @@ export function withDeterministicOptions(
 ): Record<string, unknown> {
   return {
     ...options,
+    ...(options.tailwind === true && { tailwind: { enable: true, cssConfigPath: './src/style.css' } }),
     ignores: {
       gitIgnore: {
         cwd: workspaceRoot,
@@ -144,7 +145,11 @@ export async function runAutofixFixture({
 
 function generateConfigContent(options: Record<string, boolean | undefined>): string {
   const optionsLines = Object.entries(options)
-    .map(([key, value]) => `      ${key}: ${value},`)
+    .map(([key, value]) =>
+      key === 'tailwind' && value === true
+        ? `      tailwind: { cssConfigPath: './styles.css' },`
+        : `      ${key}: ${value},`,
+    )
     .join('\n');
 
   return ts`

@@ -540,6 +540,7 @@
       "unicorn/no-prevent-default-in-passive-listener",
       "unicorn/no-process-exit",
       "unicorn/no-redundant-comparison",
+      "unicorn/no-repeated-call-wrappers",
       "unicorn/no-return-array-push",
       "unicorn/no-selector-as-dom-name",
       "unicorn/no-shorthand-property-overrides",
@@ -560,6 +561,7 @@
       "unicorn/no-unnecessary-array-splice-count",
       "unicorn/no-unnecessary-await",
       "unicorn/no-unnecessary-boolean-comparison",
+      "- unicorn/no-unnecessary-default-arguments",
       "unicorn/no-unnecessary-fetch-options",
       "unicorn/no-unnecessary-global-this",
       "unicorn/no-unnecessary-nested-ternary",
@@ -1456,6 +1458,7 @@
       "ts/prefer-as-const",
       "ts/prefer-literal-enum-member",
       "ts/prefer-namespace-keyword",
+      "ts/prefer-optional-chain",
       "ts/prefer-promise-reject-errors",
       "ts/prefer-reduce-type-parameter",
       "ts/prefer-return-this-type",
@@ -1827,21 +1830,23 @@
     ],
     "settings": {
       "tailwindcss": {
-        "callees": [
+        "functions": [
           "tv",
           "cn",
           "cnBase",
           "classnames",
           "clsx",
           "cx"
-        ]
+        ],
+        "cssConfigPath": "./src/style.css"
       }
     },
     "rules": [
       "tailwindcss/classnames-order",
+      "tailwindcss/enforces-canonical-classname",
       "tailwindcss/enforces-negative-arbitrary-values",
       "tailwindcss/enforces-shorthand",
-      "tailwindcss/migration-from-tailwind-2",
+      "tailwindcss/important-modifier-suffix",
       "- tailwindcss/no-arbitrary-value",
       "tailwindcss/no-contradicting-classname",
       "tailwindcss/no-custom-classname",

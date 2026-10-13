@@ -29,7 +29,7 @@ export default twoDigits(
     },
     react: true,
     next: true,
-    tailwind: true,
+    tailwind: { cssConfigPath: './packages/eslint-config/fixtures/input/styles.css' },
     storybook: true,
     graphql: true,
     tanstackQuery: true,
