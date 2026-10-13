@@ -1,3 +1,11 @@
+## @2digits/cli@2.0.26
+
+### Update @effect/platform-node to 4.0.4
+
+
+
+### Update effect to 4.0.4
+
 ## @2digits/cli@2.0.25
 
 ### Update effect to 4.0.3

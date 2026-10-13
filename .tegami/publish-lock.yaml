@@ -1,131 +1,92 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 12.12.1\n\n- Aligned `devEngines.packageManager` with `packageManager`\n"
-    filename: 2026-10-12-brave-wren-pnpm.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/platform-node to 4.0.4\n"
+    filename: 2026-10-13-bright-fjord-platform-node.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 12.11.2\n\n- Aligned `devEngines.packageManager` with `packageManager`\n"
-    filename: 2026-10-12-nook-opal-pnpm.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update effect to 4.0.4\n"
+    filename: 2026-10-13-calm-heron-effect.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update knip to 6.41.0\n"
-    filename: 2026-10-12-opal-brisk-knip.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update typescript-eslint to 8.71.2\n"
+    filename: 2026-10-13-amber-wren-typescript-eslint.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update voidzero-dev/setup-vp to 1.21.2\n"
-    filename: 2026-10-12-pike-iris-setup-vp.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-unicorn to 78.0.0\n\n- Enabled the new `unicorn/no-repeated-call-wrappers` rule\n- Added types for the new `unicorn/no-unnecessary-default-arguments` rule\n"
+    filename: 2026-10-13-brisk-otter-unicorn.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update @oxc-node/cli to 0.1.6\n"
-    filename: 2026-10-12-quill-pike-oxc-node.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Enable `ts/prefer-optional-chain`\n"
+    filename: 2026-10-13-keen-sparrow-optional-chain.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update baseline-browser-mapping to 2.11.28\n"
-    filename: 2026-10-12-rook-cedar-baseline.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update eslint-plugin-zod to 5.0.1\n\n- Enabled the `zod/prefer-nullish` and `zod/require-error-message` rules\n- Dropped the Oxlint override for the removed `zod/no-string-schema-with-uuid` rule\n"
+    filename: 2026-10-13-lofty-kiwi-zod.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Stop auto-starting the TLO gateway on mise enter\n\n- Removed `pitchfork` from `mise.toml` tools and the `enter` hook\n"
-    filename: 2026-10-12-sage-jade-pitchfork.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-storybook to 10.6.2\n"
+    filename: 2026-10-13-misty-cove-storybook.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update effect to 4.0.3\n"
-    filename: 2026-10-12-amber-dune-effect.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react to 5.26.5\n"
+    filename: 2026-10-13-quiet-lynx-eslint-react.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/platform-node to 4.0.3\n"
-    filename: 2026-10-12-brisk-kelp-platform-node.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: minor\n---\n\n## Support Tailwind CSS v4 in the Tailwind config\n\n- Updated `eslint-plugin-tailwindcss` to 4.4.0, which requires Tailwind CSS v4\n- Added a `cssConfigPath` option for the Tailwind v4 CSS entrypoint\n- Without `cssConfigPath`, a `tailwind.config.ts` (preferred) or `tailwind.config.js` is discovered and loaded through `@config`; the config is not enabled when none is found\n- Added `tailwindcss/enforces-canonical-classname` and `tailwindcss/important-modifier-suffix`, and removed `tailwindcss/migration-from-tailwind-2`\n"
+    filename: 2026-10-13-vivid-heron-tailwind.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react to 5.26.1\n\n- `react-extra/dom-no-unsafe-target-blank` now accepts an `allowReferrer` option\n"
-    filename: 2026-10-12-cedar-rook-eslint-react.md
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update posthog-node to 5.55.3\n"
+    filename: 2026-10-13-sunny-pike-posthog.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @tanstack/eslint-plugin-query to 5.104.2\n"
-    filename: 2026-10-12-dune-ember-tanstack-query.md
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.155.1\n"
+    filename: 2026-10-13-rusty-gull-renovate.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 65.3.0\n\n- `jsdoc/no-unnecessary-type-assertion` now accepts a `fixTypeChangingCasts` option\n"
-    filename: 2026-10-12-ember-lark-jsdoc.md
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @opentunnel/client to 0.5.1\n"
+    filename: 2026-10-13-dusky-tern-opentunnel.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-yml to 3.9.0\n"
-    filename: 2026-10-12-fern-sage-yml.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 65.3.1\n"
-    filename: 2026-10-12-lucid-heron-jsdoc.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-de-morgan to 2.2.1\n"
-    filename: 2026-10-12-quiet-otter-de-morgan.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update oxlint-tsgolint to 7.0.2004\n"
-    filename: 2026-10-12-iris-tarn-tsgolint.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update @opencode-ai/plugin to 1.19.0\n"
-    filename: 2026-10-12-gale-fern-opencode-plugin.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update posthog-node to 5.55.2\n"
-    filename: 2026-10-12-hazel-moss-posthog.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/prettier-config:\n    type: patch\n---\n\n## Update prettier to 3.9.10\n"
-    filename: 2026-10-12-jade-gale-prettier.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.151.2\n"
-    filename: 2026-10-12-kelp-nook-renovate.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.151.5\n"
-    filename: 2026-10-12-mellow-finch-renovate.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @yielded/oauth to 0.1.0-beta.37\n"
-    filename: 2026-10-12-lark-amber-yielded.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @opentunnel/client to 0.5.0\n\n- Removed the local `@opentunnel/client` and `@opentunnel/protocol` 0.2.2 patches, which no longer apply\n"
-    filename: 2026-10-12-moss-hazel-opentunnel.md
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @yielded/oauth to 0.1.0-beta.38\n"
+    filename: 2026-10-13-gentle-moth-yielded.md
     v: 0.0.0
 core:packages:
+  - id: npm:@2digits/config-monorepo
+    updated: false
   - changelogIds:
-      - 2026-10-12-brave-wren-pnpm.md
-      - 2026-10-12-nook-opal-pnpm.md
-      - 2026-10-12-opal-brisk-knip.md
-      - 2026-10-12-pike-iris-setup-vp.md
-      - 2026-10-12-quill-pike-oxc-node.md
-      - 2026-10-12-rook-cedar-baseline.md
-      - 2026-10-12-sage-jade-pitchfork.md
-    id: npm:@2digits/config-monorepo
-    updated: true
-  - changelogIds:
-      - 2026-10-12-amber-dune-effect.md
-      - 2026-10-12-brisk-kelp-platform-node.md
+      - 2026-10-13-bright-fjord-platform-node.md
+      - 2026-10-13-calm-heron-effect.md
     id: npm:@2digits/cli
     updated: true
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-10-12-cedar-rook-eslint-react.md
-      - 2026-10-12-dune-ember-tanstack-query.md
-      - 2026-10-12-ember-lark-jsdoc.md
-      - 2026-10-12-fern-sage-yml.md
-      - 2026-10-12-lucid-heron-jsdoc.md
-      - 2026-10-12-quiet-otter-de-morgan.md
+      - 2026-10-13-amber-wren-typescript-eslint.md
+      - 2026-10-13-brisk-otter-unicorn.md
+      - 2026-10-13-keen-sparrow-optional-chain.md
+      - 2026-10-13-lofty-kiwi-zod.md
+      - 2026-10-13-misty-cove-storybook.md
+      - 2026-10-13-quiet-lynx-eslint-react.md
+      - 2026-10-13-vivid-heron-tailwind.md
     id: npm:@2digits/eslint-config
     updated: true
-  - id: npm:@2digits/eslint-plugin
-    updated: false
+  - changelogIds:
+      - 2026-10-13-amber-wren-typescript-eslint.md
+    id: npm:@2digits/eslint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-10-13-sunny-pike-posthog.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
   - id: npm:@2digits/oxfmt-config
     updated: false
   - changelogIds:
-      - 2026-10-12-iris-tarn-tsgolint.md
+      - 2026-10-13-lofty-kiwi-zod.md
     id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-10-12-gale-fern-opencode-plugin.md
-      - 2026-10-12-hazel-moss-posthog.md
-    id: npm:@2digits/opencode-plugin
-    updated: true
-  - changelogIds:
-      - 2026-10-12-jade-gale-prettier.md
-    id: npm:@2digits/prettier-config
-    updated: true
-  - changelogIds:
-      - 2026-10-12-amber-dune-effect.md
+      - 2026-10-13-calm-heron-effect.md
     id: npm:@2digits/oxlint-plugin
     updated: true
+  - id: npm:@2digits/prettier-config
+    updated: false
   - changelogIds:
-      - 2026-10-12-kelp-nook-renovate.md
-      - 2026-10-12-mellow-finch-renovate.md
+      - 2026-10-13-rusty-gull-renovate.md
     id: npm:@2digits/renovate-config
     updated: true
   - changelogIds:
-      - 2026-10-12-amber-dune-effect.md
-      - 2026-10-12-brisk-kelp-platform-node.md
-      - 2026-10-12-lark-amber-yielded.md
-      - 2026-10-12-moss-hazel-opentunnel.md
+      - 2026-10-13-bright-fjord-platform-node.md
+      - 2026-10-13-calm-heron-effect.md
+      - 2026-10-13-dusky-tern-opentunnel.md
+      - 2026-10-13-gentle-moth-yielded.md
     id: npm:@2digits/tlo-mcp
     updated: true
   - id: npm:@2digits/tsconfig
@@ -136,11 +97,11 @@ npm:packages:
   - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
+  - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
-  - id: npm:@2digits/opencode-plugin
-  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/oxlint-plugin
+  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig

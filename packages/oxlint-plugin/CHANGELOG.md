@@ -1,3 +1,7 @@
+## @2digits/oxlint-plugin@0.1.4
+
+### Update effect to 4.0.4
+
 ## @2digits/oxlint-plugin@0.1.3
 
 ### Update effect to 4.0.3
