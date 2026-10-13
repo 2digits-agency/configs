@@ -70,7 +70,7 @@ export function durationArgument(
 }
 
 /**
- * Evaluate number literals and arithmetic on number literals, such as `24 * 60 * 60 * 1000`.
+ * Evaluate number literals and arithmetic on number literals, such as `-1` or `24 * 60 * 60 * 1000`.
  *
  * @param node Expression to evaluate.
  */
@@ -79,6 +79,12 @@ export function numericValue(node: ESTree.Expression): number | undefined {
 
   if (expression.type === 'Literal') {
     return typeof expression.value === 'number' ? expression.value : undefined;
+  }
+
+  if (expression.type === 'UnaryExpression' && (expression.operator === '-' || expression.operator === '+')) {
+    const argument = numericValue(expression.argument);
+
+    return argument === undefined || expression.operator === '+' ? argument : -argument;
   }
 
   if (expression.type !== 'BinaryExpression' || expression.left.type === 'PrivateIdentifier') {

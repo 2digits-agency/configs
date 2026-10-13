@@ -65,6 +65,23 @@ tester.run(ruleName, preferEffectDurationConstants, {
       [`${effect} const RETENTION_DAYS = 14;`, 'RETENTION_DAYS', 'Duration.weeks(2)'],
       [`${effect} const ONE_SECOND = 1000;`, 'ONE_SECOND', generic],
       [`${effect} const POLL_MS = 0;`, 'POLL_MS', 'Duration.zero'],
+      [`${effect} const TIMEOUT_MS = -1;`, 'TIMEOUT_MS', 'Duration.millis(-1)'],
+      // Declaration order does not change the suggested unit.
+      [
+        `${effect} const run = () => Effect.sleep(TIMEOUT_SECONDS); const TIMEOUT_SECONDS = 5;`,
+        'TIMEOUT_SECONDS',
+        'Duration.seconds(5)',
+      ],
+      [
+        `${effect} const run = () => Effect.sleep(REQUEST_TIMEOUT); const REQUEST_TIMEOUT = 30;`,
+        'REQUEST_TIMEOUT',
+        'Duration.millis(30)',
+      ],
+      [
+        `${effect} const REQUEST_TIMEOUT = 30; Effect.sleep(REQUEST_TIMEOUT);`,
+        'REQUEST_TIMEOUT',
+        'Duration.millis(30)',
+      ],
       [`${effect} const ONE_DAY = 24 * 60 * 60 * 1000;`, 'ONE_DAY', 'Duration.days(1)'],
       [`${effect} const FIVE = 5 * 60_000;`, 'FIVE', 'Duration.minutes(5)'],
       [`${effect} const ONE_DAY = 24 * 60 * 60;`, 'ONE_DAY', generic],

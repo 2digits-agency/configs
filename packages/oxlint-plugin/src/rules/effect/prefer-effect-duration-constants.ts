@@ -126,49 +126,33 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
     'https://www.effect.website/docs/v4/api/effect/Duration',
   ),
   (context, getState) => {
-    let reported = new Set<ESTree.VariableDeclarator>();
+    // Classify at the end of the file so forward references and declaration order do not change the suggestion.
+    let candidates = new Map<NumericDeclarator, boolean>();
 
-    function report(node: NumericDeclarator, unit: DurationUnit | undefined): void {
-      if (reported.has(node)) {
-        return;
+    function durationUnit(node: NumericDeclarator, passedAsDuration: boolean): DurationUnit | 'none' | undefined {
+      const named = nameUnit(node.id.name);
+
+      if (named !== undefined && named !== 'unknown') {
+        return named;
       }
 
-      reported.add(node);
+      const arithmetic = timeArithmetic(node.init);
 
-      const value = numericValue(node.init);
+      // Effect reads a plain number passed as `Duration.Input` as milliseconds.
+      if (passedAsDuration || arithmetic?.millis === true) {
+        return 'millis';
+      }
 
-      context.report({
-        node: node.id,
-        messageId: 'durationConstant',
-        data: {
-          name: node.id.name,
-          replacement:
-            unit === undefined || value === undefined
-              ? 'a Duration constructor such as Duration.seconds'
-              : durationConstructor(value, unit),
-        },
-      });
+      return arithmetic !== undefined || named === 'unknown' ? undefined : 'none';
     }
 
     return {
       before() {
-        reported = new Set();
+        candidates = new Map();
       },
       VariableDeclarator(node) {
-        if (!getState().hasEffectImport || !numericDeclarator(node)) {
-          return;
-        }
-
-        const named = nameUnit(node.id.name);
-
-        const arithmetic = timeArithmetic(node.init);
-
-        if (named !== undefined && named !== 'unknown') {
-          report(node, named);
-        } else if (arithmetic !== undefined) {
-          report(node, arithmetic.millis ? 'millis' : undefined);
-        } else if (named === 'unknown') {
-          report(node, undefined);
+        if (getState().hasEffectImport && numericDeclarator(node) && !candidates.has(node)) {
+          candidates.set(node, false);
         }
       },
       CallExpression(node) {
@@ -177,7 +161,30 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
         const declarator = argument === undefined ? undefined : declaratorOf(argument, context);
 
         if (declarator !== undefined) {
-          report(declarator, 'millis');
+          candidates.set(declarator, true);
+        }
+      },
+      'Program:exit': function reportCandidates() {
+        for (const [node, passedAsDuration] of candidates) {
+          const unit = durationUnit(node, passedAsDuration);
+
+          const value = numericValue(node.init);
+
+          if (unit === 'none') {
+            continue;
+          }
+
+          context.report({
+            node: node.id,
+            messageId: 'durationConstant',
+            data: {
+              name: node.id.name,
+              replacement:
+                unit === undefined || value === undefined
+                  ? 'a Duration constructor such as Duration.seconds'
+                  : durationConstructor(value, unit),
+            },
+          });
         }
       },
     };
