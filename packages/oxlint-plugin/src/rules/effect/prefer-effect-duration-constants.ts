@@ -17,7 +17,6 @@ const unitWords = new Map<string, DurationUnit>([
   ['sec', 'seconds'],
   ['secs', 'seconds'],
   ['seconds', 'seconds'],
-  ['min', 'minutes'],
   ['mins', 'minutes'],
   ['minutes', 'minutes'],
   ['hr', 'hours'],

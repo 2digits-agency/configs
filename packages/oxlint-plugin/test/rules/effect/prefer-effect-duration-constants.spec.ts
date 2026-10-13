@@ -35,6 +35,9 @@ tester.run(ruleName, preferEffectDurationConstants, {
     `${effect} const TIMEOUT_COUNT = 3;`,
     `${effect} const MAX_RETRIES = 5;`,
     `${effect} const age = 42;`,
+    // \`min\` usually means minimum.
+    `${effect} const PASSWORD_MIN = 8;`,
+    `${effect} const RANGE_MIN = 0;`,
     // Byte sizes and other non-time arithmetic.
     `${effect} const MAX_SIZE = 1024 * 1024;`,
     `${effect} const PAGE = 2 * 1000;`,
