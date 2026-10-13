@@ -1,5 +1,3 @@
-import { homedir } from 'node:os';
-
 import * as Context from 'effect/Context';
 import * as Data from 'effect/Data';
 import * as DateTime from 'effect/DateTime';
@@ -314,7 +312,7 @@ export function draftCustomerReply(ticket: TicketDetail, draft: ReplyDraft): Dra
 
 const TaggedErrorClass = Schema.TaggedError;
 
-export class ChangeRequestStoreError extends TaggedErrorClass<ChangeRequestStoreError>()('ChangeRequestStoreError', {
+class ChangeRequestStoreError extends TaggedErrorClass<ChangeRequestStoreError>()('ChangeRequestStoreError', {
   message: Schema.String,
 }) {}
 
@@ -328,8 +326,6 @@ export class ChangeRequestStore extends Context.Service<ChangeRequestStore, Chan
 ) {}
 
 const PrettyJson = Schema.fromJsonString(Schema.Json, { space: 2 });
-
-export const DEFAULT_REQUEST_DIRECTORY = `${homedir()}/.config/2digits/tlo-tui/requests`;
 
 // Preserve String's JSON-value coercion for filenames, while making object and array handling explicit.
 function subjectText(value: Schema.Json): string {

@@ -6,7 +6,7 @@ import type * as McpSchema from 'effect/ai/McpSchema';
  * Evidence class of a capability. Only `proven-*` MCP tools are wired into flows; historical browser AJAX calls and
  * discovered-but-unproven MCP tools are listed for transparency and never called.
  */
-export type Evidence = 'proven-mcp' | 'unproven-mcp' | 'historical-har';
+type Evidence = 'proven-mcp' | 'unproven-mcp' | 'historical-har';
 
 /**
  * - `read`: called directly.
@@ -193,12 +193,12 @@ export const HISTORICAL_HAR_WRITES: ReadonlyArray<{ readonly route: string; read
   { route: '/ajax/board/DeleteTodo', note: 'Gezien in capture, nooit blootgesteld.' },
 ];
 
-export type ToolStatus =
+type ToolStatus =
   | { readonly _tag: 'Available' }
   | { readonly _tag: 'Missing' }
   | { readonly _tag: 'Drift'; readonly missingParams: ReadonlyArray<string> };
 
-export const ToolStatus = Data.taggedEnum<ToolStatus>();
+const ToolStatus = Data.taggedEnum<ToolStatus>();
 
 export interface Capability {
   readonly policy: ToolPolicy;

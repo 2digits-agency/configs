@@ -41,7 +41,7 @@ export function validateNote(note: string): ReadonlyArray<string> {
  * @param note
  * @param attempt
  */
-export const readbackNote = Effect.fn('InternalNote.readback')(function* (
+const readbackNote = Effect.fn('InternalNote.readback')(function* (
   ticketId: TicketId,
   note: string,
   attempt: NoteAttempt,

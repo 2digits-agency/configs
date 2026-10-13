@@ -13,22 +13,18 @@ export type TaskId = string & Brand.Brand<'TaskId'>;
 
 export type TicketId = string & Brand.Brand<'TicketId'>;
 
-function prefixed<T extends string>(prefix: string) {
-  return (input: string): Opt.Option<T> => {
-    const value = input.trim();
+function prefixed<T extends string>(input: string, prefix: string): Opt.Option<T> {
+  const value = input.trim();
 
-    return API_ID.test(value) && value.startsWith(prefix) ? Opt.some(value as T) : Opt.none();
-  };
+  return API_ID.test(value) && value.startsWith(prefix) ? Opt.some(value as T) : Opt.none();
 }
 
-export const parseTimeEntryId = prefixed<TimeEntryId>('AC');
+export function parseTaskId(input: string): Opt.Option<TaskId> {
+  return prefixed<TaskId>(input, 'PT');
+}
 
-export const parseTaskId = prefixed<TaskId>('PT');
-
-export const parseTicketId = prefixed<TicketId>('TC');
-
-export function isVisibleNumber(input: string): boolean {
-  return /^\d+$/.test(input.trim());
+export function parseTicketId(input: string): Opt.Option<TicketId> {
+  return prefixed<TicketId>(input, 'TC');
 }
 
 /**

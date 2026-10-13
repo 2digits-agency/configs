@@ -219,7 +219,7 @@ export const ORBIT_WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] 
  * @param date
  * @param zone
  */
-export function zoneOffsetMinutes(date: LocalDate, zone: string): number {
+function zoneOffsetMinutes(date: LocalDate, zone: string): number {
   return DateTime.zonedOffset(DateTime.makeZonedUnsafe(`${date}T12:00:00Z`, { timeZone: zone })) / 60_000;
 }
 

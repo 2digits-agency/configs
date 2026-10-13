@@ -12,7 +12,9 @@ export const DEFAULT_KEY_FILE = `${homedir()}/.config/2digits/tlo-mcp/gateway.ke
 
 const KEY = /^[a-f0-9]{64}$/;
 
-export class GatewayKeyError extends Schema.TaggedError<GatewayKeyError>()('GatewayKeyError', {
+const TaggedErrorClass = Schema.TaggedError;
+
+export class GatewayKeyError extends TaggedErrorClass<GatewayKeyError>()('GatewayKeyError', {
   message: Schema.String,
 }) {}
 

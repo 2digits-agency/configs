@@ -2,7 +2,7 @@ import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 
 import { type BillableReadback, parseBillableReadback } from '../domain/billable.js';
-import { type TaskId, type TicketId, type TimeEntryId, parseTaskId } from '../domain/ids.js';
+import { type TaskId, type TimeEntryId, parseTaskId } from '../domain/ids.js';
 import {
   type ClockTime,
   type LocalDate,
@@ -18,7 +18,7 @@ import {
  * show the raw text and keep dependent writes disabled.
  */
 
-export interface WeekDay {
+interface WeekDay {
   readonly date: LocalDate;
   readonly state: string;
   readonly loggedMinutes: number;
@@ -98,7 +98,7 @@ export interface ProjectRow {
   readonly billing: string;
 }
 
-export interface MarkdownTable {
+interface MarkdownTable {
   readonly header: ReadonlyArray<string>;
   readonly rows: ReadonlyArray<ReadonlyArray<string>>;
 }
@@ -112,17 +112,17 @@ function splitRow(line: string): Array<string> {
     .trim()
     .replace(/^\|/, '')
     .replace(/\|$/, '')
-    .split('|')
-    .map((cell) => stripLinks(cell));
+    .split(/(?<!\\)\|/)
+    .map((cell) => stripLinks(cell.replaceAll(String.raw`\|`, '|')));
 }
 
 /**
- * First Markdown table in `text`. Cells containing `|` inside links are rare in these tools; such rows are kept but may
- * shift columns, which the callers validate per field.
+ * First Markdown table in `text`. Escaped pipes are cell content; ambiguous rows fail closed rather than shifting
+ * fields.
  *
  * @param text
  */
-export function parseMarkdownTable(text: string): Opt.Option<MarkdownTable> {
+function parseMarkdownTable(text: string): Opt.Option<MarkdownTable> {
   const lines = text.split('\n');
 
   const start = lines.findIndex(
@@ -144,7 +144,13 @@ export function parseMarkdownTable(text: string): Opt.Option<MarkdownTable> {
       break;
     }
 
-    rows.push(splitRow(line));
+    const row = splitRow(line);
+
+    if (row.length !== header.length) {
+      return Opt.none();
+    }
+
+    rows.push(row);
   }
 
   return Opt.some({ header, rows });
@@ -569,10 +575,6 @@ export function parseTicketDetail(text: string): Opt.Option<TicketDetail> {
 
 export function parseTicketComments(text: string): Opt.Option<ReadonlyArray<TicketComment>> {
   return Opt.map(Schema.decodeOption(CommentList)(text), (list) => list.comments);
-}
-
-export function asTicketId(summary: { readonly ticketId: string }): TicketId {
-  return summary.ticketId as TicketId;
 }
 
 /**

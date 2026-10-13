@@ -52,6 +52,36 @@ function verifiedNote(outcome: NoteOutcome) {
 }
 
 describe('demo-backed Orbit user flows', () => {
+  it('finds tasks and projects without losing pipes in project labels or shifting client fields', () =>
+    Effect.runPromise(
+      Effect.gen(function* () {
+        const orbit = yield* Orbit;
+
+        const tasks = yield* orbit.myTasks('Website');
+
+        expect(tasks.map(({ taskId, project, task }) => ({ taskId, project, task }))).toStrictEqual([
+          {
+            taskId: 'PTDEMO000000001',
+            project: '9001 DEMO Klant BV | Website onderhoud',
+            task: 'Development',
+          },
+          {
+            taskId: 'PTDEMO000000002',
+            project: '9001 DEMO Klant BV | Website onderhoud',
+            task: 'Overleg',
+          },
+        ]);
+
+        expect((yield* orbit.projectItems('Koppeling')).map(({ taskId }) => taskId)).toStrictEqual(['PTDEMO000000003']);
+
+        expect(yield* orbit.projects('Website')).toMatchObject([
+          { number: '9001', name: 'DEMO Klant BV | Website onderhoud', client: 'DEMO Klant BV', state: 'OPEN' },
+        ]);
+
+        expect(yield* orbit.myTasks('absent')).toStrictEqual([]);
+      }).pipe(Effect.provide(demoLayer())),
+    ));
+
   it.for([
     { fault: undefined, delivery: 'acknowledged' },
     { fault: 'timeout', delivery: 'unknown' },

@@ -23,7 +23,7 @@ import {
 import { type CreateTimeEntryArgs, Orbit, type OrbitError, createTimeEntryArguments } from '../orbit/Orbit.js';
 import { type TimeEntryDetail, type TimesheetWeek, type WeekEntry, normalizeText } from '../orbit/parse.js';
 
-export interface SelectedTask {
+interface SelectedTask {
   readonly taskId: TaskId;
   readonly label: string;
   /**
@@ -48,7 +48,7 @@ export interface Issue {
   readonly message: string;
 }
 
-export type WarningCode =
+type WarningCode =
   | 'duplicate'
   | 'overlap'
   | 'future'
@@ -58,7 +58,7 @@ export type WarningCode =
   | 'other-week'
   | 'week-unread';
 
-export interface Warning {
+interface Warning {
   readonly code: WarningCode;
   readonly message: string;
 }
@@ -273,18 +273,18 @@ export function bookingPayload(booking: ValidBooking) {
 
 const TaggedErrorClass = Schema.TaggedError;
 
-export class BookingBlocked extends TaggedErrorClass<BookingBlocked>()('BookingBlocked', {
+class BookingBlocked extends TaggedErrorClass<BookingBlocked>()('BookingBlocked', {
   messages: Schema.Array(Schema.String),
 }) {}
 
 /**
  * The fresh week shows a likely duplicate the user has not explicitly accepted.
  */
-export class DuplicateSuspected extends TaggedErrorClass<DuplicateSuspected>()('DuplicateSuspected', {
+class DuplicateSuspected extends TaggedErrorClass<DuplicateSuspected>()('DuplicateSuspected', {
   messages: Schema.Array(Schema.String),
 }) {}
 
-export interface Diff {
+interface Diff {
   readonly field: string;
   readonly expected: string;
   readonly actual: string;
@@ -320,7 +320,7 @@ export type BookingOutcome =
 
 export const BookingOutcome = Data.taggedEnum<BookingOutcome>();
 
-export function compareEntry(booking: ValidBooking, entry: TimeEntryDetail): ReadonlyArray<Diff> {
+function compareEntry(booking: ValidBooking, entry: TimeEntryDetail): ReadonlyArray<Diff> {
   const diffs: Array<Diff> = [];
 
   function push(field: string, expected: string, actual: string) {

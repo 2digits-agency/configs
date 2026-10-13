@@ -35,12 +35,12 @@ const TaggedErrorClass = Schema.TaggedError;
 /**
  * Orbit answered, but with an error (often as plain text with `isError: false`, e.g. `Error: … not a valid …`).
  */
-export class OrbitToolError extends TaggedErrorClass<OrbitToolError>()('OrbitToolError', {
+class OrbitToolError extends TaggedErrorClass<OrbitToolError>()('OrbitToolError', {
   tool: Schema.String,
   message: Schema.String,
 }) {}
 
-export class OrbitRateLimited extends TaggedErrorClass<OrbitRateLimited>()('OrbitRateLimited', {
+class OrbitRateLimited extends TaggedErrorClass<OrbitRateLimited>()('OrbitRateLimited', {
   tool: Schema.String,
   message: Schema.String,
 }) {}
@@ -48,7 +48,7 @@ export class OrbitRateLimited extends TaggedErrorClass<OrbitRateLimited>()('Orbi
 /**
  * The answer did not match the shape this client relies on; the raw text is kept for display.
  */
-export class OrbitUnreadable extends TaggedErrorClass<OrbitUnreadable>()('OrbitUnreadable', {
+class OrbitUnreadable extends TaggedErrorClass<OrbitUnreadable>()('OrbitUnreadable', {
   tool: Schema.String,
   raw: Schema.String,
 }) {}
@@ -56,7 +56,7 @@ export class OrbitUnreadable extends TaggedErrorClass<OrbitUnreadable>()('OrbitU
 /**
  * Blocked locally: not proven, approval-only, read-only mode, or missing/drifted on the gateway.
  */
-export class OrbitNotAllowed extends TaggedErrorClass<OrbitNotAllowed>()('OrbitNotAllowed', {
+class OrbitNotAllowed extends TaggedErrorClass<OrbitNotAllowed>()('OrbitNotAllowed', {
   tool: Schema.String,
   reason: Schema.String,
 }) {}
@@ -81,7 +81,7 @@ export interface InternalNoteArgs {
   readonly note: string;
 }
 
-export interface TicketQuery {
+interface TicketQuery {
   readonly query?: string;
   readonly state?: string;
   readonly limit?: number;
@@ -137,7 +137,7 @@ function args(record: Record<string, Schema.Json | undefined>): Schema.JsonObjec
   return result;
 }
 
-export function resultText(result: McpSchema.CallToolResult): string {
+function resultText(result: McpSchema.CallToolResult): string {
   return result.content
     .map((block) => ('text' in block && typeof block.text === 'string' ? block.text : `[${block.type}]`))
     .join('\n')

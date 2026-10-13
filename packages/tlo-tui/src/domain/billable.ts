@@ -24,15 +24,6 @@ export function toUpdateBillable(choice: BillableChoice): 'true' | 'false' {
 }
 
 /**
- * `ListTimeEntries.billable` filter: `'true'`, `'false'` or empty for all.
- *
- * @param choice
- */
-export function toListBillableFilter(choice: BillableChoice | undefined): 'true' | 'false' | '' {
-  return choice === undefined ? '' : toUpdateBillable(choice);
-}
-
-/**
  * Readback from `GetTimeEntry`, e.g. `Billable: yes` or `Billable: no (no rate)`. The reason matters: a zero-rate task
  * reads back as non-billable even when billable was requested.
  */

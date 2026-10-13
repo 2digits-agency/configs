@@ -37,6 +37,10 @@ function demoId(prefix: string, n: number): string {
   return `${prefix}DEMO${String(n).padStart(9, '0')}`;
 }
 
+function tableCell(value: string): string {
+  return value.replaceAll('|', String.raw`\|`);
+}
+
 interface DemoTask {
   readonly id: string;
   readonly project: string;
@@ -487,7 +491,7 @@ export function makeDemoMcpLayer(options: DemoOptions = {}) {
             '',
             '| Project | Task | Remaining | api_id |',
             '|---|---|---|---|',
-            ...rows.map((task) => `| ${task.project} | ${task.task} | 40h | ${task.id} |`),
+            ...rows.map((task) => `| ${tableCell(task.project)} | ${task.task} | 40h | ${task.id} |`),
           ].join('\n');
         },
         SearchProjectItems: (args) => {
@@ -526,7 +530,7 @@ export function makeDemoMcpLayer(options: DemoOptions = {}) {
 
               const client = TASKS.find((task) => task.project === project)?.client ?? '';
 
-              return `| [${number}](jump:PROJECT:0) | ${name.join(' ')} | ${client} | ${USER.name} | OPEN | HOURS | 0.00 | 0.00 | 0.00 | |`;
+              return `| [${number}](jump:PROJECT:0) | ${tableCell(name.join(' '))} | ${client} | ${USER.name} | OPEN | HOURS | 0.00 | 0.00 | 0.00 | |`;
             }),
             '',
             `api_ids: ${projects.map((_, index) => demoId('PR', index + 1)).join(', ')}`,
