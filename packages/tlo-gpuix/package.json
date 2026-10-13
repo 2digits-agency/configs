@@ -1,0 +1,29 @@
+{
+  "name": "@2digits/tlo-gpuix",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun build --compile src/native.tsx --outfile dist/tlo-gpuix",
+    "dev": "bun --hot src/native.tsx",
+    "preview": "bun web.ts",
+    "start": "bun src/native.tsx",
+    "test": "vp test",
+    "types": "tsc --noEmit",
+    "web:build": "bun web.ts --build"
+  },
+  "dependencies": {
+    "@gpuix/native": "catalog:",
+    "@gpuix/react": "catalog:",
+    "@modelcontextprotocol/sdk": "catalog:",
+    "effect": "catalog:",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}
