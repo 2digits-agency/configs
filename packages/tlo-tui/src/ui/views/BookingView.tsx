@@ -11,6 +11,7 @@ import * as Atom from 'effect/reactivity/Atom';
 import { billableLabel } from '../../domain/billable.js';
 import { formatDuration, parseLocalDate, startOfWeek } from '../../domain/time.js';
 import {
+  type BookingDraft,
   type BookingField,
   type BookingOutcome,
   type ValidBooking,
@@ -32,6 +33,20 @@ const FIELDS: ReadonlyArray<{ readonly id: BookingField; readonly label: string;
 ];
 
 type Stage = 'edit' | 'review' | 'result';
+
+function TaskField({ task, active }: { readonly task: BookingDraft['task']; readonly active: boolean }) {
+  return (
+    <box flexDirection="column" flexShrink={0} paddingBottom={1}>
+      <text fg={active ? theme.focus : theme.muted}>{`${active ? '▸' : ' '} Taak · Enter = zoeken`}</text>
+
+      <text fg={Opt.isSome(task) ? theme.text : theme.red}>
+        {Opt.match(task, { onNone: () => '— geen taak gekozen —', onSome: (value) => value.label })}
+      </text>
+
+      {Opt.isSome(task) ? <Muted>{task.value.taskId}</Muted> : undefined}
+    </box>
+  );
+}
 
 function successfulOutcome(result: AsyncResult.AsyncResult<BookingOutcome, unknown>) {
   return AsyncResult.isSuccess(result) ? Opt.some(result.value) : Opt.none();
@@ -309,14 +324,7 @@ export function BookingView() {
       title="Uren boeken · CreateTimeEntry"
       flexGrow={1}
       borderColor={stage === 'edit' ? theme.focus : theme.border}>
-      <Field label="Taak" active={field === 'task'} invalid={issueFor('task') !== undefined} hint="Enter = zoeken">
-        <text fg={Opt.isSome(draft.task) ? theme.text : theme.dim} wrapMode="none">
-          {Opt.match(draft.task, {
-            onNone: () => '— geen taak gekozen —',
-            onSome: (task) => `${task.label}  ${task.taskId}`,
-          })}
-        </text>
-      </Field>
+      <TaskField task={draft.task} active={field === 'task'} />
 
       <Field label="Datum" active={field === 'date'} invalid={issueFor('date') !== undefined} hint="yyyy-MM-dd">
         {input('date', 'yyyy-MM-dd')}
@@ -348,7 +356,7 @@ export function BookingView() {
         <text key={`${issue.field}-${issue.message}`} fg={theme.red}>{`• ${issue.message}`}</text>
       ))}
 
-      {Opt.match(assessment, {
+      {Opt.match(stage === 'result' ? Opt.none() : assessment, {
         onNone: () => undefined,
         onSome: (value) => (
           <box flexDirection="column">
