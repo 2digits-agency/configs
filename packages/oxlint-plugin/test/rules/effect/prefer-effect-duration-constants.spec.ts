@@ -47,6 +47,19 @@ tester.run(ruleName, preferEffectDurationConstants, {
     // Shadowed API roots are not Effect.
     `${effect} function f(Effect) { const wait = 250; Effect.sleep(wait); }`,
     `import { Stream } from 'effect'; function f(Stream) { const wait = 250; Stream.debounce(wait); }`,
+    // Already typed as a Duration.
+    `${effect} import * as Duration from 'effect/Duration'; const TIMEOUT_MS: Duration.Input = 5000; Effect.sleep(TIMEOUT_MS);`,
+    `${effect} import { Duration } from 'effect'; const TIMEOUT_MS: Duration.Duration | number = 5000;`,
+    // Zero and negative sentinels.
+    `${effect} const POLL_MS = 0;`,
+    `${effect} const TIMEOUT_MS = -1;`,
+    // Conversion factors, rates, and timestamps.
+    `${effect} const MS_PER_SECOND = 1000;`,
+    `${effect} const MS_PER_DAY = 24 * 60 * 60 * 1000;`,
+    `${effect} const REQUESTS_PER_SECOND = 10;`,
+    `${effect} const CREATED_AT_MS = 1_700_000_000_000;`,
+    `${effect} const EPOCH_SECONDS = 1_700_000_000;`,
+    `${effect} const expiresAtMs = 1_700_000_000_000;`,
     // Not a const number.
     `${effect} let TIMEOUT_MS = 30_000;`,
     `${effect} const TIMEOUT_MS = Number(process.env.TIMEOUT_MS);`,
@@ -62,10 +75,12 @@ tester.run(ruleName, preferEffectDurationConstants, {
       [`${effect} export const requestTimeoutMs = 1500;`, 'requestTimeoutMs', 'Duration.millis(1500)'],
       [`${effect} const CACHE_TTL_SECONDS = 3600;`, 'CACHE_TTL_SECONDS', 'Duration.hours(1)'],
       [`${effect} const ttlInMinutes = 90;`, 'ttlInMinutes', 'Duration.minutes(90)'],
+      [`${effect} const SESSION_WINDOW_MINUTES = 15;`, 'SESSION_WINDOW_MINUTES', 'Duration.minutes(15)'],
       [`${effect} const RETENTION_DAYS = 14;`, 'RETENTION_DAYS', 'Duration.weeks(2)'],
       [`${effect} const ONE_SECOND = 1000;`, 'ONE_SECOND', generic],
-      [`${effect} const POLL_MS = 0;`, 'POLL_MS', 'Duration.zero'],
-      [`${effect} const TIMEOUT_MS = -1;`, 'TIMEOUT_MS', 'Duration.millis(-1)'],
+      // Sentinels and factors still count when they are passed as a duration.
+      [`${effect} const NO_DELAY = 0; Effect.sleep(NO_DELAY);`, 'NO_DELAY', 'Duration.zero'],
+      [`${effect} const MS_PER_SECOND = 1000; Effect.sleep(MS_PER_SECOND);`, 'MS_PER_SECOND', 'Duration.seconds(1)'],
       // Declaration order does not change the suggested unit.
       [
         `${effect} const run = () => Effect.sleep(TIMEOUT_SECONDS); const TIMEOUT_SECONDS = 5;`,

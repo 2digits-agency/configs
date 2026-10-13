@@ -1,6 +1,6 @@
 import type { Context, ESTree, Rule, Scope } from '@oxlint/plugins';
 
-import { defineEffectRule, ruleMeta, unwrapExpression } from '../../utils';
+import { containsIdentifier, defineEffectRule, ruleMeta, unwrapExpression } from '../../utils';
 import { durationArgument, durationConstructor, numericValue, timeArithmetic, type DurationUnit } from './duration';
 
 type NumericDeclarator = ESTree.VariableDeclarator & {
@@ -54,15 +54,28 @@ function words(name: string): Array<string> {
     .map((word) => word.toLowerCase());
 }
 
+// Conversion factors (`MS_PER_SECOND`), rates (`REQUESTS_PER_SECOND`), and timestamps (`CREATED_AT_MS`) are not durations.
+const nonDurationWords = new Set(['at', 'epoch', 'per', 'timestamp']);
+
+type NameUnit = DurationUnit | 'excluded' | 'unknown' | undefined;
+
+function isUnit(named: NameUnit): named is DurationUnit {
+  return named !== undefined && named !== 'excluded' && named !== 'unknown';
+}
+
 /**
  * Classify a binding name by its last word: a unit (`TIMEOUT_MS`, `ttlSeconds`) or a duration concept
  * (`REQUEST_TIMEOUT`, `ONE_DAY`, `maxAge`, `expiresIn`). Earlier words do not count, so `RETRY_DELAY_FACTOR` is not a
- * duration.
+ * duration, except for words that mark a factor, rate, or timestamp.
  *
  * @param name Binding name.
  */
-function nameUnit(name: string): DurationUnit | 'unknown' | undefined {
+function nameUnit(name: string): NameUnit {
   const parts = words(name);
+
+  if (parts.some((part) => nonDurationWords.has(part))) {
+    return 'excluded';
+  }
 
   const last = parts.at(-1);
 
@@ -130,16 +143,30 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
     let candidates = new Map<NumericDeclarator, boolean>();
 
     function durationUnit(node: NumericDeclarator, passedAsDuration: boolean): DurationUnit | 'none' | undefined {
+      // `const TIMEOUT: Duration.Input = 5000` already opts into Duration.
+      if (node.id.typeAnnotation && containsIdentifier(node.id.typeAnnotation, 'Duration')) {
+        return 'none';
+      }
+
       const named = nameUnit(node.id.name);
 
-      if (named !== undefined && named !== 'unknown') {
+      // Effect reads a plain number passed as `Duration.Input` as milliseconds.
+      if (passedAsDuration) {
+        return isUnit(named) ? named : 'millis';
+      }
+
+      // Zero and negative values are usually sentinels such as "disabled" or "no timeout".
+      if (named === 'excluded' || (numericValue(node.init) ?? 0) <= 0) {
+        return 'none';
+      }
+
+      if (isUnit(named)) {
         return named;
       }
 
       const arithmetic = timeArithmetic(node.init);
 
-      // Effect reads a plain number passed as `Duration.Input` as milliseconds.
-      if (passedAsDuration || arithmetic?.millis === true) {
+      if (arithmetic?.millis === true) {
         return 'millis';
       }
 

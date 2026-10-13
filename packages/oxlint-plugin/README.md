@@ -91,7 +91,9 @@ Effect.sleep(wait);
 A constant is reported when its name ends in a plural or abbreviated unit (`_MS`, `Seconds`, `_MINS`, `_DAYS`) or a
 duration word (`TIMEOUT`, `DELAY`, `INTERVAL`, `TTL`, `ONE_DAY`, `maxAge`, `expiresIn`), when it is hand-written time
 arithmetic, or when it is passed to an Effect duration API. Only the last word of the name counts, so
-`RETRY_DELAY_FACTOR` is not a duration. The suggested constructor uses the unit from the name; Effect's millisecond
+`RETRY_DELAY_FACTOR` is not a duration. Names containing `per`, `at`, `epoch`, or `timestamp` (`MS_PER_SECOND`,
+`REQUESTS_PER_SECOND`, `CREATED_AT_MS`), zero or negative sentinels, and constants annotated with a `Duration` type are
+skipped unless they are passed to a duration API. The suggested constructor uses the unit from the name; Effect's millisecond
 interpretation applies only to constants passed to duration APIs. Without a known unit, the message stays generic.
 
 There is **no autofix**: the constant changes from `number` to `Duration`. Convert at non-Effect boundaries with
