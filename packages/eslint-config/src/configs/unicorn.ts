@@ -26,6 +26,7 @@ export function unicorn(): Array<TypedFlatConfigItem> {
         'unicorn/no-declarations-before-early-exit': 'off',
         'unicorn/no-nested-ternary': 'off',
         'unicorn/no-non-function-verb-prefix': 'off',
+        'unicorn/no-repeated-call-wrappers': 'error',
         'unicorn/no-top-level-side-effects': 'off',
         'unicorn/no-useless-undefined': ['error', { checkArguments: false, checkArrowFunctionBody: false }],
         'unicorn/prefer-await': 'off',
