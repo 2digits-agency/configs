@@ -41,6 +41,12 @@ tester.run(ruleName, preferEffectDurationConstants, {
     // Byte sizes and other non-time arithmetic.
     `${effect} const MAX_SIZE = 1024 * 1024;`,
     `${effect} const PAGE = 2 * 1000;`,
+    `${effect} const BUFFER_SIZE = 60 * 1024;`,
+    `${effect} const PAGE_SIZE = 60 * 2;`,
+    `${effect} const MICRO = 1000 * 1000;`,
+    // Shadowed API roots are not Effect.
+    `${effect} function f(Effect) { const wait = 250; Effect.sleep(wait); }`,
+    `import { Stream } from 'effect'; function f(Stream) { const wait = 250; Stream.debounce(wait); }`,
     // Not a const number.
     `${effect} let TIMEOUT_MS = 30_000;`,
     `${effect} const TIMEOUT_MS = Number(process.env.TIMEOUT_MS);`,

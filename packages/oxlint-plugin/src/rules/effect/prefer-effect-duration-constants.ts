@@ -172,7 +172,7 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
         }
       },
       CallExpression(node) {
-        const argument = durationArgument(node, getState());
+        const argument = durationArgument(node, context, getState());
 
         const declarator = argument === undefined ? undefined : declaratorOf(argument, context);
 

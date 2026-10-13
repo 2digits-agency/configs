@@ -31,6 +31,9 @@ tester.run('prefer-effect-duration positions', preferEffectDuration, {
     `import * as Effect from 'effect/Effect'; Effect.timeoutOrElse(program, { duration: '5 seconds', orElse });`,
     `import * as Effect from 'effect/Effect'; Effect.retry(program, { times: 3 });`,
     `import * as Effect from 'effect/Effect'; const wait = 10; Effect.sleep(wait);`,
+    `import * as Effect from 'effect/Effect'; function f(Effect) { Effect.sleep(10); }`,
+    `import { Stream } from 'effect'; function f(Stream) { Stream.debounce(250); }`,
+    `import type { Effect } from 'effect'; Effect.sleep(10);`,
   ],
   invalid: (
     [

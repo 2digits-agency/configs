@@ -1,6 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 
-import { importedApi, namespaceImport } from '../../fixes';
+import { namespaceImport } from '../../fixes';
 import { defineEffectRule, ruleMeta } from '../../utils';
 import { durationArgument, numericValue } from './duration';
 
@@ -18,7 +18,7 @@ export const preferEffectDuration: Rule = defineEffectRule(
   },
   (context, getState) => ({
     CallExpression(node) {
-      const duration = durationArgument(node, getState());
+      const duration = durationArgument(node, context, getState());
 
       if (duration === undefined || numericValue(duration) === undefined) {
         return;
@@ -28,10 +28,6 @@ export const preferEffectDuration: Rule = defineEffectRule(
         node: duration,
         messageId: 'effectDuration',
         fix(fixer) {
-          if (!importedApi(context, node.callee)) {
-            return;
-          }
-
           const imported = namespaceImport(context, node, 'effect/Duration', 'Duration', fixer);
 
           return [

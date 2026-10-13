@@ -1,5 +1,6 @@
-import type { ESTree } from '@oxlint/plugins';
+import type { Context, ESTree } from '@oxlint/plugins';
 
+import { importedApi } from '../../fixes';
 import { argumentAt, canonicalPath, objectProperty, unwrapExpression, type FileState } from '../../utils';
 
 type DurationPosition = 'first' | 'last' | 'options.duration';
@@ -31,15 +32,23 @@ const durationApis = new Map<string, DurationPosition>([
 ]);
 
 /**
- * Return the expression a call passes as its `Duration.Input`, if the callee is a known Effect duration API.
+ * Return the expression a call passes as its `Duration.Input`, if the callee is a known Effect duration API that still
+ * resolves to its runtime import.
  *
  * @param node Call to inspect.
+ * @param context Rule context, used to reject shadowed import names.
  * @param state Effect import bindings for the file.
  */
-export function durationArgument(node: ESTree.CallExpression, state: FileState): ESTree.Expression | undefined {
+export function durationArgument(
+  node: ESTree.CallExpression,
+  context: Context,
+  state: FileState,
+): ESTree.Expression | undefined {
   const path = canonicalPath(node.callee, state);
 
-  const position = path === undefined ? undefined : durationApis.get(path.join('.'));
+  const api = path === undefined ? undefined : durationApis.get(path.join('.'));
+
+  const position = api !== undefined && importedApi(context, node.callee) ? api : undefined;
 
   if (position === 'first') {
     return argumentAt(node, 0);
@@ -125,17 +134,32 @@ function factors(node: ESTree.Expression): Array<number> | undefined {
   return left === undefined || right === undefined ? undefined : [...left, ...right];
 }
 
-const timeFactors = new Set([60, 3600, 86_400, 60_000, 3_600_000, 86_400_000]);
+// Minute, hour, and day sizes in milliseconds are unambiguous on their own.
+const millisFactors = new Set([60_000, 3_600_000, 86_400_000]);
+
+const sixtyFactors = new Set([60, 3600, 86_400]);
+
+const timeFactors = new Set([7, 24, 60, 1000, 3600, 86_400]);
 
 /**
- * Detect hand-written time arithmetic such as `5 * 60 * 1000` or `24 * 60 * 60`.
+ * Detect hand-written time arithmetic such as `5 * 60 * 1000`, `24 * 60 * 60`, or `5 * 60_000`. A lone `60` is not
+ * enough: `60 * 1024` and `60 * 2` are not times.
  *
  * @param node Expression to inspect.
  */
 export function timeArithmetic(node: ESTree.Expression): { readonly millis: boolean } | undefined {
   const product = factors(node);
 
-  if (product === undefined || product.length < 2 || product.every((factor) => !timeFactors.has(factor))) {
+  if (product === undefined || product.length < 2) {
+    return undefined;
+  }
+
+  const time =
+    product.some((factor) => millisFactors.has(factor)) ||
+    (product.some((factor) => sixtyFactors.has(factor)) &&
+      product.filter((factor) => timeFactors.has(factor)).length >= 2);
+
+  if (!time) {
     return undefined;
   }
 
