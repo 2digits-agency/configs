@@ -1,3 +1,19 @@
+## @2digits/tlo-mcp@2.0.2
+
+### Update @effect/platform-node to 4.0.4
+
+
+
+### Update effect to 4.0.4
+
+
+
+### Update @opentunnel/client to 0.5.1
+
+
+
+### Update @yielded/oauth to 0.1.0-beta.38
+
 ## @2digits/tlo-mcp@2.0.1
 
 ### Update effect to 4.0.3

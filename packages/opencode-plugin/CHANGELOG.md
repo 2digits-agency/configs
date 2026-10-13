@@ -1,3 +1,7 @@
+## @2digits/opencode-plugin@0.2.41
+
+### Update posthog-node to 5.55.3
+
 ## @2digits/opencode-plugin@0.2.40
 
 ### Update @opencode-ai/plugin to 1.19.0

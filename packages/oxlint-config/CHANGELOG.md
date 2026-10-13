@@ -1,3 +1,10 @@
+## @2digits/oxlint-config@2.0.3
+
+### Update eslint-plugin-zod to 5.0.1
+
+- Enabled the `zod/prefer-nullish` and `zod/require-error-message` rules
+- Dropped the Oxlint override for the removed `zod/no-string-schema-with-uuid` rule
+
 ## @2digits/oxlint-config@2.0.2
 
 ### Update oxlint-tsgolint to 7.0.2004
