@@ -1,0 +1,51 @@
+---
+title: Writing documentation
+description: Add guides and keep the generated custom-rule reference accurate.
+---
+
+## Run the docs
+
+From the repository root:
+
+```sh
+vp install
+vp run docs:dev
+```
+
+This builds the plugins and starts the docs app. To build the site for production, run `vp run build --filter=@2digits/docs`. The app uses Next.js with Fumadocs UI and MDX.
+
+## Author a guide
+
+Create an `.mdx` file in `apps/docs/content/docs` with `title` and `description` frontmatter:
+
+```md
+---
+title: Your guide
+description: What this guide helps the reader do.
+---
+
+## Setup
+
+Explain the public API and show a working example.
+```
+
+Use `configs/` for config APIs and `plugins/` for plugin behavior and examples. Update the folder's `meta.json` to control sidebar order. Link to pages with `/docs/...` URLs or relative MDX file paths. The default MDX components support highlighted code, tables, callouts, and cards.
+
+## Generated rule references
+
+`apps/docs/scripts/generate-rules.mts` reads both plugins' exported registries and recommended configs. It regenerates `content/docs/rules/` before dev and production builds. Generated files are ignored by Git and must not be edited manually.
+
+When adding a rule, register it in the plugin and provide accurate description, options schema, messages, fixability, and suggestion metadata. The reference will pick it up at the next docs start or build. Restart the docs app after changing rule code so the plugin build and reference generation run again.
+
+Add longer explanations, correct and incorrect examples, and limitations in authored plugin guides. Never infer recommended membership from `meta.docs.recommended`; the exported recommended configuration is the source of truth.
+
+## Validate
+
+```sh
+vp run build --filter=@2digits/docs
+vp run types --filter=@2digits/docs
+vp check
+vp run test
+```
+
+Production builds validate all MDX pages and statically render each documentation route. Check navigation, search, narrow screens, and both themes in the browser before submitting UI changes. Existing repository automation builds and checks the docs workspace; publishing the site requires a separate hosting setup.

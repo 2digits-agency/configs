@@ -1,0 +1,18 @@
+{
+  "extends": "@2digits/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "paths": { "@/*": ["./*"] },
+    "checkJs": false,
+    "plugins": [{ "name": "next" }]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mts",
+    "**/*.mjs",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}

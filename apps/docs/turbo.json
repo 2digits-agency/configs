@@ -1,0 +1,20 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "content/docs/rules/**"]
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "passThroughEnv": ["PUBLIC_URL"],
+      "persistent": true,
+      "cache": false
+    },
+    "docs:dev": {
+      "dependsOn": ["^build"],
+      "passThroughEnv": ["PUBLIC_URL"],
+      "persistent": true,
+      "cache": false
+    }
+  }
+}

@@ -1,0 +1,58 @@
+---
+title: Renovate
+description: Extend the GitHub-hosted 2digits Renovate preset and adapt its scheduling and automerge policy.
+---
+
+The Renovate configuration is a GitHub-hosted JSON preset, not an npm package to install. `@2digits/renovate-config` is private and has no package export map.
+
+## Setup
+
+Enable Renovate for your repository, then create `renovate.json`:
+
+```json
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>2digits-agency/configs"]
+}
+```
+
+The repository root `default.json` forwards to `packages/renovate/default.json`, which forwards to `packages/renovate/src/default.json`. You can also use the explicit preset reference:
+
+```json
+{
+  "extends": ["github>2digits-agency/configs//packages/renovate/default.json"]
+}
+```
+
+## Defaults
+
+- Extends Renovate's recommended config, pins GitHub Action digests, and includes the repository's Nolyfill grouping preset.
+- Pins dependency ranges with `rangeStrategy: "pin"`.
+- Enables PR automerge and platform automerge, with rebasing when automerging.
+- Schedules updates after 18:00 and before 07:00 on weekdays, and throughout weekends, in `Europe/Amsterdam`.
+- Sets `updateNotScheduled: false` and creates PRs immediately, with no hourly PR limit.
+- Enables the dependency dashboard, prunes stale branches, adds the `Merge queue` label, and requests reviewer `V1RE`.
+- Groups selected ecosystems, including 2digits packages, Better Auth, Effect, Payload, PostHog, and others.
+
+Automerge is a policy request, not a guarantee that every PR merges. Renovate permissions, platform support, required checks, and branch protections still apply. The default reviewer, label, timezone, and schedule are specific to 2digits; review them before adoption.
+
+## Customize
+
+```json
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>2digits-agency/configs"],
+  "automerge": false,
+  "reviewers": [],
+  "timezone": "UTC",
+  "schedule": ["every weekend"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["typescript"],
+      "automerge": false
+    }
+  ]
+}
+```
+
+Local scalar settings override inherited values. Renovate merges `packageRules`, so local rules augment the preset rather than remove its grouping rules. `addLabels` is also additive; adding your own label does not remove the inherited `Merge queue` label. Validate the final policy with your Renovate installation before relying on it.
