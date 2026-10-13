@@ -68,6 +68,36 @@ not seven defects or a runtime outage.
 Use `@effect/vitest` for tests exercising Effect code. Run effects with `it.effect` (or `it.live` when live runtime
 services are required), not manual `Effect.run*` calls. RuleTester and synchronous CLI tests use regular `it`.
 
+### Duration constants
+
+`prefer-effect-duration` wraps number literals and literal arithmetic passed as `Duration.Input` to Effect v4 APIs
+(`Effect.sleep`, `Effect.timeout`, `Schedule.spaced`, `Schedule.exponential`, `Stream.debounce`, `TestClock.adjust`, the
+`duration` option of `Effect.timeoutOrElse`, and others) with `Duration.millis`.
+
+`prefer-effect-duration-constants` reports `const` declarations that hold a duration as a plain number, in files that
+import Effect:
+
+```ts
+import * as Effect from 'effect/Effect';
+
+const TIMEOUT_MS = 30_000; // Declare it as Duration.seconds(30)
+const CACHE_TTL_SECONDS = 3600; // Declare it as Duration.hours(1)
+const ONE_DAY = 24 * 60 * 60 * 1000; // Declare it as Duration.days(1)
+const wait = 250; // Declare it as Duration.millis(250)
+
+Effect.sleep(wait);
+```
+
+A constant is reported when its name ends in a plural or abbreviated unit (`_MS`, `Seconds`, `_MINS`, `_DAYS`) or a
+duration word (`TIMEOUT`, `DELAY`, `INTERVAL`, `TTL`, `ONE_DAY`, `maxAge`, `expiresIn`), when it is hand-written time
+arithmetic, or when it is passed to an Effect duration API. Only the last word of the name counts, so
+`RETRY_DELAY_FACTOR` is not a duration. The suggested constructor uses the unit from the name; Effect's millisecond
+interpretation applies only to constants passed to duration APIs. Without a known unit, the message stays generic.
+
+There is **no autofix**: the constant changes from `number` to `Duration`. Convert at non-Effect boundaries with
+`Duration.toMillis` or `Duration.toSeconds`, read configurable durations with `Config.Duration`, and use
+`Schema.DurationFromMillis` for schema fields.
+
 ### Function-valued Config defaults
 
 `no-function-config-default` reports inline zero-parameter functions passed to Effect's eager `Config.withDefault` API,
