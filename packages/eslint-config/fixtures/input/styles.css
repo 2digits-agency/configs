@@ -1,3 +1,9 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-brand: #0066cc;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -30,10 +36,6 @@
     padding: 24px;
   }
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .card {
   @apply p-4 rounded-lg shadow-md;

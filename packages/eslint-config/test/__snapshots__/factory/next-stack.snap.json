@@ -1830,21 +1830,23 @@
     ],
     "settings": {
       "tailwindcss": {
-        "callees": [
+        "functions": [
           "tv",
           "cn",
           "cnBase",
           "classnames",
           "clsx",
           "cx"
-        ]
+        ],
+        "cssConfigPath": "./src/style.css"
       }
     },
     "rules": [
       "tailwindcss/classnames-order",
+      "tailwindcss/enforces-canonical-classname",
       "tailwindcss/enforces-negative-arbitrary-values",
       "tailwindcss/enforces-shorthand",
-      "tailwindcss/migration-from-tailwind-2",
+      "tailwindcss/important-modifier-suffix",
       "- tailwindcss/no-arbitrary-value",
       "tailwindcss/no-contradicting-classname",
       "tailwindcss/no-custom-classname",

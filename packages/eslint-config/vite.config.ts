@@ -18,6 +18,8 @@ export default defineConfig({
     shims: true,
     hooks(ctx) {
       ctx.hook('build:prepare', async () => {
+        const sourceConfigs = await import('./src/configs');
+
         const configs = await composer(
           {
             plugins: {
@@ -27,7 +29,12 @@ export default defineConfig({
               },
             },
           },
-          ...(Object.values(await import('./src/configs')).map((config) => config()) as []),
+          // Tailwind is only enabled when a config is found; pass a path so its rules are always typed.
+          ...(Object.values(sourceConfigs).map((config) =>
+            config === sourceConfigs.tailwind
+              ? sourceConfigs.tailwind({ cssConfigPath: './fixtures/input/styles.css' })
+              : config(),
+          ) as []),
         );
 
         const configNames = configs.map((i) => i.name).filter(Boolean) as Array<string>;

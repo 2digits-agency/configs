@@ -1,8 +1,12 @@
 import { useState } from "react";
 
+function cnBase(value: string) {
+  return value;
+}
+
 export const Component1 = () => {
   const [isHidden, setIsHidden] = useState(true);
-  return <div onClick={() => setIsHidden(!isHidden)} hidden={isHidden}></div>;
+  return <div className={cnBase('bg-brand !p-4 w-4 h-4')} onClick={() => setIsHidden(!isHidden)} hidden={isHidden}></div>;
 };
 
 export function jsx2() {

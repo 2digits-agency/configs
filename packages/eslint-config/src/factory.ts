@@ -48,6 +48,7 @@ import type {
   OptionsWithIgnores,
   OptionsWithReact,
   OptionsWithStorybook,
+  OptionsWithTailwind,
   OptionsWithVitest,
   TypedFlatConfigItem,
 } from './types';
@@ -66,7 +67,7 @@ interface ESLint2DigitsOptions {
   graphql?: SharedOptions<OptionsWithFiles> | boolean;
   react?: SharedOptions<OptionsWithReact> | boolean;
   next?: SharedOptions<OptionsWithFiles> | boolean;
-  tailwind?: SharedOptions<OptionsOverrides> | boolean;
+  tailwind?: SharedOptions<OptionsWithTailwind> | boolean;
   storybook?: SharedOptions<OptionsWithStorybook> | boolean;
   vitest?: SharedOptions<OptionsWithVitest> | boolean;
   tanstackQuery?: SharedOptions<OptionsOverrides> | boolean;
