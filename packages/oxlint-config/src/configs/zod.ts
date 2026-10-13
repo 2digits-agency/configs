@@ -41,6 +41,7 @@ export const zodConfig = defineConfig({
     'zod/prefer-map-set-size-over-min-max': 'error',
     'zod/prefer-meta': 'error',
     'zod/prefer-meta-last': 'error',
+    'zod/prefer-nullish': 'error',
     'zod/prefer-strict-object': 'error',
     'zod/prefer-string-length-over-min-max': 'error',
     'zod/prefer-string-schema-with-trim': 'error',
@@ -49,6 +50,7 @@ export const zodConfig = defineConfig({
     'zod/prefer-tuple-over-array-length': 'error',
     'zod/prefer-validate': 'error',
     'zod/require-brand-type-parameter': 'error',
+    'zod/require-error-message': 'error',
     'zod/schema-error-property-style': [
       'error',
       { selector: 'Literal,TemplateLiteral', example: `"This is an error message"` },
@@ -56,8 +58,6 @@ export const zodConfig = defineConfig({
 
     'zod/consistent-import-source': undefined,
     'zod/consistent-object-schema-type': undefined,
-    'zod/no-string-schema-with-uuid': undefined,
     'zod/no-unknown-schema': undefined,
-    'zod/require-error-message': undefined,
   },
 });
