@@ -25,6 +25,8 @@ const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', impo
 
 const headerFixtureDirectory = fileURLToPath(new URL('fixtures/http-api-headers', import.meta.url));
 
+const durationFixtureDirectory = fileURLToPath(new URL('fixtures/duration-constants', import.meta.url));
+
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
 
 const oxlintConfigArgument = '--config=oxlint.config.mjs';
@@ -287,6 +289,56 @@ describe('oxlint config', () => {
     expect(bad.stdout.match(/2digits\(no-uppercase-http-api-header\)/gu)).toHaveLength(2);
 
     expect(good.status, `${good.stdout}${good.stderr}`).toBe(0);
+  });
+
+  it('diagnoses duration-typed constants through the production config and built plugin', () => {
+    const bad = spawnSync(process.execPath, [oxlintBinary, oxlintConfigArgument, invalidFixture], {
+      cwd: durationFixtureDirectory,
+      encoding: 'utf8',
+      env: oxlintEnvironment,
+    });
+
+    const good = spawnSync(process.execPath, [oxlintBinary, oxlintConfigArgument, 'valid.mjs'], {
+      cwd: durationFixtureDirectory,
+      encoding: 'utf8',
+      env: oxlintEnvironment,
+    });
+
+    expect(recommendedRules['2digits/prefer-effect-duration']).toBe('error');
+
+    expect(bad.status, `${bad.stdout}${bad.stderr}`).toBe(1);
+
+    expect(bad.stdout.match(/2digits\(prefer-effect-duration\)/gu)).toHaveLength(3);
+
+    expect(bad.stdout).toContain('Duration.seconds');
+
+    expect(good.status, `${good.stdout}${good.stderr}`).toBe(0);
+  });
+
+  it('never rewrites duration constants under --fix', () => {
+    const temporaryDirectory = mkdtempSync(path.join(tmpdir(), '2digits-duration-constants-'));
+
+    const fixture = path.join(durationFixtureDirectory, invalidFixture);
+
+    const target = path.join(temporaryDirectory, invalidFixture);
+
+    try {
+      copyFileSync(fixture, target);
+
+      const result = spawnSync(
+        process.execPath,
+        [oxlintBinary, `--config=${path.join(durationFixtureDirectory, 'oxlint.config.mjs')}`, '--fix', target],
+        { cwd: durationFixtureDirectory, encoding: 'utf8', env: oxlintEnvironment },
+      );
+
+      expect(result.status, `${result.stdout}${result.stderr}`).toBe(1);
+
+      expect(result.stdout.match(/2digits\(prefer-effect-duration\)/gu)).toHaveLength(3);
+
+      expect(readFileSync(target, 'utf8')).toBe(readFileSync(fixture, 'utf8'));
+    } finally {
+      rmSync(temporaryDirectory, { recursive: true, force: true });
+    }
   });
 
   it('never edits header contracts or lowercase collisions under --fix', () => {

@@ -51,6 +51,33 @@ HttpApiEndpoint.get('me', '/me', { headers: { 'X-Api-Key': Schema.String } });
 HttpApiEndpoint.get('me', '/me', { headers: { 'x-api-key': Schema.String } });
 ```
 
+### Duration constants
+
+`prefer-effect-duration` also reports duration-like `const` declarations in Effect files whose initializer is a bare
+positive number or a multiplication of numbers and identifiers (`5000`, `30 * 1000`, `BASE_MS * 2`):
+
+```ts
+import * as Effect from 'effect/Effect';
+
+// Diagnosed: the millisecond unit lives only in the name.
+export const TIMEOUT_MS = 5000;
+export const sessionTimeoutSeconds = 30;
+// Valid: the unit is part of the value.
+export const TIMEOUT = Duration.seconds(5);
+```
+
+A name counts as duration-like when a word names a unit (`ms`, `seconds`, `minutes`, …) or a duration concept
+(`timeout`, `delay`, `interval`, `ttl`, `timeToLive`, `backoff`, `debounce`, `throttle`). The message recommends the
+constructor matching the advertised unit — the trailing unit wins, so `THIRTY_SECONDS_MS` suggests `Duration.millis`
+— and `Duration.toMillis(name)` where a plain millisecond number is required.
+
+There is **no autofix** for constants: unlike an `Effect.sleep(5000)` argument, a constant can also feed number-typed
+APIs such as `setTimeout`, so rewriting it would silently change those call sites' types. Files without an Effect
+import, `let`/`var` bindings, non-`const` declarations, aliases (`const TIMEOUT = OTHER_MS`), computed initializers,
+zero or negative sentinel values, counts such as `TIMEOUT_COUNT`, and constants already annotated `Duration` or
+`Duration.Input` are not reported. Destructured bindings, object properties, function parameters, and class fields are
+outside this slice because the rule cannot prove their consumers accept a `Duration`.
+
 The rule checks options at argument 2 of `get`, `post`, `put`, `patch`, `delete`, `head`, and `options`.
 It resolves lexical import bindings from `effect/unstable/httpapi` and its `HttpApiEndpoint` submodule, including
 named aliases and namespace imports, and ignores shadowed bindings. Referenced schemas, computed keys, spreads,
