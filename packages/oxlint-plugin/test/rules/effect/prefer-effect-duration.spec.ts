@@ -42,6 +42,14 @@ tester.run('prefer-effect-duration positions', preferEffectDuration, {
         `${duration}\nimport * as Effect from 'effect/Effect'; Effect.sleep(Duration.millis(5 * 1000));`,
       ],
       [
+        `import * as Effect from 'effect/Effect'; Effect.sleep(-1);`,
+        `${duration}\nimport * as Effect from 'effect/Effect'; Effect.sleep(Duration.millis(-1));`,
+      ],
+      [
+        `import * as Effect from 'effect/Effect'; Effect.sleep(10 ** 3);`,
+        `${duration}\nimport * as Effect from 'effect/Effect'; Effect.sleep(Duration.millis(10 ** 3));`,
+      ],
+      [
         `import * as Schedule from 'effect/Schedule'; Schedule.exponential(100, 2);`,
         `${duration}\nimport * as Schedule from 'effect/Schedule'; Schedule.exponential(Duration.millis(100), 2);`,
       ],

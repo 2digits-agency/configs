@@ -116,6 +116,14 @@ export function numericValue(node: ESTree.Expression): number | undefined {
       return left / right;
     }
 
+    case '%': {
+      return left % right;
+    }
+
+    case '**': {
+      return left ** right;
+    }
+
     default: {
       return undefined;
     }

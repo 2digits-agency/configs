@@ -54,7 +54,7 @@ function words(name: string): Array<string> {
     .map((word) => word.toLowerCase());
 }
 
-// Conversion factors (`MS_PER_SECOND`), rates (`REQUESTS_PER_SECOND`), and timestamps (`CREATED_AT_MS`) are not durations.
+// Conversion factors (`MS_PER_SECOND`, see also `SECONDS_IN_MINUTE` below), rates (`REQUESTS_PER_SECOND`), and timestamps (`CREATED_AT_MS`) are not durations.
 const nonDurationWords = new Set(['at', 'epoch', 'per', 'timestamp']);
 
 type NameUnit = DurationUnit | 'excluded' | 'unknown' | undefined;
@@ -73,7 +73,12 @@ function isUnit(named: NameUnit): named is DurationUnit {
 function nameUnit(name: string): NameUnit {
   const parts = words(name);
 
-  if (parts.some((part) => nonDurationWords.has(part))) {
+  const inIndex = parts.indexOf('in');
+
+  // `SECONDS_IN_MINUTE` converts between units; `ttlInMinutes` and `expiresIn` are still durations.
+  const conversion = inIndex > 0 && inIndex < parts.length - 1 && unitWords.has(parts[inIndex - 1] ?? '');
+
+  if (conversion || parts.some((part) => nonDurationWords.has(part))) {
     return 'excluded';
   }
 
