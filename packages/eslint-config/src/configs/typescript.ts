@@ -69,6 +69,7 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
         'ts/no-unnecessary-type-assertion': 'off',
         'ts/method-signature-style': ['error', 'property'],
         'ts/switch-exhaustiveness-check': 'off',
+        'ts/prefer-optional-chain': 'error',
 
         ...twoDigits.configs.recommended.rules,
 
