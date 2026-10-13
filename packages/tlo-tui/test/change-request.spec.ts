@@ -4,6 +4,7 @@ import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
+import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as Path from 'effect/Path';
 import * as Schema from 'effect/Schema';
@@ -14,6 +15,7 @@ import { parseTicketId } from '../src/domain/ids.js';
 import { unsafeLocalDate } from '../src/domain/time.js';
 import {
   ChangeRequestStore,
+  type DraftResult,
   correctionEditFrom,
   draftCorrection,
   draftCustomerReply,
@@ -23,40 +25,72 @@ import { Orbit, makeOrbitLayer } from '../src/orbit/Orbit.js';
 
 const today = unsafeLocalDate('2026-10-13');
 
+function readyDraft(draft: DraftResult) {
+  return Match.value(draft).pipe(
+    Match.tag('Ready', (value) => value),
+    Match.orElse((value) => {
+      throw new Error(`Invalid draft: ${value.issues.join(', ')}`);
+    }),
+  );
+}
+
 describe('approval-only change requests', () => {
   it('persists exact correction arguments and the before state privately, without executing the correction', () =>
     Effect.runPromise(
       Effect.gen(function* () {
         const fs = yield* FileSystem.FileSystem;
+
         const path = yield* Path.Path;
+
         const temporary = yield* fs.makeTempDirectoryScoped({ prefix: 'tlo-tui-contract-' });
+
         const directory = path.join(temporary, 'requests');
+
         const store = makeChangeRequestStoreLayer({ directory, source: 'demo' });
+
         const orbit = makeOrbitLayer({ source: 'demo', writeMode: 'direct-writes' }).pipe(
           Layer.provide(makeDemoMcpLayer({ today })),
         );
+
         const saved = yield* Effect.gen(function* () {
           const api = yield* Orbit;
+
           const week = yield* api.timesheetWeek(today);
-          const row = week.entries.find((entry) => entry.date === today && entry.start === '09:15');
-          if (row === undefined) throw new Error('Expected demo entry to correct');
+
+          const row = Opt.getOrThrow(
+            Opt.fromUndefinedOr(
+              week.entries.filter((entry) => entry.date === today).find((entry) => entry.start === '09:15'),
+            ),
+          );
+
           const before = yield* api.timeEntry(row.id);
-          const draft = draftCorrection(before, {
-            ...correctionEditFrom(before),
-            date: '2026-10-14',
-            start: '16:43',
-            billable: 'non-billable',
+
+          const draft = readyDraft(
+            draftCorrection(before, {
+              ...correctionEditFrom(before),
+              date: '2026-10-14',
+              start: '16:43',
+              billable: 'non-billable',
+            }),
+          );
+
+          expect(draft.request.arguments).toStrictEqual({
+            entryId: before.id,
+            date: '2026-10-14 16:43',
+            billable: 'false',
           });
-          expect(draft._tag).toBe('Ready');
-          if (draft._tag !== 'Ready') throw new Error(`Invalid correction: ${draft.issues.join(', ')}`);
-          expect(draft.request.arguments).toEqual({ entryId: before.id, date: '2026-10-14 16:43', billable: 'false' });
+
           const requests = yield* ChangeRequestStore;
+
           const file = yield* requests.save(draft.request);
-          expect(yield* api.timeEntry(before.id)).toEqual(before);
+
+          expect(yield* api.timeEntry(before.id)).toStrictEqual(before);
+
           return { file, request: draft.request };
         }).pipe(Effect.provide(Layer.mergeAll(store, orbit)));
 
         expect(path.dirname(saved.file)).toBe(directory);
+
         const document = yield* Schema.decodeEffect(
           Schema.fromJsonString(
             Schema.Struct({
@@ -72,6 +106,7 @@ describe('approval-only change requests', () => {
             }),
           ),
         )(yield* fs.readFileString(saved.file));
+
         expect(document).toMatchObject({
           status: 'concept-niet-uitgevoerd',
           source: 'demo',
@@ -81,11 +116,18 @@ describe('approval-only change requests', () => {
           before: saved.request.before,
           readback: saved.request.readback,
         });
-        expect(document.approval).toContain('NIET uitgevoerd');
-        expect(document.approval).toContain('browser-approval');
-        expect(Opt.isSome(DateTime.make(document.createdAt))).toBe(true);
-        expect((yield* fs.stat(directory)).mode & 0o777).toBe(0o700);
-        expect((yield* fs.stat(saved.file)).mode & 0o777).toBe(0o600);
+
+        expect({
+          approval: document.approval,
+          timestampValid: Opt.isSome(DateTime.make(document.createdAt)),
+          directoryMode: (yield* fs.stat(directory)).mode & 0o777,
+          fileMode: (yield* fs.stat(saved.file)).mode & 0o777,
+        }).toStrictEqual({
+          approval: expect.stringMatching(/NIET uitgevoerd.*browser-approval/s) as unknown,
+          timestampValid: true,
+          directoryMode: 0o700,
+          fileMode: 0o600,
+        });
       }).pipe(Effect.scoped, Effect.provide(Layer.mergeAll(NodeFileSystem.layer, NodePath.layer))),
     ));
 
@@ -93,30 +135,39 @@ describe('approval-only change requests', () => {
     Effect.runPromise(
       Effect.gen(function* () {
         const orbit = yield* Orbit;
-        const [row] = yield* orbit.tickets({ state: 'CLOSED' });
-        if (row === undefined) throw new Error('Expected CLOSED demo ticket');
+
+        const row = Opt.getOrThrow(Opt.fromUndefinedOr((yield* orbit.tickets({ state: 'CLOSED' }))[0]));
+
         const ticketId = Opt.getOrThrow(parseTicketId(row.ticketId));
+
         const before = yield* orbit.ticketDetail(ticketId);
+
         const comments = yield* orbit.ticketComments(ticketId);
+
         const input = {
           message: '  Please check the reset email  ',
           waitForClient: true,
           followUpAction: 'REMINDER' as const,
           followUpDate: '',
         };
+
         expect(draftCustomerReply(before, input)._tag).toBe('Invalid');
-        const draft = draftCustomerReply(before, { ...input, followUpDate: '2026-10-19' });
-        if (draft._tag !== 'Ready') throw new Error(`Invalid reply: ${draft.issues.join(', ')}`);
-        expect(draft.request.arguments).toEqual({
+
+        const draft = readyDraft(draftCustomerReply(before, { ...input, followUpDate: '2026-10-19' }));
+
+        expect(draft.request.arguments).toStrictEqual({
           ticketId: before.ticketId,
           message: 'Please check the reset email',
           waitForClient: true,
           followUpAction: 'REMINDER',
           followUpDate: '2026-10-19',
         });
+
         expect(draft.request.sideEffects.join(' ')).toContain('heropent');
-        expect(yield* orbit.ticketDetail(ticketId)).toEqual(before);
-        expect(yield* orbit.ticketComments(ticketId)).toEqual(comments);
+
+        expect(yield* orbit.ticketDetail(ticketId)).toStrictEqual(before);
+
+        expect(yield* orbit.ticketComments(ticketId)).toStrictEqual(comments);
       }).pipe(
         Effect.provide(
           makeOrbitLayer({ source: 'demo', writeMode: 'direct-writes' }).pipe(

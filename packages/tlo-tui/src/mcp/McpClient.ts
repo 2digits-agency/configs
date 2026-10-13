@@ -2,7 +2,7 @@
  * @effect-diagnostics unstableApiUsage:off
  */
 import * as Context from 'effect/Context';
-import * as Duration from 'effect/Duration';
+import type * as Duration from 'effect/Duration';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Opt from 'effect/Option';
@@ -36,7 +36,9 @@ const NOT_DISPATCHED = new Set([-32_700, -32_600, -32_601, -32_602]);
 
 export const DEFAULT_GATEWAY_URL = 'http://127.0.0.1:4790/mcp';
 
-export class McpConnectError extends Schema.TaggedError<McpConnectError>()('McpConnectError', {
+const TaggedErrorClass = Schema.TaggedError;
+
+export class McpConnectError extends TaggedErrorClass<McpConnectError>()('McpConnectError', {
   message: Schema.String,
 }) {}
 
@@ -44,7 +46,7 @@ export class McpConnectError extends Schema.TaggedError<McpConnectError>()('McpC
  * `delivery: 'unknown'` means the request may have reached Orbit: a write may have committed. Callers must read back
  * instead of retrying.
  */
-export class McpCallError extends Schema.TaggedError<McpCallError>()('McpCallError', {
+export class McpCallError extends TaggedErrorClass<McpCallError>()('McpCallError', {
   tool: Schema.String,
   message: Schema.String,
   delivery: Schema.Literals(['not-sent', 'unknown']),
@@ -68,7 +70,7 @@ export interface GatewayConnection {
   readonly callTimeout?: Duration.Input;
 }
 
-class SendFailure extends Schema.TaggedError<SendFailure>()('SendFailure', {
+class SendFailure extends TaggedErrorClass<SendFailure>()('SendFailure', {
   message: Schema.String,
   dispatched: Schema.Boolean,
 }) {}
@@ -131,7 +133,7 @@ export function makeMcpClientLayer(connection: GatewayConnection) {
           }
 
           if (notification) {
-            return undefined;
+            return;
           }
 
           const reply = yield* (
@@ -168,8 +170,8 @@ export function makeMcpClientLayer(connection: GatewayConnection) {
         Effect.provideService(FetchHttpClient.RequestInit, { redirect: 'error' }),
       );
 
-      const connect = <A>(method: string, params: unknown, schema: Schema.Decoder<A>) =>
-        send(method, params).pipe(
+      function connect<T>(method: string, params: unknown, schema: Schema.Decoder<T>) {
+        return send(method, params).pipe(
           Effect.timeout('20 seconds'),
           Effect.flatMap(Schema.decodeUnknownEffect(schema)),
           Effect.mapError((error) =>
@@ -180,6 +182,7 @@ export function makeMcpClientLayer(connection: GatewayConnection) {
             }),
           ),
         );
+      }
 
       const initialization = yield* connect(
         'initialize',
@@ -208,13 +211,15 @@ export function makeMcpClientLayer(connection: GatewayConnection) {
 
         cursor = page.nextCursor;
 
-        if (cursor !== undefined) {
-          if (cursors.has(cursor)) {
-            return yield* McpConnectError.make({ message: 'Gateway returned a repeated tools cursor.' });
-          }
-
-          cursors.add(cursor);
+        if (cursor === undefined) {
+          continue;
         }
+
+        if (cursors.has(cursor)) {
+          return yield* McpConnectError.make({ message: 'Gateway returned a repeated tools cursor.' });
+        }
+
+        cursors.add(cursor);
       } while (cursor !== undefined);
 
       return McpClient.of({

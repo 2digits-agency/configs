@@ -1,6 +1,7 @@
 import { homedir } from 'node:os';
 
 import * as Context from 'effect/Context';
+import * as Data from 'effect/Data';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
@@ -45,6 +46,11 @@ export type DraftResult =
   | { readonly _tag: 'Ready'; readonly request: ChangeRequest }
   | { readonly _tag: 'Invalid'; readonly issues: ReadonlyArray<string> };
 
+export const DraftResult = Data.taggedEnum<DraftResult>();
+
+// Retain explicit JSON nulls in persisted snapshots of Orbit's nullable fields.
+const JSON_NULL = Opt.getOrThrow(Schema.decodeOption(Schema.fromJsonString(Schema.Null))('null'));
+
 export interface CorrectionEdit {
   readonly date: string;
   readonly start: string;
@@ -81,14 +87,7 @@ function snapshot(entry: TimeEntryDetail): Schema.JsonObject {
   };
 }
 
-/**
- * `UpdateTimeEntry` with only the changed fields. Billable uses the update contract's string form; a date or time
- * change always sends the full `yyyy-MM-dd HH:mm`.
- *
- * @param entry
- * @param edit
- */
-export function draftCorrection(entry: TimeEntryDetail, edit: CorrectionEdit): DraftResult {
+function validateCorrection(entry: TimeEntryDetail, edit: CorrectionEdit) {
   const issues: Array<string> = [];
 
   if (!entry.editable) {
@@ -121,8 +120,21 @@ export function draftCorrection(entry: TimeEntryDetail, edit: CorrectionEdit): D
     issues.push('Taak moet een PT-api_id zijn.');
   }
 
+  return { issues, date, start, duration, taskId };
+}
+
+/**
+ * `UpdateTimeEntry` with only the changed fields. Billable uses the update contract's string form; a date or time
+ * change always sends the full `yyyy-MM-dd HH:mm`.
+ *
+ * @param entry
+ * @param edit
+ */
+export function draftCorrection(entry: TimeEntryDetail, edit: CorrectionEdit): DraftResult {
+  const { issues, date, start, duration, taskId } = validateCorrection(entry, edit);
+
   if (issues.length > 0 || Opt.isNone(date) || Opt.isNone(start) || Opt.isNone(duration)) {
-    return { _tag: 'Invalid', issues };
+    return DraftResult.Invalid({ issues });
   }
 
   const changes: Record<string, Schema.Json> = {};
@@ -153,9 +165,9 @@ export function draftCorrection(entry: TimeEntryDetail, edit: CorrectionEdit): D
     summary.push('omschrijving gewijzigd');
   }
 
-  const currentBillable = Opt.map(entry.billable, (value) => value.billable);
+  const currentBillable = entry.billable.pipe(Opt.map((value) => value.billable));
 
-  if (edit.billable !== undefined && !Opt.contains(currentBillable, edit.billable === 'billable')) {
+  if (edit.billable !== undefined && !currentBillable.pipe(Opt.contains(edit.billable === 'billable'))) {
     changes.billable = toUpdateBillable(edit.billable);
 
     summary.push(`billable → ${billableLabel(edit.billable)} ('${toUpdateBillable(edit.billable)}' als string)`);
@@ -165,7 +177,7 @@ export function draftCorrection(entry: TimeEntryDetail, edit: CorrectionEdit): D
     );
   }
 
-  if (Opt.isSome(taskId) && !Opt.contains(entry.taskId, taskId.value)) {
+  if (Opt.isSome(taskId) && !entry.taskId.pipe(Opt.contains(taskId.value))) {
     changes.taskId = taskId.value;
 
     summary.push(`taak → ${taskId.value}`);
@@ -174,15 +186,14 @@ export function draftCorrection(entry: TimeEntryDetail, edit: CorrectionEdit): D
   }
 
   if (summary.length === 0) {
-    return { _tag: 'Invalid', issues: ['Geen wijzigingen.'] };
+    return DraftResult.Invalid({ issues: ['Geen wijzigingen.'] });
   }
 
   if (clockMinutes(start.value) < 6 * 60) {
     sideEffects.push('Starttijd vóór 06:00: controleer of de klok niet in een andere tijdzone is bedoeld.');
   }
 
-  return {
-    _tag: 'Ready',
+  return DraftResult.Ready({
     request: {
       kind: 'correction',
       tool: 'UpdateTimeEntry',
@@ -195,16 +206,15 @@ export function draftCorrection(entry: TimeEntryDetail, edit: CorrectionEdit): D
       ],
       before: snapshot(entry),
     },
-  };
+  });
 }
 
 export function draftDeletion(entry: TimeEntryDetail): DraftResult {
   if (!entry.editable) {
-    return { _tag: 'Invalid', issues: [`Entry is vergrendeld: ${entry.locks}`] };
+    return DraftResult.Invalid({ issues: [`Entry is vergrendeld: ${entry.locks}`] });
   }
 
-  return {
-    _tag: 'Ready',
+  return DraftResult.Ready({
     request: {
       kind: 'deletion',
       tool: 'DeleteTimeEntry',
@@ -220,7 +230,7 @@ export function draftDeletion(entry: TimeEntryDetail): DraftResult {
       ],
       before: snapshot(entry),
     },
-  };
+  });
 }
 
 export type FollowUpAction = 'NONE' | 'CLOSE' | 'REMINDER';
@@ -252,7 +262,7 @@ export function draftCustomerReply(ticket: TicketDetail, draft: ReplyDraft): Dra
   }
 
   if (issues.length > 0) {
-    return { _tag: 'Invalid', issues };
+    return DraftResult.Invalid({ issues });
   }
 
   const sideEffects = [
@@ -281,8 +291,7 @@ export function draftCustomerReply(ticket: TicketDetail, draft: ReplyDraft): Dra
     args.followUpDate = followUpDate.value;
   }
 
-  return {
-    _tag: 'Ready',
+  return DraftResult.Ready({
     request: {
       kind: 'customer-reply',
       tool: 'ReplyToTicket',
@@ -295,15 +304,17 @@ export function draftCustomerReply(ticket: TicketDetail, draft: ReplyDraft): Dra
       ],
       before: {
         ticketId: ticket.ticketId,
-        number: ticket.number ?? null,
+        number: ticket.number ?? JSON_NULL,
         state: ticket.state,
-        assignee: ticket.assignee ?? null,
+        assignee: ticket.assignee ?? JSON_NULL,
       },
     },
-  };
+  });
 }
 
-export class ChangeRequestStoreError extends Schema.TaggedError<ChangeRequestStoreError>()('ChangeRequestStoreError', {
+const TaggedErrorClass = Schema.TaggedError;
+
+export class ChangeRequestStoreError extends TaggedErrorClass<ChangeRequestStoreError>()('ChangeRequestStoreError', {
   message: Schema.String,
 }) {}
 
@@ -319,6 +330,19 @@ export class ChangeRequestStore extends Context.Service<ChangeRequestStore, Chan
 const PrettyJson = Schema.fromJsonString(Schema.Json, { space: 2 });
 
 export const DEFAULT_REQUEST_DIRECTORY = `${homedir()}/.config/2digits/tlo-tui/requests`;
+
+// Preserve String's JSON-value coercion for filenames, while making object and array handling explicit.
+function subjectText(value: Schema.Json): string {
+  if (Array.isArray(value)) {
+    return value.map((element: Schema.Json) => (element === null ? '' : subjectText(element))).join(',');
+  }
+
+  if (value === null) {
+    return 'null';
+  }
+
+  return typeof value === 'object' ? '[object Object]' : String(value);
+}
 
 /**
  * Writes change requests as private JSON files. They contain business data, so the directory is `0700`.
@@ -343,7 +367,9 @@ export function makeChangeRequestStoreLayer(options: { readonly directory: strin
 
             const createdAt = DateTime.formatIso(now);
 
-            const subject = String(request.arguments.entryId ?? request.arguments.ticketId ?? 'request');
+            const subjectValue = request.arguments.entryId ?? request.arguments.ticketId ?? 'request';
+
+            const subject = subjectText(subjectValue);
 
             const file = path.join(
               options.directory,

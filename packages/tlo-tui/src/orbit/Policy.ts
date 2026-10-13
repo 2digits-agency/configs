@@ -1,3 +1,5 @@
+import * as Data from 'effect/Data';
+import * as P from 'effect/Predicate';
 import type * as McpSchema from 'effect/ai/McpSchema';
 
 /**
@@ -25,151 +27,157 @@ export interface ToolPolicy {
   readonly note: string;
 }
 
+const PROVEN_MCP = 'proven-mcp';
+
+const UNPROVEN_MCP = 'unproven-mcp';
+
+const NOT_EXPOSED = 'not-exposed';
+
 export const TOOL_POLICIES: ReadonlyArray<ToolPolicy> = [
   {
     name: 'GetTimesheetWeek',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'read',
     params: ['date', 'user'],
     note: 'Weekstaat: dagstatus OPEN/FINAL, uren, entries met api_id.',
   },
   {
     name: 'ListTimeEntries',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'read',
     params: ['dateFrom', 'dateTo', 'taskId', 'billable'],
     note: 'dateTo is inclusief; max 100 rijen.',
   },
   {
     name: 'GetTimeEntry',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'read',
     params: ['entryId'],
     note: 'Readback: bestemming, tijd, duur, billable, locks.',
   },
   {
     name: 'ListMyTasks',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'read',
     params: ['text'],
     note: 'Alleen toegewezen backlog, niet alle taken.',
   },
   {
     name: 'SearchProjectItems',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'read',
     params: ['text', 'projectId', 'itemType', 'openOnly'],
     note: 'Max 50 treffers; zoekt items, geen projectnamen.',
   },
   {
     name: 'ListProjects',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'read',
     params: ['text', 'states', 'pageSize'],
     note: 'mine=true betekent eigenaar, niet "waar ik op werk".',
   },
   {
     name: 'ListTickets',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'read',
     params: ['query', 'state', 'limit'],
     note: 'createdTo is exclusief; standaard alleen actieve tickets.',
   },
   {
     name: 'GetTicketDetail',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'read',
     params: ['ticketId'],
     note: 'Vereist TC-api_id, nooit het zichtbare ticketnummer.',
   },
   {
     name: 'ListTicketComments',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'read',
     params: ['ticketId', 'includeInternal', 'limit'],
     note: 'Klantantwoorden (ANSWER), interne notities, systeemregels.',
   },
   {
     name: 'CreateTimeEntry',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'direct-write',
     params: ['taskId', 'date', 'durationMinutes', 'description', 'billable'],
     note: 'Eigen uren; billable is boolean; starttijd altijd expliciet (anders 09:00).',
   },
   {
     name: 'AddInternalComment',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'direct-write',
     params: ['ticketId', 'note'],
     note: 'Alleen eenvoudige notitie: zonder logMinutes (boekt op "nu") en zonder assignToUser.',
   },
   {
     name: 'UpdateTimeEntry',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'approval-only',
     params: ['entryId', 'date', 'durationMinutes', 'description', 'taskId', 'billable'],
     note: 'Correctie: billable is string; succes bewijst niets zonder readback.',
   },
   {
     name: 'DeleteTimeEntry',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'approval-only',
     params: ['entryId'],
     note: 'Pas na geverifieerde vervanging; geblokkeerd voor gefactureerd/FINAL.',
   },
   {
     name: 'ReplyToTicket',
-    evidence: 'proven-mcp',
+    evidence: PROVEN_MCP,
     access: 'approval-only',
     params: ['ticketId', 'message', 'waitForClient', 'followUpAction', 'followUpDate'],
     note: 'Klantzichtbaar: notificatie, standaard WAIT, heropent gesloten tickets.',
   },
   {
     name: 'StartTimer',
-    evidence: 'unproven-mcp',
-    access: 'not-exposed',
+    evidence: UNPROVEN_MCP,
+    access: NOT_EXPOSED,
     params: [],
     note: 'In policy genoemd, nooit succesvol aangeroepen.',
   },
   {
     name: 'StopTimer',
-    evidence: 'unproven-mcp',
-    access: 'not-exposed',
+    evidence: UNPROVEN_MCP,
+    access: NOT_EXPOSED,
     params: [],
     note: 'In policy genoemd, nooit succesvol aangeroepen.',
   },
   {
     name: 'CreateTodo',
-    evidence: 'unproven-mcp',
-    access: 'not-exposed',
+    evidence: UNPROVEN_MCP,
+    access: NOT_EXPOSED,
     params: [],
     note: 'Boardkaart aanmaken: contract ontdekt, niet live bewezen.',
   },
   {
     name: 'UpdateTodo',
-    evidence: 'unproven-mcp',
-    access: 'not-exposed',
+    evidence: UNPROVEN_MCP,
+    access: NOT_EXPOSED,
     params: [],
     note: 'Geen custom-field parameter; niet live bewezen.',
   },
   {
     name: 'MoveTodo',
-    evidence: 'unproven-mcp',
-    access: 'not-exposed',
+    evidence: UNPROVEN_MCP,
+    access: NOT_EXPOSED,
     params: [],
     note: 'Niet live bewezen via MCP.',
   },
   {
     name: 'GetCustomFieldValues',
-    evidence: 'unproven-mcp',
-    access: 'not-exposed',
+    evidence: UNPROVEN_MCP,
+    access: NOT_EXPOSED,
     params: [],
     note: 'Huidige field CODEs onbekend; niet bewezen.',
   },
   {
     name: 'SetCustomFieldValues',
-    evidence: 'unproven-mcp',
-    access: 'not-exposed',
+    evidence: UNPROVEN_MCP,
+    access: NOT_EXPOSED,
     params: [],
     note: 'Gebruik nooit HAR EXT_*-id’s als field codes.',
   },
@@ -189,6 +197,8 @@ export type ToolStatus =
   | { readonly _tag: 'Available' }
   | { readonly _tag: 'Missing' }
   | { readonly _tag: 'Drift'; readonly missingParams: ReadonlyArray<string> };
+
+export const ToolStatus = Data.taggedEnum<ToolStatus>();
 
 export interface Capability {
   readonly policy: ToolPolicy;
@@ -220,7 +230,7 @@ export function assessCapabilities(tools: ReadonlyArray<McpSchema.Tool>): Readon
     const tool = byName.get(policy.name);
 
     if (tool === undefined) {
-      return { policy, status: { _tag: 'Missing' } };
+      return { policy, status: ToolStatus.Missing() };
     }
 
     const properties = inputProperties(tool);
@@ -229,7 +239,7 @@ export function assessCapabilities(tools: ReadonlyArray<McpSchema.Tool>): Readon
 
     return {
       policy,
-      status: missingParams.length === 0 ? { _tag: 'Available' } : { _tag: 'Drift', missingParams },
+      status: missingParams.length === 0 ? ToolStatus.Available() : ToolStatus.Drift({ missingParams }),
     };
   });
 }
@@ -248,8 +258,8 @@ export function callableTools(capabilities: ReadonlyArray<Capability>, mode: Wri
     capabilities
       .filter(
         ({ policy, status }) =>
-          status._tag === 'Available' &&
-          policy.evidence === 'proven-mcp' &&
+          P.isTagged(status, 'Available') &&
+          policy.evidence === PROVEN_MCP &&
           (policy.access === 'read' || (policy.access === 'direct-write' && mode === 'direct-writes')),
       )
       .map(({ policy }) => policy.name),

@@ -1,6 +1,7 @@
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Match from 'effect/Match';
 import type * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import type * as McpSchema from 'effect/ai/McpSchema';
@@ -29,15 +30,17 @@ import {
   parseTimesheetWeek,
 } from './parse.js';
 
+const TaggedErrorClass = Schema.TaggedError;
+
 /**
  * Orbit answered, but with an error (often as plain text with `isError: false`, e.g. `Error: … not a valid …`).
  */
-export class OrbitToolError extends Schema.TaggedError<OrbitToolError>()('OrbitToolError', {
+export class OrbitToolError extends TaggedErrorClass<OrbitToolError>()('OrbitToolError', {
   tool: Schema.String,
   message: Schema.String,
 }) {}
 
-export class OrbitRateLimited extends Schema.TaggedError<OrbitRateLimited>()('OrbitRateLimited', {
+export class OrbitRateLimited extends TaggedErrorClass<OrbitRateLimited>()('OrbitRateLimited', {
   tool: Schema.String,
   message: Schema.String,
 }) {}
@@ -45,7 +48,7 @@ export class OrbitRateLimited extends Schema.TaggedError<OrbitRateLimited>()('Or
 /**
  * The answer did not match the shape this client relies on; the raw text is kept for display.
  */
-export class OrbitUnreadable extends Schema.TaggedError<OrbitUnreadable>()('OrbitUnreadable', {
+export class OrbitUnreadable extends TaggedErrorClass<OrbitUnreadable>()('OrbitUnreadable', {
   tool: Schema.String,
   raw: Schema.String,
 }) {}
@@ -53,7 +56,7 @@ export class OrbitUnreadable extends Schema.TaggedError<OrbitUnreadable>()('Orbi
 /**
  * Blocked locally: not proven, approval-only, read-only mode, or missing/drifted on the gateway.
  */
-export class OrbitNotAllowed extends Schema.TaggedError<OrbitNotAllowed>()('OrbitNotAllowed', {
+export class OrbitNotAllowed extends TaggedErrorClass<OrbitNotAllowed>()('OrbitNotAllowed', {
   tool: Schema.String,
   reason: Schema.String,
 }) {}
@@ -119,6 +122,8 @@ export class Orbit extends Context.Service<Orbit, OrbitShape>()('@2digits/tlo-tu
 
 /**
  * Drops undefined optionals so arguments stay valid JSON and omitted fields are really omitted.
+ *
+ * @param record
  */
 function args(record: Record<string, Schema.Json | undefined>): Schema.JsonObject {
   const result: Record<string, Schema.Json> = {};
@@ -156,14 +161,14 @@ const classify = Effect.fn('Orbit.classify')(function* (tool: string, result: Mc
   return text;
 });
 
-const decode = Effect.fn('Orbit.decode')(function* <A>(
+const decode = Effect.fn('Orbit.decode')(function* <T>(
   tool: string,
   text: string,
-  parse: (text: string) => Opt.Option<A>,
+  parse: (text: string) => Opt.Option<T>,
 ) {
   const parsed = parse(text);
 
-  return parsed._tag === 'Some' ? parsed.value : yield* OrbitUnreadable.make({ tool, raw: text });
+  return yield* Effect.fromOption(parsed).pipe(Effect.mapError(() => OrbitUnreadable.make({ tool, raw: text })));
 });
 
 /**
@@ -214,23 +219,28 @@ export function makeOrbitLayer(options: OrbitOptions) {
             reason:
               capability === undefined
                 ? 'Not in the proven tool policy.'
-                : capability.status._tag !== 'Available'
-                  ? `Gateway: ${capability.status._tag === 'Missing' ? 'tool missing' : 'schema drift'}.`
-                  : capability.policy.access === 'approval-only'
-                    ? 'Approval-only: draft a change request instead.'
-                    : capability.policy.access === 'direct-write'
-                      ? 'Read-only mode.'
-                      : 'Not exposed.',
+                : Match.value(capability.status).pipe(
+                    Match.tag('Available', () =>
+                      Match.value(capability.policy.access).pipe(
+                        Match.when('approval-only', () => 'Approval-only: draft a change request instead.'),
+                        Match.when('direct-write', () => 'Read-only mode.'),
+                        Match.orElse(() => 'Not exposed.'),
+                      ),
+                    ),
+                    Match.tag('Missing', () => 'Gateway: tool missing.'),
+                    Match.tag('Drift', () => 'Gateway: schema drift.'),
+                    Match.exhaustive,
+                  ),
           });
         }
 
         return yield* classify(tool, yield* client.callTool(tool, args));
       });
 
-      const read = Effect.fn('Orbit.read')(function* <A>(
+      const read = Effect.fn('Orbit.read')(function* <T>(
         tool: string,
         args: Schema.JsonObject,
-        parse: (text: string) => Opt.Option<A>,
+        parse: (text: string) => Opt.Option<T>,
       ) {
         return yield* decode(tool, yield* invoke(tool, args), parse);
       });
@@ -299,20 +309,24 @@ export function makeOrbitLayer(options: OrbitOptions) {
 }
 
 export function describeOrbitError(error: OrbitError): string {
-  switch (error._tag) {
-    case 'OrbitToolError':
-      return `Orbit (${error.tool}): ${error.message}`;
-    case 'OrbitRateLimited':
-      return `Rate limit (${error.tool}): ${error.message} — niet eerder opnieuw proberen.`;
-    case 'OrbitUnreadable':
-      return `Onbekend antwoordformaat van ${error.tool}; ruwe tekst getoond, afhankelijke writes uit.`;
-    case 'OrbitNotAllowed':
-      return `${error.tool} geblokkeerd: ${error.reason}`;
-    case 'McpCallError':
-      return error.delivery === 'unknown'
+  return Match.value(error).pipe(
+    Match.tag('OrbitToolError', (value) => `Orbit (${value.tool}): ${value.message}`),
+    Match.tag(
+      'OrbitRateLimited',
+      (value) => `Rate limit (${value.tool}): ${value.message} — niet eerder opnieuw proberen.`,
+    ),
+    Match.tag(
+      'OrbitUnreadable',
+      (value) => `Onbekend antwoordformaat van ${value.tool}; ruwe tekst getoond, afhankelijke writes uit.`,
+    ),
+    Match.tag('OrbitNotAllowed', (value) => `${value.tool} geblokkeerd: ${value.reason}`),
+    Match.tag('McpCallError', (error) =>
+      error.delivery === 'unknown'
         ? `${error.tool}: ${error.message} Uitkomst onbekend — niet automatisch herhaald.`
-        : `${error.tool}: ${error.message} (niet verstuurd)`;
-  }
+        : `${error.tool}: ${error.message} (niet verstuurd)`,
+    ),
+    Match.exhaustive,
+  );
 }
 
 export function isOrbitError(error: unknown): error is OrbitError {

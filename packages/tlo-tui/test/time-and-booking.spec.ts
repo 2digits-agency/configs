@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 
 import { parseTaskId } from '../src/domain/ids.js';
 import {
+  BoundaryNote,
   daysBetween,
   isoWeekNumber,
   localDateAt,
@@ -30,31 +31,39 @@ describe('booking review contract', () => {
       [{ billable: undefined }, 'billable'],
     ] as const) {
       const result = validateDraft({ ...draft, ...edit });
-      expect(Opt.isNone(result.valid)).toBe(true);
-      expect(result.issues.map((issue) => issue.field)).toEqual([field]);
+
+      expect(Opt.isNone(result.valid)).toBeTruthy();
+
+      expect(result.issues.map((issue) => issue.field)).toStrictEqual([field]);
     }
   });
 
   it('allows ending exactly at midnight, but requires a split for even one minute beyond it', () => {
     const valid = validateDraft(draft);
-    expect(valid.issues).toEqual([]);
-    expect(bookingPayload(Opt.getOrThrow(valid.valid))).toEqual({
+
+    expect(valid.issues).toStrictEqual([]);
+
+    expect(bookingPayload(Opt.getOrThrow(valid.valid))).toStrictEqual({
       taskId: 'PTDEMO000000001',
       date: '2026-10-13 23:23',
       durationMinutes: 37,
       billable: false,
       description: 'Late review',
     });
+
     const crossing = validateDraft({ ...draft, duration: '38' });
-    expect(Opt.isNone(crossing.valid)).toBe(true);
-    expect(crossing.issues.map((issue) => issue.field)).toEqual(['duration']);
+
+    expect(Opt.isNone(crossing.valid)).toBeTruthy();
+
+    expect(crossing.issues.map((issue) => issue.field)).toStrictEqual(['duration']);
   });
 });
 
 describe('wall-clock calendar contract', () => {
   it('keeps Monday-based weeks and inclusive gateway dates correct across the ISO year boundary', () => {
     const date = unsafeLocalDate('2021-01-01');
-    expect(weekDates(date)).toEqual([
+
+    expect(weekDates(date)).toStrictEqual([
       '2020-12-28',
       '2020-12-29',
       '2020-12-30',
@@ -63,24 +72,35 @@ describe('wall-clock calendar contract', () => {
       '2021-01-02',
       '2021-01-03',
     ]);
-    expect(isoWeekNumber(date)).toBe(53);
-    expect(isoWeekNumber(unsafeLocalDate('2021-01-04'))).toBe(1);
-    expect(weekRange(date)).toEqual({ start: '2020-12-28', endExclusive: '2021-01-04' });
-    expect(toInclusiveEnd(weekRange(date))).toEqual({ dateFrom: '2020-12-28', dateTo: '2021-01-03' });
-    expect(weekBoundaryNotes(date)).toEqual([{ _tag: 'YearBoundary', from: '2020-12-31', to: '2021-01-01' }]);
+
+    expect([isoWeekNumber(date), isoWeekNumber(unsafeLocalDate('2021-01-04'))]).toStrictEqual([53, 1]);
+
+    expect(weekRange(date)).toStrictEqual({ start: '2020-12-28', endExclusive: '2021-01-04' });
+
+    expect(toInclusiveEnd(weekRange(date))).toStrictEqual({ dateFrom: '2020-12-28', dateTo: '2021-01-03' });
+
+    expect(weekBoundaryNotes(date)).toStrictEqual([
+      BoundaryNote.YearBoundary({ from: unsafeLocalDate('2020-12-31'), to: unsafeLocalDate('2021-01-01') }),
+    ]);
   });
 
-  it.each(['2026-03-29', '2026-10-25'])('flags Amsterdam DST on %s without changing calendar day lengths', (day) => {
+  it.for(['2026-03-29', '2026-10-25'])('flags Amsterdam DST on %s without changing calendar day lengths', (day) => {
     const date = unsafeLocalDate(day);
+
     const range = weekRange(date);
+
     expect(daysBetween(range.start, range.endExclusive)).toBe(7);
-    expect(weekBoundaryNotes(date)).toContainEqual({ _tag: 'OffsetTransition', date: day, zone: 'Europe/Amsterdam' });
-    expect(weekBoundaryNotes(date, 'UTC')).not.toContainEqual(expect.objectContaining({ _tag: 'OffsetTransition' }));
+
+    expect(weekBoundaryNotes(date)).toContainEqual(BoundaryNote.OffsetTransition({ date, zone: 'Europe/Amsterdam' }));
+
+    expect(weekBoundaryNotes(date, 'UTC').map((note) => note._tag)).not.toContain('OffsetTransition');
   });
 
   it('uses the preferred display zone only when deriving a date from an instant', () => {
     const instant = Date.parse('2026-03-28T23:30:00Z');
+
     expect(localDateAt(instant, 'Europe/Amsterdam')).toBe('2026-03-29');
+
     expect(localDateAt(instant, 'UTC')).toBe('2026-03-28');
   });
 });

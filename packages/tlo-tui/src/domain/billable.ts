@@ -7,6 +7,8 @@ export type BillableChoice = 'billable' | 'non-billable';
 
 /**
  * `CreateTimeEntry.billable` is a boolean.
+ *
+ * @param choice
  */
 export function toCreateBillable(choice: BillableChoice): boolean {
   return choice === 'billable';
@@ -14,6 +16,8 @@ export function toCreateBillable(choice: BillableChoice): boolean {
 
 /**
  * `UpdateTimeEntry.billable` is the string `'true'` or `'false'`; empty would mean "unchanged".
+ *
+ * @param choice
  */
 export function toUpdateBillable(choice: BillableChoice): 'true' | 'false' {
   return choice === 'billable' ? 'true' : 'false';
@@ -21,6 +25,8 @@ export function toUpdateBillable(choice: BillableChoice): 'true' | 'false' {
 
 /**
  * `ListTimeEntries.billable` filter: `'true'`, `'false'` or empty for all.
+ *
+ * @param choice
  */
 export function toListBillableFilter(choice: BillableChoice | undefined): 'true' | 'false' | '' {
   return choice === undefined ? '' : toUpdateBillable(choice);
@@ -46,7 +52,7 @@ export function parseBillableReadback(raw: string): Opt.Option<BillableReadback>
   const word = match[1]?.toLowerCase() ?? '';
 
   return Opt.some({
-    billable: word === 'yes' || word === 'ja' || word === 'true',
+    billable: ['yes', 'ja', 'true'].includes(word),
     reason: match[2]?.trim(),
     raw: raw.trim(),
   });

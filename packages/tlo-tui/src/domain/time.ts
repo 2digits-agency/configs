@@ -1,4 +1,5 @@
 import type * as Brand from 'effect/Brand';
+import * as Data from 'effect/Data';
 import * as DateTime from 'effect/DateTime';
 import * as Opt from 'effect/Option';
 
@@ -30,8 +31,8 @@ const MINUTES_PER_DAY = 1440;
 
 const DAY_MS = 86_400_000;
 
-function pad(value: number, width = 2): string {
-  return String(value).padStart(width, '0');
+function pad(value: number): string {
+  return String(value).padStart(2, '0');
 }
 
 function toUtc(date: LocalDate): DateTime.Utc {
@@ -116,7 +117,11 @@ export function parseDuration(input: string): Opt.Option<number> {
   if (decimal !== null) {
     const minutes = Number(`${decimal[1]}.${decimal[2]}`) * 60;
 
-    return Number.isInteger(minutes) ? Opt.some(minutes) : Opt.none();
+    // Finite numbers above the safe-integer range still have integral representations; preserve the parser contract.
+    const wholeMinutes =
+      Number.isSafeInteger(minutes) || (Number.isFinite(minutes) && Math.abs(minutes) > Number.MAX_SAFE_INTEGER);
+
+    return wholeMinutes ? Opt.some(minutes) : Opt.none();
   }
 
   const plain = /^(\d+)m?$/.exec(value);
@@ -233,6 +238,8 @@ export type BoundaryNote =
   | { readonly _tag: 'YearBoundary'; readonly from: LocalDate; readonly to: LocalDate }
   | { readonly _tag: 'OffsetTransition'; readonly date: LocalDate; readonly zone: string };
 
+export const BoundaryNote = Data.taggedEnum<BoundaryNote>();
+
 /**
  * Week-level hazards: month/year closes split a week and DST days make unconverted wall-clock times ambiguous.
  *
@@ -250,13 +257,13 @@ export function weekBoundaryNotes(date: LocalDate, zone: string = PREFERRED_ZONE
     if (previous !== undefined && previous.slice(0, 7) !== day.slice(0, 7)) {
       notes.push(
         previous.slice(0, 4) === day.slice(0, 4)
-          ? { _tag: 'MonthBoundary', from: previous, to: day }
-          : { _tag: 'YearBoundary', from: previous, to: day },
+          ? BoundaryNote.MonthBoundary({ from: previous, to: day })
+          : BoundaryNote.YearBoundary({ from: previous, to: day }),
       );
     }
 
     if (isOffsetTransitionDay(day, zone)) {
-      notes.push({ _tag: 'OffsetTransition', date: day, zone });
+      notes.push(BoundaryNote.OffsetTransition({ date: day, zone }));
     }
   }
 

@@ -33,6 +33,9 @@ export function isVisibleNumber(input: string): boolean {
 
 /**
  * Finds the first api_id with this prefix in free text, e.g. a write acknowledgement.
+ *
+ * @param text
+ * @param prefix
  */
 export function findApiId(text: string, prefix: string): Opt.Option<string> {
   const match = new RegExp(String.raw`\b(${prefix}[A-Z0-9]{13})\b`).exec(text);

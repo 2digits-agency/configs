@@ -30,6 +30,9 @@ import { TOOL_POLICIES } from '../orbit/Policy.js';
 
 const PrettyJson = Schema.fromJsonString(Schema.Json, { space: 2 });
 
+// Orbit's JSON contract uses explicit nulls, not omitted fields.
+const JSON_NULL = Opt.getOrThrow(Schema.decodeOption(Schema.fromJsonString(Schema.Null))('null'));
+
 function demoId(prefix: string, n: number): string {
   return `${prefix}DEMO${String(n).padStart(9, '0')}`;
 }
@@ -138,12 +141,20 @@ function taskById(id: string): DemoTask | undefined {
   return TASKS.find((task) => task.id === id);
 }
 
+function label(entry: DemoEntry): string {
+  const task = taskById(entry.taskId);
+
+  const description = entry.description === '' ? '' : ` — ${entry.description}`;
+
+  return `${task?.project ?? '?'} / ${task?.task ?? '?'}${description}`;
+}
+
 function seedEntries(today: LocalDate): Array<DemoEntry> {
   const entries: Array<DemoEntry> = [];
 
   let counter = 1;
 
-  const add = (date: LocalDate, start: string, minutes: number, taskId: string, description = '', planned = false) => {
+  function add(date: LocalDate, start: string, minutes: number, taskId: string, description = '', planned = false) {
     const task = taskById(taskId);
 
     entries.push({
@@ -157,7 +168,7 @@ function seedEntries(today: LocalDate): Array<DemoEntry> {
       billable: (task?.rate ?? 0) > 0,
       history: [`${date} 17:30 ${USER.name}: Entry Created`],
     });
-  };
+  }
 
   const previousMonday = addDays(startOfWeek(today), -7);
 
@@ -219,8 +230,8 @@ function seedTickets(today: LocalDate): Array<DemoTicket> {
       client: 'DEMO Klant BV',
       contact: 'Demo Contactpersoon',
       assignee: USER.name,
-      taskId: null,
-      project: null,
+      taskId: JSON_NULL,
+      project: JSON_NULL,
       createdDate: `${yesterday} 10:12`,
       comments: [
         {
@@ -279,8 +290,8 @@ function seedTickets(today: LocalDate): Array<DemoTicket> {
       client: 'DEMO Klant BV',
       contact: 'Demo Contactpersoon',
       assignee: USER.name,
-      taskId: null,
-      project: null,
+      taskId: JSON_NULL,
+      project: JSON_NULL,
       createdDate: `${addDays(today, -20)} 11:00`,
       comments: [],
     },
@@ -329,29 +340,27 @@ export function makeDemoMcpLayer(options: DemoOptions = {}) {
 
       const finalBefore = startOfWeek(today);
 
-      const dayState = (date: LocalDate) => (date < finalBefore ? 'FINAL' : 'OPEN');
+      function dayState(date: LocalDate) {
+        return date < finalBefore ? 'FINAL' : 'OPEN';
+      }
 
-      const label = (entry: DemoEntry) => {
-        const task = taskById(entry.taskId);
-
-        const description = entry.description === '' ? '' : ` — ${entry.description}`;
-
-        return `${task?.project ?? '?'} / ${task?.task ?? '?'}${description}`;
-      };
-
-      const sorted = () =>
-        entries.toSorted(
+      function sorted() {
+        return entries.toSorted(
           (a, b) => a.date.localeCompare(b.date) || clockMinutes(a.start as never) - clockMinutes(b.start as never),
         );
+      }
 
-      const week = (date: LocalDate) => {
+      function week(date: LocalDate) {
         const days = weekDates(date);
 
         const rows = days.map((day, index) => {
           const own = entries.filter((entry) => entry.date === day);
 
-          const sum = (planned: boolean) =>
-            own.filter((entry) => entry.planned === planned).reduce((total, entry) => total + entry.durationMinutes, 0);
+          function sum(planned: boolean) {
+            return own
+              .filter((entry) => entry.planned === planned)
+              .reduce((total, entry) => total + entry.durationMinutes, 0);
+          }
 
           return `| ${ORBIT_WEEKDAYS[index]} ${day} | ${dayState(day)} | ${formatDuration(sum(false))} | ${formatDuration(sum(true))} | 0h | ${index < 5 ? '8h' : '0h'} |`;
         });
@@ -381,9 +390,9 @@ export function makeDemoMcpLayer(options: DemoOptions = {}) {
           '',
           'Planned entries can be confirmed (ConfirmPlannedEntry) or refused (RefusePlannedEntry). Locked entries cannot be changed.',
         ].join('\n');
-      };
+      }
 
-      const entryDetail = (entry: DemoEntry) => {
+      function entryDetail(entry: DemoEntry) {
         const task = taskById(entry.taskId);
 
         const final = dayState(entry.date) === 'FINAL';
@@ -401,38 +410,40 @@ export function makeDemoMcpLayer(options: DemoOptions = {}) {
           '- History:',
           ...entry.history.map((line) => `  - ${line}`),
         ].join('\n');
-      };
+      }
 
-      const ticketJson = (ticket: DemoTicket, detail: boolean) => ({
-        ticketId: ticket.ticketId,
-        number: ticket.number,
-        name: ticket.name,
-        state: ticket.state,
-        priority: ticket.priority,
-        queue: 'DEMO Support',
-        client: ticket.client,
-        contact: ticket.contact,
-        assignee: ticket.assignee,
-        projectId: ticket.taskId === null ? null : demoId('PR', 2),
-        project: ticket.project,
-        loggedMinutes: ticket.comments.reduce((total, comment) => total + comment.loggedMinutes, 0),
-        billable: true,
-        slaMinutesRemaining: ticket.state === 'OPEN' ? 95 : null,
-        createdDate: ticket.createdDate,
-        lastClientInput: ticket.comments.find((comment) => !comment.isInternal)?.date ?? null,
-        lastAgentReply: null,
-        closedDate: ticket.state === 'CLOSED' ? `${today} 08:00` : null,
-        ...(detail
-          ? {
-              description: ticket.comments.at(-1)?.content ?? '',
-              taskId: ticket.taskId,
-              task: ticket.taskId === null ? null : (taskById(ticket.taskId)?.task ?? null),
-              nonBillableReason: null,
-              followUpAction: null,
-              followUpDate: null,
-            }
-          : {}),
-      });
+      function ticketJson(ticket: DemoTicket, detail: boolean) {
+        return {
+          ticketId: ticket.ticketId,
+          number: ticket.number,
+          name: ticket.name,
+          state: ticket.state,
+          priority: ticket.priority,
+          queue: 'DEMO Support',
+          client: ticket.client,
+          contact: ticket.contact,
+          assignee: ticket.assignee,
+          projectId: ticket.taskId === JSON_NULL ? JSON_NULL : demoId('PR', 2),
+          project: ticket.project,
+          loggedMinutes: ticket.comments.reduce((total, comment) => total + comment.loggedMinutes, 0),
+          billable: true,
+          slaMinutesRemaining: ticket.state === 'OPEN' ? 95 : JSON_NULL,
+          createdDate: ticket.createdDate,
+          lastClientInput: ticket.comments.find((comment) => !comment.isInternal)?.date ?? JSON_NULL,
+          lastAgentReply: JSON_NULL,
+          closedDate: ticket.state === 'CLOSED' ? `${today} 08:00` : JSON_NULL,
+          ...(detail
+            ? {
+                description: ticket.comments.at(-1)?.content ?? '',
+                taskId: ticket.taskId,
+                task: ticket.taskId === JSON_NULL ? JSON_NULL : (taskById(ticket.taskId)?.task ?? JSON_NULL),
+                nonBillableReason: JSON_NULL,
+                followUpAction: JSON_NULL,
+                followUpDate: JSON_NULL,
+              }
+            : {}),
+        };
+      }
 
       const handlers: Record<string, (args: Schema.JsonObject) => string | Schema.Json> = {
         GetTimesheetWeek: (args) => {
@@ -547,11 +558,11 @@ export function makeDemoMcpLayer(options: DemoOptions = {}) {
             : {
                 ticketId: ticket.ticketId,
                 count: ticket.comments.length,
-                comments: ticket.comments.map((comment) => ({ ...comment, source: null, authorId: null })),
+                comments: ticket.comments.map((comment) => ({ ...comment, source: JSON_NULL, authorId: JSON_NULL })),
               };
         },
         CreateTimeEntry: (args) => {
-          const [rawDate = '', rawTime = '09:00'] = str(args.date).split(' ');
+          const [rawDate = '', rawTime = '09:00'] = str(args.date).split(' ', 2);
 
           const date = parseLocalDate(rawDate);
 
@@ -561,7 +572,7 @@ export function makeDemoMcpLayer(options: DemoOptions = {}) {
 
           const minutes = typeof args.durationMinutes === 'number' ? args.durationMinutes : 0;
 
-          if (Opt.isNone(date) || Opt.isNone(start) || task === undefined || minutes <= 0) {
+          if (task === undefined || Opt.isNone(date) || Opt.isNone(start) || minutes <= 0) {
             return 'Error: invalid taskId, date or duration.';
           }
 

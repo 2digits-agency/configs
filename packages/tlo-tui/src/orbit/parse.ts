@@ -126,7 +126,7 @@ export function parseMarkdownTable(text: string): Opt.Option<MarkdownTable> {
   const lines = text.split('\n');
 
   const start = lines.findIndex(
-    (line, index) => line.trim().startsWith('|') && /^\|[\s|:-]+\|$/.test(lines[index + 1]?.trim() ?? ''),
+    (line, index) => line.trimStart().startsWith('|') && /^\|[\s|:-]+\|$/.test(lines[index + 1]?.trim() ?? ''),
   );
 
   if (start === -1) {
@@ -137,8 +137,10 @@ export function parseMarkdownTable(text: string): Opt.Option<MarkdownTable> {
 
   const rows: Array<Array<string>> = [];
 
-  for (const line of lines.slice(start + 2)) {
-    if (!line.trim().startsWith('|')) {
+  const body = lines.slice(start + 2);
+
+  for (const line of body) {
+    if (!line.trimStart().startsWith('|')) {
       break;
     }
 
@@ -155,7 +157,7 @@ function minutes(value: string | undefined): Opt.Option<number> {
 const WEEK_HEADER = /^Timesheet week of (\d{4}-\d{2}-\d{2}) for (.+?) \(user api_id: ([A-Z0-9]+)\)/m;
 
 const WEEK_ENTRY =
-  /^- (Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}:\d{2}) (\d+h(?:\d{2})?)((?: \[[^\]]+\])*) (.*?)\s*\(api_id: (AC[A-Z0-9]{13})\)\s*$/;
+  /^- (Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}:\d{2}) (\d+h(?:\d{2})?)((?: \[[^\]]+\])*) (.*?)\(api_id: (AC[A-Z0-9]{13})\)\s*$/;
 
 function splitLabel(label: string): { project: string; task: string; description: string } {
   const [head = '', ...rest] = label.split(' — ');
@@ -169,33 +171,19 @@ function splitLabel(label: string): { project: string; task: string; description
   };
 }
 
-export function parseTimesheetWeek(text: string): Opt.Option<TimesheetWeek> {
-  const header = WEEK_HEADER.exec(text);
-
-  const table = parseMarkdownTable(text);
-
-  if (header === null || Opt.isNone(table)) {
-    return Opt.none();
-  }
-
-  const weekOf = parseLocalDate(header[1] ?? '');
-
-  if (Opt.isNone(weekOf)) {
-    return Opt.none();
-  }
-
+function parseWeekDays(table: MarkdownTable) {
   const days: Array<WeekDay> = [];
 
   const dateByWeekday = new Map<string, LocalDate>();
 
-  for (const [day = '', state = '', logged, planned, absence, capacity] of table.value.rows) {
-    const [weekday = '', rawDate = ''] = day.split(' ');
+  for (const [day = '', state = '', logged, planned, absence, capacity] of table.rows) {
+    const [weekday = '', rawDate = ''] = day.split(' ', 2);
 
     const date = parseLocalDate(rawDate);
 
     const values = [minutes(logged), minutes(planned), minutes(absence), minutes(capacity)];
 
-    if (Opt.isNone(date) || values.some(Opt.isNone)) {
+    if (Opt.isNone(date) || values.some((element) => Opt.isNone(element))) {
       return Opt.none();
     }
 
@@ -208,10 +196,14 @@ export function parseTimesheetWeek(text: string): Opt.Option<TimesheetWeek> {
     days.push({ date: date.value, state, loggedMinutes, plannedMinutes, absenceMinutes, capacityMinutes });
   }
 
-  if (days.length !== 7 || !ORBIT_WEEKDAYS.every((weekday) => dateByWeekday.has(weekday))) {
+  if (days.length !== 7 || ORBIT_WEEKDAYS.some((weekday) => !dateByWeekday.has(weekday))) {
     return Opt.none();
   }
 
+  return Opt.some({ days, dateByWeekday });
+}
+
+function parseWeekEntries(text: string, dateByWeekday: ReadonlyMap<string, LocalDate>): Opt.Option<Array<WeekEntry>> {
   const entries: Array<WeekEntry> = [];
 
   for (const line of text.split('\n')) {
@@ -233,7 +225,10 @@ export function parseTimesheetWeek(text: string): Opt.Option<TimesheetWeek> {
       return Opt.none();
     }
 
-    const tags = [...rawTags.matchAll(/\[([^\]]+)\]/g)].map((tag) => tag[1] ?? '');
+    const tags = rawTags
+      .matchAll(/\[([^\]]+)\]/g)
+      .map((tag) => tag[1] ?? '')
+      .toArray();
 
     entries.push({
       id: id as TimeEntryId,
@@ -247,20 +242,58 @@ export function parseTimesheetWeek(text: string): Opt.Option<TimesheetWeek> {
     });
   }
 
+  return Opt.some(entries);
+}
+
+export function parseTimesheetWeek(text: string): Opt.Option<TimesheetWeek> {
+  const header = WEEK_HEADER.exec(text);
+
+  const table = parseMarkdownTable(text);
+
+  if (header === null || Opt.isNone(table)) {
+    return Opt.none();
+  }
+
+  const weekOf = parseLocalDate(header[1] ?? '');
+
+  const calendar = parseWeekDays(table.value);
+
+  if (Opt.isNone(weekOf) || Opt.isNone(calendar)) {
+    return Opt.none();
+  }
+
+  const entries = parseWeekEntries(text, calendar.value.dateByWeekday);
+
+  if (Opt.isNone(entries)) {
+    return Opt.none();
+  }
+
   const summary = /^Week total: .*$/m.exec(text)?.[0] ?? '';
 
   return Opt.some({
     weekOf: weekOf.value,
     userName: header[2] ?? '',
     userId: header[3] ?? '',
-    days,
-    entries,
+    days: calendar.value.days,
+    entries: entries.value,
     summary,
   });
 }
 
 function field(text: string, key: string): string | undefined {
-  return new RegExp(String.raw`^- ${key}: (.*)$`, 'm').exec(text)?.[1]?.trim();
+  return new RegExp(`^- ${key}: (.*)$`, 'm').exec(text)?.[1]?.trim();
+}
+
+function detailTask(text: string) {
+  const task = field(text, 'Task') ?? '';
+
+  const taskMatch = /^(.*?) on \[([^\]]*)\]\([^)]*\)\s*(?:\(task api_id: ([A-Z0-9]+)\))?/.exec(task);
+
+  return {
+    taskName: taskMatch?.[1]?.trim() ?? task,
+    projectLabel: taskMatch?.[2]?.trim() ?? '',
+    taskId: parseTaskId(taskMatch?.[3] ?? ''),
+  };
 }
 
 export function parseTimeEntryDetail(text: string): Opt.Option<TimeEntryDetail> {
@@ -282,10 +315,6 @@ export function parseTimeEntryDetail(text: string): Opt.Option<TimeEntryDetail> 
     return Opt.none();
   }
 
-  const task = field(text, 'Task') ?? '';
-
-  const taskMatch = /^(.*?) on \[([^\]]*)\]\([^)]*\)\s*(?:\(task api_id: ([A-Z0-9]+)\))?/.exec(task);
-
   const locks = field(text, 'Locks') ?? '';
 
   return Opt.some({
@@ -295,9 +324,7 @@ export function parseTimeEntryDetail(text: string): Opt.Option<TimeEntryDetail> 
     start: start.value,
     durationMinutes: durationMinutes.value,
     kind: field(text, 'Kind') ?? '',
-    taskName: taskMatch?.[1]?.trim() ?? task,
-    projectLabel: taskMatch?.[2]?.trim() ?? '',
-    taskId: parseTaskId(taskMatch?.[3] ?? ''),
+    ...detailTask(text),
     client: field(text, 'Client') ?? '',
     description: field(text, 'Description') ?? '',
     billable: Opt.flatMap(Opt.fromUndefinedOr(field(text, 'Billable')), parseBillableReadback),
@@ -307,7 +334,7 @@ export function parseTimeEntryDetail(text: string): Opt.Option<TimeEntryDetail> 
 }
 
 const LISTED_ENTRY =
-  /^- (\d{4}-\d{2}-\d{2}) (\d{1,2}:\d{2}) \| (.+?) \| (\d+h(?:\d{2})?)((?: \[[^\]]+\])*) \| (.*?)\s*\(api_id: (AC[A-Z0-9]{13})\)\s*$/;
+  /^- (\d{4}-\d{2}-\d{2}) (\d{1,2}:\d{2}) \| (.+?) \| (\d+h(?:\d{2})?)((?: \[[^\]]+\])*) \| (.*?)\(api_id: (AC[A-Z0-9]{13})\)\s*$/;
 
 /**
  * `ListTimeEntries` output. Returns an empty list for an explicit zero count.
@@ -362,18 +389,22 @@ export function parseMyTasks(text: string): Opt.Option<ReadonlyArray<TaskOption>
   }
 
   return Opt.flatMap(parseMarkdownTable(text), ({ header, rows }) => {
-    const index = (name: string) => header.findIndex((cell) => cell.toLowerCase() === name);
+    function index(name: string) {
+      return header.findIndex((cell) => cell.toLowerCase() === name);
+    }
 
-    const [project, task, remaining, apiId] = ['project', 'task', 'remaining', 'api_id'].map(index);
+    const [project = -1, task = -1, remaining = -1, apiId = -1] = ['project', 'task', 'remaining', 'api_id'].map(
+      (element) => index(element),
+    );
 
-    if ([project, task, apiId].some((value) => value === undefined || value < 0)) {
+    if ([project, task, apiId].some((value) => value < 0)) {
       return Opt.none();
     }
 
     const options: Array<TaskOption> = [];
 
     for (const row of rows) {
-      const taskId = parseTaskId(row[apiId ?? -1] ?? '');
+      const taskId = parseTaskId(row[apiId] ?? '');
 
       if (Opt.isNone(taskId)) {
         return Opt.none();
@@ -381,11 +412,11 @@ export function parseMyTasks(text: string): Opt.Option<ReadonlyArray<TaskOption>
 
       options.push({
         taskId: taskId.value,
-        project: row[project ?? -1] ?? '',
-        task: row[task ?? -1] ?? '',
+        project: row[project] ?? '',
+        task: row[task] ?? '',
         open: true,
         rate: Opt.none(),
-        remaining: row[remaining ?? -1] ?? '',
+        remaining: row[remaining] ?? '',
         projectState: '',
       });
     }
@@ -404,8 +435,8 @@ const ITEM_PROJECT = /^\s+In project \[([^\]]+)\]\([^)]*\) "(.*)" — (\w+) \(it
  * @param text
  */
 export function parseProjectItems(text: string): Opt.Option<ReadonlyArray<TaskOption>> {
-  if (!/^Found (\d+) matching project item/m.test(text)) {
-    return /no (matching )?project items?/i.test(text) ? Opt.some([]) : Opt.none();
+  if (!/^Found \d+ matching project item/m.test(text)) {
+    return /no (?:matching )?project items?/i.test(text) ? Opt.some([]) : Opt.none();
   }
 
   const lines = text.split('\n');
@@ -454,8 +485,9 @@ export function parseProjects(text: string): Opt.Option<ReadonlyArray<ProjectRow
       ?.split(/[,\s]+/)
       .filter((id) => /^PR[A-Z0-9]{13}$/.test(id));
 
-    const at = (row: ReadonlyArray<string>, name: string) =>
-      row[header.findIndex((cell) => cell.toLowerCase() === name)] ?? '';
+    function at(row: ReadonlyArray<string>, name: string) {
+      return row[header.findIndex((cell) => cell.toLowerCase() === name)] ?? '';
+    }
 
     return rows.map((row, index) => ({
       // Only trust positional ids when the counts line up.
@@ -469,7 +501,7 @@ export function parseProjects(text: string): Opt.Option<ReadonlyArray<ProjectRow
   });
 }
 
-function Nullable<S extends Schema.Top>(schema: S) {
+function Nullable<T extends Schema.Top>(schema: T) {
   return schema.pipe(Schema.NullOr, Schema.optionalKey);
 }
 
@@ -545,6 +577,8 @@ export function asTicketId(summary: { readonly ticketId: string }): TicketId {
 
 /**
  * Normalises whitespace for note readback comparison; Orbit pads comment content with spaces.
+ *
+ * @param text
  */
 export function normalizeText(text: string): string {
   return text.replaceAll(/\s+/g, ' ').trim();
