@@ -5,6 +5,10 @@
   "tsdown": { "config": "vite.config.ts" },
   "vitest": { "config": ["vite.config.ts"] },
   "workspaces": {
+    "packages/tlo-gpuix": {
+      "entry": ["src/browser.tsx"],
+      "ignoreDependencies": ["@gpuix/native"]
+    },
     "packages/eslint-config": {
       "ignore": ["fixtures/**"],
       "ignoreDependencies": ["react", "@types/react"]
