@@ -204,8 +204,8 @@ catalogs:
       specifier: 8.0.3
       version: 8.0.3
     '@graphql-eslint/eslint-plugin':
-      specifier: 4.4.1
-      version: 4.4.1
+      specifier: 4.4.2
+      version: 4.4.2
     '@ianvs/prettier-plugin-sort-imports':
       specifier: 4.7.1
       version: 4.7.1
@@ -651,7 +651,7 @@ importers:
         version: 8.0.3(supports-color@7.2.0)
       '@graphql-eslint/eslint-plugin':
         specifier: 'catalog:'
-        version: 4.4.1(@types/node@24.19.2)(crossws@0.4.12(srvx@1.0.5))(eslint@10.12.0(jiti@2.7.0)(supports-color@7.2.0))(graphql@16.11.0)(supports-color@7.2.0)(typescript@6.0.3)
+        version: 4.4.2(@types/node@24.19.2)(crossws@0.4.12(srvx@1.0.5))(eslint@10.12.0(jiti@2.7.0)(supports-color@7.2.0))(graphql@16.11.0)(supports-color@7.2.0)(typescript@6.0.3)
       '@next/eslint-plugin-next':
         specifier: 'catalog:'
         version: 16.4.0(eslint@10.12.0(jiti@2.7.0)(supports-color@7.2.0))
@@ -1865,8 +1865,8 @@ packages:
   '@fastify/busboy@3.2.0':
     resolution: {integrity: sha512-m9FVDXU3GT2ITSe0UaMA5rU3QkfC/UXtCU8y0gSN/GugTqtVldOBWIB5V6V3sbmenVZUIpU6f+mPEO2+m5iTaA==}
 
-  '@graphql-eslint/eslint-plugin@4.4.1':
-    resolution: {integrity: sha512-QBDIMQqAXAioHKGti0nJjsklZi4wLMJAUFNv2z8Z41HT3l4HSMaxmw6pdsICkajPzxVGcvRAxp8opplINYacbg==}
+  '@graphql-eslint/eslint-plugin@4.4.2':
+    resolution: {integrity: sha512-Ai2Hdvj+Q8DARCqqc59FieHB86roEcNAO9Jxtl2hJSuZCx4eo8P1INBYicY6TyBBOZRpsItG97fjyxDkpIOr4Q==}
     engines: {node: '>=18'}
     peerDependencies:
       '@apollo/subgraph': ^2
@@ -8544,7 +8544,7 @@ snapshots:
 
   '@fastify/busboy@3.2.0': {}
 
-  '@graphql-eslint/eslint-plugin@4.4.1(@types/node@24.19.2)(crossws@0.4.12(srvx@1.0.5))(eslint@10.12.0(jiti@2.7.0)(supports-color@7.2.0))(graphql@16.11.0)(supports-color@7.2.0)(typescript@6.0.3)':
+  '@graphql-eslint/eslint-plugin@4.4.2(@types/node@24.19.2)(crossws@0.4.12(srvx@1.0.5))(eslint@10.12.0(jiti@2.7.0)(supports-color@7.2.0))(graphql@16.11.0)(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
       '@graphql-tools/code-file-loader': 8.1.22(graphql@16.11.0)(supports-color@7.2.0)
       '@graphql-tools/graphql-tag-pluck': 8.3.21(graphql@16.11.0)(supports-color@7.2.0)
