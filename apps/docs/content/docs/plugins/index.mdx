@@ -1,0 +1,12 @@
+---
+title: Custom plugins
+description: Where custom lint rules live and how shared configs register them.
+---
+
+| Implementation                        | Rule prefix    | Registration                                                   |
+| ------------------------------------- | -------------- | -------------------------------------------------------------- |
+| [ESLint plugin](/docs/plugins/eslint) | `@2digits/`    | Standalone flat config or the shared ESLint TypeScript config. |
+| [Oxlint plugin](/docs/plugins/oxlint) | `2digits/`     | JavaScript plugin registration or the shared Oxlint config.    |
+| [React rules](/docs/plugins/react)    | `react-extra/` | Embedded in the shared ESLint React config.                    |
+
+ESLint and Oxlint plugins are different packages with different APIs and rule sets. Their prefixes are intentionally different. Third-party rules enabled by our configs belong to their upstream plugins; the generated references cover only our registered custom rules.

@@ -1,0 +1,53 @@
+---
+title: Oxlint
+description: Use the combined 2digits Oxlint preset and merge project-specific rules and overrides.
+---
+
+`@2digits/oxlint-config` exports the ready-made `twoDigits` object and the `withTwoDigits` helper. The default export is the helper, not the object.
+
+## Setup
+
+For standalone Oxlint:
+
+```sh
+vp add -D oxlint oxlint-tsgolint @2digits/oxlint-config
+```
+
+In a Vite+ project, install only `@2digits/oxlint-config` and use the bundled linter. Create `oxlint.config.ts`:
+
+```ts
+import { twoDigits } from '@2digits/oxlint-config';
+
+export default twoDigits;
+```
+
+Run `vp exec oxlint .` for standalone Oxlint, or `vp lint` in a Vite+ project.
+
+## Defaults
+
+The combined preset merges the base and TypeScript configs. It includes JavaScript, Unicorn, imports, Node.js, Oxc, JSDoc, Zod, custom 2digits rules, TypeScript, React, and Vitest rules. Unlike the ESLint factory, it does not detect installed framework packages to select integrations.
+
+Browser and Node globals are enabled. Rule categories are switched off so the preset's explicit rule selections control what runs. Warnings are denied and unused disable directives are reported as errors. Shared ignores exclude dependencies, build output, lockfiles, snapshots, and fixtures, among other paths.
+
+TypeScript and React configs enable type-aware linting. Standalone consumers need the `oxlint-tsgolint` peer dependency. TypeScript rules prefer generic arrays and inline type imports. Overrides relax selected rules for declaration, test, and CommonJS files.
+
+## Customize
+
+```ts
+import { withTwoDigits } from '@2digits/oxlint-config';
+
+export default withTwoDigits({
+  options: { reportUnusedDisableDirectives: 'allow' },
+  ignorePatterns: ['generated/**'],
+  overrides: [
+    {
+      files: ['scripts/**/*.ts'],
+      rules: { 'typescript/no-explicit-any': 'off' },
+    },
+  ],
+});
+```
+
+Consumer values take precedence over defaults; later arguments take precedence over earlier arguments. Arrays are generally merged, not replaced. The helper handles `overrides` separately: consumer entries are appended in argument order so the last matching override wins.
+
+For a smaller configuration, the public subpaths `@2digits/oxlint-config/base` and `@2digits/oxlint-config/typescript` export `baseConfig` and `typescriptConfig`, respectively. There is no current `/effect` export.

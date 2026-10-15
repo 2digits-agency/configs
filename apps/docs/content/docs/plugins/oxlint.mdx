@@ -1,0 +1,66 @@
+---
+title: Oxlint plugin
+description: Syntax-based Effect, Alchemy, and statement-spacing rules.
+---
+
+## Registration
+
+The [shared Oxlint config](/docs/configs/oxlint) registers this plugin and enables its recommended rules. To register it directly:
+
+```sh
+vp add -D @2digits/oxlint-plugin
+```
+
+```ts title="oxlint.config.ts"
+import { defineConfig } from 'oxlint';
+
+import { recommendedRules } from '@2digits/oxlint-plugin';
+
+export default defineConfig({
+  jsPlugins: [{ name: '2digits', specifier: import.meta.resolve('@2digits/oxlint-plugin') }],
+  rules: recommendedRules,
+});
+```
+
+In Vite+ projects, put the same configuration under `lint` in `vite.config.ts`. The plugin exports `rules`, `recommendedRules`, and the `RuleName` and `PaddingLineOption` types.
+
+## Rule families
+
+- **Effect:** callback safety, promises, tagged values, service usage, schema checks, and preferred Effect APIs.
+- **Imports:** Effect and Alchemy submodule namespace imports, canonical aliases, and restrictions on root barrels.
+- **Alchemy:** v2 migration checks, removed APIs, deprecated resources, and unsafe secret construction.
+- **Spacing:** configurable blank lines between statements.
+
+Browse the [complete rule reference](/docs/rules/oxlint). `prefer-effect-filesystem` and `prefer-effect-path` are opt-in because the configured Effect compiler diagnostic already covers those imports more broadly. Actual preset membership is shown on each reference page.
+
+Oxlint's JavaScript plugin API does not provide type information. These rules use syntax and import bindings, not general semantic inference. Their background links and the [package README](https://github.com/2digits-agency/configs/tree/main/packages/oxlint-plugin#readme) describe narrower limitations.
+
+## Statement spacing
+
+The plugin's recommended set includes `padding-line-between-statements`, but no options means no diagnostics. The shared Oxlint config supplies a policy that separates statements while keeping consecutive imports grouped.
+
+To supply your own policy:
+
+```ts
+rules: {
+  '2digits/padding-line-between-statements': [
+    'error',
+    { blankLine: 'always', prev: '*', next: 'return' },
+    { blankLine: 'any', prev: ['const', 'let'], next: ['const', 'let'] },
+  ],
+}
+```
+
+Later matching entries win. The rule can insert or remove blank lines with `--fix` and preserves trailing comments. See its [reference](/docs/rules/oxlint/padding-line-between-statements) for the accepted option schema.
+
+## Override and fix
+
+```ts
+import lint from '@2digits/oxlint-config';
+
+export default lint({
+  rules: { '2digits/prefer-effect-duration': 'off' },
+});
+```
+
+Run `vp lint --fix` in Vite+ projects. Not every rule has a fix: reference pages distinguish automatic fixes from editor suggestions. Copied-rule attribution remains in the package's [NOTICE](https://github.com/2digits-agency/configs/blob/main/packages/oxlint-plugin/NOTICE).

@@ -1,0 +1,19 @@
+---
+title: Configs
+description: Shared linting, formatting, TypeScript, and dependency-update defaults for 2digits projects.
+---
+
+Choose the configuration for the tool your project uses. These presets provide opinionated defaults that you can adapt locally; installing one does not configure the other tools.
+
+| Configuration                          | Package or preset          | Purpose                                                          |
+| -------------------------------------- | -------------------------- | ---------------------------------------------------------------- |
+| [ESLint](/docs/configs/eslint)         | `@2digits/eslint-config`   | Async flat config with framework detection and type-aware rules. |
+| [Oxlint](/docs/configs/oxlint)         | `@2digits/oxlint-config`   | Composable JavaScript and TypeScript lint rules.                 |
+| [Oxfmt](/docs/configs/oxfmt)           | `@2digits/oxfmt-config`    | Formatting, import sorting, and Tailwind class sorting.          |
+| [Prettier](/docs/configs/prettier)     | `@2digits/prettier-config` | Formatting with bundled plugin configuration.                    |
+| [TypeScript](/docs/configs/typescript) | `@2digits/tsconfig`        | Strict, no-emit compiler defaults and an optional Effect preset. |
+| [Renovate](/docs/configs/renovate)     | GitHub-hosted preset       | Dependency updates, grouping, scheduling, and automerge.         |
+
+The setup examples use Vite+ (`vp`) to install dependencies and invoke tools. For an existing Vite+ project, prefer its bundled lint and formatting tools rather than installing standalone Oxlint or Oxfmt alongside them.
+
+Oxfmt and Prettier are alternative formatters, not identical configurations. ESLint and Oxlint also have different rule sets and plugin support: switching tools is not a guarantee of equivalent checks.

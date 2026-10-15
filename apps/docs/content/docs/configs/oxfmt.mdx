@@ -1,0 +1,58 @@
+---
+title: Oxfmt
+description: Apply 2digits formatting defaults with import, package.json, JSDoc, and Tailwind sorting.
+---
+
+`@2digits/oxfmt-config` exports a `twoDigits` config object and `withTwoDigits` as both a named and default helper.
+
+## Setup
+
+For standalone Oxfmt:
+
+```sh
+vp add -D oxfmt @2digits/oxfmt-config
+```
+
+In a Vite+ project, install only `@2digits/oxfmt-config` and use the bundled formatter. Create `oxfmt.config.ts`:
+
+```ts
+import { twoDigits } from '@2digits/oxfmt-config';
+
+export default twoDigits;
+```
+
+Run `vp exec oxfmt --write .` for standalone Oxfmt, or `vp fmt` in a Vite+ project.
+
+## Defaults
+
+- 120-column print width, two spaces, single quotes, semicolons, and trailing commas everywhere supported.
+- LF line endings, a final newline, and closing brackets on the same line.
+- Import groups for builtins, React, React Native, Next.js, Expo, third-party modules, 2digits and `@mod` packages, aliases, JSON, and relative imports.
+- Blank lines between import groups. Comments partition sorting; side-effect imports are not sorted.
+- `package.json` sorting, including scripts, plus JSDoc formatting.
+- Tailwind class sorting in `tv`, `cn`, `cnBase`, `classnames`, `clsx`, and `cx` calls.
+
+Shared ignore patterns exclude dependencies, build output, lockfiles, snapshots, fixtures, and other generated paths. Prose and object wrapping are preserved. Operators use the experimental `end` position, which differs from the Prettier preset's `start` position.
+
+## Customize
+
+```ts
+import { withTwoDigits } from '@2digits/oxfmt-config';
+
+export default withTwoDigits({
+  printWidth: 100,
+  ignorePatterns: ['generated/**'],
+});
+```
+
+The helper fills missing values from the defaults using `defu`. Earlier arguments take precedence over later arguments; this is the opposite of the Oxlint helper. Arrays are merged, so adding ignore patterns retains the shared exclusions. An empty array does not clear a default array.
+
+To replace an array rather than merge it, spread the config object directly:
+
+```ts
+import { twoDigits } from '@2digits/oxfmt-config';
+
+export default { ...twoDigits, ignorePatterns: ['node_modules/**', 'generated/**'] };
+```
+
+That replacement removes all other shared ignores. This preset configures formatting, not lint rules, and is not a promise of byte-for-byte Prettier output.

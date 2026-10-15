@@ -1,0 +1,36 @@
+{
+  "name": "@2digits/docs",
+  "version": "0.1.9",
+  "private": true,
+  "description": "Documentation for 2digits configs and custom lint rules.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/generate-rules.mts && next build",
+    "dev": "node scripts/generate-rules.mts && next dev",
+    "docs:dev": "node scripts/generate-rules.mts && next dev",
+    "start": "next start",
+    "types": "next typegen && tsc --noEmit"
+  },
+  "dependencies": {
+    "@2digits/eslint-plugin": "workspace:*",
+    "@2digits/oxlint-plugin": "workspace:*",
+    "fumadocs-core": "catalog:",
+    "fumadocs-mdx": "catalog:",
+    "fumadocs-ui": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@2digits/tsconfig": "workspace:*",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/mdx": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  }
+}

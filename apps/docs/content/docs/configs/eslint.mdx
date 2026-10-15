@@ -1,0 +1,59 @@
+---
+title: ESLint
+description: Configure the async 2digits ESLint flat-config factory and customize its detected integrations.
+---
+
+`@2digits/eslint-config` exports the `twoDigits` factory as both a named and default export. It returns a promise of flat-config entries.
+
+## Setup
+
+```sh
+vp add -D eslint @2digits/eslint-config
+```
+
+Create `eslint.config.mjs`:
+
+```js
+import twoDigits from '@2digits/eslint-config';
+
+export default await twoDigits();
+```
+
+Run `vp exec eslint .` to lint, or add `--fix` to apply available fixes. This package currently declares Node.js `24.21.0` in its engines field.
+
+## Defaults
+
+The base includes JavaScript, Node.js, comments, JSDoc, Unicorn, Sonar, regular expressions, JSONC, TOML, YAML, Markdown, and GitHub Actions checks. Dependency linting is enabled by default. Default exclusions are combined with `.gitignore`; a missing gitignore is tolerated.
+
+TypeScript, React, Next.js, Storybook, Vitest, Tailwind, Turbo, TanStack Query and Router, Drizzle, Zod, and GraphQL integrations are selected using installed-package detection. pnpm rules use workspace discovery when not explicitly configured. CSS linting is opt-in.
+
+TypeScript uses strict type-checked rules and the parser's project service. Keep linted files covered by an appropriate TypeScript project. Defaults include generic arrays (`Array<T>`), inline type imports, and underscore-prefixed unused-variable exemptions.
+
+## Customize
+
+```js
+import twoDigits from '@2digits/eslint-config';
+
+export default await twoDigits(
+  {
+    css: true,
+    next: false,
+    ts: {
+      enable: true,
+      parserOptions: { tsconfigRootDir: import.meta.dirname },
+      overrides: { 'ts/no-explicit-any': 'off' },
+    },
+    ignores: { ignores: ['generated/**'] },
+  },
+  {
+    files: ['scripts/**/*.js'],
+    rules: { 'no-console': 'off' },
+  },
+);
+```
+
+For optional integrations, `true` forces activation and `false` disables it. An options object without `enable` still uses the integration's detection default; use `enable: true` to force it. Supported rule overrides live under each integration's `overrides` property (or `js.overrides` for JavaScript).
+
+Additional flat-config entries follow the selected integrations. If Prettier is installed, its compatibility config is appended after your entries; Markdown-specific disables also come last. These final entries can therefore disable rules you set earlier. The compatibility config does not run Prettier.
+
+Tailwind linting accepts `tailwind.cssConfigPath` for a Tailwind v4 stylesheet. Without it, the config searches for `tailwind.config.ts` or `.js` up to the workspace root; if neither exists, the Tailwind config is not enabled.

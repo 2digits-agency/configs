@@ -1,0 +1,37 @@
+---
+title: Getting started
+description: Choose the shared configs that match your project's tooling.
+---
+
+## Vite+ projects
+
+Vite+ bundles Oxlint and Oxfmt. Install the shared configs:
+
+```sh
+vp add -D @2digits/oxlint-config @2digits/oxfmt-config @2digits/tsconfig
+```
+
+```ts title="vite.config.ts"
+import { defineConfig } from 'vite-plus';
+
+import fmt from '@2digits/oxfmt-config';
+import lint from '@2digits/oxlint-config';
+
+export default defineConfig({ lint: lint(), fmt: fmt() });
+```
+
+Extend `@2digits/tsconfig/tsconfig.json` in your own `tsconfig.json`, and include your source files. Run `vp check` to check formatting, linting, and types, and `vp fmt` to format code.
+
+## ESLint and Prettier projects
+
+Use the [ESLint setup](/docs/configs/eslint) and [Prettier setup](/docs/configs/prettier). These are separate tools with separate configs; Vite+'s `vp lint` and `vp fmt` do not invoke them.
+
+## Effect projects
+
+The [Effect TypeScript preset](/docs/configs/typescript#effect-preset) configures Effect language tooling. The [Oxlint plugin](/docs/plugins/oxlint) complements it with syntax-based Effect and Alchemy checks. It does not replace semantic compiler diagnostics.
+
+## More packages
+
+- [`@2digits/cli`](https://github.com/2digits-agency/configs/tree/main/packages/cli) bootstraps development configs. Check its current CLI help for available flags.
+- [Renovate](/docs/configs/renovate) supplies dependency-update policy through a GitHub preset rather than an npm install.
+- [`@2digits/opencode-plugin`](https://github.com/2digits-agency/configs/tree/main/packages/opencode-plugin) and [`@2digits/tlo-mcp`](https://github.com/2digits-agency/configs/tree/main/packages/tlo-mcp) are additional development tools. Their source and package README files remain the reference until dedicated guides are added.

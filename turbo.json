@@ -47,6 +47,7 @@
       "inputs": [
         "eslint.config.ts",
         "**/*.ts",
+        "**/*.mts",
         "**/*.tsx",
         "**/*.js",
         "**/*.mjs",
@@ -65,6 +66,8 @@
         "!.opencode/**",
         "!**/__snapshots__/**",
         "!**/dist/**",
+        "!apps/docs/.next/**",
+        "!apps/docs/content/docs/rules/**",
         "!**/.turbo/**"
       ]
     },
@@ -76,6 +79,7 @@
       "inputs": [
         "oxlint.config.ts",
         "**/*.ts",
+        "**/*.mts",
         "**/*.tsx",
         "**/*.js",
         "**/*.mjs",
@@ -91,6 +95,8 @@
         "!.opencode/**",
         "!**/__snapshots__/**",
         "!**/dist/**",
+        "!apps/docs/.next/**",
+        "!apps/docs/content/docs/rules/**",
         "!**/.turbo/**"
       ],
       "outputLogs": "new-only"
@@ -103,6 +109,7 @@
       "inputs": [
         "vite.config.ts",
         "**/*.ts",
+        "**/*.mts",
         "**/*.tsx",
         "**/*.js",
         "**/*.mjs",
@@ -111,6 +118,7 @@
         "**/*.yaml",
         "**/*.yml",
         "**/*.md",
+        "**/*.mdx",
         "**/*.css",
         "!**/CHANGELOG.md",
         "!**/fixtures/**",
@@ -121,6 +129,8 @@
         "!.opencode/**",
         "!**/__snapshots__/**",
         "!**/dist/**",
+        "!apps/docs/.next/**",
+        "!apps/docs/content/docs/rules/**",
         "!**/.turbo/**"
       ]
     },
@@ -139,10 +149,14 @@
         ".knip.json",
         "**/package.json",
         "**/*.ts",
+        "**/*.mts",
+        "**/*.mjs",
         "**/*.tsx",
         "!**/fixtures/**",
         "!**/__snapshots__/**",
         "!**/dist/**",
+        "!apps/docs/.next/**",
+        "!apps/docs/content/docs/rules/**",
         "!**/.turbo/**"
       ]
     },

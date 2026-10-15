@@ -1,0 +1,68 @@
+---
+title: TypeScript
+description: Extend strict, bundler-oriented compiler defaults with project-specific paths and optional Effect diagnostics.
+---
+
+## Setup
+
+```sh
+vp add -D typescript @2digits/tsconfig
+```
+
+Create `tsconfig.json`:
+
+```json
+{
+  "extends": "@2digits/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "incremental": false
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+Run `vp exec tsc --noEmit`. The package root also exports the same base config; the explicit `/tsconfig.json` path makes the inherited file clear. The current TypeScript peer range is `^6.0.3 || ^7.0.2`.
+
+## Defaults and trade-offs
+
+- ES2022 target with ESNext, DOM, and DOM.Iterable libraries, plus `react-jsx` JSX handling.
+- `module: "Preserve"` and `moduleResolution: "Bundler"`, with JSON imports and arbitrary extensions allowed.
+- Strict checking, unchecked indexed-access checks, unused-local and unused-parameter checks, implicit-return checks, and explicit override checks.
+- JavaScript files are allowed and checked (`allowJs` and `checkJs`).
+- No output or declarations (`noEmit: true`, `declaration: false`, `declarationMap: false`), with incremental checking enabled.
+- Isolated modules, verbatim module syntax, and erasable syntax only. TypeScript syntax that needs transformation, such as enums, is restricted.
+- Library declaration checking is skipped with `skipLibCheck: true`.
+
+This is a bundler-oriented type-checking baseline, not a Node.js emission preset. It supplies no project-specific file selection, path aliases, or framework plugins. Set those in your own config; Node-only projects may also want to replace the DOM libraries.
+
+To emit declarations for a library, override the relevant options and use a build setup compatible with the inherited module settings:
+
+```json
+{
+  "extends": "@2digits/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
+```
+
+## Effect preset
+
+The only additional compiler preset exported by this package is `/effect.json`:
+
+```json
+{
+  "extends": "@2digits/tsconfig/effect.json",
+  "include": ["src"]
+}
+```
+
+It extends the base and configures the `@effect/language-service` plugin with completions, diagnostics, inlays, refactors, namespace imports for `effect` and `@effect/*`, and many error-level diagnostics. It disables `strictEffectProvide` in `**/*.spec.ts` files. Effect warnings are not ignored in the configured compiler exit-code policy; suggestions are ignored.
+
+The optional `@effect/tsgo` peer has range `^0.45.0`. This JSON config does not install or activate an Effect-aware compiler or editor integration by itself. Use the appropriate Effect tooling; ordinary `tsc` does not execute language-service plugins as compiler checks.

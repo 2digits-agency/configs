@@ -1,0 +1,55 @@
+---
+title: ESLint plugin
+description: Register the four custom ESLint rules and understand their scope.
+---
+
+## Registration
+
+```sh
+vp add -D eslint @typescript-eslint/parser @2digits/eslint-plugin
+```
+
+```js title="eslint.config.mjs"
+import parser from '@typescript-eslint/parser';
+import plugin from '@2digits/eslint-plugin';
+
+export default [
+  {
+    ...plugin.configs.recommended,
+    files: ['**/*.ts', '**/*.tsx'],
+    languageOptions: {
+      parser,
+      parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
+    },
+  },
+];
+```
+
+The recommended config registers the plugin under `@2digits` and enables all four rules at error level. The shared ESLint config includes it when its TypeScript integration is enabled.
+
+## Rules
+
+- [`if-curly`](/docs/rules/eslint/if-curly) requires braces around `if` and `else` bodies while allowing `else if` chains. It can insert the braces automatically.
+- [`prefer-inline-array-callbacks`](/docs/rules/eslint/prefer-inline-array-callbacks) prevents passing function references directly to array methods. Array methods pass extra index and array arguments. This rule needs parser type information and does nothing without it.
+- [`prefer-inline-handlers`](/docs/rules/eslint/prefer-inline-handlers) encourages inlining handlers whose only read is as a JSX prop.
+- [`type-param-names`](/docs/rules/eslint/type-param-names) enforces descriptive `T`- or `$`-prefixed type parameters. A lone `T` is exempt. Rename suggestions are editor suggestions, not automatic fixes.
+
+## Array callbacks
+
+```ts
+// Avoid: parseInt receives the array index as its radix argument.
+const values = ['10', '11', '12'].map(parseInt);
+
+// Prefer: pass only the value and make the radix explicit.
+const values = ['10', '11', '12'].map((value) => parseInt(value, 10));
+```
+
+## Override a rule
+
+Place consumer overrides after the recommended config:
+
+```js
+export default [plugin.configs.recommended, { rules: { '@2digits/prefer-inline-handlers': 'off' } }];
+```
+
+In the shared factory, use `ts.overrides` or append a flat-config entry. Run ESLint with `--fix` to apply available automatic fixes; review the changes before committing.

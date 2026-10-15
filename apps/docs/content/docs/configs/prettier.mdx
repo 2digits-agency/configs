@@ -1,0 +1,44 @@
+---
+title: Prettier
+description: Use the 2digits Prettier preset with configured import, Tailwind, XML, Oxc, and JSDoc plugins.
+---
+
+## Setup
+
+```sh
+vp add -D prettier @2digits/prettier-config
+```
+
+Set the `prettier` field in `package.json`:
+
+```json
+{
+  "prettier": "@2digits/prettier-config"
+}
+```
+
+Run `vp exec prettier --write .` to format or `vp exec prettier --check .` to check formatting. Vite+'s `vp fmt` invokes Oxfmt, not this Prettier preset.
+
+## Defaults
+
+The preset sets a print width of 120, single quotes, trailing commas wherever supported, same-line closing brackets, and experimental operator positioning at the start of the line. Other core settings use Prettier's defaults.
+
+Configured plugins handle XML, import sorting, JSDoc, Oxc parsing, and Tailwind class sorting. Import groups separate builtins, React and React Native, Next.js, Expo, third-party modules, 2digits and `@mod` packages, aliases, JSON, and relative imports. The import sorter uses the locally detected TypeScript version when available.
+
+Tailwind sorting recognizes `tv`, `cn`, `cnBase`, `classnames`, `clsx`, and `cx`. The `pnpm-lock.yaml` override sets `requirePragma: true`, so ordinary lockfiles without a formatting pragma are left alone. This preset does not provide the shared ignore list used by Oxfmt; maintain a `.prettierignore` for generated output.
+
+## Customize
+
+Use `prettier.config.mjs` instead of the package.json field when you need overrides:
+
+```js
+import config from '@2digits/prettier-config';
+
+export default {
+  ...config,
+  printWidth: 100,
+  overrides: [...config.overrides, { files: '*.md', options: { proseWrap: 'always' } }],
+};
+```
+
+The package exports the config as its default export for both ESM imports and CommonJS `require`. There is no merge helper: object spreading replaces array properties such as `plugins` and `overrides` unless you explicitly retain their existing entries.

@@ -1,0 +1,8 @@
+services:
+  docs:
+    command: vp run docs:dev -- --port "$PORT" --hostname 0.0.0.0
+    port: 3000
+    health: /docs
+    portal:
+      title: 2digits Docs
+      url: /docs

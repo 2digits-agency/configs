@@ -1,0 +1,23 @@
+---
+title: 2digits configs
+description: Shared defaults and custom rules for consistent projects.
+---
+
+This repository contains our linting, formatting, TypeScript, and dependency-update configs, along with custom plugins that enforce 2digits conventions.
+
+## Start with your tools
+
+| What you need                  | Where to go                                                              |
+| ------------------------------ | ------------------------------------------------------------------------ |
+| Set up a project               | [Getting started](/docs/getting-started)                                 |
+| Configure ESLint or Oxlint     | [Linting configs](/docs/configs)                                         |
+| Format code and imports        | [Oxfmt](/docs/configs/oxfmt) or [Prettier](/docs/configs/prettier)       |
+| Share compiler settings        | [TypeScript](/docs/configs/typescript)                                   |
+| Understand a custom diagnostic | [ESLint rules](/docs/rules/eslint) or [Oxlint rules](/docs/rules/oxlint) |
+| Add or explain a rule          | [Writing documentation](/docs/contributing)                              |
+
+## Configs and plugins
+
+A **config** selects rules and defaults for a tool. A **plugin** implements custom rules. The shared lint configs register our plugins for you; use the plugin guides when you want to register them independently.
+
+The [rule reference](/docs/rules/oxlint) is generated from the current source. It records rule IDs, diagnostic messages, options, automatic fixes, and actual recommended-preset membership. The [plugin guides](/docs/plugins) explain how to use them.
