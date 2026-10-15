@@ -1,0 +1,9 @@
+{
+  "extends": "@2digits/tsconfig/effect.json",
+  "compilerOptions": {
+    "jsxImportSource": "@opentui/react",
+    "types": ["bun"]
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["dist", "node_modules"]
+}

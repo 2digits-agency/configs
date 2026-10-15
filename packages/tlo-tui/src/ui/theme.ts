@@ -1,0 +1,18 @@
+export const theme = {
+  bg: '#16161e',
+  panel: '#1a1b26',
+  raised: '#24283b',
+  border: '#3b4261',
+  focus: '#7aa2f7',
+  text: '#c0caf5',
+  muted: '#737aa2',
+  dim: '#565f89',
+  accent: '#7aa2f7',
+  cyan: '#7dcfff',
+  green: '#9ece6a',
+  yellow: '#e0af68',
+  orange: '#ff9e64',
+  red: '#f7768e',
+  magenta: '#bb9af7',
+  black: '#0f0f14',
+} as const;
