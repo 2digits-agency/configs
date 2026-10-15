@@ -38,6 +38,7 @@ import { preferEffectAlchemyNamespaceImports } from './effect/prefer-effect-alch
 import { preferEffectArraySort } from './effect/prefer-effect-array-sort';
 import { preferEffectDateTime } from './effect/prefer-effect-datetime';
 import { preferEffectDuration } from './effect/prefer-effect-duration';
+import { preferEffectDurationConstants } from './effect/prefer-effect-duration-constants';
 import { preferEffectEncoding } from './effect/prefer-effect-encoding';
 import { preferEffectFileSystem } from './effect/prefer-effect-filesystem';
 import { preferEffectFilter } from './effect/prefer-effect-filter';
@@ -96,6 +97,7 @@ export const rules = {
   'prefer-effect-array-sort': preferEffectArraySort,
   'prefer-effect-datetime': preferEffectDateTime,
   'prefer-effect-duration': preferEffectDuration,
+  'prefer-effect-duration-constants': preferEffectDurationConstants,
   'prefer-effect-encoding': preferEffectEncoding,
   'prefer-effect-filesystem': preferEffectFileSystem,
   'prefer-effect-filter': preferEffectFilter,

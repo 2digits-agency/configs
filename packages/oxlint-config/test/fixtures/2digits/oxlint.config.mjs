@@ -8,5 +8,6 @@ export default {
   rules: {
     '2digits/no-empty-schema-struct': 'error',
     '2digits/no-function-config-default': 'error',
+    '2digits/prefer-effect-duration-constants': 'error',
   },
 };

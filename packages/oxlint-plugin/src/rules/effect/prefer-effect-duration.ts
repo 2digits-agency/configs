@@ -1,18 +1,8 @@
 import type { Rule } from '@oxlint/plugins';
 
-import { importedApi, namespaceImport } from '../../fixes';
-import { argumentAt, canonicalPath, defineEffectRule, ruleMeta } from '../../utils';
-
-const durationApis = new Set([
-  'Effect.delay',
-  'Effect.sleep',
-  'Effect.timeout',
-  'Effect.timeoutOption',
-  'Effect.timeoutOrElse',
-  'Schedule.fixed',
-  'Schedule.spaced',
-  'Schedule.windowed',
-]);
+import { namespaceImport } from '../../fixes';
+import { defineEffectRule, ruleMeta } from '../../utils';
+import { durationArgument, numericValue } from './duration';
 
 export const preferEffectDuration: Rule = defineEffectRule(
   {
@@ -28,32 +18,24 @@ export const preferEffectDuration: Rule = defineEffectRule(
   },
   (context, getState) => ({
     CallExpression(node) {
-      const path = canonicalPath(node.callee, getState());
+      const duration = durationArgument(node, context, getState());
 
-      if (path === undefined || !durationApis.has(path.join('.'))) {
+      if (duration === undefined || numericValue(duration) === undefined) {
         return;
       }
 
-      const duration = argumentAt(node, node.arguments.length - 1);
+      context.report({
+        node: duration,
+        messageId: 'effectDuration',
+        fix(fixer) {
+          const imported = namespaceImport(context, node, 'effect/Duration', 'Duration', fixer);
 
-      if (duration?.type === 'Literal' && typeof duration.value === 'number') {
-        context.report({
-          node: duration,
-          messageId: 'effectDuration',
-          fix(fixer) {
-            if (!importedApi(context, node.callee)) {
-              return;
-            }
-
-            const imported = namespaceImport(context, node, 'effect/Duration', 'Duration', fixer);
-
-            return [
-              ...imported.fixes,
-              fixer.replaceText(duration, `${imported.name}.millis(${context.sourceCode.getText(duration)})`),
-            ];
-          },
-        });
-      }
+          return [
+            ...imported.fixes,
+            fixer.replaceText(duration, `${imported.name}.millis(${context.sourceCode.getText(duration)})`),
+          ];
+        },
+      });
     },
   }),
 );

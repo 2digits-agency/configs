@@ -235,6 +235,13 @@ describe('oxlint config', () => {
     ]).toStrictEqual([undefined, undefined]);
   });
 
+  it('enables Effect duration guidance by default', () => {
+    expect([
+      twoDigitsPluginConfig.rules['2digits/prefer-effect-duration'],
+      twoDigitsPluginConfig.rules['2digits/prefer-effect-duration-constants'],
+    ]).toStrictEqual(['error', 'error']);
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(defaultPresetEffectEntries).toStrictEqual([]);
   });
@@ -265,6 +272,8 @@ describe('oxlint config', () => {
     expect(output).toContain('2digits(no-empty-schema-struct)');
 
     expect(output.match(/2digits\(no-function-config-default\)/g)).toHaveLength(2);
+
+    expect(output).toContain('2digits(prefer-effect-duration-constants)');
   });
 
   it('diagnoses endpoint header keys through the production config and built plugin', () => {

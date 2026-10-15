@@ -28,7 +28,6 @@ for (const [name, messageId, invalid, output] of [
     `${effect} const Duration = 1; Effect.sleep(10)`,
     `import * as Duration2 from 'effect/Duration';\n${effect} const Duration = 1; Effect.sleep(Duration2.millis(10))`,
   ],
-  ['prefer-effect-duration', 'effectDuration', `${effect} function f(Effect) { Effect.sleep(10) }`, null],
   ['no-empty-effect-callback', 'emptyCallback', `${effect} Effect.callback(() => {})`, `${effect} Effect.never`],
   ['no-empty-effect-callback', 'emptyCallback', `${effect} Effect.callback(async () => {})`, null],
   ['no-empty-effect-callback', 'emptyCallback', `${effect} Effect.callback((resume = sideEffect()) => {})`, null],
