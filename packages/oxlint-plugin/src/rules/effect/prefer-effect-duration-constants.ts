@@ -26,6 +26,8 @@ const unitWords = new Map<string, DurationUnit>([
   ['weeks', 'weeks'],
 ]);
 
+const singularUnits = new Set(['day', 'hour', 'minute', 'second', 'week']);
+
 // Singular units name a quantity (`ONE_DAY`), not the unit of the number, so they only mark the name as a duration.
 const durationWords = new Set([
   'backoff',
@@ -76,7 +78,9 @@ function nameUnit(name: string): NameUnit {
   const inIndex = parts.indexOf('in');
 
   // `SECONDS_IN_MINUTE` converts between units; `ttlInMinutes` and `expiresIn` are still durations.
-  const conversion = inIndex > 0 && inIndex < parts.length - 1 && unitWords.has(parts[inIndex - 1] ?? '');
+  const before = parts[inIndex - 1] ?? '';
+
+  const conversion = inIndex > 0 && inIndex < parts.length - 1 && (unitWords.has(before) || singularUnits.has(before));
 
   if (conversion || parts.some((part) => nonDurationWords.has(part))) {
     return 'excluded';
@@ -103,6 +107,16 @@ function nameUnit(name: string): NameUnit {
   return undefined;
 }
 
+function resolvesToImport(node: ESTree.Node, name: string, context: Context): boolean {
+  let scope: Scope | null = context.sourceCode.getScope(node);
+
+  while (scope !== null && !scope.set.has(name)) {
+    scope = scope.upper;
+  }
+
+  return scope?.set.get(name)?.defs.some((definition) => definition.type === 'ImportBinding') === true;
+}
+
 function typeNamePath(node: ESTree.Node): Array<string> | undefined {
   if (node.type === 'Identifier') {
     return [node.name];
@@ -123,9 +137,10 @@ function typeNamePath(node: ESTree.Node): Array<string> | undefined {
  * `effect`.
  *
  * @param annotation Type annotation to inspect.
+ * @param context Rule context, used to reject shadowed type names.
  * @param state Effect import bindings for the file.
  */
-function durationAnnotation(annotation: ESTree.Node, state: FileState): boolean {
+function durationAnnotation(annotation: ESTree.Node, context: Context, state: FileState): boolean {
   return walkNodes(annotation, (node) => {
     if (node.type !== 'TSTypeReference') {
       return false;
@@ -133,7 +148,9 @@ function durationAnnotation(annotation: ESTree.Node, state: FileState): boolean 
 
     const [root, ...rest] = typeNamePath(node.typeName) ?? [];
 
-    const imported = root === undefined ? undefined : state.bindings.get(root);
+    // Local types that shadow the import, such as an inner `type Input = number`, are not Effect's.
+    const imported =
+      root === undefined || !resolvesToImport(node, root, context) ? undefined : state.bindings.get(root);
 
     return imported !== undefined && [...imported, ...rest][0] === 'Duration';
   });
@@ -185,7 +202,7 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
 
     function durationUnit(node: NumericDeclarator, passedAsDuration: boolean): DurationUnit | 'none' | undefined {
       // `const TIMEOUT: Duration.Input = 5000` already opts into Duration.
-      if (node.id.typeAnnotation && durationAnnotation(node.id.typeAnnotation, getState())) {
+      if (node.id.typeAnnotation && durationAnnotation(node.id.typeAnnotation, context, getState())) {
         return 'none';
       }
 

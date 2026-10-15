@@ -11,6 +11,8 @@ const effect = `import * as Effect from 'effect/Effect';`;
 
 const generic = 'a Duration constructor such as Duration.seconds';
 
+const fiveSeconds = 'Duration.seconds(5)';
+
 const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
 
 testRule(ruleName, preferEffectDurationConstants, {
@@ -62,6 +64,8 @@ tester.run(ruleName, preferEffectDurationConstants, {
     `${effect} const SECONDS_IN_MINUTE = 60;`,
     `${effect} const DAYS_IN_WEEK = 7;`,
     `${effect} const MS_IN_DAY = 24 * 60 * 60 * 1000;`,
+    `${effect} const DAY_IN_MILLISECONDS = 86_400_000;`,
+    `${effect} const MINUTE_IN_SECONDS = 60;`,
     `${effect} const CREATED_AT_MS = 1_700_000_000_000;`,
     `${effect} const EPOCH_SECONDS = 1_700_000_000;`,
     `${effect} const expiresAtMs = 1_700_000_000_000;`,
@@ -83,7 +87,12 @@ tester.run(ruleName, preferEffectDurationConstants, {
       [`${effect} const wait = 10 ** 3; Effect.sleep(wait);`, 'wait', 'Duration.seconds(1)'],
       [`${effect} const wait = 5000 % 3000; Effect.sleep(wait);`, 'wait', 'Duration.seconds(2)'],
       // A local type named Duration is not Effect's.
-      [`${effect} type Duration = number; const TIMEOUT_MS: Duration = 5000;`, 'TIMEOUT_MS', 'Duration.seconds(5)'],
+      [`${effect} type Duration = number; const TIMEOUT_MS: Duration = 5000;`, 'TIMEOUT_MS', fiveSeconds],
+      [
+        `${effect} import type { Input } from 'effect/Duration'; function f() { type Input = number; const TIMEOUT_MS: Input = 5000; }`,
+        'TIMEOUT_MS',
+        fiveSeconds,
+      ],
       [`${effect} const SESSION_WINDOW_MINUTES = 15;`, 'SESSION_WINDOW_MINUTES', 'Duration.minutes(15)'],
       [`${effect} const RETENTION_DAYS = 14;`, 'RETENTION_DAYS', 'Duration.weeks(2)'],
       [`${effect} const ONE_SECOND = 1000;`, 'ONE_SECOND', generic],
@@ -94,7 +103,7 @@ tester.run(ruleName, preferEffectDurationConstants, {
       [
         `${effect} const run = () => Effect.sleep(TIMEOUT_SECONDS); const TIMEOUT_SECONDS = 5;`,
         'TIMEOUT_SECONDS',
-        'Duration.seconds(5)',
+        fiveSeconds,
       ],
       [
         `${effect} const run = () => Effect.sleep(REQUEST_TIMEOUT); const REQUEST_TIMEOUT = 30;`,
@@ -123,7 +132,7 @@ tester.run(ruleName, preferEffectDurationConstants, {
       [
         `${effect} const limit = 5000; Effect.timeoutOrElse(program, { duration: limit, orElse });`,
         'limit',
-        'Duration.seconds(5)',
+        fiveSeconds,
       ],
       [
         `import { TestClock } from 'effect/testing'; const step = 60_000; TestClock.adjust(step);`,
@@ -143,7 +152,7 @@ tester.run(`${ruleName} reports each declaration once`, preferEffectDurationCons
   invalid: [
     {
       code: `${effect} const TIMEOUT_MS = 5000; Effect.sleep(TIMEOUT_MS); Effect.timeout(program, TIMEOUT_MS);`,
-      errors: [{ messageId: 'durationConstant', data: { name: 'TIMEOUT_MS', replacement: 'Duration.seconds(5)' } }],
+      errors: [{ messageId: 'durationConstant', data: { name: 'TIMEOUT_MS', replacement: fiveSeconds } }],
       output: null,
     },
   ],
