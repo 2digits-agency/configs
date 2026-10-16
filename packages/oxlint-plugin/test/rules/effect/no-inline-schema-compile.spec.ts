@@ -1,7 +1,9 @@
 import { noInlineSchemaCompile } from '../../../src/rules/effect/no-inline-schema-compile';
 import { testRule } from '../../rule-tester';
 
-testRule('no-inline-schema-compile', noInlineSchemaCompile, {
+const ruleName = 'no-inline-schema-compile';
+
+testRule(ruleName, noInlineSchemaCompile, {
   valid: `
     import * as Schema from 'effect/Schema'
     const User = Schema.Struct({ name: Schema.String })
@@ -16,7 +18,7 @@ testRule('no-inline-schema-compile', noInlineSchemaCompile, {
   messageId: 'inlineCompile',
 });
 
-testRule('no-inline-schema-compile', noInlineSchemaCompile, {
+testRule(ruleName, noInlineSchemaCompile, {
   valid: `
     import { Schema } from 'effect'
     export function parseWith<A>(schema: Schema.Codec<A>, input: unknown) {
@@ -32,7 +34,7 @@ testRule('no-inline-schema-compile', noInlineSchemaCompile, {
   messageId: 'inlineSchema',
 });
 
-testRule('no-inline-schema-compile', noInlineSchemaCompile, {
+testRule(ruleName, noInlineSchemaCompile, {
   valid: `
     import { Schema } from 'effect'
     class Parser {
@@ -54,7 +56,7 @@ testRule('no-inline-schema-compile', noInlineSchemaCompile, {
   messageId: 'inlineCompile',
 });
 
-testRule('no-inline-schema-compile', noInlineSchemaCompile, {
+testRule(ruleName, noInlineSchemaCompile, {
   valid: `
     import { Schema } from 'effect'
     export const makeParser = <A>(schema: Schema.Codec<A>) => {
@@ -72,4 +74,71 @@ testRule('no-inline-schema-compile', noInlineSchemaCompile, {
     }
   `,
   messageId: 'inlineCompile',
+});
+
+testRule(ruleName, noInlineSchemaCompile, {
+  valid: `
+    import { Schema } from 'effect'
+    const User = Schema.Struct({ name: Schema.String })
+    export function parse(Schema: { decodeUnknownSync: (s: unknown) => (i: unknown) => unknown }, input: unknown) {
+      return Schema.decodeUnknownSync(User)(input)
+    }
+  `,
+  invalid: `
+    import { Schema } from 'effect'
+    const User = Schema.Struct({ name: Schema.String })
+    export function parse(input: unknown) {
+      return Schema.decodeUnknownSync(User, { errors: 'all' })(input)
+    }
+  `,
+  messageId: 'inlineCompile',
+});
+
+testRule(ruleName, noInlineSchemaCompile, {
+  valid: `
+    import { Schema, type SchemaAST } from 'effect'
+    const User = Schema.Struct({ name: Schema.String })
+    export function parse(input: unknown, options: SchemaAST.ParseOptions) {
+      return Schema.decodeUnknownSync(User, options)(input)
+    }
+  `,
+  invalid: `
+    import { Schema } from 'effect'
+    let current = Schema.String
+    export const parse = (input: unknown) => Schema.decodeUnknownSync(current)(input)
+  `,
+  messageId: 'inlineCompile',
+});
+
+testRule(ruleName, noInlineSchemaCompile, {
+  valid: `
+    import { Schema } from 'effect'
+    let current: Schema.Codec<unknown> = Schema.String
+    export function use(next: Schema.Codec<unknown>) {
+      current = next
+    }
+    export const parse = (input: unknown) => Schema.decodeUnknownSync(current)(input)
+  `,
+  invalid: `
+    import { Schema } from 'effect'
+    const schemas = { current: Schema.String }
+    export const parse = (input: unknown) => Schema.decodeUnknownSync(schemas.current)(input)
+  `,
+  messageId: 'inlineCompile',
+});
+
+testRule(ruleName, noInlineSchemaCompile, {
+  valid: `
+    import { Schema } from 'effect'
+    const schemas: { current: Schema.Codec<unknown> } = { current: Schema.String }
+    export function use(next: Schema.Codec<unknown>) {
+      schemas.current = next
+    }
+    export const parse = (input: unknown) => Schema.decodeUnknownSync(schemas.current)(input)
+  `,
+  invalid: `
+    import { Schema } from 'effect'
+    export const parse = (input: unknown) => Schema.is(Schema.Array(Schema.String))(input)
+  `,
+  messageId: 'inlineSchema',
 });
