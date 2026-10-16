@@ -17,7 +17,7 @@ Single-context: root `GLOSSARY.md` and `docs/adr/`. Before exploring, read `docs
 ## Commands
 
 - **Build**: `pnpm build` | **Test**: `pnpm test` | **Single test**: `vitest run path/to/test.ts`
-- **Full check**: `pnpm check` (test + lint + types + format + knip)
+- **Full check**: `vpr check` (test + lint + types + format + knip). Use this instead of the Vite+ checklist's `vp check`, which only runs format, lint, and types.
 - **Fix**: `pnpm lint:fix` and `pnpm format:fix`
 
 ## Code Style
