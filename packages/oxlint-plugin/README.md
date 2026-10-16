@@ -35,6 +35,9 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Schema compiler hoisting from t3code: `no-inline-schema-compile` reports `Schema.decode*`, `Schema.encode*`,
   `Schema.is`, and `Schema.asserts` compilers that are built and invoked inside a function body when their schema
   could be hoisted to module scope.
+- Schema chain style: `consistent-schema-pipe` applies Schema modifiers and data-last steps with `.pipe(...)`
+  (`Schema.String.pipe(Schema.optionalKey)`) and calls Schema wrappers such as `Schema.Array(...)` directly. See
+  [ADR 0001](../../docs/adr/0001-schema-modifiers-pipe-wrappers-call.md).
 
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
@@ -176,7 +179,7 @@ The exported `PaddingLineOption` type describes each configuration entry. No opt
 
 ### Other fixes
 
-Run `vp lint --fix` to apply fixes from `prefer-effect-duration`, `no-empty-effect-callback`,
+Run `vp lint --fix` to apply fixes from `consistent-schema-pipe`, `prefer-effect-duration`, `no-empty-effect-callback`,
 `no-effect-alchemy-barrel-imports`, `prefer-effect-alchemy-namespace-imports`,
 `alchemy-no-v1-worker-properties`, and `alchemy-no-deprecated-docker-constraints`.
 Fixes skip ambiguous bindings, conflicting properties, and unsupported import references.
