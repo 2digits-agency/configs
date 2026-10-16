@@ -1,3 +1,22 @@
+## @2digits/oxlint-plugin@0.2.0
+
+### Add `prefer-effect-duration-constants`
+
+- Reported `const` numbers that hold a duration, such as `TIMEOUT_MS = 30_000`, `ONE_DAY = 24 * 60 * 60 * 1000`, or any numeric constant passed to an Effect duration API, and suggested the matching `Duration` constructor
+- Enabled the rule by default in `recommendedRules` and the 2digits Oxlint config, in files that import Effect
+- Extended `prefer-effect-duration` to number arithmetic and more Effect v4 APIs: `Schedule.exponential`, `Schedule.during`, `Stream.debounce`, `Stream.timeout`, `TestClock.adjust`, `Effect.cachedWithTTL`, and the `duration` option of `Effect.timeoutOrElse` and `Stream.throttle`
+
+### Use Effect helpers in lint rules
+
+- Rewrote rule internals to use Effect collection helpers and `Match`, so the plugin's own code follows the Effect rules it ships
+- Replaced duration arithmetic and constant-name parsing with `effect/Number` and `effect/String` helpers
+
+### Update `@oxlint/plugins` to 1.88.0
+
+
+
+### Update `effect` to 4.0.5
+
 ## @2digits/oxlint-plugin@0.1.4
 
 ### Update effect to 4.0.4

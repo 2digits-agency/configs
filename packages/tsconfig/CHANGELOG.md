@@ -1,3 +1,42 @@
+## @2digits/tsconfig@1.0.0
+
+### Reject error payloads that shadow `name`
+
+- Enabled `errorPayloadShadowsName` as an error in `effect.json`, requiring flagged error payload fields to be renamed
+
+### Update `@effect/tsgo` to 0.53.1
+
+
+
+### Require Effect array helpers
+
+- Enabled `preferEffectArray` as an error in `effect.json`, requiring flagged native array operations to use Effect helpers
+
+### Require `Effect.yieldNow` instead of zero-duration sleeps
+
+- Enabled `effectSleepZeroToYieldNow` as an error in `effect.json`; flagged `Effect.sleep(0)` calls now need `Effect.yieldNow`
+
+### Require schema-based tagged errors
+
+- Enabled `preferSchemaTaggedError` as an error in `effect.json`, requiring flagged tagged error definitions to use `Schema.TaggedError`
+
+### Enforce Effect import conventions
+
+- Enabled `preferBarrelImport` and `preferNamespaceImport` as errors in `effect.json`
+- Configured barrel imports for `@effect/vitest` and namespace imports for Effect platform packages, `@yielded/oauth`, `@yielded/jose`, `@yielded/crypto`, and `alchemy`; existing imports may need migration
+
+### Require `Effect.tap` for side effects that preserve the original value
+
+- Enabled `flatMapToTap` as an error in `effect.json`, requiring flagged `Effect.flatMap` calls to use `Effect.tap`
+
+### Require brands on schema classes
+
+- Enabled `schemaClassMissingBrand` as an error in `effect.json`; flagged schema classes now need a unique brand
+
+### Require Effect record helpers
+
+- Enabled `preferEffectRecord` as an error in `effect.json`, requiring flagged native object operations to use Effect helpers
+
 ## @2digits/tsconfig@0.9.2
 
 ### Update @effect/tsgo to 0.51.0

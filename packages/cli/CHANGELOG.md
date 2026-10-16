@@ -1,3 +1,15 @@
+## @2digits/cli@2.0.27
+
+### Update `@effect/platform-node` to 4.0.5
+
+
+
+### Brand tagged errors
+
+- Added unique brands to CLI setup and package-manager errors, and to MCP gateway, Orbit client, and OAuth session errors, preventing structurally identical values from satisfying those error types
+
+### Update `effect` to 4.0.5
+
 ## @2digits/cli@2.0.26
 
 ### Update @effect/platform-node to 4.0.4

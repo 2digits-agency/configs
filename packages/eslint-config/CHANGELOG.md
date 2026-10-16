@@ -1,3 +1,41 @@
+## @2digits/eslint-config@5.9.1
+
+### Update `eslint-plugin-turbo` to 2.11.8
+
+
+
+### Update `@eslint-react/eslint-plugin` to 5.28.0
+
+
+
+### Update `eslint-plugin-jsdoc` to 65.3.6
+
+
+
+### Update `@next/eslint-plugin-next` to 16.4.2
+
+
+
+### Update `@eslint-react/kit` to 5.28.0
+
+
+
+### Update `eslint-plugin-zod` to 5.2.0
+
+- Added `default` to the generated ESLint option types for `zod/consistent-import`
+
+### Update `@tanstack/eslint-plugin-query` to 5.104.3
+
+
+
+### Update `@graphql-eslint/eslint-plugin` to 4.4.2
+
+
+
+### Update `@eslint/css` to 2.0.1
+
+- Regenerated `css/use-baseline` option types with updated CSS properties, functions, and values, including removal of `punctuation` and `replace` from `text-autospace`
+
 ## @2digits/eslint-config@5.9.0
 
 ### Update typescript-eslint to 8.71.2

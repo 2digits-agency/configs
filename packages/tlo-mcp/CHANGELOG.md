@@ -1,3 +1,23 @@
+## @2digits/tlo-mcp@2.0.3
+
+### Update `@effect/platform-node` to 4.0.5
+
+
+
+### Brand tagged errors
+
+- Added unique brands to CLI setup and package-manager errors, and to MCP gateway, Orbit client, and OAuth session errors, preventing structurally identical values from satisfying those error types
+
+### Use namespace imports for Effect and OAuth modules
+
+- Replaced barrel imports with direct namespace imports in gateway, Orbit client, and OAuth code without changing runtime behavior
+
+### Update `@yielded/oauth` to 0.1.0-beta.42
+
+
+
+### Update `effect` to 4.0.5
+
 ## @2digits/tlo-mcp@2.0.2
 
 ### Update @effect/platform-node to 4.0.4
