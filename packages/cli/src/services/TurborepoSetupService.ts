@@ -26,7 +26,7 @@ class TurborepoSetupError extends Schema.TaggedError<TurborepoSetupError, { read
   {
     operation: Schema.String,
     message: Schema.String,
-    cause: Schema.optional(Schema.Unknown),
+    cause: Schema.Unknown.pipe(Schema.optional),
   },
 ) {}
 

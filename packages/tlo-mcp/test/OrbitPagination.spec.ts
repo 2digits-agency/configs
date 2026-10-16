@@ -12,12 +12,12 @@ import { OrbitClient, OrbitClientLive, OrbitMcpError } from '../src/mcp/OrbitCli
 import { OrbitAuth } from '../src/oauth/OrbitAuth.js';
 
 const Message = Schema.Struct({
-  id: Schema.optionalKey(Schema.Finite),
+  id: Schema.Finite.pipe(Schema.optionalKey),
   method: Schema.String,
   params: Schema.JsonObject,
 });
 
-const MessageJson = Schema.fromJsonString(Message);
+const MessageJson = Message.pipe(Schema.fromJsonString);
 
 const decodeMessageJson = Schema.decodeEffect(MessageJson);
 

@@ -17,7 +17,7 @@ import { PackageManagerService } from '../../../src/services/PackageManagerServi
 import { clearExecutedCommands, getExecutedCommands, MockCommandExecutor } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
-const encodeUnknownJson = Schema.encodeUnknownEffect(Schema.fromJsonString(Schema.Unknown));
+const encodeUnknownJson = Schema.encodeUnknownEffect(Schema.Unknown.pipe(Schema.fromJsonString));
 
 describe(PackageManagerService, () => {
   const testLayer = Layer.mergeAll(

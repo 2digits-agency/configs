@@ -6,14 +6,14 @@ export const ORBIT_ORIGIN = 'https://api.orbit.teamleader.eu';
 
 export const ORBIT_RESOURCE = `${ORBIT_ORIGIN}/mcp`;
 
-const Secret = Schema.RedactedFromValue(Schema.String.check(Schema.isMinLength(1)));
+const Secret = Schema.String.check(Schema.isMinLength(1)).pipe(Schema.RedactedFromValue);
 
 export const Session = Schema.Struct({
   clientId: Schema.String.check(Schema.isMinLength(1)),
-  clientSecret: Schema.optionalKey(Secret),
+  clientSecret: Secret.pipe(Schema.optionalKey),
   accessToken: Secret,
-  refreshToken: Schema.optionalKey(Secret),
-  expiresAt: Schema.optionalKey(Schema.Finite),
+  refreshToken: Secret.pipe(Schema.optionalKey),
+  expiresAt: Schema.Finite.pipe(Schema.optionalKey),
 });
 
 export interface Session extends Schema.Schema.Type<typeof Session> {}

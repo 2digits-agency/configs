@@ -13,7 +13,7 @@ import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 
 import { OrbitAuthError, Session } from './session.js';
 
-const SessionJson = Schema.fromJsonString(Session);
+const SessionJson = Session.pipe(Schema.fromJsonString);
 
 const decodeSessionJson = Schema.decodeEffect(SessionJson);
 

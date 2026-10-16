@@ -17,7 +17,7 @@ class PackageManagerError extends Schema.TaggedError<PackageManagerError, { read
   {
     operation: Schema.String,
     cause: Schema.Unknown,
-    message: Schema.optional(Schema.String),
+    message: Schema.String.pipe(Schema.optional),
   },
 ) {}
 
