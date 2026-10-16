@@ -8,9 +8,9 @@ import * as Schema from 'effect/Schema';
  */
 const TurboConfigSchema = Schema.StructWithRest(
   Schema.Struct({
-    tasks: Schema.optional(Schema.Record(Schema.String, Schema.Unknown)),
-    globalPassThroughEnv: Schema.String.pipe(Schema.Array, Schema.optional),
-    ui: Schema.optional(Schema.String),
+    tasks: Schema.Record(Schema.String, Schema.Unknown).pipe(Schema.optional),
+    globalPassThroughEnv: Schema.Array(Schema.String).pipe(Schema.optional),
+    ui: Schema.String.pipe(Schema.optional),
   }),
   [Schema.Record(Schema.String, Schema.Unknown)],
 );

@@ -14,7 +14,7 @@ import { OrbitClient } from '../src/mcp/OrbitClient.js';
 
 const key = 'a'.repeat(64);
 
-const encodeJson = Schema.encodeEffect(Schema.fromJsonString(Schema.Unknown));
+const encodeJson = Schema.encodeEffect(Schema.Unknown.pipe(Schema.fromJsonString));
 
 const calls: Array<string> = [];
 

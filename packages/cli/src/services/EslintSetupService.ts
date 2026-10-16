@@ -28,7 +28,7 @@ class EslintSetupError extends Schema.TaggedError<EslintSetupError, { readonly b
   {
     operation: Schema.String,
     message: Schema.String,
-    cause: Schema.optional(Schema.Defect()),
+    cause: Schema.Defect().pipe(Schema.optional),
   },
 ) {}
 

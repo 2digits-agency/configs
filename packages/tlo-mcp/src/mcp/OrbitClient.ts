@@ -23,13 +23,17 @@ const Reply = Schema.Union([
   Schema.Struct({ jsonrpc: Schema.Literal('2.0'), id: McpSchema.RequestId, result: Schema.Unknown }),
   Schema.Struct({
     jsonrpc: Schema.Literal('2.0'),
-    id: Schema.NullOr(McpSchema.RequestId),
+    id: McpSchema.RequestId.pipe(Schema.NullOr),
     error: McpSchema.McpErrorBase,
   }),
-  Schema.Struct({ jsonrpc: Schema.Literal('2.0'), method: Schema.String, params: Schema.optionalKey(Schema.Unknown) }),
+  Schema.Struct({
+    jsonrpc: Schema.Literal('2.0'),
+    method: Schema.String,
+    params: Schema.Unknown.pipe(Schema.optionalKey),
+  }),
 ]);
 
-const ReplyJson = Schema.fromJsonString(Reply);
+const ReplyJson = Reply.pipe(Schema.fromJsonString);
 
 const decodeReplyJson = Schema.decodeEffect(ReplyJson);
 

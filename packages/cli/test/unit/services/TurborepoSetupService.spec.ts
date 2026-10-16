@@ -18,13 +18,13 @@ import { clearExecutedCommands, getExecutedCommands, MockCommandExecutor } from 
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 const TurboConfigSchema = Schema.Struct({
-  $schema: Schema.optionalKey(Schema.String),
-  tasks: Schema.optionalKey(Schema.Record(Schema.String, Schema.Unknown)),
-  globalPassThroughEnv: Schema.String.pipe(Schema.Array, Schema.optional),
-  ui: Schema.optionalKey(Schema.String),
+  $schema: Schema.String.pipe(Schema.optionalKey),
+  tasks: Schema.Record(Schema.String, Schema.Unknown).pipe(Schema.optionalKey),
+  globalPassThroughEnv: Schema.Array(Schema.String).pipe(Schema.optional),
+  ui: Schema.String.pipe(Schema.optionalKey),
 });
 
-const TurboConfigJson = Schema.fromJsonString(TurboConfigSchema);
+const TurboConfigJson = TurboConfigSchema.pipe(Schema.fromJsonString);
 
 const decodeTurboConfigJson = Schema.decodeEffect(TurboConfigJson);
 
