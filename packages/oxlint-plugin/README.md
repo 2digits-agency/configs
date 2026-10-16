@@ -32,6 +32,9 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
   and no root-barrel module imports. `@effect/vitest` and lowercase unstable barrels are intentionally exempt.
 - Alchemy v2 practices: every `alchemy-*` rule.
+- Schema compiler hoisting from t3code: `no-inline-schema-compile` reports `Schema.decode*`, `Schema.encode*`,
+  `Schema.is`, and `Schema.asserts` compilers that are built and invoked inside a function body when their schema
+  could be hoisted to module scope.
 
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).

@@ -19,6 +19,8 @@ const Message = Schema.Struct({
 
 const MessageJson = Schema.fromJsonString(Message);
 
+const decodeMessageJson = Schema.decodeEffect(MessageJson);
+
 const TOOLS_LIST = 'tools/list';
 
 const auth = Layer.succeed(
@@ -43,7 +45,7 @@ function transport(pages: ReadonlyArray<Schema.JsonObject>) {
     );
 
     return Effect.runPromise(
-      Schema.decodeEffect(MessageJson)(bodyText).pipe(
+      decodeMessageJson(bodyText).pipe(
         Effect.flatMap((message) =>
           Effect.gen(function* () {
             messages.push(message);

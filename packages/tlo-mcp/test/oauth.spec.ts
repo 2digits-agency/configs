@@ -30,6 +30,8 @@ const fixture: Session = {
 
 const NEW_ACCESS = 'new-access';
 
+const decodeSession = Schema.decodeEffect(Session);
+
 describe('orbit OAuth', () => {
   it('preserves unrotated refresh tokens and replaces expiry', () => {
     const updated = updateSession(
@@ -335,7 +337,7 @@ describe('orbit OAuth', () => {
   );
 
   it.effect('rejects invalid stored token shapes without exposing their content', () =>
-    Schema.decodeEffect(Session)({ clientId: 'client', accessToken: '' }).pipe(
+    decodeSession({ clientId: 'client', accessToken: '' }).pipe(
       Effect.flip,
       Effect.tap((error) =>
         Effect.sync(() => {

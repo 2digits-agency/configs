@@ -19,6 +19,10 @@ import { ProjectDetectionService } from './ProjectDetectionService';
 
 const ESLINT_CONFIG_PACKAGE = '@2digits/eslint-config';
 
+const decodeTurboConfigJson = Schema.decodeEffect(TurboConfigJson);
+
+const encodeTurboConfigJson = Schema.encodeEffect(TurboConfigJson);
+
 class EslintSetupError extends Schema.TaggedError<EslintSetupError, { readonly brand: unique symbol }>()(
   '@2digits/cli/services/EslintSetupService/EslintSetupError',
   {
@@ -191,7 +195,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
             ),
           );
 
-        const config = yield* Schema.decodeEffect(TurboConfigJson)(content).pipe(
+        const config = yield* decodeTurboConfigJson(content).pipe(
           Effect.mapError((cause) =>
             EslintSetupError.make({
               operation: 'readTurboConfig',
@@ -212,7 +216,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         const turboPath = path.join(root, 'turbo.json');
 
-        const content = yield* Schema.encodeEffect(TurboConfigJson)(config).pipe(
+        const content = yield* encodeTurboConfigJson(config).pipe(
           Effect.mapError((cause) =>
             EslintSetupError.make({ operation: 'writeTurboConfig', message: 'Failed to write turbo.json', cause }),
           ),

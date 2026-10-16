@@ -25,6 +25,10 @@ const TurboConfigSchema = Schema.Struct({
 
 const TurboConfigJson = Schema.fromJsonString(TurboConfigSchema, { space: 2 });
 
+const decodeTurboConfigJson = Schema.decodeEffect(TurboConfigJson);
+
+const encodeUnknownTurboConfigJson = Schema.encodeUnknownEffect(TurboConfigJson);
+
 describe(EslintSetupService, () => {
   const testLayer = Layer.mergeAll(
     EslintSetupService.Default,
@@ -116,7 +120,7 @@ describe(EslintSetupService, () => {
 
           const turboContent = yield* fs.readFileString(path.join(tempDir, 'turbo.json'));
 
-          const turboConfig = yield* Schema.decodeEffect(TurboConfigJson)(turboContent);
+          const turboConfig = yield* decodeTurboConfigJson(turboContent);
 
           expect(turboConfig).toMatchSnapshot('turbo.json');
         }),
@@ -333,7 +337,7 @@ describe(EslintSetupService, () => {
 
           const content = yield* fs.readFileString(turboPath);
 
-          const config = yield* Schema.decodeEffect(TurboConfigJson)(content);
+          const config = yield* decodeTurboConfigJson(content);
 
           assertTrue(typeof config === 'object');
         }),
@@ -377,13 +381,13 @@ describe(EslintSetupService, () => {
             },
           };
 
-          const encoded = yield* Schema.encodeUnknownEffect(TurboConfigJson)(config);
+          const encoded = yield* encodeUnknownTurboConfigJson(config);
 
           yield* fs.writeFileString(turboPath, encoded);
 
           const written = yield* fs.readFileString(turboPath);
 
-          const parsed = yield* Schema.decodeEffect(TurboConfigJson)(written);
+          const parsed = yield* decodeTurboConfigJson(written);
 
           expect(parsed).toStrictEqual(config);
         }),
@@ -483,7 +487,7 @@ export default twoDigits({
 
           const originalContent = yield* fs.readFileString(turboPath);
 
-          const originalConfig = yield* Schema.decodeEffect(TurboConfigJson)(originalContent);
+          const originalConfig = yield* decodeTurboConfigJson(originalContent);
 
           const updatedConfig = {
             ...originalConfig,
@@ -501,13 +505,13 @@ export default twoDigits({
             },
           };
 
-          const encoded = yield* Schema.encodeUnknownEffect(TurboConfigJson)(updatedConfig);
+          const encoded = yield* encodeUnknownTurboConfigJson(updatedConfig);
 
           yield* fs.writeFileString(turboPath, encoded);
 
           const updated = yield* fs.readFileString(turboPath);
 
-          const config = yield* Schema.decodeEffect(TurboConfigJson)(updated);
+          const config = yield* decodeTurboConfigJson(updated);
 
           assertTrue(config.tasks?.lint !== undefined);
 

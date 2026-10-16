@@ -17,6 +17,10 @@ import { type TurboConfig, TurboConfigJson } from '../schemas/TurboConfig';
 import { PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
 
+const decodeTurboConfigJson = Schema.decodeEffect(TurboConfigJson);
+
+const encodeTurboConfigJson = Schema.encodeEffect(TurboConfigJson);
+
 class TurborepoSetupError extends Schema.TaggedError<TurborepoSetupError, { readonly brand: unique symbol }>()(
   '@2digits/cli/services/TurborepoSetupService/TurborepoSetupError',
   {
@@ -158,7 +162,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
           ),
         );
 
-        const config = yield* Schema.decodeEffect(TurboConfigJson)(content).pipe(
+        const config = yield* decodeTurboConfigJson(content).pipe(
           Effect.mapError((cause) =>
             TurborepoSetupError.make({
               operation: 'readTurboConfig',
@@ -179,7 +183,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
 
         const turboPath = path.join(root, 'turbo.json');
 
-        const content = yield* Schema.encodeEffect(TurboConfigJson)(config).pipe(
+        const content = yield* encodeTurboConfigJson(config).pipe(
           Effect.mapError((cause) =>
             TurborepoSetupError.make({
               operation: 'writeTurboConfig',

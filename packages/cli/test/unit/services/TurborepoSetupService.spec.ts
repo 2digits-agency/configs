@@ -24,6 +24,12 @@ const TurboConfigSchema = Schema.Struct({
   ui: Schema.optionalKey(Schema.String),
 });
 
+const TurboConfigJson = Schema.fromJsonString(TurboConfigSchema);
+
+const decodeTurboConfigJson = Schema.decodeEffect(TurboConfigJson);
+
+const encodeUnknownTurboConfigJson = Schema.encodeUnknownEffect(TurboConfigJson);
+
 describe(TurborepoSetupService, () => {
   const testLayer = Layer.mergeAll(
     TurborepoSetupService.Default,
@@ -131,7 +137,7 @@ describe(TurborepoSetupService, () => {
 
           const content = yield* fs.readFileString(turboPath);
 
-          const config = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(content);
+          const config = yield* decodeTurboConfigJson(content);
 
           expect(config.tasks).toBeDefined();
 
@@ -176,7 +182,7 @@ describe(TurborepoSetupService, () => {
 
           const content = yield* fs.readFileString(turboPath);
 
-          const config = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(content);
+          const config = yield* decodeTurboConfigJson(content);
 
           // Should have both existing and new tasks
           for (const task of existingTasks) {
@@ -496,7 +502,7 @@ describe(TurborepoSetupService, () => {
 
           const content = yield* fs.readFileString(turboPath);
 
-          const parsed = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(content);
+          const parsed = yield* decodeTurboConfigJson(content);
 
           expect(parsed).toStrictEqual(config);
         }),
@@ -623,7 +629,7 @@ describe(TurborepoSetupService, () => {
 
           const originalContent = yield* fs.readFileString(turboPath);
 
-          const originalConfig = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(originalContent);
+          const originalConfig = yield* decodeTurboConfigJson(originalContent);
 
           const originalTaskKeys = R.keys(originalConfig.tasks ?? {});
 
@@ -631,7 +637,7 @@ describe(TurborepoSetupService, () => {
 
           const updatedContent = yield* fs.readFileString(turboPath);
 
-          const updatedConfig = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(updatedContent);
+          const updatedConfig = yield* decodeTurboConfigJson(updatedContent);
 
           for (const taskKey of originalTaskKeys) {
             expect(updatedConfig.tasks?.[taskKey]).toBeDefined();
@@ -748,7 +754,7 @@ describe(TurborepoSetupService, () => {
             },
           };
 
-          const encodedConfig = yield* Schema.encodeUnknownEffect(Schema.fromJsonString(TurboConfigSchema))(config);
+          const encodedConfig = yield* encodeUnknownTurboConfigJson(config);
 
           yield* fs.writeFileString(turboPath, encodedConfig);
 
@@ -758,7 +764,7 @@ describe(TurborepoSetupService, () => {
 
           const updatedContent = yield* fs.readFileString(turboPath);
 
-          const updatedConfig = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(updatedContent);
+          const updatedConfig = yield* decodeTurboConfigJson(updatedContent);
 
           expect(updatedConfig.tasks?.build).toStrictEqual(config.tasks.build);
         }),

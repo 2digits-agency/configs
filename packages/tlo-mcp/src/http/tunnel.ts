@@ -7,6 +7,8 @@ import { GatewayError } from './gateway.js';
 
 const TunnelHostname = Schema.String.check(Schema.isPattern(/^[a-z0-9]+\.opentunnel\.xyz$/));
 
+const decodeTunnelHostname = Schema.decodeEffect(TunnelHostname);
+
 /**
  * One scoped SDK connection; no CLI, daemon or routes from other profiles.
  */
@@ -19,7 +21,7 @@ export const openTunnel = Effect.fn('Gateway.openTunnel')(
       routes: { tlo: `127.0.0.1:${port}` },
     });
 
-    const hostname = yield* Schema.decodeEffect(TunnelHostname)(connection.tunnel.hostname);
+    const hostname = yield* decodeTunnelHostname(connection.tunnel.hostname);
 
     yield* connection.events.pipe(
       Stream.runForEach((event) =>
