@@ -33,6 +33,8 @@ const Registration = Schema.Struct({
   client_secret: Schema.String.check(Schema.isMinLength(1)).pipe(Schema.RedactedFromValue, Schema.optionalKey),
 });
 
+const isOrbitAuthError = Schema.is(OrbitAuthError);
+
 export interface OrbitAuthShape {
   readonly login: Effect.Effect<void, OrbitAuthError>;
   readonly logout: Effect.Effect<void, OrbitAuthError>;
@@ -263,7 +265,7 @@ export const OrbitAuthLayer = Layer.effect(
       Effect.provideService(ChildProcessSpawner.ChildProcessSpawner, spawner),
       Effect.provideService(FetchHttpClient.RequestInit, { redirect: 'error' }),
       Effect.mapError((error) =>
-        Schema.is(OrbitAuthError)(error)
+        isOrbitAuthError(error)
           ? error
           : OrbitAuthError.make({
               message: 'Orbit authentication unavailable. Check connectivity or run tlo-mcp login again.',

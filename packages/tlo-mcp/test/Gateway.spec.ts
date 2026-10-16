@@ -14,6 +14,8 @@ import { OrbitClient } from '../src/mcp/OrbitClient.js';
 
 const key = 'a'.repeat(64);
 
+const encodeJson = Schema.encodeEffect(Schema.fromJsonString(Schema.Unknown));
+
 const calls: Array<string> = [];
 
 const upstream = Layer.succeed(OrbitClient, {
@@ -105,7 +107,7 @@ describe('personal HTTP gateway', () => {
       let session: string | undefined;
 
       const send = Effect.fn('Gateway.test.send')(function* (method: string, params: unknown, id?: number) {
-        const body = yield* Schema.encodeEffect(Schema.fromJsonString(Schema.Unknown))({
+        const body = yield* encodeJson({
           jsonrpc: '2.0',
           method,
           params,

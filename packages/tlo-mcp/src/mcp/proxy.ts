@@ -7,6 +7,8 @@ import * as McpServer from 'effect/ai/McpServer';
 
 import { OrbitClient } from './OrbitClient.js';
 
+const decodeUnknownJsonObject = Schema.decodeUnknownEffect(Schema.JsonObject);
+
 export const OrbitToolsLive = Layer.effectDiscard(
   Effect.gen(function* () {
     const upstream = yield* OrbitClient;
@@ -23,7 +25,7 @@ export const OrbitToolsLive = Layer.effectDiscard(
           annotations: Context.empty(),
           handle: Effect.fn('handle')(
             function* (input) {
-              return yield* Schema.decodeUnknownEffect(Schema.JsonObject)(input);
+              return yield* decodeUnknownJsonObject(input);
             },
             Effect.mapError((data) =>
               McpSchema.InvalidParams.make({ message: 'Tool arguments must be a JSON object.', data }),

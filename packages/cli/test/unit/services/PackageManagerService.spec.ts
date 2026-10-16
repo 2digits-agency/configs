@@ -17,6 +17,8 @@ import { PackageManagerService } from '../../../src/services/PackageManagerServi
 import { clearExecutedCommands, getExecutedCommands, MockCommandExecutor } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
+const encodeUnknownJson = Schema.encodeUnknownEffect(Schema.fromJsonString(Schema.Unknown));
+
 describe(PackageManagerService, () => {
   const testLayer = Layer.mergeAll(
     PackageManagerService.Default,
@@ -360,7 +362,7 @@ describe(PackageManagerService, () => {
 
           yield* fs.writeFileString(
             path.join(tempDir, 'package.json'),
-            yield* Schema.encodeUnknownEffect(Schema.fromJsonString(Schema.Unknown))({
+            yield* encodeUnknownJson({
               name: 'test-no-scripts',
               version: '1.0.0',
             }),
@@ -384,7 +386,7 @@ describe(PackageManagerService, () => {
 
           yield* fs.writeFileString(
             path.join(tempDir, 'package.json'),
-            yield* Schema.encodeUnknownEffect(Schema.fromJsonString(Schema.Unknown))({
+            yield* encodeUnknownJson({
               name: 'test-empty-scripts',
               version: '1.0.0',
               scripts: {},

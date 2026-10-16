@@ -22,6 +22,10 @@ const Message = Schema.Struct({
 
 const MessageJson = Schema.fromJsonString(Message);
 
+const decodeMessageJson = Schema.decodeEffect(MessageJson);
+
+const decodeUnknownMessageJson = Schema.decodeUnknownEffect(MessageJson);
+
 const tool = {
   name: 'GetProject',
   description: 'Official description',
@@ -42,7 +46,7 @@ function toolFetch(
     const body = init?.body instanceof Uint8Array ? new TextDecoder().decode(init.body) : init?.body;
 
     return Effect.runPromise(
-      Schema.decodeUnknownEffect(MessageJson)(body).pipe(
+      decodeUnknownMessageJson(body).pipe(
         Effect.flatMap((message) => {
           if (message.method === 'tools/call') {
             return Effect.tryPromise((_signal) => reply(message, init));
@@ -87,7 +91,7 @@ describe('orbit MCP transport', () => {
       );
 
       return Effect.runPromise(
-        Schema.decodeEffect(MessageJson)(bodyText).pipe(
+        decodeMessageJson(bodyText).pipe(
           Effect.map((message) => {
             const headers = new Headers(init?.headers);
 

@@ -21,6 +21,7 @@ import { noEmptyEffectCallback } from './effect/no-empty-effect-callback';
 import { noEmptySchemaStruct } from './effect/no-empty-schema-struct';
 import { noFunctionConfigDefault } from './effect/no-function-config-default';
 import { noHashAsIdentity } from './effect/no-hash-as-identity';
+import { noInlineSchemaCompile } from './effect/no-inline-schema-compile';
 import { noLoggingInCatch } from './effect/no-logging-in-catch';
 import { noManualEffectErrorTag } from './effect/no-manual-effect-error-tag';
 import { noManualTagComparison } from './effect/no-manual-tag-comparison';
@@ -79,6 +80,7 @@ export const rules = {
   'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,
   'no-function-config-default': noFunctionConfigDefault,
   'no-hash-as-identity': noHashAsIdentity,
+  'no-inline-schema-compile': noInlineSchemaCompile,
   'no-logging-in-catch': noLoggingInCatch,
   'no-manual-effect-error-tag': noManualEffectErrorTag,
   'no-manual-tag-comparison': noManualTagComparison,

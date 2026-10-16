@@ -31,6 +31,8 @@ const Reply = Schema.Union([
 
 const ReplyJson = Schema.fromJsonString(Reply);
 
+const decodeReplyJson = Schema.decodeEffect(ReplyJson);
+
 const PROTOCOL = McpProtocol.v2025_06_18.protocolVersion;
 
 export class OrbitMcpError extends Schema.TaggedError<OrbitMcpError, { readonly brand: unique symbol }>()(
@@ -39,6 +41,8 @@ export class OrbitMcpError extends Schema.TaggedError<OrbitMcpError, { readonly 
     message: Schema.String,
   },
 ) {}
+
+const isOrbitMcpError = Schema.is(OrbitMcpError);
 
 export interface OrbitClientShape {
   readonly tools: ReadonlyArray<McpSchema.Tool>;
@@ -121,7 +125,7 @@ export const OrbitClientLive = Layer.effect(
               Stream.pipeThroughChannel(Sse.decode({ maxEventSize: 10 * 1024 * 1024 })),
               Stream.filter((event) => event.event === 'message' || event.event === ''),
               Stream.map(Struct.get('data')),
-              Stream.mapEffect((data) => Schema.decodeEffect(ReplyJson)(data)),
+              Stream.mapEffect((data) => decodeReplyJson(data)),
               Stream.filter((reply) => 'id' in reply && reply.id === id),
               Stream.runHead,
               Effect.flatMap((reply) =>
@@ -146,7 +150,7 @@ export const OrbitClientLive = Layer.effect(
       Effect.scoped,
       Effect.provideService(FetchHttpClient.RequestInit, { redirect: 'error' }),
       Effect.mapError((error) =>
-        Schema.is(OrbitMcpError)(error)
+        isOrbitMcpError(error)
           ? error
           : OrbitMcpError.make({ message: 'Orbit connection or response failed. Request not replayed.' }),
       ),

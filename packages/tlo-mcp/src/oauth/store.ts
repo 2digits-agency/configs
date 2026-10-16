@@ -15,6 +15,12 @@ import { OrbitAuthError, Session } from './session.js';
 
 const SessionJson = Schema.fromJsonString(Session);
 
+const decodeSessionJson = Schema.decodeEffect(SessionJson);
+
+const encodeSessionJson = Schema.encodeEffect(SessionJson);
+
+const isOrbitAuthError = Schema.is(OrbitAuthError);
+
 const KEYCHAIN_SERVICE = '@2digits/tlo-mcp/orbit';
 
 export interface SessionStoreShape {
@@ -108,14 +114,14 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
             text = content;
           }
 
-          return yield* Schema.decodeEffect(SessionJson)(text);
+          return yield* decodeSessionJson(text);
         },
         Effect.mapError(() => OrbitAuthError.make({ message: 'Could not read credentials. Run tlo-mcp login again.' })),
       );
 
       const save = Effect.fn('SessionStore.save')(
         function* (session: Session) {
-          const text = yield* Schema.encodeEffect(SessionJson)(session);
+          const text = yield* encodeSessionJson(session);
 
           if (platform === 'darwin') {
             const result = yield* security(
@@ -176,7 +182,7 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
           );
         },
         Effect.mapError((error) =>
-          Schema.is(OrbitAuthError)(error)
+          isOrbitAuthError(error)
             ? error
             : OrbitAuthError.make({ message: 'Could not acquire OAuth credential lock. Check directory permissions.' }),
         ),
