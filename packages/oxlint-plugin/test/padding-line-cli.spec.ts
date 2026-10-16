@@ -1,5 +1,7 @@
 // @effect-diagnostics-next-line nodeBuiltinImport:off
 import { spawnSync } from 'node:child_process';
+
+import * as R from 'effect/Record';
 // @effect-diagnostics-next-line nodeBuiltinImport:off
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -66,16 +68,16 @@ describe('statement spacing CLI', () => {
         `,
       );
 
-      for (const [filename, { source }] of Object.entries(sources)) {
+      for (const [filename, { source }] of R.toEntries(sources)) {
         writeFileSync(path.join(directory, filename), source);
       }
 
       function run(flags: Array<string>) {
-        return spawnSync(
-          process.execPath,
-          [oxlintBinary, '--config=oxlint.config.mjs', ...flags, ...Object.keys(sources)],
-          { cwd: directory, encoding: 'utf8', env: nativeEnvironment },
-        );
+        return spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', ...flags, ...R.keys(sources)], {
+          cwd: directory,
+          encoding: 'utf8',
+          env: nativeEnvironment,
+        });
       }
 
       const reported = run([]);
@@ -89,7 +91,7 @@ describe('statement spacing CLI', () => {
 
         expect(fixed.status, `${fixed.stdout}${fixed.stderr}`).toBe(0);
 
-        for (const [filename, { fixed: expected }] of Object.entries(sources)) {
+        for (const [filename, { fixed: expected }] of R.toEntries(sources)) {
           expect(readFileSync(path.join(directory, filename), 'utf8')).toBe(expected);
         }
       }

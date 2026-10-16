@@ -11,7 +11,10 @@ import * as Struct from 'effect/Struct';
 import * as McpProtocol from 'effect/ai/McpProtocol';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as Sse from 'effect/encoding/Sse';
-import { FetchHttpClient, HttpClient, HttpClientRequest, HttpClientResponse } from 'effect/http';
+import * as FetchHttpClient from 'effect/http/FetchHttpClient';
+import * as HttpClient from 'effect/http/HttpClient';
+import * as HttpClientRequest from 'effect/http/HttpClientRequest';
+import * as HttpClientResponse from 'effect/http/HttpClientResponse';
 
 import { OrbitAuth } from '../oauth/OrbitAuth.js';
 import { ORBIT_RESOURCE } from '../oauth/session.js';
@@ -30,9 +33,12 @@ const ReplyJson = Schema.fromJsonString(Reply);
 
 const PROTOCOL = McpProtocol.v2025_06_18.protocolVersion;
 
-export class OrbitMcpError extends Schema.TaggedError<OrbitMcpError>()('OrbitMcpError', {
-  message: Schema.String,
-}) {}
+export class OrbitMcpError extends Schema.TaggedError<OrbitMcpError, { readonly brand: unique symbol }>()(
+  'OrbitMcpError',
+  {
+    message: Schema.String,
+  },
+) {}
 
 export interface OrbitClientShape {
   readonly tools: ReadonlyArray<McpSchema.Tool>;

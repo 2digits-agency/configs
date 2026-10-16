@@ -1,10 +1,12 @@
 import { describe, expect, it } from '@effect/vitest';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
 import * as Layer from 'effect/Layer';
 import * as Match from 'effect/Match';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
-import { FetchHttpClient } from 'effect/http';
+import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 
 import { OrbitClient, OrbitClientLive, OrbitMcpError } from '../src/mcp/OrbitClient.js';
 import { OrbitAuth } from '../src/oauth/OrbitAuth.js';
@@ -92,21 +94,30 @@ describe('orbit tools pagination', () => {
     return Effect.gen(function* () {
       const client = yield* OrbitClient;
 
-      expect({ tools: client.tools.map((entry) => entry.name), instructions: client.instructions }).toStrictEqual({
+      expect({
+        tools: Fn.pipe(
+          client.tools,
+          Arr.map((entry) => entry.name),
+        ),
+        instructions: client.instructions,
+      }).toStrictEqual({
         tools: ['First', 'Second', 'Third'],
         instructions: 'Startup instructions',
       });
 
-      expect(messages.map((message) => message.method)).toStrictEqual([
-        'initialize',
-        'notifications/initialized',
-        TOOLS_LIST,
-        TOOLS_LIST,
-        TOOLS_LIST,
-      ]);
+      expect(
+        Fn.pipe(
+          messages,
+          Arr.map((message) => message.method),
+        ),
+      ).toStrictEqual(['initialize', 'notifications/initialized', TOOLS_LIST, TOOLS_LIST, TOOLS_LIST]);
 
       expect(
-        messages.filter((message) => message.method === TOOLS_LIST).map((message) => message.params),
+        Fn.pipe(
+          messages,
+          Arr.filter((message) => message.method === TOOLS_LIST),
+          Arr.map((message) => message.params),
+        ),
       ).toStrictEqual([{}, { cursor: '' }, { cursor: 'last-page' }]);
 
       const snapshot = client.tools;
@@ -117,7 +128,12 @@ describe('orbit tools pagination', () => {
 
       expect(client.tools).toBe(snapshot);
 
-      expect(messages.filter((message) => message.method === TOOLS_LIST)).toHaveLength(3);
+      expect(
+        Fn.pipe(
+          messages,
+          Arr.filter((message) => message.method === TOOLS_LIST),
+        ),
+      ).toHaveLength(3);
     }).pipe(
       Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
       Effect.provideService(FetchHttpClient.Fetch, fetchMock),
@@ -133,7 +149,12 @@ describe('orbit tools pagination', () => {
 
       expect(client.tools).toStrictEqual([]);
 
-      expect(messages.filter((message) => message.method === TOOLS_LIST)).toHaveLength(1);
+      expect(
+        Fn.pipe(
+          messages,
+          Arr.filter((message) => message.method === TOOLS_LIST),
+        ),
+      ).toHaveLength(1);
     }).pipe(
       Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
       Effect.provideService(FetchHttpClient.Fetch, fetchMock),
@@ -148,7 +169,10 @@ describe('orbit tools pagination', () => {
   ]) {
     it.effect(`rejects repeated cursor sequence ${JSON.stringify(cursors)} during startup`, () => {
       const { fetchMock, messages } = transport(
-        cursors.map((nextCursor) => ({ tools: [tool('Unpublished')], nextCursor })),
+        Fn.pipe(
+          cursors,
+          Arr.map((nextCursor) => ({ tools: [tool('Unpublished')], nextCursor })),
+        ),
       );
 
       return Effect.gen(function* () {
@@ -158,9 +182,19 @@ describe('orbit tools pagination', () => {
 
         expect(error.message).toBe('Orbit returned a repeated tools cursor.');
 
-        expect(messages.filter((message) => message.method === TOOLS_LIST)).toHaveLength(cursors.length);
+        expect(
+          Fn.pipe(
+            messages,
+            Arr.filter((message) => message.method === TOOLS_LIST),
+          ),
+        ).toHaveLength(cursors.length);
 
-        expect(messages.some((message) => message.method === 'tools/call')).toBeFalsy();
+        expect(
+          Fn.pipe(
+            messages,
+            Arr.some((message) => message.method === 'tools/call'),
+          ),
+        ).toBeFalsy();
       }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetchMock), Effect.scoped);
     });
   }

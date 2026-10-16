@@ -8,8 +8,8 @@ import * as Match from 'effect/Match';
 import * as Queue from 'effect/Queue';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
-import { FetchHttpClient } from 'effect/http';
-import { TestClock } from 'effect/testing';
+import * as FetchHttpClient from 'effect/http/FetchHttpClient';
+import * as TestClock from 'effect/testing/TestClock';
 
 import { OrbitClient, OrbitClientLive, OrbitMcpError } from '../src/mcp/OrbitClient.js';
 import { OrbitAuth } from '../src/oauth/OrbitAuth.js';

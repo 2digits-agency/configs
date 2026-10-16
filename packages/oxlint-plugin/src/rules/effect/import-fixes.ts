@@ -1,4 +1,7 @@
 import type { Context, ESTree, Fix, Fixer, Variable } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
+import * as Opt from 'effect/Option';
 
 import { barrelModuleSource, isTypeOnlyImport, namespaceAlias, submoduleName } from './import-style-utils';
 
@@ -38,10 +41,10 @@ export function fixBarrel(context: Context, node: ESTree.ImportDeclaration, fixe
   }
 
   if (remaining.length > 0) {
-    imports.unshift(`import { ${remaining.join(', ')} } from ${context.sourceCode.getText(node.source)};`);
+    imports.unshift(`import { ${Arr.join(remaining, ', ')} } from ${context.sourceCode.getText(node.source)};`);
   }
 
-  return [fixer.replaceText(node, imports.join('\n'))];
+  return [fixer.replaceText(node, Arr.join(imports, '\n'))];
 }
 
 /**
@@ -62,13 +65,27 @@ export function fixNamespace(context: Context, node: ESTree.ImportDeclaration, f
 
   const variables = context.sourceCode.getDeclaredVariables(node);
 
-  const target = variables.find((variable) => variable.name === alias);
+  const target = Opt.getOrUndefined(
+    Fn.pipe(
+      variables,
+      Arr.findFirst((variable) => variable.name === alias),
+    ),
+  );
 
   if (
-    context.sourceCode.scopeManager.scopes.some(
-      (scope) =>
-        scope.variables.some((variable) => variable.name === alias && variable !== target) ||
-        scope.references.some((reference) => reference.identifier.name === alias && reference.resolved !== target),
+    Fn.pipe(
+      context.sourceCode.scopeManager.scopes,
+      Arr.some(
+        (scope) =>
+          Fn.pipe(
+            scope.variables,
+            Arr.some((variable) => variable.name === alias && variable !== target),
+          ) ||
+          Fn.pipe(
+            scope.references,
+            Arr.some((reference) => reference.identifier.name === alias && reference.resolved !== target),
+          ),
+      ),
     )
   ) {
     return undefined;
@@ -104,7 +121,7 @@ export function fixNamespace(context: Context, node: ESTree.ImportDeclaration, f
 
   const source = context.sourceCode.getText(node.source);
 
-  const typeImport = types.length === 0 ? '' : `\nimport { ${types.join(', ')} } from ${source};`;
+  const typeImport = types.length === 0 ? '' : `\nimport { ${Arr.join(types, ', ')} } from ${source};`;
 
   const text = `import * as ${alias} from ${source};${typeImport}`;
 
@@ -117,7 +134,12 @@ function fixValueImport(
   alias: string,
   fixer: Fixer,
 ): Array<Fix> | undefined {
-  const variable = variables.find((entry) => entry.name === specifier.local.name);
+  const variable = Opt.getOrUndefined(
+    Fn.pipe(
+      variables,
+      Arr.findFirst((entry) => entry.name === specifier.local.name),
+    ),
+  );
 
   if (variable === undefined) {
     return undefined;

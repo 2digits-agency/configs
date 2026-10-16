@@ -1,8 +1,12 @@
 import * as NodeHttpClient from '@effect/platform-node/NodeHttpClient';
 import { describe, expect, it } from '@effect/vitest';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fiber from 'effect/Fiber';
-import { FetchHttpClient, HttpClient } from 'effect/http';
+import * as Fn from 'effect/Function';
+import * as Order from 'effect/Order';
+import * as FetchHttpClient from 'effect/http/FetchHttpClient';
+import * as HttpClient from 'effect/http/HttpClient';
 import * as TestClock from 'effect/testing/TestClock';
 
 import { listenForLogin } from '../src/oauth/callback.js';
@@ -73,9 +77,15 @@ describe('orbit callback router', () => {
         { concurrency: 'unbounded' },
       );
 
-      expect(responses.map((response) => response.status).toSorted((left, right) => left - right)).toStrictEqual([
-        200, 400,
-      ]);
+      expect(
+        Arr.sort(
+          Fn.pipe(
+            responses,
+            Arr.map((response) => response.status),
+          ),
+          Order.Number,
+        ),
+      ).toStrictEqual([200, 400]);
 
       expect(['one', 'two']).toContain(yield* callback.code);
     }).pipe(Effect.provide(FetchHttpClient.layer), Effect.scoped),

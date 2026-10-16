@@ -15,6 +15,7 @@ import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
+import * as R from 'effect/Record';
 import * as Ref from 'effect/Ref';
 
 type Token = SyntaxToken | Comment;
@@ -221,7 +222,7 @@ function isDirective(node: ESTree.Node, sourceCode: SourceCode): boolean {
 }
 
 function isDirectivePrologue(node: ESTree.Node, sourceCode: SourceCode): boolean {
-  if (!isDirective(node, sourceCode) || !node.parent || !('body' in node.parent) || !Array.isArray(node.parent.body)) {
+  if (!isDirective(node, sourceCode) || !node.parent || !('body' in node.parent) || !Arr.isArray(node.parent.body)) {
     return false;
   }
 
@@ -373,11 +374,11 @@ const statementTypes: Record<StatementType, NodeTest> = {
 };
 
 function isStatementType(value: unknown): value is StatementType {
-  return typeof value === 'string' && Object.hasOwn(statementTypes, value);
+  return typeof value === 'string' && R.has(statementTypes, value as StatementType);
 }
 
 function isMatcherArray(value: StatementOption): value is Arr.NonEmptyReadonlyArray<StatementMatcher> {
-  return Array.isArray(value);
+  return Arr.isArray(value);
 }
 
 function parseMatcher(value: unknown): StatementMatcher {
@@ -390,7 +391,10 @@ function parseMatcher(value: unknown): StatementMatcher {
     value !== null &&
     'selector' in value &&
     typeof value.selector === 'string' &&
-    Object.keys(value).every((key) => key === 'selector' || key === 'lineMode')
+    Fn.pipe(
+      R.keys(value as Readonly<Record<string, unknown>>),
+      Arr.every((key) => key === 'selector' || key === 'lineMode'),
+    )
   ) {
     if (!('lineMode' in value)) {
       return { selector: value.selector };
@@ -406,7 +410,7 @@ function parseMatcher(value: unknown): StatementMatcher {
 }
 
 function parseStatementOption(value: unknown): StatementOption {
-  if (!Array.isArray(value)) {
+  if (!Arr.isArray(value)) {
     return parseMatcher(value);
   }
 
@@ -418,29 +422,41 @@ function parseStatementOption(value: unknown): StatementOption {
     throw new Error('Padding statement matcher arrays must not be empty');
   }
 
-  return [parseMatcher(first), ...matchers.slice(1).map((matcher) => parseMatcher(matcher))];
+  return [
+    parseMatcher(first),
+    ...Fn.pipe(
+      matchers.slice(1),
+      Arr.map((matcher) => parseMatcher(matcher)),
+    ),
+  ];
 }
 
 function parseOptions(values: ReadonlyArray<unknown>): Array<PaddingLineOption> {
-  return values.map((value) => {
-    if (
-      typeof value !== 'object' ||
-      value === null ||
-      !('blankLine' in value) ||
-      !('prev' in value) ||
-      !('next' in value) ||
-      Object.keys(value).some((key) => !['blankLine', 'prev', 'next'].includes(key)) ||
-      (value.blankLine !== 'any' && value.blankLine !== 'never' && value.blankLine !== 'always')
-    ) {
-      throw new Error('Invalid padding-line-between-statements configuration');
-    }
+  return Fn.pipe(
+    values,
+    Arr.map((value) => {
+      if (
+        typeof value !== 'object' ||
+        value === null ||
+        !('blankLine' in value) ||
+        !('prev' in value) ||
+        !('next' in value) ||
+        Fn.pipe(
+          R.keys(value),
+          Arr.some((key) => !['blankLine', 'prev', 'next'].includes(key)),
+        ) ||
+        (value.blankLine !== 'any' && value.blankLine !== 'never' && value.blankLine !== 'always')
+      ) {
+        throw new Error('Invalid padding-line-between-statements configuration');
+      }
 
-    return {
-      blankLine: value.blankLine,
-      prev: parseStatementOption(value.prev),
-      next: parseStatementOption(value.next),
-    };
-  });
+      return {
+        blankLine: value.blankLine,
+        prev: parseStatementOption(value.prev),
+        next: parseStatementOption(value.next),
+      };
+    }),
+  );
 }
 
 function getPaddingLineSequences(
@@ -555,8 +571,14 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
   const sourceCode = context.sourceCode;
 
   const selectors = new Set(
-    options.flatMap((option) =>
-      [option.prev, option.next].flat().flatMap((matcher) => (typeof matcher === 'string' ? [] : matcher.selector)),
+    Fn.pipe(
+      options,
+      Arr.flatMap((option) =>
+        Fn.pipe(
+          [option.prev, option.next].flat(),
+          Arr.flatMap((matcher) => (typeof matcher === 'string' ? [] : [matcher.selector])),
+        ),
+      ),
     ),
   );
 
@@ -593,7 +615,10 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
     }
 
     if (isMatcherArray(matcher)) {
-      return matcher.some((item) => match(inner, item, matchedNodes));
+      return Fn.pipe(
+        matcher,
+        Arr.some((item) => match(inner, item, matchedNodes)),
+      );
     }
 
     if (typeof matcher !== 'string') {
@@ -608,7 +633,7 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
     return statementTypes[matcher](inner, sourceCode);
   }
 
-  const reversedOptions = options.toReversed();
+  const reversedOptions = Arr.reverse(options);
 
   function getPaddingType(prevNode: ESTree.Node, nextNode: ESTree.Node, matchedNodes: SelectorMatches): PaddingType {
     for (const option of reversedOptions) {
@@ -672,10 +697,14 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
       const matchedNodes = yield* Ref.get(matches);
 
       yield* Ref.get(pendingPairs).pipe(
-        Effect.flatMap(
-          // oxlint-disable-next-line unicorn/no-array-for-each
-          Effect.forEach(({ prevNode, nextNode }) =>
-            verifyPair(prevNode, nextNode, getPaddingType(prevNode, nextNode, matchedNodes)),
+        Effect.flatMap((pairs) =>
+          Effect.all(
+            Fn.pipe(
+              pairs,
+              Arr.map(({ prevNode, nextNode }) =>
+                verifyPair(prevNode, nextNode, getPaddingType(prevNode, nextNode, matchedNodes)),
+              ),
+            ),
           ),
         ),
       );
@@ -746,7 +775,7 @@ export const paddingLineBetweenStatements = Rule.define({
       $defs: {
         statementMatcher: {
           anyOf: [
-            { type: 'string', enum: Object.keys(statementTypes) },
+            { type: 'string', enum: R.keys(statementTypes) },
             {
               type: 'object',
               properties: { selector: { type: 'string' }, lineMode: { enum: ['any', 'singleline', 'multiline'] } },

@@ -1,4 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
 
 import { callbackCall, canonicalPath, defineEffectRule, isFunctionNode, ruleMeta, type FileState } from '../../utils';
 
@@ -52,7 +53,7 @@ export const noLoggingInCatch: Rule = defineEffectRule(
       const path = canonicalPath(node.callee, state);
 
       const logger =
-        path?.[1] !== undefined && path[0] === 'Effect' && logMethods.has(path[1]) ? path.join('.') : undefined;
+        path?.[1] !== undefined && path[0] === 'Effect' && logMethods.has(path[1]) ? Arr.join(path, '.') : undefined;
 
       if (logger === undefined) {
         return;

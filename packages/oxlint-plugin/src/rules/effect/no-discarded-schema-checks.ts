@@ -1,4 +1,7 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
+import * as Opt from 'effect/Option';
 
 import {
   defineEffectRule,
@@ -49,7 +52,12 @@ export const noDiscardedSchemaChecks: Rule = defineEffectRule(
         return;
       }
 
-      const options = node.arguments.find((argument) => argument.type === 'ObjectExpression');
+      const options = Opt.getOrUndefined(
+        Fn.pipe(
+          node.arguments,
+          Arr.findFirst((argument) => argument.type === 'ObjectExpression'),
+        ),
+      );
 
       const preserve =
         options?.type === 'ObjectExpression' ? objectProperty(options, 'unsafePreserveChecks') : undefined;

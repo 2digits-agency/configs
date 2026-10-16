@@ -8,6 +8,9 @@ import {
   type Visitor,
   type VisitorWithHooks,
 } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
+import * as R from 'effect/Record';
 
 export interface FileState {
   readonly bindings: ReadonlyMap<string, ReadonlyArray<string>>;
@@ -236,7 +239,13 @@ export function isApi(node: ESTree.Node, state: FileState, namespace: string, me
 export function isApiPath(node: ESTree.Node, state: FileState, expected: ReadonlyArray<string>): boolean {
   const path = canonicalPath(node, state);
 
-  return path?.length === expected.length && path.every((part, index) => part === expected[index]);
+  return (
+    path?.length === expected.length &&
+    Fn.pipe(
+      path,
+      Arr.every((part, index) => part === expected[index]),
+    )
+  );
 }
 
 export function isFunctionNode(node: ESTree.Node | undefined): node is FunctionNode {
@@ -295,7 +304,7 @@ export function unwrapExpression(node: ESTree.Expression): ESTree.Expression {
 }
 
 function appendNodeChildren(value: object, pending: Array<unknown>): void {
-  if (Array.isArray(value)) {
+  if (Arr.isArray(value)) {
     for (const child of value as Array<unknown>) {
       pending.push(child);
     }
@@ -303,7 +312,7 @@ function appendNodeChildren(value: object, pending: Array<unknown>): void {
     return;
   }
 
-  for (const [key, child] of Object.entries(value)) {
+  for (const [key, child] of R.toEntries(value)) {
     if (!['loc', 'parent', 'range'].includes(key)) {
       pending.push(child);
     }

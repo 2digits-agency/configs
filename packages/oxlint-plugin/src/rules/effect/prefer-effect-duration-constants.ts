@@ -1,4 +1,6 @@
 import type { Context, ESTree, Rule, Scope } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
 
 import { defineEffectRule, ruleMeta, unwrapExpression, walkNodes, type FileState } from '../../utils';
 import { durationArgument, durationConstructor, numericValue, timeArithmetic, type DurationUnit } from './duration';
@@ -50,10 +52,11 @@ const durationWords = new Set([
 ]);
 
 function words(name: string): Array<string> {
-  return name
-    .split(/[_$]+|(?<=[\da-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/u)
-    .filter((word) => word.length > 0)
-    .map((word) => word.toLowerCase());
+  return Fn.pipe(
+    name.split(/[_$]+|(?<=[\da-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/u),
+    Arr.filter((word) => word.length > 0),
+    Arr.map((word) => word.toLowerCase()),
+  );
 }
 
 // Conversion factors (`MS_PER_SECOND`, see also `SECONDS_IN_MINUTE` below), rates (`REQUESTS_PER_SECOND`), and timestamps (`CREATED_AT_MS`) are not durations.
@@ -82,7 +85,13 @@ function nameUnit(name: string): NameUnit {
 
   const conversion = inIndex > 0 && inIndex < parts.length - 1 && (unitWords.has(before) || singularUnits.has(before));
 
-  if (conversion || parts.some((part) => nonDurationWords.has(part))) {
+  if (
+    conversion ||
+    Fn.pipe(
+      parts,
+      Arr.some((part) => nonDurationWords.has(part)),
+    )
+  ) {
     return 'excluded';
   }
 
@@ -114,7 +123,10 @@ function resolvesToImport(node: ESTree.Node, name: string, context: Context): bo
     scope = scope.upper;
   }
 
-  return scope?.set.get(name)?.defs.some((definition) => definition.type === 'ImportBinding') === true;
+  return Fn.pipe(
+    scope?.set.get(name)?.defs ?? [],
+    Arr.some((definition) => definition.type === 'ImportBinding'),
+  );
 }
 
 function typeNamePath(node: ESTree.Node): Array<string> | undefined {

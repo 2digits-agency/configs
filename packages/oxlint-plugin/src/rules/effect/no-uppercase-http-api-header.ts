@@ -1,4 +1,7 @@
 import type { Context, Definition, ESTree, Rule, Scope } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
+import * as Opt from 'effect/Option';
 
 import { argumentAt, defineSyntaxRule, propertyName, ruleMeta, staticPath } from '../../utils';
 import { isTypeOnlyImport } from './import-style-utils';
@@ -108,13 +111,26 @@ export const noUppercaseHttpApiHeader: Rule = defineSyntaxRule(
   ),
   (context) => ({
     CallExpression(node) {
-      if (node.arguments.some((argument) => argument.type === 'SpreadElement') || !isEndpointCall(node, context)) {
+      if (
+        Fn.pipe(
+          node.arguments,
+          Arr.some((argument) => argument.type === 'SpreadElement'),
+        ) ||
+        !isEndpointCall(node, context)
+      ) {
         return;
       }
 
       const options = directProperties(argumentAt(node, 2));
 
-      const headers = directProperties(options?.find((property) => propertyName(property) === 'headers')?.value);
+      const headers = directProperties(
+        Opt.getOrUndefined(
+          Fn.pipe(
+            options ?? [],
+            Arr.findFirst((property) => propertyName(property) === 'headers'),
+          ),
+        )?.value,
+      );
 
       if (headers === undefined) {
         return;

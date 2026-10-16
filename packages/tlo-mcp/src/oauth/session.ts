@@ -1,4 +1,4 @@
-import type { OAuth } from '@yielded/oauth';
+import type * as OAuth from '@yielded/oauth/OAuth';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 
@@ -18,9 +18,12 @@ export const Session = Schema.Struct({
 
 export interface Session extends Schema.Schema.Type<typeof Session> {}
 
-export class OrbitAuthError extends Schema.TaggedError<OrbitAuthError>()('OrbitAuthError', {
-  message: Schema.String,
-}) {}
+export class OrbitAuthError extends Schema.TaggedError<OrbitAuthError, { readonly brand: unique symbol }>()(
+  'OrbitAuthError',
+  {
+    message: Schema.String,
+  },
+) {}
 
 /**
  * An omitted rotated refresh token preserves the previous grant, not its expiry.

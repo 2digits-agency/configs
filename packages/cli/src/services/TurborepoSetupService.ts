@@ -17,7 +17,7 @@ import { type TurboConfig, TurboConfigJson } from '../schemas/TurboConfig';
 import { PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
 
-class TurborepoSetupError extends Schema.TaggedError<TurborepoSetupError>()(
+class TurborepoSetupError extends Schema.TaggedError<TurborepoSetupError, { readonly brand: unique symbol }>()(
   '@2digits/cli/services/TurborepoSetupService/TurborepoSetupError',
   {
     operation: Schema.String,

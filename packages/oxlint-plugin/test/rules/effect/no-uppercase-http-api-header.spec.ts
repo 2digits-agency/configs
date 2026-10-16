@@ -1,5 +1,7 @@
+import * as Fn from 'effect/Function';
 /* oxlint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 /* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
+import * as Arr from 'effect/Array';
 import { RuleTester } from 'oxlint/plugins-dev';
 
 import { noUppercaseHttpApiHeader } from '../../../src/rules/effect/no-uppercase-http-api-header';
@@ -98,9 +100,12 @@ const ambiguousOptions = [
 ];
 
 tester.run(ruleName, noUppercaseHttpApiHeader, {
-  valid: ambiguousOptions.map(
-    (options) => `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
-      HttpApiEndpoint.get('me', '/me', ${options});`,
+  valid: Fn.pipe(
+    ambiguousOptions,
+    Arr.map(
+      (options) => `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
+  HttpApiEndpoint.get('me', '/me', ${options});`,
+    ),
   ),
   invalid: [
     {
@@ -152,3 +157,5 @@ HttpApiEndpoint.get('me', '/me', { headers: {
     },
   ],
 });
+
+/* eslint-enable unicorn/no-null */

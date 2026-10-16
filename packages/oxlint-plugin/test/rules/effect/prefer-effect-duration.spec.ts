@@ -1,3 +1,5 @@
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
 import { RuleTester } from 'oxlint/plugins-dev';
 
 import { preferEffectDuration } from '../../../src/rules/effect/prefer-effect-duration';
@@ -35,7 +37,7 @@ tester.run('prefer-effect-duration positions', preferEffectDuration, {
     `import { Stream } from 'effect'; function f(Stream) { Stream.debounce(250); }`,
     `import type { Effect } from 'effect'; Effect.sleep(10);`,
   ],
-  invalid: (
+  invalid: Fn.pipe(
     [
       [
         `import * as Effect from 'effect/Effect'; Effect.sleep(5 * 1000);`,
@@ -65,6 +67,7 @@ tester.run('prefer-effect-duration positions', preferEffectDuration, {
         `import { TestClock } from 'effect/testing'; TestClock.adjust(60_000);`,
         `${duration}\nimport { TestClock } from 'effect/testing'; TestClock.adjust(Duration.millis(60_000));`,
       ],
-    ] satisfies Array<[string, string]>
-  ).map(([code, output]) => ({ code, errors: [{ messageId: 'effectDuration' }], output })),
+    ] satisfies Array<[string, string]>,
+    Arr.map(([code, output]) => ({ code, errors: [{ messageId: 'effectDuration' }], output })),
+  ),
 });

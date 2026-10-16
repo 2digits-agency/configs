@@ -1,5 +1,7 @@
 import { describe, expect, it } from '@effect/vitest';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
 import * as TestConsole from 'effect/testing/TestConsole';
 
 import { McpLoggerLayer } from '../src/mcp/logger.js';
@@ -13,7 +15,7 @@ describe('mcp logging', () => {
 
       const stdout = yield* TestConsole.logLines;
 
-      expect(stderr.join('\n')).toContain('MCP diagnostic');
+      expect(Arr.join(Fn.pipe(stderr, Arr.map(String)), '\n')).toContain('MCP diagnostic');
 
       expect(stdout).toStrictEqual([]);
     }),

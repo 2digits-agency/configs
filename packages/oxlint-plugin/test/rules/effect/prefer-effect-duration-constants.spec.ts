@@ -1,5 +1,7 @@
+import * as Fn from 'effect/Function';
 /* oxlint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 /* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
+import * as Arr from 'effect/Array';
 import { RuleTester } from 'oxlint/plugins-dev';
 
 import { preferEffectDurationConstants } from '../../../src/rules/effect/prefer-effect-duration-constants';
@@ -78,7 +80,7 @@ tester.run(ruleName, preferEffectDurationConstants, {
     `${effect} const attempts = 3; Effect.retry(program, { times: attempts });`,
     `${effect} const value = 3; Effect.succeed(value);`,
   ],
-  invalid: (
+  invalid: Fn.pipe(
     [
       [`${effect} const TIMEOUT_MS = 30_000;`, 'TIMEOUT_MS', 'Duration.seconds(30)'],
       [`${effect} export const requestTimeoutMs = 1500;`, 'requestTimeoutMs', 'Duration.millis(1500)'],
@@ -139,12 +141,13 @@ tester.run(ruleName, preferEffectDurationConstants, {
         'step',
         'Duration.minutes(1)',
       ],
-    ] satisfies Array<[string, string, string]>
-  ).map(([code, name, replacement]) => ({
-    code,
-    errors: [{ messageId: 'durationConstant', data: { name, replacement } }],
-    output: null,
-  })),
+    ] satisfies Array<[string, string, string]>,
+    Arr.map(([code, name, replacement]) => ({
+      code,
+      errors: [{ messageId: 'durationConstant', data: { name, replacement } }],
+      output: null,
+    })),
+  ),
 });
 
 tester.run(`${ruleName} reports each declaration once`, preferEffectDurationConstants, {
@@ -157,3 +160,5 @@ tester.run(`${ruleName} reports each declaration once`, preferEffectDurationCons
     },
   ],
 });
+
+/* eslint-enable unicorn/no-null */
