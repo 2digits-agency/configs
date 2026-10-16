@@ -1,6 +1,7 @@
 import type { Context, ESTree, Rule, Scope } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
+import * as Str from 'effect/String';
 
 import { defineEffectRule, ruleMeta, unwrapExpression, walkNodes, type FileState } from '../../utils';
 import { durationArgument, durationConstructor, numericValue, timeArithmetic, type DurationUnit } from './duration';
@@ -51,13 +52,11 @@ const durationWords = new Set([
   'week',
 ]);
 
-function words(name: string): Array<string> {
-  return Fn.pipe(
-    name.split(/[_$]+|(?<=[\da-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/u),
-    Arr.filter((word) => word.length > 0),
-    Arr.map((word) => word.toLowerCase()),
-  );
-}
+const words = Fn.flow(
+  Str.split(/[_$]+|(?<=[\da-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/u),
+  Arr.filter(Str.isNonEmpty),
+  Arr.map(Str.toLowerCase),
+);
 
 // Conversion factors (`MS_PER_SECOND`, see also `SECONDS_IN_MINUTE` below), rates (`REQUESTS_PER_SECOND`), and timestamps (`CREATED_AT_MS`) are not durations.
 const nonDurationWords = new Set(['at', 'epoch', 'per', 'timestamp']);
