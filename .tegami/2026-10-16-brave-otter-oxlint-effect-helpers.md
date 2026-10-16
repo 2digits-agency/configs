@@ -3,7 +3,7 @@ packages:
   'npm:@2digits/oxlint-plugin': patch
 ---
 
-## Use Effect collection helpers and `Match` in rule code
+## Use Effect helpers in lint rules
 
-- Rewrote rule internals to use `effect/Array`, `effect/Record`, `effect/Option`, and `effect/Function` instead of native array, object, and `switch` calls, so the plugin's own code follows the Effect rules it ships
-- Rule behavior is unchanged; the existing test suite passes without changes
+- Rewrote rule internals to use Effect collection helpers and `Match`, so the plugin's own code follows the Effect rules it ships
+- Replaced duration arithmetic and constant-name parsing with `effect/Number` and `effect/String` helpers
