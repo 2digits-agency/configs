@@ -2,6 +2,7 @@ import type { Context, ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
+import * as Num from 'effect/Number';
 import * as Opt from 'effect/Option';
 
 import { importedApi } from '../../fixes';
@@ -105,13 +106,13 @@ export function numericValue(node: ESTree.Expression): number | undefined {
 
   return Fn.pipe(
     Match.value(expression.operator),
-    Match.when('*', () => left * right),
-    Match.when('+', () => left + right),
-    Match.when('-', () => left - right),
-    Match.when('/', () => left / right),
-    Match.when('%', () => left % right),
+    Match.when('*', () => Num.multiply(left, right)),
+    Match.when('+', () => Num.sum(left, right)),
+    Match.when('-', () => Num.subtract(left, right)),
+    Match.when('/', () => Num.divideUnsafe(left, right)),
+    Match.when('%', () => Num.remainder(left, right)),
     Match.when('**', () => left ** right),
-    Match.orElse((): number | undefined => undefined),
+    Match.orElse(Fn.constUndefined),
   );
 }
 
