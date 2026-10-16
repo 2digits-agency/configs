@@ -1,3 +1,11 @@
+## @2digits/config-monorepo@0.1.11
+
+### Document Schema chain style and agent checks
+
+- Added `GLOSSARY.md` and ADR 0001, which record why Schema modifiers go in `.pipe(...)` while Schema wrappers are called
+- Documented `vpr check` as the full check in `AGENTS.md`, since `vp check` only runs format, lint, and types
+- Removed the vendored `vite-plus` agent skill and its `skills-lock.json` entry
+
 ## @2digits/config-monorepo@0.1.10
 
 ### Update `@effect/tsgo` to 0.53.1
