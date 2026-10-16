@@ -142,3 +142,38 @@ testRule(ruleName, noInlineSchemaCompile, {
   `,
   messageId: 'inlineSchema',
 });
+
+testRule(ruleName, noInlineSchemaCompile, {
+  valid: `
+    import { Schema, type SchemaAST } from 'effect'
+    const User = Schema.Struct({ name: Schema.String })
+    declare function nextOptions(): SchemaAST.ParseOptions
+    export const parse = (input: unknown) => Schema.decodeUnknownSync(User, nextOptions())(input)
+  `,
+  invalid: `
+    import { Schema } from 'effect'
+    export const parse = (input: unknown) =>
+      Schema.decodeUnknownSync(Schema.String.check(Schema.makeFilter((s: string) => s.trim() !== '')))(input)
+  `,
+  messageId: 'inlineSchema',
+});
+
+testRule(ruleName, noInlineSchemaCompile, {
+  valid: `
+    import { Schema } from 'effect'
+    export class Base {
+      constructor(input: unknown) {
+        Schema.asserts(Schema.instanceOf(new.target))(input)
+      }
+    }
+  `,
+  invalid: `
+    import { Schema } from 'effect'
+    export class Base {
+      constructor(input: unknown) {
+        Schema.asserts(Schema.instanceOf(Date))(input)
+      }
+    }
+  `,
+  messageId: 'inlineSchema',
+});

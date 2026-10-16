@@ -45,6 +45,15 @@ const moduleScopes = new Set<string>(['global', 'module']);
 
 const functionTypes = new Set<string>(['ArrowFunctionExpression', 'FunctionDeclaration', 'FunctionExpression']);
 
+const dynamicTypes = new Set<string>([
+  'AssignmentExpression',
+  'AwaitExpression',
+  'ImportExpression',
+  'TaggedTemplateExpression',
+  'UpdateExpression',
+  'YieldExpression',
+]);
+
 const transparentParentTypes = new Set<string>(['ParenthesizedExpression', 'TSAsExpression', 'TSNonNullExpression']);
 
 function resolveVariable(node: ESTree.Node, name: string, context: Context): Variable | undefined {
@@ -169,13 +178,46 @@ function isNonReferenceName(node: ESTree.Node): boolean {
   );
 }
 
-// Hoisting needs arguments free of `this`, function-local bindings, and mutable module bindings.
-function isHoistable(node: ESTree.Node, context: Context): boolean {
+function isInsideCallback(node: ESTree.Node, root: ESTree.Node): boolean {
+  if (node === root) {
+    return false;
+  }
+
+  let parent = node.parent as ESTree.Node | null;
+
+  while (parent !== null && parent !== root) {
+    if (functionTypes.has(parent.type)) {
+      return true;
+    }
+
+    parent = parent.parent as ESTree.Node | null;
+  }
+
+  return false;
+}
+
+// Hoisting evaluates the arguments once, so only Effect API calls may run eagerly; callbacks still run later.
+function isDynamic(node: ESTree.Node, root: ESTree.Node, state: FileState): boolean {
+  if (isInsideCallback(node, root)) {
+    return false;
+  }
+
+  if (node.type === 'CallExpression' || node.type === 'NewExpression') {
+    return canonicalPath(node.callee, state) === undefined;
+  }
+
+  return dynamicTypes.has(node.type);
+}
+
+// Hoisting needs arguments free of `this`, `new.target`, function-local or mutable bindings, and non-Effect calls.
+function isHoistable(node: ESTree.Node, state: FileState, context: Context): boolean {
   return !walkNodes(
     node,
     (child) =>
       child.type === 'ThisExpression' ||
       child.type === 'Super' ||
+      (child.type === 'MetaProperty' && child.meta.name === 'new') ||
+      isDynamic(child, node, state) ||
       (child.type === 'Identifier' &&
         !isNonReferenceName(child) &&
         !isMovableIdentifier(child, child.name, node, context)),
@@ -228,7 +270,7 @@ export const noInlineSchemaCompile: Rule = defineEffectRule(
         (!inlineSchema && schema.type !== 'Identifier' && schema.type !== 'MemberExpression') ||
         !Fn.pipe(
           node.arguments,
-          Arr.every((child) => isHoistable(child, context)),
+          Arr.every((child) => isHoistable(child, state, context)),
         )
       ) {
         return;
