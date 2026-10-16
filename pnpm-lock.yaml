@@ -174,8 +174,8 @@ catalogs:
       specifier: 4.0.5
       version: 4.0.5
     '@effect/tsgo':
-      specifier: 0.53.1
-      version: 0.53.1
+      specifier: 0.53.2
+      version: 0.53.2
     '@effect/vitest':
       specifier: 4.0.5
       version: 4.0.5
@@ -411,8 +411,8 @@ catalogs:
       specifier: 19.3.1
       version: 19.3.1
     renovate:
-      specifier: 44.164.9
-      version: 44.164.9
+      specifier: 44.164.10
+      version: 44.164.10
     tailwind-csstree:
       specifier: 0.4.1
       version: 0.4.1
@@ -515,7 +515,7 @@ importers:
         version: 0.87.4
       '@effect/tsgo':
         specifier: 'catalog:'
-        version: 0.53.1
+        version: 0.53.2
       '@manypkg/cli':
         specifier: 'catalog:'
         version: 0.25.1
@@ -1093,7 +1093,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 44.164.9(supports-color@7.2.0)(typanion@3.14.0)
+        version: 44.164.10(supports-color@7.2.0)(typanion@3.14.0)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1139,7 +1139,7 @@ importers:
     devDependencies:
       '@effect/tsgo':
         specifier: 'catalog:'
-        version: 0.53.1
+        version: 0.53.2
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1428,8 +1428,8 @@ packages:
     resolution: {integrity: sha512-y7/yvZ2TPAnR9+jnc00klvNNLkJiXFFrQA/hlLCcxA9a2A4zQIOimyFQ9XfwYKiGD1fb5GY8vbKIIgO8d5Tb2A==}
     engines: {node: '>= 20.12.0'}
 
-  '@containerbase/base@14.41.0':
-    resolution: {integrity: sha512-J3QzMfOt5iNaeC6BFdhA9j3QKwDPJ7U9U6rkLZ2M8msH1jqd53Dcq5Zh1KB6g8na2Mu9YTcCoeSPgMuyVBDZ3Q==}
+  '@containerbase/base@14.41.1':
+    resolution: {integrity: sha512-wC9G0z/73TrSsbNBxYq0nVuQ/BK7RThazq7oU19EDtdTnzGTOIq4YAWpqtGseCicyN+f7FGNOYR2b11QNh1jAA==}
     engines: {node: '>=24.10.0'}
     peerDependencies:
       zod: ^4.0.0
@@ -1459,43 +1459,38 @@ packages:
       effect: ^4.0.5
       redis: '>=5.0.0 <7.0.0'
 
-  '@effect/tsgo-darwin-arm64@0.53.1':
-    resolution: {integrity: sha512-wje3jvSaN3ttD7sBm9Bw/E8xHq2ZQWMJNg1YAGCj3/tiwUxHDUjKrt1LC/HLju+OnTBSsSvkUE8jXUT3OdQY4A==}
+  '@effect/tsgo-darwin-arm64@0.53.2':
+    resolution: {integrity: sha512-2Vr9znhVd3NAixBFuliiaslLRkBHuZ8jHbBisvPhF+zcIN1OrpM2w/CTYYDObumH0qnfbTT85hmvPzxuM1zYrA==}
     cpu: [arm64]
     os: [darwin]
 
-  '@effect/tsgo-darwin-x64@0.53.1':
-    resolution: {integrity: sha512-x4mNzV8WLPZ71Vu7vyOJiJGTNOrfYR0g5+Zg9Q9ZieKCVSJkWJvOIOND+EvT9gUP4qdTYQh4kzGbe/T+kSrilg==}
+  '@effect/tsgo-darwin-x64@0.53.2':
+    resolution: {integrity: sha512-OGz77iayhGP275oJK9ypXdkNdkvH6+hF+Sa/HrwOinmPHm1rpJXRfG5jQV9v8kDsXOjLzeYl4XkTx7DuSKzyfA==}
     cpu: [x64]
     os: [darwin]
 
-  '@effect/tsgo-linux-arm64@0.53.1':
-    resolution: {integrity: sha512-p2HrEKCh0EAY2G9MYS5vjJy2ZX27UyjZRgy2SUQu8PUVHLq3TAGTsX0d6I7LlNbRsUFxmI4HgypP6IPAUnjUwQ==}
+  '@effect/tsgo-linux-arm64@0.53.2':
+    resolution: {integrity: sha512-pC1k5iFgNF49+4cgiPSJq/Oyw1IWOmmXt9TOWc3SgDpP9SCmHhUyaGUCTVDT4zc7WAXNxYQeNIN1FHQ+ZX+9XQ==}
     cpu: [arm64]
     os: [linux]
 
-  '@effect/tsgo-linux-arm@0.53.1':
-    resolution: {integrity: sha512-y29MekM4Riv1MjnRS0ST49ttmvHoVdPNmpR3aivmNlOWIKXXm4XSGx0F+PEnblq8dESWeSXmAcC0mcETUq880A==}
+  '@effect/tsgo-linux-arm@0.53.2':
+    resolution: {integrity: sha512-hsfGmSBnURiTkSXFnGRg/6JCMQx1g5mYBsbf/ZfV/zlKbEVYZnG2kCEiQNi14XRHeqTDkhbTD6KiHCcUIfrirw==}
     cpu: [arm]
     os: [linux]
 
-  '@effect/tsgo-linux-x64@0.53.1':
-    resolution: {integrity: sha512-dvvZGUW2DhQGjP+28v7Q977it6CLw44rh+OhP/+3snk0IeoMiRtnmtd6k42ny3/uvexJFAgLc2ch0ttwwGc/LQ==}
-    cpu: [x64]
-    os: [linux]
-
-  '@effect/tsgo-win32-arm64@0.53.1':
-    resolution: {integrity: sha512-9AvAoqT6QDhVKSaVx2PpgBxFJNbOP8gjBz+Q9cCJTaiOFFMxpuSvsrU1+ttDh4XuaWn3mJXtdQDSrEHlepuhoQ==}
+  '@effect/tsgo-win32-arm64@0.53.2':
+    resolution: {integrity: sha512-zAWZcwgVOmGRIRQLS+EKs6AxVXn7VV623YPZs7EHIixll3pUcEvDG6MOAptywydDEn5WeyuFTOSbDaaoyf/zMA==}
     cpu: [arm64]
     os: [win32]
 
-  '@effect/tsgo-win32-x64@0.53.1':
-    resolution: {integrity: sha512-XTKMzsK3I78oApuTTcOx6orxGOqkGeDZBDHYiJQ6vIlwiKaeyZqCWm2fUtAgkvyxDyY5g4JXm8Qd23RVRSoxmg==}
+  '@effect/tsgo-win32-x64@0.53.2':
+    resolution: {integrity: sha512-aLSDn6VNbUXJXz6IpsJLbtO1iHcvUxOLjT8YHFXrSsYBTKA+11dEUSgu54jwpScaTvBd5ErU0wyWvpalABJdnA==}
     cpu: [x64]
     os: [win32]
 
-  '@effect/tsgo@0.53.1':
-    resolution: {integrity: sha512-0LW8VI1+HvC+S5KOpReuAneN4T93ipcd8aKNXpy2DubBfm6ShWhBtWxtxPSaQ9M25gAtQs6w/D9NEmXqgd8uGg==}
+  '@effect/tsgo@0.53.2':
+    resolution: {integrity: sha512-GfMMVfmCW5DYTMCqa7PHs41lD43bgs5qwgz391jDm5xb0q5+stZgY9qLSa9OQl+5fhDyjEOprj0E9aUSKj+E4A==}
     hasBin: true
 
   '@effect/vitest@4.0.5':
@@ -3298,8 +3293,8 @@ packages:
     peerDependencies:
       '@redis/client': ^6.2.1
 
-  '@renovatebot/base-image@13.131.2':
-    resolution: {integrity: sha512-CX/Q1LQRgsM+BnQYM1GzhR3q2TDKHYofSjtcqfuHo/Y0VF1L4bV+6Prc5+reu7Qjre8yUOkivzW8eVkGkLk//g==}
+  '@renovatebot/base-image@13.131.3':
+    resolution: {integrity: sha512-ijoqQdgiCoUlpAdA88VcJLFhjjyoJvR/Lskpfj3nkzkBVw+SX9Uay3pjPNCH1gBYBExbXhaoU2hlHubj6V88Wg==}
     engines: {node: '>=24.10.0'}
     peerDependencies:
       zod: ^4.0.0
@@ -6740,8 +6735,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@44.164.9:
-    resolution: {integrity: sha512-SM7UKwf0pNa5N1IivzLZO83EsLp5cDrIgMbS/M/ELgGTOlMWeRT3dhnP505IP2vAhFKc7zT73L+sOfYdE/zxxQ==}
+  renovate@44.164.10:
+    resolution: {integrity: sha512-00SwO80VhvAKMvn3NHD3yQTq9Fo0NhhpGgRkmRlh+6GS/GgH7AHwNsAnueU3gjTtoPAyj8igBQZvVqfmcG3mew==}
     engines: {node: ^24.11.0, pnpm: ^11.0.0}
     hasBin: true
 
@@ -7964,7 +7959,7 @@ snapshots:
       fast-wrap-ansi: 0.2.2
       sisteransi: 1.0.5
 
-  '@containerbase/base@14.41.0(zod@4.6.5)':
+  '@containerbase/base@14.41.1(zod@4.6.5)':
     optionalDependencies:
       zod: 4.6.5
 
@@ -8000,36 +7995,32 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@effect/tsgo-darwin-arm64@0.53.1':
+  '@effect/tsgo-darwin-arm64@0.53.2':
     optional: true
 
-  '@effect/tsgo-darwin-x64@0.53.1':
+  '@effect/tsgo-darwin-x64@0.53.2':
     optional: true
 
-  '@effect/tsgo-linux-arm64@0.53.1':
+  '@effect/tsgo-linux-arm64@0.53.2':
     optional: true
 
-  '@effect/tsgo-linux-arm@0.53.1':
+  '@effect/tsgo-linux-arm@0.53.2':
     optional: true
 
-  '@effect/tsgo-linux-x64@0.53.1':
+  '@effect/tsgo-win32-arm64@0.53.2':
     optional: true
 
-  '@effect/tsgo-win32-arm64@0.53.1':
+  '@effect/tsgo-win32-x64@0.53.2':
     optional: true
 
-  '@effect/tsgo-win32-x64@0.53.1':
-    optional: true
-
-  '@effect/tsgo@0.53.1':
+  '@effect/tsgo@0.53.2':
     optionalDependencies:
-      '@effect/tsgo-darwin-arm64': 0.53.1
-      '@effect/tsgo-darwin-x64': 0.53.1
-      '@effect/tsgo-linux-arm': 0.53.1
-      '@effect/tsgo-linux-arm64': 0.53.1
-      '@effect/tsgo-linux-x64': 0.53.1
-      '@effect/tsgo-win32-arm64': 0.53.1
-      '@effect/tsgo-win32-x64': 0.53.1
+      '@effect/tsgo-darwin-arm64': 0.53.2
+      '@effect/tsgo-darwin-x64': 0.53.2
+      '@effect/tsgo-linux-arm': 0.53.2
+      '@effect/tsgo-linux-arm64': 0.53.2
+      '@effect/tsgo-win32-arm64': 0.53.2
+      '@effect/tsgo-win32-x64': 0.53.2
 
   '@effect/vitest@4.0.5(effect@4.0.5)(vitest@5.0.5)':
     dependencies:
@@ -9555,9 +9546,9 @@ snapshots:
     dependencies:
       '@redis/client': 6.2.1(@opentelemetry/api@1.9.1)
 
-  '@renovatebot/base-image@13.131.2(zod@4.6.5)':
+  '@renovatebot/base-image@13.131.3(zod@4.6.5)':
     dependencies:
-      '@containerbase/base': 14.41.0(zod@4.6.5)
+      '@containerbase/base': 14.41.1(zod@4.6.5)
     optionalDependencies:
       zod: 4.6.5
 
@@ -13257,7 +13248,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@44.164.9(supports-color@7.2.0)(typanion@3.14.0):
+  renovate@44.164.10(supports-color@7.2.0)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1139.0
       '@aws-sdk/client-ec2': 3.1139.0
@@ -13290,7 +13281,7 @@ snapshots:
       '@pnpm/parse-overrides': 1001.0.4
       '@qnighy/marshal': 0.1.3
       '@redis/client': 6.3.0(@opentelemetry/api@1.9.1)
-      '@renovatebot/base-image': 13.131.2(zod@4.6.5)
+      '@renovatebot/base-image': 13.131.3(zod@4.6.5)
       '@renovatebot/detect-tools': 4.0.21
       '@renovatebot/good-enough-parser': 2.0.1
       '@renovatebot/osv-offline': 3.0.12(supports-color@7.2.0)
