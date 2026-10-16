@@ -1,3 +1,72 @@
+## @2digits/config-monorepo@0.1.10
+
+### Update `@effect/tsgo` to 0.53.1
+
+
+
+### Fix wizard terminal and browser fallbacks
+
+- Added a terminal-clearing fallback when `tput clear` fails
+- Restored the manual URL warning when no browser-opening command is available
+
+### Update `oxlint` to 1.88.0
+
+
+
+### Update `oxfmt` to 0.73.0
+
+
+
+### Preserve wizard environment values safely
+
+- Quoted and escaped saved values, and decoded supported quoted values when reusing them on later runs
+- Created new environment files with mode `0600` and preserved existing file permissions and symlinks
+- Updated the corresponding shell variable after saving its value
+
+### Update Node.js to 24.22.0
+
+
+
+### Parse wizard stages before prompting
+
+- Wrapped stages in `run_wizard` so edits made during a run cannot alter later stages being parsed
+
+### Update the `baseline-browser-mapping` override to 2.11.29
+
+
+
+### Update `vite-plus` to 1.3.0
+
+
+
+### Update the `vite` alias to `@voidzero-dev/vite-plus-core` 1.3.0
+
+
+
+### Update the agent skills
+
+- Updated the Matt Pocock skills (`ask-matt`, `code-review`, `diagnosing-bugs`, `grilling`, `handoff`, `implement`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-tickets`, `wayfinder`) and the `gitbutler` skill, and updated `skills-lock.json` to match
+- Added a required `SKILL.md` read before `ask-matt` describes a skill or recommends skipping it
+- Added forced-red test verification and a `/retro` handoff to `diagnosing-bugs`
+- Updated `code-review` to run Standards and Spec sub-agents together in the foreground and check for `CODING_STANDARDS.md` and `CONTRIBUTING.md`
+- Updated `gitbutler` guidance for `but init`, `-F` message files, and the current `but` version
+- Added `.claude/skills` links for the `turborepo` and `wizard` skills, and for the other skills synced from `.agents/skills`
+
+### Fix wizard prompt editing and end-of-input handling
+
+- Added Readline editing to visible prompts with cursor-safe color codes
+- Made visible and secret prompts fail on empty end-of-input instead of silently continuing
+
+### Update `@oxc-node/cli` to 0.1.7
+
+
+
+### Update `turbo` to 2.11.8
+
+
+
+### Update `pnpm` to 12.14.0
+
 ## @2digits/config-monorepo@0.1.9
 
 ### Update pnpm to 12.12.1
