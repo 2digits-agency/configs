@@ -5,7 +5,7 @@
       "inputs": ["$TURBO_DEFAULT$", "tsdown.config.ts", "!test/**", "!fixtures/**", "!vitest.config.ts"]
     },
     "docs": {
-      "outputs": ["./.eslint-config-inspector/**"],
+      "outputs": ["dist/__eslint-config-inspector/**"],
       "dependsOn": ["build", "^build"],
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/eslint.config.ts"]
     },
