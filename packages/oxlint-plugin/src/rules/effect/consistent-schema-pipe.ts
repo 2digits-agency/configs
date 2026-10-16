@@ -1,4 +1,4 @@
-import type { Context, ESTree, Rule } from '@oxlint/plugins';
+import type { Context, ESTree, Rule, Scope } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
@@ -187,6 +187,106 @@ function isPure(node: ESTree.Node, context: Context, state: FileState): boolean 
     (node.callee === callee || isPure(node.callee, context, state)) &&
     allPure(node.arguments, context, state)
   );
+}
+
+function typePath(node: ESTree.TSTypeName, state: FileState): ReadonlyArray<string> | undefined {
+  if (node.type === 'Identifier') {
+    return state.bindings.get(node.name);
+  }
+
+  if (node.type !== 'TSQualifiedName') {
+    return undefined;
+  }
+
+  const left = typePath(node.left, state);
+
+  return left === undefined ? undefined : [...left, node.right.name];
+}
+
+function typeParameter(name: string, from: ESTree.Node): ESTree.TSTypeParameter | undefined {
+  for (let node: ESTree.Node | null = from.parent; node !== null; node = node.parent) {
+    const parameter =
+      'typeParameters' in node && node.typeParameters?.type === 'TSTypeParameterDeclaration'
+        ? Fn.pipe(
+            node.typeParameters.params,
+            Arr.findFirst((candidate) => candidate.name.name === name),
+            Opt.getOrUndefined,
+          )
+        : undefined;
+
+    if (parameter !== undefined) {
+      return parameter;
+    }
+  }
+
+  return undefined;
+}
+
+// Whether a value of the declared type has `.pipe`, or undefined when that is unknown without type information.
+function hasPipe(declared: ESTree.TSType, from: ESTree.Node, state: FileState): boolean | undefined {
+  const seen = new Set<ESTree.TSTypeParameter>();
+
+  let type: ESTree.TSType | null = declared;
+
+  let scope: ESTree.Node = from;
+
+  // A type parameter only has `.pipe` when its constraint does, so follow constraints to a Schema type.
+  while (type?.type === 'TSTypeReference') {
+    const path = typePath(type.typeName, state);
+
+    const member = path?.length === 2 && path[0] === 'Schema' ? path[1] : undefined;
+
+    if (member !== undefined) {
+      // Schema.Constraint and its subtypes are not Pipeable, unlike Schema.Top and the schemas built on it.
+      return !member.startsWith('Constraint');
+    }
+
+    const parameter: ESTree.TSTypeParameter | undefined =
+      type.typeName.type === 'Identifier' ? typeParameter(type.typeName.name, scope) : undefined;
+
+    if (parameter === undefined || seen.has(parameter)) {
+      return seen.size === 0 ? undefined : false;
+    }
+
+    seen.add(parameter);
+
+    type = parameter.constraint;
+
+    scope = parameter;
+  }
+
+  return seen.size === 0 ? undefined : false;
+}
+
+function declaredType(node: ESTree.IdentifierReference, context: Context): ESTree.TSTypeAnnotation | undefined {
+  for (let scope: Scope | null = context.sourceCode.getScope(node); scope !== null; scope = scope.upper) {
+    const variable = scope.set.get(node.name);
+
+    if (variable !== undefined) {
+      const name = variable.defs[0]?.name;
+
+      return name !== undefined && 'typeAnnotation' in name ? (name.typeAnnotation ?? undefined) : undefined;
+    }
+  }
+
+  return undefined;
+}
+
+// Without types, only the declared type of a head shows that it cannot take `.pipe(...)`, e.g. a generic schema.
+function headLacksPipe(node: ESTree.Expression, context: Context, state: FileState): boolean {
+  let head = node;
+
+  while (head.type === 'TSSatisfiesExpression' || head.type === 'TSNonNullExpression') {
+    head = head.expression;
+  }
+
+  if (head.type === 'TSAsExpression') {
+    return hasPipe(head.typeAnnotation, head, state) === false;
+  }
+
+  const annotation = head.type === 'Identifier' ? declaredType(head, context) : undefined;
+
+  return annotation !== undefined && hasPipe(annotation.typeAnnotation, annotation, state) === false;
 }
 
 function hasSpread(node: ESTree.CallExpression): boolean {
@@ -494,6 +594,11 @@ export const consistentSchemaPipe: Rule = defineEffectRule(
       }
 
       const { head } = chain;
+
+      // Unless a wrapper comes first, the fix calls `.pipe(...)` on the head itself.
+      if (chain.steps[0]?.wrapper === false && headLacksPipe(head, context, state)) {
+        return;
+      }
 
       // Steps are moved around, so comments between them would be lost.
       const hasComments = Fn.pipe(

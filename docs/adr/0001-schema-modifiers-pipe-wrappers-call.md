@@ -18,6 +18,7 @@ const TurboConfig = Schema.Struct({
 
 - The modifier, wrapper, and Data-last step lists are pinned to the Effect version in the workspace catalog and must be revisited when Effect adds Schema functions.
 - `pipe(schema, ...)` from `effect` is normalized to `schema.pipe(...)`, but only when the head is recognizably a Schema expression or the first step is a known Schema function, since the rule has no type information.
+- Calls on a head declared as `Schema.Constraint` or a generic not bounded by a pipeable Schema type, such as `<T extends Schema.Constraint>(schema: T)`, stay calls, because `Schema.Constraint` has no `.pipe`.
 - Transformations and derived codecs such as `RedactedFromValue`, `OptionFrom*`, `fromJsonString`, and `toCodecJson` count as modifiers, while `Redacted` counts as a wrapper. Calls that pass options, such as `Schema.fromJsonString(S, { space: 2 })`, stay calls because a pipe step cannot carry them.
 - `Schema.Opaque<Self>()(schema)` stays a call, because it is the `class X extends Schema.Opaque<X>()(S) {}` idiom.
 - Only namespace imports of Schema are recognized; named imports such as `import { optional } from 'effect/Schema'` are out of scope.
