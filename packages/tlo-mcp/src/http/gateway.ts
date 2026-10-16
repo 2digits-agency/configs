@@ -12,7 +12,10 @@ import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as McpProtocol from 'effect/ai/McpProtocol';
 import * as McpServer from 'effect/ai/McpServer';
-import { HttpIncomingMessage, HttpRouter, HttpServerRequest, HttpServerResponse } from 'effect/http';
+import * as HttpIncomingMessage from 'effect/http/HttpIncomingMessage';
+import * as HttpRouter from 'effect/http/HttpRouter';
+import * as HttpServerRequest from 'effect/http/HttpServerRequest';
+import * as HttpServerResponse from 'effect/http/HttpServerResponse';
 
 import { OrbitClient } from '../mcp/OrbitClient.js';
 import { OrbitToolsLive } from '../mcp/proxy.js';
@@ -21,9 +24,12 @@ export const KEY_FILE = `${homedir()}/.config/2digits/tlo-mcp/gateway.key`;
 
 const GatewayKey = Schema.String.check(Schema.isPattern(/^[a-f0-9]{64}$/)).pipe(Schema.RedactedFromValue);
 
-export class GatewayError extends Schema.TaggedError<GatewayError>()('GatewayError', {
-  message: Schema.String,
-}) {}
+export class GatewayError extends Schema.TaggedError<GatewayError, { readonly brand: unique symbol }>()(
+  'GatewayError',
+  {
+    message: Schema.String,
+  },
+) {}
 
 /**
  * A separate gateway credential, never an Orbit token. Existing keys are not replaced.

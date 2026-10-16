@@ -8,7 +8,10 @@ import * as NodeHttpServer from '@effect/platform-node/NodeHttpServer';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
 import * as P from 'effect/Predicate';
-import { HttpRouter, HttpServer, HttpServerRequest, HttpServerResponse } from 'effect/http';
+import * as HttpRouter from 'effect/http/HttpRouter';
+import * as HttpServer from 'effect/http/HttpServer';
+import * as HttpServerRequest from 'effect/http/HttpServerRequest';
+import * as HttpServerResponse from 'effect/http/HttpServerResponse';
 
 import { OrbitAuthError } from './session.js';
 

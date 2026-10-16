@@ -1,4 +1,7 @@
 import type { Rule } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
+import * as Opt from 'effect/Option';
 
 import { defineEffectRule, propertyName, ruleMeta } from '../../utils';
 
@@ -11,15 +14,22 @@ export const noOverwrittenDiscriminant: Rule = defineEffectRule(
   ),
   (context) => ({
     ObjectExpression(node) {
-      const tagIndex = node.properties.findIndex(
-        (property) => property.type === 'Property' && propertyName(property) === '_tag',
+      const tagIndex = Opt.getOrElse(
+        Fn.pipe(
+          node.properties,
+          Arr.findFirstIndex((property) => property.type === 'Property' && propertyName(property) === '_tag'),
+        ),
+        () => -1,
       );
 
       if (tagIndex === -1) {
         return;
       }
 
-      const laterSpread = node.properties.slice(tagIndex + 1).some((property) => property.type === 'SpreadElement');
+      const laterSpread = Fn.pipe(
+        node.properties.slice(tagIndex + 1),
+        Arr.some((property) => property.type === 'SpreadElement'),
+      );
 
       const tag = node.properties[tagIndex];
 

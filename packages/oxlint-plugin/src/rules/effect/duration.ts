@@ -1,4 +1,9 @@
 import type { Context, ESTree } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
+import * as Match from 'effect/Match';
+import * as Num from 'effect/Number';
+import * as Opt from 'effect/Option';
 
 import { importedApi } from '../../fixes';
 import { argumentAt, canonicalPath, objectProperty, unwrapExpression, type FileState } from '../../utils';
@@ -46,7 +51,7 @@ export function durationArgument(
 ): ESTree.Expression | undefined {
   const path = canonicalPath(node.callee, state);
 
-  const api = path === undefined ? undefined : durationApis.get(path.join('.'));
+  const api = path === undefined ? undefined : durationApis.get(Arr.join(path, '.'));
 
   const position = api !== undefined && importedApi(context, node.callee) ? api : undefined;
 
@@ -99,35 +104,16 @@ export function numericValue(node: ESTree.Expression): number | undefined {
     return undefined;
   }
 
-  switch (expression.operator) {
-    case '*': {
-      return left * right;
-    }
-
-    case '+': {
-      return left + right;
-    }
-
-    case '-': {
-      return left - right;
-    }
-
-    case '/': {
-      return left / right;
-    }
-
-    case '%': {
-      return left % right;
-    }
-
-    case '**': {
-      return left ** right;
-    }
-
-    default: {
-      return undefined;
-    }
-  }
+  return Fn.pipe(
+    Match.value(expression.operator),
+    Match.when('*', () => Num.multiply(left, right)),
+    Match.when('+', () => Num.sum(left, right)),
+    Match.when('-', () => Num.subtract(left, right)),
+    Match.when('/', () => Num.divideUnsafe(left, right)),
+    Match.when('%', () => Num.remainder(left, right)),
+    Match.when('**', () => left ** right),
+    Match.orElse(Fn.constUndefined),
+  );
 }
 
 function factors(node: ESTree.Expression): Array<number> | undefined {
@@ -169,15 +155,31 @@ export function timeArithmetic(node: ESTree.Expression): { readonly millis: bool
   }
 
   const time =
-    product.some((factor) => millisFactors.has(factor)) ||
-    (product.some((factor) => sixtyFactors.has(factor)) &&
-      product.filter((factor) => timeFactors.has(factor)).length >= 2);
+    Fn.pipe(
+      product,
+      Arr.some((factor) => millisFactors.has(factor)),
+    ) ||
+    (Fn.pipe(
+      product,
+      Arr.some((factor) => sixtyFactors.has(factor)),
+    ) &&
+      Fn.pipe(
+        product,
+        Arr.filter((factor) => timeFactors.has(factor)),
+      ).length >= 2);
 
   if (!time) {
     return undefined;
   }
 
-  return { millis: product.includes(1000) || product.some((factor) => factor % 60_000 === 0) };
+  return {
+    millis:
+      product.includes(1000) ||
+      Fn.pipe(
+        product,
+        Arr.some((factor) => factor % 60_000 === 0),
+      ),
+  };
 }
 
 export type DurationUnit = 'days' | 'hours' | 'millis' | 'minutes' | 'seconds' | 'weeks';
@@ -206,7 +208,14 @@ function formatNumber(value: number): string {
  * @param unit Unit of `value`.
  */
 export function durationConstructor(value: number, unit: DurationUnit): string {
-  const millis = value * (unitMillis.find(([name]) => name === unit)?.[1] ?? 1);
+  const millis =
+    value *
+    (Opt.getOrUndefined(
+      Fn.pipe(
+        unitMillis,
+        Arr.findFirst(([name]) => name === unit),
+      ),
+    )?.[1] ?? 1);
 
   if (millis === 0) {
     return 'Duration.zero';

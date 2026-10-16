@@ -6,7 +6,7 @@ import * as NodeHttpServer from '@effect/platform-node/NodeHttpServer';
 import { OpenTunnelClient } from '@opentunnel/client/effect';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
-import { HttpRouter } from 'effect/http';
+import * as HttpRouter from 'effect/http/HttpRouter';
 
 import { GatewayError, gatewayRoutes, KEY_FILE, loadGatewayKey } from '../http/gateway.js';
 import { openTunnel } from '../http/tunnel.js';

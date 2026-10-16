@@ -8,7 +8,8 @@ import * as Path from 'effect/Path';
 import * as Schema from 'effect/Schema';
 import type * as Scope from 'effect/Scope';
 import * as Stream from 'effect/Stream';
-import { ChildProcess, ChildProcessSpawner } from 'effect/process';
+import * as ChildProcess from 'effect/process/ChildProcess';
+import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 
 import { OrbitAuthError, Session } from './session.js';
 

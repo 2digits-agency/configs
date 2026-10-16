@@ -8,7 +8,7 @@ import * as Layer from 'effect/Layer';
 import * as PlatformError from 'effect/PlatformError';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
-import { TestClock } from 'effect/testing';
+import * as TestClock from 'effect/testing/TestClock';
 
 import { OrbitAuthError } from '../src/oauth/session.js';
 import { makeSessionStoreLayer, SessionStore } from '../src/oauth/store.js';

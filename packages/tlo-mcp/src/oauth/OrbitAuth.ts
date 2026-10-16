@@ -1,7 +1,5 @@
-/**
- * @effect-diagnostics unstableApiUsage:off
- */
-import { OAuth, Pkce } from '@yielded/oauth';
+import * as OAuth from '@yielded/oauth/OAuth';
+import * as Pkce from '@yielded/oauth/Pkce';
 import * as Clock from 'effect/Clock';
 import * as Context from 'effect/Context';
 import * as Crypto from 'effect/Crypto';
@@ -13,8 +11,11 @@ import * as Match from 'effect/Match';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Semaphore from 'effect/Semaphore';
-import { FetchHttpClient, HttpClient, HttpClientRequest } from 'effect/http';
-import { ChildProcess, ChildProcessSpawner } from 'effect/process';
+import * as FetchHttpClient from 'effect/http/FetchHttpClient';
+import * as HttpClient from 'effect/http/HttpClient';
+import * as HttpClientRequest from 'effect/http/HttpClientRequest';
+import * as ChildProcess from 'effect/process/ChildProcess';
+import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 
 import { listenForLogin } from './callback.js';
 import {

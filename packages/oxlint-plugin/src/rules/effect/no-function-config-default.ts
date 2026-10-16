@@ -1,4 +1,6 @@
 import type { Context, ESTree, Rule, Scope, Variable } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
 
 import { importedApi } from '../../fixes';
 import {
@@ -37,7 +39,10 @@ function resolveConst(node: ESTree.Expression, context: Context): ESTree.Express
       definition?.parent?.type !== 'VariableDeclaration' ||
       definition.parent.kind !== 'const' ||
       !declaration.init ||
-      variable.references.some((reference) => reference.isWrite() && !reference.init)
+      Fn.pipe(
+        variable.references,
+        Arr.some((reference) => reference.isWrite() && !reference.init),
+      )
     ) {
       return undefined;
     }

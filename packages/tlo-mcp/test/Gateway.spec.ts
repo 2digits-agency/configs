@@ -6,7 +6,7 @@ import * as Layer from 'effect/Layer';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as McpSchema from 'effect/ai/McpSchema';
-import { HttpRouter } from 'effect/http';
+import * as HttpRouter from 'effect/http/HttpRouter';
 
 import { connectionPrompt } from '../src/cli/connect.js';
 import { gatewayRoutes, loadGatewayKey } from '../src/http/gateway.js';

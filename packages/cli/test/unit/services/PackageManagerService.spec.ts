@@ -1,9 +1,12 @@
+import * as Fn from 'effect/Function';
+import * as Opt from 'effect/Option';
 /* eslint-disable sonar/no-duplicate-string */
 
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import { describe, expect, layer } from '@effect/vitest';
 import { assertTrue, strictEqual } from '@effect/vitest/utils';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
@@ -113,7 +116,12 @@ describe(PackageManagerService, () => {
           assertTrue(executed.length > 0);
 
           // Should have executed a pnpm add command
-          const addCommand = executed.find((cmd) => cmd.command.includes('add') || cmd.shell === true);
+          const addCommand = Opt.getOrUndefined(
+            Fn.pipe(
+              executed,
+              Arr.findFirst((cmd) => cmd.command.includes('add') || cmd.shell === true),
+            ),
+          );
 
           assertTrue(addCommand !== undefined);
 
@@ -143,7 +151,12 @@ describe(PackageManagerService, () => {
           // Should execute 2 commands (one for deps, one for devDeps)
           assertTrue(executed.length >= 2);
 
-          expect(executed.map((e) => e.command)).toMatchInlineSnapshot(`
+          expect(
+            Fn.pipe(
+              executed,
+              Arr.map((e) => e.command),
+            ),
+          ).toMatchInlineSnapshot(`
             [
               "pnpm add --workspace-root -D vitest",
               "pnpm add --workspace-root effect",
@@ -409,3 +422,5 @@ describe(PackageManagerService, () => {
     });
   });
 });
+
+/* eslint-enable sonar/no-duplicate-string */

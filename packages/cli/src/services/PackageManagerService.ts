@@ -12,7 +12,7 @@ import * as pkgTypes from 'pkg-types';
 
 import { CurrentWorkingDirService } from './CurrentWorkingDirService';
 
-class PackageManagerError extends Schema.TaggedError<PackageManagerError>()(
+class PackageManagerError extends Schema.TaggedError<PackageManagerError, { readonly brand: unique symbol }>()(
   '@2digits/cli/services/PackageManagerService/PackageManagerError',
   {
     operation: Schema.String,

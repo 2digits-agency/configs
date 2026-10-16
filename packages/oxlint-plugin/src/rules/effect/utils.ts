@@ -1,4 +1,5 @@
 import type { ESTree } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
 
 import {
   callbackCall,
@@ -45,7 +46,9 @@ export function promiseInitializer(node: ESTree.Expression): boolean {
   const expression = unwrapExpression(node);
 
   if (expression.type === 'NewExpression') {
-    return staticPath(expression.callee)?.join('.') === 'Promise';
+    const callee = staticPath(expression.callee);
+
+    return callee !== undefined && Arr.join(callee, '.') === 'Promise';
   }
 
   if (expression.type !== 'CallExpression') {
@@ -55,7 +58,7 @@ export function promiseInitializer(node: ESTree.Expression): boolean {
   const path = staticPath(expression.callee);
 
   return (
-    path?.join('.') === 'fetch' ||
+    (path !== undefined && Arr.join(path, '.') === 'fetch') ||
     (path?.[0] === 'Promise' && path[1] !== 'withResolvers') ||
     ['catch', 'finally', 'then'].includes(path?.at(-1) ?? '') ||
     (isFunctionNode(expression.callee) && expression.callee.async)

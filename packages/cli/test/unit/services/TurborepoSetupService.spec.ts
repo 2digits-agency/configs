@@ -1,4 +1,3 @@
-/* eslint-disable sonar/no-duplicate-string */
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import { describe, expect, layer } from '@effect/vitest';
@@ -8,6 +7,8 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Opt from 'effect/Option';
+/* eslint-disable sonar/no-duplicate-string */
+import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
@@ -162,7 +163,7 @@ describe(TurborepoSetupService, () => {
           if (Opt.isSome(configOptionBefore)) {
             const { value: configBefore } = configOptionBefore;
 
-            existingTasks = Object.keys(configBefore.tasks ?? {});
+            existingTasks = R.keys(configBefore.tasks ?? {});
           }
 
           const detectedTasks = new Set(['build', 'typecheck']);
@@ -624,7 +625,7 @@ describe(TurborepoSetupService, () => {
 
           const originalConfig = yield* Schema.decodeEffect(Schema.fromJsonString(TurboConfigSchema))(originalContent);
 
-          const originalTaskKeys = Object.keys(originalConfig.tasks ?? {});
+          const originalTaskKeys = R.keys(originalConfig.tasks ?? {});
 
           yield* service.mergeTurboConfig(new Set(['newTask']));
 
@@ -765,3 +766,5 @@ describe(TurborepoSetupService, () => {
     });
   });
 });
+
+/* eslint-enable sonar/no-duplicate-string */

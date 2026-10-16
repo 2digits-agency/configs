@@ -19,7 +19,7 @@ import { ProjectDetectionService } from './ProjectDetectionService';
 
 const ESLINT_CONFIG_PACKAGE = '@2digits/eslint-config';
 
-class EslintSetupError extends Schema.TaggedError<EslintSetupError>()(
+class EslintSetupError extends Schema.TaggedError<EslintSetupError, { readonly brand: unique symbol }>()(
   '@2digits/cli/services/EslintSetupService/EslintSetupError',
   {
     operation: Schema.String,

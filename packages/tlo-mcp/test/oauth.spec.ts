@@ -1,16 +1,20 @@
 import * as NodeServices from '@effect/platform-node/NodeServices';
 import { describe, expect, it } from '@effect/vitest';
+import * as Arr from 'effect/Array';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
 import * as Fiber from 'effect/Fiber';
 import * as FileSystem from 'effect/FileSystem';
+import * as Fn from 'effect/Function';
 import * as Layer from 'effect/Layer';
+import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
 import * as Ref from 'effect/Ref';
 import * as Schema from 'effect/Schema';
-import { FetchHttpClient, HttpClient } from 'effect/http';
-import { TestClock } from 'effect/testing';
+import * as FetchHttpClient from 'effect/http/FetchHttpClient';
+import * as HttpClient from 'effect/http/HttpClient';
+import * as TestClock from 'effect/testing/TestClock';
 
 import { OrbitAuth, OrbitAuthLayer } from '../src/oauth/OrbitAuth.js';
 import { listenForLogin, validateCallback } from '../src/oauth/callback.js';
@@ -234,7 +238,7 @@ describe('orbit OAuth', () => {
 
           const parameters = new URLSearchParams(bodyText);
 
-          expect(Object.fromEntries(parameters)).toMatchObject({
+          expect(R.fromEntries(parameters)).toMatchObject({
             grant_type: 'refresh_token',
             resource: `${ORBIT_ORIGIN}/mcp`,
             refresh_token: 'refresh',
@@ -312,7 +316,12 @@ describe('orbit OAuth', () => {
 
         const tokens = yield* Effect.all([Fiber.join(first), Fiber.join(second)]);
 
-        expect(tokens.map((element) => Redacted.value(element))).toStrictEqual([NEW_ACCESS, NEW_ACCESS]);
+        expect(
+          Fn.pipe(
+            tokens,
+            Arr.map((element) => Redacted.value(element)),
+          ),
+        ).toStrictEqual([NEW_ACCESS, NEW_ACCESS]);
 
         expect(refreshes).toBe(1);
 

@@ -2,7 +2,9 @@ import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import { describe, layer } from '@effect/vitest';
 import { assertTrue, strictEqual } from '@effect/vitest/utils';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
 
@@ -94,7 +96,12 @@ describe(EslintDetectionService, () => {
 
           assertTrue(configs.length > 0);
 
-          assertTrue(configs.some((path) => path.includes('eslint.config.js')));
+          assertTrue(
+            Fn.pipe(
+              configs,
+              Arr.some((path) => path.includes('eslint.config.js')),
+            ),
+          );
         }),
       );
 

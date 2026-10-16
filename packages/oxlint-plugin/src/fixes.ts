@@ -1,4 +1,7 @@
 import type { Context, ESTree, Fix, Fixer, Scope, Variable } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
+import * as Opt from 'effect/Option';
 
 import { staticPath } from './utils';
 
@@ -36,8 +39,9 @@ export function importedApi(context: Context, node: ESTree.Node): boolean {
 
   const variable = name === undefined ? undefined : binding(context, node, name);
 
-  return (
-    variable?.defs.some((definition) => {
+  return Fn.pipe(
+    variable?.defs ?? [],
+    Arr.some((definition) => {
       const specifier = definition.node;
 
       return (
@@ -46,7 +50,7 @@ export function importedApi(context: Context, node: ESTree.Node): boolean {
         specifier.parent.importKind !== 'type' &&
         (specifier.type !== 'ImportSpecifier' || specifier.importKind !== 'type')
       );
-    }) === true
+    }),
   );
 }
 
@@ -80,7 +84,10 @@ export function namespaceImport(
     for (const specifier of statement.specifiers) {
       if (
         specifier.type === 'ImportNamespaceSpecifier' &&
-        binding(context, node, specifier.local.name)?.defs.some((definition) => definition.node === specifier)
+        Fn.pipe(
+          binding(context, node, specifier.local.name)?.defs ?? [],
+          Arr.some((definition) => definition.node === specifier),
+        )
       ) {
         return { name: specifier.local.name, fixes: [] };
       }
@@ -88,10 +95,19 @@ export function namespaceImport(
   }
 
   const names = new Set(
-    context.sourceCode.scopeManager.scopes.flatMap((scope) => [
-      ...scope.variables.map((variable) => variable.name),
-      ...scope.references.map((reference) => reference.identifier.name),
-    ]),
+    Fn.pipe(
+      context.sourceCode.scopeManager.scopes,
+      Arr.flatMap((scope) => [
+        ...Fn.pipe(
+          scope.variables,
+          Arr.map((variable) => variable.name),
+        ),
+        ...Fn.pipe(
+          scope.references,
+          Arr.map((reference) => reference.identifier.name),
+        ),
+      ]),
+    ),
   );
 
   let name = preferred;
@@ -104,11 +120,16 @@ export function namespaceImport(
 
   const text = `import * as ${name} from '${source}';\n`;
 
-  const first = program.body.find(
-    (statement) =>
-      statement.type !== 'ExpressionStatement' ||
-      statement.expression.type !== 'Literal' ||
-      typeof statement.expression.value !== 'string',
+  const first = Opt.getOrUndefined(
+    Fn.pipe(
+      program.body,
+      Arr.findFirst(
+        (statement) =>
+          statement.type !== 'ExpressionStatement' ||
+          statement.expression.type !== 'Literal' ||
+          typeof statement.expression.value !== 'string',
+      ),
+    ),
   );
 
   return {
@@ -126,23 +147,26 @@ export function namespaceImport(
 export function plainOptions(node: ESTree.ObjectExpression, destination: string): boolean {
   const names = new Set<string>();
 
-  return node.properties.every((property) => {
-    if (property.type !== 'Property' || property.computed || property.method || property.kind !== 'init') {
-      return false;
-    }
+  return Fn.pipe(
+    node.properties,
+    Arr.every((property) => {
+      if (property.type !== 'Property' || property.computed || property.method || property.kind !== 'init') {
+        return false;
+      }
 
-    if (property.key.type !== 'Identifier' && property.key.type !== 'Literal') {
-      return false;
-    }
+      if (property.key.type !== 'Identifier' && property.key.type !== 'Literal') {
+        return false;
+      }
 
-    const name = property.key.type === 'Identifier' ? property.key.name : String(property.key.value);
+      const name = property.key.type === 'Identifier' ? property.key.name : String(property.key.value);
 
-    if (name === destination || names.has(name)) {
-      return false;
-    }
+      if (name === destination || names.has(name)) {
+        return false;
+      }
 
-    names.add(name);
+      names.add(name);
 
-    return true;
-  });
+      return true;
+    }),
+  );
 }

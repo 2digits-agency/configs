@@ -1,14 +1,17 @@
 import * as NodeServices from '@effect/platform-node/NodeServices';
 import { describe, expect, it } from '@effect/vitest';
+import * as Arr from 'effect/Array';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
 import * as Fiber from 'effect/Fiber';
+import * as Fn from 'effect/Function';
 import * as Layer from 'effect/Layer';
 import * as Redacted from 'effect/Redacted';
 import * as Sink from 'effect/Sink';
 import * as Stream from 'effect/Stream';
-import { FetchHttpClient } from 'effect/http';
-import { ChildProcess, ChildProcessSpawner } from 'effect/process';
+import * as FetchHttpClient from 'effect/http/FetchHttpClient';
+import * as ChildProcess from 'effect/process/ChildProcess';
+import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 import * as TestClock from 'effect/testing/TestClock';
 import { vi } from 'vite-plus/test';
 
@@ -183,7 +186,10 @@ describe('orbit browser and operation cleanup', () => {
             commands: commands.length,
             registrations,
             grants,
-            aborted: signals.every((signal) => signal.aborted),
+            aborted: Fn.pipe(
+              signals,
+              Arr.every((signal) => signal.aborted),
+            ),
             access: saved?.accessToken.pipe(Redacted.value),
           }).toStrictEqual({
             released: 1,
@@ -217,7 +223,13 @@ describe('orbit browser and operation cleanup', () => {
             challenge: true,
           });
 
-          const output = stderr.mock.calls.map(([text]) => String(text)).join('');
+          const output = Arr.join(
+            Fn.pipe(
+              stderr.mock.calls,
+              Arr.map(([text]) => String(text)),
+            ),
+            '',
+          );
 
           expect(output.includes(`Open this URL in your browser:\n${url.href}\n`)).toBe(
             outcome === 'nonzero' || outcome === 'timeout',
@@ -316,7 +328,12 @@ describe('orbit browser and operation cleanup', () => {
 
         expect(released).toBe(2);
 
-        expect(signals.every((signal) => signal.aborted)).toBeTruthy();
+        expect(
+          Fn.pipe(
+            signals,
+            Arr.every((signal) => signal.aborted),
+          ),
+        ).toBeTruthy();
       }).pipe(
         Effect.provide(OrbitAuthLayer.pipe(Layer.provide(store), Layer.provide(FetchHttpClient.layer))),
         Effect.provideService(FetchHttpClient.Fetch, fetchMock),

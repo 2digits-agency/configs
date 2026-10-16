@@ -1,6 +1,8 @@
+import * as Fn from 'effect/Function';
 /* oxlint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
 /* eslint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
 import { describe, expect, it } from '@effect/vitest';
+import * as Arr from 'effect/Array';
 import { RuleTester } from 'oxlint/plugins-dev';
 
 import { recommendedRules, rules } from '../../../src';
@@ -97,42 +99,45 @@ tester.run('no-function-config-default binding proof', noFunctionConfigDefault, 
     `import { Config as C } from 'effect'; function use(C) { C.withDefault(config, () => 2); }`,
     `import type { Config } from 'effect'; Config.withDefault(config, () => 2);`,
   ],
-  invalid: [
-    `Config.withDefault(Config.Number('N'), ${thunk});`,
-    `Config.withDefault(Config.String('S'), ${thunk});`,
-    `Config.Number('N').pipe(Config.withDefault(${thunk}));`,
-    `Config.String('S').pipe(Config.withDefault(${thunk}));`,
-    `Config.withDefault(Config.succeed({ run: () => 1 }), ${thunk});`,
-    `Config.withDefault(Config.succeed(1), ${thunk});`,
-    `Config.withDefault(Config.Number('N').pipe(Config.map(() => () => 1)), ${thunk});`,
-    `Config.succeed(() => 1).pipe(Config.map(() => 3), Config.withDefault(${thunk}));`,
-    `other.pipe(Config.withDefault(${thunk}));`,
-    `Config.withDefault(${thunk});`,
-    `import { config } from './config'; Config.withDefault(config, ${thunk});`,
-    `const config = makeConfig(); Config.withDefault(config, ${thunk});`,
-    `const config = Config.succeed(() => 1); function use(config) { Config.withDefault(config, ${thunk}); }`,
-    `let config = Config.succeed(() => 1); Config.withDefault(config, ${thunk});`,
-    `const config = Config.succeed(() => 1); config = Config.Number('N'); Config.withDefault(config, ${thunk});`,
-    `const config = other; const other = config; Config.withDefault(config, ${thunk});`,
-    `const { config } = Config.succeed(() => 1); Config.withDefault(config, ${thunk});`,
-    `import { succeed, withDefault } from 'effect/Config'; function use(succeed) { withDefault(succeed(() => 1), ${thunk}); }`,
-    `import { Config as C } from 'effect'; C.withDefault(C.String('S'), ${thunk});`,
-    `import { withDefault as fallback } from 'effect/Config'; fallback(${thunk});`,
-  ].map((body) => ({
-    code: `${configImport}\n${body}`,
-    filename: 'invalid.ts',
-    errors: [
-      {
-        messageId: 'functionDefault',
-        line: 2,
-        column: body.indexOf(thunk),
-        endLine: 2,
-        endColumn: body.indexOf(thunk) + thunk.length,
-        suggestions: null,
-      },
+  invalid: Fn.pipe(
+    [
+      `Config.withDefault(Config.Number('N'), ${thunk});`,
+      `Config.withDefault(Config.String('S'), ${thunk});`,
+      `Config.Number('N').pipe(Config.withDefault(${thunk}));`,
+      `Config.String('S').pipe(Config.withDefault(${thunk}));`,
+      `Config.withDefault(Config.succeed({ run: () => 1 }), ${thunk});`,
+      `Config.withDefault(Config.succeed(1), ${thunk});`,
+      `Config.withDefault(Config.Number('N').pipe(Config.map(() => () => 1)), ${thunk});`,
+      `Config.succeed(() => 1).pipe(Config.map(() => 3), Config.withDefault(${thunk}));`,
+      `other.pipe(Config.withDefault(${thunk}));`,
+      `Config.withDefault(${thunk});`,
+      `import { config } from './config'; Config.withDefault(config, ${thunk});`,
+      `const config = makeConfig(); Config.withDefault(config, ${thunk});`,
+      `const config = Config.succeed(() => 1); function use(config) { Config.withDefault(config, ${thunk}); }`,
+      `let config = Config.succeed(() => 1); Config.withDefault(config, ${thunk});`,
+      `const config = Config.succeed(() => 1); config = Config.Number('N'); Config.withDefault(config, ${thunk});`,
+      `const config = other; const other = config; Config.withDefault(config, ${thunk});`,
+      `const { config } = Config.succeed(() => 1); Config.withDefault(config, ${thunk});`,
+      `import { succeed, withDefault } from 'effect/Config'; function use(succeed) { withDefault(succeed(() => 1), ${thunk}); }`,
+      `import { Config as C } from 'effect'; C.withDefault(C.String('S'), ${thunk});`,
+      `import { withDefault as fallback } from 'effect/Config'; fallback(${thunk});`,
     ],
-    output: null,
-  })),
+    Arr.map((body) => ({
+      code: `${configImport}\n${body}`,
+      filename: 'invalid.ts',
+      errors: [
+        {
+          messageId: 'functionDefault',
+          line: 2,
+          column: body.indexOf(thunk),
+          endLine: 2,
+          endColumn: body.indexOf(thunk) + thunk.length,
+          suggestions: null,
+        },
+      ],
+      output: null,
+    })),
+  ),
 });
 
 describe('no-function-config-default metadata', () => {
@@ -146,3 +151,5 @@ describe('no-function-config-default metadata', () => {
     expect(noFunctionConfigDefault.meta?.hasSuggestions).toBeUndefined();
   });
 });
+
+/* eslint-enable unicorn/no-null */

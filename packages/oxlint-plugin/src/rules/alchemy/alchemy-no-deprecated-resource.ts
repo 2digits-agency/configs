@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
 
 import { canonicalPath, defineEffectRule, ruleMeta } from '../../utils';
 
@@ -28,7 +29,7 @@ export const alchemyNoDeprecatedResource: Rule = defineEffectRule(
         return;
       }
 
-      const api = path.join('.');
+      const api = Arr.join(path, '.');
 
       const replacement = deprecatedResources.get(api);
 

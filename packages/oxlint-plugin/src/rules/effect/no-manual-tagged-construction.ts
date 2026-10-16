@@ -1,4 +1,7 @@
 import type { Rule } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
+import * as Opt from 'effect/Option';
 
 import { defineSyntaxRule, propertyName, ruleMeta } from '../../utils';
 import { isMatchPatternObject, isStringLiteral } from './tagged-values';
@@ -22,9 +25,14 @@ export const noManualTaggedConstruction: Rule = defineSyntaxRule(
         return;
       }
 
-      const tag = node.properties.find(
-        (property) =>
-          property.type === 'Property' && propertyName(property) === '_tag' && isStringLiteral(property.value),
+      const tag = Opt.getOrUndefined(
+        Fn.pipe(
+          node.properties,
+          Arr.findFirst(
+            (property) =>
+              property.type === 'Property' && propertyName(property) === '_tag' && isStringLiteral(property.value),
+          ),
+        ),
       );
 
       if (tag !== undefined) {
