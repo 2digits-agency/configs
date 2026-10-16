@@ -219,8 +219,8 @@ catalogs:
       specifier: 1.19.3
       version: 1.19.3
     '@opentunnel/client':
-      specifier: 0.5.1
-      version: 0.5.1
+      specifier: 0.5.2
+      version: 0.5.2
     '@oxc-node/cli':
       specifier: 0.1.7
       version: 0.1.7
@@ -1105,7 +1105,7 @@ importers:
         version: 4.0.5(effect@4.0.5)(redis@6.2.1(@opentelemetry/api@1.9.1))
       '@opentunnel/client':
         specifier: 'catalog:'
-        version: 0.5.1(effect@4.0.5)
+        version: 0.5.2(effect@4.0.5)
       '@yielded/oauth':
         specifier: 'catalog:'
         version: 0.1.0-beta.42(effect@4.0.5)
@@ -2368,14 +2368,14 @@ packages:
     resolution: {integrity: sha512-eSYWTm620tTk45EKSedaUL8MFYI8hW164hIXsgIHyxu3VobUB3fFCu5t0hQby6OoWRPsG1KkKUG2M5UadiLiVg==}
     engines: {node: '>=14'}
 
-  '@opentunnel/client@0.5.1':
-    resolution: {integrity: sha512-TdrdD0RCgX5vGRjLEKAsPD0vshUdjJEIUr7KEmJA3wmgbmRj5TQSHO66AMWF6REhd7UJ2ZnYQ3XNjqgnT+ghfQ==}
+  '@opentunnel/client@0.5.2':
+    resolution: {integrity: sha512-zEpYXzapzYwoOY1p43cUbX91cK+aaXHapcWxPDh/QL4OSL1q/qHCVl9l/nPsNt19UKQ99W4V/Z6Y0PJsIKC4+A==}
     engines: {bun: '>=1.4.0', node: '>=22'}
     peerDependencies:
       effect: 4.0.5
 
-  '@opentunnel/protocol@0.5.1':
-    resolution: {integrity: sha512-8DIZNyDxEFyzl6WzVB/M7hZauCU+zFABo0iviywj6kX3yO9jFSPzqWCBBaarpjWJEOXYXaSILllJI62fSlEdeA==}
+  '@opentunnel/protocol@0.5.2':
+    resolution: {integrity: sha512-pB+xK/TEA7JV0QktvF+1UkJDheoRqc5KMqs/ltpU5i5kngzjGeAYvR00Z8qp6KEXIFJtlpBvwy4TXn9+CBYK0Q==}
     peerDependencies:
       effect: 4.0.5
 
@@ -8992,12 +8992,12 @@ snapshots:
 
   '@opentelemetry/semantic-conventions@1.43.0': {}
 
-  '@opentunnel/client@0.5.1(effect@4.0.5)':
+  '@opentunnel/client@0.5.2(effect@4.0.5)':
     dependencies:
-      '@opentunnel/protocol': 0.5.1(effect@4.0.5)
+      '@opentunnel/protocol': 0.5.2(effect@4.0.5)
       effect: 4.0.5
 
-  '@opentunnel/protocol@0.5.1(effect@4.0.5)':
+  '@opentunnel/protocol@0.5.2(effect@4.0.5)':
     dependencies:
       effect: 4.0.5
 
