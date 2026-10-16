@@ -216,8 +216,8 @@ catalogs:
       specifier: 16.4.2
       version: 16.4.2
     '@opencode-ai/plugin':
-      specifier: 1.19.2
-      version: 1.19.2
+      specifier: 1.19.3
+      version: 1.19.3
     '@opentunnel/client':
       specifier: 0.5.1
       version: 0.5.1
@@ -872,7 +872,7 @@ importers:
     dependencies:
       '@opencode-ai/plugin':
         specifier: 'catalog:'
-        version: 1.19.2
+        version: 1.19.3
       posthog-node:
         specifier: 'catalog:'
         version: 5.56.1(@opentelemetry/api@1.9.1)
@@ -2203,8 +2203,8 @@ packages:
   '@one-ini/wasm@0.2.1':
     resolution: {integrity: sha512-TUqERXGNTifZ9y2g3wPxQrw3HpHv/02DsW3D90T9x0hhonrL1ZqpSmNrU2XkoIq0fP1N6gZfVQzy2Fw1ZvGBNg==}
 
-  '@opencode-ai/plugin@1.19.2':
-    resolution: {integrity: sha512-aS4WUtjHMuCqAT+SHq9N3O8xx+VEa/wN7PhWL94uhrY2YOcniq6yqDM6BWwmWopOvXCkcDp3nSG+43r1yDcj4w==}
+  '@opencode-ai/plugin@1.19.3':
+    resolution: {integrity: sha512-FBN2OREfg9xiIvrxrxjZt6CCg6kn8WzKdwsD/6+a10R/M4hrdRTounUgg0LUR4cOXcI/XMKPeIWdfdaXBdmZEw==}
     peerDependencies:
       '@opentui/core': '>=0.4.5'
       '@opentui/keymap': '>=0.4.5'
@@ -2217,8 +2217,8 @@ packages:
       '@opentui/solid':
         optional: true
 
-  '@opencode-ai/sdk@1.19.2':
-    resolution: {integrity: sha512-1KG4L3iWVgXzaliqilcorRikw3idrGPhLllgiO78VL3o1AY64FgFrr3ftIW0V9koIsj0kyrcWfJ8jGOftRs+ug==}
+  '@opencode-ai/sdk@1.19.3':
+    resolution: {integrity: sha512-G63bZD2r6plqgjFdenWVj3HBFWmLQSVuG9CXMQuTjakzA5aL6wFLmI23Biz5ESE4lQQ08UTHcY2N4NOShJFb2w==}
 
   '@opentelemetry/api-logs@0.223.0':
     resolution: {integrity: sha512-Oepm6etVPFCn0VWB1t833iOTgz1eYBDUPxcrOR/XvwzD1+Ag9VzSPSrrKAFNJ/haatj+8CXbG47pZXvdNQKDJw==}
@@ -8809,14 +8809,14 @@ snapshots:
 
   '@one-ini/wasm@0.2.1': {}
 
-  '@opencode-ai/plugin@1.19.2':
+  '@opencode-ai/plugin@1.19.3':
     dependencies:
       '@ai-sdk/provider': 3.0.8
-      '@opencode-ai/sdk': 1.19.2
+      '@opencode-ai/sdk': 1.19.3
       effect: 4.0.0-beta.83
       zod: 4.1.8
 
-  '@opencode-ai/sdk@1.19.2':
+  '@opencode-ai/sdk@1.19.3':
     dependencies:
       cross-spawn: 7.0.6
 
