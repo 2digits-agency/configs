@@ -1,228 +1,66 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update `@effect/tsgo` to 0.53.1\n"
-    filename: 2026-10-16-calm-heron-pebble.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n### Document Schema chain style and agent checks\n\n- Added `GLOSSARY.md` and ADR 0001, which record why Schema modifiers go in `.pipe(...)` while Schema wrappers are called\n- Documented `vpr check` as the full check in `AGENTS.md`, since `vp check` only runs format, lint, and types\n- Removed the vendored `vite-plus` agent skill and its `skills-lock.json` entry\n"
+    filename: 2026-10-16-3b9d6c1.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Fix wizard terminal and browser fallbacks\n\n- Added a terminal-clearing fallback when `tput clear` fails\n- Restored the manual URL warning when no browser-opening command is available\n"
-    filename: 2026-10-16-cosy-dove-bramble.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n### Write Schema chains in pipe style\n\n- Applied Schema modifiers such as `optionalKey`, `NullOr`, `RedactedFromValue`, and `fromJsonString` with `.pipe(...)`, and called `Schema.Array(...)` directly, without changing runtime behavior\n"
+    filename: 2026-10-16-e81f4a2.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `oxlint` to 1.88.0\n"
-    filename: 2026-10-16-dapper-mole-cove.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: minor\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n### Add `no-inline-schema-compile`\n\n- Reported Schema decoders, encoders, and guards such as `Schema.decodeUnknownSync(User)(input)` that are compiled and invoked inside a function body, so the compiled function is rebuilt on every call\n- Skipped schemas that depend on function parameters, local bindings, or `this`, because those cannot be hoisted to module scope\n- Enabled the rule by default in `recommendedRules` and the 2digits Oxlint config, in files that import Effect\n"
+    filename: 2026-10-16-a7c3e91.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update `oxfmt` to 0.73.0\n"
-    filename: 2026-10-16-fresh-koala-ridge.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Preserve wizard environment values safely\n\n- Quoted and escaped saved values, and decoded supported quoted values when reusing them on later runs\n- Created new environment files with mode `0600` and preserved existing file permissions and symlinks\n- Updated the corresponding shell variable after saving its value\n"
-    filename: 2026-10-16-golden-newt-woodland.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update Node.js to 24.22.0\n"
-    filename: 2026-10-16-happy-deer-flint.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Parse wizard stages before prompting\n\n- Wrapped stages in `run_wizard` so edits made during a run cannot alter later stages being parsed\n"
-    filename: 2026-10-16-lucid-wombat-field.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the `baseline-browser-mapping` override to 2.11.29\n"
-    filename: 2026-10-16-misty-lark-valley.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `vite-plus` to 1.3.0\n"
-    filename: 2026-10-16-nimble-crane-pine.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the `vite` alias to `@voidzero-dev/vite-plus-core` 1.3.0\n"
-    filename: 2026-10-16-plucky-seal-heath.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the agent skills\n\n- Updated the Matt Pocock skills (`ask-matt`, `code-review`, `diagnosing-bugs`, `grilling`, `handoff`, `implement`, `setup-matt-pocock-skills`, `tdd`, `teach`, `to-tickets`, `wayfinder`) and the `gitbutler` skill, and updated `skills-lock.json` to match\n- Added a required `SKILL.md` read before `ask-matt` describes a skill or recommends skipping it\n- Added forced-red test verification and a `/retro` handoff to `diagnosing-bugs`\n- Updated `code-review` to run Standards and Spec sub-agents together in the foreground and check for `CODING_STANDARDS.md` and `CONTRIBUTING.md`\n- Updated `gitbutler` guidance for `but init`, `-F` message files, and the current `but` version\n- Added `.claude/skills` links for the `turborepo` and `wizard` skills, and for the other skills synced from `.agents/skills`\n"
-    filename: 2026-10-16-quiet-owl-skills.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Fix wizard prompt editing and end-of-input handling\n\n- Added Readline editing to visible prompts with cursor-safe color codes\n- Made visible and secret prompts fail on empty end-of-input instead of silently continuing\n"
-    filename: 2026-10-16-rapid-pipit-bay.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `@oxc-node/cli` to 0.1.7\n"
-    filename: 2026-10-16-steady-raven-moss.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `turbo` to 2.11.8\n"
-    filename: 2026-10-16-sunny-gecko-marsh.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `pnpm` to 12.14.0\n"
-    filename: 2026-10-16-velvet-owl-reed.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `@effect/platform-node` to 4.0.5\n"
-    filename: 2026-10-16-amber-fox-meadow.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Brand tagged errors\n\n- Added unique brands to CLI setup and package-manager errors, and to MCP gateway, Orbit client, and OAuth session errors, preventing structurally identical values from satisfying those error types\n"
-    filename: 2026-10-16-brave-otter-tlo-mcp-brands.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `effect` to 4.0.5\n"
-    filename: 2026-10-16-warm-hare-cloud.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-turbo` to 2.11.8\n"
-    filename: 2026-10-16-bold-marten-spruce.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@eslint-react/eslint-plugin` to 5.28.0\n"
-    filename: 2026-10-16-bright-lynx-willow.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-jsdoc` to 65.3.6\n"
-    filename: 2026-10-16-clear-finch-harbor.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@next/eslint-plugin-next` to 16.4.2\n"
-    filename: 2026-10-16-crisp-falcon-dune.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@eslint-react/kit` to 5.28.0\n"
-    filename: 2026-10-16-gentle-badger-fern.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-zod` to 5.2.0\n\n- Added `default` to the generated ESLint option types for `zod/consistent-import`\n"
-    filename: 2026-10-16-kind-swift-acorn.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@tanstack/eslint-plugin-query` to 5.104.3\n"
-    filename: 2026-10-16-lively-ibis-orchard.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@graphql-eslint/eslint-plugin` to 4.4.2\n"
-    filename: 2026-10-16-mellow-otter-brook.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@eslint/css` to 2.0.1\n\n- Regenerated `css/use-baseline` option types with updated CSS properties, functions, and values, including removal of `punctuation` and `replace` from `text-autospace`\n"
-    filename: 2026-10-16-silver-robin-grove.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `posthog-node` to 5.56.1\n"
-    filename: 2026-10-16-eager-stork-birch.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `@opencode-ai/plugin` to 1.19.2\n"
-    filename: 2026-10-16-quiet-panda-lantern.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: minor\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n## Add `prefer-effect-duration-constants`\n\n- Reported `const` numbers that hold a duration, such as `TIMEOUT_MS = 30_000`, `ONE_DAY = 24 * 60 * 60 * 1000`, or any numeric constant passed to an Effect duration API, and suggested the matching `Duration` constructor\n- Enabled the rule by default in `recommendedRules` and the 2digits Oxlint config, in files that import Effect\n- Extended `prefer-effect-duration` to number arithmetic and more Effect v4 APIs: `Schedule.exponential`, `Schedule.during`, `Stream.debounce`, `Stream.timeout`, `TestClock.adjust`, `Effect.cachedWithTTL`, and the `duration` option of `Effect.timeoutOrElse` and `Stream.throttle`\n"
-    filename: 2026-10-13-steady-heron-duration-constants.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Use namespace imports for Effect and OAuth modules\n\n- Replaced barrel imports with direct namespace imports in gateway, Orbit client, and OAuth code without changing runtime behavior\n"
-    filename: 2026-10-16-merry-shrew-glade.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `@yielded/oauth` to 0.1.0-beta.42\n"
-    filename: 2026-10-16-tidy-quail-cedar.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: major\n---\n\n## Reject error payloads that shadow `name`\n\n- Enabled `errorPayloadShadowsName` as an error in `effect.json`, requiring flagged error payload fields to be renamed\n"
-    filename: 2026-10-16-azure-weasel-stone.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: major\n---\n\n## Require Effect array helpers\n\n- Enabled `preferEffectArray` as an error in `effect.json`, requiring flagged native array operations to use Effect helpers\n"
-    filename: 2026-10-16-copper-toad-hollow.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: major\n---\n\n## Require `Effect.yieldNow` instead of zero-duration sleeps\n\n- Enabled `effectSleepZeroToYieldNow` as an error in `effect.json`; flagged `Effect.sleep(0)` calls now need `Effect.yieldNow`\n"
-    filename: 2026-10-16-dawn-puffin-island.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: major\n---\n\n## Require schema-based tagged errors\n\n- Enabled `preferSchemaTaggedError` as an error in `effect.json`, requiring flagged tagged error definitions to use `Schema.TaggedError`\n"
-    filename: 2026-10-16-green-ferret-hill.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: major\n---\n\n## Enforce Effect import conventions\n\n- Enabled `preferBarrelImport` and `preferNamespaceImport` as errors in `effect.json`\n- Configured barrel imports for `@effect/vitest` and namespace imports for Effect platform packages, `@yielded/oauth`, `@yielded/jose`, `@yielded/crypto`, and `alchemy`; existing imports may need migration\n"
-    filename: 2026-10-16-patient-swan-thistle.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: major\n---\n\n## Require `Effect.tap` for side effects that preserve the original value\n\n- Enabled `flatMapToTap` as an error in `effect.json`, requiring flagged `Effect.flatMap` calls to use `Effect.tap`\n"
-    filename: 2026-10-16-polite-jay-stream.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: major\n---\n\n## Require brands on schema classes\n\n- Enabled `schemaClassMissingBrand` as an error in `effect.json`; flagged schema classes now need a unique brand\n"
-    filename: 2026-10-16-scarlet-duck-garden.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: major\n---\n\n## Require Effect record helpers\n\n- Enabled `preferEffectRecord` as an error in `effect.json`, requiring flagged native object operations to use Effect helpers\n"
-    filename: 2026-10-16-smooth-bison-prairie.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Use Effect helpers in lint rules\n\n- Rewrote rule internals to use Effect collection helpers and `Match`, so the plugin's own code follows the Effect rules it ships\n- Replaced duration arithmetic and constant-name parsing with `effect/Number` and `effect/String` helpers\n"
-    filename: 2026-10-16-brave-otter-oxlint-effect-helpers.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Update `@oxlint/plugins` to 1.88.0\n"
-    filename: 2026-10-16-soft-wren-maple.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: minor\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n### Add `consistent-schema-pipe`\n\n- Reported Schema modifiers such as `Schema.optionalKey(Schema.String)` and `Schema.fromJsonString(User)` that are called instead of applied with `.pipe(...)`, and fixed them to `Schema.String.pipe(Schema.optionalKey)`; calls that pass options are left alone\n- Reported Schema wrappers such as `Array` piped into, fixing `Schema.String.pipe(Schema.Array, Schema.optional)` to `Schema.Array(Schema.String).pipe(Schema.optional)`\n- Rewrote inline data-last calls such as `Schema.brand('UserId')(Schema.String)` and `pipe(schema, ...)` from `effect` to `schema.pipe(...)`, merging into existing pipes instead of nesting\n- Enabled the rule by default in `recommendedRules` and the 2digits Oxlint config, in files that import Effect\n"
+    filename: 2026-10-16-c5e2b07.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-10-16-calm-heron-pebble.md
-      - 2026-10-16-cosy-dove-bramble.md
-      - 2026-10-16-dapper-mole-cove.md
-      - 2026-10-16-fresh-koala-ridge.md
-      - 2026-10-16-golden-newt-woodland.md
-      - 2026-10-16-happy-deer-flint.md
-      - 2026-10-16-lucid-wombat-field.md
-      - 2026-10-16-misty-lark-valley.md
-      - 2026-10-16-nimble-crane-pine.md
-      - 2026-10-16-plucky-seal-heath.md
-      - 2026-10-16-quiet-owl-skills.md
-      - 2026-10-16-rapid-pipit-bay.md
-      - 2026-10-16-steady-raven-moss.md
-      - 2026-10-16-sunny-gecko-marsh.md
-      - 2026-10-16-velvet-owl-reed.md
+      - 2026-10-16-3b9d6c1.md
     id: npm:@2digits/config-monorepo
     updated: true
   - changelogIds:
-      - 2026-10-16-amber-fox-meadow.md
-      - 2026-10-16-brave-otter-tlo-mcp-brands.md
-      - 2026-10-16-warm-hare-cloud.md
+      - 2026-10-16-e81f4a2.md
     id: npm:@2digits/cli
     updated: true
+  - id: npm:@2digits/eslint-config
+    updated: false
   - id: npm:@2digits/constants
     updated: false
-  - changelogIds:
-      - 2026-10-16-bold-marten-spruce.md
-      - 2026-10-16-bright-lynx-willow.md
-      - 2026-10-16-clear-finch-harbor.md
-      - 2026-10-16-crisp-falcon-dune.md
-      - 2026-10-16-gentle-badger-fern.md
-      - 2026-10-16-kind-swift-acorn.md
-      - 2026-10-16-lively-ibis-orchard.md
-      - 2026-10-16-mellow-otter-brook.md
-      - 2026-10-16-silver-robin-grove.md
-    id: npm:@2digits/eslint-config
-    updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
+  - id: npm:@2digits/opencode-plugin
+    updated: false
+  - id: npm:@2digits/oxfmt-config
+    updated: false
   - changelogIds:
-      - 2026-10-16-eager-stork-birch.md
-      - 2026-10-16-quiet-panda-lantern.md
-    id: npm:@2digits/opencode-plugin
-    updated: true
-  - changelogIds:
-      - 2026-10-16-fresh-koala-ridge.md
-    id: npm:@2digits/oxfmt-config
-    updated: true
-  - changelogIds:
-      - 2026-10-13-steady-heron-duration-constants.md
-      - 2026-10-16-dapper-mole-cove.md
-      - 2026-10-16-kind-swift-acorn.md
+      - 2026-10-16-a7c3e91.md
+      - 2026-10-16-c5e2b07.md
     id: npm:@2digits/oxlint-config
+    updated: true
+  - changelogIds:
+      - 2026-10-16-a7c3e91.md
+      - 2026-10-16-c5e2b07.md
+    id: npm:@2digits/oxlint-plugin
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
-  - id: npm:@2digits/renovate-config
-    updated: false
   - changelogIds:
-      - 2026-10-16-amber-fox-meadow.md
-      - 2026-10-16-brave-otter-tlo-mcp-brands.md
-      - 2026-10-16-merry-shrew-glade.md
-      - 2026-10-16-tidy-quail-cedar.md
-      - 2026-10-16-warm-hare-cloud.md
+      - 2026-10-16-e81f4a2.md
     id: npm:@2digits/tlo-mcp
     updated: true
-  - changelogIds:
-      - 2026-10-16-azure-weasel-stone.md
-      - 2026-10-16-calm-heron-pebble.md
-      - 2026-10-16-copper-toad-hollow.md
-      - 2026-10-16-dawn-puffin-island.md
-      - 2026-10-16-green-ferret-hill.md
-      - 2026-10-16-patient-swan-thistle.md
-      - 2026-10-16-polite-jay-stream.md
-      - 2026-10-16-scarlet-duck-garden.md
-      - 2026-10-16-smooth-bison-prairie.md
-    id: npm:@2digits/tsconfig
-    updated: true
-  - changelogIds:
-      - 2026-10-13-steady-heron-duration-constants.md
-      - 2026-10-16-brave-otter-oxlint-effect-helpers.md
-      - 2026-10-16-soft-wren-maple.md
-      - 2026-10-16-warm-hare-cloud.md
-    id: npm:@2digits/oxlint-plugin
-    updated: true
+  - id: npm:@2digits/renovate-config
+    updated: false
+  - id: npm:@2digits/tsconfig
+    updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
-  - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-config
+  - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
-  - id: npm:@2digits/prettier-config
-  - id: npm:@2digits/renovate-config
-  - id: npm:@2digits/tlo-mcp
-  - id: npm:@2digits/tsconfig
   - id: npm:@2digits/oxlint-plugin
+  - id: npm:@2digits/prettier-config
+  - id: npm:@2digits/tlo-mcp
+  - id: npm:@2digits/renovate-config
+  - id: npm:@2digits/tsconfig

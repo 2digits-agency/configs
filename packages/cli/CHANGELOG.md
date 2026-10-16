@@ -1,3 +1,9 @@
+## @2digits/cli@2.0.28
+
+### Write Schema chains in pipe style
+
+- Applied Schema modifiers such as `optionalKey`, `NullOr`, `RedactedFromValue`, and `fromJsonString` with `.pipe(...)`, and called `Schema.Array(...)` directly, without changing runtime behavior
+
 ## @2digits/cli@2.0.27
 
 ### Update `@effect/platform-node` to 4.0.5

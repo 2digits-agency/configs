@@ -1,3 +1,18 @@
+## @2digits/oxlint-plugin@0.3.0
+
+### Add `no-inline-schema-compile`
+
+- Reported Schema decoders, encoders, and guards such as `Schema.decodeUnknownSync(User)(input)` that are compiled and invoked inside a function body, so the compiled function is rebuilt on every call
+- Skipped schemas that depend on function parameters, local bindings, or `this`, because those cannot be hoisted to module scope
+- Enabled the rule by default in `recommendedRules` and the 2digits Oxlint config, in files that import Effect
+
+### Add `consistent-schema-pipe`
+
+- Reported Schema modifiers such as `Schema.optionalKey(Schema.String)` and `Schema.fromJsonString(User)` that are called instead of applied with `.pipe(...)`, and fixed them to `Schema.String.pipe(Schema.optionalKey)`; calls that pass options are left alone
+- Reported Schema wrappers such as `Array` piped into, fixing `Schema.String.pipe(Schema.Array, Schema.optional)` to `Schema.Array(Schema.String).pipe(Schema.optional)`
+- Rewrote inline data-last calls such as `Schema.brand('UserId')(Schema.String)` and `pipe(schema, ...)` from `effect` to `schema.pipe(...)`, merging into existing pipes instead of nesting
+- Enabled the rule by default in `recommendedRules` and the 2digits Oxlint config, in files that import Effect
+
 ## @2digits/oxlint-plugin@0.2.0
 
 ### Add `prefer-effect-duration-constants`
