@@ -85,6 +85,22 @@ testRule(rule, consistentSchemaPipe, {
   output: null,
 });
 
+// Reordering would evaluate an impure step or head at a different time, so these are reported without a fix.
+for (const [messageId, invalid, valid] of [
+  [
+    'wrapperPipe',
+    `${schema} Schema.String.pipe(Schema.check(filter), Schema.Array, makeStep())`,
+    `${schema} Schema.Array(Schema.String.pipe(Schema.check(filter))).pipe(makeStep())`,
+  ],
+  [
+    'dataLastCall',
+    `${schema} Schema.check(makeFilter())(makeSchema())`,
+    `${schema} makeSchema().pipe(Schema.check(makeFilter()))`,
+  ],
+] as const) {
+  testRule(rule, consistentSchemaPipe, { valid, invalid, messageId, output: null });
+}
+
 for (const valid of [
   `${schema}
   const TurboConfigSchema = Schema.Struct({
@@ -98,6 +114,8 @@ for (const valid of [
   `${schema} Schema.decodeUnknownSync(Schema.String)(input)`,
   `${schema} Schema.fromJsonString(TurboConfig, { space: 2 })`,
   `${schema} Schema.optional<typeof Name>(Name)`,
+  `${schema} Schema.String.pipe<Schema.Top>(Schema.Array)`,
+  `${pipe} pipe<Schema.Top, Schema.Top>(Schema.String, Schema.optional)`,
   `${schema} class UserId extends Schema.Opaque<UserId>()(Schema.String) {}`,
   `${pipe} pipe(Schema.decodeUnknownSync(User)(raw), (user) => user.name)`,
   `${pipe} pipe(Schema.Struct({ name: Schema.String }).makeUnsafe(raw), (user) => user.name)`,

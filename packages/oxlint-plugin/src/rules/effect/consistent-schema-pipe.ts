@@ -112,6 +112,8 @@ interface Chain {
   readonly head: ESTree.Expression;
   readonly steps: ReadonlyArray<Step>;
   readonly violation: { readonly kind: Violation; readonly name?: string } | undefined;
+  // The fix would evaluate an impure expression at a different time than the original code.
+  readonly reordersEffects: boolean;
 }
 
 function schemaMember(node: ESTree.Node, context: Context, state: FileState): string | undefined {
@@ -128,6 +130,63 @@ function isWrapper(name: string | undefined): name is string {
 
 function isSchemaFunction(name: string | undefined): name is string {
   return name !== undefined && (modifiers.has(name) || wrappers.has(name));
+}
+
+const pureLeaves = new Set<string>([
+  'ArrowFunctionExpression',
+  'FunctionExpression',
+  'Identifier',
+  'Literal',
+  'ThisExpression',
+]);
+
+function allPure(nodes: ReadonlyArray<ESTree.Node | null>, context: Context, state: FileState): boolean {
+  return Fn.pipe(
+    nodes,
+    Arr.every((node) => node === null || isPure(node, context, state)),
+  );
+}
+
+// Expressions whose evaluation has no observable effect, so a fix may move them. Schema factories count as pure.
+function isPure(node: ESTree.Node, context: Context, state: FileState): boolean {
+  if (pureLeaves.has(node.type)) {
+    return true;
+  }
+
+  if (node.type === 'MemberExpression') {
+    return isPure(node.object, context, state) && (!node.computed || isPure(node.property, context, state));
+  }
+
+  if (node.type === 'TemplateLiteral') {
+    return allPure(node.expressions, context, state);
+  }
+
+  if (node.type === 'ArrayExpression') {
+    return allPure(node.elements, context, state);
+  }
+
+  if (node.type === 'ObjectExpression') {
+    return Fn.pipe(
+      node.properties,
+      Arr.every((property) =>
+        property.type === 'SpreadElement'
+          ? isPure(property.argument, context, state)
+          : (!property.computed || isPure(property.key, context, state)) && isPure(property.value, context, state),
+      ),
+    );
+  }
+
+  if (node.type !== 'CallExpression') {
+    return false;
+  }
+
+  const callee = node.callee.type === 'CallExpression' ? node.callee.callee : node.callee;
+
+  return (
+    schemaMember(callee, context, state) !== undefined &&
+    (node.callee === callee || isPure(node.callee, context, state)) &&
+    allPure(node.arguments, context, state)
+  );
 }
 
 function hasSpread(node: ESTree.CallExpression): boolean {
@@ -153,6 +212,7 @@ function isMethodPipe(
     node.callee.type === 'MemberExpression' &&
     !node.callee.optional &&
     staticPropertyName(node.callee) === 'pipe' &&
+    !node.typeArguments &&
     !hasSpread(node)
   );
 }
@@ -207,6 +267,7 @@ function functionPipeParts(
     head === undefined ||
     first === undefined ||
     head.type === 'SpreadElement' ||
+    node.typeArguments ||
     hasSpread(node) ||
     (!isSchemaHead(head, context, state) && !isKnownStep(first, context, state))
   ) {
@@ -220,12 +281,18 @@ function appendStep(
   argument: ESTree.Expression,
   step: Step,
   violation: Chain['violation'],
+  reordersEffects: boolean,
   context: Context,
   state: FileState,
 ): Chain {
   const inner = flattenOrHead(argument, context, state);
 
-  return { head: inner.head, steps: [...inner.steps, step], violation: inner.violation ?? violation };
+  return {
+    head: inner.head,
+    steps: [...inner.steps, step],
+    violation: inner.violation ?? violation,
+    reordersEffects: inner.reordersEffects || reordersEffects,
+  };
 }
 
 function callChain(node: ESTree.CallExpression, context: Context, state: FileState): Chain | undefined {
@@ -244,6 +311,7 @@ function callChain(node: ESTree.CallExpression, context: Context, state: FileSta
       argument,
       { text: context.sourceCode.getText(node.callee), wrapper },
       wrapper ? undefined : { kind: 'modifierCall', name },
+      false,
       context,
       state,
     );
@@ -259,6 +327,8 @@ function callChain(node: ESTree.CallExpression, context: Context, state: FileSta
     argument,
     { text: context.sourceCode.getText(node.callee), wrapper: false },
     { kind: 'dataLastCall', name: stepName },
+    // The configured step was evaluated before the schema; in a pipe the schema comes first.
+    !isPure(node.callee, context, state) && !isPure(argument, context, state),
     context,
     state,
   );
@@ -286,6 +356,14 @@ function pipeChain(node: ESTree.CallExpression, context: Context, state: FileSta
 
   const firstWrapper = Fn.pipe(names, Arr.findFirst(isWrapper), Opt.getOrUndefined);
 
+  // Steps after an extracted wrapper move into a later pipe, so they would be built after earlier steps ran.
+  const reordersEffects =
+    firstWrapper !== undefined &&
+    Fn.pipe(
+      args.slice(names.indexOf(firstWrapper) + 1),
+      Arr.some((arg) => !isPure(arg, context, state)),
+    );
+
   return appendSteps(
     receiver,
     Fn.pipe(
@@ -297,6 +375,7 @@ function pipeChain(node: ESTree.CallExpression, context: Context, state: FileSta
       : firstWrapper === undefined
         ? undefined
         : { kind: 'wrapperPipe', name: firstWrapper },
+    reordersEffects,
     context,
     state,
   );
@@ -306,12 +385,18 @@ function appendSteps(
   receiver: ESTree.Expression,
   steps: ReadonlyArray<Step>,
   violation: Chain['violation'],
+  reordersEffects: boolean,
   context: Context,
   state: FileState,
 ): Chain {
   const inner = flattenOrHead(receiver, context, state);
 
-  return { head: inner.head, steps: [...inner.steps, ...steps], violation: inner.violation ?? violation };
+  return {
+    head: inner.head,
+    steps: [...inner.steps, ...steps],
+    violation: inner.violation ?? violation,
+    reordersEffects: inner.reordersEffects || reordersEffects,
+  };
 }
 
 function flatten(node: ESTree.Expression, context: Context, state: FileState): Chain | undefined {
@@ -321,7 +406,7 @@ function flatten(node: ESTree.Expression, context: Context, state: FileState): C
 }
 
 function flattenOrHead(node: ESTree.Expression, context: Context, state: FileState): Chain {
-  return flatten(node, context, state) ?? { head: node, steps: [], violation: undefined };
+  return flatten(node, context, state) ?? { head: node, steps: [], violation: undefined, reordersEffects: false };
 }
 
 // The outermost chain reports once and fixes the whole chain.
@@ -423,12 +508,13 @@ export const consistentSchemaPipe: Rule = defineEffectRule(
         node,
         messageId: chain.violation.kind,
         data: { name: chain.violation.name ?? '' },
-        fix: hasComments
-          ? undefined
-          : (fixer) => [
-              fixer.replaceTextRange([node.range[0], head.range[0]], prefix),
-              fixer.replaceTextRange([head.range[1], node.range[1]], suffix),
-            ],
+        fix:
+          hasComments || chain.reordersEffects
+            ? undefined
+            : (fixer) => [
+                fixer.replaceTextRange([node.range[0], head.range[0]], prefix),
+                fixer.replaceTextRange([head.range[1], node.range[1]], suffix),
+              ],
       });
     },
   }),
