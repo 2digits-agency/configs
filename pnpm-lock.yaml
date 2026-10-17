@@ -393,8 +393,8 @@ catalogs:
       specifier: 2.3.3
       version: 2.3.3
     posthog-node:
-      specifier: 5.56.1
-      version: 5.56.1
+      specifier: 5.56.2
+      version: 5.56.2
     prettier:
       specifier: 3.9.10
       version: 3.9.10
@@ -875,7 +875,7 @@ importers:
         version: 1.19.3
       posthog-node:
         specifier: 'catalog:'
-        version: 5.56.1(@opentelemetry/api@1.9.1)
+        version: 5.56.2(@opentelemetry/api@1.9.1)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -6518,8 +6518,8 @@ packages:
     resolution: {integrity: sha512-zkd+e9S1AQHhmaBKye9zlFHWjOwVgqXl1q3ECYy8561K7qxR2cREf/STLskulBFd78k6AOFeA+ff1TtEzk9bAA==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-node@5.56.1:
-    resolution: {integrity: sha512-TlEeE5OHNbsIje/htLwvmxN45/X0FcMSsln15cHdQqybUGj9Ebd0yyziWec0Fi5YQwMHYCfJPcNdgol/s1lIFA==}
+  posthog-node@5.56.2:
+    resolution: {integrity: sha512-1/qYFNuHkDJJuDHjAvozN/fH/+XdqzlIZ0WCsCYrhUgGNxDBw5M3kZaJaRX0YSPi9tn7PnZFD5eTXg2Z7m5LeQ==}
     engines: {node: ^20.20.0 || >=22.22.0}
     peerDependencies:
       '@opentelemetry/api': ^1.2.0
@@ -13053,7 +13053,7 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.2
 
-  posthog-node@5.56.1(@opentelemetry/api@1.9.1):
+  posthog-node@5.56.2(@opentelemetry/api@1.9.1):
     dependencies:
       '@posthog/core': 1.59.1
     optionalDependencies:
