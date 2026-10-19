@@ -6,7 +6,6 @@ import {
   getErrorMessage,
   getPrompt,
   getTraceName,
-  isValidCustomPropertiesJson,
   mapStopReason,
   parseCustomProperties,
   parseNumber,
@@ -36,6 +35,15 @@ describe(redactSensitive, () => {
       self: '[Circular]',
     });
   });
+
+  it('keeps values that are referenced more than once without being circular', () => {
+    const shared = { keep: 'ok' };
+
+    expect(redactSensitive({ first: shared, second: [shared] }, new WeakSet<object>(), 0)).toStrictEqual({
+      first: { keep: 'ok' },
+      second: [{ keep: 'ok' }],
+    });
+  });
 });
 
 describe(serializeAttribute, () => {
@@ -53,24 +61,16 @@ describe(parseNumber, () => {
 });
 
 describe(parseCustomProperties, () => {
-  it('returns parsed records and ignores invalid values', () => {
+  it('returns parsed records and undefined for invalid values', () => {
     expect(parseCustomProperties('{"foo":"bar"}')).toStrictEqual({ foo: 'bar' });
 
-    expect(parseCustomProperties('{')).toStrictEqual({});
+    expect(parseCustomProperties('{}')).toStrictEqual({});
 
-    expect(parseCustomProperties('[]')).toStrictEqual({});
-  });
-});
+    expect(parseCustomProperties(undefined)).toStrictEqual({});
 
-describe(isValidCustomPropertiesJson, () => {
-  it('accepts valid record json including an empty object', () => {
-    expect(isValidCustomPropertiesJson('{"foo":"bar"}')).toBeTruthy();
+    expect(parseCustomProperties('{')).toBeUndefined();
 
-    expect(isValidCustomPropertiesJson('{}')).toBeTruthy();
-
-    expect(isValidCustomPropertiesJson('{')).toBeFalsy();
-
-    expect(isValidCustomPropertiesJson('[]')).toBeFalsy();
+    expect(parseCustomProperties('[]')).toBeUndefined();
   });
 });
 
@@ -79,6 +79,10 @@ describe(getErrorMessage, () => {
     expect(getErrorMessage({ data: { message: 'bad' } })).toBe('bad');
 
     expect(getErrorMessage({ name: 'Boom' })).toBe('Boom');
+  });
+
+  it('returns string errors without JSON quotes', () => {
+    expect(getErrorMessage('Boom')).toBe('Boom');
   });
 });
 

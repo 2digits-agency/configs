@@ -5,7 +5,6 @@ import { DEFAULT_HOST, DEFAULT_MAX_ATTRIBUTE_LENGTH, DEFAULT_SESSION_WINDOW_MINU
 import type { Config } from './types.js';
 import {
   getProjectName,
-  isValidCustomPropertiesJson,
   parseCustomProperties,
   parseDistinctId,
   parseNumber,
@@ -25,7 +24,7 @@ export async function buildConfig(ctx: PluginInput): Promise<Config> {
 
   const customProperties = parseCustomProperties(process.env.POSTHOG_LLMA_CUSTOM_PROPERTIES);
 
-  if (!isValidCustomPropertiesJson(process.env.POSTHOG_LLMA_CUSTOM_PROPERTIES)) {
+  if (!customProperties) {
     console.warn(`${LIB_NAME}: ignoring invalid POSTHOG_LLMA_CUSTOM_PROPERTIES JSON`);
   }
 
@@ -43,6 +42,6 @@ export async function buildConfig(ctx: PluginInput): Promise<Config> {
     distinctId: parseDistinctId(process.env.POSTHOG_OPENCODE_LLMA_DISTINCT_ID),
     gitEmail: await readGitEmail(ctx),
     projectName,
-    customProperties,
+    customProperties: customProperties ?? {},
   };
 }

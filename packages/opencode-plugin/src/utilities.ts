@@ -33,34 +33,32 @@ export function truncate(value: string, maxLength: number): string {
   return `${value.slice(0, maxLength)}...[truncated ${omitted} chars]`;
 }
 
-export function redactSensitive(value: unknown, seen: WeakSet<object>, depth: number): unknown {
+export function redactSensitive(value: unknown, ancestors: WeakSet<object>, depth: number): unknown {
   if (depth > 8) {
     return '[DepthLimit]';
   }
 
-  if (value === null || value === undefined) {
+  if (typeof value !== 'object' || value === null) {
     return value;
   }
 
-  if (typeof value !== 'object') {
-    return value;
-  }
-
-  if (seen.has(value)) {
+  if (ancestors.has(value)) {
     return '[Circular]';
   }
 
-  seen.add(value);
+  ancestors.add(value);
 
-  if (Array.isArray(value)) {
-    return value.map((item) => redactSensitive(item, seen, depth + 1));
-  }
+  const output = Array.isArray(value)
+    ? value.map((item) => redactSensitive(item, ancestors, depth + 1))
+    : Object.fromEntries(
+        Object.entries(value).map(([key, nested]) => [
+          key,
+          SENSITIVE_KEY_PATTERN.test(key) ? '[REDACTED]' : redactSensitive(nested, ancestors, depth + 1),
+        ]),
+      );
 
-  const output: Record<string, unknown> = {};
-
-  for (const [key, nested] of Object.entries(value)) {
-    output[key] = SENSITIVE_KEY_PATTERN.test(key) ? '[REDACTED]' : redactSensitive(nested, seen, depth + 1);
-  }
+  // Only objects on the current path are circular, not values that are referenced more than once.
+  ancestors.delete(value);
 
   return output;
 }
@@ -72,13 +70,9 @@ export function serializeAttribute(value: unknown, maxLength: number): string | 
 
   const redacted = redactSensitive(value, new WeakSet<object>(), 0);
 
-  if (typeof redacted === 'string') {
-    return truncate(redacted, maxLength);
-  }
+  const text = typeof redacted === 'string' ? redacted : safeStringify(redacted);
 
-  const json = safeStringify(redacted);
-
-  return json ? truncate(json, maxLength) : undefined;
+  return text === undefined ? undefined : truncate(text, maxLength);
 }
 
 export function parseTraceGrouping(value: string | undefined): TraceGrouping {
@@ -91,7 +85,8 @@ export function parseNumber(value: string | undefined, fallback: number): number
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
-export function parseCustomProperties(value: string | undefined): Record<string, unknown> {
+// Returns `undefined` when the value is set but is not a JSON object.
+export function parseCustomProperties(value: string | undefined): Record<string, unknown> | undefined {
   if (!value) {
     return {};
   }
@@ -99,32 +94,16 @@ export function parseCustomProperties(value: string | undefined): Record<string,
   try {
     const parsed: unknown = JSON.parse(value);
 
-    return isRecord(parsed) ? parsed : {};
+    return isRecord(parsed) ? parsed : undefined;
   } catch {
-    return {};
-  }
-}
-
-export function isValidCustomPropertiesJson(value: string | undefined): boolean {
-  if (!value) {
-    return true;
-  }
-
-  try {
-    return isRecord(JSON.parse(value));
-  } catch {
-    return false;
+    return undefined;
   }
 }
 
 export function parseDistinctId(value: string | undefined): string | undefined {
   const distinctId = value?.trim();
 
-  if (!distinctId) {
-    return undefined;
-  }
-
-  return distinctId;
+  return distinctId === '' ? undefined : distinctId;
 }
 
 export function getProjectName(directory: string): string {
@@ -134,29 +113,17 @@ export function getProjectName(directory: string): string {
 }
 
 export function getTraceName(prompt: string | undefined): string | undefined {
-  if (!prompt) {
-    return undefined;
-  }
+  const traceName = prompt?.replaceAll(/\s+/g, ' ').trim().slice(0, 120);
 
-  const traceName = prompt.replaceAll(/\s+/g, ' ').trim();
-
-  if (!traceName) {
-    return undefined;
-  }
-
-  return traceName.slice(0, 120);
+  return traceName === '' ? undefined : traceName;
 }
 
 export function getDistinctId(config: Config, sessionID: string): string {
   return config.distinctId ?? config.gitEmail ?? sessionID;
 }
 
-export function getPendingKey(sessionID: string, messageID: string): string {
-  return `${sessionID}:${messageID}`;
-}
-
-export function getToolKey(sessionID: string, callID: string): string {
-  return `${sessionID}:${callID}`;
+export function sessionKey(sessionID: string, id: string): string {
+  return `${sessionID}:${id}`;
 }
 
 export function mapStopReason(finish: string | undefined, hasError: boolean): string | undefined {
@@ -164,20 +131,20 @@ export function mapStopReason(finish: string | undefined, hasError: boolean): st
     return 'error';
   }
 
-  if (!finish) {
-    return undefined;
-  }
-
   if (finish === 'tool-calls') {
     return 'tool_calls';
   }
 
-  return finish;
+  return finish === '' ? undefined : finish;
 }
 
 export function getErrorMessage(error: unknown): string | undefined {
   if (!error) {
     return undefined;
+  }
+
+  if (typeof error === 'string') {
+    return error;
   }
 
   if (isRecord(error)) {
@@ -197,27 +164,22 @@ export function getErrorMessage(error: unknown): string | undefined {
   return safeStringify(error);
 }
 
-export function getPrompt(parts: Array<PromptPart>): string | undefined {
-  const prompt = parts
-    .filter((part) => part.type === 'text' && !part.synthetic && typeof part.text === 'string')
-    .map((part) => part.text ?? '')
-    .join('\n')
-    .trim();
+function joinText(texts: Iterable<string>): string | undefined {
+  const text = [...texts].join('\n').trim();
 
-  return prompt.length > 0 ? prompt : undefined;
+  return text.length > 0 ? text : undefined;
+}
+
+export function getPrompt(parts: Array<PromptPart>): string | undefined {
+  return joinText(
+    parts
+      .filter((part) => part.type === 'text' && !part.synthetic && typeof part.text === 'string')
+      .map((part) => part.text ?? ''),
+  );
 }
 
 export function getAssistantOutput(state: AssistantOutputState | undefined): string | undefined {
-  if (!state) {
-    return undefined;
-  }
-
-  const output = state.order
-    .map((partID) => state.parts.get(partID) ?? '')
-    .join('\n')
-    .trim();
-
-  return output.length > 0 ? output : undefined;
+  return state && joinText(state.parts.values());
 }
 
 export function buildInputMessages(

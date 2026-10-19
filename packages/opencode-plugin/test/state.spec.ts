@@ -110,7 +110,7 @@ describe(createSessionState, () => {
 
     const resolved = createGenerationForSession(state);
 
-    state.storeAssistantOutput({ id: 'part-1', messageID: 'assistant-1', text: 'response' });
+    state.storeAssistantOutput({ id: 'part-1', sessionID: 'session-1', messageID: 'assistant-1', text: 'response' });
 
     const errorMessage = state.updateTraceStateFromAssistantMessage(resolved.traceState, resolved.pending, {
       mode: 'build',
@@ -137,7 +137,12 @@ describe(createSessionState, () => {
 
     createGenerationForSession(state);
 
+    // Text parts of user messages are stored too and have no generation state.
+    state.storeAssistantOutput({ id: 'part-1', sessionID: 'session-1', messageID: 'user-1', text: 'hello world' });
+
     state.clearSessionState('session-1');
+
+    expect(state.getAssistantOutputForMessage('user-1')).toBeUndefined();
 
     expect(state.getTraceState('session-1')).toBeUndefined();
 
