@@ -1,36 +1,33 @@
-import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
-import * as NodePath from '@effect/platform-node/NodePath';
 import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
-import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
-import * as Path from 'effect/Path';
 import * as P from 'effect/Predicate';
-import * as R from 'effect/Record';
-import * as Schema from 'effect/Schema';
+import * as Str from 'effect/String';
 import * as Struct from 'effect/Struct';
 
-import { type TurboConfig, TurboConfigJson } from '../schemas/TurboConfig';
-import { PackageManagerService } from './PackageManagerService';
+import type { TurboConfig } from '../schemas/TurboConfig';
+import { hasDependency, PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
-
-const decodeTurboConfigJson = Schema.decodeEffect(TurboConfigJson);
-
-const encodeTurboConfigJson = Schema.encodeEffect(TurboConfigJson);
-
-class TurborepoSetupError extends Schema.TaggedError<TurborepoSetupError, { readonly brand: unique symbol }>()(
-  '@2digits/cli/services/TurborepoSetupService/TurborepoSetupError',
-  {
-    operation: Schema.String,
-    message: Schema.String,
-    cause: Schema.Unknown.pipe(Schema.optional),
-  },
-) {}
+import { TurboConfigService } from './TurboConfigService';
 
 type TaskCategory = 'build' | 'test' | 'lint' | 'typecheck' | 'dev' | 'other';
+
+const taskCategoriesByName: ReadonlyMap<string, TaskCategory> = new Map([
+  ['build', 'build'],
+  ['compile', 'build'],
+  ['bundle', 'build'],
+  ['test', 'test'],
+  ['lint', 'lint'],
+  ['typecheck', 'typecheck'],
+  ['types', 'typecheck'],
+  ['tsc', 'typecheck'],
+  ['dev', 'dev'],
+  ['start', 'dev'],
+  ['serve', 'dev'],
+]);
 
 /**
  * Categorize a task name into a known category.
@@ -38,29 +35,20 @@ type TaskCategory = 'build' | 'test' | 'lint' | 'typecheck' | 'dev' | 'other';
  * @param taskName - The task name to categorize.
  */
 function categorizeTask(taskName: string): TaskCategory {
-  const lower = taskName.toLowerCase();
+  const lower = Str.toLowerCase(taskName);
 
-  if (Arr.contains(['build', 'compile', 'bundle'], lower)) {
-    return 'build';
-  }
-
-  if (lower === 'test' || lower.includes('spec') || lower.includes('vitest')) {
-    return 'test';
-  }
-
-  if (lower === 'lint' || lower.includes('eslint')) {
-    return 'lint';
-  }
-
-  if (Arr.contains(['typecheck', 'types', 'tsc'], lower)) {
-    return 'typecheck';
-  }
-
-  if (Arr.contains(['dev', 'start', 'serve'], lower)) {
-    return 'dev';
-  }
-
-  return 'other';
+  return (
+    taskCategoriesByName.get(lower) ??
+    Match.value(lower).pipe(
+      Match.withReturnType<TaskCategory>(),
+      Match.when(
+        (name) => name.includes('spec') || name.includes('vitest'),
+        () => 'test',
+      ),
+      Match.when(Str.includes('eslint'), () => 'lint'),
+      Match.orElse(() => 'other'),
+    )
+  );
 }
 
 /**
@@ -71,9 +59,7 @@ function categorizeTask(taskName: string): TaskCategory {
 const generateTaskConfig = Match.type<TaskCategory>().pipe(
   Match.withReturnType<Record<string, unknown>>(),
   Match.when('build', () => ({ dependsOn: ['^build'], outputs: ['dist/**', 'build/**', '.next/**', 'out/**'] })),
-  Match.when('test', () => ({ dependsOn: ['^build'] })),
-  Match.when('lint', () => ({ dependsOn: ['^build'] })),
-  Match.when('typecheck', () => ({ dependsOn: ['^build'] })),
+  Match.when(Match.is('test', 'lint', 'typecheck'), () => ({ dependsOn: ['^build'] })),
   Match.when('dev', () => ({ persistent: true, cache: false })),
   Match.orElse(() => ({})),
 );
@@ -88,13 +74,9 @@ function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): Tu
   const tasks = { ...existingConfig.tasks };
 
   for (const taskName of detectedTasks) {
-    if (P.isTruthy(tasks[taskName])) {
-      continue;
+    if (!P.isTruthy(tasks[taskName])) {
+      tasks[taskName] = generateTaskConfig(categorizeTask(taskName));
     }
-
-    const category = categorizeTask(taskName);
-
-    tasks[taskName] = generateTaskConfig(category);
   }
 
   return {
@@ -110,13 +92,11 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
   '@2digits/cli/services/TurborepoSetupService',
   {
     make: Effect.gen(function* () {
-      const fs = yield* FileSystem.FileSystem;
-
-      const path = yield* Path.Path;
-
       const pm = yield* PackageManagerService;
 
       const projectDetect = yield* ProjectDetectionService;
+
+      const turboConfigService = yield* TurboConfigService;
 
       /**
        * Detect tasks from workspace package.json files.
@@ -139,69 +119,10 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
       });
 
       /**
-       * Read existing turbo.json configuration.
-       */
-      const readTurboConfig = Effect.fn('TurborepoSetupService.readTurboConfig')(function* () {
-        const root = yield* pm.resolveRoot();
-
-        const turboPath = path.join(root, 'turbo.json');
-
-        const exists = yield* fs.exists(turboPath).pipe(Effect.orElseSucceed(() => false));
-
-        if (!exists) {
-          return Opt.none();
-        }
-
-        const content = yield* fs.readFileString(turboPath).pipe(
-          Effect.mapError((cause) =>
-            TurborepoSetupError.make({
-              operation: 'readTurboConfig',
-              message: 'Failed to read turbo.json',
-              cause,
-            }),
-          ),
-        );
-
-        const config = yield* decodeTurboConfigJson(content).pipe(
-          Effect.mapError((cause) =>
-            TurborepoSetupError.make({
-              operation: 'readTurboConfig',
-              message: 'Invalid JSON in turbo.json',
-              cause,
-            }),
-          ),
-        );
-
-        return Opt.some(config);
-      });
-
-      /**
        * Write turbo.json configuration.
        */
       const writeTurboConfig = Effect.fn('TurborepoSetupService.writeTurboConfig')(function* (config: TurboConfig) {
-        const root = yield* pm.resolveRoot();
-
-        const turboPath = path.join(root, 'turbo.json');
-
-        const content = yield* encodeTurboConfigJson(config).pipe(
-          Effect.mapError((cause) =>
-            TurborepoSetupError.make({
-              operation: 'writeTurboConfig',
-              message: 'Failed to write turbo.json',
-              cause,
-            }),
-          ),
-        );
-
-        yield* fs.writeFileString(turboPath, content).pipe(
-          Effect.mapError((cause) =>
-            TurborepoSetupError.make({
-              operation: 'writeTurboConfig',
-              message: 'Failed to write turbo.json',
-              cause,
-            }),
-          ),
-        );
+        yield* turboConfigService.write(config);
 
         yield* Effect.logInfo('✅ Updated turbo.json');
       });
@@ -212,29 +133,20 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
       const mergeTurboConfig = Effect.fn('TurborepoSetupService.mergeTurboConfig')(function* (
         detectedTasks: Set<string>,
       ) {
-        const turboConfigOption = yield* readTurboConfig();
+        const turboConfigOption = yield* turboConfigService.read();
 
-        yield* Match.value(turboConfigOption).pipe(
-          Match.tag(
-            'Some',
-            Effect.fn('TurborepoSetupService.mergeExistingTurboConfig')(function* ({
-              value: existingConfig,
-            }: Opt.Some<TurboConfig>) {
-              yield* writeTurboConfig(mergeTasks(existingConfig, detectedTasks));
+        yield* Opt.match(turboConfigOption, {
+          onNone: Effect.fn('TurborepoSetupService.createTurboConfig')(function* () {
+            yield* writeTurboConfig(mergeTasks({}, detectedTasks));
 
-              yield* Effect.logInfo(`📦 Merged ${detectedTasks.size} detected task(s) into turbo.json`);
-            }),
-          ),
-          Match.tag(
-            'None',
-            Effect.fn('TurborepoSetupService.createTurboConfig')(function* () {
-              yield* writeTurboConfig(mergeTasks({}, detectedTasks));
+            yield* Effect.logInfo(`✨ Created turbo.json with ${detectedTasks.size} task(s)`);
+          }),
+          onSome: Effect.fn('TurborepoSetupService.mergeExistingTurboConfig')(function* (existingConfig) {
+            yield* writeTurboConfig(mergeTasks(existingConfig, detectedTasks));
 
-              yield* Effect.logInfo(`✨ Created turbo.json with ${detectedTasks.size} task(s)`);
-            }),
-          ),
-          Match.exhaustive,
-        );
+            yield* Effect.logInfo(`📦 Merged ${detectedTasks.size} detected task(s) into turbo.json`);
+          }),
+        });
       });
 
       /**
@@ -254,25 +166,20 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
         let updated = false;
 
         for (const taskName of detectedTasks) {
-          const turboCommand = `turbo run ${taskName}`;
+          const existingScript = scripts[taskName] ?? '';
 
-          // eslint-disable-next-line unicorn/no-unreadable-object-destructuring
-          const { [taskName]: existingScript } = scripts;
-
-          if (existingScript === undefined || existingScript === '') {
-            scripts[taskName] = turboCommand;
-
-            updated = true;
-
-            yield* Effect.logInfo(`✅ Added script: ${taskName}`);
-          } else if (existingScript !== turboCommand && !existingScript.includes('turbo')) {
-            // Only update if not already using turbo
-            scripts[taskName] = turboCommand;
-
-            updated = true;
-
-            yield* Effect.logInfo(`✅ Updated script: ${taskName}`);
+          // Only update if not already using turbo
+          if (existingScript.includes('turbo')) {
+            continue;
           }
+
+          scripts[taskName] = `turbo run ${taskName}`;
+
+          updated = true;
+
+          yield* Effect.logInfo(
+            Str.isEmpty(existingScript) ? `✅ Added script: ${taskName}` : `✅ Updated script: ${taskName}`,
+          );
         }
 
         yield* updated
@@ -290,7 +197,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
 
         const packageJson = yield* pm.readPackageJson({ id: root });
 
-        if (R.has(packageJson.dependencies ?? {}, 'turbo') || R.has(packageJson.devDependencies ?? {}, 'turbo')) {
+        if (hasDependency(packageJson, 'turbo')) {
           yield* Effect.logInfo('✅ Turbo already installed');
         } else {
           yield* Effect.logInfo('Installing turbo...');
@@ -365,7 +272,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
       return {
         setup,
         detectWorkspaceTasks,
-        readTurboConfig,
+        readTurboConfig: turboConfigService.read,
         writeTurboConfig,
         mergeTurboConfig,
         updateRootScripts,
@@ -374,14 +281,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
     }),
   },
 ) {
-  static readonly Default = Layer.effect(this, this.make).pipe(
-    Layer.provide(
-      Layer.mergeAll(
-        NodeFileSystem.layer,
-        NodePath.layer,
-        PackageManagerService.Default,
-        ProjectDetectionService.Default,
-      ),
-    ),
+  static readonly layer = Layer.effect(this, this.make).pipe(
+    Layer.provide(Layer.mergeAll(PackageManagerService.layer, ProjectDetectionService.layer, TurboConfigService.layer)),
   );
 }

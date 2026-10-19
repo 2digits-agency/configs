@@ -32,10 +32,10 @@ const encodeUnknownTurboConfigJson = Schema.encodeUnknownEffect(TurboConfigJson)
 
 describe(TurborepoSetupService, () => {
   const testLayer = Layer.mergeAll(
-    TurborepoSetupService.Default,
-    ProjectDetectionService.Default,
-    PackageManagerService.Default,
-    MockCommandExecutor.Default,
+    TurborepoSetupService.layer,
+    ProjectDetectionService.layer,
+    PackageManagerService.layer,
+    MockCommandExecutor.layer,
     NodeFileSystem.layer,
     NodePath.layer,
   );

@@ -6,21 +6,15 @@ import * as Layer from 'effect/Layer';
 import * as CliConfig from 'effect/cli/CliConfig';
 
 import { cli } from './Cli';
-import { CurrentWorkingDirService } from './services/CurrentWorkingDirService';
-import { EslintDetectionService } from './services/EslintDetectionService';
 import { EslintSetupService } from './services/EslintSetupService';
 import { PrettierSetupService } from './services/PrettierSetupService';
-import { ProjectDetectionService } from './services/ProjectDetectionService';
 import { TurborepoSetupService } from './services/TurborepoSetupService';
 
 const MainLive = Layer.mergeAll(
   CliConfig.layer(),
-  CurrentWorkingDirService.Default,
-  PrettierSetupService.Default,
-  EslintSetupService.Default,
-  ProjectDetectionService.Default,
-  EslintDetectionService.Default,
-  TurborepoSetupService.Default,
+  PrettierSetupService.layer,
+  EslintSetupService.layer,
+  TurborepoSetupService.layer,
   NodeServices.layer,
 );
 

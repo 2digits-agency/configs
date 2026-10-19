@@ -6,40 +6,24 @@ import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
-import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as Path from 'effect/Path';
 import * as R from 'effect/Record';
-import * as Schema from 'effect/Schema';
 
-import { type TurboConfig, TurboConfigJson } from '../schemas/TurboConfig';
+import type { TurboConfig } from '../schemas/TurboConfig';
 import { EslintDetectionService } from './EslintDetectionService';
-import { PackageManagerService } from './PackageManagerService';
+import { ensureScript, hasDependency, PackageManagerService } from './PackageManagerService';
 import { ProjectDetectionService } from './ProjectDetectionService';
+import { TurboConfigService } from './TurboConfigService';
 
 const ESLINT_CONFIG_PACKAGE = '@2digits/eslint-config';
 
-const decodeTurboConfigJson = Schema.decodeEffect(TurboConfigJson);
+const DEFAULT_CONFIG = `import twoDigits from '${ESLINT_CONFIG_PACKAGE}';
 
-const encodeTurboConfigJson = Schema.encodeEffect(TurboConfigJson);
+export default twoDigits();
+`;
 
-class EslintSetupError extends Schema.TaggedError<EslintSetupError, { readonly brand: unique symbol }>()(
-  '@2digits/cli/services/EslintSetupService/EslintSetupError',
-  {
-    operation: Schema.String,
-    message: Schema.String,
-    cause: Schema.Defect().pipe(Schema.optional),
-  },
-) {}
-
-/**
- * Generate root ESLint configuration content.
- *
- * @param isMonorepo - Whether the project is a monorepo.
- */
-function generateRootConfig(isMonorepo: boolean): string {
-  if (isMonorepo) {
-    return `import twoDigits from '${ESLINT_CONFIG_PACKAGE}';
+const MONOREPO_ROOT_CONFIG = `import twoDigits from '${ESLINT_CONFIG_PACKAGE}';
 
 export default twoDigits({
   ignores: {
@@ -47,23 +31,6 @@ export default twoDigits({
   },
 });
 `;
-  }
-
-  return `import twoDigits from '${ESLINT_CONFIG_PACKAGE}';
-
-export default twoDigits();
-`;
-}
-
-/**
- * Generate workspace ESLint configuration content.
- */
-function generateWorkspaceConfig(): string {
-  return `import twoDigits from '${ESLINT_CONFIG_PACKAGE}';
-
-export default twoDigits();
-`;
-}
 
 /**
  * Merge lint tasks into turbo.json.
@@ -110,6 +77,8 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
       const eslintDetect = yield* EslintDetectionService;
 
+      const turboConfigService = yield* TurboConfigService;
+
       /**
        * Write ESLint configuration file.
        */
@@ -132,28 +101,24 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         const existingConfigs = yield* eslintDetect.detectExistingConfigs(targetDir);
 
-        if (Arr.isReadonlyArrayEmpty(existingConfigs)) {
-          return [];
-        }
+        // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+        return yield* Effect.forEach(
+          existingConfigs,
+          Effect.fn('EslintSetupService.backupConfig')(function* (configPath) {
+            const backupPath = `${configPath}.backup`;
 
-        const backups: Array<string> = [];
+            // Check if backup already exists, append timestamp if needed
+            const backupExists = yield* fs.exists(backupPath).pipe(Effect.orElseSucceed(() => false));
 
-        for (const configPath of existingConfigs) {
-          const backupPath = `${configPath}.backup`;
+            const finalBackupPath = backupExists ? `${backupPath}.${yield* Clock.currentTimeMillis}` : backupPath;
 
-          // Check if backup already exists, append timestamp if needed
-          const backupExists = yield* fs.exists(backupPath).pipe(Effect.orElseSucceed(() => false));
+            yield* fs.copy(configPath, finalBackupPath);
 
-          const finalBackupPath = backupExists ? `${backupPath}.${yield* Clock.currentTimeMillis}` : backupPath;
+            yield* Effect.logInfo(`📦 Backed up ${configPath} to ${finalBackupPath}`);
 
-          yield* fs.copy(configPath, finalBackupPath);
-
-          backups.push(finalBackupPath);
-
-          yield* Effect.logInfo(`📦 Backed up ${configPath} to ${finalBackupPath}`);
-        }
-
-        return backups;
+            return finalBackupPath;
+          }),
+        );
       });
 
       /**
@@ -174,61 +139,10 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
       });
 
       /**
-       * Read turbo.json configuration.
-       */
-      const readTurboConfig = Effect.fn('EslintSetupService.readTurboConfig')(function* () {
-        const root = yield* pm.resolveRoot();
-
-        const turboPath = path.join(root, 'turbo.json');
-
-        const exists = yield* fs.exists(turboPath).pipe(Effect.orElseSucceed(() => false));
-
-        if (!exists) {
-          return Opt.none();
-        }
-
-        const content = yield* fs
-          .readFileString(turboPath)
-          .pipe(
-            Effect.mapError((cause) =>
-              EslintSetupError.make({ operation: 'readTurboConfig', message: 'Failed to read turbo.json', cause }),
-            ),
-          );
-
-        const config = yield* decodeTurboConfigJson(content).pipe(
-          Effect.mapError((cause) =>
-            EslintSetupError.make({
-              operation: 'readTurboConfig',
-              message: 'Invalid JSON in turbo.json',
-              cause,
-            }),
-          ),
-        );
-
-        return Opt.some(config);
-      });
-
-      /**
        * Write turbo.json configuration.
        */
       const writeTurboConfig = Effect.fn('EslintSetupService.writeTurboConfig')(function* (config: TurboConfig) {
-        const root = yield* pm.resolveRoot();
-
-        const turboPath = path.join(root, 'turbo.json');
-
-        const content = yield* encodeTurboConfigJson(config).pipe(
-          Effect.mapError((cause) =>
-            EslintSetupError.make({ operation: 'writeTurboConfig', message: 'Failed to write turbo.json', cause }),
-          ),
-        );
-
-        yield* fs
-          .writeFileString(turboPath, content)
-          .pipe(
-            Effect.mapError((cause) =>
-              EslintSetupError.make({ operation: 'writeTurboConfig', message: 'Failed to write turbo.json', cause }),
-            ),
-          );
+        yield* turboConfigService.write(config);
 
         yield* Effect.logInfo('✅ Updated turbo.json with lint tasks');
       });
@@ -239,28 +153,23 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
       const ensureDependencies = Effect.fn('EslintSetupService.ensureDependencies')(function* () {
         yield* Effect.logInfo('Checking dependencies...');
 
-        const eslintInstalled = yield* eslintDetect.isEslintInstalled();
+        const root = yield* pm.resolveRoot();
 
-        if (eslintInstalled) {
-          const packageJson = yield* pm.readPackageJson();
+        const packageJson = yield* pm.readPackageJson({ id: root });
 
-          if (
-            R.has(packageJson.dependencies ?? {}, ESLINT_CONFIG_PACKAGE) ||
-            R.has(packageJson.devDependencies ?? {}, ESLINT_CONFIG_PACKAGE)
-          ) {
-            yield* Effect.logInfo('✅ Dependencies already installed');
-          } else {
-            yield* Effect.logInfo(`Installing ${ESLINT_CONFIG_PACKAGE}...`);
-
-            yield* pm.addDependencies({
-              devDependencies: [ESLINT_CONFIG_PACKAGE],
-            });
-          }
-        } else {
+        if (!hasDependency(packageJson, 'eslint')) {
           yield* Effect.logInfo(`Installing eslint and ${ESLINT_CONFIG_PACKAGE}...`);
 
           yield* pm.addDependencies({
             devDependencies: ['eslint', ESLINT_CONFIG_PACKAGE],
+          });
+        } else if (hasDependency(packageJson, ESLINT_CONFIG_PACKAGE)) {
+          yield* Effect.logInfo('✅ Dependencies already installed');
+        } else {
+          yield* Effect.logInfo(`Installing ${ESLINT_CONFIG_PACKAGE}...`);
+
+          yield* pm.addDependencies({
+            devDependencies: [ESLINT_CONFIG_PACKAGE],
           });
         }
       });
@@ -297,13 +206,9 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         const uses2Digits = rootConfigExists && (yield* eslintDetect.uses2DigitsConfig(rootConfigPath));
 
-        if (uses2Digits) {
-          yield* Effect.logInfo(`✅ Root config already uses ${ESLINT_CONFIG_PACKAGE}`);
-        } else {
-          const rootConfig = generateRootConfig(isMonorepo);
-
-          yield* writeEslintConfig(rootConfigPath, rootConfig);
-        }
+        yield* uses2Digits
+          ? Effect.logInfo(`✅ Root config already uses ${ESLINT_CONFIG_PACKAGE}`)
+          : writeEslintConfig(rootConfigPath, isMonorepo ? MONOREPO_ROOT_CONFIG : DEFAULT_CONFIG);
       });
 
       /**
@@ -314,24 +219,22 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         const workspaces = yield* projectDetect.discoverWorkspaces();
 
-        if (Arr.isReadonlyArrayNonEmpty(workspaces)) {
-          yield* Effect.logInfo(`Found ${workspaces.length} workspace(s)`);
-
-          for (const workspacePath of workspaces) {
-            const workspaceConfigPath = path.join(workspacePath, 'eslint.config.ts');
-
-            const workspaceConfigExists = yield* fs.exists(workspaceConfigPath).pipe(Effect.orElseSucceed(() => false));
-
-            if (workspaceConfigExists) {
-              yield* Effect.logInfo(`⚠️  Skipping ${workspaceConfigPath} (already exists)`);
-            } else {
-              const workspaceConfig = generateWorkspaceConfig();
-
-              yield* writeEslintConfig(workspaceConfigPath, workspaceConfig);
-            }
-          }
-        } else {
+        if (Arr.isReadonlyArrayEmpty(workspaces)) {
           yield* Effect.logInfo('No workspaces found in apps/ or packages/');
+
+          return;
+        }
+
+        yield* Effect.logInfo(`Found ${workspaces.length} workspace(s)`);
+
+        for (const workspacePath of workspaces) {
+          const workspaceConfigPath = path.join(workspacePath, 'eslint.config.ts');
+
+          const workspaceConfigExists = yield* fs.exists(workspaceConfigPath).pipe(Effect.orElseSucceed(() => false));
+
+          yield* workspaceConfigExists
+            ? Effect.logInfo(`⚠️  Skipping ${workspaceConfigPath} (already exists)`)
+            : writeEslintConfig(workspaceConfigPath, DEFAULT_CONFIG);
         }
       });
 
@@ -341,24 +244,15 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
       const updateTurboConfig = Effect.fn('EslintSetupService.updateTurboConfig')(function* () {
         yield* Effect.logInfo('Updating turbo.json...');
 
-        const turboConfigOption = yield* readTurboConfig();
+        const turboConfigOption = yield* turboConfigService.read();
 
-        yield* Match.value(turboConfigOption).pipe(
-          Match.tag(
-            'Some',
-            Effect.fn('EslintSetupService.updateExistingTurboConfig')(function* ({
-              value: turboConfig,
-            }: Opt.Some<TurboConfig>) {
-              const hasLintTask = turboConfig.tasks !== undefined && R.has(turboConfig.tasks, 'lint');
-
-              yield* hasLintTask
-                ? Effect.logInfo('✅ Lint tasks already exist in turbo.json')
-                : writeTurboConfig(mergeLintTasks(turboConfig));
-            }),
-          ),
-          Match.tag('None', () => Effect.logInfo('⚠️  turbo.json not found, skipping task configuration')),
-          Match.exhaustive,
-        );
+        yield* Opt.match(turboConfigOption, {
+          onNone: () => Effect.logInfo('⚠️  turbo.json not found, skipping task configuration'),
+          onSome: (turboConfig) =>
+            R.has(turboConfig.tasks ?? {}, 'lint')
+              ? Effect.logInfo('✅ Lint tasks already exist in turbo.json')
+              : writeTurboConfig(mergeLintTasks(turboConfig)),
+        });
       });
 
       /**
@@ -367,17 +261,11 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
       const validateAndComplete = Effect.fn('EslintSetupService.validateAndComplete')(function* () {
         yield* Effect.logInfo('Validating setup...');
 
-        const finalPackageJson = yield* pm.readPackageJson();
+        const root = yield* pm.resolveRoot();
 
-        const hasEslint =
-          R.has(finalPackageJson.dependencies ?? {}, 'eslint') ||
-          R.has(finalPackageJson.devDependencies ?? {}, 'eslint');
+        const finalPackageJson = yield* pm.readPackageJson({ id: root });
 
-        const has2DigitsConfig =
-          R.has(finalPackageJson.dependencies ?? {}, ESLINT_CONFIG_PACKAGE) ||
-          R.has(finalPackageJson.devDependencies ?? {}, ESLINT_CONFIG_PACKAGE);
-
-        if (!hasEslint || !has2DigitsConfig) {
+        if (!hasDependency(finalPackageJson, 'eslint') || !hasDependency(finalPackageJson, ESLINT_CONFIG_PACKAGE)) {
           yield* Effect.logError('⚠️  Warning: Dependencies may not be fully installed');
         }
 
@@ -404,32 +292,14 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
         const { scripts } = packageJson;
 
-        const { lint, 'lint:fix': lintFix, 'lint:root': lintRoot, 'lint:root:fix': lintRootFix } = scripts;
+        yield* ensureScript(scripts, 'lint', isMonorepo ? 'turbo run lint lint:root' : 'eslint .');
 
-        if (lint === undefined || lint === '') {
-          scripts.lint = isMonorepo ? 'turbo run lint lint:root' : 'eslint .';
-
-          yield* Effect.logInfo('✅ Added lint script');
-        }
-
-        if (lintFix === undefined || lintFix === '') {
-          scripts['lint:fix'] = isMonorepo ? 'turbo run lint:fix lint:root:fix' : 'eslint . --fix';
-
-          yield* Effect.logInfo('✅ Added lint:fix script');
-        }
+        yield* ensureScript(scripts, 'lint:fix', isMonorepo ? 'turbo run lint:fix lint:root:fix' : 'eslint . --fix');
 
         if (isMonorepo) {
-          if (lintRoot === undefined || lintRoot === '') {
-            scripts['lint:root'] = 'eslint .';
+          yield* ensureScript(scripts, 'lint:root', 'eslint .');
 
-            yield* Effect.logInfo('✅ Added lint:root script');
-          }
-
-          if (lintRootFix === undefined || lintRootFix === '') {
-            scripts['lint:root:fix'] = 'eslint . --fix';
-
-            yield* Effect.logInfo('✅ Added lint:root:fix script');
-          }
+          yield* ensureScript(scripts, 'lint:root:fix', 'eslint . --fix');
         }
 
         yield* pm.writePackageJson({ id: root, content: packageJson });
@@ -480,14 +350,15 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
     }),
   },
 ) {
-  static readonly Default = Layer.effect(this, this.make).pipe(
+  static readonly layer = Layer.effect(this, this.make).pipe(
     Layer.provide(
       Layer.mergeAll(
         NodeFileSystem.layer,
         NodePath.layer,
-        PackageManagerService.Default,
-        ProjectDetectionService.Default,
-        EslintDetectionService.Default,
+        PackageManagerService.layer,
+        ProjectDetectionService.layer,
+        EslintDetectionService.layer,
+        TurboConfigService.layer,
       ),
     ),
   );

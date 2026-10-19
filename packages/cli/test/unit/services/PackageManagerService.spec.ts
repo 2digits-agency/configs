@@ -20,8 +20,8 @@ const encodeUnknownJson = Schema.encodeUnknownEffect(Schema.Unknown.pipe(Schema.
 
 describe(PackageManagerService, () => {
   const testLayer = Layer.mergeAll(
-    PackageManagerService.Default,
-    MockCommandExecutor.Default,
+    PackageManagerService.layer,
+    MockCommandExecutor.layer,
     NodeFileSystem.layer,
     NodePath.layer,
   );

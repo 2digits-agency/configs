@@ -12,9 +12,9 @@ import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(PrettierSetupService, () => {
   const testLayer = Layer.mergeAll(
-    PrettierSetupService.Default,
-    PackageManagerService.Default,
-    MockCommandExecutor.Default,
+    PrettierSetupService.layer,
+    PackageManagerService.layer,
+    MockCommandExecutor.layer,
     NodeFileSystem.layer,
     NodePath.layer,
   );

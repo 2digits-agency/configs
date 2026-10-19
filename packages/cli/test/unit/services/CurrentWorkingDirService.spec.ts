@@ -8,7 +8,7 @@ import * as Path from 'effect/Path';
 import { CurrentWorkingDirService } from '../../../src/services/CurrentWorkingDirService.js';
 
 describe(CurrentWorkingDirService, () => {
-  const testLayer = Layer.mergeAll(CurrentWorkingDirService.Default, NodePath.layer);
+  const testLayer = Layer.mergeAll(CurrentWorkingDirService.layer, NodePath.layer);
 
   layer(testLayer)((it) => {
     it('returns process.cwd()', () =>

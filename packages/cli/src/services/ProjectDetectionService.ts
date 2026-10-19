@@ -102,7 +102,7 @@ export class ProjectDetectionService extends Context.Service<ProjectDetectionSer
     }),
   },
 ) {
-  static readonly Default = Layer.effect(this, this.make).pipe(
-    Layer.provide(Layer.mergeAll(NodeFileSystem.layer, NodePath.layer, PackageManagerService.Default)),
+  static readonly layer = Layer.effect(this, this.make).pipe(
+    Layer.provide(Layer.mergeAll(NodeFileSystem.layer, NodePath.layer, PackageManagerService.layer)),
   );
 }

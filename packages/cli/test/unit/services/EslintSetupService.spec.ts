@@ -2,7 +2,7 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import { describe, expect, layer } from '@effect/vitest';
-import { assertSuccess, assertTrue, strictEqual } from '@effect/vitest/utils';
+import { assertSuccess, assertTrue, deepStrictEqual, strictEqual } from '@effect/vitest/utils';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
@@ -13,7 +13,7 @@ import { EslintDetectionService } from '../../../src/services/EslintDetectionSer
 import { EslintSetupService } from '../../../src/services/EslintSetupService.js';
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
-import { MockCommandExecutor } from '../../helpers/MockCommandService.js';
+import { clearExecutedCommands, getExecutedCommands, MockCommandExecutor } from '../../helpers/MockCommandService.js';
 import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 const TurboConfigSchema = Schema.Struct({
@@ -31,11 +31,11 @@ const encodeUnknownTurboConfigJson = Schema.encodeUnknownEffect(TurboConfigJson)
 
 describe(EslintSetupService, () => {
   const testLayer = Layer.mergeAll(
-    EslintSetupService.Default,
-    EslintDetectionService.Default,
-    ProjectDetectionService.Default,
-    PackageManagerService.Default,
-    MockCommandExecutor.Default,
+    EslintSetupService.layer,
+    EslintDetectionService.layer,
+    ProjectDetectionService.layer,
+    PackageManagerService.layer,
+    MockCommandExecutor.layer,
     NodeFileSystem.layer,
     NodePath.layer,
   );
@@ -123,6 +123,38 @@ describe(EslintSetupService, () => {
           const turboConfig = yield* decodeTurboConfigJson(turboContent);
 
           expect(turboConfig).toMatchSnapshot('turbo.json');
+        }),
+      );
+
+      it.effect('checks root dependencies when run from a workspace', () =>
+        Effect.gen(function* () {
+          const service = yield* EslintSetupService;
+
+          const pm = yield* PackageManagerService;
+
+          const path = yield* Path.Path;
+
+          const tempDir = yield* withTempTestEnv('EslintSetupService');
+
+          yield* copyFixture('monorepo-turborepo');
+
+          const rootPkg = yield* pm.readPackageJson({ id: tempDir });
+
+          rootPkg.devDependencies = {
+            ...rootPkg.devDependencies,
+            eslint: '^9.0.0',
+            '@2digits/eslint-config': '^1.0.0',
+          };
+
+          yield* pm.writePackageJson({ id: tempDir, content: rootPkg });
+
+          process.chdir(path.join(tempDir, 'packages/app'));
+
+          yield* clearExecutedCommands;
+
+          yield* service.setup();
+
+          deepStrictEqual(yield* getExecutedCommands, []);
         }),
       );
     }),
