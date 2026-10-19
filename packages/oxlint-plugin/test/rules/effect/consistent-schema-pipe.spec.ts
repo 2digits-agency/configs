@@ -143,6 +143,9 @@ for (const valid of [
   `import { optional } from 'effect/Schema'; optional(Schema.String)`,
   `${schema} function f(Schema: Api) { return Schema.optional(Schema.String) }`,
   `${schema} Schema.String.pipe(Schema.optional).pipe(Schema.mutableKey)`,
+  // An optional link can skip the pipe, which a direct wrapper call would not.
+  `${schema} config?.item.pipe(Schema.Array)`,
+  `${schema} value.pipe?.(Schema.Array)`,
   // Schema.Constraint has no `.pipe`, so heads that may only be a Constraint stay calls.
   `${schema} function f<T extends Schema.Constraint>(schema: T) { return Schema.toCodecJson(schema) }`,
   `${schema} const f = <T extends Schema.Constraint, U extends T>(schema: U) => Schema.brand('Id')(schema)`,

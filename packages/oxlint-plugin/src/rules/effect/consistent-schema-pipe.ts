@@ -293,10 +293,21 @@ function soleArgument(node: ESTree.CallExpression): ESTree.Expression | undefine
   return node.arguments.length === 1 && !node.typeArguments ? argumentAt(node, 0) : undefined;
 }
 
+// An optional link before the call, as in `a?.b.pipe(...)`, can skip it, which a direct wrapper call would not.
+const isShortCircuitable: (node: ESTree.Expression) => boolean = Match.type<ESTree.Expression>().pipe(
+  Match.withReturnType<boolean>(),
+  Match.when({ type: 'CallExpression' }, ({ optional, callee }) => optional || isShortCircuitable(callee)),
+  Match.when({ type: 'MemberExpression' }, ({ optional, object }) => optional || isShortCircuitable(object)),
+  Match.when({ type: 'TSNonNullExpression' }, ({ expression }) => isShortCircuitable(expression)),
+  Match.orElse(Fn.constFalse),
+);
+
 function isPipeCall(
   node: ESTree.CallExpression,
 ): node is ESTree.CallExpression & { readonly callee: ESTree.MemberExpression } {
-  return node.callee.type === 'MemberExpression' && !node.callee.optional && staticPropertyName(node.callee) === 'pipe';
+  return (
+    node.callee.type === 'MemberExpression' && staticPropertyName(node.callee) === 'pipe' && !isShortCircuitable(node)
+  );
 }
 
 function isMethodPipe(node: ESTree.CallExpression): boolean {
