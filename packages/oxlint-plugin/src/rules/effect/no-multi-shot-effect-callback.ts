@@ -14,12 +14,19 @@ import {
   walkNodes,
 } from '../../utils';
 
+// Repeating event sources, keyed by method, with the index of their handler argument.
+const multiShotHandlerIndex: ReadonlyMap<string, number> = new Map([
+  ['addEventListener', 1],
+  ['on', 1],
+  ['setInterval', 0],
+]);
+
 function isMultiShotRegistration(node: ESTree.CallExpression, resume: string): boolean {
-  const path = staticPath(node.callee);
+  const method = staticPath(node.callee)?.at(-1);
 
-  const method = path?.at(-1);
+  const handlerIndex = method === undefined ? undefined : multiShotHandlerIndex.get(method);
 
-  if (method === undefined || !['addEventListener', 'on', 'setInterval'].includes(method)) {
+  if (handlerIndex === undefined) {
     return false;
   }
 
@@ -35,7 +42,7 @@ function isMultiShotRegistration(node: ESTree.CallExpression, resume: string): b
     }
   }
 
-  const handler = argumentAt(node, method === 'setInterval' ? 0 : 1);
+  const handler = argumentAt(node, handlerIndex);
 
   return handler !== undefined && containsIdentifier(handler, resume);
 }

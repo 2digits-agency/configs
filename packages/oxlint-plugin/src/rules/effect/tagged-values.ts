@@ -1,19 +1,48 @@
 import type { ESTree } from '@oxlint/plugins';
+import * as Fn from 'effect/Function';
+import * as Match from 'effect/Match';
 
-import { isStringLiteral, staticPropertyName } from '../../utils';
+import { callbackCall, enclosingFunction, isEqualityOperator, isStringLiteral, staticPropertyName } from '../../utils';
 
-const equalityOperators = new Set(['==', '===', '!=', '!==']);
+const isBroadEffectCatchCallee = Match.type<ESTree.Expression>().pipe(
+  Match.when(
+    {
+      type: 'MemberExpression',
+      computed: false,
+      object: { type: 'Identifier', name: 'Effect' },
+      property: { type: 'Identifier', name: Match.is('catch', 'catchAll', 'catchIf') },
+    },
+    Fn.constTrue,
+  ),
+  Match.orElse(Fn.constFalse),
+);
 
-const broadEffectCatchMethods = new Set(['catch', 'catchAll', 'catchIf']);
+const isMatchPatternCallee = Match.type<ESTree.Expression>().pipe(
+  Match.when(
+    {
+      type: 'MemberExpression',
+      computed: false,
+      object: { type: 'Identifier', name: 'Match' },
+      property: { type: 'Identifier', name: Match.is('when', 'not') },
+    },
+    Fn.constTrue,
+  ),
+  Match.orElse(Fn.constFalse),
+);
 
 /**
  * Recognize static `_tag` access, including bracket notation.
  *
  * @param node - Candidate syntax node.
  */
-export function isTagMember(node: ESTree.Node): node is ESTree.MemberExpression {
-  return node.type === 'MemberExpression' && staticPropertyName(node) === '_tag';
-}
+export const isTagMember = Match.type<ESTree.Node>().pipe(
+  Match.when(
+    { type: 'MemberExpression', computed: false, property: { type: 'Identifier', name: '_tag' } },
+    Fn.constTrue,
+  ),
+  Match.when({ type: 'MemberExpression', computed: true, property: { type: 'Literal', value: '_tag' } }, Fn.constTrue),
+  Match.orElse(Fn.constFalse),
+) as (node: ESTree.Node) => node is ESTree.MemberExpression;
 
 /**
  * Return the tag member in a literal equality or inequality comparison.
@@ -21,7 +50,7 @@ export function isTagMember(node: ESTree.Node): node is ESTree.MemberExpression 
  * @param node - Comparison to inspect.
  */
 export function tagMemberFromComparison(node: ESTree.BinaryExpression): ESTree.MemberExpression | undefined {
-  if (!equalityOperators.has(node.operator)) {
+  if (!isEqualityOperator(node.operator)) {
     return undefined;
   }
 
@@ -42,28 +71,11 @@ export function tagMemberFromComparison(node: ESTree.BinaryExpression): ESTree.M
  * @param node - Node whose enclosing callback is inspected.
  */
 export function isInsideBroadEffectHandler(node: ESTree.Node): boolean {
-  let current = node.parent;
+  const callback = enclosingFunction(node);
 
-  while (current) {
-    if (current.type === 'ArrowFunctionExpression' || current.type === 'FunctionExpression') {
-      const call = current.parent;
+  const call = callback === undefined ? undefined : callbackCall(callback);
 
-      return (
-        call.type === 'CallExpression' &&
-        call.arguments.includes(current) &&
-        call.callee.type === 'MemberExpression' &&
-        call.callee.object.type === 'Identifier' &&
-        call.callee.object.name === 'Effect' &&
-        !call.callee.computed &&
-        call.callee.property.type === 'Identifier' &&
-        broadEffectCatchMethods.has(call.callee.property.name)
-      );
-    }
-
-    current = current.parent;
-  }
-
-  return false;
+  return call !== undefined && isBroadEffectCatchCallee(call.callee);
 }
 
 /**
@@ -83,14 +95,5 @@ export function isReasonTagMember(node: ESTree.MemberExpression): boolean {
 export function isMatchPatternObject(node: ESTree.ObjectExpression): boolean {
   const call = node.parent;
 
-  return (
-    call.type === 'CallExpression' &&
-    call.arguments.includes(node) &&
-    call.callee.type === 'MemberExpression' &&
-    call.callee.object.type === 'Identifier' &&
-    call.callee.object.name === 'Match' &&
-    !call.callee.computed &&
-    call.callee.property.type === 'Identifier' &&
-    (call.callee.property.name === 'when' || call.callee.property.name === 'not')
-  );
+  return call.type === 'CallExpression' && call.arguments.includes(node) && isMatchPatternCallee(call.callee);
 }

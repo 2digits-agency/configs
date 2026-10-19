@@ -1,6 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 
-import { defineEffectRule, enclosingFunction, isApi, ruleMeta } from '../../utils';
+import { defineEffectRule, enclosingFunction, isAnyApi, ruleMeta } from '../../utils';
 import { callbackApi, functionProperty } from './utils';
 
 const pureCallbackMethods = new Set(['andThen', 'map', 'mapError', 'tap', 'tapError', 'tapErrorCause']);
@@ -31,9 +31,7 @@ export const noThrowInEffectCallback: Rule = defineEffectRule(
 
       if (
         (path?.[0] === 'Effect' && path[1] !== undefined && pureCallbackMethods.has(path[1])) ||
-        (optionsCall !== undefined &&
-          (isApi(optionsCall.callee, state, 'Effect', 'try') ||
-            isApi(optionsCall.callee, state, 'Effect', 'tryPromise')))
+        (optionsCall !== undefined && isAnyApi(optionsCall.callee, state, 'Effect', ['try', 'tryPromise']))
       ) {
         context.report({ node, messageId: 'callbackThrow' });
       }

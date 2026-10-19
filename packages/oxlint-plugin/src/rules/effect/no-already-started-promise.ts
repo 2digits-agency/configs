@@ -1,37 +1,14 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 
-import {
-  argumentAt,
-  defineEffectRule,
-  isApi,
-  isFunctionNode,
-  objectProperty,
-  ruleMeta,
-  type FileState,
-  type FunctionNode,
-} from '../../utils';
-import { functionResult, promiseInitializer } from './utils';
+import { argumentAt, defineEffectRule, isAnyApi, ruleMeta, type FileState, type FunctionNode } from '../../utils';
+import { functionResult, promiseInitializer, promiseThunkArgument } from './utils';
 
 function promiseThunk(node: ESTree.CallExpression, state: FileState): FunctionNode | undefined {
-  if (!isApi(node.callee, state, 'Effect', 'promise') && !isApi(node.callee, state, 'Effect', 'tryPromise')) {
+  if (!isAnyApi(node.callee, state, 'Effect', ['promise', 'tryPromise'])) {
     return undefined;
   }
 
-  const first = argumentAt(node, 0);
-
-  if (first !== undefined && isFunctionNode(first)) {
-    return first;
-  }
-
-  if (first?.type === 'ObjectExpression') {
-    const tryProperty = objectProperty(first, 'try');
-
-    if (tryProperty !== undefined && isFunctionNode(tryProperty.value)) {
-      return tryProperty.value;
-    }
-  }
-
-  return undefined;
+  return promiseThunkArgument(argumentAt(node, 0));
 }
 
 export const noAlreadyStartedPromise: Rule = defineEffectRule(

@@ -9,9 +9,10 @@ import {
   ruleMeta,
   staticPath,
   unwrapExpression,
+  type FileState,
 } from '../../utils';
 
-function isPlaintextSecret(node: ESTree.Expression, state: Parameters<typeof isApi>[1]): boolean {
+function isPlaintextSecret(node: ESTree.Expression, state: FileState): boolean {
   const value = unwrapExpression(node);
 
   if (isStringLiteral(value) || value.type === 'TemplateLiteral') {

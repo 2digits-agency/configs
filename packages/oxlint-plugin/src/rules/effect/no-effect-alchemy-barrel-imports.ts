@@ -2,7 +2,7 @@ import type { Rule } from '@oxlint/plugins';
 
 import { defineSyntaxRule, moduleExportName, ruleMeta } from '../../utils';
 import { fixBarrel } from './import-fixes';
-import { barrelModuleSource, isTypeOnlyImport, namespaceAlias } from './import-style-utils';
+import { barrelModuleSource, isModuleName, isTypeOnlyImport, namespaceAlias } from './import-style-utils';
 
 export const noEffectAlchemyBarrelImports: Rule = defineSyntaxRule(
   {
@@ -26,7 +26,7 @@ export const noEffectAlchemyBarrelImports: Rule = defineSyntaxRule(
 
         const name = moduleExportName(specifier.imported);
 
-        const source = /^\p{Lu}/u.test(name) ? barrelModuleSource(node.source.value, name) : undefined;
+        const source = isModuleName(name) ? barrelModuleSource(node.source.value, name) : undefined;
 
         if (source !== undefined) {
           context.report({

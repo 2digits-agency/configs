@@ -4,7 +4,7 @@ import {
   containsIdentifier,
   defineEffectRule,
   firstIdentifierParameter,
-  isApi,
+  isAnyApi,
   isErrorConstructor,
   ruleMeta,
   walkNodes,
@@ -22,8 +22,7 @@ function wrapperDropsCause(node: FunctionNode, state: FileState): boolean {
 
   const isHandler =
     (callPath?.[0] === 'Effect' && callPath[1] !== undefined && errorHandlerMethods.has(callPath[1])) ||
-    (optionsCall !== undefined &&
-      (isApi(optionsCall.callee, state, 'Effect', 'try') || isApi(optionsCall.callee, state, 'Effect', 'tryPromise')));
+    (optionsCall !== undefined && isAnyApi(optionsCall.callee, state, 'Effect', ['try', 'tryPromise']));
 
   if (!isHandler || !node.body) {
     return false;

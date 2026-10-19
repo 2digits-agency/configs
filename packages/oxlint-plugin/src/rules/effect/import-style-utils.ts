@@ -1,4 +1,8 @@
 import type { ESTree } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
+import * as Opt from 'effect/Option';
+import * as R from 'effect/Record';
+import * as Str from 'effect/String';
 
 const effectImportAliases: Readonly<Record<string, string>> = {
   Array: 'Arr',
@@ -12,6 +16,17 @@ const effectImportAliases: Readonly<Record<string, string>> = {
   String: 'Str',
 };
 
+const moduleNamePattern = /^\p{Lu}/u;
+
+/**
+ * Effect and Alchemy module namespaces are PascalCase; lowercase exports are plain values.
+ *
+ * @param name Exported or submodule name.
+ */
+export function isModuleName(name: string): boolean {
+  return moduleNamePattern.test(name);
+}
+
 function isEffectVitestSource(source: string): boolean {
   return source === '@effect/vitest' || source.startsWith('@effect/vitest/');
 }
@@ -21,7 +36,7 @@ export function isTypeOnlyImport(declaration: ESTree.ImportDeclaration, specifie
 }
 
 export function namespaceAlias(moduleName: string): string {
-  return effectImportAliases[moduleName] ?? moduleName;
+  return Opt.getOrElse(R.get(effectImportAliases, moduleName), () => moduleName);
 }
 
 export function barrelModuleSource(source: string, moduleName: string): string | undefined {
@@ -44,7 +59,11 @@ export function submoduleName(source: string): string | undefined {
   const isSubmodule =
     source.startsWith('effect/') || source.startsWith('alchemy/') || /^@effect\/[^/]+\//u.test(source);
 
-  const name = isSubmodule ? source.split('/').at(-1) : undefined;
+  if (!isSubmodule) {
+    return undefined;
+  }
 
-  return name !== undefined && /^\p{Lu}/u.test(name) ? name : undefined;
+  const name = Arr.lastNonEmpty(Str.split(source, '/'));
+
+  return isModuleName(name) ? name : undefined;
 }

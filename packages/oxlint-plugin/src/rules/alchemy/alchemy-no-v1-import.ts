@@ -4,6 +4,11 @@ import * as Opt from 'effect/Option';
 
 import { defineSyntaxRule, ruleMeta } from '../../utils';
 
+const providerEntrypoints: ReadonlyMap<string, string> = new Map([
+  ['alchemy/aws', 'alchemy/AWS'],
+  ['alchemy/cloudflare', 'alchemy/Cloudflare'],
+]);
+
 export const alchemyNoV1Import: Rule = defineSyntaxRule(
   ruleMeta(
     'problem',
@@ -30,13 +35,11 @@ export const alchemyNoV1Import: Rule = defineSyntaxRule(
         return;
       }
 
-      const provider = /^alchemy\/(aws|cloudflare)$/.exec(source)?.[1];
+      const replacement = providerEntrypoints.get(source);
 
-      if (provider === undefined) {
+      if (replacement === undefined) {
         return;
       }
-
-      const replacement = `alchemy/${provider === 'aws' ? 'AWS' : 'Cloudflare'}`;
 
       context.report({ node: node.source, messageId: 'providerImport', data: { replacement } });
     },

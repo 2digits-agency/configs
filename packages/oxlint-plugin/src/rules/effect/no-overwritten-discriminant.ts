@@ -1,4 +1,4 @@
-import type { Rule } from '@oxlint/plugins';
+import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 
@@ -13,27 +13,20 @@ export const noOverwrittenDiscriminant: Rule = defineEffectRule(
   ),
   (context) => ({
     ObjectExpression(node) {
-      const tagIndex = Opt.getOrElse(
-        Arr.findFirstIndex(
-          node.properties,
-          (property) => property.type === 'Property' && propertyName(property) === '_tag',
-        ),
-        () => -1,
+      const tag = Arr.findFirstWithIndex(
+        node.properties,
+        (property): property is ESTree.ObjectProperty =>
+          property.type === 'Property' && propertyName(property) === '_tag',
       );
 
-      if (tagIndex === -1) {
+      if (Opt.isNone(tag)) {
         return;
       }
 
-      const laterSpread = Arr.some(
-        node.properties.slice(tagIndex + 1),
-        (property) => property.type === 'SpreadElement',
-      );
+      const [property, index] = tag.value;
 
-      const tag = node.properties[tagIndex];
-
-      if (laterSpread && tag?.type === 'Property') {
-        context.report({ node: tag, messageId: 'overwritten' });
+      if (Arr.some(Arr.drop(node.properties, index + 1), (later) => later.type === 'SpreadElement')) {
+        context.report({ node: property, messageId: 'overwritten' });
       }
     },
   }),

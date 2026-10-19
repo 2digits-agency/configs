@@ -1,8 +1,10 @@
 import type { ESTree } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
 
 import {
   callbackCall,
   enclosingFunction,
+  findAncestor,
   isApi,
   isApiPath,
   isFunctionNode,
@@ -23,24 +25,21 @@ const workerHandlers = new Set([
   'webSocketMessage',
 ]);
 
+const workerPaths: ReadonlyArray<ReadonlyArray<string>> = [
+  ['Cloudflare', 'Worker'],
+  ['Cloudflare', 'Workers', 'Worker'],
+];
+
 export function isCloudflareWorker(node: ESTree.Node, state: FileState): boolean {
-  return (
-    isApiPath(node, state, ['Cloudflare', 'Worker']) || isApiPath(node, state, ['Cloudflare', 'Workers', 'Worker'])
-  );
+  return Arr.some(workerPaths, (path) => isApiPath(node, state, path));
 }
 
 export function containingWorker(node: ESTree.Node, state: FileState): ESTree.CallExpression | undefined {
-  let parent = node.parent;
-
-  while (parent) {
-    if (parent.type === 'CallExpression' && isCloudflareWorker(parent.callee, state)) {
-      return parent;
-    }
-
-    parent = parent.parent;
-  }
-
-  return undefined;
+  return findAncestor(
+    node,
+    (parent): parent is ESTree.CallExpression =>
+      parent.type === 'CallExpression' && isCloudflareWorker(parent.callee, state),
+  );
 }
 
 export function containingEffectGen(node: ESTree.Node, state: FileState): ESTree.CallExpression | undefined {

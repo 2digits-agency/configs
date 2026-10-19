@@ -1,6 +1,7 @@
 import type { Context, Definition, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 
 import {
   argumentAt,
@@ -78,9 +79,7 @@ function directProperties(node: ESTree.Expression | undefined): Array<ESTree.Obj
 
     const name =
       propertyName(property) ??
-      (property.key.type === 'Literal' && typeof property.key.value === 'number'
-        ? String(property.key.value)
-        : undefined);
+      (property.key.type === 'Literal' && P.isNumber(property.key.value) ? String(property.key.value) : undefined);
 
     if (name === undefined || names.has(name)) {
       return undefined;

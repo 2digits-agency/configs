@@ -1,4 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import * as P from 'effect/Predicate';
 
 import {
   canonicalPath,
@@ -12,10 +13,16 @@ import {
 } from '../../utils';
 import { objectArgument } from './utils';
 
+const nonJsonGlobals: ReadonlySet<string> = new Set(['NaN', 'Infinity', 'undefined']);
+
+const annotateMethods: ReadonlySet<string> = new Set(['annotate', 'annotateEncoded', 'annotateKey']);
+
+const jsonValueAnnotations = ['default', 'examples'] as const;
+
 function directlyNonJson(expression: ESTree.Expression): boolean {
   return (
-    (expression.type === 'Literal' && typeof expression.value === 'bigint') ||
-    (expression.type === 'Identifier' && ['NaN', 'Infinity', 'undefined'].includes(expression.name)) ||
+    (expression.type === 'Literal' && P.isBigInt(expression.value)) ||
+    (expression.type === 'Identifier' && nonJsonGlobals.has(expression.name)) ||
     isFunctionNode(expression) ||
     (expression.type === 'CallExpression' && staticPath(expression.callee)?.at(-1) === 'Symbol')
   );
@@ -90,7 +97,7 @@ export const noNonJsonSchemaAnnotation: Rule = defineEffectRule(
             ? directPath[1]
             : undefined;
 
-      if (method === undefined || !['annotate', 'annotateEncoded', 'annotateKey'].includes(method)) {
+      if (method === undefined || !annotateMethods.has(method)) {
         return;
       }
 
@@ -100,7 +107,7 @@ export const noNonJsonSchemaAnnotation: Rule = defineEffectRule(
         return;
       }
 
-      for (const name of ['default', 'examples']) {
+      for (const name of jsonValueAnnotations) {
         const property = objectProperty(annotations, name);
 
         if (property === undefined) {

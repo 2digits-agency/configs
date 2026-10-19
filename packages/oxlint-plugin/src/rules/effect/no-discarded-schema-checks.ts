@@ -11,6 +11,8 @@ import {
   unwrapExpression,
 } from '../../utils';
 
+const schemaMapMethods: ReadonlySet<string> = new Set(['mapElements', 'mapFields', 'mapMembers']);
+
 function methodCall(node: ESTree.Expression, method: string): ESTree.CallExpression | undefined {
   const expression = unwrapExpression(node);
 
@@ -45,20 +47,18 @@ export const noDiscardedSchemaChecks: Rule = defineEffectRule(
 
       if (
         method === undefined ||
-        !['mapElements', 'mapFields', 'mapMembers'].includes(method) ||
+        !schemaMapMethods.has(method) ||
         methodCall(node.callee.object, 'check') === undefined
       ) {
         return;
       }
 
-      const options = Opt.getOrUndefined(
-        Arr.findFirst(node.arguments, (argument) => argument.type === 'ObjectExpression'),
+      const preservesChecks = Arr.findFirst(node.arguments, (argument) => argument.type === 'ObjectExpression').pipe(
+        Opt.flatMapNullishOr((options) => objectProperty(options, 'unsafePreserveChecks')),
+        Opt.exists((preserve) => isLiteral(preserve.value, true)),
       );
 
-      const preserve =
-        options?.type === 'ObjectExpression' ? objectProperty(options, 'unsafePreserveChecks') : undefined;
-
-      if (preserve !== undefined && isLiteral(preserve.value, true)) {
+      if (preservesChecks) {
         return;
       }
 

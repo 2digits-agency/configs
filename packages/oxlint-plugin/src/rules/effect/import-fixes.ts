@@ -1,9 +1,16 @@
 import type { Context, ESTree, Fix, Fixer, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
+import * as Result from 'effect/Result';
 
 import { moduleExportName } from '../../utils';
-import { barrelModuleSource, isTypeOnlyImport, namespaceAlias, submoduleName } from './import-style-utils';
+import {
+  barrelModuleSource,
+  isModuleName,
+  isTypeOnlyImport,
+  namespaceAlias,
+  submoduleName,
+} from './import-style-utils';
 
 /**
  * Split barrel module imports without renaming their local bindings.
@@ -13,38 +20,34 @@ import { barrelModuleSource, isTypeOnlyImport, namespaceAlias, submoduleName } f
  * @param fixer Edit factory.
  */
 export function fixBarrel(context: Context, node: ESTree.ImportDeclaration, fixer: Fixer): Array<Fix> | undefined {
-  if (context.sourceCode.getCommentsInside(node).length > 0 || node.attributes.length > 0) {
+  const specifiers: ReadonlyArray<ESTree.ImportDeclarationSpecifier> = node.specifiers;
+
+  if (
+    context.sourceCode.getCommentsInside(node).length > 0 ||
+    node.attributes.length > 0 ||
+    !Arr.every(specifiers, (specifier): specifier is ESTree.ImportSpecifier => specifier.type === 'ImportSpecifier')
+  ) {
     return undefined;
   }
 
-  const remaining: Array<string> = [];
-
-  const imports: Array<string> = [];
-
-  for (const specifier of node.specifiers) {
-    if (specifier.type !== 'ImportSpecifier') {
-      return undefined;
-    }
-
+  const [imports, remaining] = Arr.partition(specifiers, (specifier) => {
     const name = moduleExportName(specifier.imported);
 
     const source =
-      /^\p{Lu}/u.test(name) && !isTypeOnlyImport(node, specifier)
+      isModuleName(name) && !isTypeOnlyImport(node, specifier)
         ? barrelModuleSource(node.source.value, name)
         : undefined;
 
-    if (source === undefined) {
-      remaining.push(context.sourceCode.getText(specifier));
-    } else {
-      imports.push(`import * as ${specifier.local.name} from '${source}';`);
-    }
-  }
+    return source === undefined
+      ? Result.fail(context.sourceCode.getText(specifier))
+      : Result.succeed(`import * as ${specifier.local.name} from '${source}';`);
+  });
 
-  if (remaining.length > 0) {
-    imports.unshift(`import { ${Arr.join(remaining, ', ')} } from ${context.sourceCode.getText(node.source)};`);
-  }
+  const lines = Arr.isReadonlyArrayNonEmpty(remaining)
+    ? Arr.prepend(imports, `import { ${Arr.join(remaining, ', ')} } from ${context.sourceCode.getText(node.source)};`)
+    : imports;
 
-  return [fixer.replaceText(node, Arr.join(imports, '\n'))];
+  return [fixer.replaceText(node, Arr.join(lines, '\n'))];
 }
 
 /**

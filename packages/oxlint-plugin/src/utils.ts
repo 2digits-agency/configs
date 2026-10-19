@@ -14,6 +14,7 @@ import {
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Str from 'effect/String';
@@ -46,29 +47,23 @@ export const moduleExportName = Match.type<ESTree.ModuleExportName>().pipe(
   }),
 );
 
-function modulePath(source: string): ReadonlyArray<string> | undefined {
-  if (source === 'alchemy') {
-    return ['Alchemy'];
-  }
+const submoduleSource = /^(?:effect|@effect\/platform|alchemy)\//u;
 
-  if (source === 'effect' || source === '@effect/platform') {
-    return [];
-  }
+// Lowercase entrypoints such as effect/unstable/http are barrels. Their named imports are module namespaces,
+// While PascalCase entrypoints such as effect/Schema are the module itself.
+function submodulePath(source: string): ReadonlyArray<string> {
+  const name = Arr.lastNonEmpty(Str.split(source, '/'));
 
-  if (source.startsWith('effect/') || source.startsWith('@effect/platform/') || source.startsWith('alchemy/')) {
-    const name = source.split('/').at(-1);
-
-    if (name === undefined) {
-      return undefined;
-    }
-
-    // Lowercase entrypoints such as effect/unstable/http are barrels. Their named imports are module namespaces,
-    // While PascalCase entrypoints such as effect/Schema are the module itself.
-    return /^\p{Ll}/u.test(name) ? [] : [name];
-  }
-
-  return undefined;
+  return /^\p{Ll}/u.test(name) ? [] : [name];
 }
+
+const modulePath = Match.type<string>().pipe(
+  Match.withReturnType<ReadonlyArray<string> | undefined>(),
+  Match.when('alchemy', () => ['Alchemy']),
+  Match.when(Match.is('effect', '@effect/platform'), () => []),
+  Match.when((source) => submoduleSource.test(source), submodulePath),
+  Match.orElse(Fn.constUndefined),
+);
 
 function collectState(program: ESTree.Program): FileState {
   const bindings = new Map<string, ReadonlyArray<string>>();
@@ -245,6 +240,25 @@ export function isApi(node: ESTree.Node, state: FileState, namespace: string, me
   return path?.length === 2 && path[0] === namespace && path[1] === member;
 }
 
+/**
+ * Like `isApi`, for any of several members of one namespace. Resolves the path once.
+ *
+ * @param node Callee or reference.
+ * @param state Import bindings of the file.
+ * @param namespace Module namespace, such as `Effect`.
+ * @param members Accepted member names.
+ */
+export function isAnyApi(
+  node: ESTree.Node,
+  state: FileState,
+  namespace: string,
+  members: ReadonlyArray<string>,
+): boolean {
+  const path = canonicalPath(node, state);
+
+  return path?.length === 2 && path[0] === namespace && Arr.contains(members, path[1]);
+}
+
 export function isApiPath(node: ESTree.Node, state: FileState, expected: ReadonlyArray<string>): boolean {
   const path = canonicalPath(node, state);
 
@@ -276,13 +290,12 @@ export const propertyName = Match.type<ESTree.ObjectProperty>().pipe(
 );
 
 export function objectProperty(node: ESTree.ObjectExpression, name: string): ESTree.ObjectProperty | undefined {
-  for (const property of node.properties) {
-    if (property.type === 'Property' && propertyName(property) === name) {
-      return property;
-    }
-  }
-
-  return undefined;
+  return Opt.getOrUndefined(
+    Arr.findFirst(
+      node.properties,
+      (property): property is ESTree.ObjectProperty => property.type === 'Property' && propertyName(property) === name,
+    ),
+  );
 }
 
 const wrapperExpressionTypes: ReadonlySet<string> = new Set<WrapperExpression['type']>([
@@ -333,15 +346,13 @@ export function walkNodes(root: ESTree.Node, visit: (node: ESTree.Node) => boole
   while (pending.length > 0) {
     const value = pending.pop();
 
-    if (!value || typeof value !== 'object' || seen.has(value)) {
+    if (!P.isObjectOrArray(value) || seen.has(value)) {
       continue;
     }
 
     seen.add(value);
 
-    const record = value as Record<string, unknown>;
-
-    if (typeof record.type === 'string' && visit(value as ESTree.Node) === true) {
+    if (P.hasProperty(value, 'type') && P.isString(value.type) && visit(value as ESTree.Node) === true) {
       return true;
     }
 
@@ -371,18 +382,27 @@ export function functionUsesFirstParameter(node: FunctionNode): boolean {
   return containsIdentifier(node.body, parameter.name);
 }
 
-export function enclosingFunction(node: ESTree.Node): FunctionNode | undefined {
-  let parent = node.parent;
-
-  while (parent) {
-    if (isFunctionNode(parent)) {
+/**
+ * The nearest ancestor that passes `refinement`, walking up from the parent of `node`.
+ *
+ * @param node Start node, not tested itself.
+ * @param refinement Ancestor test.
+ */
+export function findAncestor<TNode extends ESTree.Node>(
+  node: ESTree.Node,
+  refinement: P.Refinement<ESTree.Node, TNode>,
+): TNode | undefined {
+  for (let parent = node.parent; parent; parent = parent.parent) {
+    if (refinement(parent)) {
       return parent;
     }
-
-    parent = parent.parent;
   }
 
   return undefined;
+}
+
+export function enclosingFunction(node: ESTree.Node): FunctionNode | undefined {
+  return findAncestor(node, isFunctionNode);
 }
 
 export function callbackCall(node: FunctionNode): ESTree.CallExpression | undefined {
@@ -407,6 +427,12 @@ export function containsRange(outer: ESTree.Node, inner: Ranged): boolean {
 
 export function isStringLiteral(node: ESTree.Node): node is ESTree.StringLiteral {
   return node.type === 'Literal' && Str.isString(node.value);
+}
+
+const equalityOperators: ReadonlySet<string> = new Set(['==', '===', '!=', '!==']);
+
+export function isEqualityOperator(operator: string): boolean {
+  return equalityOperators.has(operator);
 }
 
 export function isLiteral(node: ESTree.Node, value: string | number | boolean): boolean {

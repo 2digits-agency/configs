@@ -1,6 +1,7 @@
 import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
+import * as Match from 'effect/Match';
 import * as Str from 'effect/String';
 
 import {
@@ -124,19 +125,19 @@ function resolvesToImport(node: ESTree.Node, name: string, context: Context): bo
   );
 }
 
-function typeNamePath(node: ESTree.Node): Array<string> | undefined {
-  if (node.type === 'Identifier') {
-    return [node.name];
-  }
+type TypeNamePath = ReadonlyArray<string> | undefined;
 
-  if (node.type === 'TSQualifiedName') {
-    const left = typeNamePath(node.left);
+const typeNamePath: (node: ESTree.TSTypeName) => TypeNamePath = Match.type<ESTree.TSTypeName>().pipe(
+  Match.discriminators('type')({
+    Identifier: ({ name }): TypeNamePath => [name],
+    TSQualifiedName: ({ left, right }): TypeNamePath => {
+      const path = typeNamePath(left);
 
-    return left === undefined ? undefined : [...left, node.right.name];
-  }
-
-  return undefined;
-}
+      return path === undefined ? undefined : Arr.append(path, right.name);
+    },
+  }),
+  Match.orElse(Fn.constUndefined),
+);
 
 /**
  * Whether an annotation references a type from Effect's Duration module through its import binding, such as

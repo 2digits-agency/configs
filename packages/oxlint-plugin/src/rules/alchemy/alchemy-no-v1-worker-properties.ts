@@ -4,6 +4,11 @@ import { importedApi, plainOptions } from '../../fixes';
 import { argumentAt, defineEffectRule, objectProperty, ruleMeta } from '../../utils';
 import { isCloudflareWorker } from './utils';
 
+const renamedProperties = [
+  ['entrypoint', 'main'],
+  ['bindings', 'env'],
+] as const;
+
 export const alchemyNoV1WorkerProperties: Rule = defineEffectRule(
   {
     ...ruleMeta(
@@ -28,10 +33,7 @@ export const alchemyNoV1WorkerProperties: Rule = defineEffectRule(
         return;
       }
 
-      for (const [old, replacement] of [
-        ['entrypoint', 'main'],
-        ['bindings', 'env'],
-      ] as const) {
+      for (const [old, replacement] of renamedProperties) {
         const property = objectProperty(options, old);
 
         if (property !== undefined) {

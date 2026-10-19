@@ -2,6 +2,8 @@ import type { Rule } from '@oxlint/plugins';
 
 import { defineEffectRule, isGlobalIdentifier, ruleMeta, staticPath } from '../../utils';
 
+const urlParseMethods: ReadonlySet<string> = new Set(['canParse', 'parse']);
+
 export const preferEffectUrl: Rule = defineEffectRule(
   ruleMeta(
     'suggestion',
@@ -23,7 +25,7 @@ export const preferEffectUrl: Rule = defineEffectRule(
       if (
         getState().hasEffectImport &&
         path?.[0] === 'URL' &&
-        ['canParse', 'parse'].includes(path[1] ?? '') &&
+        urlParseMethods.has(path[1] ?? '') &&
         node.callee.type === 'MemberExpression' &&
         isGlobalIdentifier(node.callee.object, context, 'URL')
       ) {

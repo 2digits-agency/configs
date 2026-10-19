@@ -99,7 +99,7 @@ export const noFunctionConfigDefault: Rule = defineEffectRule(
         return;
       }
 
-      if (fallback !== undefined && isFunctionNode(fallback) && fallback.params.length === 0) {
+      if (isFunctionNode(fallback) && fallback.params.length === 0) {
         context.report({ node: fallback, messageId: 'functionDefault' });
       }
     },
