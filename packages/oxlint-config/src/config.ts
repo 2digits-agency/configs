@@ -1,4 +1,4 @@
-import { defu } from 'defu';
+import { createDefu, defu } from 'defu';
 import { defineConfig, type OxlintConfig } from 'oxlint';
 
 import { baseConfig } from './base';
@@ -10,6 +10,29 @@ import { typescriptConfig } from './typescript';
 export const twoDigits = defineConfig(defu(baseConfig, typescriptConfig));
 
 /**
+ * `defu` with Oxlint precedence; earlier arguments take precedence over later ones.
+ *
+ * Oxlint applies `extends` and `overrides` in array order, so the last matching entry wins: entries from preferred
+ * configs are appended, where `defu` would prepend them. A rule entry is replaced as a whole, because concatenating two
+ * `[severity, ...options]` tuples corrupts both.
+ */
+const mergeConfig = createDefu((config: Record<PropertyKey, unknown>, key, value: unknown, namespace) => {
+  if (namespace === 'rules') {
+    config[key] = value;
+
+    return true;
+  }
+
+  if (namespace === '' && (key === 'extends' || key === 'overrides')) {
+    config[key] = [config[key] ?? [], value].flat();
+
+    return true;
+  }
+
+  return false;
+});
+
+/**
  * Extend the 2digits defaults with consumer configuration.
  *
  * Consumer configuration takes precedence over the defaults; later configs take precedence over earlier configs.
@@ -17,19 +40,5 @@ export const twoDigits = defineConfig(defu(baseConfig, typescriptConfig));
  * @param configs Consumer configurations to merge into the defaults.
  */
 export function withTwoDigits(...configs: Array<OxlintConfig>): OxlintConfig {
-  let config: OxlintConfig = twoDigits;
-
-  /**
-   * Oxlint applies `overrides` in array order, so the last matching entry wins. Merging them with `defu` would prepend
-   * each config's entries and hand precedence to the earliest config, so they are collected separately.
-   */
-  const extraOverrides = [];
-
-  for (const { overrides = [], ...rest } of configs) {
-    config = defu(rest, config);
-
-    extraOverrides.push(...overrides);
-  }
-
-  return { ...config, overrides: [...(config.overrides ?? []), ...extraOverrides] };
+  return mergeConfig({ overrides: [] }, ...configs.toReversed(), twoDigits);
 }

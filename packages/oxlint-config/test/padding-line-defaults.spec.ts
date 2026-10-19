@@ -40,6 +40,8 @@ const projectFiles = {
   'source.ts': source,
 };
 
+const alwaysSpacing = "['error', { blankLine: 'always', prev: '*', next: '*' }]";
+
 const anySpacing = "['error', { blankLine: 'any', prev: '*', next: '*' }]";
 
 /**
@@ -76,22 +78,24 @@ describe('default statement spacing', () => {
     });
   });
 
-  it.for([spacingRule("'off'"), spacingRule(anySpacing)])(
-    'honors consumer rule configuration: %s',
-    (consumerConfigs) => {
-      const config = ts`
+  it.for([
+    spacingRule("'off'"),
+    spacingRule(anySpacing),
+    `{ extends: [${spacingRule("'off'")}] }`,
+    `${spacingRule(alwaysSpacing)}, ${spacingRule(anySpacing)}`,
+  ])('honors consumer rule configuration: %s', (consumerConfigs) => {
+    const config = ts`
       import lint from '${presetUrl}';
 
       export default lint(${consumerConfigs});
     `;
 
-      withTemporaryProject({ ...projectFiles, 'oxlint.config.mjs': config }, (directory) => {
-        const result = runOxlint(directory, '--fix', 'source.ts');
+    withTemporaryProject({ ...projectFiles, 'oxlint.config.mjs': config }, (directory) => {
+      const result = runOxlint(directory, '--fix', 'source.ts');
 
-        expect(result.status, result.output).toBe(0);
+      expect(result.status, result.output).toBe(0);
 
-        expect(readFileSync(path.join(directory, 'source.ts'), 'utf8')).toBe(source);
-      });
-    },
-  );
+      expect(readFileSync(path.join(directory, 'source.ts'), 'utf8')).toBe(source);
+    });
+  });
 });
