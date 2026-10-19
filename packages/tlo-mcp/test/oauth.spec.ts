@@ -6,7 +6,6 @@ import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
 import * as Fiber from 'effect/Fiber';
 import * as FileSystem from 'effect/FileSystem';
-import * as Fn from 'effect/Function';
 import * as Layer from 'effect/Layer';
 import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
@@ -318,12 +317,7 @@ describe('orbit OAuth', () => {
 
         const tokens = yield* Effect.all([Fiber.join(first), Fiber.join(second)]);
 
-        expect(
-          Fn.pipe(
-            tokens,
-            Arr.map((element) => Redacted.value(element)),
-          ),
-        ).toStrictEqual([NEW_ACCESS, NEW_ACCESS]);
+        expect(Arr.map(tokens, (element) => Redacted.value(element))).toStrictEqual([NEW_ACCESS, NEW_ACCESS]);
 
         expect(refreshes).toBe(1);
 

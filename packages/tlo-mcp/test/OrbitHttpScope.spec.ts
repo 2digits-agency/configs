@@ -3,7 +3,6 @@ import * as Arr from 'effect/Array';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
 import * as Fiber from 'effect/Fiber';
-import * as Fn from 'effect/Function';
 import * as Layer from 'effect/Layer';
 import * as Match from 'effect/Match';
 import * as Redacted from 'effect/Redacted';
@@ -23,12 +22,7 @@ describe('orbit HTTP request scopes', () => {
     const signals: Array<AbortSignal> = [];
 
     const fetchMock: typeof globalThis.fetch = (_input, init) => {
-      expect(
-        Fn.pipe(
-          signals,
-          Arr.every((signal) => signal.aborted),
-        ),
-      ).toBeTruthy();
+      expect(Arr.every(signals, (signal) => signal.aborted)).toBeTruthy();
 
       if (init?.signal) {
         expect(init.signal.aborted).toBeFalsy();
@@ -62,10 +56,7 @@ describe('orbit HTTP request scopes', () => {
       expect({
         instructions: client.instructions,
         requests: signals.length,
-        closed: Fn.pipe(
-          signals,
-          Arr.every((s) => s.aborted),
-        ),
+        closed: Arr.every(signals, (s) => s.aborted),
       }).toStrictEqual({ instructions: 'Keep official instructions', requests: 3, closed: true });
 
       const result = yield* client.callTool('WriteProject', {});
@@ -74,12 +65,7 @@ describe('orbit HTTP request scopes', () => {
 
       expect(signals).toHaveLength(4);
 
-      expect(
-        Fn.pipe(
-          signals,
-          Arr.every((signal) => signal.aborted),
-        ),
-      ).toBeTruthy();
+      expect(Arr.every(signals, (signal) => signal.aborted)).toBeTruthy();
     }).pipe(
       Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
       Effect.provideService(FetchHttpClient.Fetch, fetchMock),
@@ -127,12 +113,7 @@ describe('orbit HTTP request scopes', () => {
 
         expect(signals).toHaveLength(1);
 
-        expect(
-          Fn.pipe(
-            signals,
-            Arr.every((signal) => signal.aborted),
-          ),
-        ).toBeTruthy();
+        expect(Arr.every(signals, (signal) => signal.aborted)).toBeTruthy();
       }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetchMock), Effect.scoped);
     });
   }
@@ -155,12 +136,7 @@ describe('orbit HTTP request scopes', () => {
 
       expect(signals).toHaveLength(1);
 
-      expect(
-        Fn.pipe(
-          signals,
-          Arr.every((signal) => signal.aborted),
-        ),
-      ).toBeTruthy();
+      expect(Arr.every(signals, (signal) => signal.aborted)).toBeTruthy();
     }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetchMock), Effect.scoped);
   });
 
