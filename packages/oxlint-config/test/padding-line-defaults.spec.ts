@@ -1,25 +1,10 @@
-import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import ts from 'dedent';
 import { describe, expect, it } from 'vite-plus/test';
 
-const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
-
-const presetUrl = new URL('../dist/index.mjs', import.meta.url).href;
-
-const nativeEnvironment = { ...process.env };
-
-delete nativeEnvironment.VP_VERSION;
-
-delete nativeEnvironment.NAPI_RS_NATIVE_LIBRARY_PATH;
-
-nativeEnvironment.PATH = [fileURLToPath(new URL('../node_modules/.bin', import.meta.url)), nativeEnvironment.PATH].join(
-  path.delimiter,
-);
+import { presetUrl, runOxlint, withTemporaryProject } from './oxlint';
 
 const source = ts`
   import type { Input } from './input.js';
@@ -49,89 +34,68 @@ const expectedSource = ts`
   export const defaultName = filename({ path: ' example ' });
 `;
 
+const projectFiles = {
+  'input.ts': ts`export type Input = { readonly path: string };`,
+  'output.ts': ts`export type Output = string;`,
+  'source.ts': source,
+};
+
+const alwaysSpacing = "['error', { blankLine: 'always', prev: '*', next: '*' }]";
+
+const anySpacing = "['error', { blankLine: 'any', prev: '*', next: '*' }]";
+
+/**
+ * Source for a consumer config that sets the statement spacing rule.
+ *
+ * @param entry Rule entry source.
+ */
+function spacingRule(entry: string) {
+  return `{ rules: { '2digits/padding-line-between-statements': ${entry} } }`;
+}
+
 describe('default statement spacing', () => {
   it('reports and fixes missing blank lines through the built default preset idempotently', () => {
-    const directory = mkdtempSync(path.join(tmpdir(), '2digits-padding-'));
+    const config = ts`
+      import lint from '${presetUrl}';
 
-    try {
-      writeFileSync(
-        path.join(directory, 'oxlint.config.mjs'),
-        ts`
-          import lint from '${presetUrl}';
+      export default lint();
+    `;
 
-          export default lint();
-        `,
-      );
+    withTemporaryProject({ ...projectFiles, 'oxlint.config.mjs': config }, (directory) => {
+      const reported = runOxlint(directory, 'source.ts');
 
-      writeFileSync(path.join(directory, 'source.ts'), source);
+      expect(reported.status, reported.output).toBe(1);
 
-      writeFileSync(path.join(directory, 'input.ts'), ts`export type Input = { readonly path: string };`);
-
-      writeFileSync(path.join(directory, 'output.ts'), ts`export type Output = string;`);
-
-      const reported = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'source.ts'], {
-        cwd: directory,
-        encoding: 'utf8',
-        env: nativeEnvironment,
-      });
-
-      expect(reported.status, `${reported.stdout}${reported.stderr}`).toBe(1);
-
-      expect(`${reported.stdout}${reported.stderr}`).toContain('padding-line-between-statements');
+      expect(reported.output).toContain('padding-line-between-statements');
 
       for (const _pass of [1, 2]) {
-        const fixed = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', '--fix', 'source.ts'], {
-          cwd: directory,
-          encoding: 'utf8',
-          env: nativeEnvironment,
-        });
+        const fixed = runOxlint(directory, '--fix', 'source.ts');
 
-        expect(fixed.status, `${fixed.stdout}${fixed.stderr}`).toBe(0);
+        expect(fixed.status, fixed.output).toBe(0);
 
         expect(readFileSync(path.join(directory, 'source.ts'), 'utf8')).toBe(expectedSource);
       }
-    } finally {
-      rmSync(directory, { recursive: true, force: true });
-    }
+    });
   });
 
-  it.for(["'off'", "['error', { blankLine: 'any', prev: '*', next: '*' }]"])(
-    'honors consumer rule configuration: %s',
-    (rule) => {
-      const directory = mkdtempSync(path.join(tmpdir(), '2digits-padding-override-'));
+  it.for([
+    spacingRule("'off'"),
+    spacingRule(anySpacing),
+    `{ extends: [${spacingRule("'off'")}] }`,
+    `${spacingRule(alwaysSpacing)}, ${spacingRule(anySpacing)}`,
+  ])('honors consumer rule configuration: %s', (consumerConfigs) => {
+    const config = ts`
+      import lint from '${presetUrl}';
 
-      try {
-        writeFileSync(
-          path.join(directory, 'oxlint.config.mjs'),
-          ts`
-            import lint from '${presetUrl}';
+      export default lint(${consumerConfigs});
+    `;
 
-            export default lint({
-              rules: {
-                '2digits/padding-line-between-statements': ${rule},
-              },
-            });
-          `,
-        );
+    withTemporaryProject({ ...projectFiles, 'oxlint.config.mjs': config }, (directory) => {
+      const result = runOxlint(directory, '--fix', 'source.ts');
 
-        writeFileSync(path.join(directory, 'source.ts'), source);
+      expect(result.status, result.output).toBe(0);
 
-        writeFileSync(path.join(directory, 'input.ts'), ts`export type Input = { readonly path: string };`);
-
-        writeFileSync(path.join(directory, 'output.ts'), ts`export type Output = string;`);
-
-        const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', '--fix', 'source.ts'], {
-          cwd: directory,
-          encoding: 'utf8',
-          env: nativeEnvironment,
-        });
-
-        expect(result.status, `${result.stdout}${result.stderr}`).toBe(0);
-
-        expect(readFileSync(path.join(directory, 'source.ts'), 'utf8')).toBe(source);
-      } finally {
-        rmSync(directory, { recursive: true, force: true });
-      }
-    },
-  );
+      expect(readFileSync(path.join(directory, 'source.ts'), 'utf8')).toBe(source);
+    });
+  });
 });
