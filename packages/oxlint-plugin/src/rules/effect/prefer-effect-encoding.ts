@@ -1,19 +1,12 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import * as Fn from 'effect/Function';
 
 import { argumentAt, defineEffectRule, isGlobalIdentifier, isLiteral, ruleMeta, staticPath } from '../../utils';
 
 const encodings = new Set(['base64', 'base64url', 'hex']);
 
 function isEncodingArgument(node: ReturnType<typeof argumentAt>): boolean {
-  return (
-    node !== undefined &&
-    Fn.pipe(
-      [...encodings],
-      Arr.some((encoding) => isLiteral(node, encoding)),
-    )
-  );
+  return node !== undefined && Arr.some([...encodings], (encoding) => isLiteral(node, encoding));
 }
 
 export const preferEffectEncoding: Rule = defineEffectRule(

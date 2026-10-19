@@ -1,16 +1,15 @@
-// @effect-diagnostics-next-line nodeBuiltinImport:off
-import { spawnSync } from 'node:child_process';
-
-import * as R from 'effect/Record';
-// @effect-diagnostics-next-line nodeBuiltinImport:off
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-// @effect-diagnostics-next-line nodeBuiltinImport:off
-import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import * as NodeServices from '@effect/platform-node/NodeServices';
 import { describe, expect, it } from '@effect/vitest';
 import ts from 'dedent';
+import * as Effect from 'effect/Effect';
+import * as FileSystem from 'effect/FileSystem';
+import * as Path from 'effect/Path';
+import * as R from 'effect/Record';
+import * as Schema from 'effect/Schema';
+import * as Stream from 'effect/Stream';
+import * as ChildProcess from 'effect/process/ChildProcess';
 
 const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
 
@@ -22,37 +21,61 @@ delete nativeEnvironment.VP_VERSION;
 
 delete nativeEnvironment.NAPI_RS_NATIVE_LIBRARY_PATH;
 
+const encodeOption = Schema.encodeEffect(Schema.Unknown.pipe(Schema.fromJsonString));
+
+const runOxlint = Effect.fn('PaddingLineCli.runOxlint')(function* (directory: string, args: ReadonlyArray<string>) {
+  const child = yield* ChildProcess.make(process.execPath, [oxlintBinary, ...args], {
+    cwd: directory,
+    env: nativeEnvironment,
+  });
+
+  const { exitCode, stdout, stderr } = yield* Effect.all(
+    {
+      exitCode: child.exitCode,
+      stdout: child.stdout.pipe(Stream.decodeText(), Stream.mkString),
+      stderr: child.stderr.pipe(Stream.decodeText(), Stream.mkString),
+    },
+    { concurrency: 'unbounded' },
+  );
+
+  return { status: exitCode, stdout, stderr };
+});
+
 describe('statement spacing CLI', () => {
-  it('loads the published plugin, isolates files and fixes spacing idempotently', () => {
-    const directory = mkdtempSync(path.join(tmpdir(), '2digits-padding-'));
+  it.effect('loads the published plugin, isolates files and fixes spacing idempotently', () =>
+    Effect.gen(function* () {
+      const fs = yield* FileSystem.FileSystem;
 
-    const sources = {
-      'a.ts': {
-        source: ts`
-          foo();
-          bar();
-        `,
-        fixed: ts`
-          foo();
+      const path = yield* Path.Path;
 
-          bar();
-        `,
-      },
-      'b.ts': {
-        source: ts`
-          const b = 1;
-          foo(b);
-        `,
-        fixed: ts`
-          const b = 1;
+      const directory = yield* fs.makeTempDirectoryScoped({ prefix: '2digits-padding-' });
 
-          foo(b);
-        `,
-      },
-    };
+      const sources = {
+        'a.ts': {
+          source: ts`
+            foo();
+            bar();
+          `,
+          fixed: ts`
+            foo();
 
-    try {
-      writeFileSync(
+            bar();
+          `,
+        },
+        'b.ts': {
+          source: ts`
+            const b = 1;
+            foo(b);
+          `,
+          fixed: ts`
+            const b = 1;
+
+            foo(b);
+          `,
+        },
+      };
+
+      yield* fs.writeFileString(
         path.join(directory, 'oxlint.config.mjs'),
         ts`
           export default {
@@ -69,79 +92,77 @@ describe('statement spacing CLI', () => {
       );
 
       for (const [filename, { source }] of R.toEntries(sources)) {
-        writeFileSync(path.join(directory, filename), source);
+        yield* fs.writeFileString(path.join(directory, filename), source);
       }
 
       function run(flags: Array<string>) {
-        return spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', ...flags, ...R.keys(sources)], {
-          cwd: directory,
-          encoding: 'utf8',
-          env: nativeEnvironment,
-        });
+        return runOxlint(directory, ['--config=oxlint.config.mjs', ...flags, ...R.keys(sources)]);
       }
 
-      const reported = run([]);
+      const reported = yield* run([]);
 
       expect(reported.status, `${reported.stdout}${reported.stderr}`).toBe(1);
 
       expect(reported.stdout).toContain('padding-line-between-statements');
 
       for (const _pass of [1, 2]) {
-        const fixed = run(['--fix']);
+        const fixed = yield* run(['--fix']);
 
         expect(fixed.status, `${fixed.stdout}${fixed.stderr}`).toBe(0);
 
         for (const [filename, { fixed: expected }] of R.toEntries(sources)) {
-          expect(readFileSync(path.join(directory, filename), 'utf8')).toBe(expected);
+          expect(yield* fs.readFileString(path.join(directory, filename))).toBe(expected);
         }
       }
-    } finally {
-      rmSync(directory, { recursive: true, force: true });
-    }
-  });
+    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+  );
 
-  it.for([
+  const malformedOptions = [
     { blankLine: 'sometimes', prev: '*', next: '*' },
     { blankLine: 'always', prev: 'unknown', next: '*' },
     { blankLine: 'always', prev: [], next: '*' },
     { blankLine: 'always', prev: { selector: 'ExpressionStatement', lineMode: 'unknown' }, next: '*' },
     { blankLine: 'always', prev: '*', next: '*', extra: true },
-  ])('rejects malformed configuration %j', (option) => {
-    const directory = mkdtempSync(path.join(tmpdir(), '2digits-padding-options-'));
+  ];
 
-    try {
-      writeFileSync(
-        path.join(directory, 'a.ts'),
-        ts`
+  for (const [index, option] of malformedOptions.entries()) {
+    it.effect(`rejects malformed configuration ${index + 1}`, () =>
+      Effect.gen(function* () {
+        const fs = yield* FileSystem.FileSystem;
+
+        const path = yield* Path.Path;
+
+        const directory = yield* fs.makeTempDirectoryScoped({ prefix: '2digits-padding-options-' });
+
+        yield* fs.writeFileString(
+          path.join(directory, 'a.ts'),
+          ts`
           foo();
           bar();
         `,
-      );
+        );
 
-      writeFileSync(
-        path.join(directory, 'oxlint.config.mjs'),
-        ts`
+        const encodedOption = yield* encodeOption(option);
+
+        yield* fs.writeFileString(
+          path.join(directory, 'oxlint.config.mjs'),
+          ts`
           export default {
             categories: { correctness: 'off' },
             jsPlugins: [{ name: '2digits', specifier: '${pluginUrl}' }],
             rules: {
-              '2digits/padding-line-between-statements': ['error', ${JSON.stringify(option)}],
+              '2digits/padding-line-between-statements': ['error', ${encodedOption}],
             },
           };
         `,
-      );
+        );
 
-      const result = spawnSync(process.execPath, [oxlintBinary, '--config=oxlint.config.mjs', 'a.ts'], {
-        cwd: directory,
-        encoding: 'utf8',
-        env: nativeEnvironment,
-      });
+        const result = yield* runOxlint(directory, ['--config=oxlint.config.mjs', 'a.ts']);
 
-      expect(result.status).not.toBe(0);
+        expect(result.status).not.toBe(0);
 
-      expect(`${result.stdout}${result.stderr}`).toContain('padding');
-    } finally {
-      rmSync(directory, { recursive: true, force: true });
-    }
-  });
+        expect(`${result.stdout}${result.stderr}`).toContain('padding');
+      }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    );
+  }
 });

@@ -1,4 +1,3 @@
-import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
 /* eslint-disable sonar/no-duplicate-string */
 
@@ -119,10 +118,7 @@ describe(PackageManagerService, () => {
 
           // Should have executed a pnpm add command
           const addCommand = Opt.getOrUndefined(
-            Fn.pipe(
-              executed,
-              Arr.findFirst((cmd) => cmd.command.includes('add') || cmd.shell === true),
-            ),
+            Arr.findFirst(executed, (cmd) => cmd.command.includes('add') || cmd.shell === true),
           );
 
           assertTrue(addCommand !== undefined);
@@ -153,12 +149,7 @@ describe(PackageManagerService, () => {
           // Should execute 2 commands (one for deps, one for devDeps)
           assertTrue(executed.length >= 2);
 
-          expect(
-            Fn.pipe(
-              executed,
-              Arr.map((e) => e.command),
-            ),
-          ).toMatchInlineSnapshot(`
+          expect(Arr.map(executed, (e) => e.command)).toMatchInlineSnapshot(`
             [
               "pnpm add --workspace-root -D vitest",
               "pnpm add --workspace-root effect",

@@ -1,9 +1,16 @@
 import type { Context, ESTree, Fix, Fixer, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
+import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 
 import { barrelModuleSource, isTypeOnlyImport, namespaceAlias, submoduleName } from './import-style-utils';
+
+const importedName = Match.type<ESTree.ModuleExportName>().pipe(
+  Match.when({ type: 'Identifier' }, ({ name }) => name),
+  Match.when({ value: Match.nonEmptyString }, ({ value }) => value),
+  Match.orElse(Fn.constUndefined),
+);
 
 /**
  * Split barrel module imports without renaming their local bindings.
@@ -26,10 +33,10 @@ export function fixBarrel(context: Context, node: ESTree.ImportDeclaration, fixe
       return undefined;
     }
 
-    const name = specifier.imported.type === 'Identifier' ? specifier.imported.name : specifier.imported.value;
+    const name = importedName(specifier.imported);
 
     const source =
-      /^\p{Lu}/u.test(name) && !isTypeOnlyImport(node, specifier)
+      name !== undefined && /^\p{Lu}/u.test(name) && !isTypeOnlyImport(node, specifier)
         ? barrelModuleSource(node.source.value, name)
         : undefined;
 
@@ -65,27 +72,14 @@ export function fixNamespace(context: Context, node: ESTree.ImportDeclaration, f
 
   const variables = context.sourceCode.getDeclaredVariables(node);
 
-  const target = Opt.getOrUndefined(
-    Fn.pipe(
-      variables,
-      Arr.findFirst((variable) => variable.name === alias),
-    ),
-  );
+  const target = Opt.getOrUndefined(Arr.findFirst(variables, (variable) => variable.name === alias));
 
   if (
-    Fn.pipe(
+    Arr.some(
       context.sourceCode.scopeManager.scopes,
-      Arr.some(
-        (scope) =>
-          Fn.pipe(
-            scope.variables,
-            Arr.some((variable) => variable.name === alias && variable !== target),
-          ) ||
-          Fn.pipe(
-            scope.references,
-            Arr.some((reference) => reference.identifier.name === alias && reference.resolved !== target),
-          ),
-      ),
+      (scope) =>
+        Arr.some(scope.variables, (variable) => variable.name === alias && variable !== target) ||
+        Arr.some(scope.references, (reference) => reference.identifier.name === alias && reference.resolved !== target),
     )
   ) {
     return undefined;
@@ -134,12 +128,7 @@ function fixValueImport(
   alias: string,
   fixer: Fixer,
 ): Array<Fix> | undefined {
-  const variable = Opt.getOrUndefined(
-    Fn.pipe(
-      variables,
-      Arr.findFirst((entry) => entry.name === specifier.local.name),
-    ),
-  );
+  const variable = Opt.getOrUndefined(Arr.findFirst(variables, (entry) => entry.name === specifier.local.name));
 
   if (variable === undefined) {
     return undefined;

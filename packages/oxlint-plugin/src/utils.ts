@@ -10,6 +10,7 @@ import {
 } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
+import * as Match from 'effect/Match';
 import * as R from 'effect/Record';
 
 export interface FileState {
@@ -33,13 +34,11 @@ const emptyState: FileState = {
   hasEffectImport: false,
 };
 
-function importedName(specifier: ESTree.ImportSpecifier): string | undefined {
-  if (specifier.imported.type === 'Identifier') {
-    return specifier.imported.name;
-  }
-
-  return typeof specifier.imported.value === 'string' ? specifier.imported.value : undefined;
-}
+const importedName = Match.type<ESTree.ImportSpecifier>().pipe(
+  Match.when({ imported: { type: 'Identifier' } }, ({ imported }) => imported.name),
+  Match.when({ imported: { value: 'string' } }, ({ imported }) => imported.value),
+  Match.orElse(Fn.constUndefined),
+);
 
 function modulePath(source: string): ReadonlyArray<string> | undefined {
   if (source === 'alchemy') {
@@ -239,13 +238,7 @@ export function isApi(node: ESTree.Node, state: FileState, namespace: string, me
 export function isApiPath(node: ESTree.Node, state: FileState, expected: ReadonlyArray<string>): boolean {
   const path = canonicalPath(node, state);
 
-  return (
-    path?.length === expected.length &&
-    Fn.pipe(
-      path,
-      Arr.every((part, index) => part === expected[index]),
-    )
-  );
+  return path?.length === expected.length && Arr.every(path, (part, index) => part === expected[index]);
 }
 
 export function isFunctionNode(node: ESTree.Node | undefined): node is FunctionNode {

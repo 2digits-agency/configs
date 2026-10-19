@@ -3,7 +3,6 @@ import { describe, expect, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fiber from 'effect/Fiber';
-import * as Fn from 'effect/Function';
 import * as Order from 'effect/Order';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as HttpClient from 'effect/http/HttpClient';
@@ -79,10 +78,7 @@ describe('orbit callback router', () => {
 
       expect(
         Arr.sort(
-          Fn.pipe(
-            responses,
-            Arr.map((response) => response.status),
-          ),
+          Arr.map(responses, (response) => response.status),
           Order.Number,
         ),
       ).toStrictEqual([200, 400]);

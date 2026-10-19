@@ -1,6 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import * as Fn from 'effect/Function';
 
 import { importedApi, namespaceImport } from '../../fixes';
 import { argumentAt, defineEffectRule, isApi, isFunctionNode, ruleMeta } from '../../utils';
@@ -40,10 +39,7 @@ export const noEmptyEffectCallback: Rule = defineEffectRule(
               node.arguments.length !== 1 ||
               register.async ||
               register.generator ||
-              Fn.pipe(
-                register.params,
-                Arr.some((parameter) => parameter.type !== 'Identifier'),
-              ) ||
+              Arr.some(register.params, (parameter) => parameter.type !== 'Identifier') ||
               context.sourceCode.getCommentsInside(node).length > 0
             ) {
               return;

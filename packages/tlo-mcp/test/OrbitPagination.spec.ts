@@ -97,22 +97,20 @@ describe('orbit tools pagination', () => {
       const client = yield* OrbitClient;
 
       expect({
-        tools: Fn.pipe(
-          client.tools,
-          Arr.map((entry) => entry.name),
-        ),
+        tools: Arr.map(client.tools, (entry) => entry.name),
         instructions: client.instructions,
       }).toStrictEqual({
         tools: ['First', 'Second', 'Third'],
         instructions: 'Startup instructions',
       });
 
-      expect(
-        Fn.pipe(
-          messages,
-          Arr.map((message) => message.method),
-        ),
-      ).toStrictEqual(['initialize', 'notifications/initialized', TOOLS_LIST, TOOLS_LIST, TOOLS_LIST]);
+      expect(Arr.map(messages, (message) => message.method)).toStrictEqual([
+        'initialize',
+        'notifications/initialized',
+        TOOLS_LIST,
+        TOOLS_LIST,
+        TOOLS_LIST,
+      ]);
 
       expect(
         Fn.pipe(
@@ -130,12 +128,7 @@ describe('orbit tools pagination', () => {
 
       expect(client.tools).toBe(snapshot);
 
-      expect(
-        Fn.pipe(
-          messages,
-          Arr.filter((message) => message.method === TOOLS_LIST),
-        ),
-      ).toHaveLength(3);
+      expect(Arr.filter(messages, (message) => message.method === TOOLS_LIST)).toHaveLength(3);
     }).pipe(
       Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
       Effect.provideService(FetchHttpClient.Fetch, fetchMock),
@@ -151,12 +144,7 @@ describe('orbit tools pagination', () => {
 
       expect(client.tools).toStrictEqual([]);
 
-      expect(
-        Fn.pipe(
-          messages,
-          Arr.filter((message) => message.method === TOOLS_LIST),
-        ),
-      ).toHaveLength(1);
+      expect(Arr.filter(messages, (message) => message.method === TOOLS_LIST)).toHaveLength(1);
     }).pipe(
       Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
       Effect.provideService(FetchHttpClient.Fetch, fetchMock),
@@ -171,10 +159,7 @@ describe('orbit tools pagination', () => {
   ]) {
     it.effect(`rejects repeated cursor sequence ${JSON.stringify(cursors)} during startup`, () => {
       const { fetchMock, messages } = transport(
-        Fn.pipe(
-          cursors,
-          Arr.map((nextCursor) => ({ tools: [tool('Unpublished')], nextCursor })),
-        ),
+        Arr.map(cursors, (nextCursor) => ({ tools: [tool('Unpublished')], nextCursor })),
       );
 
       return Effect.gen(function* () {
@@ -184,19 +169,9 @@ describe('orbit tools pagination', () => {
 
         expect(error.message).toBe('Orbit returned a repeated tools cursor.');
 
-        expect(
-          Fn.pipe(
-            messages,
-            Arr.filter((message) => message.method === TOOLS_LIST),
-          ),
-        ).toHaveLength(cursors.length);
+        expect(Arr.filter(messages, (message) => message.method === TOOLS_LIST)).toHaveLength(cursors.length);
 
-        expect(
-          Fn.pipe(
-            messages,
-            Arr.some((message) => message.method === 'tools/call'),
-          ),
-        ).toBeFalsy();
+        expect(Arr.some(messages, (message) => message.method === 'tools/call')).toBeFalsy();
       }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetchMock), Effect.scoped);
     });
   }

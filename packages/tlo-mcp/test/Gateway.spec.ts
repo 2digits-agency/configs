@@ -43,7 +43,10 @@ const upstream = Layer.succeed(OrbitClient, {
 const makeHandler = Effect.fn('Gateway.test.handler')(function* () {
   const handler = yield* Effect.acquireRelease(
     Effect.sync(() =>
-      HttpRouter.toWebHandler(gatewayRoutes(Redacted.make(key)).pipe(Layer.provide(upstream)), { disableLogger: true }),
+      HttpRouter.toWebHandler(
+        gatewayRoutes(Redacted.make(key)).pipe(Layer.provide(upstream), Layer.provide(NodeServices.layer)),
+        { disableLogger: true },
+      ),
     ),
     (handler) => Effect.tryPromise((_signal) => handler.dispose()).pipe(Effect.orDie),
   );

@@ -4,7 +4,6 @@ import * as Arr from 'effect/Array';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
 import * as Fiber from 'effect/Fiber';
-import * as Fn from 'effect/Function';
 import * as Layer from 'effect/Layer';
 import * as Redacted from 'effect/Redacted';
 import * as Sink from 'effect/Sink';
@@ -186,10 +185,7 @@ describe('orbit browser and operation cleanup', () => {
             commands: commands.length,
             registrations,
             grants,
-            aborted: Fn.pipe(
-              signals,
-              Arr.every((signal) => signal.aborted),
-            ),
+            aborted: Arr.every(signals, (signal) => signal.aborted),
             access: saved?.accessToken.pipe(Redacted.value),
           }).toStrictEqual({
             released: 1,
@@ -224,10 +220,7 @@ describe('orbit browser and operation cleanup', () => {
           });
 
           const output = Arr.join(
-            Fn.pipe(
-              stderr.mock.calls,
-              Arr.map(([text]) => String(text)),
-            ),
+            Arr.map(stderr.mock.calls, ([text]) => String(text)),
             '',
           );
 
@@ -328,12 +321,7 @@ describe('orbit browser and operation cleanup', () => {
 
         expect(released).toBe(2);
 
-        expect(
-          Fn.pipe(
-            signals,
-            Arr.every((signal) => signal.aborted),
-          ),
-        ).toBeTruthy();
+        expect(Arr.every(signals, (signal) => signal.aborted)).toBeTruthy();
       }).pipe(
         Effect.provide(OrbitAuthLayer.pipe(Layer.provide(store), Layer.provide(FetchHttpClient.layer))),
         Effect.provideService(FetchHttpClient.Fetch, fetchMock),

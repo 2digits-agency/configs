@@ -1,6 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
 
 import { defineSyntaxRule, propertyName, ruleMeta } from '../../utils';
@@ -26,12 +25,10 @@ export const noManualTaggedConstruction: Rule = defineSyntaxRule(
       }
 
       const tag = Opt.getOrUndefined(
-        Fn.pipe(
+        Arr.findFirst(
           node.properties,
-          Arr.findFirst(
-            (property) =>
-              property.type === 'Property' && propertyName(property) === '_tag' && isStringLiteral(property.value),
-          ),
+          (property) =>
+            property.type === 'Property' && propertyName(property) === '_tag' && isStringLiteral(property.value),
         ),
       );
 

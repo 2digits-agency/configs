@@ -1,6 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
 
 import { defineSyntaxRule, ruleMeta } from '../../utils';
@@ -21,10 +20,7 @@ export const alchemyNoV1Import: Rule = defineSyntaxRule(
 
       if (source === 'alchemy') {
         const defaultImport = Opt.getOrUndefined(
-          Fn.pipe(
-            node.specifiers,
-            Arr.findFirst((specifier) => specifier.type === 'ImportDefaultSpecifier'),
-          ),
+          Arr.findFirst(node.specifiers, (specifier) => specifier.type === 'ImportDefaultSpecifier'),
         );
 
         if (defaultImport !== undefined) {

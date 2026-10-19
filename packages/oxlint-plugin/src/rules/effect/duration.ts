@@ -1,3 +1,4 @@
+// oxlint-disable unicorn/no-array-method-this-argument
 import type { Context, ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
@@ -104,8 +105,7 @@ export function numericValue(node: ESTree.Expression): number | undefined {
     return undefined;
   }
 
-  return Fn.pipe(
-    Match.value(expression.operator),
+  return Match.value(expression.operator).pipe(
     Match.when('*', () => Num.multiply(left, right)),
     Match.when('+', () => Num.sum(left, right)),
     Match.when('-', () => Num.subtract(left, right)),
@@ -155,30 +155,16 @@ export function timeArithmetic(node: ESTree.Expression): { readonly millis: bool
   }
 
   const time =
-    Fn.pipe(
-      product,
-      Arr.some((factor) => millisFactors.has(factor)),
-    ) ||
-    (Fn.pipe(
-      product,
-      Arr.some((factor) => sixtyFactors.has(factor)),
-    ) &&
-      Fn.pipe(
-        product,
-        Arr.filter((factor) => timeFactors.has(factor)),
-      ).length >= 2);
+    Arr.some(product, (factor) => millisFactors.has(factor)) ||
+    (Arr.some(product, (factor) => sixtyFactors.has(factor)) &&
+      Arr.filter(product, (factor) => timeFactors.has(factor)).length >= 2);
 
   if (!time) {
     return undefined;
   }
 
   return {
-    millis:
-      product.includes(1000) ||
-      Fn.pipe(
-        product,
-        Arr.some((factor) => factor % 60_000 === 0),
-      ),
+    millis: product.includes(1000) || Arr.some(product, (factor) => factor % 60_000 === 0),
   };
 }
 
@@ -208,14 +194,7 @@ function formatNumber(value: number): string {
  * @param unit Unit of `value`.
  */
 export function durationConstructor(value: number, unit: DurationUnit): string {
-  const millis =
-    value *
-    (Opt.getOrUndefined(
-      Fn.pipe(
-        unitMillis,
-        Arr.findFirst(([name]) => name === unit),
-      ),
-    )?.[1] ?? 1);
+  const millis = value * (Arr.findFirst(unitMillis, ([name]) => name === unit).pipe(Opt.getOrUndefined)?.[1] ?? 1);
 
   if (millis === 0) {
     return 'Duration.zero';

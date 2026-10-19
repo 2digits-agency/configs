@@ -20,6 +20,7 @@ export function unicorn(): Array<TypedFlatConfigItem> {
         'unicorn/max-nested-calls': 'off',
         'unicorn/name-replacements': 'off',
         'unicorn/no-array-callback-reference': 'off',
+        'unicorn/no-array-method-this-argument': 'off',
         'unicorn/no-asterisk-prefix-in-documentation-comments': 'off',
         'unicorn/no-break-in-nested-loop': 'off',
         'unicorn/no-computed-property-existence-check': 'off',

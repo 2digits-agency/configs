@@ -1,4 +1,3 @@
-import * as Fn from 'effect/Function';
 /* eslint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
 
 import { describe, expectTypeOf, it } from '@effect/vitest';
@@ -118,163 +117,163 @@ tester.run('padding-line-between-statements', rule, {
     { code: ts`type A = { a: string; b: number };`, options: [{ ...always, prev: 'ts-method', next: 'ts-method' }] },
   ],
   invalid: [
-    ...Fn.pipe(
+    ...Arr.map(
       [
         [
           'singleline-block-like',
           ts`
-        if (x) {}
-        foo();
-      `,
+      if (x) {}
+      foo();
+    `,
         ],
         [
           'multiline-block-like',
           ts`
-        if (x) {
-          bar();
-        }
-        foo();
-      `,
+      if (x) {
+        bar();
+      }
+      foo();
+    `,
         ],
         [
           'singleline-expression',
           ts`
-        bar();
-        foo();
-      `,
+      bar();
+      foo();
+    `,
         ],
         [
           'multiline-expression',
           ts`
-        bar(
-          1
-        );
-        foo();
-      `,
+      bar(
+        1
+      );
+      foo();
+    `,
         ],
         [
           'singleline-return',
           ts`
-        function f() {
-          return 1;
-          foo();
-        }
-      `,
+      function f() {
+        return 1;
+        foo();
+      }
+    `,
         ],
         [
           'multiline-return',
           ts`
-        function f() {
-          return (
-            1
-          );
-          foo();
-        }
-      `,
+      function f() {
+        return (
+          1
+        );
+        foo();
+      }
+    `,
         ],
         [
           'singleline-export',
           ts`
-        export const a = 1;
-        foo();
-      `,
+      export const a = 1;
+      foo();
+    `,
         ],
         [
           'multiline-export',
           ts`
-        export const a = {
-          b: 1
-        };
-        foo();
-      `,
+      export const a = {
+        b: 1
+      };
+      foo();
+    `,
         ],
         [
           'singleline-var',
           ts`
-        var a = 1;
-        foo();
-      `,
+      var a = 1;
+      foo();
+    `,
         ],
         [
           'multiline-var',
           ts`
-        var a = {
-          b: 1
-        };
-        foo();
-      `,
+      var a = {
+        b: 1
+      };
+      foo();
+    `,
         ],
         [
           'singleline-let',
           ts`
-        let a = 1;
-        foo();
-      `,
+      let a = 1;
+      foo();
+    `,
         ],
         [
           'multiline-let',
           ts`
-        let a = {
-          b: 1
-        };
-        foo();
-      `,
+      let a = {
+        b: 1
+      };
+      foo();
+    `,
         ],
         [
           'singleline-const',
           ts`
-        const a = 1;
-        foo();
-      `,
+      const a = 1;
+      foo();
+    `,
         ],
         [
           'multiline-const',
           ts`
-        const a = {
-          b: 1
-        };
-        foo();
-      `,
+      const a = {
+        b: 1
+      };
+      foo();
+    `,
         ],
         [
           'singleline-using',
           ts`
-        using a = resource;
-        foo();
-      `,
+      using a = resource;
+      foo();
+    `,
         ],
         [
           'multiline-using',
           ts`
-        using a = acquire(
-          resource
-        );
-        foo();
-      `,
+      using a = acquire(
+        resource
+      );
+      foo();
+    `,
         ],
         [
           'singleline-type',
           ts`
-        type A = string;
-        foo();
-      `,
+      type A = string;
+      foo();
+    `,
         ],
         [
           'multiline-type',
           ts`
-        type A = {
-          a: string
-        };
-        foo();
-      `,
+      type A = {
+        a: string
+      };
+      foo();
+    `,
         ],
       ] satisfies Array<[PaddingLineOption['prev'], string]>,
-      Arr.map(([prev, code]) => ({
+      ([prev, code]) => ({
         code,
         output: code.replace(/\n(\s*foo\(\);)/u, '\n\n$1'),
         options: [{ ...always, prev }],
         errors: [{ messageId: 'expectedBlankLine' }],
-      })),
+      }),
     ),
     {
       code: ts`
@@ -321,253 +320,253 @@ tester.run('padding-line-between-statements', rule, {
       ],
       errors: [{ messageId: 'expectedBlankLine' }, { messageId: 'expectedBlankLine' }],
     },
-    ...Fn.pipe(
+    ...Arr.map(
       [
         [
           ts`
-        foo();
-        bar();
-      `,
+      foo();
+      bar();
+    `,
           ts`
-        foo();
-        
-        bar();
-      `,
+      foo();
+      
+      bar();
+    `,
         ],
         ['foo(); bar();', 'foo();\n\n bar();'],
         [
           ts`
-        foo()
-        bar()
-      `,
+      foo()
+      bar()
+    `,
           ts`
-        foo()
-        
-        bar()
-      `,
+      foo()
+      
+      bar()
+    `,
         ],
         [
           ts`
-        foo()
-        ;[1].forEach(bar)
-      `,
+      foo()
+      ;[1].forEach(bar)
+    `,
           ts`
-        foo()
-        
-        ;[1].forEach(bar)
-      `,
+      foo()
+      
+      ;[1].forEach(bar)
+    `,
         ],
         [
           ts`
-        foo(); // trailing
-        bar();
-      `,
+      foo(); // trailing
+      bar();
+    `,
           ts`
-        foo(); // trailing
-        
-        bar();
-      `,
+      foo(); // trailing
+      
+      bar();
+    `,
         ],
         [
           ts`
-        foo(); /* trailing */
-        // leading
-        bar();
-      `,
+      foo(); /* trailing */
+      // leading
+      bar();
+    `,
           ts`
-        foo(); /* trailing */
-        
-        // leading
-        bar();
-      `,
+      foo(); /* trailing */
+      
+      // leading
+      bar();
+    `,
         ],
         [
           ts`
+      foo();
+      /** docs */
+      function bar() {}
+    `,
+          ts`
+      foo();
+      
+      /** docs */
+      function bar() {}
+    `,
+        ],
+        [
+          ts`
+      function f() {
         foo();
-        /** docs */
-        function bar() {}
-      `,
+        return 1;
+      }
+    `,
           ts`
+      function f() {
         foo();
-        
-        /** docs */
-        function bar() {}
-      `,
+      
+        return 1;
+      }
+    `,
         ],
         [
           ts`
-        function f() {
-          foo();
-          return 1;
-        }
-      `,
+      class A { static {
+        foo();
+        bar();
+      } }
+    `,
           ts`
-        function f() {
-          foo();
-        
-          return 1;
-        }
-      `,
+      class A { static {
+        foo();
+      
+        bar();
+      } }
+    `,
         ],
         [
           ts`
-        class A { static {
-          foo();
-          bar();
-        } }
-      `,
+      namespace A {
+        foo();
+        bar();
+      }
+    `,
           ts`
-        class A { static {
-          foo();
-        
-          bar();
-        } }
-      `,
+      namespace A {
+        foo();
+      
+        bar();
+      }
+    `,
         ],
         [
           ts`
-        namespace A {
-          foo();
-          bar();
-        }
-      `,
+      switch (x) { case 1: foo();
+        bar(); }
+    `,
           ts`
-        namespace A {
-          foo();
-        
-          bar();
-        }
-      `,
+      switch (x) { case 1: foo();
+      
+        bar(); }
+    `,
         ],
         [
           ts`
-        switch (x) { case 1: foo();
-          bar(); }
-      `,
+      export type A = string;
+      export interface B {}
+    `,
           ts`
-        switch (x) { case 1: foo();
-        
-          bar(); }
-      `,
+      export type A = string;
+      
+      export interface B {}
+    `,
         ],
         [
           ts`
-        export type A = string;
-        export interface B {}
-      `,
+      interface A {
+        foo(): void;
+        bar(): void;
+      }
+    `,
           ts`
-        export type A = string;
-        
-        export interface B {}
-      `,
+      interface A {
+        foo(): void;
+      
+        bar(): void;
+      }
+    `,
         ],
         [
           ts`
-        interface A {
-          foo(): void;
-          bar(): void;
-        }
-      `,
+      type A = {
+        foo(): void;
+        bar(): void;
+      }
+    `,
           ts`
-        interface A {
-          foo(): void;
-        
-          bar(): void;
-        }
-      `,
+      type A = {
+        foo(): void;
+      
+        bar(): void;
+      }
+    `,
         ],
         [
           ts`
-        type A = {
-          foo(): void;
-          bar(): void;
-        }
+        function f(x: string): void;
+        function f(x: string) {}
       `,
           ts`
-        type A = {
-          foo(): void;
-        
-          bar(): void;
-        }
+        function f(x: string): void;
+      
+        function f(x: string) {}
       `,
-        ],
-        [
-          ts`
-          function f(x: string): void;
-          function f(x: string) {}
-        `,
-          ts`
-          function f(x: string): void;
-        
-          function f(x: string) {}
-        `,
         ],
         ['foo();\r\nbar();', 'foo();\n\r\nbar();'],
       ] satisfies Array<[string, string]>,
-      Arr.map(([code, output]) => ({
+      ([code, output]) => ({
         code,
         output,
         options: [always],
         errors: [{ messageId: 'expectedBlankLine' }],
-      })),
+      }),
     ),
-    ...Fn.pipe(
+    ...Arr.map(
       [
         [
           ts`
-        foo();
-        
-        
-        bar();
-      `,
+      foo();
+      
+      
+      bar();
+    `,
           ts`
-        foo();
-        bar();
-      `,
+      foo();
+      bar();
+    `,
         ],
         [
           ts`
-        foo()
-        
-        ;[1].forEach(bar)
-      `,
+      foo()
+      
+      ;[1].forEach(bar)
+    `,
           ts`
-        foo()
-        ;[1].forEach(bar)
-      `,
+      foo()
+      ;[1].forEach(bar)
+    `,
         ],
         [
           ts`
-        foo(); // trailing
-        
-        bar();
-      `,
+      foo(); // trailing
+      
+      bar();
+    `,
           ts`
-        foo(); // trailing
-        bar();
-      `,
+      foo(); // trailing
+      bar();
+    `,
         ],
         [
           ts`
-        foo();
-        
-        // leading
-        bar();
-      `,
+      foo();
+      
+      // leading
+      bar();
+    `,
           ts`
-        foo();
-        // leading
-        bar();
-      `,
+      foo();
+      // leading
+      bar();
+    `,
         ],
         ['foo();\r\n\r\nbar();', 'foo();\r\nbar();'],
       ] satisfies Array<[string, string]>,
-      Arr.map(([code, output]) => ({
+      ([code, output]) => ({
         code,
         output,
         options: [never],
         errors: [{ messageId: 'unexpectedBlankLine' }],
-      })),
+      }),
     ),
     {
       code: ts`

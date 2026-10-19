@@ -1,6 +1,3 @@
-// @effect-diagnostics-next-line nodeBuiltinImport:off
-import path from 'node:path';
-
 import { defineConfig } from 'vite-plus';
 
 import pkg from './package.json';
@@ -28,7 +25,7 @@ export default defineConfig({
     ],
   },
   test: {
-    setupFiles: [path.join(__dirname, 'test/vitest.setup.ts')],
+    setupFiles: ['./test/vitest.setup.ts'],
     include: ['test/**/*.spec.ts'],
     fakeTimers: {
       toFake: undefined,

@@ -1,4 +1,3 @@
-import * as Fn from 'effect/Function';
 /* oxlint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
 /* eslint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
 import { describe, expect, it } from '@effect/vitest';
@@ -99,7 +98,7 @@ tester.run('no-function-config-default binding proof', noFunctionConfigDefault, 
     `import { Config as C } from 'effect'; function use(C) { C.withDefault(config, () => 2); }`,
     `import type { Config } from 'effect'; Config.withDefault(config, () => 2);`,
   ],
-  invalid: Fn.pipe(
+  invalid: Arr.map(
     [
       `Config.withDefault(Config.Number('N'), ${thunk});`,
       `Config.withDefault(Config.String('S'), ${thunk});`,
@@ -122,7 +121,7 @@ tester.run('no-function-config-default binding proof', noFunctionConfigDefault, 
       `import { Config as C } from 'effect'; C.withDefault(C.String('S'), ${thunk});`,
       `import { withDefault as fallback } from 'effect/Config'; fallback(${thunk});`,
     ],
-    Arr.map((body) => ({
+    (body) => ({
       code: `${configImport}\n${body}`,
       filename: 'invalid.ts',
       errors: [
@@ -136,7 +135,7 @@ tester.run('no-function-config-default binding proof', noFunctionConfigDefault, 
         },
       ],
       output: null,
-    })),
+    }),
   ),
 });
 

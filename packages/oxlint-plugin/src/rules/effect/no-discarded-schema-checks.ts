@@ -1,6 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
 
 import {
@@ -53,10 +52,7 @@ export const noDiscardedSchemaChecks: Rule = defineEffectRule(
       }
 
       const options = Opt.getOrUndefined(
-        Fn.pipe(
-          node.arguments,
-          Arr.findFirst((argument) => argument.type === 'ObjectExpression'),
-        ),
+        Arr.findFirst(node.arguments, (argument) => argument.type === 'ObjectExpression'),
       );
 
       const preserve =
