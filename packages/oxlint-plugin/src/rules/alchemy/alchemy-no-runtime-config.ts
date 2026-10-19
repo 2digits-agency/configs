@@ -25,9 +25,13 @@ export const alchemyNoRuntimeConfig: Rule = defineEffectRule(
 
       const program = containingEffectGen(node, state);
 
-      const handler = program === undefined ? undefined : containingHandler(program);
+      if (program === undefined) {
+        return;
+      }
 
-      if (program !== undefined && handler !== undefined && containingWorker(program, state) !== undefined) {
+      const handler = containingHandler(program);
+
+      if (handler !== undefined && containingWorker(program, state) !== undefined) {
         context.report({ node: argument, messageId: 'runtime', data: { handler } });
       }
     },

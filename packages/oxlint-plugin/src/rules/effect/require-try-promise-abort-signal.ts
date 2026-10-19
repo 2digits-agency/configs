@@ -6,33 +6,18 @@ import {
   firstIdentifierParameter,
   functionUsesFirstParameter,
   isApi,
-  isFunctionNode,
-  objectProperty,
   ruleMeta,
   type FileState,
   type FunctionNode,
 } from '../../utils';
+import { promiseThunkArgument } from './utils';
 
 function tryPromiseThunk(node: ESTree.CallExpression, state: FileState): FunctionNode | undefined {
   if (!isApi(node.callee, state, 'Effect', 'tryPromise')) {
     return undefined;
   }
 
-  const first = argumentAt(node, 0);
-
-  if (first !== undefined && isFunctionNode(first)) {
-    return first;
-  }
-
-  if (first?.type === 'ObjectExpression') {
-    const tryProperty = objectProperty(first, 'try');
-
-    if (tryProperty !== undefined && isFunctionNode(tryProperty.value)) {
-      return tryProperty.value;
-    }
-  }
-
-  return undefined;
+  return promiseThunkArgument(argumentAt(node, 0));
 }
 
 export const requireTryPromiseAbortSignal: Rule = defineEffectRule(

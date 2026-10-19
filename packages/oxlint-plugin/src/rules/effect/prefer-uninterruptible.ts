@@ -1,6 +1,19 @@
 import type { Rule } from '@oxlint/plugins';
 
-import { argumentAt, defineEffectRule, functionUsesFirstParameter, isApi, isFunctionNode, ruleMeta } from '../../utils';
+import {
+  argumentAt,
+  canonicalPath,
+  defineEffectRule,
+  functionUsesFirstParameter,
+  isFunctionNode,
+  ruleMeta,
+} from '../../utils';
+
+// Effect mask APIs, keyed by member, with the equivalent API to use when `restore` is unused.
+const maskReplacements: ReadonlyMap<string, string> = new Map([
+  ['interruptibleMask', 'interruptible'],
+  ['uninterruptibleMask', 'uninterruptible'],
+]);
 
 export const preferUninterruptible: Rule = defineEffectRule(
   ruleMeta(
@@ -14,13 +27,9 @@ export const preferUninterruptible: Rule = defineEffectRule(
   ),
   (context, getState) => ({
     CallExpression(node) {
-      const state = getState();
+      const path = canonicalPath(node.callee, getState());
 
-      const method = isApi(node.callee, state, 'Effect', 'uninterruptibleMask')
-        ? 'uninterruptible'
-        : isApi(node.callee, state, 'Effect', 'interruptibleMask')
-          ? 'interruptible'
-          : undefined;
+      const method = path?.length === 2 && path[0] === 'Effect' ? maskReplacements.get(path[1] ?? '') : undefined;
 
       const callback = argumentAt(node, 0);
 

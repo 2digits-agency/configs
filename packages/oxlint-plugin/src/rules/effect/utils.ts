@@ -1,10 +1,14 @@
 import type { ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
+import * as Match from 'effect/Match';
+import * as Opt from 'effect/Option';
 
 import {
   callbackCall,
   canonicalPath,
   isFunctionNode,
+  objectProperty,
   propertyName,
   staticPath,
   unwrapExpression,
@@ -13,13 +17,12 @@ import {
 } from '../../utils';
 
 export function objectArgument(node: ESTree.CallExpression): ESTree.ObjectExpression | undefined {
-  for (const argument of node.arguments) {
-    if (argument.type === 'ObjectExpression') {
-      return argument;
-    }
-  }
-
-  return undefined;
+  return Opt.getOrUndefined(
+    Arr.findFirst(
+      node.arguments,
+      (argument): argument is ESTree.ObjectExpression => argument.type === 'ObjectExpression',
+    ),
+  );
 }
 
 export function functionProperty(node: FunctionNode, name: string): ESTree.CallExpression | undefined {
@@ -42,27 +45,35 @@ export function callbackApi(node: FunctionNode, state: FileState): ReadonlyArray
   return call === undefined ? undefined : canonicalPath(call.callee, state);
 }
 
-export function promiseInitializer(node: ESTree.Expression): boolean {
-  const expression = unwrapExpression(node);
+const promiseChainMethods: ReadonlySet<string> = new Set(['catch', 'finally', 'then']);
 
-  if (expression.type === 'NewExpression') {
-    const callee = staticPath(expression.callee);
+function isPromiseConstruction(node: ESTree.NewExpression): boolean {
+  const path = staticPath(node.callee);
 
-    return callee !== undefined && Arr.join(callee, '.') === 'Promise';
-  }
+  return path !== undefined && Arr.join(path, '.') === 'Promise';
+}
 
-  if (expression.type !== 'CallExpression') {
-    return false;
-  }
-
-  const path = staticPath(expression.callee);
+function isPromiseCall(node: ESTree.CallExpression): boolean {
+  const path = staticPath(node.callee);
 
   return (
     (path !== undefined && Arr.join(path, '.') === 'fetch') ||
     (path?.[0] === 'Promise' && path[1] !== 'withResolvers') ||
-    ['catch', 'finally', 'then'].includes(path?.at(-1) ?? '') ||
-    (isFunctionNode(expression.callee) && expression.callee.async)
+    promiseChainMethods.has(path?.at(-1) ?? '') ||
+    (isFunctionNode(node.callee) && node.callee.async)
   );
+}
+
+const promiseExpression = Match.type<ESTree.Expression>().pipe(
+  Match.discriminators('type')({
+    CallExpression: isPromiseCall,
+    NewExpression: isPromiseConstruction,
+  }),
+  Match.orElse(Fn.constFalse),
+);
+
+export function promiseInitializer(node: ESTree.Expression): boolean {
+  return promiseExpression(unwrapExpression(node));
 }
 
 export function functionResult(node: FunctionNode): ESTree.Expression | undefined {
@@ -79,4 +90,15 @@ export function functionResult(node: FunctionNode): ESTree.Expression | undefine
   }
 
   return unwrapExpression(node.body.body[0].argument);
+}
+
+/**
+ * The thunk passed to `Effect.promise` or `Effect.tryPromise`, either directly or as the `try` option.
+ *
+ * @param node First call argument.
+ */
+export function promiseThunkArgument(node: ESTree.Expression | undefined): FunctionNode | undefined {
+  const thunk = node?.type === 'ObjectExpression' ? objectProperty(node, 'try')?.value : node;
+
+  return isFunctionNode(thunk) ? thunk : undefined;
 }

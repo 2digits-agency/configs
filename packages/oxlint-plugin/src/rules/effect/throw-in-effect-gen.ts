@@ -1,22 +1,27 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 
 import {
   argumentAt,
   callbackCall,
   defineEffectRule,
+  enclosingFunction,
+  isAnyApi,
   isApi,
-  isFunctionNode,
   ruleMeta,
   type FileState,
   type FunctionNode,
 } from '../../utils';
 
+const generatorMethods: ReadonlyArray<string> = ['fn', 'fnUntraced', 'gen'];
+
+const curriedGeneratorMethods: ReadonlyArray<string> = ['fn', 'fnUntraced'];
+
 function capturedByEffectTry(node: FunctionNode, state: FileState): boolean {
   const parent = node.parent;
 
   if (parent.type === 'CallExpression' && argumentAt(parent, 0) === node) {
-    return isApi(parent.callee, state, 'Effect', 'try') || isApi(parent.callee, state, 'Effect', 'tryPromise');
+    return isAnyApi(parent.callee, state, 'Effect', ['try', 'tryPromise']);
   }
 
   if (parent.type !== 'Property' || parent.key.type !== 'Identifier' || parent.key.name !== 'try') {
@@ -28,7 +33,7 @@ function capturedByEffectTry(node: FunctionNode, state: FileState): boolean {
   return (
     object.type === 'ObjectExpression' &&
     object.parent.type === 'CallExpression' &&
-    (isApi(object.parent.callee, state, 'Effect', 'try') || isApi(object.parent.callee, state, 'Effect', 'tryPromise'))
+    isAnyApi(object.parent.callee, state, 'Effect', ['try', 'tryPromise'])
   );
 }
 
@@ -40,11 +45,7 @@ export const throwInEffectGen: Rule = defineEffectRule(
     ThrowStatement(node) {
       const state = getState();
 
-      let callback: ESTree.Node | undefined = node.parent;
-
-      while (callback && !isFunctionNode(callback)) {
-        callback = callback.parent ?? undefined;
-      }
+      const callback = enclosingFunction(node);
 
       if (callback === undefined || capturedByEffectTry(callback, state)) {
         return;
@@ -53,14 +54,13 @@ export const throwInEffectGen: Rule = defineEffectRule(
       const call = callbackCall(callback);
 
       const direct =
-        call !== undefined &&
-        Arr.some(['fn', 'fnUntraced', 'gen'], (method) => isApi(call.callee, state, 'Effect', method));
+        call !== undefined && Arr.some(generatorMethods, (method) => isApi(call.callee, state, 'Effect', method));
 
       const outerCallee = call?.callee;
 
       const curried =
         outerCallee?.type === 'CallExpression' &&
-        Arr.some(['fn', 'fnUntraced'], (method) => isApi(outerCallee.callee, state, 'Effect', method));
+        Arr.some(curriedGeneratorMethods, (method) => isApi(outerCallee.callee, state, 'Effect', method));
 
       if (direct || curried) {
         context.report({ node, messageId: 'throwInGen' });

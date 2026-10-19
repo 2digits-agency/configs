@@ -1,6 +1,16 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 
-import { argumentAt, defineEffectRule, isApi, ruleMeta, staticPath, type FileState } from '../../utils';
+import {
+  argumentAt,
+  defineEffectRule,
+  isApi,
+  isEqualityOperator,
+  ruleMeta,
+  staticPath,
+  type FileState,
+} from '../../utils';
+
+const keyedMethods: ReadonlySet<string> = new Set(['delete', 'get', 'has', 'set']);
 
 function isHashCall(node: ESTree.Node, state: FileState): node is ESTree.CallExpression {
   return node.type === 'CallExpression' && isApi(node.callee, state, 'Hash', 'hash');
@@ -33,10 +43,7 @@ export const noHashAsIdentity: Rule = defineEffectRule(
         }
       },
       CallExpression(node) {
-        if (
-          node.callee.type !== 'MemberExpression' ||
-          !['delete', 'get', 'has', 'set'].includes(staticPath(node.callee)?.at(-1) ?? '')
-        ) {
+        if (node.callee.type !== 'MemberExpression' || !keyedMethods.has(staticPath(node.callee)?.at(-1) ?? '')) {
           return;
         }
 
@@ -47,7 +54,7 @@ export const noHashAsIdentity: Rule = defineEffectRule(
         }
       },
       BinaryExpression(node) {
-        if (['===', '!==', '==', '!='].includes(node.operator) && isHashValue(node.left) && isHashValue(node.right)) {
+        if (isEqualityOperator(node.operator) && isHashValue(node.left) && isHashValue(node.right)) {
           context.report({ node, messageId: 'hashIdentity' });
         }
       },

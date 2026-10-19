@@ -1,16 +1,8 @@
 import type { Rule } from '@oxlint/plugins';
 
-import { defineSyntaxRule, ruleMeta } from '../../utils';
+import { defineSyntaxRule, moduleExportName, ruleMeta } from '../../utils';
 import { fixBarrel } from './import-fixes';
-import { barrelModuleSource, isTypeOnlyImport, namespaceAlias } from './import-style-utils';
-
-function importedName(specifier: Parameters<typeof isTypeOnlyImport>[1]): string | undefined {
-  if (specifier?.imported.type === 'Identifier') {
-    return specifier.imported.name;
-  }
-
-  return typeof specifier?.imported.value === 'string' ? specifier.imported.value : undefined;
-}
+import { barrelModuleSource, isModuleName, isTypeOnlyImport, namespaceAlias } from './import-style-utils';
 
 export const noEffectAlchemyBarrelImports: Rule = defineSyntaxRule(
   {
@@ -32,12 +24,11 @@ export const noEffectAlchemyBarrelImports: Rule = defineSyntaxRule(
           continue;
         }
 
-        const name = importedName(specifier);
+        const name = moduleExportName(specifier.imported);
 
-        const source =
-          name === undefined || !/^\p{Lu}/u.test(name) ? undefined : barrelModuleSource(node.source.value, name);
+        const source = isModuleName(name) ? barrelModuleSource(node.source.value, name) : undefined;
 
-        if (name !== undefined && source !== undefined) {
+        if (source !== undefined) {
           context.report({
             node: specifier,
             messageId: 'barrelImport',

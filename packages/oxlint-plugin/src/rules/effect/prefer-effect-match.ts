@@ -1,23 +1,21 @@
 import type { Context, ESTree, Rule } from '@oxlint/plugins';
 
-import { defineEffectRule, ruleMeta } from '../../utils';
+import { defineEffectRule, isEqualityOperator, ruleMeta } from '../../utils';
 
-const equalityOperators = new Set(['==', '===', '!=', '!==']);
-
-function isLiteral(node: ESTree.Node): boolean {
+function isStaticLiteral(node: ESTree.Node): boolean {
   return node.type === 'Literal' || (node.type === 'TemplateLiteral' && node.expressions.length === 0);
 }
 
 function comparedValue(test: ESTree.Expression, context: Context): string | undefined {
-  if (test.type !== 'BinaryExpression' || !equalityOperators.has(test.operator)) {
+  if (test.type !== 'BinaryExpression' || !isEqualityOperator(test.operator)) {
     return undefined;
   }
 
-  if (isLiteral(test.left)) {
+  if (isStaticLiteral(test.left)) {
     return context.sourceCode.getText(test.right);
   }
 
-  if (isLiteral(test.right)) {
+  if (isStaticLiteral(test.right)) {
     return context.sourceCode.getText(test.left);
   }
 

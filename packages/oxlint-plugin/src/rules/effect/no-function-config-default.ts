@@ -1,4 +1,4 @@
-import type { Context, ESTree, Rule, Scope, Variable } from '@oxlint/plugins';
+import type { Context, ESTree, Rule, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 
 import { importedApi } from '../../fixes';
@@ -7,7 +7,9 @@ import {
   defineEffectRule,
   isApi,
   isFunctionNode,
+  resolveVariable,
   ruleMeta,
+  soleDefinition,
   staticPropertyName,
   unwrapExpression,
 } from '../../utils';
@@ -18,15 +20,9 @@ function resolveConst(node: ESTree.Expression, context: Context): ESTree.Express
   const seen = new Set<Variable>();
 
   while (expression.type === 'Identifier') {
-    let scope: Scope | null = context.sourceCode.getScope(expression);
+    const variable = resolveVariable(context, expression, expression.name);
 
-    while (scope !== null && !scope.set.has(expression.name)) {
-      scope = scope.upper;
-    }
-
-    const variable = scope?.set.get(expression.name);
-
-    const definition = variable?.defs.length === 1 ? variable.defs[0] : undefined;
+    const definition = soleDefinition(variable);
 
     const declaration = definition?.node;
 
@@ -103,7 +99,7 @@ export const noFunctionConfigDefault: Rule = defineEffectRule(
         return;
       }
 
-      if (fallback !== undefined && isFunctionNode(fallback) && fallback.params.length === 0) {
+      if (isFunctionNode(fallback) && fallback.params.length === 0) {
         context.report({ node: fallback, messageId: 'functionDefault' });
       }
     },

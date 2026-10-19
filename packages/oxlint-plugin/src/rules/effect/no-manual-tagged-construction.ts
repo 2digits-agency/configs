@@ -2,8 +2,8 @@ import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 
-import { defineSyntaxRule, propertyName, ruleMeta } from '../../utils';
-import { isMatchPatternObject, isStringLiteral } from './tagged-values';
+import { defineSyntaxRule, isStringLiteral, propertyName, ruleMeta } from '../../utils';
+import { isMatchPatternObject } from './tagged-values';
 
 /**
  * Prefer constructors to literal tagged objects, excluding direct Match patterns.

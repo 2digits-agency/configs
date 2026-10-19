@@ -15,6 +15,7 @@ import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Ref from 'effect/Ref';
 
@@ -115,6 +116,20 @@ const paddingLineSequence = new RegExp(
 
 const cjsExport = /^(?:module\s*\.\s*)?exports(?:\s*\.|\s*\[|$)/u;
 
+const functionTypes: ReadonlySet<NodeType> = new Set([
+  'FunctionDeclaration',
+  'FunctionExpression',
+  'ArrowFunctionExpression',
+]);
+
+const paddingTypes: ReadonlySet<unknown> = new Set<PaddingType>(['any', 'never', 'always']);
+
+const lineModes: ReadonlySet<unknown> = new Set<LineMode>(['any', 'singleline', 'multiline']);
+
+const optionKeys: ReadonlySet<string> = new Set(['blankLine', 'prev', 'next']);
+
+const selectorKeys: ReadonlySet<string> = new Set(['selector', 'lineMode']);
+
 function isSemicolonToken(token: Token): boolean {
   return token.type === 'Punctuator' && token.value === ';';
 }
@@ -128,7 +143,7 @@ function isSingleLine(node: ESTree.Node): boolean {
 }
 
 function isFunction(node: ESTree.Node): boolean {
-  return ['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression'].includes(node.type);
+  return functionTypes.has(node.type);
 }
 
 function skipChainExpression(node: ESTree.Node): ESTree.Node {
@@ -136,9 +151,9 @@ function skipChainExpression(node: ESTree.Node): ESTree.Node {
 }
 
 function keywordTester(types: NodeType | ReadonlyArray<NodeType>, keyword: string): NodeTest {
-  return (node, sourceCode) =>
-    sourceCode.getFirstToken(node)?.value === keyword &&
-    (Arr.isArray(types) ? types.includes(node.type) : types === node.type);
+  const nodeTypes: ReadonlySet<NodeType> = new Set(Arr.ensure(types));
+
+  return (node, sourceCode) => sourceCode.getFirstToken(node)?.value === keyword && nodeTypes.has(node.type);
 }
 
 function nodeTypeTester(type: NodeType): NodeTest {
@@ -167,13 +182,10 @@ function isIIFEStatement(node: ESTree.Node): boolean {
   let callee: ESTree.Node = expression.callee;
 
   while (callee.type === 'SequenceExpression') {
-    const last = callee.expressions.at(-1);
-
-    if (last === undefined) {
-      throw new Error('Padding rule invariant: sequence expression is empty');
-    }
-
-    callee = last;
+    callee = Opt.getOrThrowWith(
+      Arr.last(callee.expressions),
+      () => new Error('Padding rule invariant: sequence expression is empty'),
+    );
   }
 
   return isFunction(callee);
@@ -215,7 +227,7 @@ function isDirective(node: ESTree.Node, sourceCode: SourceCode): boolean {
     node.type === 'ExpressionStatement' &&
     (node.parent.type === 'Program' || (node.parent.type === 'BlockStatement' && isFunction(node.parent.parent))) &&
     node.expression.type === 'Literal' &&
-    typeof node.expression.value === 'string' &&
+    P.isString(node.expression.value) &&
     (sourceCode.getTokenBefore(node.expression)?.value !== '(' ||
       sourceCode.getTokenAfter(node.expression)?.value !== ')')
   );
@@ -226,17 +238,13 @@ function isDirectivePrologue(node: ESTree.Node, sourceCode: SourceCode): boolean
     return false;
   }
 
-  for (const sibling of node.parent.body) {
-    if (sibling === node) {
-      break;
-    }
+  const siblings: ReadonlyArray<ESTree.Node> = node.parent.body;
 
-    if (!isDirective(sibling, sourceCode)) {
-      return false;
-    }
-  }
-
-  return true;
+  return Fn.pipe(
+    siblings,
+    Arr.takeWhile((sibling) => sibling !== node),
+    Arr.every((sibling) => isDirective(sibling, sourceCode)),
+  );
 }
 
 function isCJSExport(node: ESTree.Node): boolean {
@@ -373,8 +381,16 @@ const statementTypes: Record<StatementType, NodeTest> = {
   'multiline-type': lineModeTester(multilineStatementTypes.type, 'multiline'),
 };
 
+function isLineMode(value: unknown): value is LineMode {
+  return lineModes.has(value);
+}
+
+function isPaddingType(value: unknown): value is PaddingType {
+  return paddingTypes.has(value);
+}
+
 function isStatementType(value: unknown): value is StatementType {
-  return typeof value === 'string' && R.has(statementTypes, value as StatementType);
+  return P.isString(value) && R.has(statementTypes, value as StatementType);
 }
 
 function isMatcherArray(value: StatementOption): value is Arr.NonEmptyReadonlyArray<StatementMatcher> {
@@ -386,19 +402,12 @@ function parseMatcher(value: unknown): StatementMatcher {
     return value;
   }
 
-  if (
-    typeof value === 'object' &&
-    value !== null &&
-    'selector' in value &&
-    typeof value.selector === 'string' &&
-    Arr.every(R.keys(value as Readonly<Record<string, unknown>>), (key) => key === 'selector' || key === 'lineMode')
-  ) {
+  if (P.isObject(value) && P.isString(value.selector) && Arr.every(R.keys(value), (key) => selectorKeys.has(key))) {
     if (!('lineMode' in value)) {
       return { selector: value.selector };
     }
 
-    // eslint-disable-next-line unicorn/prefer-includes-over-repeated-comparisons -- Equality checks narrow the parsed union.
-    if (value.lineMode === 'any' || value.lineMode === 'singleline' || value.lineMode === 'multiline') {
+    if (isLineMode(value.lineMode)) {
       return { selector: value.selector, lineMode: value.lineMode };
     }
   }
@@ -413,25 +422,22 @@ function parseStatementOption(value: unknown): StatementOption {
 
   const matchers: ReadonlyArray<unknown> = value;
 
-  const first = matchers[0];
-
-  if (first === undefined) {
+  if (!Arr.isReadonlyArrayNonEmpty(matchers)) {
     throw new Error('Padding statement matcher arrays must not be empty');
   }
 
-  return [parseMatcher(first), ...Arr.map(matchers.slice(1), (matcher) => parseMatcher(matcher))];
+  return Arr.map(matchers, (matcher) => parseMatcher(matcher));
 }
 
 function parseOptions(values: ReadonlyArray<unknown>): Array<PaddingLineOption> {
   return Arr.map(values, (value) => {
     if (
-      typeof value !== 'object' ||
-      value === null ||
+      !P.isObject(value) ||
       !('blankLine' in value) ||
       !('prev' in value) ||
       !('next' in value) ||
-      Arr.some(R.keys(value), (key) => !['blankLine', 'prev', 'next'].includes(key)) ||
-      (value.blankLine !== 'any' && value.blankLine !== 'never' && value.blankLine !== 'always')
+      Arr.some(R.keys(value), (key) => !optionKeys.has(key)) ||
+      !isPaddingType(value.blankLine)
     ) {
       throw new Error('Invalid padding-line-between-statements configuration');
     }
@@ -489,7 +495,7 @@ function verifyPair(
     const pairs = getPaddingLineSequences(prevNode, nextNode, sourceCode);
 
     if (padding === 'never') {
-      if (pairs.length === 0) {
+      if (!Arr.isArrayNonEmpty(pairs)) {
         return yield* Effect.void;
       }
 
@@ -503,11 +509,7 @@ function verifyPair(
             return null;
           }
 
-          const pair = pairs[0];
-
-          if (pair === undefined) {
-            throw new Error('Padding rule invariant: reported padding pair is missing');
-          }
+          const pair = Arr.headNonEmpty(pairs);
 
           const start = pair[0].range[1];
 
@@ -521,7 +523,7 @@ function verifyPair(
       });
     }
 
-    if (pairs.length > 0) {
+    if (Arr.isArrayNonEmpty(pairs)) {
       return yield* Effect.void;
     }
 
@@ -555,17 +557,19 @@ function verifyPair(
 function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<PaddingLineOption>) {
   const sourceCode = context.sourceCode;
 
-  const selectors = new Set(
-    Arr.flatMap(options, (option) =>
-      Arr.flatMap([option.prev, option.next].flat(), (matcher) =>
-        typeof matcher === 'string' ? [] : [matcher.selector],
+  const selectors = Arr.fromIterable(
+    new Set(
+      Fn.pipe(
+        options,
+        Arr.flatMap((option) => [...Arr.ensure(option.prev), ...Arr.ensure(option.next)]),
+        Arr.flatMap((matcher) => (P.isString(matcher) ? [] : [matcher.selector])),
       ),
     ),
   );
 
   // Collections are mutated only inside Ref updates, avoiding quadratic copies during traversal.
   const matches = yield* Ref.make<Map<string, Set<ESTree.Node>>>(
-    new Map(Array.from(selectors, (selector) => [selector, new Set<ESTree.Node>()])),
+    new Map(Arr.map(selectors, (selector) => [selector, new Set<ESTree.Node>()])),
   );
 
   const pendingPairs = yield* Ref.make(Arr.empty<StatementPair>());
@@ -599,7 +603,7 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
       return Arr.some(matcher, (item) => match(inner, item, matchedNodes));
     }
 
-    if (typeof matcher !== 'string') {
+    if (!P.isString(matcher)) {
       return (
         matchedNodes.get(matcher.selector)?.has(inner) === true &&
         (matcher.lineMode === 'singleline'
@@ -611,16 +615,14 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
     return statementTypes[matcher](inner, sourceCode);
   }
 
-  const reversedOptions = Arr.reverse(options);
-
   function getPaddingType(prevNode: ESTree.Node, nextNode: ESTree.Node, matchedNodes: SelectorMatches): PaddingType {
-    for (const option of reversedOptions) {
-      if (match(prevNode, option.prev, matchedNodes) && match(nextNode, option.next, matchedNodes)) {
-        return option.blankLine;
-      }
-    }
-
-    return 'any';
+    return Fn.pipe(
+      Arr.findLast(
+        options,
+        (option) => match(prevNode, option.prev, matchedNodes) && match(nextNode, option.next, matchedNodes),
+      ),
+      Opt.match({ onNone: (): PaddingType => 'any', onSome: (option) => option.blankLine }),
+    );
   }
 
   const verify = Match.type<ESTree.Node>().pipe(
@@ -710,7 +712,7 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
   // Compose colliding selectors instead of replacing the rule's scope/statement listeners.
   return Visitor.merge(
     visitor,
-    ...Array.from(selectors, (selector) =>
+    ...Arr.map(selectors, (selector) =>
       Visitor.on(selector, (node) =>
         Ref.update(matches, (matchedNodes) => {
           matchedNodes.get(selector)?.add(node);

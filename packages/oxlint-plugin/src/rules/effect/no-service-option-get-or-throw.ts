@@ -1,6 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 
-import { argumentAt, defineEffectRule, isApi, ruleMeta, staticPath, unwrapExpression } from '../../utils';
+import { argumentAt, defineEffectRule, isAnyApi, isApi, ruleMeta, staticPath, unwrapExpression } from '../../utils';
 
 export const noServiceOptionGetOrThrow: Rule = defineEffectRule(
   ruleMeta(
@@ -16,7 +16,7 @@ export const noServiceOptionGetOrThrow: Rule = defineEffectRule(
     CallExpression(node) {
       const state = getState();
 
-      if (isApi(node.callee, state, 'Option', 'getOrThrow') || isApi(node.callee, state, 'Option', 'getOrThrowWith')) {
+      if (isAnyApi(node.callee, state, 'Option', ['getOrThrow', 'getOrThrowWith'])) {
         const option = argumentAt(node, 0);
 
         const yielded = option?.type === 'YieldExpression' ? option.argument : option;
@@ -47,10 +47,7 @@ export const noServiceOptionGetOrThrow: Rule = defineEffectRule(
 
       const mapper = argumentAt(map, 0);
 
-      if (
-        mapper !== undefined &&
-        (isApi(mapper, state, 'Option', 'getOrThrow') || isApi(mapper, state, 'Option', 'getOrThrowWith'))
-      ) {
+      if (mapper !== undefined && isAnyApi(mapper, state, 'Option', ['getOrThrow', 'getOrThrowWith'])) {
         context.report({ node, messageId: 'getOrThrow' });
       }
     },

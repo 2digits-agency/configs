@@ -1,12 +1,12 @@
-import type { Rule } from '@oxlint/plugins';
+import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 
-import { argumentAt, defineEffectRule, isGlobalIdentifier, isLiteral, ruleMeta, staticPath } from '../../utils';
+import { argumentAt, defineEffectRule, isGlobalIdentifier, isStringLiteral, ruleMeta, staticPath } from '../../utils';
 
-const encodings = new Set(['base64', 'base64url', 'hex']);
+const encodings: ReadonlySet<string> = new Set(['base64', 'base64url', 'hex']);
 
-function isEncodingArgument(node: ReturnType<typeof argumentAt>): boolean {
-  return node !== undefined && Arr.some([...encodings], (encoding) => isLiteral(node, encoding));
+function isEncodingArgument(node: ESTree.Expression | undefined): boolean {
+  return node !== undefined && isStringLiteral(node) && encodings.has(node.value);
 }
 
 export const preferEffectEncoding: Rule = defineEffectRule(

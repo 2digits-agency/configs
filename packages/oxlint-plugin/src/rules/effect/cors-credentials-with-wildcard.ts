@@ -14,13 +14,7 @@ function wildcardOrigins(node: ESTree.Expression): boolean {
   return (
     origins.type === 'ArrayExpression' &&
     (origins.elements.length === 0 ||
-      Arr.some(origins.elements, (element) => {
-        if (!element || element.type === 'SpreadElement') {
-          return false;
-        }
-
-        return isLiteral(element, '*');
-      }))
+      Arr.some(origins.elements, (element) => element !== null && isLiteral(element, '*')))
   );
 }
 

@@ -1,6 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 
-import { argumentAt, defineEffectRule, isApi, ruleMeta, staticPath, unwrapExpression } from '../../utils';
+import { argumentAt, defineEffectRule, isAnyApi, isApi, ruleMeta, staticPath, unwrapExpression } from '../../utils';
 
 export const noOptionOfService: Rule = defineEffectRule(
   ruleMeta(
@@ -16,7 +16,7 @@ export const noOptionOfService: Rule = defineEffectRule(
     CallExpression(node) {
       const state = getState();
 
-      const wrapper = isApi(node.callee, state, 'Effect', 'option') || isApi(node.callee, state, 'Effect', 'either');
+      const wrapper = isAnyApi(node.callee, state, 'Effect', ['option', 'either']);
 
       const wrapped = argumentAt(node, 0);
 
@@ -38,7 +38,7 @@ export const noOptionOfService: Rule = defineEffectRule(
         operator !== undefined &&
         source.type === 'CallExpression' &&
         isApi(source.callee, state, 'Effect', 'service') &&
-        (isApi(operator, state, 'Effect', 'option') || isApi(operator, state, 'Effect', 'either'))
+        isAnyApi(operator, state, 'Effect', ['option', 'either'])
       ) {
         context.report({ node, messageId: 'mandatory' });
       }

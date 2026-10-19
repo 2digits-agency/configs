@@ -1,16 +1,8 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
-import * as Fn from 'effect/Function';
-import * as Match from 'effect/Match';
+import type { Rule } from '@oxlint/plugins';
 
-import { defineSyntaxRule, ruleMeta } from '../../utils';
+import { defineSyntaxRule, moduleExportName, ruleMeta } from '../../utils';
 
 const serviceConstructorName = /^make[A-Z]/u;
-
-const importedName = Match.type<ESTree.ModuleExportName>().pipe(
-  Match.when({ type: 'Identifier' }, (imported) => imported.name),
-  Match.when({ value: Match.nonEmptyString }, (imported) => imported.value),
-  Match.orElse(Fn.constUndefined),
-);
 
 const testFile = /\.(?:test|spec)\.[cm]?[jt]sx?$/u;
 
@@ -43,9 +35,9 @@ export const noServiceConstructorImports: Rule = defineSyntaxRule(
           continue;
         }
 
-        const name = importedName(specifier.imported);
+        const name = moduleExportName(specifier.imported);
 
-        if (name !== undefined && serviceConstructorName.test(name)) {
+        if (serviceConstructorName.test(name)) {
           context.report({ node: specifier, messageId: 'serviceConstructorImport', data: { name } });
         }
       }

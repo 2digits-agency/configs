@@ -1,31 +1,8 @@
-import type { Context, ESTree, Fix, Fixer, Scope, Variable } from '@oxlint/plugins';
+import type { Context, ESTree, Fix, Fixer } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 
-import { staticPath } from './utils';
-
-/**
- * Resolve names at the edit site, including local shadowing.
- *
- * @param context Rule context.
- * @param node Edit site.
- * @param name Local binding name.
- */
-function binding(context: Context, node: ESTree.Node, name: string): Variable | undefined {
-  let scope: Scope | null = context.sourceCode.getScope(node);
-
-  while (scope !== null) {
-    const variable = scope.set.get(name);
-
-    if (variable !== undefined) {
-      return variable;
-    }
-
-    scope = scope.upper;
-  }
-
-  return undefined;
-}
+import { isStringLiteral, resolveVariable, staticPath } from './utils';
 
 /**
  * Only rewrite API roots that still resolve to runtime imports.
@@ -36,7 +13,7 @@ function binding(context: Context, node: ESTree.Node, name: string): Variable | 
 export function importedApi(context: Context, node: ESTree.Node): boolean {
   const name = staticPath(node)?.[0];
 
-  const variable = name === undefined ? undefined : binding(context, node, name);
+  const variable = name === undefined ? undefined : resolveVariable(context, node, name);
 
   return Arr.some(variable?.defs ?? [], (definition) => {
     const specifier = definition.node;
@@ -68,26 +45,22 @@ export function namespaceImport(
 ): { readonly name: string; readonly fixes: Array<Fix> } {
   const program = context.sourceCode.ast;
 
-  for (const statement of program.body) {
-    if (
-      statement.type !== 'ImportDeclaration' ||
-      statement.source.value !== source ||
-      statement.importKind === 'type'
-    ) {
-      continue;
-    }
+  const visibleNamespace = Arr.findFirst(
+    Arr.flatMap(program.body, (statement) =>
+      statement.type === 'ImportDeclaration' && statement.source.value === source && statement.importKind !== 'type'
+        ? statement.specifiers
+        : [],
+    ),
+    (specifier) =>
+      specifier.type === 'ImportNamespaceSpecifier' &&
+      Arr.some(
+        resolveVariable(context, node, specifier.local.name)?.defs ?? [],
+        (definition) => definition.node === specifier,
+      ),
+  );
 
-    for (const specifier of statement.specifiers) {
-      if (
-        specifier.type === 'ImportNamespaceSpecifier' &&
-        Arr.some(
-          binding(context, node, specifier.local.name)?.defs ?? [],
-          (definition) => definition.node === specifier,
-        )
-      ) {
-        return { name: specifier.local.name, fixes: [] };
-      }
-    }
+  if (Opt.isSome(visibleNamespace)) {
+    return { name: visibleNamespace.value.local.name, fixes: [] };
   }
 
   const names = new Set(
@@ -110,10 +83,7 @@ export function namespaceImport(
   const first = Opt.getOrUndefined(
     Arr.findFirst(
       program.body,
-      (statement) =>
-        statement.type !== 'ExpressionStatement' ||
-        statement.expression.type !== 'Literal' ||
-        typeof statement.expression.value !== 'string',
+      (statement) => statement.type !== 'ExpressionStatement' || !isStringLiteral(statement.expression),
     ),
   );
 

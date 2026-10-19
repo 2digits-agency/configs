@@ -1,9 +1,11 @@
-import type { Context, ESTree, Rule, Scope, Variable } from '@oxlint/plugins';
+import type { Context, ESTree, Rule, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 
 import {
   canonicalPath,
+  containsRange,
   defineEffectRule,
+  resolveVariable,
   ruleMeta,
   staticPath,
   unwrapExpression,
@@ -55,22 +57,6 @@ const dynamicTypes = new Set<string>([
 
 const transparentParentTypes = new Set<string>(['ParenthesizedExpression', 'TSAsExpression', 'TSNonNullExpression']);
 
-function resolveVariable(node: ESTree.Node, name: string, context: Context): Variable | undefined {
-  let scope: Scope | null = context.sourceCode.getScope(node);
-
-  while (scope !== null) {
-    const variable = scope.set.get(name);
-
-    if (variable !== undefined) {
-      return variable;
-    }
-
-    scope = scope.upper;
-  }
-
-  return undefined;
-}
-
 // The callee root must resolve to the import itself, not to a parameter or local that shadows it.
 function compilerMethod(node: ESTree.Node, state: FileState, context: Context): string | undefined {
   const path = canonicalPath(node, state);
@@ -83,7 +69,7 @@ function compilerMethod(node: ESTree.Node, state: FileState, context: Context): 
     return undefined;
   }
 
-  const variable = resolveVariable(node, root, context);
+  const variable = resolveVariable(context, node, root);
 
   return variable !== undefined && Arr.every(variable.defs, (definition) => definition.type === 'ImportBinding')
     ? method
@@ -122,10 +108,6 @@ function isSchemaCall(node: ESTree.Expression, state: FileState): boolean {
   return node.type === 'CallExpression' && canonicalPath(node.callee, state)?.[0] === 'Schema';
 }
 
-function contains(outer: ESTree.Node, inner: ESTree.Node): boolean {
-  return outer.range[0] <= inner.range[0] && inner.range[1] <= outer.range[1];
-}
-
 function isMutationTarget(node: ESTree.Node): boolean {
   let current = node;
 
@@ -155,9 +137,9 @@ function isStableVariable(variable: Variable): boolean {
 
 // Movable means declared at module scope with a stable value, or inside the schema itself (callback params).
 function isMovableIdentifier(node: ESTree.Node, name: string, root: ESTree.Node, context: Context): boolean {
-  const variable = resolveVariable(node, name, context);
+  const variable = resolveVariable(context, node, name);
 
-  if (variable === undefined || contains(root, variable.scope.block)) {
+  if (variable === undefined || containsRange(root, variable.scope.block)) {
     return true;
   }
 

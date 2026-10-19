@@ -5,6 +5,7 @@ import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Num from 'effect/Number';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 
 import { importedApi } from '../../fixes';
 import { argumentAt, canonicalPath, objectProperty, unwrapExpression, type FileState } from '../../utils';
@@ -37,6 +38,16 @@ const durationApis = new Map<string, DurationPosition>([
   ['TestClock.adjust', 'last'],
 ]);
 
+const durationExpressions: Record<DurationPosition, (node: ESTree.CallExpression) => ESTree.Expression | undefined> = {
+  first: (node) => argumentAt(node, 0),
+  last: (node) => argumentAt(node, node.arguments.length - 1),
+  'options.duration': (node) => {
+    const options = argumentAt(node, node.arguments.length - 1);
+
+    return options?.type === 'ObjectExpression' ? objectProperty(options, 'duration')?.value : undefined;
+  },
+};
+
 /**
  * Return the expression a call passes as its `Duration.Input`, if the callee is a known Effect duration API that still
  * resolves to its runtime import.
@@ -52,28 +63,27 @@ export function durationArgument(
 ): ESTree.Expression | undefined {
   const path = canonicalPath(node.callee, state);
 
-  const api = path === undefined ? undefined : durationApis.get(Arr.join(path, '.'));
+  const position = path === undefined ? undefined : durationApis.get(Arr.join(path, '.'));
 
-  const position = api !== undefined && importedApi(context, node.callee) ? api : undefined;
-
-  if (position === 'first') {
-    return argumentAt(node, 0);
-  }
-
-  if (position === 'last') {
-    return argumentAt(node, node.arguments.length - 1);
-  }
-
-  if (position === 'options.duration') {
-    const options = argumentAt(node, node.arguments.length - 1);
-
-    const property = options?.type === 'ObjectExpression' ? objectProperty(options, 'duration') : undefined;
-
-    return property?.value;
-  }
-
-  return undefined;
+  return position !== undefined && importedApi(context, node.callee) ? durationExpressions[position](node) : undefined;
 }
+
+type Arithmetic = (left: number, right: number) => number;
+
+function power(base: number, exponent: number): number {
+  return base ** exponent;
+}
+
+const arithmetic = Match.type<ESTree.BinaryExpression['operator']>().pipe(
+  Match.withReturnType<Arithmetic | undefined>(),
+  Match.when('*', () => Num.multiply),
+  Match.when('+', () => Num.sum),
+  Match.when('-', () => Num.subtract),
+  Match.when('/', () => Num.divideUnsafe),
+  Match.when('%', () => Num.remainder),
+  Match.when('**', () => power),
+  Match.orElse(Fn.constUndefined),
+);
 
 /**
  * Evaluate number literals and arithmetic on number literals, such as `-1` or `24 * 60 * 60 * 1000`.
@@ -84,7 +94,7 @@ export function numericValue(node: ESTree.Expression): number | undefined {
   const expression = unwrapExpression(node);
 
   if (expression.type === 'Literal') {
-    return typeof expression.value === 'number' ? expression.value : undefined;
+    return P.isNumber(expression.value) ? expression.value : undefined;
   }
 
   if (expression.type === 'UnaryExpression' && (expression.operator === '-' || expression.operator === '+')) {
@@ -105,22 +115,14 @@ export function numericValue(node: ESTree.Expression): number | undefined {
     return undefined;
   }
 
-  return Match.value(expression.operator).pipe(
-    Match.when('*', () => Num.multiply(left, right)),
-    Match.when('+', () => Num.sum(left, right)),
-    Match.when('-', () => Num.subtract(left, right)),
-    Match.when('/', () => Num.divideUnsafe(left, right)),
-    Match.when('%', () => Num.remainder(left, right)),
-    Match.when('**', () => left ** right),
-    Match.orElse(Fn.constUndefined),
-  );
+  return arithmetic(expression.operator)?.(left, right);
 }
 
 function factors(node: ESTree.Expression): Array<number> | undefined {
   const expression = unwrapExpression(node);
 
   if (expression.type === 'Literal') {
-    return typeof expression.value === 'number' ? [expression.value] : undefined;
+    return P.isNumber(expression.value) ? [expression.value] : undefined;
   }
 
   if (expression.type !== 'BinaryExpression' || expression.operator !== '*') {
@@ -131,7 +133,7 @@ function factors(node: ESTree.Expression): Array<number> | undefined {
 
   const right = factors(expression.right);
 
-  return left === undefined || right === undefined ? undefined : [...left, ...right];
+  return left === undefined || right === undefined ? undefined : Arr.appendAll(left, right);
 }
 
 // Minute, hour, and day sizes in milliseconds are unambiguous on their own.
@@ -164,7 +166,7 @@ export function timeArithmetic(node: ESTree.Expression): { readonly millis: bool
   }
 
   return {
-    millis: product.includes(1000) || Arr.some(product, (factor) => factor % 60_000 === 0),
+    millis: Arr.contains(product, 1000) || Arr.some(product, (factor) => factor % 60_000 === 0),
   };
 }
 
@@ -194,17 +196,21 @@ function formatNumber(value: number): string {
  * @param unit Unit of `value`.
  */
 export function durationConstructor(value: number, unit: DurationUnit): string {
-  const millis = value * (Arr.findFirst(unitMillis, ([name]) => name === unit).pipe(Opt.getOrUndefined)?.[1] ?? 1);
+  const millis =
+    value *
+    Arr.findFirst(unitMillis, ([name]) => name === unit).pipe(
+      Opt.map(([, size]) => size),
+      Opt.getOrElse(() => 1),
+    );
 
   if (millis === 0) {
     return 'Duration.zero';
   }
 
-  for (const [name, size] of unitMillis) {
-    if (Number.isSafeInteger(millis / size)) {
-      return `Duration.${name}(${formatNumber(millis / size)})`;
-    }
-  }
-
-  return `Duration.millis(${formatNumber(millis)})`;
+  return Arr.findFirst(unitMillis, ([, size]) => Number.isSafeInteger(millis / size)).pipe(
+    Opt.match({
+      onNone: () => `Duration.millis(${formatNumber(millis)})`,
+      onSome: ([name, size]) => `Duration.${name}(${formatNumber(millis / size)})`,
+    }),
+  );
 }
