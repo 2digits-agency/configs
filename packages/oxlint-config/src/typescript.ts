@@ -1,26 +1,12 @@
 import { defineConfig } from 'oxlint';
 
-import { ignorePatterns } from '@2digits/constants';
-
 import { overridesConfig } from './configs/overrides';
+import { presetConfig } from './configs/preset';
 import { reactConfig } from './configs/react';
 import { typescriptRulesConfig } from './configs/typescript';
 import { vitestConfig } from './configs/vitest';
 
 export const typescriptConfig = defineConfig({
-  options: {
-    denyWarnings: true,
-    reportUnusedDisableDirectives: 'deny',
-  },
-  categories: {
-    nursery: 'off',
-    pedantic: 'off',
-    correctness: 'off',
-    perf: 'off',
-    style: 'off',
-    restriction: 'off',
-    suspicious: 'off',
-  },
+  ...presetConfig,
   extends: [typescriptRulesConfig, vitestConfig, reactConfig, overridesConfig],
-  ignorePatterns,
 });
