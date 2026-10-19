@@ -1,21 +1,16 @@
-import { renamePluginsInConfigs } from 'eslint-flat-config-utils';
-
-import { PluginNameMap } from '../constants';
-import { GLOB_SRC } from '../globs';
+import { GLOB_SRC, GLOB_TESTS } from '../globs';
 import type { OptionsTypeScriptWithTypes, TypedFlatConfigItem } from '../types';
-import { interopDefault } from '../utils';
+import { interopDefault, mergeRules, renameRules } from '../utils';
 
 export async function typescript(options: OptionsTypeScriptWithTypes = {}): Promise<Array<TypedFlatConfigItem>> {
-  const { overrides = {}, parserOptions = {} } = options;
+  const { overrides = {}, parserOptions = {}, tsconfigRootDir = process.cwd() } = options;
 
   const [{ plugin, configs, parser }, twoDigits] = await Promise.all([
     interopDefault(import('typescript-eslint')),
     interopDefault(import('@2digits/eslint-plugin')),
   ]);
 
-  const strictConfig = renamePluginsInConfigs(configs.strictTypeChecked as never, PluginNameMap);
-
-  const rules = Object.fromEntries(strictConfig.flatMap(({ rules }) => Object.entries(rules ?? {})));
+  const rules = renameRules(mergeRules(configs.strictTypeChecked));
 
   return [
     {
@@ -31,7 +26,7 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
       languageOptions: {
         parser,
         parserOptions: {
-          tsconfigRootDir: process.cwd(),
+          tsconfigRootDir,
           projectService: true,
           onUnsupportedTypeScriptVersion: 'ignore',
           ...parserOptions,
@@ -88,7 +83,7 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
     },
     {
       name: '2digits:typescript/disables/test',
-      files: ['**/*.{test,spec}.ts?(x)'],
+      files: [GLOB_TESTS],
       rules: {
         'no-unused-expressions': 'off',
       },

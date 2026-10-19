@@ -1,11 +1,9 @@
 import plugin from '@eslint/markdown';
-import { renamePluginsInRules } from 'eslint-flat-config-utils';
 import { mergeProcessors, processorPassThrough } from 'eslint-merge-processors';
 
-import { PluginNameMap } from '../constants';
 import { GLOB_MARKDOWN, GLOB_MARKDOWN_CODE, GLOB_MARKDOWN_IN_MARKDOWN } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
-import { interopDefault } from '../utils';
+import { interopDefault, renameRules } from '../utils';
 
 const files = [GLOB_MARKDOWN];
 
@@ -52,17 +50,15 @@ export function markdown(): Array<TypedFlatConfigItem> {
 }
 
 export async function markdownDisables(): Promise<Array<TypedFlatConfigItem>> {
-  const tseslint = await interopDefault(import('typescript-eslint'));
+  const [tseslint, reactPlugin] = await Promise.all([
+    interopDefault(import('typescript-eslint')),
+    interopDefault(import('@eslint-react/eslint-plugin')),
+  ]);
 
-  const reactPlugin = await interopDefault(import('@eslint-react/eslint-plugin'));
-
-  const disableTypeCheckedRules = renamePluginsInRules(
-    {
-      ...tseslint.configs.disableTypeChecked.rules,
-      ...reactPlugin.configs['disable-type-checked'].rules,
-    },
-    PluginNameMap,
-  );
+  const disableTypeCheckedRules = renameRules({
+    ...tseslint.configs.disableTypeChecked.rules,
+    ...reactPlugin.configs['disable-type-checked'].rules,
+  });
 
   return [
     {

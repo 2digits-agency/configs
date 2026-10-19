@@ -1,8 +1,5 @@
-import { renamePluginsInRules } from 'eslint-flat-config-utils';
-
-import { PluginNameMap } from '../constants';
 import type { OptionsWithFiles, TypedFlatConfigItem } from '../types';
-import { interopDefault } from '../utils';
+import { interopDefault, renameRules } from '../utils';
 
 export async function graphql(options: OptionsWithFiles = {}): Promise<Array<TypedFlatConfigItem>> {
   const { overrides = {}, files = ['**/*.graphql', '**/*.gql'] } = options;
@@ -14,32 +11,24 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<Array<Typ
     ),
   ]);
 
-  const { configs } = gql;
+  const { rules: operationsRecommended } = gql.configs['flat/operations-recommended'];
 
-  const { 'flat/operations-recommended': flatOperationsRecommended } = configs;
+  /**
+   * Without a schema, rules that need the schema or sibling operations cannot run.
+   */
+  const recommended = renameRules(
+    gqlSchema
+      ? operationsRecommended
+      : Object.fromEntries(
+          Object.entries(operationsRecommended).filter(([rule]) => {
+            const docs = (gql.rules as Partial<typeof gql.rules>)[
+              rule.replace('@graphql-eslint/', '') as keyof typeof gql.rules
+            ]?.meta.docs;
 
-  const { rules: flatRecommended } = flatOperationsRecommended;
-
-  let rules = {} as typeof flatRecommended;
-
-  if (gqlSchema) {
-    rules = flatRecommended;
-  } else {
-    for (const rule of Object.keys(flatRecommended) as Array<keyof typeof rules>) {
-      const ruleName = rule.replace('@graphql-eslint/', '') as keyof typeof gql.rules;
-
-      if (
-        ruleName in gql.rules &&
-        (gql.rules[ruleName].meta.docs?.requiresSchema || gql.rules[ruleName].meta.docs?.requiresSiblings)
-      ) {
-        continue;
-      }
-
-      rules[rule] = flatRecommended[rule] as never;
-    }
-  }
-
-  const recommended = renamePluginsInRules(rules, PluginNameMap);
+            return !docs?.requiresSchema && !docs?.requiresSiblings;
+          }),
+        ),
+  );
 
   return [
     {

@@ -1,7 +1,6 @@
-// oxlint-disable complexity
+import * as findUp from 'empathic/find';
 import { FlatConfigComposer } from 'eslint-flat-config-utils';
 import { isPackageExists } from 'local-pkg';
-import { findWorkspaceDir } from 'pkg-types';
 
 import {
   antfu,
@@ -95,18 +94,25 @@ export function extractConfig<T>(options: SharedOptions<T> | undefined | boolean
   return rest as T;
 }
 
-// eslint-disable-next-line sonar/cognitive-complexity
+function anyPackageExists(names: Array<string>): boolean {
+  return names.some((name) => isPackageExists(name));
+}
+
+function optionalConfig<TOptions, TConfig>(
+  options: SharedOptions<TOptions> | boolean | undefined,
+  detected: boolean,
+  config: (options: TOptions) => TConfig,
+): TConfig | false {
+  return enabled(options, detected) && config(extractConfig(options));
+}
+
 export async function twoDigits(
   options: ESLint2DigitsOptions = {},
   ...userConfig: Array<TypedFlatConfigItem>
 ): Promise<Array<TypedFlatConfigItem>> {
-  let pnpmPromise;
+  const { overrides: _, ...typescriptOptions } = extractConfig(options.ts);
 
-  if (options.pnpm === undefined) {
-    pnpmPromise = findWorkspaceDir();
-  }
-
-  let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>(
+  return new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>(
     ignores(options.ignores),
     javascript(options.js),
     boolean(),
@@ -122,104 +128,32 @@ export async function twoDigits(
     yaml(),
     markdown(),
     githubActions(),
-  );
-
-  if (enabled(options.css)) {
-    composer = composer.append(css(extractConfig(options.css)));
-  }
-
-  if (enabled(options.depend, true)) {
-    composer = composer.append(depend());
-  }
-
-  if (enabled(options.turbo, isPackageExists('turbo'))) {
-    composer = composer.append(turbo(extractConfig(options.turbo)));
-  }
-
-  const { overrides, ...typescriptOptions } = extractConfig(options.ts);
-
-  if (enabled(options.ts, isPackageExists('typescript'))) {
-    composer = composer.append(typescript(extractConfig(options.ts)));
-  }
-
-  if (enabled(options.react, isPackageExists('react'))) {
-    composer = composer.append(
-      react({
-        ...extractConfig(options.react),
-        ...typescriptOptions,
-      }),
-    );
-  }
-
-  if (enabled(options.next, isPackageExists('next'))) {
-    composer = composer.append(
-      next({
-        ...extractConfig(options.next),
-        ...typescriptOptions,
-      }),
-    );
-  }
-
-  if (
-    enabled(
-      options.storybook,
-      storybookPackages.some((pkg) => isPackageExists(pkg)),
-    )
-  ) {
-    composer = composer.append(
-      storybook({
-        ...extractConfig(options.storybook),
-        ...typescriptOptions,
-      }),
-    );
-  }
-
-  if (enabled(options.vitest, isPackageExists('vitest'))) {
-    composer = composer.append(vitest(extractConfig(options.vitest)));
-  }
-
-  if (enabled(options.tailwind, isPackageExists('tailwindcss'))) {
-    composer = composer.append(tailwind(extractConfig(options.tailwind)));
-  }
-
-  if (
-    enabled(
+    optionalConfig(options.css, false, css),
+    optionalConfig(options.depend, true, depend),
+    optionalConfig(options.turbo, isPackageExists('turbo'), turbo),
+    optionalConfig(options.ts, isPackageExists('typescript'), typescript),
+    optionalConfig(options.react, isPackageExists('react'), (config) => react({ ...config, ...typescriptOptions })),
+    optionalConfig(options.next, isPackageExists('next'), (config) => next({ ...config, ...typescriptOptions })),
+    optionalConfig(options.storybook, anyPackageExists(storybookPackages), (config) =>
+      storybook({ ...config, ...typescriptOptions }),
+    ),
+    optionalConfig(options.vitest, isPackageExists('vitest'), vitest),
+    optionalConfig(options.tailwind, isPackageExists('tailwindcss'), tailwind),
+    optionalConfig(
       options.tanstackQuery,
-      isPackageExists('react-query') ||
-        isPackageExists('@tanstack/react-query') ||
-        isPackageExists('@tanstack/react-query-devtools'),
-    )
-  ) {
-    composer = composer.append(tanstackQuery(extractConfig(options.tanstackQuery)));
-  }
-
-  if (enabled(options.tanstackRouter, isPackageExists('@tanstack/react-router'))) {
-    composer = composer.append(tanstackRouter(extractConfig(options.tanstackRouter)));
-  }
-
-  if (enabled(options.drizzle, isPackageExists('drizzle-kit') || isPackageExists('drizzle-orm'))) {
-    composer = composer.append(drizzle(extractConfig(options.drizzle)));
-  }
-
-  if (enabled(options.zod, isPackageExists('zod'))) {
-    composer = composer.append(zod(extractConfig(options.zod)));
-  }
-
-  if (enabled(options.graphql, isPackageExists('graphql'))) {
-    composer = composer.append(graphql(extractConfig(options.graphql)));
-  }
-
-  if (enabled(options.pnpm, !!(await pnpmPromise))) {
-    composer = composer.append(pnpm());
-  }
-
-  composer = composer.append(...userConfig);
-
-  if (isPackageExists('prettier')) {
-    composer = composer.append(prettier());
-  }
-
-  composer = composer.append(markdownDisables());
-
-  return composer.renamePlugins(PluginNameMap).toConfigs();
+      anyPackageExists(['react-query', '@tanstack/react-query', '@tanstack/react-query-devtools']),
+      tanstackQuery,
+    ),
+    optionalConfig(options.tanstackRouter, isPackageExists('@tanstack/react-router'), tanstackRouter),
+    optionalConfig(options.drizzle, anyPackageExists(['drizzle-kit', 'drizzle-orm']), drizzle),
+    optionalConfig(options.zod, isPackageExists('zod'), zod),
+    optionalConfig(options.graphql, isPackageExists('graphql'), graphql),
+    // The pnpm rules throw without a `pnpm-workspace.yaml`, so only a pnpm workspace enables them.
+    optionalConfig(options.pnpm, findUp.file('pnpm-workspace.yaml') !== undefined, pnpm),
+    ...userConfig,
+    isPackageExists('prettier') && prettier(),
+    markdownDisables(),
+  )
+    .renamePlugins(PluginNameMap)
+    .toConfigs();
 }

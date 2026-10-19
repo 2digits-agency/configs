@@ -1,8 +1,8 @@
 import { GLOB_TESTS } from '../globs';
-import type { OptionsOverrides, OptionsWithVitest, TypedFlatConfigItem } from '../types';
+import type { OptionsWithVitest, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
-export async function vitest(options: OptionsWithVitest & OptionsOverrides = {}): Promise<Array<TypedFlatConfigItem>> {
+export async function vitest(options: OptionsWithVitest = {}): Promise<Array<TypedFlatConfigItem>> {
   const { files = [GLOB_TESTS], overrides = {}, typecheck = true, vitestImports } = options;
 
   const plugin = await interopDefault(import('@vitest/eslint-plugin'));
