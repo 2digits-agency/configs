@@ -1,9 +1,10 @@
 // Native timing-safe equality is intentional at the HTTP authentication boundary.
 // @effect-diagnostics-next-line nodeBuiltinImport:off
-import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+import { timingSafeEqual } from 'node:crypto';
 import { homedir } from 'node:os';
 
 import * as ByteSize from 'effect/ByteSize';
+import * as Crypto from 'effect/Crypto';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
@@ -12,6 +13,7 @@ import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as McpProtocol from 'effect/ai/McpProtocol';
 import * as McpServer from 'effect/ai/McpServer';
+import * as Hex from 'effect/encoding/Hex';
 import * as HttpIncomingMessage from 'effect/http/HttpIncomingMessage';
 import * as HttpRouter from 'effect/http/HttpRouter';
 import * as HttpServerRequest from 'effect/http/HttpServerRequest';
@@ -38,6 +40,8 @@ export const loadGatewayKey = Effect.fn('Gateway.loadKey')(
   function* (file: string) {
     const fs = yield* FileSystem.FileSystem;
 
+    const crypto = yield* Crypto.Crypto;
+
     const path = yield* Path.Path;
 
     const directory = path.dirname(file);
@@ -46,8 +50,10 @@ export const loadGatewayKey = Effect.fn('Gateway.loadKey')(
 
     yield* fs.chmod(directory, 0o700);
 
+    const bytes = yield* crypto.randomBytes(32);
+
     yield* fs
-      .writeFileString(file, randomBytes(32).toString('hex'), { flag: 'wx', mode: 0o600 })
+      .writeFileString(file, Hex.encode(bytes), { flag: 'wx', mode: 0o600 })
       .pipe(Effect.catchReason('PlatformError', 'AlreadyExists', () => Effect.void));
 
     const info = yield* fs.stat(file);
@@ -64,41 +70,54 @@ export const loadGatewayKey = Effect.fn('Gateway.loadKey')(
 );
 
 /**
+ * Hash before comparing so both sides of the equality check have the same length.
+ *
+ * @param crypto
+ * @param value
+ */
+function sha256(crypto: Crypto.Crypto, value: string) {
+  return crypto.digest('SHA-256', new TextEncoder().encode(value)).pipe(Effect.orDie);
+}
+
+/**
  * Authenticate before parsing or dispatching MCP, including unsupported methods and paths.
  *
  * @param key
  */
 function gatewayAuthentication(key: Redacted.Redacted) {
-  const expected = createHash('sha256')
-    .update(`Bearer ${Redacted.value(key)}`)
-    .digest();
+  return Layer.unwrap(
+    Effect.gen(function* () {
+      // Resolve Crypto when the layer is built: request handlers do not receive the layer's services.
+      const crypto = yield* Crypto.Crypto;
 
-  return HttpRouter.middleware(
-    (httpEffect) =>
-      Effect.gen(function* () {
-        const request = yield* HttpServerRequest.HttpServerRequest;
+      const expected = yield* sha256(crypto, `Bearer ${Redacted.value(key)}`);
 
-        const received = createHash('sha256')
-          .update(request.headers.authorization ?? '')
-          .digest();
+      return HttpRouter.middleware(
+        (httpEffect) =>
+          Effect.gen(function* () {
+            const request = yield* HttpServerRequest.HttpServerRequest;
 
-        if (!timingSafeEqual(expected, received)) {
-          return HttpServerResponse.empty({
-            status: 401,
-            headers: { 'www-authenticate': 'Bearer', 'cache-control': 'no-store' },
-          });
-        }
+            const received = yield* sha256(crypto, request.headers.authorization ?? '');
 
-        if (request.headers.origin !== undefined) {
-          return HttpServerResponse.empty({ status: 403, headers: { 'cache-control': 'no-store' } });
-        }
+            if (!timingSafeEqual(expected, received)) {
+              return HttpServerResponse.empty({
+                status: 401,
+                headers: { 'www-authenticate': 'Bearer', 'cache-control': 'no-store' },
+              });
+            }
 
-        return yield* httpEffect.pipe(
-          Effect.provideService(HttpIncomingMessage.MaxBodySize, ByteSize.bytes(1024 * 1024)),
-          Effect.map((response) => HttpServerResponse.setHeader(response, 'cache-control', 'no-store')),
-        );
-      }),
-    { global: true },
+            if (request.headers.origin !== undefined) {
+              return HttpServerResponse.empty({ status: 403, headers: { 'cache-control': 'no-store' } });
+            }
+
+            return yield* httpEffect.pipe(
+              Effect.provideService(HttpIncomingMessage.MaxBodySize, ByteSize.bytes(1024 * 1024)),
+              Effect.map((response) => HttpServerResponse.setHeader(response, 'cache-control', 'no-store')),
+            );
+          }),
+        { global: true },
+      );
+    }),
   );
 }
 
