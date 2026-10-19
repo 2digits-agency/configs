@@ -1,14 +1,19 @@
-import { noMultiShotEffectCallback } from '../../../src/rules/effect/no-multi-shot-effect-callback';
 import { testRule } from '../../rule-tester';
 
-testRule('no-multi-shot-effect-callback', noMultiShotEffectCallback, {
-  valid: `
+testRule('no-multi-shot-effect-callback', {
+  valid: [
+    `
     import * as Fx from 'effect/Effect'
     Fx.callback((resume) => target.addEventListener('ready', resume, { once: true }))
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Fx from 'effect/Effect'
     Fx.callback((resume) => emitter.on('data', resume))
   `,
-  messageId: 'multiShot',
+      errors: [{ messageId: 'multiShot' }],
+    },
+  ],
 });

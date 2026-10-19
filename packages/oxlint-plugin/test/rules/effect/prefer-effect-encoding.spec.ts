@@ -1,14 +1,19 @@
-import { preferEffectEncoding } from '../../../src/rules/effect/prefer-effect-encoding';
 import { testRule } from '../../rule-tester';
 
-testRule('prefer-effect-encoding', preferEffectEncoding, {
-  valid: `
+testRule('prefer-effect-encoding', {
+  valid: [
+    `
     import * as Encoding from 'effect/Encoding'
     const encoded = Encoding.encodeBase64('hello')
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Effect from 'effect/Effect'
     const encoded = btoa('hello')
   `,
-  messageId: 'effectEncoding',
+      errors: [{ messageId: 'effectEncoding' }],
+    },
+  ],
 });

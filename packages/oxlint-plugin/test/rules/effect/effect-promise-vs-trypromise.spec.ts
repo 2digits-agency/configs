@@ -1,14 +1,19 @@
-import { effectPromiseVsTryPromise } from '../../../src/rules/effect/effect-promise-vs-trypromise';
 import { testRule } from '../../rule-tester';
 
-testRule('effect-promise-vs-trypromise', effectPromiseVsTryPromise, {
-  valid: `
+testRule('effect-promise-vs-trypromise', {
+  valid: [
+    `
     import { tryPromise as fromPromise } from 'effect/Effect'
     fromPromise(() => fetch('/'))
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import { promise as fromPromise } from 'effect/Effect'
     fromPromise(() => fetch('/'))
   `,
-  messageId: 'tryPromise',
+      errors: [{ messageId: 'tryPromise' }],
+    },
+  ],
 });

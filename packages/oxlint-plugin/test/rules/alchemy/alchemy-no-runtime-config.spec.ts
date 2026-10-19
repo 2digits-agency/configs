@@ -1,8 +1,8 @@
-import { alchemyNoRuntimeConfig } from '../../../src/rules/alchemy/alchemy-no-runtime-config';
 import { testRule } from '../../rule-tester';
 
-testRule('alchemy-no-runtime-config', alchemyNoRuntimeConfig, {
-  valid: `
+testRule('alchemy-no-runtime-config', {
+  valid: [
+    `
     import * as Cloudflare from 'alchemy/Cloudflare'
     import * as Config from 'effect/Config'
     import * as Effect from 'effect/Effect'
@@ -11,7 +11,10 @@ testRule('alchemy-no-runtime-config', alchemyNoRuntimeConfig, {
       return { fetch: Effect.succeed(new Response(String(secret))) }
     }))
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Cloudflare from 'alchemy/Cloudflare'
     import * as Config from 'effect/Config'
     import * as Effect from 'effect/Effect'
@@ -22,5 +25,7 @@ testRule('alchemy-no-runtime-config', alchemyNoRuntimeConfig, {
       }) }
     }))
   `,
-  messageId: 'runtime',
+      errors: [{ messageId: 'runtime' }],
+    },
+  ],
 });

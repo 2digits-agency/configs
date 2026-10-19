@@ -1,13 +1,16 @@
-import { noServiceOptionGetOrThrow } from '../../../src/rules/effect/no-service-option-get-or-throw';
 import { testRule } from '../../rule-tester';
 
-testRule('no-service-option-get-or-throw', noServiceOptionGetOrThrow, {
-  valid: `
+testRule('no-service-option-get-or-throw', {
+  valid: [
+    `
     import * as Fx from 'effect/Effect'
     import * as Option from 'effect/Option'
     Fx.serviceOption(Logger).pipe(Fx.map(Option.getOrElse(() => fallback)))
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Fx from 'effect/Effect'
     import * as Option from 'effect/Option'
     Fx.gen(function* () {
@@ -15,5 +18,7 @@ testRule('no-service-option-get-or-throw', noServiceOptionGetOrThrow, {
       return logger
     })
   `,
-  messageId: 'getOrThrow',
+      errors: [{ messageId: 'getOrThrow' }],
+    },
+  ],
 });

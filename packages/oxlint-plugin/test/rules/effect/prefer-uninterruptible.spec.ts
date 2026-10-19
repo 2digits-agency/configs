@@ -1,14 +1,19 @@
-import { preferUninterruptible } from '../../../src/rules/effect/prefer-uninterruptible';
 import { testRule } from '../../rule-tester';
 
-testRule('prefer-uninterruptible', preferUninterruptible, {
-  valid: `
+testRule('prefer-uninterruptible', {
+  valid: [
+    `
     import * as Fx from 'effect/Effect'
     Fx.uninterruptibleMask((restore) => restore(program))
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Fx from 'effect/Effect'
     Fx.uninterruptibleMask(() => program)
   `,
-  messageId: 'unusedRestore',
+      errors: [{ messageId: 'unusedRestore' }],
+    },
+  ],
 });

@@ -1,14 +1,19 @@
-import { alchemyNoReservedEventbridgeDefaultName } from '../../../src/rules/alchemy/alchemy-no-reserved-eventbridge-default-name';
 import { testRule } from '../../rule-tester';
 
-testRule('alchemy-no-reserved-eventbridge-default-name', alchemyNoReservedEventbridgeDefaultName, {
-  valid: `
+testRule('alchemy-no-reserved-eventbridge-default-name', {
+  valid: [
+    `
     import * as AWS from 'alchemy/AWS'
     AWS.EventBridge.EventBus('Bus', { name: 'application-events' })
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as AWS from 'alchemy/AWS'
     AWS.EventBridge.EventBus('Bus', { name: 'default' })
   `,
-  messageId: 'reserved',
+      errors: [{ messageId: 'reserved' }],
+    },
+  ],
 });

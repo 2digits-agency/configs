@@ -1,18 +1,23 @@
-import { noEmptyEffectCallback } from '../../../src/rules/effect/no-empty-effect-callback';
 import { testRule } from '../../rule-tester';
 
-testRule('no-empty-effect-callback', noEmptyEffectCallback, {
-  valid: `
+testRule('no-empty-effect-callback', {
+  valid: [
+    `
     import * as Fx from 'effect/Effect'
     const blocked = Fx.never
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Fx from 'effect/Effect'
     const blocked = Fx.callback(() => {})
   `,
-  messageId: 'emptyCallback',
-  output: `
+      errors: [{ messageId: 'emptyCallback' }],
+      output: `
     import * as Fx from 'effect/Effect'
     const blocked = Fx.never
   `,
+    },
+  ],
 });

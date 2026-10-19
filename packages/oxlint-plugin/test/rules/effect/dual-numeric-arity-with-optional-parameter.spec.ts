@@ -1,14 +1,19 @@
-import { dualNumericArityWithOptionalParameter } from '../../../src/rules/effect/dual-numeric-arity-with-optional-parameter';
 import { testRule } from '../../rule-tester';
 
-testRule('dual-numeric-arity-with-optional-parameter', dualNumericArityWithOptionalParameter, {
-  valid: `
+testRule('dual-numeric-arity-with-optional-parameter', {
+  valid: [
+    `
     import * as Fn from 'effect/Function'
     Fn.dual((args) => args.length === 2, (self: string, suffix?: string) => self + suffix)
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Fn from 'effect/Function'
     Fn.dual(2, (self: string, suffix = '') => self + suffix)
   `,
-  messageId: 'unsafeArity',
+      errors: [{ messageId: 'unsafeArity' }],
+    },
+  ],
 });

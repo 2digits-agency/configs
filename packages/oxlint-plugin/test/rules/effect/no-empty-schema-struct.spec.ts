@@ -1,14 +1,19 @@
-import { noEmptySchemaStruct } from '../../../src/rules/effect/no-empty-schema-struct';
 import { testRule } from '../../rule-tester';
 
-testRule('no-empty-schema-struct', noEmptySchemaStruct, {
-  valid: `
+testRule('no-empty-schema-struct', {
+  valid: [
+    `
     import * as S from 'effect/Schema'
     S.Struct({ id: S.String })
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as S from 'effect/Schema'
     S.Struct({})
   `,
-  messageId: 'emptyStruct',
+      errors: [{ messageId: 'emptyStruct' }],
+    },
+  ],
 });

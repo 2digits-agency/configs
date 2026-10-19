@@ -1,14 +1,19 @@
-import { noDiscardedSchemaChecks } from '../../../src/rules/effect/no-discarded-schema-checks';
 import { testRule } from '../../rule-tester';
 
-testRule('no-discarded-schema-checks', noDiscardedSchemaChecks, {
-  valid: `
+testRule('no-discarded-schema-checks', {
+  valid: [
+    `
     import * as Schema from 'effect/Schema'
     const Mapped = Schema.Struct({ value: Schema.String }).mapFields(mapper)
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Schema from 'effect/Schema'
     const Mapped = Schema.Struct({ value: Schema.String }).check(filter).mapFields(mapper)
   `,
-  messageId: 'discarded',
+      errors: [{ messageId: 'discarded' }],
+    },
+  ],
 });

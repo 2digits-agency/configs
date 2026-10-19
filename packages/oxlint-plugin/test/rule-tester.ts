@@ -1,15 +1,7 @@
 import { describe, it } from '@effect/vitest';
-import type { Rule } from '@oxlint/plugins';
 import { RuleTester } from 'oxlint/plugins-dev';
 
-import type { RuleName } from '../src';
-
-interface RuleCase {
-  readonly invalid: string;
-  readonly messageId: string;
-  readonly valid: string;
-  readonly output?: string | null;
-}
+import { rules, type RuleName } from '../src';
 
 RuleTester.describe = describe;
 
@@ -24,16 +16,12 @@ const tester = new RuleTester({
   },
 });
 
-export function testRule(name: RuleName, rule: Rule, ruleCase: RuleCase): void {
-  tester.run(name, rule, {
-    valid: [{ code: ruleCase.valid, filename: 'valid.ts' }],
-    invalid: [
-      {
-        code: ruleCase.invalid,
-        filename: 'invalid.ts',
-        errors: [{ messageId: ruleCase.messageId }],
-        ...(ruleCase.output === undefined ? {} : { output: ruleCase.output }),
-      },
-    ],
-  });
+/**
+ * Runs a registered rule against RuleTester cases.
+ *
+ * @param name - Rule name in the plugin registry.
+ * @param tests - Valid and invalid cases; either list may be omitted.
+ */
+export function testRule(name: RuleName, tests: Partial<RuleTester.TestCases>): void {
+  tester.run(name, rules[name], { valid: [], invalid: [], ...tests });
 }

@@ -1,28 +1,22 @@
-import { RuleTester } from 'oxlint/plugins-dev';
-
-import { preferYieldNow } from '../../../src/rules/effect/prefer-yield-now';
 import { testRule } from '../../rule-tester';
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
-
-testRule('prefer-yield-now', preferYieldNow, {
-  valid: `
+testRule('prefer-yield-now', {
+  valid: [
+    `
     import * as Fx from 'effect/Effect'
     const yielded = Fx.yieldNow
   `,
-  invalid: `
+    // String-literal import names resolve like identifiers.
+    `import { 'Duration' as Fx } from 'effect'; Fx.sleep('0 millis');`,
+  ],
+  invalid: [
+    {
+      code: `
     import * as Fx from 'effect/Effect'
     Fx.sleep('0 millis')
   `,
-  messageId: 'zeroSleep',
-});
-
-tester.run('prefer-yield-now string-literal import names', preferYieldNow, {
-  valid: [`import { 'Duration' as Fx } from 'effect'; Fx.sleep('0 millis');`],
-  invalid: [
-    {
-      code: `import { 'Effect' as Fx } from 'effect'; Fx.sleep('0 millis');`,
       errors: [{ messageId: 'zeroSleep' }],
     },
+    { code: `import { 'Effect' as Fx } from 'effect'; Fx.sleep('0 millis');`, errors: [{ messageId: 'zeroSleep' }] },
   ],
 });
