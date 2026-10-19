@@ -1,4 +1,4 @@
-import { PostHog } from 'posthog-node';
+import { PostHog, type EventMessage } from 'posthog-node';
 
 import { FRAMEWORK, LIB_NAME } from './constants.js';
 import type {
@@ -17,28 +17,36 @@ import {
   serializeAttribute,
 } from './utilities.js';
 
+const shutdownEvents = ['beforeExit', 'SIGINT', 'SIGTERM'] as const;
+
+function stateAttribute(config: Config, value: unknown): string | undefined {
+  return config.privacyMode ? undefined : serializeAttribute(value, config.maxAttributeLength);
+}
+
+function sharedProperties(config: Config, agentName: string): Record<string, unknown> {
+  return {
+    $ai_lib: LIB_NAME,
+    $ai_framework: FRAMEWORK,
+    $ai_project_name: config.projectName,
+    $ai_agent_name: agentName,
+    ...config.customProperties,
+  };
+}
+
 export function buildTraceProperties(config: Config, traceState: TraceState, latency: number): Record<string, unknown> {
   return {
     $ai_trace_id: traceState.traceID,
     $ai_session_id: traceState.sessionID,
     $ai_latency: latency,
-    $ai_input_state: config.privacyMode
-      ? undefined
-      : serializeAttribute(traceState.inputState, config.maxAttributeLength),
-    $ai_output_state: config.privacyMode
-      ? undefined
-      : serializeAttribute(traceState.outputState, config.maxAttributeLength),
+    $ai_input_state: stateAttribute(config, traceState.inputState),
+    $ai_output_state: stateAttribute(config, traceState.outputState),
     $ai_total_input_tokens: traceState.totalInputTokens,
     $ai_total_output_tokens: traceState.totalOutputTokens,
     $ai_total_cost_usd: traceState.totalCostUsd,
     $ai_is_error: traceState.hasError,
     $ai_error: traceState.errorMessage,
     $ai_span_name: traceState.traceName,
-    $ai_lib: LIB_NAME,
-    $ai_framework: FRAMEWORK,
-    $ai_project_name: config.projectName,
-    $ai_agent_name: traceState.agentName,
-    ...config.customProperties,
+    ...sharedProperties(config, traceState.agentName),
   };
 }
 
@@ -57,6 +65,8 @@ export function buildGenerationProperties(input: {
 
   const generationLatency = Math.max(0, info.time.completed - info.time.created) / 1000;
 
+  const isError = Boolean(info.error);
+
   return {
     $ai_trace_id: generation.traceID,
     $ai_session_id: info.sessionID,
@@ -72,18 +82,14 @@ export function buildGenerationProperties(input: {
       info.tokens.input + info.tokens.output + info.tokens.reasoning + info.tokens.cache.read + info.tokens.cache.write,
     $ai_latency: generationLatency,
     $ai_total_cost_usd: info.cost,
-    $ai_stop_reason: mapStopReason(info.finish, Boolean(info.error)),
-    $ai_is_error: Boolean(info.error),
+    $ai_stop_reason: mapStopReason(info.finish, isError),
+    $ai_is_error: isError,
     $ai_error: errorMessage,
     $ai_tools_called: toolsCalled,
     $ai_tool_call_count: toolCallCount,
     cache_read_input_tokens: info.tokens.cache.read,
     cache_creation_input_tokens: info.tokens.cache.write,
-    $ai_lib: LIB_NAME,
-    $ai_framework: FRAMEWORK,
-    $ai_project_name: config.projectName,
-    $ai_agent_name: traceState.agentName,
-    ...config.customProperties,
+    ...sharedProperties(config, traceState.agentName),
   };
 }
 
@@ -103,16 +109,12 @@ export function buildToolSpanProperties(input: {
     $ai_span_id: crypto.randomUUID(),
     $ai_parent_id: toolCall.parentSpanID,
     $ai_span_name: toolName,
-    $ai_input_state: config.privacyMode ? undefined : serializeAttribute(toolCall.args, config.maxAttributeLength),
-    $ai_output_state: config.privacyMode ? undefined : serializeAttribute(output, config.maxAttributeLength),
+    $ai_input_state: stateAttribute(config, toolCall.args),
+    $ai_output_state: stateAttribute(config, output),
     $ai_latency: latency,
     $ai_is_error: false,
     $ai_error: undefined,
-    $ai_lib: LIB_NAME,
-    $ai_framework: FRAMEWORK,
-    $ai_project_name: config.projectName,
-    $ai_agent_name: traceState?.agentName ?? config.projectName,
-    ...config.customProperties,
+    ...sharedProperties(config, traceState?.agentName ?? config.projectName),
   };
 }
 
@@ -141,18 +143,12 @@ export function createCaptureManager(config: Config) {
     }
   }
 
+  function eventMessage(event: string, sessionID: string, properties: Record<string, unknown>): EventMessage {
+    return { distinctId: getDistinctId(config, sessionID), event, properties };
+  }
+
   function capture(event: string, sessionID: string, properties: Record<string, unknown>) {
-    const posthog = ensureClient();
-
-    if (!posthog) {
-      return;
-    }
-
-    posthog.capture({
-      distinctId: getDistinctId(config, sessionID),
-      event,
-      properties,
-    });
+    ensureClient()?.capture(eventMessage(event, sessionID, properties));
   }
 
   async function captureImmediate(
@@ -160,17 +156,7 @@ export function createCaptureManager(config: Config) {
     sessionID: string,
     properties: Record<string, unknown>,
   ): Promise<void> {
-    const posthog = ensureClient();
-
-    if (!posthog) {
-      return;
-    }
-
-    await posthog.captureImmediate({
-      distinctId: getDistinctId(config, sessionID),
-      event,
-      properties,
-    });
+    await ensureClient()?.captureImmediate(eventMessage(event, sessionID, properties));
   }
 
   async function shutdown(): Promise<void> {
@@ -190,17 +176,11 @@ export function createCaptureManager(config: Config) {
 
     shutdownRegistered = true;
 
-    process.once('beforeExit', () => {
-      void onShutdown();
-    });
-
-    process.once('SIGINT', () => {
-      void onShutdown();
-    });
-
-    process.once('SIGTERM', () => {
-      void onShutdown();
-    });
+    for (const event of shutdownEvents) {
+      process.once(event, () => {
+        void onShutdown();
+      });
+    }
   }
 
   return {

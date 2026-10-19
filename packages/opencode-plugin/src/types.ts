@@ -50,7 +50,10 @@ export interface ToolCallState {
 }
 
 export interface AssistantOutputState {
-  order: Array<string>;
+  sessionID: string;
+  /**
+   * Text by part ID, in the order parts first arrived.
+   */
   parts: Map<string, string>;
 }
 
@@ -94,6 +97,7 @@ export interface PromptPart {
 
 export interface AssistantTextPart {
   id: string;
+  sessionID: string;
   messageID: string;
   text: string;
 }

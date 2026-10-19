@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 
 import type {
   AssistantMessageInfo,
+  AssistantOutputState,
   AssistantTextPart,
   CompletedAssistantMessageInfo,
   Config,
@@ -10,14 +11,15 @@ import type {
   ToolCallState,
   TraceState,
 } from './types.js';
-import {
-  getAssistantOutput,
-  getErrorMessage,
-  getPendingKey,
-  getPrompt,
-  getToolKey,
-  getTraceName,
-} from './utilities.js';
+import { getAssistantOutput, getErrorMessage, getPrompt, getTraceName, sessionKey } from './utilities.js';
+
+function deleteSessionEntries<T extends { sessionID: string }>(map: Map<string, T>, sessionID: string): void {
+  for (const [key, value] of map) {
+    if (value.sessionID === sessionID) {
+      map.delete(key);
+    }
+  }
+}
 
 function updateTraceStateFromAssistantMessage(
   traceState: TraceState,
@@ -65,7 +67,7 @@ export function createSessionState(config: Config) {
 
   const generationTools = new Map<string, Array<string>>();
 
-  const assistantOutputs = new Map<string, { order: Array<string>; parts: Map<string, string> }>();
+  const assistantOutputs = new Map<string, AssistantOutputState>();
 
   const generationStates = new Map<string, GenerationState>();
 
@@ -80,36 +82,22 @@ export function createSessionState(config: Config) {
 
     currentGenerationIDs.delete(sessionID);
 
-    for (const [pendingKey, pending] of pendingMessages) {
-      if (pending.sessionID === sessionID) {
-        pendingMessages.delete(pendingKey);
-      }
-    }
+    deleteSessionEntries(pendingMessages, sessionID);
 
-    const generationSpanIDs = new Set<string>();
+    deleteSessionEntries(assistantOutputs, sessionID);
+
+    deleteSessionEntries(toolCalls, sessionID);
 
     for (const [assistantMessageID, generation] of generationStates) {
       if (generation.sessionID !== sessionID) {
         continue;
       }
 
-      generationSpanIDs.add(generation.spanID);
-
       generationStates.delete(assistantMessageID);
 
-      assistantOutputs.delete(assistantMessageID);
-
       completedAssistantMessages.delete(assistantMessageID);
-    }
 
-    for (const spanID of generationSpanIDs) {
-      generationTools.delete(spanID);
-    }
-
-    for (const [toolKey, toolCall] of toolCalls) {
-      if (toolCall.sessionID === sessionID) {
-        toolCalls.delete(toolKey);
-      }
+      generationTools.delete(generation.spanID);
     }
   }
 
@@ -172,7 +160,7 @@ export function createSessionState(config: Config) {
 
     traceState.traceName ??= getTraceName(prompt);
 
-    pendingMessages.set(getPendingKey(input.sessionID, output.message.id), pending);
+    pendingMessages.set(sessionKey(input.sessionID, output.message.id), pending);
 
     activeMessages.set(input.sessionID, pending);
 
@@ -180,11 +168,10 @@ export function createSessionState(config: Config) {
   }
 
   function storeAssistantOutput(part: AssistantTextPart): void {
-    const state = assistantOutputs.get(part.messageID) ?? { order: [], parts: new Map<string, string>() };
-
-    if (!state.parts.has(part.id)) {
-      state.order.push(part.id);
-    }
+    const state = assistantOutputs.get(part.messageID) ?? {
+      sessionID: part.sessionID,
+      parts: new Map<string, string>(),
+    };
 
     state.parts.set(part.id, part.text);
 
@@ -214,7 +201,7 @@ export function createSessionState(config: Config) {
     parentID: string;
     sessionID: string;
   }): { pending: PendingMessage; pendingKey: string; traceState: TraceState } | undefined {
-    const pendingKey = getPendingKey(info.sessionID, info.parentID);
+    const pendingKey = sessionKey(info.sessionID, info.parentID);
 
     const pending = pendingMessages.get(pendingKey) ?? activeMessages.get(info.sessionID);
 
@@ -265,10 +252,6 @@ export function createSessionState(config: Config) {
     return { generation, ...resolved };
   }
 
-  function hasCompletedAssistantMessage(messageID: string): boolean {
-    return completedAssistantMessages.has(messageID);
-  }
-
   function markAssistantMessageCompleted(messageID: string): void {
     completedAssistantMessages.add(messageID);
   }
@@ -284,17 +267,13 @@ export function createSessionState(config: Config) {
   }
 
   function setToolCall(sessionID: string, callID: string, toolCall: ToolCallState): void {
-    toolCalls.set(getToolKey(sessionID, callID), toolCall);
+    toolCalls.set(sessionKey(sessionID, callID), toolCall);
   }
 
   function takeToolCall(sessionID: string, callID: string): ToolCallState | undefined {
-    const toolKey = getToolKey(sessionID, callID);
+    const toolKey = sessionKey(sessionID, callID);
 
     const toolCall = toolCalls.get(toolKey);
-
-    if (!toolCall) {
-      return undefined;
-    }
 
     toolCalls.delete(toolKey);
 
@@ -339,8 +318,6 @@ export function createSessionState(config: Config) {
     getOrCreateGenerationState,
     getTraceState,
     getTraceSessionIDs,
-    getOrCreateTraceState,
-    hasCompletedAssistantMessage,
     markAssistantMessageCompleted,
     markSessionError,
     recordGenerationToolCall,
