@@ -1,3 +1,31 @@
+## @2digits/eslint-config@5.9.2
+
+### Update eslint plugins
+
+- `eslint-plugin-jsdoc` to 65.3.12
+- `eslint-plugin-n` to 18.5.0
+- `eslint-plugin-turbo` to 2.11.9
+
+### Update @eslint-react packages to 5.28.1
+
+
+
+### Update eslint to 10.13.0
+
+
+
+### Update @tanstack/eslint-plugin-query to 5.104.4
+
+
+
+### Update @eslint-react packages to 5.28.2
+
+
+
+### Disable unicorn/no-array-method-this-argument
+
+- Turned off `unicorn/no-array-method-this-argument` in both the ESLint and oxlint unicorn configs
+
 ## @2digits/eslint-config@5.9.1
 
 ### Update `eslint-plugin-turbo` to 2.11.8

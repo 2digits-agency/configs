@@ -1,3 +1,17 @@
+## @2digits/tlo-mcp@2.0.5
+
+### Update @effect/language-service to 0.87.5
+
+
+
+### Update @opentunnel/client to 0.5.2
+
+
+
+### Use effect Crypto in gateway authentication
+
+- Replaced Node `crypto` hashing with `effect/Crypto` and `effect/encoding/Hex` in gateway key loading and authentication
+
 ## @2digits/tlo-mcp@2.0.4
 
 ### Write Schema chains in pipe style
