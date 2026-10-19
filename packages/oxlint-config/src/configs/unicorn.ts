@@ -26,7 +26,7 @@ export const unicornConfig = defineConfig({
     'unicorn/no-array-callback-reference': undefined,
     'unicorn/no-array-fill-with-reference-type': 'error',
     'unicorn/no-array-for-each': 'error',
-    'unicorn/no-array-method-this-argument': 'error',
+    'unicorn/no-array-method-this-argument': undefined,
     'unicorn/no-array-reduce': 'error',
     'unicorn/no-array-reverse': 'error',
     'unicorn/no-array-sort': 'error',
