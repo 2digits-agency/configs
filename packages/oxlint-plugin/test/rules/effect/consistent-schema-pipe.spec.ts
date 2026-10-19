@@ -71,6 +71,27 @@ for (const [invalid, output, valid] of [
   testRule(rule, consistentSchemaPipe, { valid, invalid, messageId: 'functionPipe', output });
 }
 
+// A generic bounded by a pipeable Schema type, or a wrapper applied first, still gets a fix.
+for (const [messageId, invalid, output] of [
+  [
+    'modifierCall',
+    `function f<T extends Schema.Top>(schema: T) { return Schema.optional(schema) }`,
+    `function f<T extends Schema.Top>(schema: T) { return schema.pipe(Schema.optional) }`,
+  ],
+  [
+    'modifierCall',
+    `function f<T extends Schema.Constraint>(schema: T) { return Schema.optional(Schema.Array(schema)) }`,
+    `function f<T extends Schema.Constraint>(schema: T) { return Schema.Array(schema).pipe(Schema.optional) }`,
+  ],
+] as const) {
+  testRule(rule, consistentSchemaPipe, {
+    valid: `${schema} ${output}`,
+    invalid: `${schema} ${invalid}`,
+    messageId,
+    output: `${schema} ${output}`,
+  });
+}
+
 testRule(rule, consistentSchemaPipe, {
   valid: `${schema} (value as Schema.Top).pipe(Schema.optional)`,
   invalid: `${schema} Schema.optional(value as Schema.Top)`,
@@ -122,6 +143,12 @@ for (const valid of [
   `import { optional } from 'effect/Schema'; optional(Schema.String)`,
   `${schema} function f(Schema: Api) { return Schema.optional(Schema.String) }`,
   `${schema} Schema.String.pipe(Schema.optional).pipe(Schema.mutableKey)`,
+  // Schema.Constraint has no `.pipe`, so heads that may only be a Constraint stay calls.
+  `${schema} function f<T extends Schema.Constraint>(schema: T) { return Schema.toCodecJson(schema) }`,
+  `${schema} const f = <T extends Schema.Constraint, U extends T>(schema: U) => Schema.brand('Id')(schema)`,
+  `${pipe} function f<T>(schema: T) { return pipe(schema, Schema.optional) }`,
+  `${schema} Schema.optional(value as Schema.ConstraintCodec<string>)`,
+  `${schema} import { type Constraint } from 'effect/Schema'; function f(schema: Constraint) { return Schema.optional(schema) }`,
 ]) {
   testRule(rule, consistentSchemaPipe, {
     valid,
