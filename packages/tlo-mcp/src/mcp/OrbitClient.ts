@@ -48,6 +48,12 @@ export class OrbitMcpError extends Schema.TaggedError<OrbitMcpError, { readonly 
 
 const isOrbitMcpError = Schema.is(OrbitMcpError);
 
+function rejected(response: HttpClientResponse.HttpClientResponse) {
+  return OrbitMcpError.make({
+    message: `Orbit HTTP ${response.status}: authorization rejected. Run tlo-mcp login; a 403 can also mean insufficient rights.`,
+  });
+}
+
 export interface OrbitClientShape {
   readonly tools: ReadonlyArray<McpSchema.Tool>;
   readonly instructions: string | undefined;
@@ -73,14 +79,8 @@ export const OrbitClientLive = Layer.effect(
         Effect.flatMap(
           HttpClientResponse.matchStatus({
             '2xx': (response) => Effect.succeed(response),
-            401: (response) =>
-              OrbitMcpError.make({
-                message: `Orbit HTTP ${response.status}: authorization rejected. Run tlo-mcp login; a 403 can also mean insufficient rights.`,
-              }),
-            403: (response) =>
-              OrbitMcpError.make({
-                message: `Orbit HTTP ${response.status}: authorization rejected. Run tlo-mcp login; a 403 can also mean insufficient rights.`,
-              }),
+            401: rejected,
+            403: rejected,
             429: (response) =>
               OrbitMcpError.make({
                 message: `Orbit rate limited. Retry after ${response.headers['retry-after'] ?? 'the server cooldown'}; request not replayed.`,
@@ -132,10 +132,11 @@ export const OrbitClientLive = Layer.effect(
               Stream.mapEffect((data) => decodeReplyJson(data)),
               Stream.filter((reply) => 'id' in reply && reply.id === id),
               Stream.runHead,
-              Effect.flatMap((reply) =>
-                Opt.isSome(reply)
-                  ? Effect.succeed(reply.value)
-                  : OrbitMcpError.make({ message: 'Orbit stream ended before replying.' }),
+              Effect.flatMap(
+                Opt.match({
+                  onNone: () => OrbitMcpError.make({ message: 'Orbit stream ended before replying.' }),
+                  onSome: Effect.succeed,
+                }),
               ),
             )
           : yield* HttpClientResponse.schemaBodyJson(Reply)(response);

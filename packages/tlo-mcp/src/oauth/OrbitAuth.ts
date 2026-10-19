@@ -35,6 +35,8 @@ const Registration = Schema.Struct({
 
 const isOrbitAuthError = Schema.is(OrbitAuthError);
 
+const browserCommand = ChildProcess.make({ stdout: 'ignore', stderr: 'ignore', forceKillAfter: '1 second' });
+
 export interface OrbitAuthShape {
   readonly login: Effect.Effect<void, OrbitAuthError>;
   readonly logout: Effect.Effect<void, OrbitAuthError>;
@@ -156,32 +158,9 @@ export const OrbitAuthLayer = Layer.effect(
     const openBrowser = Effect.fn('OrbitAuth.openBrowser')(
       function* (url: Redacted.Redacted) {
         const browser = yield* Match.value(process.platform).pipe(
-          Match.when(
-            'darwin',
-            () =>
-              ChildProcess.make({
-                stdout: 'ignore',
-                stderr: 'ignore',
-                forceKillAfter: '1 second',
-              })`open ${Redacted.value(url)}`,
-          ),
-          Match.when(
-            'win32',
-            () =>
-              ChildProcess.make({
-                stdout: 'ignore',
-                stderr: 'ignore',
-                forceKillAfter: '1 second',
-              })`rundll32 url.dll,FileProtocolHandler ${Redacted.value(url)}`,
-          ),
-          Match.orElse(
-            () =>
-              ChildProcess.make({
-                stdout: 'ignore',
-                stderr: 'ignore',
-                forceKillAfter: '1 second',
-              })`xdg-open ${Redacted.value(url)}`,
-          ),
+          Match.when('darwin', () => browserCommand`open ${Redacted.value(url)}`),
+          Match.when('win32', () => browserCommand`rundll32 url.dll,FileProtocolHandler ${Redacted.value(url)}`),
+          Match.orElse(() => browserCommand`xdg-open ${Redacted.value(url)}`),
         );
 
         return yield* browser.exitCode;

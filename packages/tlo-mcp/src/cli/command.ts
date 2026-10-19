@@ -10,33 +10,21 @@ const NAME = 'tlo-mcp';
 
 const VERSION = '1.0.0';
 
-const loginCommand = Command.make(
-  'login',
-  {},
-  Effect.fn('TloMcp.login')(
-    function* () {
-      const auth = yield* OrbitAuth;
+function authCommand(name: 'login' | 'logout') {
+  return Command.make(
+    name,
+    {},
+    Effect.fn(`TloMcp.${name}`)(
+      function* () {
+        const auth = yield* OrbitAuth;
 
-      yield* auth.login;
-    },
-    Effect.provide(OrbitAuthLive),
-    Effect.scoped,
-  ),
-);
-
-const logoutCommand = Command.make(
-  'logout',
-  {},
-  Effect.fn('TloMcp.logout')(
-    function* () {
-      const auth = yield* OrbitAuth;
-
-      yield* auth.logout;
-    },
-    Effect.provide(OrbitAuthLive),
-    Effect.scoped,
-  ),
-);
+        yield* auth[name];
+      },
+      Effect.provide(OrbitAuthLive),
+      Effect.scoped,
+    ),
+  );
+}
 
 const tloMcpCommand = Command.make(
   NAME,
@@ -47,7 +35,7 @@ const tloMcpCommand = Command.make(
     ),
   },
   ({ port }) => connect(port),
-).pipe(Command.withSubcommands([loginCommand, logoutCommand]));
+).pipe(Command.withSubcommands([authCommand('login'), authCommand('logout')]));
 
 export const run = Effect.fn('TloMcp.run')(function* (args: ReadonlyArray<string>) {
   return yield* Command.runWith(tloMcpCommand, { version: VERSION })(args);

@@ -24,6 +24,17 @@ import { OrbitToolsLive } from '../mcp/proxy.js';
 
 export const KEY_FILE = `${homedir()}/.config/2digits/tlo-mcp/gateway.key`;
 
+const MAX_BODY_SIZE = ByteSize.mebibytes(1);
+
+const unauthorized = HttpServerResponse.empty({
+  status: 401,
+  headers: { 'www-authenticate': 'Bearer', 'cache-control': 'no-store' },
+});
+
+const forbidden = HttpServerResponse.empty({ status: 403, headers: { 'cache-control': 'no-store' } });
+
+const encoder = new TextEncoder();
+
 const GatewayKey = Schema.String.check(Schema.isPattern(/^[a-f0-9]{64}$/)).pipe(Schema.RedactedFromValue);
 
 export class GatewayError extends Schema.TaggedError<GatewayError, { readonly brand: unique symbol }>()(
@@ -76,7 +87,7 @@ export const loadGatewayKey = Effect.fn('Gateway.loadKey')(
  * @param value
  */
 function sha256(crypto: Crypto.Crypto, value: string) {
-  return crypto.digest('SHA-256', new TextEncoder().encode(value)).pipe(Effect.orDie);
+  return crypto.digest('SHA-256', encoder.encode(value)).pipe(Effect.orDie);
 }
 
 /**
@@ -100,18 +111,15 @@ function gatewayAuthentication(key: Redacted.Redacted) {
             const received = yield* sha256(crypto, request.headers.authorization ?? '');
 
             if (!timingSafeEqual(expected, received)) {
-              return HttpServerResponse.empty({
-                status: 401,
-                headers: { 'www-authenticate': 'Bearer', 'cache-control': 'no-store' },
-              });
+              return unauthorized;
             }
 
             if (request.headers.origin !== undefined) {
-              return HttpServerResponse.empty({ status: 403, headers: { 'cache-control': 'no-store' } });
+              return forbidden;
             }
 
             return yield* httpEffect.pipe(
-              Effect.provideService(HttpIncomingMessage.MaxBodySize, ByteSize.bytes(1024 * 1024)),
+              Effect.provideService(HttpIncomingMessage.MaxBodySize, MAX_BODY_SIZE),
               Effect.map((response) => HttpServerResponse.setHeader(response, 'cache-control', 'no-store')),
             );
           }),

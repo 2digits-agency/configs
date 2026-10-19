@@ -19,9 +19,11 @@ const decodeSessionJson = Schema.decodeEffect(SessionJson);
 
 const encodeSessionJson = Schema.encodeEffect(SessionJson);
 
-const isOrbitAuthError = Schema.is(OrbitAuthError);
-
 const KEYCHAIN_SERVICE = '@2digits/tlo-mcp/orbit';
+
+const KEYCHAIN_ITEM = ['-a', 'orbit', '-s', KEYCHAIN_SERVICE];
+
+const KEYCHAIN_ITEM_NOT_FOUND = 44;
 
 export interface SessionStoreShape {
   readonly load: Effect.Effect<Session | undefined, OrbitAuthError>;
@@ -35,7 +37,7 @@ export class SessionStore extends Context.Service<SessionStore, SessionStoreShap
 ) {}
 
 function quoteSecurity(value: string): string {
-  const escaped = value.replaceAll('\\', String.raw`\\`).replaceAll('"', String.raw`\"`);
+  const escaped = value.replaceAll(/["\\]/g, String.raw`\$&`);
 
   return `"${escaped}"`;
 }
@@ -88,12 +90,10 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
 
       const load = Effect.fn('SessionStore.load')(
         function* () {
-          let text: string;
-
           if (platform === 'darwin') {
-            const result = yield* security(['find-generic-password', '-a', 'orbit', '-s', KEYCHAIN_SERVICE, '-w']);
+            const result = yield* security(['find-generic-password', ...KEYCHAIN_ITEM, '-w']);
 
-            if (result.exitCode === 44) {
+            if (result.exitCode === KEYCHAIN_ITEM_NOT_FOUND) {
               return;
             }
 
@@ -101,20 +101,14 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
               return yield* OrbitAuthError.make({ message: 'Could not read macOS Keychain.' });
             }
 
-            text = result.output.trim();
-          } else {
-            const content = yield* fs
-              .readFileString(file)
-              .pipe(Effect.catchReason('PlatformError', 'NotFound', () => Effect.void));
-
-            if (content === undefined) {
-              return;
-            }
-
-            text = content;
+            return yield* decodeSessionJson(result.output.trim());
           }
 
-          return yield* decodeSessionJson(text);
+          const content = yield* fs
+            .readFileString(file)
+            .pipe(Effect.catchReason('PlatformError', 'NotFound', () => Effect.undefined));
+
+          return content === undefined ? undefined : yield* decodeSessionJson(content);
         },
         Effect.mapError(() => OrbitAuthError.make({ message: 'Could not read credentials. Run tlo-mcp login again.' })),
       );
@@ -153,9 +147,9 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
       const clear = Effect.fn('SessionStore.clear')(
         function* () {
           if (platform === 'darwin') {
-            const result = yield* security(['delete-generic-password', '-a', 'orbit', '-s', KEYCHAIN_SERVICE]);
+            const result = yield* security(['delete-generic-password', ...KEYCHAIN_ITEM]);
 
-            if (result.exitCode !== 0 && result.exitCode !== 44) {
+            if (result.exitCode !== 0 && result.exitCode !== KEYCHAIN_ITEM_NOT_FOUND) {
               return yield* OrbitAuthError.make({ message: 'Could not remove Keychain credentials.' });
             }
           } else {
@@ -181,10 +175,8 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
             () => fs.remove(lockFile).pipe(Effect.orDie),
           );
         },
-        Effect.mapError((error) =>
-          isOrbitAuthError(error)
-            ? error
-            : OrbitAuthError.make({ message: 'Could not acquire OAuth credential lock. Check directory permissions.' }),
+        Effect.catchTag('PlatformError', () =>
+          OrbitAuthError.make({ message: 'Could not acquire OAuth credential lock. Check directory permissions.' }),
         ),
       );
 
