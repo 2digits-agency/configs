@@ -1,3 +1,29 @@
+## @2digits/oxlint-plugin@0.3.1
+
+### Keep generic Schema calls in `consistent-schema-pipe`
+
+`consistent-schema-pipe` no longer reports or rewrites calls such as `Schema.toCodecJson(schema)` when `schema` is declared as `Schema.Constraint` or as a type parameter that is not bounded by a pipeable Schema type. Those values have no `.pipe`, so the old autofix produced code that failed to type-check.
+
+### Match imported names with effect Match
+
+- Replaced the manual `importedName` if-chain with an `effect/Match`-based implementation
+
+### Use Effect Array helpers directly
+
+- Replaced `effect/Function` pipe wrappers with direct `effect/Array` calls across rules and fixes
+
+### Use Effect modules across rule helpers
+
+- Rule internals now use `effect/Array`, `Option`, `Match`, `Predicate` and `String` instead of hand-written loops, `typeof` checks and if-chains.
+- Shared `resolveVariable`, `soleDefinition`, `findAncestor`, `isAnyApi` and `isEqualityOperator` helpers replace copies across rules.
+- Fixed hot paths that allocated a new array or matcher on every visited node.
+
+### Express AST helpers with effect Match and Predicate
+
+- Rewrote `staticPropertyName`, `propertyName`, `isFunctionNode` and `isErrorConstructor` with `effect/Match` and `effect/Predicate`
+- Replaced four copies of the imported-name lookup with one shared `moduleExportName` helper, and the repeated string-literal checks with a shared `isStringLiteral`
+- Fixed `importedName` so string-literal import names (`import { 'foo-bar' as x }`) are recognized again
+
 ## @2digits/oxlint-plugin@0.3.0
 
 ### Add `no-inline-schema-compile`

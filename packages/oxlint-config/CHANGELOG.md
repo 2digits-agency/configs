@@ -1,3 +1,9 @@
+## @2digits/oxlint-config@2.1.2
+
+### Disable unicorn/no-array-method-this-argument
+
+- Turned off `unicorn/no-array-method-this-argument` in both the ESLint and oxlint unicorn configs
+
 ## @2digits/oxlint-config@2.1.1
 
 ### Add `no-inline-schema-compile`

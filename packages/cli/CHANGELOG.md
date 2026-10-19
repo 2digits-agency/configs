@@ -1,3 +1,13 @@
+## @2digits/cli@2.0.29
+
+### Update @effect/language-service to 0.87.5
+
+
+
+### Use relative setupFiles path in vite config
+
+- Changed `setupFiles` from an absolute `path.join(__dirname, ...)` to a relative `./test/vitest.setup.ts`
+
 ## @2digits/cli@2.0.28
 
 ### Write Schema chains in pipe style

@@ -1,3 +1,11 @@
+## @2digits/config-monorepo@0.1.12
+
+### Update knip to 6.42.0
+
+
+
+### Update turbo to 2.11.9
+
 ## @2digits/config-monorepo@0.1.11
 
 ### Document Schema chain style and agent checks

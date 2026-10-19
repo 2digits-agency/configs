@@ -1,3 +1,13 @@
+## @2digits/tsconfig@1.0.1
+
+### Update @effect/tsgo to 0.53.4
+
+
+
+### Expand namespace import packages list
+
+- Replaced the wildcard `@effect/*` entry with an explicit, sorted list of Effect namespace import packages
+
 ## @2digits/tsconfig@1.0.0
 
 ### Reject error payloads that shadow `name`
