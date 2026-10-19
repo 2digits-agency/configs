@@ -1,4 +1,3 @@
-import * as Fn from 'effect/Function';
 /* oxlint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 /* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 import * as Arr from 'effect/Array';
@@ -80,7 +79,7 @@ tester.run(ruleName, preferEffectDurationConstants, {
     `${effect} const attempts = 3; Effect.retry(program, { times: attempts });`,
     `${effect} const value = 3; Effect.succeed(value);`,
   ],
-  invalid: Fn.pipe(
+  invalid: Arr.map(
     [
       [`${effect} const TIMEOUT_MS = 30_000;`, 'TIMEOUT_MS', 'Duration.seconds(30)'],
       [`${effect} export const requestTimeoutMs = 1500;`, 'requestTimeoutMs', 'Duration.millis(1500)'],
@@ -142,11 +141,11 @@ tester.run(ruleName, preferEffectDurationConstants, {
         'Duration.minutes(1)',
       ],
     ] satisfies Array<[string, string, string]>,
-    Arr.map(([code, name, replacement]) => ({
+    ([code, name, replacement]) => ({
       code,
       errors: [{ messageId: 'durationConstant', data: { name, replacement } }],
       output: null,
-    })),
+    }),
   ),
 });
 

@@ -1,6 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import * as Fn from 'effect/Function';
 
 import {
   argumentAt,
@@ -55,19 +54,13 @@ export const throwInEffectGen: Rule = defineEffectRule(
 
       const direct =
         call !== undefined &&
-        Fn.pipe(
-          ['fn', 'fnUntraced', 'gen'],
-          Arr.some((method) => isApi(call.callee, state, 'Effect', method)),
-        );
+        Arr.some(['fn', 'fnUntraced', 'gen'], (method) => isApi(call.callee, state, 'Effect', method));
 
       const outerCallee = call?.callee;
 
       const curried =
         outerCallee?.type === 'CallExpression' &&
-        Fn.pipe(
-          ['fn', 'fnUntraced'],
-          Arr.some((method) => isApi(outerCallee.callee, state, 'Effect', method)),
-        );
+        Arr.some(['fn', 'fnUntraced'], (method) => isApi(outerCallee.callee, state, 'Effect', method));
 
       if (direct || curried) {
         context.report({ node, messageId: 'throwInGen' });

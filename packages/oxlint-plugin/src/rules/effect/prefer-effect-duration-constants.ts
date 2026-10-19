@@ -84,13 +84,7 @@ function nameUnit(name: string): NameUnit {
 
   const conversion = inIndex > 0 && inIndex < parts.length - 1 && (unitWords.has(before) || singularUnits.has(before));
 
-  if (
-    conversion ||
-    Fn.pipe(
-      parts,
-      Arr.some((part) => nonDurationWords.has(part)),
-    )
-  ) {
+  if (conversion || Arr.some(parts, (part) => nonDurationWords.has(part))) {
     return 'excluded';
   }
 
@@ -122,10 +116,7 @@ function resolvesToImport(node: ESTree.Node, name: string, context: Context): bo
     scope = scope.upper;
   }
 
-  return Fn.pipe(
-    scope?.set.get(name)?.defs ?? [],
-    Arr.some((definition) => definition.type === 'ImportBinding'),
-  );
+  return Arr.some(scope?.set.get(name)?.defs ?? [], (definition) => definition.type === 'ImportBinding');
 }
 
 function typeNamePath(node: ESTree.Node): Array<string> | undefined {

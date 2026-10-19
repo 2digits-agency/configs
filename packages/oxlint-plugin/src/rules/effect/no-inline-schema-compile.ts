@@ -1,6 +1,5 @@
 import type { Context, ESTree, Rule, Scope, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import * as Fn from 'effect/Function';
 
 import {
   canonicalPath,
@@ -86,11 +85,7 @@ function compilerMethod(node: ESTree.Node, state: FileState, context: Context): 
 
   const variable = resolveVariable(node, root, context);
 
-  return variable !== undefined &&
-    Fn.pipe(
-      variable.defs,
-      Arr.every((definition) => definition.type === 'ImportBinding'),
-    )
+  return variable !== undefined && Arr.every(variable.defs, (definition) => definition.type === 'ImportBinding')
     ? method
     : undefined;
 }
@@ -152,9 +147,9 @@ function isMutationTarget(node: ESTree.Node): boolean {
 
 // A module binding is stable when neither it nor its members are reassigned after initialization.
 function isStableVariable(variable: Variable): boolean {
-  return Fn.pipe(
+  return Arr.every(
     variable.references,
-    Arr.every((reference) => (!reference.isWrite() || reference.init) && !isMutationTarget(reference.identifier)),
+    (reference) => (!reference.isWrite() || reference.init) && !isMutationTarget(reference.identifier),
   );
 }
 
@@ -252,10 +247,7 @@ export const noInlineSchemaCompile: Rule = defineEffectRule(
         method === undefined ||
         argument === undefined ||
         argument.type === 'SpreadElement' ||
-        Fn.pipe(
-          node.arguments,
-          Arr.some((child) => child.type === 'SpreadElement'),
-        ) ||
+        Arr.some(node.arguments, (child) => child.type === 'SpreadElement') ||
         !isImmediatelyInvoked(node) ||
         !isInsideFunction(node)
       ) {
@@ -268,10 +260,7 @@ export const noInlineSchemaCompile: Rule = defineEffectRule(
 
       if (
         (!inlineSchema && schema.type !== 'Identifier' && schema.type !== 'MemberExpression') ||
-        !Fn.pipe(
-          node.arguments,
-          Arr.every((child) => isHoistable(child, state, context)),
-        )
+        !Arr.every(node.arguments, (child) => isHoistable(child, state, context))
       ) {
         return;
       }

@@ -1,6 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import * as Fn from 'effect/Function';
 
 import { defineEffectRule, isApi, isLiteral, objectProperty, ruleMeta, unwrapExpression } from '../../utils';
 import { objectArgument } from './utils';
@@ -15,16 +14,13 @@ function wildcardOrigins(node: ESTree.Expression): boolean {
   return (
     origins.type === 'ArrayExpression' &&
     (origins.elements.length === 0 ||
-      Fn.pipe(
-        origins.elements,
-        Arr.some((element) => {
-          if (!element || element.type === 'SpreadElement') {
-            return false;
-          }
+      Arr.some(origins.elements, (element) => {
+        if (!element || element.type === 'SpreadElement') {
+          return false;
+        }
 
-          return isLiteral(element, '*');
-        }),
-      ))
+        return isLiteral(element, '*');
+      }))
   );
 }
 

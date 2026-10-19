@@ -391,10 +391,7 @@ function parseMatcher(value: unknown): StatementMatcher {
     value !== null &&
     'selector' in value &&
     typeof value.selector === 'string' &&
-    Fn.pipe(
-      R.keys(value as Readonly<Record<string, unknown>>),
-      Arr.every((key) => key === 'selector' || key === 'lineMode'),
-    )
+    Arr.every(R.keys(value as Readonly<Record<string, unknown>>), (key) => key === 'selector' || key === 'lineMode')
   ) {
     if (!('lineMode' in value)) {
       return { selector: value.selector };
@@ -422,41 +419,29 @@ function parseStatementOption(value: unknown): StatementOption {
     throw new Error('Padding statement matcher arrays must not be empty');
   }
 
-  return [
-    parseMatcher(first),
-    ...Fn.pipe(
-      matchers.slice(1),
-      Arr.map((matcher) => parseMatcher(matcher)),
-    ),
-  ];
+  return [parseMatcher(first), ...Arr.map(matchers.slice(1), (matcher) => parseMatcher(matcher))];
 }
 
 function parseOptions(values: ReadonlyArray<unknown>): Array<PaddingLineOption> {
-  return Fn.pipe(
-    values,
-    Arr.map((value) => {
-      if (
-        typeof value !== 'object' ||
-        value === null ||
-        !('blankLine' in value) ||
-        !('prev' in value) ||
-        !('next' in value) ||
-        Fn.pipe(
-          R.keys(value),
-          Arr.some((key) => !['blankLine', 'prev', 'next'].includes(key)),
-        ) ||
-        (value.blankLine !== 'any' && value.blankLine !== 'never' && value.blankLine !== 'always')
-      ) {
-        throw new Error('Invalid padding-line-between-statements configuration');
-      }
+  return Arr.map(values, (value) => {
+    if (
+      typeof value !== 'object' ||
+      value === null ||
+      !('blankLine' in value) ||
+      !('prev' in value) ||
+      !('next' in value) ||
+      Arr.some(R.keys(value), (key) => !['blankLine', 'prev', 'next'].includes(key)) ||
+      (value.blankLine !== 'any' && value.blankLine !== 'never' && value.blankLine !== 'always')
+    ) {
+      throw new Error('Invalid padding-line-between-statements configuration');
+    }
 
-      return {
-        blankLine: value.blankLine,
-        prev: parseStatementOption(value.prev),
-        next: parseStatementOption(value.next),
-      };
-    }),
-  );
+    return {
+      blankLine: value.blankLine,
+      prev: parseStatementOption(value.prev),
+      next: parseStatementOption(value.next),
+    };
+  });
 }
 
 function getPaddingLineSequences(
@@ -571,13 +556,9 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
   const sourceCode = context.sourceCode;
 
   const selectors = new Set(
-    Fn.pipe(
-      options,
-      Arr.flatMap((option) =>
-        Fn.pipe(
-          [option.prev, option.next].flat(),
-          Arr.flatMap((matcher) => (typeof matcher === 'string' ? [] : [matcher.selector])),
-        ),
+    Arr.flatMap(options, (option) =>
+      Arr.flatMap([option.prev, option.next].flat(), (matcher) =>
+        typeof matcher === 'string' ? [] : [matcher.selector],
       ),
     ),
   );
@@ -615,10 +596,7 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
     }
 
     if (isMatcherArray(matcher)) {
-      return Fn.pipe(
-        matcher,
-        Arr.some((item) => match(inner, item, matchedNodes)),
-      );
+      return Arr.some(matcher, (item) => match(inner, item, matchedNodes));
     }
 
     if (typeof matcher !== 'string') {
@@ -699,11 +677,8 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
       yield* Ref.get(pendingPairs).pipe(
         Effect.flatMap((pairs) =>
           Effect.all(
-            Fn.pipe(
-              pairs,
-              Arr.map(({ prevNode, nextNode }) =>
-                verifyPair(prevNode, nextNode, getPaddingType(prevNode, nextNode, matchedNodes)),
-              ),
+            Arr.map(pairs, ({ prevNode, nextNode }) =>
+              verifyPair(prevNode, nextNode, getPaddingType(prevNode, nextNode, matchedNodes)),
             ),
           ),
         ),

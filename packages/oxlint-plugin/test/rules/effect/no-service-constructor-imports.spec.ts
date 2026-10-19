@@ -1,6 +1,5 @@
 import { describe, expect, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
-import * as Fn from 'effect/Function';
 import { RuleTester } from 'oxlint/plugins-dev';
 
 import { recommendedRules, rules } from '../../../src';
@@ -18,12 +17,12 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
   rules['no-service-constructor-imports'],
   {
     valid: [
-      ...Fn.pipe(
+      ...Arr.map(
         ['src/service.test.ts', 'src/service.spec.tsx', 'src/service.test.mts', 'src/service.spec.cts'],
-        Arr.map((filename) => ({
+        (filename) => ({
           filename,
           code: 'import { makeIssueService } from "./issue-service.ts";',
-        })),
+        }),
       ),
       { filename: runtimeFilename, code: 'import { makeExecutionMemo } from "alchemy/Runtime/ExecutionMemo";' },
       {

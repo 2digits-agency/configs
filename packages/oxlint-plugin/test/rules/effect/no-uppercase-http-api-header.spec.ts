@@ -1,4 +1,3 @@
-import * as Fn from 'effect/Function';
 /* oxlint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 /* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 import * as Arr from 'effect/Array';
@@ -100,12 +99,10 @@ const ambiguousOptions = [
 ];
 
 tester.run(ruleName, noUppercaseHttpApiHeader, {
-  valid: Fn.pipe(
+  valid: Arr.map(
     ambiguousOptions,
-    Arr.map(
-      (options) => `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
-  HttpApiEndpoint.get('me', '/me', ${options});`,
-    ),
+    (options) => `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
+    HttpApiEndpoint.get('me', '/me', ${options});`,
   ),
   invalid: [
     {

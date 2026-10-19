@@ -141,10 +141,7 @@ const pureLeaves = new Set<string>([
 ]);
 
 function allPure(nodes: ReadonlyArray<ESTree.Node | null>, context: Context, state: FileState): boolean {
-  return Fn.pipe(
-    nodes,
-    Arr.every((node) => node === null || isPure(node, context, state)),
-  );
+  return Arr.every(nodes, (node) => node === null || isPure(node, context, state));
 }
 
 // Expressions whose evaluation has no observable effect, so a fix may move them. Schema factories count as pure.
@@ -166,13 +163,10 @@ function isPure(node: ESTree.Node, context: Context, state: FileState): boolean 
   }
 
   if (node.type === 'ObjectExpression') {
-    return Fn.pipe(
-      node.properties,
-      Arr.every((property) =>
-        property.type === 'SpreadElement'
-          ? isPure(property.argument, context, state)
-          : (!property.computed || isPure(property.key, context, state)) && isPure(property.value, context, state),
-      ),
+    return Arr.every(node.properties, (property) =>
+      property.type === 'SpreadElement'
+        ? isPure(property.argument, context, state)
+        : (!property.computed || isPure(property.key, context, state)) && isPure(property.value, context, state),
     );
   }
 
@@ -190,10 +184,7 @@ function isPure(node: ESTree.Node, context: Context, state: FileState): boolean 
 }
 
 function hasSpread(node: ESTree.CallExpression): boolean {
-  return Fn.pipe(
-    node.arguments,
-    Arr.some((argument) => argument.type === 'SpreadElement'),
-  );
+  return Arr.some(node.arguments, (argument) => argument.type === 'SpreadElement');
 }
 
 // A rewrite would drop explicit type arguments, so such calls are left alone.
@@ -349,27 +340,18 @@ function pipeChain(node: ESTree.CallExpression, context: Context, state: FileSta
 
   const [receiver, args] = parts;
 
-  const names = Fn.pipe(
-    args,
-    Arr.map((arg) => schemaMember(arg, context, state)),
-  );
+  const names = Arr.map(args, (arg) => schemaMember(arg, context, state));
 
   const firstWrapper = Fn.pipe(names, Arr.findFirst(isWrapper), Opt.getOrUndefined);
 
   // Steps after an extracted wrapper move into a later pipe, so they would be built after earlier steps ran.
   const reordersEffects =
     firstWrapper !== undefined &&
-    Fn.pipe(
-      args.slice(names.indexOf(firstWrapper) + 1),
-      Arr.some((arg) => !isPure(arg, context, state)),
-    );
+    Arr.some(args.slice(names.indexOf(firstWrapper) + 1), (arg) => !isPure(arg, context, state));
 
   return appendSteps(
     receiver,
-    Fn.pipe(
-      args,
-      Arr.map((arg, index) => ({ text: context.sourceCode.getText(arg), wrapper: isWrapper(names[index]) })),
-    ),
+    Arr.map(args, (arg, index) => ({ text: context.sourceCode.getText(arg), wrapper: isWrapper(names[index]) })),
     functionPipe
       ? { kind: 'functionPipe' }
       : firstWrapper === undefined
@@ -496,10 +478,7 @@ export const consistentSchemaPipe: Rule = defineEffectRule(
       const { head } = chain;
 
       // Steps are moved around, so comments between them would be lost.
-      const hasComments = Fn.pipe(
-        context.sourceCode.getCommentsInside(node),
-        Arr.some((comment) => !contains(head, comment)),
-      );
+      const hasComments = Arr.some(context.sourceCode.getCommentsInside(node), (comment) => !contains(head, comment));
 
       // Chains inside the head keep their own fixes; chains inside steps are fixed on a later pass.
       const [prefix = '', suffix = ''] = render(head, chain.steps).split(headMarker);
