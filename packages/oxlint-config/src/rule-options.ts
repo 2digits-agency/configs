@@ -28,8 +28,8 @@ declare module 'oxlint' {
       readonly prevent?: boolean;
     }>;
     'zod/array-style'?: RuleWithOptions<{ readonly style: 'function' | 'method' }>;
-    'zod/consistent-import'?: RuleWithOptions<{ readonly syntax: 'named' | 'namespace' }>;
-    'zod/consistent-import-source'?: RuleWithOptions<{ readonly sources: Array<string> }>;
+    'zod/consistent-import'?: RuleWithOptions<{ readonly syntax: 'default' | 'named' | 'namespace' }>;
+    'zod/consistent-import-source'?: RuleWithOptions<{ readonly sources: Array<'zod' | 'zod/v3' | 'zod/v4'> }>;
     'zod/consistent-object-schema-type'?: RuleWithOptions<{
       readonly allow: Array<'looseObject' | 'object' | 'strictObject'>;
     }>;
@@ -44,7 +44,9 @@ declare module 'oxlint' {
     'zod/no-coerce-boolean'?: AllowWarnDeny;
     'zod/no-conflicting-checks'?: RuleWithOptions<NoConflictingChecksOptions>;
     'zod/no-duplicate-schema-methods'?: AllowWarnDeny;
+    'zod/no-dynamic-schema-value'?: AllowWarnDeny;
     'zod/no-empty-custom-schema'?: AllowWarnDeny;
+    'zod/no-function-scoped-schema'?: AllowWarnDeny;
     'zod/no-native-enum'?: AllowWarnDeny;
     'zod/no-number-schema-with-finite'?: AllowWarnDeny;
     'zod/no-number-schema-with-int'?: AllowWarnDeny;
@@ -58,20 +60,23 @@ declare module 'oxlint' {
     'zod/no-promise-schema'?: AllowWarnDeny;
     'zod/no-schema-with-is-nullable'?: AllowWarnDeny;
     'zod/no-schema-with-is-optional'?: AllowWarnDeny;
-    'zod/no-string-schema-with-uuid'?: AllowWarnDeny;
     'zod/no-throw-in-refine'?: AllowWarnDeny;
     'zod/no-transform-in-record-key'?: AllowWarnDeny;
     'zod/no-unknown-schema'?: AllowWarnDeny;
     'zod/no-unnecessary-readonly'?: AllowWarnDeny;
     'zod/prefer-enum-over-literal-union'?: AllowWarnDeny;
     'zod/prefer-loose-object'?: AllowWarnDeny;
+    'zod/prefer-map-set-size-over-min-max'?: AllowWarnDeny;
     'zod/prefer-meta'?: AllowWarnDeny;
     'zod/prefer-meta-last'?: AllowWarnDeny;
+    'zod/prefer-nullish'?: AllowWarnDeny;
     'zod/prefer-strict-object'?: AllowWarnDeny;
+    'zod/prefer-string-length-over-min-max'?: AllowWarnDeny;
     'zod/prefer-string-schema-with-trim'?: AllowWarnDeny;
-    'zod/prefer-top-level-string-formats'?: AllowWarnDeny;
+    'zod/prefer-top-level-string-formats'?: RuleWithOptions<{ readonly ignore?: Array<string> }>;
     'zod/prefer-trim-before-string-length-checks'?: AllowWarnDeny;
     'zod/prefer-tuple-over-array-length'?: AllowWarnDeny;
+    'zod/prefer-validate'?: AllowWarnDeny;
     'zod/require-brand-type-parameter'?: AllowWarnDeny;
     'zod/require-error-message'?: AllowWarnDeny;
     'zod/schema-error-property-style'?: RuleWithOptions<{

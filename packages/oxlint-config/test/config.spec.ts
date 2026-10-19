@@ -2,12 +2,13 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vite-plus/test';
+import zodPlugin from 'eslint-plugin-zod';
+import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 
 import eslintTwoDigits from '@2digits/eslint-config';
 import { recommendedRules } from '@2digits/oxlint-plugin';
 
-import withTwoDigits, { twoDigits, type OxlintConfig } from '../src';
+import withTwoDigits, { twoDigits, type DummyRuleMap, type OxlintConfig } from '../src';
 import { twoDigitsPluginConfig } from '../src/configs/2digits';
 import { javascriptConfig } from '../src/configs/javascript';
 import { nodeConfig } from '../src/configs/node';
@@ -83,6 +84,11 @@ const sharedEslintJavascriptRules = Object.fromEntries(
     ([rule, value]) => value !== undefined && sharedJavascriptRuleNames.has(rule),
   ),
 );
+
+// `DummyRuleMap` also has a string index signature; remapping keeps only the explicitly declared keys.
+type DeclaredZodRule = keyof {
+  [TRule in keyof DummyRuleMap as TRule extends `zod/${string}` ? TRule : never]: unknown;
+};
 
 function collectPluginsAndRules(config: OxlintConfig): Array<string> {
   const nested = config.extends ?? [];
@@ -206,6 +212,17 @@ describe('oxlint config', () => {
     expect(plugin?.specifier).toContain('eslint-plugin-zod');
 
     expect(zodConfig.rules['zod/array-style']).toStrictEqual(['error', { style: 'function' }]);
+
+    // Every plugin rule is configured or explicitly left unset, and declared for type-checked consumer configs.
+    const { rules } = zodPlugin as typeof zodPlugin & { rules: Record<string, unknown> };
+
+    expect(Object.keys(zodConfig.rules).toSorted()).toStrictEqual(
+      Object.keys(rules)
+        .map((rule) => `zod/${rule}`)
+        .toSorted(),
+    );
+
+    expectTypeOf<keyof typeof zodConfig.rules>().toEqualTypeOf<DeclaredZodRule>();
   });
 
   it('configures every recommended 2digits rule', () => {
