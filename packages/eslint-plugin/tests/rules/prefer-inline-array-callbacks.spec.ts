@@ -1,7 +1,16 @@
+import path from 'node:path';
+
 import parser from '@typescript-eslint/parser';
 import { run, type InvalidTestCase, type ValidTestCase, unindent as typescript } from 'eslint-vitest-rule-tester';
+import { beforeAll, describe } from 'vite-plus/test';
 
 import { preferInlineArrayCallbacks, RULE_NAME } from '../../src/rules/prefer-inline-array-callbacks';
+
+const parserOptions = {
+  projectService: {
+    allowDefaultProject: ['*.ts'],
+  },
+};
 
 const valids: Array<ValidTestCase> = [
   typescript`const arr = [1, 2, 3]; arr.map((x) => x * 2)`,
@@ -142,15 +151,21 @@ const invalids: Array<InvalidTestCase> = [
   },
 ];
 
-await run({
-  parser,
-  parserOptions: {
-    projectService: {
-      allowDefaultProject: ['*.ts'],
-    },
-  },
-  name: RULE_NAME,
-  rule: preferInlineArrayCallbacks,
-  valid: valids,
-  invalid: invalids,
+describe(RULE_NAME, () => {
+  /**
+   * The rule tester hardcodes a 10s timeout per valid case. The first type-aware parse builds the TypeScript program,
+   * which can take longer than that on a busy CI runner, so build it up front with a longer timeout.
+   */
+  beforeAll(() => {
+    parser.parseForESLint('', { ...parserOptions, filePath: path.join(process.cwd(), 'file.ts') });
+  }, 60_000);
+
+  void run({
+    parser,
+    parserOptions,
+    name: RULE_NAME,
+    rule: preferInlineArrayCallbacks,
+    valid: valids,
+    invalid: invalids,
+  });
 });
