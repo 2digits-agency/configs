@@ -1,4 +1,4 @@
-import type { Context, ESTree, Rule, Scope } from '@oxlint/plugins';
+import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
@@ -6,8 +6,10 @@ import * as Opt from 'effect/Option';
 import { importedApi } from '../../fixes';
 import {
   canonicalPath,
+  containsRange,
   defineEffectRule,
   isApiPath,
+  resolveVariable,
   ruleMeta,
   staticPath,
   staticPropertyName,
@@ -253,17 +255,9 @@ function hasPipe(declared: ESTree.TSType, from: ESTree.Node, state: FileState): 
 }
 
 function declaredType(node: ESTree.IdentifierReference, context: Context): ESTree.TSTypeAnnotation | undefined {
-  for (let scope: Scope | null = context.sourceCode.getScope(node); scope !== null; scope = scope.upper) {
-    const variable = scope.set.get(node.name);
+  const name = resolveVariable(context, node, node.name)?.defs[0]?.name;
 
-    if (variable !== undefined) {
-      const name = variable.defs[0]?.name;
-
-      return name !== undefined && 'typeAnnotation' in name ? (name.typeAnnotation ?? undefined) : undefined;
-    }
-  }
-
-  return undefined;
+  return name !== undefined && 'typeAnnotation' in name ? (name.typeAnnotation ?? undefined) : undefined;
 }
 
 // Without types, only the declared type of a head shows that it cannot take `.pipe(...)`, e.g. a generic schema.
@@ -542,10 +536,6 @@ function render(head: ESTree.Expression, steps: ReadonlyArray<Step>): string {
   return pipeSteps(target, pending, head);
 }
 
-function contains(outer: ESTree.Node, inner: { readonly range: readonly [number, number] }): boolean {
-  return outer.range[0] <= inner.range[0] && inner.range[1] <= outer.range[1];
-}
-
 export const consistentSchemaPipe: Rule = defineEffectRule(
   {
     ...ruleMeta(
@@ -583,7 +573,10 @@ export const consistentSchemaPipe: Rule = defineEffectRule(
       }
 
       // Steps are moved around, so comments between them would be lost.
-      const hasComments = Arr.some(context.sourceCode.getCommentsInside(node), (comment) => !contains(head, comment));
+      const hasComments = Arr.some(
+        context.sourceCode.getCommentsInside(node),
+        (comment) => !containsRange(head, comment),
+      );
 
       // Chains inside the head keep their own fixes; chains inside steps are fixed on a later pass.
       const [prefix = '', suffix = ''] = render(head, chain.steps).split(headMarker);

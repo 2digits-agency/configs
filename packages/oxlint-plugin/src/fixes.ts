@@ -1,31 +1,8 @@
-import type { Context, ESTree, Fix, Fixer, Scope, Variable } from '@oxlint/plugins';
+import type { Context, ESTree, Fix, Fixer } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 
-import { staticPath } from './utils';
-
-/**
- * Resolve names at the edit site, including local shadowing.
- *
- * @param context Rule context.
- * @param node Edit site.
- * @param name Local binding name.
- */
-function binding(context: Context, node: ESTree.Node, name: string): Variable | undefined {
-  let scope: Scope | null = context.sourceCode.getScope(node);
-
-  while (scope !== null) {
-    const variable = scope.set.get(name);
-
-    if (variable !== undefined) {
-      return variable;
-    }
-
-    scope = scope.upper;
-  }
-
-  return undefined;
-}
+import { resolveVariable, staticPath } from './utils';
 
 /**
  * Only rewrite API roots that still resolve to runtime imports.
@@ -36,7 +13,7 @@ function binding(context: Context, node: ESTree.Node, name: string): Variable | 
 export function importedApi(context: Context, node: ESTree.Node): boolean {
   const name = staticPath(node)?.[0];
 
-  const variable = name === undefined ? undefined : binding(context, node, name);
+  const variable = name === undefined ? undefined : resolveVariable(context, node, name);
 
   return Arr.some(variable?.defs ?? [], (definition) => {
     const specifier = definition.node;
@@ -81,7 +58,7 @@ export function namespaceImport(
       if (
         specifier.type === 'ImportNamespaceSpecifier' &&
         Arr.some(
-          binding(context, node, specifier.local.name)?.defs ?? [],
+          resolveVariable(context, node, specifier.local.name)?.defs ?? [],
           (definition) => definition.node === specifier,
         )
       ) {

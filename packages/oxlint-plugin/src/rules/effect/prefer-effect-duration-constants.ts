@@ -1,9 +1,17 @@
-import type { Context, ESTree, Rule, Scope } from '@oxlint/plugins';
+import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Str from 'effect/String';
 
-import { defineEffectRule, ruleMeta, unwrapExpression, walkNodes, type FileState } from '../../utils';
+import {
+  defineEffectRule,
+  resolveVariable,
+  ruleMeta,
+  soleDefinition,
+  unwrapExpression,
+  walkNodes,
+  type FileState,
+} from '../../utils';
 import { durationArgument, durationConstructor, numericValue, timeArithmetic, type DurationUnit } from './duration';
 
 type NumericDeclarator = ESTree.VariableDeclarator & {
@@ -110,13 +118,10 @@ function nameUnit(name: string): NameUnit {
 }
 
 function resolvesToImport(node: ESTree.Node, name: string, context: Context): boolean {
-  let scope: Scope | null = context.sourceCode.getScope(node);
-
-  while (scope !== null && !scope.set.has(name)) {
-    scope = scope.upper;
-  }
-
-  return Arr.some(scope?.set.get(name)?.defs ?? [], (definition) => definition.type === 'ImportBinding');
+  return Arr.some(
+    resolveVariable(context, node, name)?.defs ?? [],
+    (definition) => definition.type === 'ImportBinding',
+  );
 }
 
 function typeNamePath(node: ESTree.Node): Array<string> | undefined {
@@ -175,15 +180,7 @@ function declaratorOf(node: ESTree.Expression, context: Context): NumericDeclara
     return undefined;
   }
 
-  let scope: Scope | null = context.sourceCode.getScope(expression);
-
-  while (scope !== null && !scope.set.has(expression.name)) {
-    scope = scope.upper;
-  }
-
-  const definitions = scope?.set.get(expression.name)?.defs;
-
-  const declaration = definitions?.length === 1 ? definitions[0]?.node : undefined;
+  const declaration = soleDefinition(resolveVariable(context, expression, expression.name))?.node;
 
   return declaration?.type === 'VariableDeclarator' && numericDeclarator(declaration) ? declaration : undefined;
 }

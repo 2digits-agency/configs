@@ -1,8 +1,16 @@
-import type { Context, Definition, ESTree, Rule, Scope } from '@oxlint/plugins';
+import type { Context, Definition, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 
-import { argumentAt, defineSyntaxRule, propertyName, ruleMeta, staticPath } from '../../utils';
+import {
+  argumentAt,
+  defineSyntaxRule,
+  propertyName,
+  resolveVariable,
+  ruleMeta,
+  soleDefinition,
+  staticPath,
+} from '../../utils';
 import { isTypeOnlyImport } from './import-style-utils';
 
 const endpointMethods = new Set(['get', 'post', 'put', 'patch', 'delete', 'head', 'options']);
@@ -49,21 +57,9 @@ function isEndpointCall(node: ESTree.CallExpression, context: Context): boolean 
     return false;
   }
 
-  let scope: Scope | null = context.sourceCode.getScope(node);
+  const definition = soleDefinition(resolveVariable(context, node, root));
 
-  while (scope) {
-    const binding = scope.set.get(root);
-
-    if (binding !== undefined) {
-      const definition = binding.defs.length === 1 ? binding.defs[0] : undefined;
-
-      return definition !== undefined && isEndpointImport(definition, path);
-    }
-
-    scope = scope.upper;
-  }
-
-  return false;
+  return definition !== undefined && isEndpointImport(definition, path);
 }
 
 function directProperties(node: ESTree.Expression | undefined): Array<ESTree.ObjectProperty> | undefined {

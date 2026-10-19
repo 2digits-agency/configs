@@ -1,10 +1,13 @@
 import {
   defineRule,
   type Context,
+  type Definition,
+  type Ranged,
   type ESTree,
   type Rule,
   type RuleMeta,
   type Scope,
+  type Variable,
   type Visitor,
   type VisitorWithHooks,
 } from '@oxlint/plugins';
@@ -190,22 +193,36 @@ export function staticPath(node: ESTree.Node): ReadonlyArray<string> | undefined
   return current.type === 'Identifier' ? [current.name, ...path] : undefined;
 }
 
-export function isGlobalIdentifier(node: ESTree.Node, context: Context, name: string): boolean {
-  if (node.type !== 'Identifier' || node.name !== name) {
-    return false;
-  }
+/**
+ * Resolve a name from the scope at `node` outwards, so local shadowing wins over imports and globals.
+ *
+ * @param context Rule context.
+ * @param node Lookup site.
+ * @param name Local binding name.
+ */
+export function resolveVariable(context: Context, node: ESTree.Node, name: string): Variable | undefined {
+  for (let scope: Scope | null = context.sourceCode.getScope(node); scope !== null; scope = scope.upper) {
+    const variable = scope.set.get(name);
 
-  let scope: Scope | null = context.sourceCode.getScope(node);
-
-  while (scope !== null) {
-    if (scope.set.has(name)) {
-      return false;
+    if (variable !== undefined) {
+      return variable;
     }
-
-    scope = scope.upper;
   }
 
-  return true;
+  return undefined;
+}
+
+/**
+ * The only definition of a variable, or `undefined` when it is redeclared or unresolved.
+ *
+ * @param variable Resolved variable.
+ */
+export function soleDefinition(variable: Variable | undefined): Definition | undefined {
+  return variable?.defs.length === 1 ? variable.defs[0] : undefined;
+}
+
+export function isGlobalIdentifier(node: ESTree.Node, context: Context, name: string): boolean {
+  return node.type === 'Identifier' && node.name === name && resolveVariable(context, node, name) === undefined;
 }
 
 export function canonicalPath(node: ESTree.Node, state: FileState): ReadonlyArray<string> | undefined {
@@ -268,15 +285,19 @@ export function objectProperty(node: ESTree.ObjectExpression, name: string): EST
   return undefined;
 }
 
+const wrapperExpressionTypes: ReadonlySet<string> = new Set<WrapperExpression['type']>([
+  'ParenthesizedExpression',
+  'TSAsExpression',
+  'TSNonNullExpression',
+  'TSSatisfiesExpression',
+  'TSTypeAssertion',
+]);
+
 function isWrapperExpression(node: ESTree.Expression): node is WrapperExpression {
-  return [
-    'ParenthesizedExpression',
-    'TSAsExpression',
-    'TSNonNullExpression',
-    'TSSatisfiesExpression',
-    'TSTypeAssertion',
-  ].includes(node.type);
+  return wrapperExpressionTypes.has(node.type);
 }
+
+const nonChildKeys: ReadonlySet<string> = new Set(['loc', 'parent', 'range']);
 
 export function unwrapExpression(node: ESTree.Expression): ESTree.Expression {
   let expression = node;
@@ -298,7 +319,7 @@ function appendNodeChildren(value: object, pending: Array<unknown>): void {
   }
 
   for (const [key, child] of R.toEntries(value)) {
-    if (!['loc', 'parent', 'range'].includes(key)) {
+    if (!nonChildKeys.has(key)) {
       pending.push(child);
     }
   }
@@ -372,6 +393,16 @@ export function callbackCall(node: FunctionNode): ESTree.CallExpression | undefi
   }
 
   return undefined;
+}
+
+/**
+ * Whether `inner` lies inside the source range of `outer`, inclusive.
+ *
+ * @param outer Enclosing node.
+ * @param inner Node, comment or token.
+ */
+export function containsRange(outer: ESTree.Node, inner: Ranged): boolean {
+  return outer.range[0] <= inner.range[0] && inner.range[1] <= outer.range[1];
 }
 
 export function isStringLiteral(node: ESTree.Node): node is ESTree.StringLiteral {
