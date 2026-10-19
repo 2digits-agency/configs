@@ -24,11 +24,8 @@ export const openTunnel = Effect.fn('Gateway.openTunnel')(
     const hostname = yield* decodeTunnelHostname(connection.tunnel.hostname);
 
     yield* connection.events.pipe(
-      Stream.runForEach((event) =>
-        event.type === 'reconnecting'
-          ? Effect.sync(() => process.stderr.write('OpenTunnel reconnecting...\n'))
-          : Effect.void,
-      ),
+      Stream.filter((event) => event.type === 'reconnecting'),
+      Stream.runForEach(() => Effect.sync(() => process.stderr.write('OpenTunnel reconnecting...\n'))),
       Effect.forkScoped,
     );
 

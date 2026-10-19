@@ -15,6 +15,27 @@ import * as HttpServerResponse from 'effect/http/HttpServerResponse';
 
 import { OrbitAuthError } from './session.js';
 
+const headers = {
+  'content-type': 'text/plain; charset=utf-8',
+  'cache-control': 'no-store',
+  'referrer-policy': 'no-referrer',
+  'content-security-policy': "default-src 'none'",
+};
+
+const invalid = HttpServerResponse.text('Invalid callback.', { status: 400, headers });
+
+const accepted = HttpServerResponse.text('Authorization received. Return to your terminal to complete login.', {
+  headers,
+});
+
+const denied = HttpServerResponse.text('Authorization denied. Return to your terminal.', { status: 400, headers });
+
+function soleParameter(url: URL, name: string): string | undefined {
+  const values = url.searchParams.getAll(name);
+
+  return values.length === 1 ? values[0] : undefined;
+}
+
 /**
  * Reject unsolicited callbacks without consuming the legitimate login attempt.
  *
@@ -22,9 +43,9 @@ import { OrbitAuthError } from './session.js';
  * @param state
  */
 export function validateCallback(url: URL, state: string): string | undefined {
-  const received = url.searchParams.get('state');
+  const received = soleParameter(url, 'state');
 
-  if (received === null || url.pathname !== '/callback' || url.searchParams.getAll('state').length !== 1) {
+  if (received === undefined || url.pathname !== '/callback') {
     return undefined;
   }
 
@@ -40,13 +61,9 @@ export function validateCallback(url: URL, state: string): string | undefined {
     throw new Error('Orbit authorization was denied.');
   }
 
-  const code = url.searchParams.get('code');
+  const code = soleParameter(url, 'code');
 
-  if (code === null || code.length === 0 || url.searchParams.getAll('code').length !== 1) {
-    return undefined;
-  }
-
-  return code;
+  return code === '' ? undefined : code;
 }
 
 export const listenForLogin = Effect.fn('OrbitAuth.listenForLogin')(function* (state: string) {
@@ -65,21 +82,6 @@ export const listenForLogin = Effect.fn('OrbitAuth.listenForLogin')(function* (s
   const host = `127.0.0.1:${server.address.port}`;
 
   const redirectUri = `http://${host}/callback`;
-
-  const headers = {
-    'content-type': 'text/plain; charset=utf-8',
-    'cache-control': 'no-store',
-    'referrer-policy': 'no-referrer',
-    'content-security-policy': "default-src 'none'",
-  };
-
-  const invalid = HttpServerResponse.text('Invalid callback.', { status: 400, headers });
-
-  const accepted = HttpServerResponse.text('Authorization received. Return to your terminal to complete login.', {
-    headers,
-  });
-
-  const denied = HttpServerResponse.text('Authorization denied. Return to your terminal.', { status: 400, headers });
 
   const handler = Effect.fn('OrbitAuth.handleCallback')(function* () {
     const request = yield* HttpServerRequest.HttpServerRequest;
