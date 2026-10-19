@@ -11,7 +11,9 @@ import {
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
+import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
+import * as Str from 'effect/String';
 
 export interface FileState {
   readonly bindings: ReadonlyMap<string, ReadonlyArray<string>>;
@@ -36,7 +38,7 @@ const emptyState: FileState = {
 
 const importedName = Match.type<ESTree.ImportSpecifier>().pipe(
   Match.when({ imported: { type: 'Identifier' } }, ({ imported }) => imported.name),
-  Match.when({ imported: { value: 'string' } }, ({ imported }) => imported.value),
+  Match.when({ imported: { value: Str.isString } }, ({ imported }) => imported.value),
   Match.orElse(Fn.constUndefined),
 );
 
@@ -159,17 +161,11 @@ export function ruleMeta(
   };
 }
 
-export function staticPropertyName(node: ESTree.MemberExpression): string | undefined {
-  if (!node.computed && node.property.type === 'Identifier') {
-    return node.property.name;
-  }
-
-  if (node.computed && node.property.type === 'Literal' && typeof node.property.value === 'string') {
-    return node.property.value;
-  }
-
-  return undefined;
-}
+export const staticPropertyName = Match.type<ESTree.MemberExpression>().pipe(
+  Match.when({ computed: false, property: { type: 'Identifier' } }, ({ property }) => property.name),
+  Match.when({ computed: true, property: { type: 'Literal', value: Str.isString } }, ({ property }) => property.value),
+  Match.orElse(Fn.constUndefined),
+);
 
 export function staticPath(node: ESTree.Node): ReadonlyArray<string> | undefined {
   const path: Array<string> = [];
@@ -241,9 +237,12 @@ export function isApiPath(node: ESTree.Node, state: FileState, expected: Readonl
   return path?.length === expected.length && Arr.every(path, (part, index) => part === expected[index]);
 }
 
-export function isFunctionNode(node: ESTree.Node | undefined): node is FunctionNode {
-  return node?.type === 'ArrowFunctionExpression' || node?.type === 'FunctionExpression';
-}
+export const isFunctionNode: P.Refinement<ESTree.Node | undefined, FunctionNode> = (v): v is FunctionNode =>
+  Match.value(v).pipe(
+    Match.when({ type: 'ArrowFunctionExpression' }, Fn.constTrue),
+    Match.when({ type: 'FunctionExpression' }, Fn.constTrue),
+    Match.orElse(Fn.constFalse),
+  );
 
 export function argumentAt(
   node: ESTree.CallExpression | ESTree.NewExpression,
@@ -254,17 +253,11 @@ export function argumentAt(
   return argument === undefined || argument.type === 'SpreadElement' ? undefined : argument;
 }
 
-export function propertyName(node: ESTree.ObjectProperty): string | undefined {
-  if (!node.computed && node.key.type === 'Identifier') {
-    return node.key.name;
-  }
-
-  if (node.key.type === 'Literal' && typeof node.key.value === 'string') {
-    return node.key.value;
-  }
-
-  return undefined;
-}
+export const propertyName = Match.type<ESTree.ObjectProperty>().pipe(
+  Match.when({ computed: false, key: { type: 'Identifier' } }, ({ key }) => key.name),
+  Match.when({ key: { type: 'Literal', value: Str.isString } }, ({ key }) => key.value),
+  Match.orElse(Fn.constUndefined),
+);
 
 export function objectProperty(node: ESTree.ObjectExpression, name: string): ESTree.ObjectProperty | undefined {
   for (const property of node.properties) {
@@ -404,6 +397,7 @@ export function isDiscarded(node: ESTree.Node): boolean {
   return parent.type === 'SequenceExpression' && parent.expressions.at(-1) !== node;
 }
 
-export function isErrorConstructor(node: ESTree.NewExpression): boolean {
-  return staticPath(node.callee)?.at(-1)?.endsWith('Error') === true;
-}
+export const isErrorConstructor = P.mapInput<string | undefined, ESTree.NewExpression>(
+  P.compose(P.isString, Str.endsWith('Error')),
+  (node) => staticPath(node.callee)?.at(-1),
+);
