@@ -33,13 +33,11 @@ const emptyState: FileState = {
   hasEffectImport: false,
 };
 
-function importedName(specifier: ESTree.ImportSpecifier): string | undefined {
-  if (specifier.imported.type === 'Identifier') {
-    return specifier.imported.name;
-  }
-
-  return typeof specifier.imported.value === 'string' ? specifier.imported.value : undefined;
-}
+const importedName = Match.type<ESTree.ImportSpecifier>().pipe(
+  Match.when({ imported: { type: 'Identifier' } }, ({ imported }) => imported.name),
+  Match.when({ imported: { value: 'string' } }, ({ imported }) => imported.value),
+  Match.orElse(Fn.constUndefined),
+);
 
 function modulePath(source: string): ReadonlyArray<string> | undefined {
   if (source === 'alchemy') {
