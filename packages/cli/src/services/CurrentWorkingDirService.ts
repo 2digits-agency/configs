@@ -10,5 +10,5 @@ export class CurrentWorkingDirService extends Context.Service<CurrentWorkingDirS
     }),
   },
 ) {
-  static readonly Default = Layer.effect(this, this.make);
+  static readonly layer = Layer.effect(this, this.make);
 }

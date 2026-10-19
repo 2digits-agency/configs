@@ -7,9 +7,9 @@ import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Opt from 'effect/Option';
 import * as Path from 'effect/Path';
-import * as R from 'effect/Record';
+import * as Str from 'effect/String';
 
-import { PackageManagerService } from './PackageManagerService';
+import { hasDependency, PackageManagerService } from './PackageManagerService';
 
 const ESLINT_CONFIG_FILES = [
   '.eslintrc',
@@ -22,6 +22,8 @@ const ESLINT_CONFIG_FILES = [
   'eslint.config.cjs',
   'eslint.config.mjs',
 ] as const;
+
+const ESLINT_CONFIG_FILES_WITH_TS = [...ESLINT_CONFIG_FILES, 'eslint.config.ts'] as const;
 
 /**
  * Service for detecting ESLint installation and configuration files.
@@ -66,7 +68,7 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
 
         const packageJson = yield* pm.readPackageJson({ id: pkgPath });
 
-        return R.has(packageJson.dependencies ?? {}, 'eslint') || R.has(packageJson.devDependencies ?? {}, 'eslint');
+        return hasDependency(packageJson, 'eslint');
       });
 
       /**
@@ -77,7 +79,7 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
 
         const targetDir = dir ?? root;
 
-        const existingConfigs = yield* findExistingConfigs(targetDir, [...ESLINT_CONFIG_FILES, 'eslint.config.ts']);
+        const existingConfigs = yield* findExistingConfigs(targetDir, ESLINT_CONFIG_FILES_WITH_TS);
 
         return Arr.isReadonlyArrayNonEmpty(existingConfigs);
       });
@@ -101,15 +103,11 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
 
         const targetPath = configPath ?? path.join(root, 'eslint.config.ts');
 
-        const exists = yield* fs.exists(targetPath).pipe(Effect.orElseSucceed(() => false));
-
-        if (!exists) {
-          return false;
-        }
-
-        const content = yield* fs.readFileString(targetPath).pipe(Effect.orElseSucceed(() => ''));
-
-        return content.includes('@2digits/eslint-config');
+        // A missing or unreadable config does not use it either.
+        return yield* fs.readFileString(targetPath).pipe(
+          Effect.map(Str.includes('@2digits/eslint-config')),
+          Effect.orElseSucceed(() => false),
+        );
       });
 
       return {
@@ -121,7 +119,7 @@ export class EslintDetectionService extends Context.Service<EslintDetectionServi
     }),
   },
 ) {
-  static readonly Default = Layer.effect(this, this.make).pipe(
-    Layer.provide(Layer.mergeAll(NodeFileSystem.layer, NodePath.layer, PackageManagerService.Default)),
+  static readonly layer = Layer.effect(this, this.make).pipe(
+    Layer.provide(Layer.mergeAll(NodeFileSystem.layer, NodePath.layer, PackageManagerService.layer)),
   );
 }

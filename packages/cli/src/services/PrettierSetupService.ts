@@ -3,7 +3,7 @@ import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as P from 'effect/Predicate';
 
-import { PackageManagerService, type PackageJson } from './PackageManagerService';
+import { ensureScript, PackageManagerService, type PackageJson } from './PackageManagerService';
 
 export class PrettierSetupService extends Context.Service<PrettierSetupService>()(
   '@2digits/cli/services/PrettierSetupService',
@@ -26,17 +26,9 @@ export class PrettierSetupService extends Context.Service<PrettierSetupService>(
 
         packageJson.scripts ??= {};
 
-        if (packageJson.scripts.format === undefined || packageJson.scripts.format === '') {
-          packageJson.scripts.format = 'prettier . --ignore-unknown --check --cache';
+        yield* ensureScript(packageJson.scripts, 'format', 'prettier . --ignore-unknown --check --cache');
 
-          yield* Effect.logInfo('✅ Added format script');
-        }
-
-        if (packageJson.scripts['format:fix'] === undefined || packageJson.scripts['format:fix'] === '') {
-          packageJson.scripts['format:fix'] = 'prettier . --ignore-unknown --write --cache';
-
-          yield* Effect.logInfo('✅ Added format:fix script');
-        }
+        yield* ensureScript(packageJson.scripts, 'format:fix', 'prettier . --ignore-unknown --write --cache');
 
         yield* pm.writePackageJson({ id: root, content: packageJson });
 
@@ -61,5 +53,5 @@ export class PrettierSetupService extends Context.Service<PrettierSetupService>(
     }),
   },
 ) {
-  static readonly Default = Layer.effect(this, this.make).pipe(Layer.provide(PackageManagerService.Default));
+  static readonly layer = Layer.effect(this, this.make).pipe(Layer.provide(PackageManagerService.layer));
 }

@@ -73,7 +73,7 @@ export class MockCommandExecutor extends Context.Service<MockCommandExecutor>()(
     }),
   },
 ) {
-  static readonly Default = Layer.effectContext(
+  static readonly layer = Layer.effectContext(
     Effect.gen(function* () {
       const mock = yield* MockCommandExecutor.make;
 

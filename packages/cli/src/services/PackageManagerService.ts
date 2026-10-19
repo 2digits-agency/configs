@@ -2,10 +2,11 @@ import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
-import * as Match from 'effect/Match';
 import * as Path from 'effect/Path';
+import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 import * as Stream from 'effect/Stream';
+import * as Str from 'effect/String';
 import * as ChildProcess from 'effect/process/ChildProcess';
 import * as nypm from 'nypm';
 import * as pkgTypes from 'pkg-types';
@@ -27,6 +28,37 @@ export interface PackageJson extends BasePackageJson {
   prettier?: unknown;
 }
 
+/**
+ * Check whether a package is listed in `dependencies` or `devDependencies`.
+ *
+ * @param packageJson - The package.json to inspect.
+ * @param name - The package name to look for.
+ */
+export function hasDependency(packageJson: PackageJson, name: string): boolean {
+  return R.has(packageJson.dependencies ?? {}, name) || R.has(packageJson.devDependencies ?? {}, name);
+}
+
+/**
+ * Add a script unless the package already defines a non-empty one under the same name.
+ *
+ * @param scripts - The `scripts` field to update in place.
+ * @param name - The script name.
+ * @param command - The command to add.
+ */
+export const ensureScript = Effect.fn('PackageManagerService.ensureScript')(function* (
+  scripts: NonNullable<PackageJson['scripts']>,
+  name: string,
+  command: string,
+) {
+  if (Str.isNonEmpty(scripts[name] ?? '')) {
+    return;
+  }
+
+  scripts[name] = command;
+
+  yield* Effect.logInfo(`✅ Added ${name} script`);
+});
+
 export class PackageManagerService extends Context.Service<PackageManagerService>()(
   '@2digits/cli/services/PackageManagerService',
   {
@@ -37,10 +69,20 @@ export class PackageManagerService extends Context.Service<PackageManagerService
 
       const runAddCommand = Effect.fn('PackageManagerService.runAddCommand')(
         function* (
-          command: ChildProcess.Command,
+          packageManager: nypm.PackageManagerName,
+          workspace: boolean | string,
           dependencyType: 'dependencies' | 'devDependencies',
-          dependencies: ReadonlyArray<string>,
+          dependencies: Array<string>,
         ) {
+          const command = ChildProcess.make(
+            nypm.addDependencyCommand(packageManager, dependencies, {
+              workspace,
+              dev: dependencyType === 'devDependencies',
+              short: true,
+            }),
+            { shell: true },
+          );
+
           const childProcess = yield* command;
 
           const { exitCode, stderr } = yield* Effect.all({
@@ -70,18 +112,15 @@ export class PackageManagerService extends Context.Service<PackageManagerService
           yield* Effect.logDebug(`Added ${dependencyType}: ${Arr.join(dependencies, ', ')}`);
         },
         Effect.scoped,
-        (effect, _command, dependencyType) =>
+        (effect, _packageManager, _workspace, dependencyType) =>
           effect.pipe(
-            Effect.mapError((cause) =>
-              Match.value(cause).pipe(
-                Match.when(Schema.is(PackageManagerError), (error) => error),
-                Match.orElse((cause) =>
-                  PackageManagerError.make({
-                    operation: 'addDependencies',
-                    message: `Failed to run package manager command for ${dependencyType}`,
-                    cause,
-                  }),
-                ),
+            Effect.catchTag('PlatformError', (cause) =>
+              Effect.fail(
+                PackageManagerError.make({
+                  operation: 'addDependencies',
+                  message: `Failed to run package manager command for ${dependencyType}`,
+                  cause,
+                }),
               ),
             ),
           ),
@@ -163,24 +202,12 @@ export class PackageManagerService extends Context.Service<PackageManagerService
         const dependencies = options.dependencies ?? [];
 
         if (Arr.isReadonlyArrayNonEmpty(devDependencies)) {
-          const devDepsCmd = ChildProcess.make(
-            nypm.addDependencyCommand(pm.name, devDependencies, { workspace, dev: true, short: true }),
-            { shell: true },
-          );
-
-          yield* runAddCommand(devDepsCmd, 'devDependencies', devDependencies);
+          yield* runAddCommand(pm.name, workspace, 'devDependencies', devDependencies);
         }
 
-        if (!Arr.isReadonlyArrayNonEmpty(dependencies)) {
-          return;
+        if (Arr.isReadonlyArrayNonEmpty(dependencies)) {
+          yield* runAddCommand(pm.name, workspace, 'dependencies', dependencies);
         }
-
-        const depsCmd = ChildProcess.make(
-          nypm.addDependencyCommand(pm.name, dependencies, { workspace, short: true }),
-          { shell: true },
-        );
-
-        yield* runAddCommand(depsCmd, 'dependencies', dependencies);
       });
 
       const getPackageManager = Effect.fn('PackageManagerService.getPackageManager')(function* () {
@@ -221,7 +248,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
     }),
   },
 ) {
-  static readonly Default = Layer.effect(this, this.make).pipe(
-    Layer.provide(Layer.mergeAll(Path.layer, CurrentWorkingDirService.Default)),
+  static readonly layer = Layer.effect(this, this.make).pipe(
+    Layer.provide(Layer.mergeAll(Path.layer, CurrentWorkingDirService.layer)),
   );
 }

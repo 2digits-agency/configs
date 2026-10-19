@@ -13,9 +13,9 @@ import { copyFixture, withTempTestEnv } from '../../helpers/testEnv.js';
 
 describe(ProjectDetectionService, () => {
   const testLayer = Layer.mergeAll(
-    ProjectDetectionService.Default,
-    PackageManagerService.Default,
-    MockCommandExecutor.Default,
+    ProjectDetectionService.layer,
+    PackageManagerService.layer,
+    MockCommandExecutor.layer,
     NodeFileSystem.layer,
     NodePath.layer,
   );

@@ -14,9 +14,9 @@ import { copyFixture, fixturesBasePath, withTempTestEnv } from '../../helpers/te
 
 describe(EslintDetectionService, () => {
   const testLayer = Layer.mergeAll(
-    EslintDetectionService.Default,
-    PackageManagerService.Default,
-    MockCommandExecutor.Default,
+    EslintDetectionService.layer,
+    PackageManagerService.layer,
+    MockCommandExecutor.layer,
     NodeFileSystem.layer,
     NodePath.layer,
   );
