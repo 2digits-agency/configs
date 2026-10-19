@@ -38,6 +38,12 @@ for (const [messageId, invalid, output] of [
   ['wrapperPipe', `(first, second).pipe(Schema.Array)`, `Schema.Array((first, second))`],
   ['dataLastCall', `Schema.toTaggedUnion('_tag')(Event)`, `Event.pipe(Schema.toTaggedUnion('_tag'))`],
   ['dataLastCall', `Schema.brand('UserId')(Schema.String)`, `Schema.String.pipe(Schema.brand('UserId'))`],
+  // The parentheses keep the optional chain closed, so `.pipe(Schema.optional)` still runs when `config` is nullish.
+  [
+    'modifierCall',
+    `Schema.optional(config?.item.pipe(Schema.Array))`,
+    `(config?.item.pipe(Schema.Array)).pipe(Schema.optional)`,
+  ],
   [
     'dataLastCall',
     `Schema.optionalKey(Schema.check(Schema.isNonEmpty())(Schema.String))`,
