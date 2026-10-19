@@ -36,10 +36,11 @@ const emptyState: FileState = {
   hasEffectImport: false,
 };
 
-const importedName = Match.type<ESTree.ImportSpecifier>().pipe(
-  Match.when({ imported: { type: 'Identifier' } }, ({ imported }) => imported.name),
-  Match.when({ imported: { value: Str.isString } }, ({ imported }) => imported.value),
-  Match.orElse(Fn.constUndefined),
+export const moduleExportName = Match.type<ESTree.ModuleExportName>().pipe(
+  Match.discriminatorsExhaustive('type')({
+    Identifier: ({ name }) => name,
+    Literal: ({ value }) => value,
+  }),
 );
 
 function modulePath(source: string): ReadonlyArray<string> | undefined {
@@ -95,11 +96,7 @@ function collectState(program: ESTree.Program): FileState {
         continue;
       }
 
-      const name = importedName(specifier);
-
-      if (name !== undefined) {
-        bindings.set(specifier.local.name, [...path, name]);
-      }
+      bindings.set(specifier.local.name, [...path, moduleExportName(specifier.imported)]);
     }
   }
 
@@ -237,12 +234,14 @@ export function isApiPath(node: ESTree.Node, state: FileState, expected: Readonl
   return path?.length === expected.length && Arr.every(path, (part, index) => part === expected[index]);
 }
 
-export const isFunctionNode: P.Refinement<ESTree.Node | undefined, FunctionNode> = (v): v is FunctionNode =>
-  Match.value(v).pipe(
-    Match.when({ type: 'ArrowFunctionExpression' }, Fn.constTrue),
-    Match.when({ type: 'FunctionExpression' }, Fn.constTrue),
-    Match.orElse(Fn.constFalse),
-  );
+const functionNodeMatcher = Match.type<ESTree.Node | undefined>().pipe(
+  Match.when({ type: Match.is('ArrowFunctionExpression', 'FunctionExpression') }, Fn.constTrue),
+  Match.orElse(Fn.constFalse),
+);
+
+export function isFunctionNode(node: ESTree.Node | undefined): node is FunctionNode {
+  return functionNodeMatcher(node);
+}
 
 export function argumentAt(
   node: ESTree.CallExpression | ESTree.NewExpression,
@@ -373,6 +372,10 @@ export function callbackCall(node: FunctionNode): ESTree.CallExpression | undefi
   }
 
   return undefined;
+}
+
+export function isStringLiteral(node: ESTree.Node): node is ESTree.StringLiteral {
+  return node.type === 'Literal' && Str.isString(node.value);
 }
 
 export function isLiteral(node: ESTree.Node, value: string | number | boolean): boolean {

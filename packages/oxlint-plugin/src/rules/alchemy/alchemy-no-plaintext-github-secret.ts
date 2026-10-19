@@ -4,6 +4,7 @@ import {
   argumentAt,
   defineEffectRule,
   isApi,
+  isStringLiteral,
   objectProperty,
   ruleMeta,
   staticPath,
@@ -13,7 +14,7 @@ import {
 function isPlaintextSecret(node: ESTree.Expression, state: Parameters<typeof isApi>[1]): boolean {
   const value = unwrapExpression(node);
 
-  if ((value.type === 'Literal' && typeof value.value === 'string') || value.type === 'TemplateLiteral') {
+  if (isStringLiteral(value) || value.type === 'TemplateLiteral') {
     return true;
   }
 

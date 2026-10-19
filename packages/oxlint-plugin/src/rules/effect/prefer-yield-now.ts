@@ -6,6 +6,7 @@ import {
   defineEffectRule,
   isApi,
   isLiteral,
+  isStringLiteral,
   ruleMeta,
   unwrapExpression,
   type FileState,
@@ -18,7 +19,7 @@ function zeroDuration(node: ESTree.Expression, state: FileState): boolean {
     return true;
   }
 
-  if (expression.type === 'Literal' && typeof expression.value === 'string') {
+  if (isStringLiteral(expression)) {
     return /^0\s*(?:nanos?|micros?|millis?|seconds?|minutes?|hours?|days?|weeks?)$/i.test(expression.value);
   }
 

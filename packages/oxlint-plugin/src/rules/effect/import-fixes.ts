@@ -1,16 +1,9 @@
 import type { Context, ESTree, Fix, Fixer, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import * as Fn from 'effect/Function';
-import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 
+import { moduleExportName } from '../../utils';
 import { barrelModuleSource, isTypeOnlyImport, namespaceAlias, submoduleName } from './import-style-utils';
-
-const importedName = Match.type<ESTree.ModuleExportName>().pipe(
-  Match.when({ type: 'Identifier' }, ({ name }) => name),
-  Match.when({ value: Match.nonEmptyString }, ({ value }) => value),
-  Match.orElse(Fn.constUndefined),
-);
 
 /**
  * Split barrel module imports without renaming their local bindings.
@@ -33,10 +26,10 @@ export function fixBarrel(context: Context, node: ESTree.ImportDeclaration, fixe
       return undefined;
     }
 
-    const name = importedName(specifier.imported);
+    const name = moduleExportName(specifier.imported);
 
     const source =
-      name !== undefined && /^\p{Lu}/u.test(name) && !isTypeOnlyImport(node, specifier)
+      /^\p{Lu}/u.test(name) && !isTypeOnlyImport(node, specifier)
         ? barrelModuleSource(node.source.value, name)
         : undefined;
 

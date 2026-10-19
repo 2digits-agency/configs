@@ -1,19 +1,10 @@
 import type { ESTree } from '@oxlint/plugins';
 
-import { staticPropertyName } from '../../utils';
+import { isStringLiteral, staticPropertyName } from '../../utils';
 
 const equalityOperators = new Set(['==', '===', '!=', '!==']);
 
 const broadEffectCatchMethods = new Set(['catch', 'catchAll', 'catchIf']);
-
-/**
- * Recognize string literals, not dynamic tags or templates.
- *
- * @param node - Candidate syntax node.
- */
-export function isStringLiteral(node: ESTree.Node): node is ESTree.StringLiteral {
-  return node.type === 'Literal' && typeof node.value === 'string';
-}
 
 /**
  * Recognize static `_tag` access, including bracket notation.
