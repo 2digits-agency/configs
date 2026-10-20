@@ -3,6 +3,7 @@ import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
 
 import {
   defineEffectRule,
@@ -127,9 +128,10 @@ function resolvesToImport(node: ESTree.Node, name: string, context: Context): bo
 
 type TypeNamePath = ReadonlyArray<string> | undefined;
 
-const typeNamePath: (node: ESTree.TSTypeName) => TypeNamePath = Match.type<ESTree.TSTypeName>().pipe(
+const typeNamePath = Match.type<ESTree.TSTypeName>().pipe(
+  Match.withReturnType<TypeNamePath>(),
   Match.discriminators('type')({
-    Identifier: ({ name }): TypeNamePath => [name],
+    Identifier: Fn.flow(Struct.get('name'), Arr.make),
     TSQualifiedName: ({ left, right }): TypeNamePath => {
       const path = typeNamePath(left);
 
@@ -158,7 +160,7 @@ function durationAnnotation(annotation: ESTree.Node, context: Context, state: Fi
 
     // Local types that shadow the import, such as an inner `type Input = number`, are not Effect's.
     const imported =
-      root === undefined || !resolvesToImport(node, root, context) ? undefined : state.bindings?.get(root);
+      root === undefined || !resolvesToImport(node, root, context) ? undefined : state.bindings.get(root);
 
     return imported !== undefined && [...imported, ...rest][0] === 'Duration';
   });
@@ -198,7 +200,7 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
   ),
   (context, getState) => {
     // Classify at the end of the file so forward references and declaration order do not change the suggestion.
-    let candidates = new Map<NumericDeclarator, boolean>();
+    const candidates = new Map<NumericDeclarator, boolean>();
 
     function durationUnit(node: NumericDeclarator, passedAsDuration: boolean): DurationUnit | 'none' | undefined {
       // `const TIMEOUT: Duration.Input = 5000` already opts into Duration.
@@ -233,7 +235,7 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
 
     return {
       before() {
-        candidates = new Map();
+        candidates.clear();
       },
       VariableDeclarator(node) {
         if (getState().hasEffectImport && numericDeclarator(node) && !candidates.has(node)) {

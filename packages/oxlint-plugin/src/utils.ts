@@ -23,10 +23,9 @@ import * as Str from 'effect/String';
 
 export class FileState extends Schema.Class<FileState, { readonly brand: unique symbol }>('FileState')({
   bindings: Schema.ReadonlyMap(Schema.String, Schema.Array(Schema.String)).pipe(
-    Schema.optionalKey,
     Schema.withConstructorDefault(Effect.succeed(new Map())),
   ),
-  hasEffectImport: Schema.Boolean.pipe(Schema.optionalKey, Schema.withConstructorDefault(Effect.succeed(false))),
+  hasEffectImport: Schema.Boolean.pipe(Schema.withConstructorDefault(Effect.succeed(false))),
 }) {}
 
 export type FunctionNode = ESTree.ArrowFunctionExpression | ESTree.Function;
@@ -229,7 +228,7 @@ export function canonicalPath(node: ESTree.Node, state: FileState): ReadonlyArra
     return undefined;
   }
 
-  const imported = state.bindings?.get(first);
+  const imported = state.bindings.get(first);
 
   return imported === undefined ? undefined : [...imported, ...path.slice(1)];
 }
