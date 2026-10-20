@@ -1,3 +1,11 @@
+## @2digits/tsconfig@1.0.2
+
+### Enable schemaClassObjectLiteral rule in effect config
+
+- Added `schemaClassObjectLiteral: error` to the `@effect/language-service` plugin rules in `effect.json`
+
+### Update @effect/tsgo to 0.54.0
+
 ## @2digits/tsconfig@1.0.1
 
 ### Update @effect/tsgo to 0.53.4

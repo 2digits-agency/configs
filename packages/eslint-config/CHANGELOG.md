@@ -1,3 +1,15 @@
+## @2digits/eslint-config@5.9.3
+
+### Update typescript-eslint to 8.72.0
+
+- `@typescript-eslint/parser`, `scope-manager` and `utils` to 8.72.0
+
+### Update eslint-plugin-jsdoc to 65.3.15
+
+
+
+### Update @tanstack/eslint-plugin-query to 5.104.5
+
 ## @2digits/eslint-config@5.9.2
 
 ### Update eslint plugins
