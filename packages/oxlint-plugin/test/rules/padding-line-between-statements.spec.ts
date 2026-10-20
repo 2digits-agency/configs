@@ -3,17 +3,9 @@
 import { describe, expectTypeOf, it } from '@effect/vitest';
 import ts from 'dedent';
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
-import { rules, type PaddingLineOption } from '../../src';
-
-RuleTester.describe = describe;
-
-RuleTester.it = it;
-
-RuleTester.itOnly = it.only;
-
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+import type { PaddingLineOption } from '../../src';
+import { testRule } from '../rule-tester';
 
 const always = { blankLine: 'always', prev: '*', next: '*' } satisfies PaddingLineOption;
 
@@ -35,9 +27,7 @@ describe('padding-line-between-statements types', () => {
   });
 });
 
-const rule = rules['padding-line-between-statements'];
-
-tester.run('padding-line-between-statements', rule, {
+testRule('padding-line-between-statements', {
   valid: [
     {
       code: ts`

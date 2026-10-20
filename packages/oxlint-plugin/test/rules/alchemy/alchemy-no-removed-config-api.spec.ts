@@ -1,14 +1,19 @@
-import { alchemyNoRemovedConfigApi } from '../../../src/rules/alchemy/alchemy-no-removed-config-api';
 import { testRule } from '../../rule-tester';
 
-testRule('alchemy-no-removed-config-api', alchemyNoRemovedConfigApi, {
-  valid: `
+testRule('alchemy-no-removed-config-api', {
+  valid: [
+    `
     import * as Alchemy from 'alchemy'
     Alchemy.Stack('App', {}, program)
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Alchemy from 'alchemy'
     Alchemy.Secret('API_KEY')
   `,
-  messageId: 'removed',
+      errors: [{ messageId: 'removed' }],
+    },
+  ],
 });

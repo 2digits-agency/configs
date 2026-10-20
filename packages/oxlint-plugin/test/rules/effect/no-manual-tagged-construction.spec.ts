@@ -1,14 +1,10 @@
-import { rules } from '../../../src';
+import * as Arr from 'effect/Array';
+
 import { testRule } from '../../rule-tester';
 
-for (const invalid of [
-  'const value = { _tag: "Ready", payload };',
-  'const value = { ["_tag"]: "Ready" };',
-  'const value = { "_tag": "Ready" };',
-  'Other.when({ _tag: "Ready" });',
-]) {
-  testRule('no-manual-tagged-construction', rules['no-manual-tagged-construction'], {
-    valid: `
+testRule('no-manual-tagged-construction', {
+  valid: [
+    `
       Match.when({ _tag: 'Ready' }, handleReady);
       Match.not({ '_tag': 'Pending' });
       Ready.make({ value });
@@ -17,7 +13,14 @@ for (const invalid of [
       ({ [key]: 'Ready' });
       ({ ...value });
     `,
-    invalid,
-    messageId: 'manualConstruction',
-  });
-}
+  ],
+  invalid: Arr.map(
+    [
+      'const value = { _tag: "Ready", payload };',
+      'const value = { ["_tag"]: "Ready" };',
+      'const value = { "_tag": "Ready" };',
+      'Other.when({ _tag: "Ready" });',
+    ],
+    (code) => ({ code, errors: [{ messageId: 'manualConstruction' }] }),
+  ),
+});

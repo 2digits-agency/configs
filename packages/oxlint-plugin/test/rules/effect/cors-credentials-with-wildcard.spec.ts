@@ -1,14 +1,19 @@
-import { corsCredentialsWithWildcard } from '../../../src/rules/effect/cors-credentials-with-wildcard';
 import { testRule } from '../../rule-tester';
 
-testRule('cors-credentials-with-wildcard', corsCredentialsWithWildcard, {
-  valid: `
+testRule('cors-credentials-with-wildcard', {
+  valid: [
+    `
     import { HttpMiddleware as Middleware } from 'effect/unstable/http'
     Middleware.cors({ credentials: true, allowedOrigins: ['https://example.com'] })
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import { HttpMiddleware as Middleware } from 'effect/unstable/http'
     Middleware.cors({ credentials: true })
   `,
-  messageId: 'wildcard',
+      errors: [{ messageId: 'wildcard' }],
+    },
+  ],
 });

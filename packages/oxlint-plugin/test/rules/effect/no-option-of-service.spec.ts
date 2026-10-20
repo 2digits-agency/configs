@@ -1,14 +1,19 @@
-import { noOptionOfService } from '../../../src/rules/effect/no-option-of-service';
 import { testRule } from '../../rule-tester';
 
-testRule('no-option-of-service', noOptionOfService, {
-  valid: `
+testRule('no-option-of-service', {
+  valid: [
+    `
     import * as Fx from 'effect/Effect'
     Fx.serviceOption(Logger)
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Fx from 'effect/Effect'
     Fx.option(Fx.service(Logger))
   `,
-  messageId: 'mandatory',
+      errors: [{ messageId: 'mandatory' }],
+    },
+  ],
 });

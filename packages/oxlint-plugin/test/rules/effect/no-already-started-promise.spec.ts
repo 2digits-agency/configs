@@ -1,15 +1,20 @@
-import { noAlreadyStartedPromise } from '../../../src/rules/effect/no-already-started-promise';
 import { testRule } from '../../rule-tester';
 
-testRule('no-already-started-promise', noAlreadyStartedPromise, {
-  valid: `
+testRule('no-already-started-promise', {
+  valid: [
+    `
     import * as Fx from 'effect/Effect'
     Fx.tryPromise(() => fetch('/users'))
   `,
-  invalid: `
+  ],
+  invalid: [
+    {
+      code: `
     import * as Fx from 'effect/Effect'
     const request = fetch('/users')
     Fx.tryPromise(() => request)
   `,
-  messageId: 'prestarted',
+      errors: [{ messageId: 'prestarted' }],
+    },
+  ],
 });

@@ -4,23 +4,25 @@ import * as Exit from 'effect/Exit';
 import * as Schema from 'effect/Schema';
 import * as HttpApiEndpoint from 'effect/http-api/HttpApiEndpoint';
 
+const headerDecoder = Effect.fn('HttpApiHeaderRuntime.headerDecoder')(function* (headers: Schema.Top | undefined) {
+  if (headers === undefined) {
+    return yield* Effect.die('Endpoint headers are missing');
+  }
+
+  // Rebuild the endpoint AST: these fixtures contain only service-free string fields.
+  return Schema.decodeEffect(Schema.make<Schema.Codec<unknown, unknown>>(headers.ast));
+});
+
 describe('effect v4 endpoint header decoding', () => {
   it.effect('fails a required mixed-case key even when the header arrived', () =>
     Effect.gen(function* () {
-      const endpoint = HttpApiEndpoint.get('me', '/me', { headers: { 'X-Api-Key': Schema.String } });
-
-      const headers = endpoint.headers;
+      const { headers } = HttpApiEndpoint.get('me', '/me', { headers: { 'X-Api-Key': Schema.String } });
 
       expect(headers).toBeDefined();
 
-      if (headers === undefined) {
-        return yield* Effect.die('Endpoint headers are missing');
-      }
+      const decode = yield* headerDecoder(headers);
 
-      // Rebuild the endpoint AST: this fixture contains only service-free string fields.
-      const decoder = Schema.make<Schema.Codec<unknown, unknown>>(headers.ast);
-
-      const result = yield* Effect.exit(Schema.decodeEffect(decoder)({ 'x-api-key': 'present' }));
+      const result = yield* Effect.exit(decode({ 'x-api-key': 'present' }));
 
       expect(Exit.isFailure(result)).toBeTruthy();
     }),
@@ -28,20 +30,13 @@ describe('effect v4 endpoint header decoding', () => {
 
   it.effect('decodes the same required header with a lowercase schema key', () =>
     Effect.gen(function* () {
-      const endpoint = HttpApiEndpoint.get('me', '/me', { headers: { 'x-api-key': Schema.String } });
-
-      const headers = endpoint.headers;
+      const { headers } = HttpApiEndpoint.get('me', '/me', { headers: { 'x-api-key': Schema.String } });
 
       expect(headers).toBeDefined();
 
-      if (headers === undefined) {
-        return yield* Effect.die('Endpoint headers are missing');
-      }
+      const decode = yield* headerDecoder(headers);
 
-      // Rebuild the endpoint AST: this fixture contains only service-free string fields.
-      const decoder = Schema.make<Schema.Codec<unknown, unknown>>(headers.ast);
-
-      const result = yield* Schema.decodeEffect(decoder)({ 'x-api-key': 'present' });
+      const result = yield* decode({ 'x-api-key': 'present' });
 
       expect(result).toStrictEqual({ 'x-api-key': 'present' });
     }),

@@ -1,12 +1,8 @@
 /* oxlint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 /* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
-import { preferEffectDurationConstants } from '../../../src/rules/effect/prefer-effect-duration-constants';
 import { testRule } from '../../rule-tester';
-
-const ruleName = 'prefer-effect-duration-constants';
 
 const effect = `import * as Effect from 'effect/Effect';`;
 
@@ -14,22 +10,12 @@ const generic = 'a Duration constructor such as Duration.seconds';
 
 const fiveSeconds = 'Duration.seconds(5)';
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
-
-testRule(ruleName, preferEffectDurationConstants, {
-  valid: `
+testRule('prefer-effect-duration-constants', {
+  valid: [
+    `
     import * as Duration from 'effect/Duration'
     const TIMEOUT = Duration.seconds(30)
   `,
-  invalid: `
-    import * as Effect from 'effect/Effect'
-    const TIMEOUT_MS = 30_000
-  `,
-  messageId: 'durationConstant',
-});
-
-tester.run(ruleName, preferEffectDurationConstants, {
-  valid: [
     // Only files that use Effect are checked.
     `const TIMEOUT_MS = 30_000;`,
     `const ONE_DAY = 24 * 60 * 60 * 1000;`,
@@ -79,84 +65,87 @@ tester.run(ruleName, preferEffectDurationConstants, {
     `${effect} const attempts = 3; Effect.retry(program, { times: attempts });`,
     `${effect} const value = 3; Effect.succeed(value);`,
   ],
-  invalid: Arr.map(
-    [
-      [`${effect} const TIMEOUT_MS = 30_000;`, 'TIMEOUT_MS', 'Duration.seconds(30)'],
-      [`${effect} export const requestTimeoutMs = 1500;`, 'requestTimeoutMs', 'Duration.millis(1500)'],
-      [`${effect} const CACHE_TTL_SECONDS = 3600;`, 'CACHE_TTL_SECONDS', 'Duration.hours(1)'],
-      [`${effect} const ttlInMinutes = 90;`, 'ttlInMinutes', 'Duration.minutes(90)'],
-      [`${effect} const wait = 10 ** 3; Effect.sleep(wait);`, 'wait', 'Duration.seconds(1)'],
-      [`${effect} const wait = 5000 % 3000; Effect.sleep(wait);`, 'wait', 'Duration.seconds(2)'],
-      // A local type named Duration is not Effect's.
-      [`${effect} type Duration = number; const TIMEOUT_MS: Duration = 5000;`, 'TIMEOUT_MS', fiveSeconds],
-      [
-        `${effect} import type { Input } from 'effect/Duration'; function f() { type Input = number; const TIMEOUT_MS: Input = 5000; }`,
-        'TIMEOUT_MS',
-        fiveSeconds,
-      ],
-      [`${effect} const SESSION_WINDOW_MINUTES = 15;`, 'SESSION_WINDOW_MINUTES', 'Duration.minutes(15)'],
-      [`${effect} const RETENTION_DAYS = 14;`, 'RETENTION_DAYS', 'Duration.weeks(2)'],
-      [`${effect} const ONE_SECOND = 1000;`, 'ONE_SECOND', generic],
-      // Sentinels and factors still count when they are passed as a duration.
-      [`${effect} const NO_DELAY = 0; Effect.sleep(NO_DELAY);`, 'NO_DELAY', 'Duration.zero'],
-      [`${effect} const MS_PER_SECOND = 1000; Effect.sleep(MS_PER_SECOND);`, 'MS_PER_SECOND', 'Duration.seconds(1)'],
-      // Declaration order does not change the suggested unit.
-      [
-        `${effect} const run = () => Effect.sleep(TIMEOUT_SECONDS); const TIMEOUT_SECONDS = 5;`,
-        'TIMEOUT_SECONDS',
-        fiveSeconds,
-      ],
-      [
-        `${effect} const run = () => Effect.sleep(REQUEST_TIMEOUT); const REQUEST_TIMEOUT = 30;`,
-        'REQUEST_TIMEOUT',
-        'Duration.millis(30)',
-      ],
-      [
-        `${effect} const REQUEST_TIMEOUT = 30; Effect.sleep(REQUEST_TIMEOUT);`,
-        'REQUEST_TIMEOUT',
-        'Duration.millis(30)',
-      ],
-      [`${effect} const ONE_DAY = 24 * 60 * 60 * 1000;`, 'ONE_DAY', 'Duration.days(1)'],
-      [`${effect} const FIVE = 5 * 60_000;`, 'FIVE', 'Duration.minutes(5)'],
-      [`${effect} const ONE_DAY = 24 * 60 * 60;`, 'ONE_DAY', generic],
-      [`${effect} const REQUEST_TIMEOUT = 30;`, 'REQUEST_TIMEOUT', generic],
-      [`${effect} const maxAge = 3600 as const;`, 'maxAge', generic],
-      [`${effect} const expiresIn = 60;`, 'expiresIn', generic],
-      // Any numeric const used as a Duration.Input, whatever its name.
-      [`${effect} const wait = 250; Effect.sleep(wait);`, 'wait', 'Duration.millis(250)'],
-      [`${effect} const wait = 250; program.pipe(Effect.timeout(wait));`, 'wait', 'Duration.millis(250)'],
-      [
-        `import * as Schedule from 'effect/Schedule'; const base = 100; Schedule.exponential(base, 2);`,
-        'base',
-        'Duration.millis(100)',
-      ],
-      [
-        `${effect} const limit = 5000; Effect.timeoutOrElse(program, { duration: limit, orElse });`,
-        'limit',
-        fiveSeconds,
-      ],
-      [
-        `import { TestClock } from 'effect/testing'; const step = 60_000; TestClock.adjust(step);`,
-        'step',
-        'Duration.minutes(1)',
-      ],
-    ] satisfies Array<[string, string, string]>,
-    ([code, name, replacement]) => ({
-      code,
-      errors: [{ messageId: 'durationConstant', data: { name, replacement } }],
-      output: null,
-    }),
-  ),
-});
-
-tester.run(`${ruleName} reports each declaration once`, preferEffectDurationConstants, {
-  valid: [],
   invalid: [
+    {
+      code: `
+    import * as Effect from 'effect/Effect'
+    const TIMEOUT_MS = 30_000
+  `,
+      errors: [{ messageId: 'durationConstant' }],
+    },
     {
       code: `${effect} const TIMEOUT_MS = 5000; Effect.sleep(TIMEOUT_MS); Effect.timeout(program, TIMEOUT_MS);`,
       errors: [{ messageId: 'durationConstant', data: { name: 'TIMEOUT_MS', replacement: fiveSeconds } }],
       output: null,
     },
+    ...Arr.map(
+      [
+        [`${effect} const TIMEOUT_MS = 30_000;`, 'TIMEOUT_MS', 'Duration.seconds(30)'],
+        [`${effect} export const requestTimeoutMs = 1500;`, 'requestTimeoutMs', 'Duration.millis(1500)'],
+        [`${effect} const CACHE_TTL_SECONDS = 3600;`, 'CACHE_TTL_SECONDS', 'Duration.hours(1)'],
+        [`${effect} const ttlInMinutes = 90;`, 'ttlInMinutes', 'Duration.minutes(90)'],
+        [`${effect} const wait = 10 ** 3; Effect.sleep(wait);`, 'wait', 'Duration.seconds(1)'],
+        [`${effect} const wait = 5000 % 3000; Effect.sleep(wait);`, 'wait', 'Duration.seconds(2)'],
+        // A local type named Duration is not Effect's.
+        [`${effect} type Duration = number; const TIMEOUT_MS: Duration = 5000;`, 'TIMEOUT_MS', fiveSeconds],
+        [
+          `${effect} import type { Input } from 'effect/Duration'; function f() { type Input = number; const TIMEOUT_MS: Input = 5000; }`,
+          'TIMEOUT_MS',
+          fiveSeconds,
+        ],
+        [`${effect} const SESSION_WINDOW_MINUTES = 15;`, 'SESSION_WINDOW_MINUTES', 'Duration.minutes(15)'],
+        [`${effect} const RETENTION_DAYS = 14;`, 'RETENTION_DAYS', 'Duration.weeks(2)'],
+        [`${effect} const ONE_SECOND = 1000;`, 'ONE_SECOND', generic],
+        // Sentinels and factors still count when they are passed as a duration.
+        [`${effect} const NO_DELAY = 0; Effect.sleep(NO_DELAY);`, 'NO_DELAY', 'Duration.zero'],
+        [`${effect} const MS_PER_SECOND = 1000; Effect.sleep(MS_PER_SECOND);`, 'MS_PER_SECOND', 'Duration.seconds(1)'],
+        // Declaration order does not change the suggested unit.
+        [
+          `${effect} const run = () => Effect.sleep(TIMEOUT_SECONDS); const TIMEOUT_SECONDS = 5;`,
+          'TIMEOUT_SECONDS',
+          fiveSeconds,
+        ],
+        [
+          `${effect} const run = () => Effect.sleep(REQUEST_TIMEOUT); const REQUEST_TIMEOUT = 30;`,
+          'REQUEST_TIMEOUT',
+          'Duration.millis(30)',
+        ],
+        [
+          `${effect} const REQUEST_TIMEOUT = 30; Effect.sleep(REQUEST_TIMEOUT);`,
+          'REQUEST_TIMEOUT',
+          'Duration.millis(30)',
+        ],
+        [`${effect} const ONE_DAY = 24 * 60 * 60 * 1000;`, 'ONE_DAY', 'Duration.days(1)'],
+        [`${effect} const FIVE = 5 * 60_000;`, 'FIVE', 'Duration.minutes(5)'],
+        [`${effect} const ONE_DAY = 24 * 60 * 60;`, 'ONE_DAY', generic],
+        [`${effect} const REQUEST_TIMEOUT = 30;`, 'REQUEST_TIMEOUT', generic],
+        [`${effect} const maxAge = 3600 as const;`, 'maxAge', generic],
+        [`${effect} const expiresIn = 60;`, 'expiresIn', generic],
+        // Any numeric const used as a Duration.Input, whatever its name.
+        [`${effect} const wait = 250; Effect.sleep(wait);`, 'wait', 'Duration.millis(250)'],
+        [`${effect} const wait = 250; program.pipe(Effect.timeout(wait));`, 'wait', 'Duration.millis(250)'],
+        [
+          `import * as Schedule from 'effect/Schedule'; const base = 100; Schedule.exponential(base, 2);`,
+          'base',
+          'Duration.millis(100)',
+        ],
+        [
+          `${effect} const limit = 5000; Effect.timeoutOrElse(program, { duration: limit, orElse });`,
+          'limit',
+          fiveSeconds,
+        ],
+        [
+          `import { TestClock } from 'effect/testing'; const step = 60_000; TestClock.adjust(step);`,
+          'step',
+          'Duration.minutes(1)',
+        ],
+      ] satisfies Array<[string, string, string]>,
+      ([code, name, replacement]) => ({
+        code,
+        errors: [{ messageId: 'durationConstant', data: { name, replacement } }],
+        output: null,
+      }),
+    ),
   ],
 });
 

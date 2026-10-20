@@ -1,19 +1,10 @@
-import { rules } from '../../../src';
+import * as Arr from 'effect/Array';
+
 import { testRule } from '../../rule-tester';
 
-const name = 'no-manual-tag-comparison';
-
-const rule = rules[name];
-
-for (const invalid of [
-  'value._tag === "Ready";',
-  '"Ready" !== value["_tag"];',
-  'value._tag == "Ready";',
-  'value._tag != "Ready";',
-  'Effect.catch(error => () => error._tag === "Missing");',
-]) {
-  testRule(name, rule, {
-    valid: `
+testRule('no-manual-tag-comparison', {
+  valid: [
+    `
       Predicate.isTagged('Ready')(value);
       Match.value(value).pipe(Match.tag('Ready', handleReady));
       if (value.status === 'Ready') handleReady(value);
@@ -22,13 +13,19 @@ for (const invalid of [
       value[key] === 'Ready';
       value._tag > 'Ready';
     `,
-    invalid,
-    messageId: 'manualComparison',
-  });
-}
-
-testRule(name, rule, {
-  valid: 'Effect.catch(error => { switch (error._tag) { case "Missing": return recover; } });',
-  invalid: 'switch (value._tag) { case "Ready": handleReady(value); }',
-  messageId: 'manualSwitch',
+    'Effect.catch(error => { switch (error._tag) { case "Missing": return recover; } });',
+  ],
+  invalid: [
+    ...Arr.map(
+      [
+        'value._tag === "Ready";',
+        '"Ready" !== value["_tag"];',
+        'value._tag == "Ready";',
+        'value._tag != "Ready";',
+        'Effect.catch(error => () => error._tag === "Missing");',
+      ],
+      (code) => ({ code, errors: [{ messageId: 'manualComparison' }] }),
+    ),
+    { code: 'switch (value._tag) { case "Ready": handleReady(value); }', errors: [{ messageId: 'manualSwitch' }] },
+  ],
 });

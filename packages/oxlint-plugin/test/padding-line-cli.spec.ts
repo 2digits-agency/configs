@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url';
 
 import * as NodeServices from '@effect/platform-node/NodeServices';
-import { describe, expect, it } from '@effect/vitest';
+import { expect, layer } from '@effect/vitest';
 import ts from 'dedent';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
@@ -41,14 +41,42 @@ const runOxlint = Effect.fn('PaddingLineCli.runOxlint')(function* (directory: st
   return { status: exitCode, stdout, stderr };
 });
 
-describe('statement spacing CLI', () => {
+const writeProject = Effect.fn('PaddingLineCli.writeProject')(function* (
+  files: Readonly<Record<string, string>>,
+  option: unknown,
+) {
+  const fs = yield* FileSystem.FileSystem;
+
+  const path = yield* Path.Path;
+
+  const directory = yield* fs.makeTempDirectoryScoped({ prefix: '2digits-padding-' });
+
+  const encodedOption = yield* encodeOption(option);
+
+  yield* fs.writeFileString(
+    path.join(directory, 'oxlint.config.mjs'),
+    ts`
+      export default {
+        categories: { correctness: 'off' },
+        jsPlugins: [{ name: '2digits', specifier: '${pluginUrl}' }],
+        rules: { '2digits/padding-line-between-statements': ['error', ${encodedOption}] },
+      };
+    `,
+  );
+
+  for (const [filename, source] of R.toEntries(files)) {
+    yield* fs.writeFileString(path.join(directory, filename), source);
+  }
+
+  return directory;
+});
+
+layer(NodeServices.layer)('statement spacing CLI', (it) => {
   it.effect('loads the published plugin, isolates files and fixes spacing idempotently', () =>
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
 
       const path = yield* Path.Path;
-
-      const directory = yield* fs.makeTempDirectoryScoped({ prefix: '2digits-padding-' });
 
       const sources = {
         'a.ts': {
@@ -75,25 +103,10 @@ describe('statement spacing CLI', () => {
         },
       };
 
-      yield* fs.writeFileString(
-        path.join(directory, 'oxlint.config.mjs'),
-        ts`
-          export default {
-            categories: { correctness: 'off' },
-            jsPlugins: [{ name: '2digits', specifier: '${pluginUrl}' }],
-            rules: {
-              '2digits/padding-line-between-statements': [
-                'error',
-                { blankLine: 'always', prev: '*', next: { selector: ':statement' } },
-              ],
-            },
-          };
-        `,
+      const directory = yield* writeProject(
+        R.map(sources, ({ source }) => source),
+        { blankLine: 'always', prev: '*', next: { selector: ':statement' } },
       );
-
-      for (const [filename, { source }] of R.toEntries(sources)) {
-        yield* fs.writeFileString(path.join(directory, filename), source);
-      }
 
       function run(flags: Array<string>) {
         return runOxlint(directory, ['--config=oxlint.config.mjs', ...flags, ...R.keys(sources)]);
@@ -114,7 +127,7 @@ describe('statement spacing CLI', () => {
           expect(yield* fs.readFileString(path.join(directory, filename))).toBe(expected);
         }
       }
-    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    }),
   );
 
   const malformedOptions = [
@@ -128,33 +141,14 @@ describe('statement spacing CLI', () => {
   for (const [index, option] of malformedOptions.entries()) {
     it.effect(`rejects malformed configuration ${index + 1}`, () =>
       Effect.gen(function* () {
-        const fs = yield* FileSystem.FileSystem;
-
-        const path = yield* Path.Path;
-
-        const directory = yield* fs.makeTempDirectoryScoped({ prefix: '2digits-padding-options-' });
-
-        yield* fs.writeFileString(
-          path.join(directory, 'a.ts'),
-          ts`
+        const directory = yield* writeProject(
+          {
+            'a.ts': ts`
           foo();
           bar();
         `,
-        );
-
-        const encodedOption = yield* encodeOption(option);
-
-        yield* fs.writeFileString(
-          path.join(directory, 'oxlint.config.mjs'),
-          ts`
-          export default {
-            categories: { correctness: 'off' },
-            jsPlugins: [{ name: '2digits', specifier: '${pluginUrl}' }],
-            rules: {
-              '2digits/padding-line-between-statements': ['error', ${encodedOption}],
-            },
-          };
-        `,
+          },
+          option,
         );
 
         const result = yield* runOxlint(directory, ['--config=oxlint.config.mjs', 'a.ts']);
@@ -162,7 +156,7 @@ describe('statement spacing CLI', () => {
         expect(result.status).not.toBe(0);
 
         expect(`${result.stdout}${result.stderr}`).toContain('padding');
-      }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+      }),
     );
   }
 });

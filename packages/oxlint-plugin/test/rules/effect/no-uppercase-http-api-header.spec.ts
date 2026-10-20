@@ -1,51 +1,16 @@
 /* oxlint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 /* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
-import { noUppercaseHttpApiHeader } from '../../../src/rules/effect/no-uppercase-http-api-header';
 import { testRule } from '../../rule-tester';
 
-const ruleName = 'no-uppercase-http-api-header';
+const endpointImport = `import { HttpApiEndpoint } from 'effect/unstable/httpapi';`;
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
-
-testRule(ruleName, noUppercaseHttpApiHeader, {
-  valid: `
-    import { HttpApiEndpoint } from 'effect/unstable/httpapi';
-    HttpApiEndpoint.get('me', '/me', { headers: { 'x-api-key': Schema.String } });
-  `,
-  invalid: `
-    import { HttpApiEndpoint } from 'effect/unstable/httpapi';
-    HttpApiEndpoint.get('me', '/me', { headers: { 'X-Api-Key': Schema.String } });
-  `,
-  messageId: 'uppercase',
-  output: null,
-});
-
-testRule(ruleName, noUppercaseHttpApiHeader, {
-  valid: `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
-    HttpApiEndpoint.get('me', '/me', { headers: { 123: Schema.String, '123': Schema.Number, Foo: Schema.String } });`,
-  invalid: `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
-    HttpApiEndpoint.get('me', '/me', { headers: { 123: Schema.String, Foo: Schema.String } });`,
-  messageId: 'uppercase',
-  output: null,
-});
-
-for (const method of ['get', 'post', 'put', 'patch', 'delete', 'head', 'options']) {
-  for (const [declaration, endpoint] of [
-    ["import { HttpApiEndpoint as Endpoint } from 'effect/unstable/httpapi';", 'Endpoint'],
-    ["import * as Api from 'effect/unstable/httpapi';", 'Api.HttpApiEndpoint'],
-    ["import * as Endpoint from 'effect/unstable/httpapi/HttpApiEndpoint';", 'Endpoint'],
-  ]) {
-    testRule(ruleName, noUppercaseHttpApiHeader, {
-      valid: `${declaration} ${endpoint}.${method}('me', '/me', { headers: { authorization: Schema.String } });`,
-      invalid: `${declaration} ${endpoint}.${method}(endpointName, endpointPath, { headers: { Authorization: Schema.String } });`,
-      messageId: 'uppercase',
-      output: null,
-    });
-  }
-}
+const endpointCalls = Arr.cartesian(['get', 'post', 'put', 'patch', 'delete', 'head', 'options'], [
+  ["import { HttpApiEndpoint as Endpoint } from 'effect/unstable/httpapi';", 'Endpoint'],
+  ["import * as Api from 'effect/unstable/httpapi';", 'Api.HttpApiEndpoint'],
+  ["import * as Endpoint from 'effect/unstable/httpapi/HttpApiEndpoint';", 'Endpoint'],
+] as const);
 
 const unrelatedBindings = [
   `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
@@ -64,18 +29,6 @@ const unrelatedBindings = [
   `import type { HttpApiEndpoint } from 'effect/unstable/httpapi';
    HttpApiEndpoint.get('me', '/me', { headers: { Foo: Schema.String } });`,
 ];
-
-tester.run(ruleName, noUppercaseHttpApiHeader, {
-  valid: unrelatedBindings,
-  invalid: [
-    {
-      code: `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
-      function local() { HttpApiEndpoint.get('me', '/me', { headers: { Foo: Schema.String } }); }`,
-      errors: [{ messageId: 'uppercase' }],
-      output: null,
-    },
-  ],
-});
 
 const ambiguousOptions = [
   `{ headers: { ['Foo']: Schema.String } }`,
@@ -98,25 +51,31 @@ const ambiguousOptions = [
   `{ headers: { 'É': Schema.String, 'ß': Schema.String } }`,
 ];
 
-tester.run(ruleName, noUppercaseHttpApiHeader, {
-  valid: Arr.map(
-    ambiguousOptions,
-    (options) => `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
-    HttpApiEndpoint.get('me', '/me', ${options});`,
-  ),
-  invalid: [
-    {
-      code: `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
-      HttpApiEndpoint.get('me', '/me', { headers: { Foo: Schema.String, foo: Schema.String } });`,
-      errors: [{ messageId: 'uppercase' }],
-      output: null,
-    },
-  ],
-});
+function uppercase(code: string) {
+  return { code, errors: [{ messageId: 'uppercase' }], output: null };
+}
 
-testRule(ruleName, noUppercaseHttpApiHeader, {
-  valid: `
-    import { HttpApiEndpoint } from 'effect/unstable/httpapi';
+testRule('no-uppercase-http-api-header', {
+  valid: [
+    `
+    ${endpointImport}
+    HttpApiEndpoint.get('me', '/me', { headers: { 'x-api-key': Schema.String } });
+  `,
+    `${endpointImport}
+    HttpApiEndpoint.get('me', '/me', { headers: { 123: Schema.String, '123': Schema.Number, Foo: Schema.String } });`,
+    ...Arr.map(
+      endpointCalls,
+      ([method, [declaration, endpoint]]) =>
+        `${declaration} ${endpoint}.${method}('me', '/me', { headers: { authorization: Schema.String } });`,
+    ),
+    ...unrelatedBindings,
+    ...Arr.map(
+      ambiguousOptions,
+      (options) => `${endpointImport}
+    HttpApiEndpoint.get('me', '/me', ${options});`,
+    ),
+    `
+    ${endpointImport}
     HttpApiEndpoint.make('GET')('me', '/me', { headers: { Foo: Schema.String } });
     HttpApiEndpoint.del('me', '/me', { headers: { Foo: Schema.String } });
     HttpApiEndpoint.get('me', '/me').setHeaders(Schema.Struct({ Foo: Schema.String }));
@@ -130,17 +89,27 @@ testRule(ruleName, noUppercaseHttpApiHeader, {
     response.setHeader('X-Api-Key', 'present');
     const unrelated = { headers: { Foo: schema } };
   `,
-  invalid: `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
-    HttpApiEndpoint.post('me', '/me', { headers: { 'X-Api-Key': Schema.String }, payload: Schema.String });`,
-  messageId: 'uppercase',
-  output: null,
-});
-
-tester.run(ruleName, noUppercaseHttpApiHeader, {
-  valid: [],
+  ],
   invalid: [
+    uppercase(`
+    ${endpointImport}
+    HttpApiEndpoint.get('me', '/me', { headers: { 'X-Api-Key': Schema.String } });
+  `),
+    uppercase(`${endpointImport}
+    HttpApiEndpoint.get('me', '/me', { headers: { 123: Schema.String, Foo: Schema.String } });`),
+    ...Arr.map(endpointCalls, ([method, [declaration, endpoint]]) =>
+      uppercase(
+        `${declaration} ${endpoint}.${method}(endpointName, endpointPath, { headers: { Authorization: Schema.String } });`,
+      ),
+    ),
+    uppercase(`${endpointImport}
+      function local() { HttpApiEndpoint.get('me', '/me', { headers: { Foo: Schema.String } }); }`),
+    uppercase(`${endpointImport}
+      HttpApiEndpoint.get('me', '/me', { headers: { Foo: Schema.String, foo: Schema.String } });`),
+    uppercase(`${endpointImport}
+    HttpApiEndpoint.post('me', '/me', { headers: { 'X-Api-Key': Schema.String }, payload: Schema.String });`),
     {
-      code: `import { HttpApiEndpoint } from 'effect/unstable/httpapi';
+      code: `${endpointImport}
 HttpApiEndpoint.get('me', '/me', { headers: {
   Foo: Schema.String,
   'x-API-key': Schema.String,
