@@ -6711,7 +6711,7 @@ Backward pagination arguments
    * Disallow awaiting a value that is not a Thenable
    * @see https://typescript-eslint.io/rules/await-thenable
    */
-  'ts/await-thenable'?: Linter.RuleEntry<[]>
+  'ts/await-thenable'?: Linter.RuleEntry<TsAwaitThenable>
   /**
    * Disallow `@ts-<directive>` comments or require descriptions after directives
    * @see https://typescript-eslint.io/rules/ban-ts-comment
@@ -15938,6 +15938,11 @@ type TsArrayType = []|[{
   default?: ("array" | "generic" | "array-simple")
   
   readonly?: ("array" | "generic" | "array-simple")
+}]
+// ----- ts/await-thenable -----
+type TsAwaitThenable = []|[{
+  
+  allowMixedPromiseArrays?: boolean
 }]
 // ----- ts/ban-ts-comment -----
 type TsBanTsComment = []|[{
