@@ -1,3 +1,17 @@
+## @2digits/oxlint-plugin@0.3.2
+
+### Use Effect helpers in rule internals
+
+- Rewrote rule helpers and `utils.ts` to use Effect modules
+- Fixed `consistent-schema-pipe` handling
+
+### Make FileState bindings non-optional
+
+- Removed optional-key handling for `bindings` and `hasEffectImport` so they default via constructor defaults instead of nullable access
+- Updated rule code to access `state.bindings` directly without optional chaining
+- Changed `candidates` from `let` to `const` and use `.clear()` on reset in `preferEffectDurationConstants`
+- Rewrote `typeNamePath` identifier case using `Fn.flow(Struct.get('name'), Arr.make)`
+
 ## @2digits/oxlint-plugin@0.3.1
 
 ### Keep generic Schema calls in `consistent-schema-pipe`

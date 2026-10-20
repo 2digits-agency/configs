@@ -1,138 +1,99 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update knip to 6.42.0\n"
-    filename: 2026-10-18-bump-knip.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n### Fix `--prettier` and `--no-prettier`\n\n`--prettier` now sets up Prettier and `--no-prettier` skips it, as documented. Before, the two flags did the opposite.\n\n### Check ESLint dependencies at the workspace root\n\nWhen run from a workspace subdirectory, `2d --eslint` now checks the root `package.json` for `eslint` and `@2digits/eslint-config`, where it installs them, instead of reinstalling them and warning that dependencies may be missing.\n\n### Use Effect modules across services\n\n- `turbo.json` reads and writes now go through one `TurboConfigService` instead of copies in the ESLint and Turborepo setup.\n- Shared `hasDependency` and `ensureScript` helpers replace repeated dependency and script checks.\n- Task categories and flag handling use `effect/Match`, `Option` and `String` instead of if-chains, and service layers follow the Effect v4 `layer` naming.\n"
+    filename: 2026-10-19-cli-effect-cleanup.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update turbo to 2.11.9\n"
-    filename: 2026-10-18-bump-turbo.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update typescript-eslint to 8.72.0\n\n- `@typescript-eslint/parser`, `scope-manager` and `utils` to 8.72.0\n"
+    filename: 2026-10-20-deep-sea-cove.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/language-service to 0.87.5\n"
-    filename: 2026-10-18-bump-effect-language-service.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 65.3.15\n"
+    filename: 2026-10-20-ember-sky-peak.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n## Use relative setupFiles path in vite config\n\n- Changed `setupFiles` from an absolute `path.join(__dirname, ...)` to a relative `./test/vitest.setup.ts`\n"
-    filename: 2026-10-18-cli-vite-setup-path.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @tanstack/eslint-plugin-query to 5.104.5\n"
+    filename: 2026-10-20-frost-leaf-moon.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint plugins\n\n- `eslint-plugin-jsdoc` to 65.3.12\n- `eslint-plugin-n` to 18.5.0\n- `eslint-plugin-turbo` to 2.11.9\n"
-    filename: 2026-10-18-bump-eslint-plugins.md
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n### Fix redaction, error messages and session cleanup\n\n- Objects referenced more than once in tool input or output are no longer replaced with `[Circular]`; only real cycles are.\n- String errors are reported as-is instead of wrapped in JSON quotes.\n- Text parts of user messages are now released when a session's trace is flushed, instead of being kept for the life of the process.\n\n### Share helpers across capture, state and config\n\n- Trace, generation and tool span events share one builder for the common `$ai_*` and custom properties, and one privacy-aware attribute serializer.\n- Custom properties JSON is parsed once instead of twice, and the session window is computed once per plugin instead of on every message.\n"
+    filename: 2026-10-19-opencode-plugin-cleanup.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react packages to 5.28.1\n"
-    filename: 2026-10-18-bump-eslint-react.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n### Behavior change: consumer config now wins in `withTwoDigits`\n\n`withTwoDigits` now merges consumer configs the way its documentation describes: consumer configuration takes precedence over the 2digits defaults, and later configs take precedence over earlier ones. Lint results change for consumers who rely on either of these:\n\n- **`extends`**: configs listed in a consumer `extends` now override the 2digits presets. They used to be placed before the presets, so a rule set there (for example `curly: 'off'`) was silently overridden by the defaults.\n- **Rules with options set in more than one config**: the later entry now replaces the earlier one. The entries used to be concatenated into one invalid entry such as `['warn', { … }, 'error', { … }]`.\n\nConfigs that pass neither resolve exactly as before.\n"
+    filename: 2026-10-19-oxlint-config-merge-precedence.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint to 10.13.0\n"
-    filename: 2026-10-18-bump-eslint.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n### Type every `eslint-plugin-zod` rule\n\nThe rule types now match `eslint-plugin-zod` 5.2: `zod/no-dynamic-schema-value`, `zod/no-function-scoped-schema`, `zod/prefer-map-set-size-over-min-max`, `zod/prefer-nullish`, `zod/prefer-string-length-over-min-max` and `zod/prefer-validate` are declared, the removed `zod/no-string-schema-with-uuid` is gone, `zod/consistent-import` accepts `syntax: 'default'`, and `zod/prefer-top-level-string-formats` accepts its `ignore` option.\n"
+    filename: 2026-10-19-oxlint-config-zod-rule-types.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @tanstack/eslint-plugin-query to 5.104.4\n"
-    filename: 2026-10-18-bump-tanstack-query-plugin.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Use Effect helpers in rule internals\n\n- Rewrote rule helpers and `utils.ts` to use Effect modules\n- Fixed `consistent-schema-pipe` handling\n"
+    filename: 2026-10-20-gentle-rain-stone.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react packages to 5.28.2\n"
-    filename: 2026-10-19-bump-eslint-react-5-28-2.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Make FileState bindings non-optional\n\n- Removed optional-key handling for `bindings` and `hasEffectImport` so they default via constructor defaults instead of nullable access\n- Updated rule code to access `state.bindings` directly without optional chaining\n- Changed `candidates` from `let` to `const` and use `.clear()` on reset in `preferEffectDurationConstants`\n- Rewrote `typeNamePath` identifier case using `Fn.flow(Struct.get('name'), Arr.make)`\n"
+    filename: 2026-10-20-steady-maple-brook.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Disable unicorn/no-array-method-this-argument\n\n- Turned off `unicorn/no-array-method-this-argument` in both the ESLint and oxlint unicorn configs\n"
-    filename: 2026-10-19-lazy-panda-dusk.md
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.171.1\n"
+    filename: 2026-10-20-bright-fox-lake.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update posthog-node to 5.56.2\n"
-    filename: 2026-10-18-bump-posthog-node.md
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.171.2\n\n- Bumped the `renovate` catalog dependency from 44.171.1 to 44.171.2\n"
+    filename: 2026-10-20-quick-fox-moon.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n### Keep generic Schema calls in `consistent-schema-pipe`\n\n`consistent-schema-pipe` no longer reports or rewrites calls such as `Schema.toCodecJson(schema)` when `schema` is declared as `Schema.Constraint` or as a type parameter that is not bounded by a pipeable Schema type. Those values have no `.pipe`, so the old autofix produced code that failed to type-check.\n"
-    filename: 2026-10-16-55b35e1d.md
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n### Tidy Effect usage in the gateway, Orbit client and OAuth store\n\n- Shared the Orbit 401/403 handler, the browser command options and the callback query-parameter check instead of copying them.\n- Hoisted gateway and OAuth callback responses, the request body limit and the text encoder so they are no longer rebuilt per request.\n- The credential lock now maps file-system errors with `catchTag` instead of a hand-written error guard.\n"
+    filename: 2026-10-19-tlo-mcp-effect-cleanup.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Match imported names with effect Match\n\n- Replaced the manual `importedName` if-chain with an `effect/Match`-based implementation\n"
-    filename: 2026-10-18-oxlint-match-imported-name.md
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Enable schemaClassObjectLiteral rule in effect config\n\n- Added `schemaClassObjectLiteral: error` to the `@effect/language-service` plugin rules in `effect.json`\n"
+    filename: 2026-10-20-bright-owls-zen.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Use Effect Array helpers directly\n\n- Replaced `effect/Function` pipe wrappers with direct `effect/Array` calls across rules and fixes\n"
-    filename: 2026-10-19-calm-otter-ridge.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n### Use Effect modules across rule helpers\n\n- Rule internals now use `effect/Array`, `Option`, `Match`, `Predicate` and `String` instead of hand-written loops, `typeof` checks and if-chains.\n- Shared `resolveVariable`, `soleDefinition`, `findAncestor`, `isAnyApi` and `isEqualityOperator` helpers replace copies across rules.\n- Fixed hot paths that allocated a new array or matcher on every visited node.\n"
-    filename: 2026-10-19-oxlint-plugin-effect-modules.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Express AST helpers with effect Match and Predicate\n\n- Rewrote `staticPropertyName`, `propertyName`, `isFunctionNode` and `isErrorConstructor` with `effect/Match` and `effect/Predicate`\n- Replaced four copies of the imported-name lookup with one shared `moduleExportName` helper, and the repeated string-literal checks with a shared `isStringLiteral`\n- Fixed `importedName` so string-literal import names (`import { 'foo-bar' as x }`) are recognized again\n"
-    filename: 2026-10-19-oxlint-plugin-match-helpers.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.167.2\n"
-    filename: 2026-10-18-bump-renovate.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.167.7\n"
-    filename: 2026-10-19-bump-renovate-44-167-7.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.167.6\n"
-    filename: 2026-10-19-tidy-ravens-mise.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @opentunnel/client to 0.5.2\n"
-    filename: 2026-10-18-bump-opentunnel-client.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Use effect Crypto in gateway authentication\n\n- Replaced Node `crypto` hashing with `effect/Crypto` and `effect/encoding/Hex` in gateway key loading and authentication\n"
-    filename: 2026-10-18-tlo-mcp-effect-crypto.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.53.4\n"
-    filename: 2026-10-18-bump-effect-tsgo.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Expand namespace import packages list\n\n- Replaced the wildcard `@effect/*` entry with an explicit, sorted list of Effect namespace import packages\n"
-    filename: 2026-10-18-tsconfig-namespace-imports.md
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.54.0\n"
+    filename: 2026-10-20-calm-wolf-dune.md
     v: 0.0.0
 core:packages:
-  - changelogIds:
-      - 2026-10-18-bump-knip.md
-      - 2026-10-18-bump-turbo.md
-    id: npm:@2digits/config-monorepo
-    updated: true
-  - changelogIds:
-      - 2026-10-18-bump-effect-language-service.md
-      - 2026-10-18-cli-vite-setup-path.md
-    id: npm:@2digits/cli
-    updated: true
+  - id: npm:@2digits/config-monorepo
+    updated: false
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-10-18-bump-eslint-plugins.md
-      - 2026-10-18-bump-eslint-react.md
-      - 2026-10-18-bump-eslint.md
-      - 2026-10-18-bump-tanstack-query-plugin.md
-      - 2026-10-19-bump-eslint-react-5-28-2.md
-      - 2026-10-19-lazy-panda-dusk.md
+      - 2026-10-19-cli-effect-cleanup.md
+    id: npm:@2digits/cli
+    updated: true
+  - changelogIds:
+      - 2026-10-20-deep-sea-cove.md
+      - 2026-10-20-ember-sky-peak.md
+      - 2026-10-20-frost-leaf-moon.md
     id: npm:@2digits/eslint-config
     updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
   - changelogIds:
-      - 2026-10-18-bump-posthog-node.md
+      - 2026-10-19-opencode-plugin-cleanup.md
     id: npm:@2digits/opencode-plugin
     updated: true
   - id: npm:@2digits/oxfmt-config
     updated: false
   - changelogIds:
-      - 2026-10-19-lazy-panda-dusk.md
+      - 2026-10-19-oxlint-config-merge-precedence.md
+      - 2026-10-19-oxlint-config-zod-rule-types.md
     id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-10-16-55b35e1d.md
-      - 2026-10-18-oxlint-match-imported-name.md
-      - 2026-10-19-calm-otter-ridge.md
-      - 2026-10-19-oxlint-plugin-effect-modules.md
-      - 2026-10-19-oxlint-plugin-match-helpers.md
+      - 2026-10-20-gentle-rain-stone.md
+      - 2026-10-20-steady-maple-brook.md
     id: npm:@2digits/oxlint-plugin
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
   - changelogIds:
-      - 2026-10-18-bump-renovate.md
-      - 2026-10-19-bump-renovate-44-167-7.md
-      - 2026-10-19-tidy-ravens-mise.md
+      - 2026-10-20-bright-fox-lake.md
+      - 2026-10-20-quick-fox-moon.md
     id: npm:@2digits/renovate-config
     updated: true
   - changelogIds:
-      - 2026-10-18-bump-effect-language-service.md
-      - 2026-10-18-bump-opentunnel-client.md
-      - 2026-10-18-tlo-mcp-effect-crypto.md
+      - 2026-10-19-tlo-mcp-effect-cleanup.md
     id: npm:@2digits/tlo-mcp
     updated: true
   - changelogIds:
-      - 2026-10-18-bump-effect-tsgo.md
-      - 2026-10-18-tsconfig-namespace-imports.md
+      - 2026-10-20-bright-owls-zen.md
+      - 2026-10-20-calm-wolf-dune.md
     id: npm:@2digits/tsconfig
     updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
-  - id: npm:@2digits/cli
   - id: npm:@2digits/constants
+  - id: npm:@2digits/cli
   - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
