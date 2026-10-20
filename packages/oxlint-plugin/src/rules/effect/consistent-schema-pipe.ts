@@ -187,7 +187,7 @@ function isPure(node: ESTree.Node, context: Context, state: FileState): boolean 
 
 function typePath(node: ESTree.TSTypeName, state: FileState): ReadonlyArray<string> | undefined {
   if (node.type === 'Identifier') {
-    return state.bindings.get(node.name);
+    return state.bindings?.get(node.name);
   }
 
   if (node.type !== 'TSQualifiedName') {

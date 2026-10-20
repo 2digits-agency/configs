@@ -246,8 +246,8 @@ describe('oxlint config', () => {
 
   it('enables Effect duration guidance by default', () => {
     expect([
-      twoDigitsPluginConfig.rules['2digits/prefer-effect-duration'],
-      twoDigitsPluginConfig.rules['2digits/prefer-effect-duration-constants'],
+      recommendedRules['2digits/prefer-effect-duration'],
+      recommendedRules['2digits/prefer-effect-duration-constants'],
     ]).toStrictEqual(['error', 'error']);
   });
 

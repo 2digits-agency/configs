@@ -12,17 +12,22 @@ import {
   type VisitorWithHooks,
 } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
+import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
-export interface FileState {
-  readonly bindings: ReadonlyMap<string, ReadonlyArray<string>>;
-  readonly hasEffectImport: boolean;
-}
+export class FileState extends Schema.Class<FileState, { readonly brand: unique symbol }>('FileState')({
+  bindings: Schema.ReadonlyMap(Schema.String, Schema.Array(Schema.String)).pipe(
+    Schema.optionalKey,
+    Schema.withConstructorDefault(Effect.succeed(new Map())),
+  ),
+  hasEffectImport: Schema.Boolean.pipe(Schema.optionalKey, Schema.withConstructorDefault(Effect.succeed(false))),
+}) {}
 
 export type FunctionNode = ESTree.ArrowFunctionExpression | ESTree.Function;
 
@@ -35,10 +40,7 @@ type WrapperExpression =
 
 type StateGetter = () => FileState;
 
-const emptyState: FileState = {
-  bindings: new Map(),
-  hasEffectImport: false,
-};
+const emptyState = FileState.make();
 
 export const moduleExportName = Match.type<ESTree.ModuleExportName>().pipe(
   Match.discriminatorsExhaustive('type')({
@@ -46,8 +48,6 @@ export const moduleExportName = Match.type<ESTree.ModuleExportName>().pipe(
     Literal: ({ value }) => value,
   }),
 );
-
-const submoduleSource = /^(?:effect|@effect\/platform|alchemy)\//u;
 
 // Lowercase entrypoints such as effect/unstable/http are barrels. Their named imports are module namespaces,
 // While PascalCase entrypoints such as effect/Schema are the module itself.
@@ -59,9 +59,9 @@ function submodulePath(source: string): ReadonlyArray<string> {
 
 const modulePath = Match.type<string>().pipe(
   Match.withReturnType<ReadonlyArray<string> | undefined>(),
-  Match.when('alchemy', () => ['Alchemy']),
-  Match.when(Match.is('effect', '@effect/platform'), () => []),
-  Match.when((source) => submoduleSource.test(source), submodulePath),
+  Match.when('alchemy', Fn.constant(['Alchemy'])),
+  Match.when(Match.is('effect', '@effect/platform'), Fn.constant([])),
+  Match.whenOr(Str.startsWith('effect/'), Str.startsWith('alchemy/'), Str.startsWith('@effect/'), submodulePath),
   Match.orElse(Fn.constUndefined),
 );
 
@@ -98,7 +98,7 @@ function collectState(program: ESTree.Program): FileState {
     }
   }
 
-  return { bindings, hasEffectImport };
+  return FileState.make({ bindings, hasEffectImport });
 }
 
 export function defineSyntaxRule(meta: RuleMeta, create: (context: Context) => Visitor): Rule {
@@ -229,7 +229,7 @@ export function canonicalPath(node: ESTree.Node, state: FileState): ReadonlyArra
     return undefined;
   }
 
-  const imported = state.bindings.get(first);
+  const imported = state.bindings?.get(first);
 
   return imported === undefined ? undefined : [...imported, ...path.slice(1)];
 }

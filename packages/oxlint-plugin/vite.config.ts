@@ -14,5 +14,6 @@ export default defineConfig({
   },
   test: {
     include: ['test/**/*.spec.ts'],
+    isolate: false,
   },
 });

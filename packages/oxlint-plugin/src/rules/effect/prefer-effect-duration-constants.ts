@@ -158,7 +158,7 @@ function durationAnnotation(annotation: ESTree.Node, context: Context, state: Fi
 
     // Local types that shadow the import, such as an inner `type Input = number`, are not Effect's.
     const imported =
-      root === undefined || !resolvesToImport(node, root, context) ? undefined : state.bindings.get(root);
+      root === undefined || !resolvesToImport(node, root, context) ? undefined : state.bindings?.get(root);
 
     return imported !== undefined && [...imported, ...rest][0] === 'Duration';
   });

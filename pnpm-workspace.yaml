@@ -15,7 +15,7 @@ catalog:
   '@arethetypeswrong/core': 0.18.5
   '@effect/language-service': 0.87.5
   '@effect/platform-node': 4.0.5
-  '@effect/tsgo': 0.53.4
+  '@effect/tsgo': 0.54.0
   '@effect/vitest': 4.0.5
   '@eslint-community/eslint-plugin-eslint-comments': 4.8.1
   '@eslint-react/eslint-plugin': 5.28.2
@@ -31,17 +31,17 @@ catalog:
   '@next/eslint-plugin-next': 16.4.2
   '@opencode-ai/plugin': 1.19.3
   '@oxc-node/cli': 0.1.7
-  '@oxlint/plugins': 1.88.0
+  '@oxlint/plugins': 1.89.0
   '@prettier/plugin-oxc': 0.2.3
   '@prettier/plugin-xml': 3.4.2
   '@stylistic/eslint-plugin': 5.10.0
-  '@tanstack/eslint-plugin-query': 5.104.4
+  '@tanstack/eslint-plugin-query': 5.104.5
   '@tanstack/eslint-plugin-router': 1.162.0
   '@types/node': 24.19.2
   '@types/react': 19.3.0
-  '@typescript-eslint/parser': 8.71.2
-  '@typescript-eslint/scope-manager': 8.71.2
-  '@typescript-eslint/utils': 8.71.2
+  '@typescript-eslint/parser': 8.72.0
+  '@typescript-eslint/scope-manager': 8.72.0
+  '@typescript-eslint/utils': 8.72.0
   '@vitest/eslint-plugin': 1.6.27
   dedent: 1.7.2
   defu: 6.1.7
@@ -56,7 +56,7 @@ catalog:
   eslint-plugin-depend: 1.5.0
   eslint-plugin-drizzle: 0.2.3
   eslint-plugin-github-action: 0.4.0
-  eslint-plugin-jsdoc: 65.3.12
+  eslint-plugin-jsdoc: 65.3.15
   eslint-plugin-jsonc: 3.4.2
   eslint-plugin-n: 18.5.0
   eslint-plugin-pnpm: 1.9.1
@@ -76,22 +76,22 @@ catalog:
   globals: 17.13.0
   graphql-config: 5.1.8
   jsonc-eslint-parser: 3.3.0
-  knip: 6.42.0
+  knip: 6.42.1
   local-pkg: 1.2.1
   nolyfill: 1.0.44
   nypm: 0.6.10
-  oxfmt: 0.73.0
+  oxfmt: 0.74.0
   oxlint-tsgolint: 7.0.2004
-  oxlint: 1.88.0
+  oxlint: 1.89.0
   pkg-pr-new: 0.0.91
-  pkg-types: 2.3.3
+  pkg-types: 2.4.0
   posthog-node: 5.56.2
   prettier-plugin-jsdoc: 1.8.1
   prettier-plugin-tailwindcss: 0.8.1
   prettier: 3.9.10
   publint: 0.3.25
   react: 19.3.1
-  renovate: 44.167.7
+  renovate: 44.171.1
   tailwind-csstree: 0.4.1
   tailwindcss: 4.3.3
   tegami: 1.5.0
@@ -99,7 +99,7 @@ catalog:
   tinyglobby: 0.2.17
   ts-api-utils: 2.5.0
   turbo: 2.11.9
-  typescript-eslint: 8.71.2
+  typescript-eslint: 8.72.0
   typescript: 7.0.2
   vite-plus: 1.3.0
   vite: npm:@voidzero-dev/vite-plus-core@1.3.0
@@ -107,7 +107,7 @@ catalog:
   yaml-eslint-parser: 2.1.0
   zod: 4.6.7
   effect-oxlint: 0.4.0
-  '@yielded/oauth': 0.1.0-beta.42
+  '@yielded/oauth': 0.1.0-beta.43
   '@opentunnel/client': 0.5.2
 
 overrides:
@@ -118,7 +118,7 @@ overrides:
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
   array.prototype.flatmap: npm:@nolyfill/array.prototype.flatmap@1.0.44
   array.prototype.tosorted: npm:@nolyfill/array.prototype.tosorted@1.0.44
-  baseline-browser-mapping: 2.11.29
+  baseline-browser-mapping: 2.11.30
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
   '@typescript-eslint/types': 8.71.2
   eslint-plugin-sonarjs>typescript: 'catalog:eslint'
