@@ -38,6 +38,12 @@ for (const [messageId, invalid, output] of [
   ['wrapperPipe', `(first, second).pipe(Schema.Array)`, `Schema.Array((first, second))`],
   ['dataLastCall', `Schema.toTaggedUnion('_tag')(Event)`, `Event.pipe(Schema.toTaggedUnion('_tag'))`],
   ['dataLastCall', `Schema.brand('UserId')(Schema.String)`, `Schema.String.pipe(Schema.brand('UserId'))`],
+  // The parentheses keep the optional chain closed, so `.pipe(Schema.optional)` still runs when `config` is nullish.
+  [
+    'modifierCall',
+    `Schema.optional(config?.item.pipe(Schema.Array))`,
+    `(config?.item.pipe(Schema.Array)).pipe(Schema.optional)`,
+  ],
   [
     'dataLastCall',
     `Schema.optionalKey(Schema.check(Schema.isNonEmpty())(Schema.String))`,
@@ -143,6 +149,9 @@ for (const valid of [
   `import { optional } from 'effect/Schema'; optional(Schema.String)`,
   `${schema} function f(Schema: Api) { return Schema.optional(Schema.String) }`,
   `${schema} Schema.String.pipe(Schema.optional).pipe(Schema.mutableKey)`,
+  // An optional link can skip the pipe, which a direct wrapper call would not.
+  `${schema} config?.item.pipe(Schema.Array)`,
+  `${schema} value.pipe?.(Schema.Array)`,
   // Schema.Constraint has no `.pipe`, so heads that may only be a Constraint stay calls.
   `${schema} function f<T extends Schema.Constraint>(schema: T) { return Schema.toCodecJson(schema) }`,
   `${schema} const f = <T extends Schema.Constraint, U extends T>(schema: U) => Schema.brand('Id')(schema)`,

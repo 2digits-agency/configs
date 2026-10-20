@@ -1,13 +1,17 @@
 import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
+import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 
 import { importedApi } from '../../fixes';
 import {
+  argumentAt,
   canonicalPath,
   containsRange,
   defineEffectRule,
+  findAncestor,
   isApiPath,
   resolveVariable,
   ruleMeta,
@@ -118,64 +122,36 @@ interface Chain {
   readonly reordersEffects: boolean;
 }
 
+function isNameIn(names: ReadonlySet<string>): P.Refinement<string | undefined, string> {
+  return (name): name is string => name !== undefined && names.has(name);
+}
+
+const isWrapper = isNameIn(wrappers);
+
+const isSchemaFunction = P.or(isNameIn(modifiers), isWrapper);
+
+const isDataLastStep = isNameIn(dataLastSteps);
+
+const isSchemaMethod = isNameIn(schemaMethods);
+
+const isConstructorName = P.compose(P.isString, (name) => constructorName.test(name));
+
+// The member of a `Schema.<name>` path.
+function schemaName(path: ReadonlyArray<string> | undefined): string | undefined {
+  return path?.length === 2 && path[0] === 'Schema' ? path[1] : undefined;
+}
+
 function schemaMember(node: ESTree.Node, context: Context, state: FileState): string | undefined {
-  const path = canonicalPath(node, state);
+  const name = schemaName(canonicalPath(node, state));
 
-  return staticPath(node)?.length === 2 && path?.length === 2 && path[0] === 'Schema' && importedApi(context, node)
-    ? path[1]
-    : undefined;
+  return name !== undefined && staticPath(node)?.length === 2 && importedApi(context, node) ? name : undefined;
 }
-
-function isWrapper(name: string | undefined): name is string {
-  return name !== undefined && wrappers.has(name);
-}
-
-function isSchemaFunction(name: string | undefined): name is string {
-  return name !== undefined && (modifiers.has(name) || wrappers.has(name));
-}
-
-const pureLeaves = new Set<string>([
-  'ArrowFunctionExpression',
-  'FunctionExpression',
-  'Identifier',
-  'Literal',
-  'ThisExpression',
-]);
 
 function allPure(nodes: ReadonlyArray<ESTree.Node | null>, context: Context, state: FileState): boolean {
   return Arr.every(nodes, (node) => node === null || isPure(node, context, state));
 }
 
-// Expressions whose evaluation has no observable effect, so a fix may move them. Schema factories count as pure.
-function isPure(node: ESTree.Node, context: Context, state: FileState): boolean {
-  if (pureLeaves.has(node.type)) {
-    return true;
-  }
-
-  if (node.type === 'MemberExpression') {
-    return isPure(node.object, context, state) && (!node.computed || isPure(node.property, context, state));
-  }
-
-  if (node.type === 'TemplateLiteral') {
-    return allPure(node.expressions, context, state);
-  }
-
-  if (node.type === 'ArrayExpression') {
-    return allPure(node.elements, context, state);
-  }
-
-  if (node.type === 'ObjectExpression') {
-    return Arr.every(node.properties, (property) =>
-      property.type === 'SpreadElement'
-        ? isPure(property.argument, context, state)
-        : (!property.computed || isPure(property.key, context, state)) && isPure(property.value, context, state),
-    );
-  }
-
-  if (node.type !== 'CallExpression') {
-    return false;
-  }
-
+function isPureCall(node: ESTree.CallExpression, context: Context, state: FileState): boolean {
   const callee = node.callee.type === 'CallExpression' ? node.callee.callee : node.callee;
 
   return (
@@ -185,37 +161,60 @@ function isPure(node: ESTree.Node, context: Context, state: FileState): boolean 
   );
 }
 
-function typePath(node: ESTree.TSTypeName, state: FileState): ReadonlyArray<string> | undefined {
-  if (node.type === 'Identifier') {
-    return state.bindings.get(node.name);
-  }
+// Expressions whose evaluation has no observable effect, so a fix may move them. Schema factories count as pure.
+// `Match.fn` handlers get the matched node followed by every argument of the call, hence the ignored `_node`.
+const isPure: (node: ESTree.Node, context: Context, state: FileState) => boolean = Match.fn(
+  (node: ESTree.Node, _context: Context, _state: FileState) => node,
+).pipe(
+  Match.withReturnType<boolean>(),
+  Match.when(
+    { type: Match.is('ArrowFunctionExpression', 'FunctionExpression', 'Identifier', 'Literal', 'ThisExpression') },
+    Fn.constTrue,
+  ),
+  Match.when(
+    { type: 'MemberExpression' },
+    (node, _node, context, state) =>
+      isPure(node.object, context, state) && (!node.computed || isPure(node.property, context, state)),
+  ),
+  Match.when({ type: 'TemplateLiteral' }, ({ expressions }, _node, context, state) =>
+    allPure(expressions, context, state),
+  ),
+  Match.when({ type: 'ArrayExpression' }, ({ elements }, _node, context, state) => allPure(elements, context, state)),
+  Match.when({ type: 'ObjectExpression' }, ({ properties }, _node, context, state) =>
+    Arr.every(properties, (property) =>
+      property.type === 'SpreadElement'
+        ? isPure(property.argument, context, state)
+        : (!property.computed || isPure(property.key, context, state)) && isPure(property.value, context, state),
+    ),
+  ),
+  Match.when({ type: 'CallExpression' }, (node, _node, context, state) => isPureCall(node, context, state)),
+  Match.orElse(Fn.constFalse),
+);
 
-  if (node.type !== 'TSQualifiedName') {
-    return undefined;
-  }
+const typePath: (node: ESTree.TSTypeName, state: FileState) => ReadonlyArray<string> | undefined = Match.fn(
+  (node: ESTree.TSTypeName, _state: FileState) => node,
+).pipe(
+  Match.withReturnType<ReadonlyArray<string> | undefined>(),
+  Match.when({ type: 'Identifier' }, ({ name }, _node, state) => state.bindings.get(name)),
+  Match.when({ type: 'TSQualifiedName' }, ({ left, right }, _node, state) => {
+    const path = typePath(left, state);
 
-  const left = typePath(node.left, state);
+    return path === undefined ? undefined : Arr.append(path, right.name);
+  }),
+  Match.orElse(Fn.constUndefined),
+);
 
-  return left === undefined ? undefined : [...left, node.right.name];
+function ownTypeParameter(node: ESTree.Node, name: string): ESTree.TSTypeParameter | undefined {
+  return 'typeParameters' in node && node.typeParameters?.type === 'TSTypeParameterDeclaration'
+    ? Opt.getOrUndefined(Arr.findFirst(node.typeParameters.params, (candidate) => candidate.name.name === name))
+    : undefined;
 }
 
+// The nearest type parameter called `name` that is in scope at `from`.
 function typeParameter(name: string, from: ESTree.Node): ESTree.TSTypeParameter | undefined {
-  for (let node: ESTree.Node | null = from.parent; node !== null; node = node.parent) {
-    const parameter =
-      'typeParameters' in node && node.typeParameters?.type === 'TSTypeParameterDeclaration'
-        ? Fn.pipe(
-            node.typeParameters.params,
-            Arr.findFirst((candidate) => candidate.name.name === name),
-            Opt.getOrUndefined,
-          )
-        : undefined;
+  const owner = findAncestor(from, (node): node is ESTree.Node => ownTypeParameter(node, name) !== undefined);
 
-    if (parameter !== undefined) {
-      return parameter;
-    }
-  }
-
-  return undefined;
+  return owner === undefined ? undefined : ownTypeParameter(owner, name);
 }
 
 // Whether a value of the declared type has `.pipe`, or undefined when that is unknown without type information.
@@ -228,9 +227,7 @@ function hasPipe(declared: ESTree.TSType, from: ESTree.Node, state: FileState): 
 
   // A type parameter only has `.pipe` when its constraint does, so follow constraints to a Schema type.
   while (type?.type === 'TSTypeReference') {
-    const path = typePath(type.typeName, state);
-
-    const member = path?.length === 2 && path[0] === 'Schema' ? path[1] : undefined;
+    const member = schemaName(typePath(type.typeName, state));
 
     if (member !== undefined) {
       // Schema.Constraint and its subtypes are not Pipeable, unlike Schema.Top and the schemas built on it.
@@ -261,45 +258,60 @@ function declaredType(node: ESTree.IdentifierReference, context: Context): ESTre
 }
 
 // Without types, only the declared type of a head shows that it cannot take `.pipe(...)`, e.g. a generic schema.
-function headLacksPipe(node: ESTree.Expression, context: Context, state: FileState): boolean {
-  let head = node;
+const headLacksPipe: (node: ESTree.Expression, context: Context, state: FileState) => boolean = Match.fn(
+  (node: ESTree.Expression, _context: Context, _state: FileState) => node,
+).pipe(
+  Match.withReturnType<boolean>(),
+  Match.when(
+    { type: Match.is('TSNonNullExpression', 'TSSatisfiesExpression') },
+    ({ expression }, _node, context, state) => headLacksPipe(expression, context, state),
+  ),
+  Match.when(
+    { type: 'TSAsExpression' },
+    (head, _node, _context, state) => hasPipe(head.typeAnnotation, head, state) === false,
+  ),
+  Match.when({ type: 'Identifier' }, (head, _node, context, state) => {
+    const annotation = declaredType(head, context);
 
-  while (head.type === 'TSSatisfiesExpression' || head.type === 'TSNonNullExpression') {
-    head = head.expression;
-  }
+    return annotation !== undefined && hasPipe(annotation.typeAnnotation, annotation, state) === false;
+  }),
+  Match.orElse(Fn.constFalse),
+);
 
-  if (head.type === 'TSAsExpression') {
-    return hasPipe(head.typeAnnotation, head, state) === false;
-  }
-
-  const annotation = head.type === 'Identifier' ? declaredType(head, context) : undefined;
-
-  return annotation !== undefined && hasPipe(annotation.typeAnnotation, annotation, state) === false;
+function isExpression(argument: ESTree.Argument): argument is ESTree.Expression {
+  return argument.type !== 'SpreadElement';
 }
 
-function hasSpread(node: ESTree.CallExpression): boolean {
-  return Arr.some(node.arguments, (argument) => argument.type === 'SpreadElement');
+// A rewrite would drop explicit type arguments, and spread arguments hide the steps, so such calls are left alone.
+function plainArguments(node: ESTree.CallExpression): ReadonlyArray<ESTree.Expression> | undefined {
+  const args = node.arguments;
+
+  return !node.typeArguments && Arr.every(args, isExpression) ? args : undefined;
 }
 
-// A rewrite would drop explicit type arguments, so such calls are left alone.
 function soleArgument(node: ESTree.CallExpression): ESTree.Expression | undefined {
-  const [argument] = node.arguments;
-
-  return node.arguments.length === 1 && argument?.type !== 'SpreadElement' && !node.typeArguments
-    ? argument
-    : undefined;
+  return node.arguments.length === 1 && !node.typeArguments ? argumentAt(node, 0) : undefined;
 }
 
-function isMethodPipe(
+// An optional link before the call, as in `a?.b.pipe(...)`, can skip it, which a direct wrapper call would not.
+const isShortCircuitable: (node: ESTree.Expression) => boolean = Match.type<ESTree.Expression>().pipe(
+  Match.withReturnType<boolean>(),
+  Match.when({ type: 'CallExpression' }, ({ optional, callee }) => optional || isShortCircuitable(callee)),
+  Match.when({ type: 'MemberExpression' }, ({ optional, object }) => optional || isShortCircuitable(object)),
+  Match.when({ type: 'TSNonNullExpression' }, ({ expression }) => isShortCircuitable(expression)),
+  Match.orElse(Fn.constFalse),
+);
+
+function isPipeCall(
   node: ESTree.CallExpression,
 ): node is ESTree.CallExpression & { readonly callee: ESTree.MemberExpression } {
   return (
-    node.callee.type === 'MemberExpression' &&
-    !node.callee.optional &&
-    staticPropertyName(node.callee) === 'pipe' &&
-    !node.typeArguments &&
-    !hasSpread(node)
+    node.callee.type === 'MemberExpression' && staticPropertyName(node.callee) === 'pipe' && !isShortCircuitable(node)
   );
+}
+
+function isMethodPipe(node: ESTree.CallExpression): boolean {
+  return isPipeCall(node) && plainArguments(node) !== undefined;
 }
 
 function isFunctionPipe(node: ESTree.CallExpression, context: Context, state: FileState): boolean {
@@ -310,71 +322,64 @@ function isFunctionPipe(node: ESTree.CallExpression, context: Context, state: Fi
 }
 
 function isKnownStep(node: ESTree.Node, context: Context, state: FileState): boolean {
-  if (isSchemaFunction(schemaMember(node, context, state))) {
-    return true;
-  }
-
-  return node.type === 'CallExpression' && dataLastSteps.has(schemaMember(node.callee, context, state) ?? '');
+  return (
+    isSchemaFunction(schemaMember(node, context, state)) ||
+    (node.type === 'CallExpression' && isDataLastStep(schemaMember(node.callee, context, state)))
+  );
 }
 
-// A Schema constructor or value, a schema chain, or a schema method called on one of those.
-function isSchemaHead(node: ESTree.Expression, context: Context, state: FileState): boolean {
-  if (constructorName.test(schemaMember(node, context, state) ?? '') || flatten(node, context, state) !== undefined) {
-    return true;
-  }
-
-  if (node.type !== 'CallExpression') {
-    return false;
-  }
-
+// A Schema constructor or function call, or a schema method called on a schema head.
+function isSchemaCall(node: ESTree.CallExpression, context: Context, state: FileState): boolean {
   const name = schemaMember(node.callee, context, state);
 
   if (name !== undefined) {
-    return constructorName.test(name) || isSchemaFunction(name);
+    return isConstructorName(name) || isSchemaFunction(name);
   }
 
   return (
     node.callee.type === 'MemberExpression' &&
-    schemaMethods.has(staticPropertyName(node.callee) ?? '') &&
+    isSchemaMethod(staticPropertyName(node.callee)) &&
     isSchemaHead(node.callee.object, context, state)
+  );
+}
+
+// A Schema constructor or value, a schema chain, or a schema call.
+function isSchemaHead(node: ESTree.Expression, context: Context, state: FileState): boolean {
+  return (
+    isConstructorName(schemaMember(node, context, state)) ||
+    flatten(node, context, state) !== undefined ||
+    (node.type === 'CallExpression' && isSchemaCall(node, context, state))
   );
 }
 
 // Without types, only rewrite `pipe(x, ...)` when x is known to be a schema, so `x.pipe` exists.
 function functionPipeParts(
-  node: ESTree.CallExpression,
+  args: ReadonlyArray<ESTree.Expression>,
   context: Context,
   state: FileState,
 ): readonly [ESTree.Expression, ReadonlyArray<ESTree.Expression>] | undefined {
-  const [head, first] = node.arguments;
+  const [head, first] = args;
 
-  if (
-    head === undefined ||
-    first === undefined ||
-    head.type === 'SpreadElement' ||
-    node.typeArguments ||
-    hasSpread(node) ||
-    (!isSchemaHead(head, context, state) && !isKnownStep(first, context, state))
-  ) {
-    return undefined;
-  }
-
-  return [head, node.arguments.slice(1) as ReadonlyArray<ESTree.Expression>];
+  return head !== undefined &&
+    first !== undefined &&
+    (isSchemaHead(head, context, state) || isKnownStep(first, context, state))
+    ? [head, args.slice(1)]
+    : undefined;
 }
 
-function appendStep(
-  argument: ESTree.Expression,
-  step: Step,
+function extendChain(
+  receiver: ESTree.Expression,
+  steps: ReadonlyArray<Step>,
   violation: Chain['violation'],
   reordersEffects: boolean,
   context: Context,
   state: FileState,
 ): Chain {
-  const inner = flattenOrHead(argument, context, state);
+  const inner = flattenOrHead(receiver, context, state);
 
   return {
     head: inner.head,
-    steps: [...inner.steps, step],
+    steps: Arr.appendAll(inner.steps, steps),
     violation: inner.violation ?? violation,
     reordersEffects: inner.reordersEffects || reordersEffects,
   };
@@ -392,9 +397,9 @@ function callChain(node: ESTree.CallExpression, context: Context, state: FileSta
   if (isSchemaFunction(name)) {
     const wrapper = isWrapper(name);
 
-    return appendStep(
+    return extendChain(
       argument,
-      { text: context.sourceCode.getText(node.callee), wrapper },
+      [{ text: context.sourceCode.getText(node.callee), wrapper }],
       wrapper ? undefined : { kind: 'modifierCall', name },
       false,
       context,
@@ -404,13 +409,13 @@ function callChain(node: ESTree.CallExpression, context: Context, state: FileSta
 
   const stepName = node.callee.type === 'CallExpression' ? schemaMember(node.callee.callee, context, state) : undefined;
 
-  if (stepName === undefined || !dataLastSteps.has(stepName)) {
+  if (!isDataLastStep(stepName)) {
     return undefined;
   }
 
-  return appendStep(
+  return extendChain(
     argument,
-    { text: context.sourceCode.getText(node.callee), wrapper: false },
+    [{ text: context.sourceCode.getText(node.callee), wrapper: false }],
     { kind: 'dataLastCall', name: stepName },
     // The configured step was evaluated before the schema; in a pipe the schema comes first.
     !isPure(node.callee, context, state) && !isPure(argument, context, state),
@@ -420,59 +425,45 @@ function callChain(node: ESTree.CallExpression, context: Context, state: FileSta
 }
 
 function pipeChain(node: ESTree.CallExpression, context: Context, state: FileState): Chain | undefined {
+  const args = plainArguments(node);
+
+  if (args === undefined) {
+    return undefined;
+  }
+
   const functionPipe = isFunctionPipe(node, context, state);
 
   const parts = functionPipe
-    ? functionPipeParts(node, context, state)
-    : isMethodPipe(node)
-      ? ([node.callee.object, node.arguments as ReadonlyArray<ESTree.Expression>] as const)
+    ? functionPipeParts(args, context, state)
+    : isPipeCall(node)
+      ? ([node.callee.object, args] as const)
       : undefined;
 
   if (parts === undefined) {
     return undefined;
   }
 
-  const [receiver, args] = parts;
+  const [receiver, steps] = parts;
 
-  const names = Arr.map(args, (arg) => schemaMember(arg, context, state));
+  const names = Arr.map(steps, (step) => schemaMember(step, context, state));
 
-  const firstWrapper = Fn.pipe(names, Arr.findFirst(isWrapper), Opt.getOrUndefined);
+  const firstWrapper = Arr.findFirstWithIndex(names, isWrapper);
 
   // Steps after an extracted wrapper move into a later pipe, so they would be built after earlier steps ran.
-  const reordersEffects =
-    firstWrapper !== undefined &&
-    Arr.some(args.slice(names.indexOf(firstWrapper) + 1), (arg) => !isPure(arg, context, state));
+  const reordersEffects = Opt.exists(firstWrapper, ([, wrapperIndex]) =>
+    Arr.some(steps, (step, index) => index > wrapperIndex && !isPure(step, context, state)),
+  );
 
-  return appendSteps(
+  return extendChain(
     receiver,
-    Arr.map(args, (arg, index) => ({ text: context.sourceCode.getText(arg), wrapper: isWrapper(names[index]) })),
+    Arr.zipWith(steps, names, (step, name) => ({ text: context.sourceCode.getText(step), wrapper: isWrapper(name) })),
     functionPipe
       ? { kind: 'functionPipe' }
-      : firstWrapper === undefined
-        ? undefined
-        : { kind: 'wrapperPipe', name: firstWrapper },
+      : Opt.getOrUndefined(Opt.map(firstWrapper, ([name]) => ({ kind: 'wrapperPipe', name }) as const)),
     reordersEffects,
     context,
     state,
   );
-}
-
-function appendSteps(
-  receiver: ESTree.Expression,
-  steps: ReadonlyArray<Step>,
-  violation: Chain['violation'],
-  reordersEffects: boolean,
-  context: Context,
-  state: FileState,
-): Chain {
-  const inner = flattenOrHead(receiver, context, state);
-
-  return {
-    head: inner.head,
-    steps: [...inner.steps, ...steps],
-    violation: inner.violation ?? violation,
-    reordersEffects: inner.reordersEffects || reordersEffects,
-  };
 }
 
 function flatten(node: ESTree.Expression, context: Context, state: FileState): Chain | undefined {
