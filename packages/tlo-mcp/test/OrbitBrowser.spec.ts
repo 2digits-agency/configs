@@ -8,6 +8,7 @@ import * as Layer from 'effect/Layer';
 import * as Redacted from 'effect/Redacted';
 import * as Sink from 'effect/Sink';
 import * as Stream from 'effect/Stream';
+import * as Str from 'effect/String';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as ChildProcess from 'effect/process/ChildProcess';
 import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
@@ -93,18 +94,18 @@ describe('orbit browser and operation cleanup', () => {
             signals.push(init.signal);
           }
 
-          if (url.endsWith('/register')) {
+          if (Str.endsWith('/register')(url)) {
             registrations++;
           }
 
-          if (url.endsWith('/access_token')) {
+          if (Str.endsWith('/access_token')(url)) {
             grants++;
           }
 
           const response = Response.json(
-            url.endsWith('/register')
+            Str.endsWith('/register')(url)
               ? { client_id: 'client' }
-              : url.endsWith('/access_token')
+              : Str.endsWith('/access_token')(url)
                 ? { access_token: 'access', token_type: 'Bearer', expires_in: 3600 }
                 : metadata,
           );
@@ -224,7 +225,7 @@ describe('orbit browser and operation cleanup', () => {
             '',
           );
 
-          expect(output.includes(`Open this URL in your browser:\n${url.href}\n`)).toBe(
+          expect(Str.includes(`Open this URL in your browser:\n${url.href}\n`)(output)).toBe(
             outcome === 'nonzero' || outcome === 'timeout',
           );
         }).pipe(
@@ -265,7 +266,7 @@ describe('orbit browser and operation cleanup', () => {
           signals.push(init.signal);
         }
 
-        if (!url.endsWith('/register')) {
+        if (!Str.endsWith('/register')(url)) {
           discoveries++;
 
           return Promise.resolve(Response.json(discoveries === 1 ? {} : metadata));

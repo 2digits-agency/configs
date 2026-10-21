@@ -2,6 +2,8 @@
 /* eslint-disable unicorn/no-null -- RuleTester uses null to assert no autofix. */
 import { describe, expect, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
+import * as Opt from 'effect/Option';
+import * as Str from 'effect/String';
 import { RuleTester } from 'oxlint/plugins-dev';
 
 import { recommendedRules, rules } from '../../../src';
@@ -121,21 +123,25 @@ tester.run('no-function-config-default binding proof', noFunctionConfigDefault, 
       `import { Config as C } from 'effect'; C.withDefault(C.String('S'), ${thunk});`,
       `import { withDefault as fallback } from 'effect/Config'; fallback(${thunk});`,
     ],
-    (body) => ({
-      code: `${configImport}\n${body}`,
-      filename: 'invalid.ts',
-      errors: [
-        {
-          messageId: 'functionDefault',
-          line: 2,
-          column: body.indexOf(thunk),
-          endLine: 2,
-          endColumn: body.indexOf(thunk) + thunk.length,
-          suggestions: null,
-        },
-      ],
-      output: null,
-    }),
+    (body) => {
+      const column = Opt.getOrThrow(Str.indexOf(thunk)(body));
+
+      return {
+        code: `${configImport}\n${body}`,
+        filename: 'invalid.ts',
+        errors: [
+          {
+            messageId: 'functionDefault',
+            line: 2,
+            column,
+            endLine: 2,
+            endColumn: column + thunk.length,
+            suggestions: null,
+          },
+        ],
+        output: null,
+      };
+    },
   ),
 });
 

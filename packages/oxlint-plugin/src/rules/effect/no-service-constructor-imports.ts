@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import * as Str from 'effect/String';
 
 import { defineSyntaxRule, moduleExportName, ruleMeta } from '../../utils';
 
@@ -22,11 +23,11 @@ export const noServiceConstructorImports: Rule = defineSyntaxRule(
   (context) => ({
     ImportDeclaration(node) {
       // CreateOnce is reused across files: inspect the current filename on each visit.
-      if (testFile.test(context.filename.replaceAll('\\', '/'))) {
+      if (testFile.test(Str.replaceAll('\\', '/')(context.filename))) {
         return;
       }
 
-      if (!node.source.value.startsWith('./') && !node.source.value.startsWith('../')) {
+      if (!Str.startsWith('./')(node.source.value) && !Str.startsWith('../')(node.source.value)) {
         return;
       }
 

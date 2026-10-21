@@ -4,6 +4,7 @@ import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fiber from 'effect/Fiber';
 import * as Order from 'effect/Order';
+import * as Str from 'effect/String';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as HttpClient from 'effect/http/HttpClient';
 import * as TestClock from 'effect/testing/TestClock';
@@ -22,7 +23,7 @@ describe('orbit callback router', () => {
       expect(Number(new URL(callback.redirectUri).port)).toBeGreaterThan(0);
 
       for (const url of [
-        callback.redirectUri.replace('/callback', '/wrong?state=secret&code=valid'),
+        Str.replace('/callback', '/wrong?state=secret&code=valid')(callback.redirectUri),
         `${callback.redirectUri}?code=valid`,
         `${callback.redirectUri}?state=wrong&code=valid`,
         `${callback.redirectUri}?state=secret&state=secret&code=valid`,

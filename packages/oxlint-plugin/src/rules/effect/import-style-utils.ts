@@ -28,7 +28,7 @@ export function isModuleName(name: string): boolean {
 }
 
 function isEffectVitestSource(source: string): boolean {
-  return source === '@effect/vitest' || source.startsWith('@effect/vitest/');
+  return source === '@effect/vitest' || Str.startsWith('@effect/vitest/')(source);
 }
 
 export function isTypeOnlyImport(declaration: ESTree.ImportDeclaration, specifier?: ESTree.ImportSpecifier): boolean {
@@ -57,7 +57,7 @@ export function submoduleName(source: string): string | undefined {
   }
 
   const isSubmodule =
-    source.startsWith('effect/') || source.startsWith('alchemy/') || /^@effect\/[^/]+\//u.test(source);
+    Str.startsWith('effect/')(source) || Str.startsWith('alchemy/')(source) || /^@effect\/[^/]+\//u.test(source);
 
   if (!isSubmodule) {
     return undefined;

@@ -6,6 +6,7 @@ import * as Match from 'effect/Match';
 import * as Num from 'effect/Number';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
+import * as Str from 'effect/String';
 
 import { importedApi } from '../../fixes';
 import { argumentAt, canonicalPath, objectProperty, unwrapExpression, type FileState } from '../../utils';
@@ -186,7 +187,7 @@ function formatNumber(value: number): string {
     return String(value);
   }
 
-  return String(value).replaceAll(/\B(?=(?:\d{3})+$)/gu, '_');
+  return Str.replaceAll(/\B(?=(?:\d{3})+$)/gu, '_')(String(value));
 }
 
 /**

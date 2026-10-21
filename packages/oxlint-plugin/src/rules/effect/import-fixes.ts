@@ -2,6 +2,7 @@ import type { Context, ESTree, Fix, Fixer, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 import * as Result from 'effect/Result';
+import * as Str from 'effect/String';
 
 import { moduleExportName } from '../../utils';
 import {
@@ -157,7 +158,7 @@ function fixReferences(variable: Variable, replacement: string, member: boolean,
 
     const parent = identifier.parent;
 
-    if (reference.isWrite() || parent.type === 'ExportSpecifier' || parent.type.startsWith('JSX')) {
+    if (reference.isWrite() || parent.type === 'ExportSpecifier' || Str.startsWith('JSX')(parent.type)) {
       return undefined;
     }
 

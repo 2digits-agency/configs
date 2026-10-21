@@ -6,6 +6,7 @@ import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import * as Str from 'effect/String';
 
 import { EslintDetectionService } from '../../../src/services/EslintDetectionService.js';
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
@@ -95,7 +96,7 @@ describe(EslintDetectionService, () => {
 
           assertTrue(configs.length > 0);
 
-          assertTrue(Arr.some(configs, (path) => path.includes('eslint.config.js')));
+          assertTrue(Arr.some(configs, Str.includes('eslint.config.js')));
         }),
       );
 

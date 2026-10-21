@@ -8,6 +8,7 @@ import * as Path from 'effect/Path';
 import * as Schema from 'effect/Schema';
 import type * as Scope from 'effect/Scope';
 import * as Stream from 'effect/Stream';
+import * as Str from 'effect/String';
 import * as ChildProcess from 'effect/process/ChildProcess';
 import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 
@@ -37,7 +38,7 @@ export class SessionStore extends Context.Service<SessionStore, SessionStoreShap
 ) {}
 
 function quoteSecurity(value: string): string {
-  const escaped = value.replaceAll(/["\\]/g, String.raw`\$&`);
+  const escaped = Str.replaceAll(/["\\]/g, Str.String.raw`\$&`)(value);
 
   return `"${escaped}"`;
 }
@@ -101,7 +102,7 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
               return yield* OrbitAuthError.make({ message: 'Could not read macOS Keychain.' });
             }
 
-            return yield* decodeSessionJson(result.output.trim());
+            return yield* decodeSessionJson(Str.trim(result.output));
           }
 
           const content = yield* fs
@@ -165,7 +166,7 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
 
           // Fail closed: an existing lock may belong to a live login or a crashed process.
           yield* Effect.acquireRelease(
-            fs.writeFileString(lockFile, String(process.pid), { flag: 'wx', mode: 0o600 }).pipe(
+            fs.writeFileString(lockFile, process.pid.toString(), { flag: 'wx', mode: 0o600 }).pipe(
               Effect.catchReason('PlatformError', 'AlreadyExists', () =>
                 OrbitAuthError.make({
                   message: `OAuth credentials locked. Close other login/refresh processes. After a crash only, remove ${lockFile}.`,

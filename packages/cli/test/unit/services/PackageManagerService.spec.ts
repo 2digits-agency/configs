@@ -11,6 +11,7 @@ import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
 import * as Schema from 'effect/Schema';
+import * as Str from 'effect/String';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { clearExecutedCommands, getExecutedCommands, MockCommandExecutor } from '../../helpers/MockCommandService.js';
@@ -38,7 +39,7 @@ describe(PackageManagerService, () => {
 
           const root = yield* service.resolveRoot();
 
-          assertTrue(root.includes(dir));
+          assertTrue(Str.includes(dir)(root));
         }),
       );
     });
@@ -118,7 +119,7 @@ describe(PackageManagerService, () => {
 
           // Should have executed a pnpm add command
           const addCommand = Opt.getOrUndefined(
-            Arr.findFirst(executed, (cmd) => cmd.command.includes('add') || cmd.shell === true),
+            Arr.findFirst(executed, (cmd) => Str.includes('add')(cmd.command) || cmd.shell === true),
           );
 
           assertTrue(addCommand !== undefined);
@@ -171,9 +172,9 @@ describe(PackageManagerService, () => {
           const cmd = yield* service.runScriptCommand({ script: 'test' });
 
           // Should return a pnpm command
-          assertTrue(cmd.includes('pnpm'));
+          assertTrue(Str.includes('pnpm')(cmd));
 
-          assertTrue(cmd.includes('test'));
+          assertTrue(Str.includes('test')(cmd));
 
           expect(cmd).toMatchInlineSnapshot(`"pnpm run test"`);
         }),
