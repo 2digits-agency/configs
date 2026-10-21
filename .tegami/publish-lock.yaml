@@ -1,106 +1,117 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n### Fix `--prettier` and `--no-prettier`\n\n`--prettier` now sets up Prettier and `--no-prettier` skips it, as documented. Before, the two flags did the opposite.\n\n### Check ESLint dependencies at the workspace root\n\nWhen run from a workspace subdirectory, `2d --eslint` now checks the root `package.json` for `eslint` and `@2digits/eslint-config`, where it installs them, instead of reinstalling them and warning that dependencies may be missing.\n\n### Use Effect modules across services\n\n- `turbo.json` reads and writes now go through one `TurboConfigService` instead of copies in the ESLint and Turborepo setup.\n- Shared `hasDependency` and `ensureScript` helpers replace repeated dependency and script checks.\n- Task categories and flag handling use `effect/Match`, `Option` and `String` instead of if-chains, and service layers follow the Effect v4 `layer` naming.\n"
-    filename: 2026-10-19-cli-effect-cleanup.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update Node.js to 24.22.1 and pnpm to 12.15.0\n\n- Bumped the `devEngines.runtime` and `engines.node` fields to 24.22.1\n- Bumped the `packageManager` and `devEngines.packageManager` fields to pnpm 12.15.0\n"
+    filename: 2026-10-21-bright-pines-lift.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update typescript-eslint to 8.72.0\n\n- `@typescript-eslint/parser`, `scope-manager` and `utils` to 8.72.0\n"
-    filename: 2026-10-20-deep-sea-cove.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `turbo` to 2.11.10\n"
+    filename: 2026-10-21-fresh-otters-race.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 65.3.15\n"
-    filename: 2026-10-20-ember-sky-peak.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `@oxc-node/cli` to 1.0.0\n\n- Bumped the catalog entry from `0.1.7` to the `1.0.0` release\n"
+    filename: 2026-10-21-keen-jays-drum.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @tanstack/eslint-plugin-query to 5.104.5\n"
-    filename: 2026-10-20-frost-leaf-moon.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the GitButler agent skill to 0.5.2233\n\n- Bumped the bundled skill version\n- Documented the new `but merge --ff-only` flag\n"
+    filename: 2026-10-21-nimble-moons-share.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n### Fix redaction, error messages and session cleanup\n\n- Objects referenced more than once in tool input or output are no longer replaced with `[Circular]`; only real cycles are.\n- String errors are reported as-is instead of wrapped in JSON quotes.\n- Text parts of user messages are now released when a session's trace is flushed, instead of being kept for the life of the process.\n\n### Share helpers across capture, state and config\n\n- Trace, generation and tool span events share one builder for the common `$ai_*` and custom properties, and one privacy-aware attribute serializer.\n- Custom properties JSON is parsed once instead of twice, and the session window is computed once per plugin instead of on every message.\n"
-    filename: 2026-10-19-opencode-plugin-cleanup.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Pin `@typescript-eslint/types` to 8.72.0\n\n- Updated the `overrides` entry so every `@typescript-eslint` package resolves the same types version\n"
+    filename: 2026-10-21-silver-ibex-climb.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n### Behavior change: consumer config now wins in `withTwoDigits`\n\n`withTwoDigits` now merges consumer configs the way its documentation describes: consumer configuration takes precedence over the 2digits defaults, and later configs take precedence over earlier ones. Lint results change for consumers who rely on either of these:\n\n- **`extends`**: configs listed in a consumer `extends` now override the 2digits presets. They used to be placed before the presets, so a rule set there (for example `curly: 'off'`) was silently overridden by the defaults.\n- **Rules with options set in more than one config**: the later entry now replaces the earlier one. The entries used to be concatenated into one invalid entry such as `['warn', { … }, 'error', { … }]`.\n\nConfigs that pass neither resolve exactly as before.\n"
-    filename: 2026-10-19-oxlint-config-merge-precedence.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n## Use Effect string helpers when categorizing Turborepo tasks\n\n- Rewrote the task-category match to use `Predicate.or` with `String.includes` instead of native `String.prototype.includes`\n- Switched the build-time version replacement to `String.replaceAll`\n"
+    filename: 2026-10-21-tidy-ravens-mend.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n### Type every `eslint-plugin-zod` rule\n\nThe rule types now match `eslint-plugin-zod` 5.2: `zod/no-dynamic-schema-value`, `zod/no-function-scoped-schema`, `zod/prefer-map-set-size-over-min-max`, `zod/prefer-nullish`, `zod/prefer-string-length-over-min-max` and `zod/prefer-validate` are declared, the removed `zod/no-string-schema-with-uuid` is gone, `zod/consistent-import` accepts `syntax: 'default'`, and `zod/prefer-top-level-string-formats` accepts its `ignore` option.\n"
-    filename: 2026-10-19-oxlint-config-zod-rule-types.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-turbo` to 2.11.10\n"
+    filename: 2026-10-21-bold-pumas-climb.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Use Effect helpers in rule internals\n\n- Rewrote rule helpers and `utils.ts` to use Effect modules\n- Fixed `consistent-schema-pipe` handling\n"
-    filename: 2026-10-20-gentle-rain-stone.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-storybook` to 10.6.3\n"
+    filename: 2026-10-21-neat-swans-listen.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Make FileState bindings non-optional\n\n- Removed optional-key handling for `bindings` and `hasEffectImport` so they default via constructor defaults instead of nullable access\n- Updated rule code to access `state.bindings` directly without optional chaining\n- Changed `candidates` from `let` to `const` and use `.clear()` on reset in `preferEffectDurationConstants`\n- Rewrote `typeNamePath` identifier case using `Fn.flow(Struct.get('name'), Arr.make)`\n"
-    filename: 2026-10-20-steady-maple-brook.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@eslint-react/eslint-plugin` and `@eslint-react/kit` to 5.28.4\n"
+    filename: 2026-10-21-olive-forks-smile.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.171.1\n"
-    filename: 2026-10-20-bright-fox-lake.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Require Node.js 24.22.1\n\n- Raised the `engines.node` field to 24.22.1\n- The `settings.node.version` value of the generated ESLint config now reports 24.22.1\n"
+    filename: 2026-10-21-quiet-moles-nest.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.171.2\n\n- Bumped the `renovate` catalog dependency from 44.171.1 to 44.171.2\n"
-    filename: 2026-10-20-quick-fox-moon.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-jsdoc` to 65.4.0\n"
+    filename: 2026-10-21-warm-cranes-hurry.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n### Tidy Effect usage in the gateway, Orbit client and OAuth store\n\n- Shared the Orbit 401/403 handler, the browser command options and the callback query-parameter check instead of copying them.\n- Hoisted gateway and OAuth callback responses, the request body limit and the text encoder so they are no longer rebuilt per request.\n- The credential lock now maps file-system errors with `catchTag` instead of a hand-written error guard.\n"
-    filename: 2026-10-19-tlo-mcp-effect-cleanup.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Use Effect string helpers inside the lint rules\n\n- Replaced native string calls such as `startsWith`, `replaceAll` and `split` with their `effect/String` counterparts in the Effect rules, the padding-line rule and the shared utils\n"
+    filename: 2026-10-21-plain-herons-tidy.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Enable schemaClassObjectLiteral rule in effect config\n\n- Added `schemaClassObjectLiteral: error` to the `@effect/language-service` plugin rules in `effect.json`\n"
-    filename: 2026-10-20-bright-owls-zen.md
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.175.0\n\n- Bumped the `renovate` catalog dependency from 44.171.2 to 44.175.0\n"
+    filename: 2026-10-21-tidy-otters-renew.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.54.0\n"
-    filename: 2026-10-20-calm-wolf-dune.md
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `@opentunnel/client` to 0.5.4\n"
+    filename: 2026-10-21-bright-lanterns-glide.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Use Effect string helpers in the Orbit client and OAuth store\n\n- Replaced native string calls with `effect/String` helpers when checking the `text/event-stream` content type, quoting security values, trimming session output and writing the lock file\n- The content-type check now treats a missing header as an empty string\n"
+    filename: 2026-10-21-lucky-otters-gather.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update `@effect/tsgo` to 0.56.0\n\n- Bumped the `@effect/tsgo` catalog dependency from 0.54.0 to 0.56.0\n"
+    filename: 2026-10-21-quiet-falcons-hover.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Enable the `preferEffectString` rule in the Effect preset\n\n- Added `\"preferEffectString\": \"error\"` to `effect.json`, so consumers that extend the preset now get an error when they call native string methods instead of `effect/String` helpers\n"
+    filename: 2026-10-21-quiet-strings-guard.md
     v: 0.0.0
 core:packages:
-  - id: npm:@2digits/config-monorepo
-    updated: false
+  - changelogIds:
+      - 2026-10-21-bright-pines-lift.md
+      - 2026-10-21-fresh-otters-race.md
+      - 2026-10-21-keen-jays-drum.md
+      - 2026-10-21-nimble-moons-share.md
+      - 2026-10-21-silver-ibex-climb.md
+    id: npm:@2digits/config-monorepo
+    updated: true
+  - changelogIds:
+      - 2026-10-21-tidy-ravens-mend.md
+    id: npm:@2digits/cli
+    updated: true
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-10-19-cli-effect-cleanup.md
-    id: npm:@2digits/cli
-    updated: true
-  - changelogIds:
-      - 2026-10-20-deep-sea-cove.md
-      - 2026-10-20-ember-sky-peak.md
-      - 2026-10-20-frost-leaf-moon.md
+      - 2026-10-21-bold-pumas-climb.md
+      - 2026-10-21-neat-swans-listen.md
+      - 2026-10-21-olive-forks-smile.md
+      - 2026-10-21-quiet-moles-nest.md
+      - 2026-10-21-warm-cranes-hurry.md
     id: npm:@2digits/eslint-config
     updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
-  - changelogIds:
-      - 2026-10-19-opencode-plugin-cleanup.md
-    id: npm:@2digits/opencode-plugin
-    updated: true
+  - id: npm:@2digits/opencode-plugin
+    updated: false
   - id: npm:@2digits/oxfmt-config
     updated: false
-  - changelogIds:
-      - 2026-10-19-oxlint-config-merge-precedence.md
-      - 2026-10-19-oxlint-config-zod-rule-types.md
-    id: npm:@2digits/oxlint-config
+  - id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-10-20-gentle-rain-stone.md
-      - 2026-10-20-steady-maple-brook.md
+      - 2026-10-21-plain-herons-tidy.md
     id: npm:@2digits/oxlint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-10-21-tidy-otters-renew.md
+    id: npm:@2digits/renovate-config
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
   - changelogIds:
-      - 2026-10-20-bright-fox-lake.md
-      - 2026-10-20-quick-fox-moon.md
-    id: npm:@2digits/renovate-config
-    updated: true
-  - changelogIds:
-      - 2026-10-19-tlo-mcp-effect-cleanup.md
+      - 2026-10-21-bright-lanterns-glide.md
+      - 2026-10-21-lucky-otters-gather.md
     id: npm:@2digits/tlo-mcp
     updated: true
   - changelogIds:
-      - 2026-10-20-bright-owls-zen.md
-      - 2026-10-20-calm-wolf-dune.md
+      - 2026-10-21-quiet-falcons-hover.md
+      - 2026-10-21-quiet-strings-guard.md
     id: npm:@2digits/tsconfig
     updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
-  - id: npm:@2digits/constants
   - id: npm:@2digits/cli
+  - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxlint-plugin
-  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/renovate-config
+  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig

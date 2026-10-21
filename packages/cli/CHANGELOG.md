@@ -1,3 +1,10 @@
+## @2digits/cli@2.0.31
+
+### Use Effect string helpers when categorizing Turborepo tasks
+
+- Rewrote the task-category match to use `Predicate.or` with `String.includes` instead of native `String.prototype.includes`
+- Switched the build-time version replacement to `String.replaceAll`
+
 ## @2digits/cli@2.0.30
 
 ### Fix `--prettier` and `--no-prettier`
