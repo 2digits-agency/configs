@@ -18,6 +18,7 @@ import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Ref from 'effect/Ref';
+import * as Str from 'effect/String';
 
 type Token = SyntaxToken | Comment;
 
@@ -351,7 +352,7 @@ const baseStatementTypes: Record<BasicStatementType, NodeTest> = {
   'cjs-import': (node, sourceCode) =>
     node.type === 'VariableDeclaration' &&
     node.declarations[0]?.init != null &&
-    sourceCode.getText(node.declarations[0].init).startsWith('require('),
+    Str.startsWith('require(')(sourceCode.getText(node.declarations[0].init)),
   enum: keywordTester('TSEnumDeclaration', 'enum'),
   interface: keywordTester('TSInterfaceDeclaration', 'interface'),
   'function-overload': nodeTypeTester('TSDeclareFunction'),
@@ -517,7 +518,7 @@ function verifyPair(
 
           return fixer.replaceTextRange(
             [start, end],
-            sourceCode.text.slice(start, end).replace(paddingLineSequence, '$1$2'),
+            Fn.pipe(sourceCode.text, Str.slice(start, end), Str.replace(paddingLineSequence, '$1$2')),
           );
         },
       });

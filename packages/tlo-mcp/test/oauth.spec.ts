@@ -11,6 +11,7 @@ import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
 import * as Ref from 'effect/Ref';
 import * as Schema from 'effect/Schema';
+import * as Str from 'effect/String';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as HttpClient from 'effect/http/HttpClient';
 import * as TestClock from 'effect/testing/TestClock';
@@ -225,7 +226,7 @@ describe('orbit OAuth', () => {
       const fetchMock: typeof globalThis.fetch = (input, init) => {
         const url = input instanceof Request ? input.url : String(input);
 
-        const isToken = url.endsWith('/access_token');
+        const isToken = Str.endsWith('/access_token')(url);
 
         if (isToken) {
           refreshes++;

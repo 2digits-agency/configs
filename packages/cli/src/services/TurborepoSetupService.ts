@@ -41,10 +41,7 @@ function categorizeTask(taskName: string): TaskCategory {
     taskCategoriesByName.get(lower) ??
     Match.value(lower).pipe(
       Match.withReturnType<TaskCategory>(),
-      Match.when(
-        (name) => name.includes('spec') || name.includes('vitest'),
-        () => 'test',
-      ),
+      Match.when(P.or(Str.includes('spec'), Str.includes('vitest')), () => 'test'),
       Match.when(Str.includes('eslint'), () => 'lint'),
       Match.orElse(() => 'other'),
     )

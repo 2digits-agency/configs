@@ -2,6 +2,7 @@ import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
+import * as Str from 'effect/String';
 
 import { importedApi } from '../../fixes';
 import {
@@ -234,7 +235,7 @@ function hasPipe(declared: ESTree.TSType, from: ESTree.Node, state: FileState): 
 
     if (member !== undefined) {
       // Schema.Constraint and its subtypes are not Pipeable, unlike Schema.Top and the schemas built on it.
-      return !member.startsWith('Constraint');
+      return !Str.startsWith('Constraint')(member);
     }
 
     const parameter: ESTree.TSTypeParameter | undefined =
@@ -579,7 +580,7 @@ export const consistentSchemaPipe: Rule = defineEffectRule(
       );
 
       // Chains inside the head keep their own fixes; chains inside steps are fixed on a later pass.
-      const [prefix = '', suffix = ''] = render(head, chain.steps).split(headMarker);
+      const [prefix, suffix = ''] = Str.split(render(head, chain.steps), headMarker);
 
       context.report({
         node,

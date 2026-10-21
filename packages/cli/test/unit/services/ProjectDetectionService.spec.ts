@@ -1,10 +1,12 @@
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import { describe, expect, layer } from '@effect/vitest';
-import { deepStrictEqual, strictEqual } from '@effect/vitest/utils';
+import { assertTrue, deepStrictEqual, strictEqual } from '@effect/vitest/utils';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import * as Str from 'effect/String';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
@@ -81,7 +83,7 @@ describe(ProjectDetectionService, () => {
           // Should find the packages/app workspace
           strictEqual(workspaces.length, 1);
 
-          strictEqual(workspaces[0]?.includes('packages/app'), true);
+          assertTrue(Arr.some(workspaces, Str.includes('packages/app')));
 
           expect(workspaces.at(0)).toMatch(`${testDir}/packages/app`);
         }),

@@ -3,6 +3,7 @@
 import { describe, expectTypeOf, it } from '@effect/vitest';
 import ts from 'dedent';
 import * as Arr from 'effect/Array';
+import * as Str from 'effect/String';
 import { RuleTester } from 'oxlint/plugins-dev';
 
 import { rules, type PaddingLineOption } from '../../src';
@@ -270,7 +271,7 @@ tester.run('padding-line-between-statements', rule, {
       ] satisfies Array<[PaddingLineOption['prev'], string]>,
       ([prev, code]) => ({
         code,
-        output: code.replace(/\n(\s*foo\(\);)/u, '\n\n$1'),
+        output: Str.replace(/\n(\s*foo\(\);)/u, '\n\n$1')(code),
         options: [{ ...always, prev }],
         errors: [{ messageId: 'expectedBlankLine' }],
       }),

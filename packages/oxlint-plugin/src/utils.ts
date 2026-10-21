@@ -76,7 +76,7 @@ function collectState(program: ESTree.Program): FileState {
 
     const source = statement.source.value;
 
-    if (source === 'effect' || source.startsWith('effect/') || source.startsWith('@effect/')) {
+    if (source === 'effect' || Str.startsWith('effect/')(source) || Str.startsWith('@effect/')(source)) {
       hasEffectImport = true;
     }
 
@@ -374,7 +374,7 @@ export function firstIdentifierParameter(node: FunctionNode): ESTree.BindingIden
 export function functionUsesFirstParameter(node: FunctionNode): boolean {
   const parameter = firstIdentifierParameter(node);
 
-  if (parameter === undefined || !node.body || parameter.name.startsWith('_')) {
+  if (parameter === undefined || !node.body || Str.startsWith('_')(parameter.name)) {
     return false;
   }
 

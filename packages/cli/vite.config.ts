@@ -1,3 +1,4 @@
+import * as Str from 'effect/String';
 import { defineConfig } from 'vite-plus';
 
 import pkg from './package.json';
@@ -14,12 +15,11 @@ export default defineConfig({
       {
         name: 'replace-version',
         transform(code) {
-          if (!code.includes('__REPLACE_VERSION__')) {
+          if (!Str.includes('__REPLACE_VERSION__')(code)) {
             return;
           }
 
-          // eslint-disable-next-line unicorn/no-unsafe-string-replacement
-          return code.replaceAll('__REPLACE_VERSION__', pkg.version);
+          return Str.replaceAll('__REPLACE_VERSION__', pkg.version)(code);
         },
       },
     ],

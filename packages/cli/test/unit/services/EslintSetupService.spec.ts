@@ -8,6 +8,7 @@ import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
 import * as Schema from 'effect/Schema';
+import * as Str from 'effect/String';
 
 import { EslintDetectionService } from '../../../src/services/EslintDetectionService.js';
 import { EslintSetupService } from '../../../src/services/EslintSetupService.js';
@@ -69,9 +70,9 @@ describe(EslintSetupService, () => {
           // Check config content
           const configContent = yield* fs.readFileString(configPath);
 
-          assertTrue(configContent.includes('@2digits/eslint-config'));
+          assertTrue(Str.includes('@2digits/eslint-config')(configContent));
 
-          assertTrue(configContent.includes('export default twoDigits()'));
+          assertTrue(Str.includes('export default twoDigits()')(configContent));
 
           // Check package.json was updated
           const updatedPkg = yield* pm.readPackageJson({ id: tempDir });
@@ -443,9 +444,9 @@ describe(EslintSetupService, () => {
 
           const written = yield* fs.readFileString(configPath);
 
-          assertTrue(written.includes('@2digits/eslint-config'));
+          assertTrue(Str.includes('@2digits/eslint-config')(written));
 
-          assertTrue(written.includes('export default twoDigits()'));
+          assertTrue(Str.includes('export default twoDigits()')(written));
         }),
       );
 
@@ -473,7 +474,7 @@ export default twoDigits({
 
           const written = yield* fs.readFileString(configPath);
 
-          assertTrue(written.includes("ignores: ['apps/**', 'packages/**']"));
+          assertTrue(Str.includes("ignores: ['apps/**', 'packages/**']")(written));
         }),
       );
 
@@ -500,7 +501,7 @@ export default twoDigits({
 
             const written = yield* fs.readFileString(configPath);
 
-            assertTrue(written.includes('@2digits/eslint-config'));
+            assertTrue(Str.includes('@2digits/eslint-config')(written));
           }
         }),
       );
@@ -719,7 +720,7 @@ export default twoDigits({
 
           const final = yield* fs.readFileString(configPath);
 
-          assertTrue(final.includes('@2digits/eslint-config'));
+          assertTrue(Str.includes('@2digits/eslint-config')(final));
         }),
       );
     }),

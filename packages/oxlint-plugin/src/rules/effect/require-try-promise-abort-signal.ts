@@ -1,4 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import * as Str from 'effect/String';
 
 import {
   argumentAt,
@@ -44,7 +45,7 @@ export const requireTryPromiseAbortSignal: Rule = defineEffectRule(
 
       if (signal === undefined) {
         context.report({ node: thunk, messageId: 'missingSignal' });
-      } else if (!signal.name.startsWith('_') && !functionUsesFirstParameter(thunk)) {
+      } else if (!Str.startsWith('_')(signal.name) && !functionUsesFirstParameter(thunk)) {
         context.report({ node: signal, messageId: 'unusedSignal' });
       }
     },

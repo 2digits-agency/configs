@@ -5,6 +5,7 @@ import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
+import * as Str from 'effect/String';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as HttpRouter from 'effect/http/HttpRouter';
 
@@ -12,7 +13,7 @@ import { connectionPrompt } from '../src/cli/connect.js';
 import { gatewayRoutes, loadGatewayKey } from '../src/http/gateway.js';
 import { OrbitClient } from '../src/mcp/OrbitClient.js';
 
-const key = 'a'.repeat(64);
+const key = Str.repeat(64)('a');
 
 const encodeJson = Schema.encodeEffect(Schema.Unknown.pipe(Schema.fromJsonString));
 

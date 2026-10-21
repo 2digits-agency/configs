@@ -7,6 +7,7 @@ import * as Layer from 'effect/Layer';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import * as Stream from 'effect/Stream';
+import * as Str from 'effect/String';
 import * as Struct from 'effect/Struct';
 import * as McpProtocol from 'effect/ai/McpProtocol';
 import * as McpSchema from 'effect/ai/McpSchema';
@@ -123,7 +124,7 @@ export const OrbitClientLive = Layer.effect(
           return;
         }
 
-        const reply = response.headers['content-type']?.startsWith('text/event-stream')
+        const reply = Str.startsWith('text/event-stream')(response.headers['content-type'] ?? '')
           ? yield* response.stream.pipe(
               Stream.decodeText(),
               Stream.pipeThroughChannel(Sse.decode({ maxEventSize: 10 * 1024 * 1024 })),
