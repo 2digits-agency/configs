@@ -18,14 +18,7 @@ import * as ChildProcess from 'effect/process/ChildProcess';
 import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 
 import { listenForLogin } from './callback.js';
-import {
-  authentication,
-  needsRefresh,
-  ORBIT_ORIGIN,
-  ORBIT_RESOURCE,
-  OrbitAuthError,
-  updateSession,
-} from './session.js';
+import { authentication, ORBIT_ORIGIN, ORBIT_RESOURCE, OrbitAuthError, Session } from './session.js';
 import { SessionStore, SessionStoreLive } from './store.js';
 
 const Registration = Schema.Struct({
@@ -98,7 +91,7 @@ export const OrbitAuthLayer = Layer.effect(
 
       const now = yield* Clock.currentTimeMillis;
 
-      if (!needsRefresh(session, now)) {
+      if (!Session.needsRefresh(session, now)) {
         return session.accessToken;
       }
 
@@ -125,7 +118,7 @@ export const OrbitAuthLayer = Layer.effect(
         .refreshGrant({ refreshToken: session.refreshToken, resources: [ORBIT_RESOURCE] })
         .pipe(Effect.flatMap(OAuth.tokens));
 
-      const updated = updateSession(session, tokens, yield* Clock.currentTimeMillis);
+      const updated = Session.update(session, tokens, yield* Clock.currentTimeMillis);
 
       yield* store.save(updated);
 
@@ -224,7 +217,7 @@ export const OrbitAuthLayer = Layer.effect(
         })
         .pipe(Effect.flatMap(OAuth.tokens));
 
-      yield* store.save(updateSession(identity, tokens, yield* Clock.currentTimeMillis));
+      yield* store.save(Session.update(identity, tokens, yield* Clock.currentTimeMillis));
 
       yield* Effect.sync(() => {
         process.stderr.write('Orbit login complete.\n');

@@ -10,7 +10,7 @@ import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as TestClock from 'effect/testing/TestClock';
 
-import { OrbitAuthError } from '../src/oauth/session.js';
+import { OrbitAuthError, Session } from '../src/oauth/session.js';
 import { makeSessionStoreLayer, SessionStore } from '../src/oauth/store.js';
 
 const TEMP_PREFIX = 'orbit-store-';
@@ -170,7 +170,7 @@ describe('orbit scoped persistence and lock policy', () => {
         const store = yield* SessionStore;
 
         const failure = yield* store
-          .save({ clientId: 'client', accessToken: Redacted.make('secret') })
+          .save(Session.make({ clientId: 'client', accessToken: Redacted.make('secret') }))
           .pipe(Effect.flip);
 
         expect(failure.message).toContain('Could not persist');
