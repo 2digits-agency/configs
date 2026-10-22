@@ -1,3 +1,9 @@
+## @2digits/oxlint-plugin@0.3.3
+
+### Use Effect string helpers inside the lint rules
+
+- Replaced native string calls such as `startsWith`, `replaceAll` and `split` with their `effect/String` counterparts in the Effect rules, the padding-line rule and the shared utils
+
 ## @2digits/oxlint-plugin@0.3.2
 
 ### Use Effect helpers in rule internals

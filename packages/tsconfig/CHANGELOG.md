@@ -1,3 +1,13 @@
+## @2digits/tsconfig@1.0.3
+
+### Update `@effect/tsgo` to 0.56.0
+
+- Bumped the `@effect/tsgo` catalog dependency from 0.54.0 to 0.56.0
+
+### Enable the `preferEffectString` rule in the Effect preset
+
+- Added `"preferEffectString": "error"` to `effect.json`, so consumers that extend the preset now get an error when they call native string methods instead of `effect/String` helpers
+
 ## @2digits/tsconfig@1.0.2
 
 ### Enable schemaClassObjectLiteral rule in effect config

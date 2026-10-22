@@ -1,3 +1,27 @@
+## @2digits/config-monorepo@0.1.13
+
+### Update Node.js to 24.22.1 and pnpm to 12.15.0
+
+- Bumped the `devEngines.runtime` and `engines.node` fields to 24.22.1
+- Bumped the `packageManager` and `devEngines.packageManager` fields to pnpm 12.15.0
+
+### Update `turbo` to 2.11.10
+
+
+
+### Update `@oxc-node/cli` to 1.0.0
+
+- Bumped the catalog entry from `0.1.7` to the `1.0.0` release
+
+### Update the GitButler agent skill to 0.5.2233
+
+- Bumped the bundled skill version
+- Documented the new `but merge --ff-only` flag
+
+### Pin `@typescript-eslint/types` to 8.72.0
+
+- Updated the `overrides` entry so every `@typescript-eslint` package resolves the same types version
+
 ## @2digits/config-monorepo@0.1.12
 
 ### Update knip to 6.42.0

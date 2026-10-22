@@ -1,3 +1,24 @@
+## @2digits/eslint-config@5.9.4
+
+### Update `eslint-plugin-turbo` to 2.11.10
+
+
+
+### Update `eslint-plugin-storybook` to 10.6.3
+
+
+
+### Update `@eslint-react/eslint-plugin` and `@eslint-react/kit` to 5.28.4
+
+
+
+### Require Node.js 24.22.1
+
+- Raised the `engines.node` field to 24.22.1
+- The `settings.node.version` value of the generated ESLint config now reports 24.22.1
+
+### Update `eslint-plugin-jsdoc` to 65.4.0
+
 ## @2digits/eslint-config@5.9.3
 
 ### Update typescript-eslint to 8.72.0
