@@ -1,3 +1,9 @@
+## @2digits/renovate-config@1.2.114
+
+### Update renovate to 44.176.2
+
+- Bumped the `renovate` catalog dependency from 44.175.0 to 44.176.2
+
 ## @2digits/renovate-config@1.2.113
 
 ### Update renovate to 44.175.0

@@ -1,3 +1,9 @@
+## @2digits/eslint-config@5.9.5
+
+### Update `eslint-plugin-zod` to 5.2.1
+
+- Bumped the `eslint-plugin-zod` catalog dependency from 5.2.0 to 5.2.1
+
 ## @2digits/eslint-config@5.9.4
 
 ### Update `eslint-plugin-turbo` to 2.11.10

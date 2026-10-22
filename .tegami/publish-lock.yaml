@@ -1,104 +1,90 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update Node.js to 24.22.1 and pnpm to 12.15.0\n\n- Bumped the `devEngines.runtime` and `engines.node` fields to 24.22.1\n- Bumped the `packageManager` and `devEngines.packageManager` fields to pnpm 12.15.0\n"
-    filename: 2026-10-21-bright-pines-lift.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Remove the repository-specific Pitchfork lint exception\n\n- Removed the `toml/spaced-comment` override for `pitchfork.toml` from the root ESLint configuration\n"
+    filename: 2026-10-22-fresh-larks-sail.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `turbo` to 2.11.10\n"
-    filename: 2026-10-21-fresh-otters-race.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Correct development commands to run repository scripts\n\n- Updated development instructions to use `vpr` so checks, builds and fixes run the intended package scripts instead of Vite+ built-in tasks\n"
+    filename: 2026-10-22-gentle-finches-hop.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `@oxc-node/cli` to 1.0.0\n\n- Bumped the catalog entry from `0.1.7` to the `1.0.0` release\n"
-    filename: 2026-10-21-keen-jays-drum.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Remove obsolete OpenCode plugin plans and Amp integration research\n"
+    filename: 2026-10-22-soft-wolves-wander.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update the GitButler agent skill to 0.5.2233\n\n- Bumped the bundled skill version\n- Documented the new `but merge --ff-only` flag\n"
-    filename: 2026-10-21-nimble-moons-share.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n## Update `nypm` to 0.6.11\n\n- Bumped the `nypm` catalog dependency from 0.6.10 to 0.6.11\n"
+    filename: 2026-10-22-neat-cranes-race.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Pin `@typescript-eslint/types` to 8.72.0\n\n- Updated the `overrides` entry so every `@typescript-eslint` package resolves the same types version\n"
-    filename: 2026-10-21-silver-ibex-climb.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-zod` to 5.2.1\n\n- Bumped the `eslint-plugin-zod` catalog dependency from 5.2.0 to 5.2.1\n"
+    filename: 2026-10-22-silver-moons-listen.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n## Use Effect string helpers when categorizing Turborepo tasks\n\n- Rewrote the task-category match to use `Predicate.or` with `String.includes` instead of native `String.prototype.includes`\n- Switched the build-time version replacement to `String.replaceAll`\n"
-    filename: 2026-10-21-tidy-ravens-mend.md
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update `posthog-node` to 5.56.4\n\n- Bumped the `posthog-node` catalog dependency from 5.56.2 to 5.56.4\n"
+    filename: 2026-10-22-warm-pines-climb.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-turbo` to 2.11.10\n"
-    filename: 2026-10-21-bold-pumas-climb.md
+  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.176.2\n\n- Bumped the `renovate` catalog dependency from 44.175.0 to 44.176.2\n"
+    filename: 2026-10-22-keen-ibex-renew.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-storybook` to 10.6.3\n"
-    filename: 2026-10-21-neat-swans-listen.md
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `@opentunnel/client` to 0.5.5\n\n- Bumped the `@opentunnel/client` catalog dependency from 0.5.4 to 0.5.5\n"
+    filename: 2026-10-22-bold-otters-glide.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `@eslint-react/eslint-plugin` and `@eslint-react/kit` to 5.28.4\n"
-    filename: 2026-10-21-olive-forks-smile.md
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Document running the gateway outside this repository\n\n- Replaced repository-specific startup and login commands with `npx @2digits/tlo-mcp` and global installation instructions\n"
+    filename: 2026-10-22-bright-herons-drift.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Require Node.js 24.22.1\n\n- Raised the `engines.node` field to 24.22.1\n- The `settings.node.version` value of the generated ESLint config now reports 24.22.1\n"
-    filename: 2026-10-21-quiet-moles-nest.md
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Clarify background gateway setup\n\n- Added supervisor guidance for interactive login, tunnel readiness, failure restarts and clean shutdown\n- Added a standalone Pitchfork configuration and login-start instructions\n"
+    filename: 2026-10-22-calm-badgers-roam.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update `eslint-plugin-jsdoc` to 65.4.0\n"
-    filename: 2026-10-21-warm-cranes-hurry.md
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Model the Orbit session as a schema class\n\n- Changed `Session` from a `Schema.Struct` to a `Schema.Class`, so sessions are now created with `Session.make` instead of a plain object literal\n- Moved `updateSession` and `needsRefresh` onto the class as the `Session.update` and `Session.needsRefresh` static methods\n"
+    filename: 2026-10-22-quiet-jars-mend.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Use Effect string helpers inside the lint rules\n\n- Replaced native string calls such as `startsWith`, `replaceAll` and `split` with their `effect/String` counterparts in the Effect rules, the padding-line rule and the shared utils\n"
-    filename: 2026-10-21-plain-herons-tidy.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/renovate-config:\n    type: patch\n---\n\n## Update renovate to 44.175.0\n\n- Bumped the `renovate` catalog dependency from 44.171.2 to 44.175.0\n"
-    filename: 2026-10-21-tidy-otters-renew.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update `@opentunnel/client` to 0.5.4\n"
-    filename: 2026-10-21-bright-lanterns-glide.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Use Effect string helpers in the Orbit client and OAuth store\n\n- Replaced native string calls with `effect/String` helpers when checking the `text/event-stream` content type, quoting security values, trimming session output and writing the lock file\n- The content-type check now treats a missing header as an empty string\n"
-    filename: 2026-10-21-lucky-otters-gather.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update `@effect/tsgo` to 0.56.0\n\n- Bumped the `@effect/tsgo` catalog dependency from 0.54.0 to 0.56.0\n"
-    filename: 2026-10-21-quiet-falcons-hover.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Enable the `preferEffectString` rule in the Effect preset\n\n- Added `\"preferEffectString\": \"error\"` to `effect.json`, so consumers that extend the preset now get an error when they call native string methods instead of `effect/String` helpers\n"
-    filename: 2026-10-21-quiet-strings-guard.md
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update TypeScript to 7.1.0-beta\n\n- Bumped the `typescript` catalog dependency from 7.0.2 to 7.1.0-beta\n- The supported peer range `^6.0.3 || ^7.0.2` already covers the new release, so no range change was needed\n"
+    filename: 2026-10-22-plain-ravens-hurry.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-10-21-bright-pines-lift.md
-      - 2026-10-21-fresh-otters-race.md
-      - 2026-10-21-keen-jays-drum.md
-      - 2026-10-21-nimble-moons-share.md
-      - 2026-10-21-silver-ibex-climb.md
+      - 2026-10-22-fresh-larks-sail.md
+      - 2026-10-22-gentle-finches-hop.md
+      - 2026-10-22-soft-wolves-wander.md
     id: npm:@2digits/config-monorepo
     updated: true
   - changelogIds:
-      - 2026-10-21-tidy-ravens-mend.md
+      - 2026-10-22-neat-cranes-race.md
     id: npm:@2digits/cli
     updated: true
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-10-21-bold-pumas-climb.md
-      - 2026-10-21-neat-swans-listen.md
-      - 2026-10-21-olive-forks-smile.md
-      - 2026-10-21-quiet-moles-nest.md
-      - 2026-10-21-warm-cranes-hurry.md
+      - 2026-10-22-silver-moons-listen.md
     id: npm:@2digits/eslint-config
     updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
-  - id: npm:@2digits/opencode-plugin
-    updated: false
+  - changelogIds:
+      - 2026-10-22-warm-pines-climb.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
   - id: npm:@2digits/oxfmt-config
     updated: false
-  - id: npm:@2digits/oxlint-config
+  - changelogIds:
+      - 2026-10-22-gentle-finches-hop.md
+      - 2026-10-22-silver-moons-listen.md
+    id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-10-21-plain-herons-tidy.md
+      - 2026-10-22-gentle-finches-hop.md
     id: npm:@2digits/oxlint-plugin
-    updated: true
-  - changelogIds:
-      - 2026-10-21-tidy-otters-renew.md
-    id: npm:@2digits/renovate-config
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
   - changelogIds:
-      - 2026-10-21-bright-lanterns-glide.md
-      - 2026-10-21-lucky-otters-gather.md
+      - 2026-10-22-keen-ibex-renew.md
+    id: npm:@2digits/renovate-config
+    updated: true
+  - changelogIds:
+      - 2026-10-22-bold-otters-glide.md
+      - 2026-10-22-bright-herons-drift.md
+      - 2026-10-22-calm-badgers-roam.md
+      - 2026-10-22-gentle-finches-hop.md
+      - 2026-10-22-quiet-jars-mend.md
     id: npm:@2digits/tlo-mcp
     updated: true
   - changelogIds:
-      - 2026-10-21-quiet-falcons-hover.md
-      - 2026-10-21-quiet-strings-guard.md
+      - 2026-10-22-plain-ravens-hurry.md
     id: npm:@2digits/tsconfig
     updated: true
 npm:packages:
@@ -111,7 +97,7 @@ npm:packages:
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxlint-plugin
-  - id: npm:@2digits/renovate-config
   - id: npm:@2digits/prettier-config
+  - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig

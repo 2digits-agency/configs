@@ -1,3 +1,15 @@
+## @2digits/config-monorepo@0.1.14
+
+### Remove the repository-specific Pitchfork lint exception
+
+- Removed the `toml/spaced-comment` override for `pitchfork.toml` from the root ESLint configuration
+
+### Correct development commands to run repository scripts
+
+- Updated development instructions to use `vpr` so checks, builds and fixes run the intended package scripts instead of Vite+ built-in tasks
+
+### Remove obsolete OpenCode plugin plans and Amp integration research
+
 ## @2digits/config-monorepo@0.1.13
 
 ### Update Node.js to 24.22.1 and pnpm to 12.15.0
