@@ -5,39 +5,13 @@ Only Orbit tools are exposed. No local Executor, cookie adapter, Amp plugin, Ver
 
 ## Run
 
-Requires Node.js 24+. In this repository, the root `pitchfork.toml` runs the gateway in the background.
-With `mise activate` enabled in your shell, entering the repository installs the pinned Pitchfork version and
-starts the gateway automatically. It keeps running after you leave the repository or close the terminal.
-The Mac must stay awake. Pitchfork retries failed processes up to three times and waits for the public tunnel
-to be ready, not just the local HTTP port. Each start builds the CLI; source edits need a restart.
-
-From the repository root:
+Requires Node.js 24+. Start the gateway with:
 
 ```bash
-mise exec -- pitchfork status tlo-mcp
-mise exec -- pitchfork logs tlo-mcp --tail
-mise exec -- pitchfork restart tlo-mcp
-mise exec -- pitchfork stop tlo-mcp
+npx @2digits/tlo-mcp
 ```
 
-The public endpoint and Executor connection prompt are in the logs; the gateway key is never printed.
-Stopping the log viewer does not stop the gateway. Stop any manually started gateway before enabling Pitchfork,
-since both use port `4790`. First-time Orbit login still requires completing the browser flow.
-To keep the gateway stopped across repository visits, use `mise exec -- pitchfork disable tlo-mcp`;
-resume with `mise exec -- pitchfork enable tlo-mcp` followed by `mise exec -- pitchfork start tlo-mcp`.
-This setup starts on repository entry, not automatically at macOS login.
-
-To run in the foreground instead, first stop/disable the Pitchfork daemon. From this package:
-
-```bash
-vp run run
-```
-
-Or, after installation/build:
-
-```bash
-vp exec tlo-mcp
-```
+Or install it globally (`npm i -g @2digits/tlo-mcp`) and run `tlo-mcp`.
 
 The command:
 
@@ -51,6 +25,34 @@ OpenTunnel runs inside this process using its Effect SDK. No separate tunnel CLI
 Keep this process running and the computer awake. Ctrl-C closes the HTTP server and tunnel; identity and key persist
 so subsequent starts reuse the URL. Use `--port 4791` if the default port is occupied.
 The first tunnel certificate can take several minutes. Failed startup closes acquired resources.
+
+## Run in the background
+
+Any process supervisor works (launchd, systemd, pm2, Pitchfork, …). Keep these in mind:
+
+- Run one instance per machine; it binds `127.0.0.1:4790` (or `--port`).
+- Treat it as ready once `TLO gateway ready:` is logged, not when the port opens; the tunnel comes up later.
+- The process exits when the tunnel drops for good, so restart it on failure.
+- Send `SIGINT` to stop it cleanly.
+- The first start needs the interactive Orbit login. Run it once in a terminal (or run `tlo-mcp login`) before handing it to a supervisor.
+- The logs contain the public endpoint and the Executor prompt; the gateway key is never printed.
+
+Example with [Pitchfork](https://pitchfork.jdx.dev), in `~/.config/pitchfork/config.toml`:
+
+```toml
+[daemons.tlo]
+run = "npx -y @2digits/tlo-mcp --port 4790"
+dir = "~/"
+boot_start = true
+retry = true
+ready_output = { pattern = "TLO gateway ready:", timeout = "5m" }
+health_port = { port = 4790, interval = "30s", retries = 3 }
+stop_signal = { signal = "SIGINT", timeout = "10s" }
+```
+
+Run `pitchfork boot enable` so the supervisor starts at login. Boot-started supervisors get a minimal `PATH`, so use
+absolute paths for `npx`/`node` if they are not found. Manage it with `pitchfork status global/tlo`,
+`pitchfork logs global/tlo`, and `pitchfork restart global/tlo`.
 
 ## Connect Executor Cloud
 
@@ -85,12 +87,12 @@ handoff for the API key and verify one read-only tool after connecting.
 ## Re-login and logout
 
 ```bash
-vp exec tlo-mcp login
-vp exec tlo-mcp logout
+npx @2digits/tlo-mcp login
+npx @2digits/tlo-mcp logout
 ```
 
-Disable and stop the Pitchfork daemon (or stop the foreground gateway) before either command. After login,
-enable and start it again. Leave it disabled after logout to avoid automatic re-login on repository entry.
+Stop the running gateway (and disable its supervisor) before either command. After login, start it again.
+Leave it stopped after logout, or the next start opens the Orbit login again.
 Logout removes local OAuth credentials, not the upstream grant,
 gateway key or tunnel identity. An expired/rejected existing grant fails visibly; re-login explicitly rather than
 silently registering replacement clients. OAuth credential locks fail closed; never remove a live process's lock.
@@ -104,8 +106,13 @@ The SDK/protocol are bundled into the CLI so published output does not depend on
 Re-test these patches when upgrading OpenTunnel. The standalone SDK's original Bun requirement does not apply
 to this patched Node CLI.
 
+## Development
+
+From this package in the repository:
+
 ```bash
-vp test
-vp run types
-vp run build
+vpr run    # build and start the gateway from source
+vpr test
+vpr types
+vpr build
 ```
