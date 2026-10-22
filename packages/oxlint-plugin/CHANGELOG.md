@@ -1,3 +1,9 @@
+## @2digits/oxlint-plugin@0.3.4
+
+### Correct development commands to run repository scripts
+
+- Updated development instructions to use `vpr` so checks, builds and fixes run the intended package scripts instead of Vite+ built-in tasks
+
 ## @2digits/oxlint-plugin@0.3.3
 
 ### Use Effect string helpers inside the lint rules

@@ -1,3 +1,13 @@
+## @2digits/oxlint-config@2.1.5
+
+### Correct development commands to run repository scripts
+
+- Updated development instructions to use `vpr` so checks, builds and fixes run the intended package scripts instead of Vite+ built-in tasks
+
+### Update `eslint-plugin-zod` to 5.2.1
+
+- Bumped the `eslint-plugin-zod` catalog dependency from 5.2.0 to 5.2.1
+
 ## @2digits/oxlint-config@2.1.3
 
 ### Behavior change: consumer config now wins in `withTwoDigits`

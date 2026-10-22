@@ -1,3 +1,27 @@
+## @2digits/tlo-mcp@2.0.8
+
+### Update `@opentunnel/client` to 0.5.5
+
+- Bumped the `@opentunnel/client` catalog dependency from 0.5.4 to 0.5.5
+
+### Document running the gateway outside this repository
+
+- Replaced repository-specific startup and login commands with `npx @2digits/tlo-mcp` and global installation instructions
+
+### Clarify background gateway setup
+
+- Added supervisor guidance for interactive login, tunnel readiness, failure restarts and clean shutdown
+- Added a standalone Pitchfork configuration and login-start instructions
+
+### Correct development commands to run repository scripts
+
+- Updated development instructions to use `vpr` so checks, builds and fixes run the intended package scripts instead of Vite+ built-in tasks
+
+### Model the Orbit session as a schema class
+
+- Changed `Session` from a `Schema.Struct` to a `Schema.Class`, so sessions are now created with `Session.make` instead of a plain object literal
+- Moved `updateSession` and `needsRefresh` onto the class as the `Session.update` and `Session.needsRefresh` static methods
+
 ## @2digits/tlo-mcp@2.0.7
 
 ### Update `@opentunnel/client` to 0.5.4

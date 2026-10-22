@@ -1,3 +1,9 @@
+## @2digits/cli@2.0.32
+
+### Update `nypm` to 0.6.11
+
+- Bumped the `nypm` catalog dependency from 0.6.10 to 0.6.11
+
 ## @2digits/cli@2.0.31
 
 ### Use Effect string helpers when categorizing Turborepo tasks
