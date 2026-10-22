@@ -1,5 +1,5 @@
 import * as NodeServices from '@effect/platform-node/NodeServices';
-import { describe, expect, it } from '@effect/vitest';
+import { assert, describe, expect, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
@@ -18,15 +18,15 @@ import * as TestClock from 'effect/testing/TestClock';
 
 import { OrbitAuth, OrbitAuthLayer } from '../src/oauth/OrbitAuth.js';
 import { listenForLogin, validateCallback } from '../src/oauth/callback.js';
-import { needsRefresh, ORBIT_ORIGIN, Session, updateSession } from '../src/oauth/session.js';
+import { ORBIT_ORIGIN, Session } from '../src/oauth/session.js';
 import { makeSessionStoreLayer, SessionStore } from '../src/oauth/store.js';
 
-const fixture: Session = {
+const fixture = Session.make({
   clientId: 'test-client',
   accessToken: Redacted.make('access'),
   refreshToken: Redacted.make('refresh'),
   expiresAt: 0,
-};
+});
 
 const NEW_ACCESS = 'new-access';
 
@@ -34,7 +34,7 @@ const decodeSession = Schema.decodeEffect(Session);
 
 describe('orbit OAuth', () => {
   it('preserves unrotated refresh tokens and replaces expiry', () => {
-    const updated = updateSession(
+    const updated = Session.update(
       fixture,
       { tokenType: 'bearer', accessToken: Redacted.make(NEW_ACCESS), expiresIn: 120 },
       1000,
@@ -42,17 +42,21 @@ describe('orbit OAuth', () => {
 
     expect(Redacted.value(updated.accessToken)).toBe(NEW_ACCESS);
 
-    expect(updated.refreshToken).toBe(fixture.refreshToken);
+    assert(Redacted.isRedacted(updated.refreshToken));
+
+    assert(Redacted.isRedacted(fixture.refreshToken));
+
+    expect(Redacted.value(updated.refreshToken)).toBe(Redacted.value(fixture.refreshToken));
 
     expect(updated.expiresAt).toBe(121_000);
 
-    expect(needsRefresh(updated, 60_999)).toBeFalsy();
+    expect(Session.needsRefresh(updated, 60_999)).toBeFalsy();
 
-    expect(needsRefresh(updated, 61_000)).toBeTruthy();
+    expect(Session.needsRefresh(updated, 61_000)).toBeTruthy();
   });
 
   it('retains rotated refresh tokens but never invents an expiry', () => {
-    const updated = updateSession(
+    const updated = Session.update(
       fixture,
       { tokenType: 'bearer', accessToken: Redacted.make('new'), refreshToken: Redacted.make('rotated') },
       1000,
@@ -62,7 +66,7 @@ describe('orbit OAuth', () => {
 
     expect(updated.refreshToken?.pipe(Redacted.value)).toBe('rotated');
 
-    expect(needsRefresh(updated, 1000)).toBeTruthy();
+    expect(Session.needsRefresh(updated, 1000)).toBeTruthy();
 
     expect(JSON.stringify(updated)).not.toContain('rotated');
   });
