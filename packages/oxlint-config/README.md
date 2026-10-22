@@ -20,4 +20,4 @@ the regression invokes the package's Oxlint CLI directly and removes Vite+'s `VP
 `NAPI_RS_NATIVE_LIBRARY_PATH` binary override from its child environment. This verifies comment preservation,
 not Fallow's dead-code analysis.
 
-After building the workspace, run the package's tests with `vp run test` from this directory.
+After building the workspace, run the package's tests with `vpr test` from this directory.

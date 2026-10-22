@@ -179,7 +179,7 @@ The exported `PaddingLineOption` type describes each configuration entry. No opt
 
 ### Other fixes
 
-Run `vp lint --fix` to apply fixes from `consistent-schema-pipe`, `prefer-effect-duration`, `no-empty-effect-callback`,
+Run `vpr lint:oxlint:fix` from the repository root to apply fixes from `consistent-schema-pipe`, `prefer-effect-duration`, `no-empty-effect-callback`,
 `no-effect-alchemy-barrel-imports`, `prefer-effect-alchemy-namespace-imports`,
 `alchemy-no-v1-worker-properties`, and `alchemy-no-deprecated-docker-constraints`.
 Fixes skip ambiguous bindings, conflicting properties, and unsupported import references.
@@ -197,7 +197,7 @@ policy for handwritten imports.
    `defineEffectRule`.
 2. Register it in `src/rules/index.ts`. `src/index.ts` automatically includes it in `recommendedRules`.
 3. Add a matching test file under `test/rules` with valid and invalid `RuleTester` cases.
-4. Run `vp test`, `vp check`, and `vp run build`.
+4. Run `vpr test` and `vpr build` in this package, then `vpr check` from the repository root.
 
 `defineEffectRule` resolves namespace and named imports from `effect`, `@effect/*`, and `alchemy/*` entrypoints, so rules
 should match canonical API paths instead of hard-coding local import names.

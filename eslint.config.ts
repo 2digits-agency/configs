@@ -50,10 +50,4 @@ export default twoDigits(
       '@2digits/type-param-names': 'off',
     },
   },
-  {
-    files: ['pitchfork.toml'],
-    rules: {
-      'toml/spaced-comment': ['off'],
-    },
-  },
 );
