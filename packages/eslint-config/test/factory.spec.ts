@@ -1,3 +1,6 @@
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, it, vi } from 'vitest';
@@ -73,5 +76,37 @@ describe('factory', () => {
     }
 
     await expect(snapshotJson(serialized)).toMatchFileSnapshot(fixtureSnapshotPath('factory', name));
+  });
+
+  it('passes ts.tsconfigRootDir to the TypeScript parser', async ({ expect }) => {
+    const config = await twoDigits({ ts: { tsconfigRootDir: '/project' } });
+
+    const typescriptRules = config.find((entry) => entry.name === '2digits:typescript/rules');
+
+    expect(typescriptRules?.languageOptions?.parserOptions).toHaveProperty('tsconfigRootDir', '/project');
+  });
+
+  it('enables pnpm rules only inside a pnpm workspace', { timeout: 30_000 }, async ({ expect, onTestFinished }) => {
+    const cwd = process.cwd();
+
+    const projectDir = await fs.mkdtemp(path.join(os.tmpdir(), 'eslint-config-pnpm-'));
+
+    onTestFinished(async () => {
+      process.chdir(cwd);
+
+      await fs.rm(projectDir, { recursive: true, force: true });
+    });
+
+    process.chdir(projectDir);
+
+    const withoutWorkspace = await twoDigits();
+
+    await fs.writeFile('pnpm-workspace.yaml', '');
+
+    const withWorkspace = await twoDigits();
+
+    expect(withoutWorkspace.map((entry) => entry.name)).not.toContain('2digits:pnpm/package-json');
+
+    expect(withWorkspace.map((entry) => entry.name)).toContain('2digits:pnpm/package-json');
   });
 });

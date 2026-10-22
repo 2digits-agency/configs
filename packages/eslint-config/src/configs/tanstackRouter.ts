@@ -1,16 +1,13 @@
-import { renamePluginsInRules } from 'eslint-flat-config-utils';
-
-import { PluginNameMap } from '../constants';
 import { GLOB_SRC } from '../globs';
 import type { OptionsOverrides, TypedFlatConfigItem } from '../types';
-import { interopDefault } from '../utils';
+import { interopDefault, mergeRules, renameRules } from '../utils';
 
 export async function tanstackRouter(options: OptionsOverrides = {}): Promise<Array<TypedFlatConfigItem>> {
   const { overrides = {} } = options;
 
   const tsRouter = await interopDefault(import('@tanstack/eslint-plugin-router'));
 
-  const recommended = renamePluginsInRules(tsRouter.configs['flat/recommended'].at(0)?.rules ?? {}, PluginNameMap);
+  const recommended = renameRules(mergeRules(tsRouter.configs['flat/recommended']));
 
   return [
     {

@@ -2,8 +2,9 @@ import eslintPluginToml, { configs } from 'eslint-plugin-toml';
 
 import { GLOB_MISE_TOML, GLOB_TOML } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
+import { mergeRules } from '../utils';
 
-const standard = Object.fromEntries(configs.standard.flatMap(({ rules }) => Object.entries({ ...rules })));
+const standard = mergeRules(configs.standard);
 
 export function toml(): Array<TypedFlatConfigItem> {
   return [

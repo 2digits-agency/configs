@@ -3,8 +3,9 @@ import * as parser from 'yaml-eslint-parser';
 
 import { GLOB_GITHUB_ACTIONS } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
+import { mergeRules } from '../utils';
 
-const recommendedRules = Object.fromEntries(configs.recommended.flatMap(({ rules }) => Object.entries({ ...rules })));
+const recommendedRules = mergeRules(configs.recommended);
 
 export function githubActions(): Array<TypedFlatConfigItem> {
   return [

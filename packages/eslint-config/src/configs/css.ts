@@ -5,36 +5,24 @@ import { tailwind3, tailwind4 } from 'tailwind-csstree';
 import { GLOB_CSS } from '../globs';
 import type { OptionsCss, TypedFlatConfigItem } from '../types';
 
-async function resolveTailwindSyntax(options?: OptionsCss) {
-  if (options?.customSyntax) {
-    const { customSyntax } = options;
-
+async function resolveTailwindSyntax({ customSyntax, tailwindMajor }: OptionsCss) {
+  if (customSyntax) {
     return customSyntax;
   }
 
-  if (options?.tailwindMajor === 3) {
-    return tailwind3;
-  }
+  const major = tailwindMajor ?? (await installedTailwindMajor());
 
-  if (options?.tailwindMajor === 4) {
-    return tailwind4;
-  }
+  return major >= 4 ? tailwind4 : tailwind3;
+}
 
+async function installedTailwindMajor(): Promise<number> {
   try {
     const info = await getPackageInfo('tailwindcss');
 
-    const version = info?.version ?? '';
-
-    const [majorVersion = '0'] = version.split('.', 1);
-
-    const major = Number.parseInt(majorVersion, 10);
-
-    if (Number.isFinite(major) && major >= 4) {
-      return tailwind4;
-    }
-  } catch {}
-
-  return tailwind3;
+    return Number.parseInt(info?.version ?? '0', 10);
+  } catch {
+    return 0;
+  }
 }
 
 export async function css(options: OptionsCss = {}): Promise<Array<TypedFlatConfigItem>> {

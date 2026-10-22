@@ -1,23 +1,20 @@
 import eslintReactKit, { type RuleFunction } from '@eslint-react/kit';
-import { renamePluginsInRules } from 'eslint-flat-config-utils';
 
-import { PluginNameMap } from '../constants';
 import { GLOB_TS, GLOB_TSX } from '../globs';
-import { noUnnecessaryUseCallback } from '../rules/react/no-unnecessary-use-callback';
-import { noUnnecessaryUseMemo } from '../rules/react/no-unnecessary-use-memo';
+import { noUnnecessaryUseCallback, noUnnecessaryUseMemo } from '../rules/react/no-unnecessary-hook';
 import { preferDestructuringAssignment } from '../rules/react/prefer-destructuring-assignment';
 import { preferNamespaceImport } from '../rules/react/prefer-namespace-import';
 import type { OptionsTypeScriptWithTypes, OptionsWithReact, TypedFlatConfigItem } from '../types';
-import { interopDefault } from '../utils';
+import { interopDefault, renameRules, typeAwareLanguageOptions } from '../utils';
 
 export async function react(
   options: OptionsWithReact & OptionsTypeScriptWithTypes = {},
 ): Promise<Array<TypedFlatConfigItem>> {
   const { files = [GLOB_TS, GLOB_TSX], overrides = {}, parserOptions, tsconfigRootDir, reactCompiler = true } = options;
 
-  const [pluginReact, parser, pluginReactCompiler, stylistic] = await Promise.all([
+  const [pluginReact, languageOptions, pluginReactCompiler, stylistic] = await Promise.all([
     interopDefault(import('@eslint-react/eslint-plugin')),
-    interopDefault(import('@typescript-eslint/parser')),
+    typeAwareLanguageOptions({ tsconfigRootDir, ...parserOptions }),
     reactCompiler ? interopDefault(import('eslint-plugin-react-compiler')) : Promise.resolve(undefined),
     interopDefault(import('@stylistic/eslint-plugin')),
   ]);
@@ -30,14 +27,11 @@ export async function react(
 
   const reactExtraPlugin = plugins?.['@eslint-react'] ?? {};
 
-  const recommended = renamePluginsInRules(
-    {
-      ...configs['disable-conflict-eslint-plugin-react'].rules,
-      ...configs['disable-conflict-eslint-plugin-react-hooks'].rules,
-      ...configs['strict-type-checked'].rules,
-    },
-    PluginNameMap,
-  );
+  const recommended = renameRules({
+    ...configs['disable-conflict-eslint-plugin-react'].rules,
+    ...configs['disable-conflict-eslint-plugin-react-hooks'].rules,
+    ...configs['strict-type-checked'].rules,
+  });
 
   return [
     {
@@ -62,18 +56,7 @@ export async function react(
     {
       name: '2digits:react/rules',
       files,
-      languageOptions: {
-        parser,
-        parserOptions: {
-          ecmaFeatures: {
-            jsx: true,
-          },
-          tsconfigRootDir,
-          projectService: true,
-          ...parserOptions,
-        },
-        sourceType: 'module',
-      },
+      languageOptions,
       rules: {
         ...recommended,
 

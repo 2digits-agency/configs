@@ -1,28 +1,23 @@
 import { fixupPluginRules } from '@eslint/compat';
-import { renamePluginsInRules } from 'eslint-flat-config-utils';
 
-import { PluginNameMap } from '../constants';
 import { GLOB_TS, GLOB_TSX } from '../globs';
 import type { OptionsTypeScriptWithTypes, OptionsWithFiles, TypedFlatConfigItem } from '../types';
-import { interopDefault } from '../utils';
+import { interopDefault, renameRules, typeAwareLanguageOptions } from '../utils';
 
 export async function next(
   options: OptionsWithFiles & OptionsTypeScriptWithTypes = {},
 ): Promise<Array<TypedFlatConfigItem>> {
   const { files = [GLOB_TS, GLOB_TSX], overrides = {}, parserOptions } = options;
 
-  const [next, parser] = await Promise.all([
+  const [next, languageOptions] = await Promise.all([
     interopDefault(import('@next/eslint-plugin-next')),
-    interopDefault(import('@typescript-eslint/parser')),
+    typeAwareLanguageOptions(parserOptions),
   ]);
 
-  const recommended = renamePluginsInRules(
-    {
-      ...next.configs.recommended.rules,
-      ...next.configs['core-web-vitals'].rules,
-    },
-    PluginNameMap,
-  );
+  const recommended = renameRules({
+    ...next.configs.recommended.rules,
+    ...next.configs['core-web-vitals'].rules,
+  });
 
   return [
     {
@@ -34,17 +29,7 @@ export async function next(
     {
       name: '2digits:next/rules',
       files,
-      languageOptions: {
-        parser,
-        parserOptions: {
-          ecmaFeatures: {
-            jsx: true,
-          },
-          projectService: true,
-          ...parserOptions,
-        },
-        sourceType: 'module',
-      },
+      languageOptions,
       rules: {
         ...recommended,
 

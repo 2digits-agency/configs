@@ -1,30 +1,16 @@
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint';
-
 import { GLOB_STORIES } from '../globs';
 import type { OptionsTypeScriptWithTypes, OptionsWithStorybook, TypedFlatConfigItem } from '../types';
-import { interopDefault } from '../utils';
+import { interopDefault, typeAwareLanguageOptions } from '../utils';
 
 export async function storybook(
   options: OptionsWithStorybook & OptionsTypeScriptWithTypes = {},
 ): Promise<Array<TypedFlatConfigItem>> {
   const { files = [GLOB_STORIES], overrides = {}, parserOptions, storybookDirectory = '.storybook' } = options;
 
-  const [storybook, parser] = await Promise.all([
+  const [storybook, languageOptions] = await Promise.all([
     interopDefault(import('eslint-plugin-storybook')),
-    interopDefault(import('@typescript-eslint/parser')),
+    typeAwareLanguageOptions(parserOptions),
   ]);
-
-  const languageOptions = {
-    parser,
-    parserOptions: {
-      ecmaFeatures: {
-        jsx: true,
-      },
-      projectService: true,
-      ...parserOptions,
-    },
-    sourceType: 'module',
-  } satisfies FlatConfig.LanguageOptions;
 
   return [
     {
