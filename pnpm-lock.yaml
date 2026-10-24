@@ -294,8 +294,8 @@ catalogs:
       specifier: 2.0.0
       version: 2.0.0
     eslint-plugin-antfu:
-      specifier: 3.2.3
-      version: 3.2.3
+      specifier: 3.3.1
+      version: 3.3.1
     eslint-plugin-de-morgan:
       specifier: 2.2.1
       version: 2.2.1
@@ -690,7 +690,7 @@ importers:
         version: 2.0.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-antfu:
         specifier: 'catalog:'
-        version: 3.2.3(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+        version: 3.3.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-de-morgan:
         specifier: 'catalog:'
         version: 2.2.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
@@ -2365,12 +2365,14 @@ packages:
   '@opentelemetry/sdk-trace-base@2.12.0':
     resolution: {integrity: sha512-JOERgZCxRM06FEJ5kEWxlSRChah6MmXDx3KwCruqEv/iEyLkTokCSemf2y1w8oIHtfrr8EVTpzebq/31vn2Cpg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-node@2.12.0':
     resolution: {integrity: sha512-9DufH1IlmQMoKAfot5y/FhTP1RnmhLb5K6eKmJO/bvzPjYwPAazoiAUbTZFdPbqxOXN0FEbhZx/e6SB1Og4jmg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -5016,8 +5018,8 @@ packages:
     peerDependencies:
       eslint: '*'
 
-  eslint-plugin-antfu@3.2.3:
-    resolution: {integrity: sha512-U2fnz/H0gFPxpuC7QpaHa0Jv2AgCZ5hunp36SOP/yWo8yFzgvMh8X4pZ4uN4IKoqtBhk7G3HuVa93Urf51+sZg==}
+  eslint-plugin-antfu@3.3.1:
+    resolution: {integrity: sha512-SP1Wmq8EPgXOMWE3SNGS6T7sCcKYOId5vLU8hUO0VFMJ7PwaMYEqFNdp0jlL6vnsT1h1LCKuRmoed1ktRjWHjA==}
     peerDependencies:
       eslint: '*'
 
@@ -11360,7 +11362,7 @@ snapshots:
     dependencies:
       eslint: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
 
-  eslint-plugin-antfu@3.2.3(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0)):
+  eslint-plugin-antfu@3.3.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0)):
     dependencies:
       eslint: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
 
