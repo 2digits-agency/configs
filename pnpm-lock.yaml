@@ -213,8 +213,8 @@ catalogs:
       specifier: 0.25.1
       version: 0.25.1
     '@next/eslint-plugin-next':
-      specifier: 16.4.2
-      version: 16.4.2
+      specifier: 16.4.3
+      version: 16.4.3
     '@opencode-ai/plugin':
       specifier: 1.19.3
       version: 1.19.3
@@ -654,7 +654,7 @@ importers:
         version: 4.4.2(@types/node@24.19.2)(crossws@0.4.12(srvx@1.0.5))(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(graphql@16.11.0)(supports-color@7.2.0)(typescript@6.0.3)
       '@next/eslint-plugin-next':
         specifier: 'catalog:'
-        version: 16.4.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+        version: 16.4.3(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
       '@stylistic/eslint-plugin':
         specifier: 'catalog:'
         version: 5.10.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
@@ -2178,8 +2178,8 @@ packages:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
 
-  '@next/eslint-plugin-next@16.4.2':
-    resolution: {integrity: sha512-gCTWlw0e+Y6kajpFyKKgA195jUJCRhlzJE0lV7ufe8a+ghIsANWZ0/FiJwg6DuOG1+OvRbcZDcFBoRh3mNJx0g==}
+  '@next/eslint-plugin-next@16.4.3':
+    resolution: {integrity: sha512-oxuC06wt/71h6ACYCV9GbKOfnf5a7VlRe/p80YHTut15TNgDEmynDnaq8t/xhy5rlvk7dhItIPs6H3rvIM4kyw==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2365,12 +2365,14 @@ packages:
   '@opentelemetry/sdk-trace-base@2.12.0':
     resolution: {integrity: sha512-JOERgZCxRM06FEJ5kEWxlSRChah6MmXDx3KwCruqEv/iEyLkTokCSemf2y1w8oIHtfrr8EVTpzebq/31vn2Cpg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-node@2.12.0':
     resolution: {integrity: sha512-9DufH1IlmQMoKAfot5y/FhTP1RnmhLb5K6eKmJO/bvzPjYwPAazoiAUbTZFdPbqxOXN0FEbhZx/e6SB1Og4jmg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -9078,7 +9080,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.3
     optional: true
 
-  '@next/eslint-plugin-next@16.4.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))':
+  '@next/eslint-plugin-next@16.4.3(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))':
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
       fast-glob: 3.3.1
