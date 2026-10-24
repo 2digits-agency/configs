@@ -171,14 +171,14 @@ catalogs:
       specifier: 0.87.5
       version: 0.87.5
     '@effect/platform-node':
-      specifier: 4.0.5
-      version: 4.0.5
+      specifier: 4.0.6
+      version: 4.0.6
     '@effect/tsgo':
-      specifier: 0.56.0
-      version: 0.56.0
+      specifier: 0.56.1
+      version: 0.56.1
     '@effect/vitest':
-      specifier: 4.0.5
-      version: 4.0.5
+      specifier: 4.0.6
+      version: 4.0.6
     '@eslint-community/eslint-plugin-eslint-comments':
       specifier: 4.8.1
       version: 4.8.1
@@ -270,8 +270,8 @@ catalogs:
       specifier: 6.1.7
       version: 6.1.7
     effect:
-      specifier: 4.0.5
-      version: 4.0.5
+      specifier: 4.0.6
+      version: 4.0.6
     effect-oxlint:
       specifier: 0.4.0
       version: 0.4.0
@@ -461,8 +461,8 @@ catalogs:
       version: 6.0.3
 
 overrides:
-  '@opentunnel/client>effect': 4.0.5
-  '@opentunnel/protocol>effect': 4.0.5
+  '@opentunnel/client>effect': 4.0.6
+  '@opentunnel/protocol>effect': 4.0.6
   array-includes: npm:@nolyfill/array-includes@1.0.44
   array.prototype.findlast: npm:@nolyfill/array.prototype.findlast@1.0.44
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
@@ -515,7 +515,7 @@ importers:
         version: 0.87.5
       '@effect/tsgo':
         specifier: 'catalog:'
-        version: 0.56.0
+        version: 0.56.1
       '@manypkg/cli':
         specifier: 'catalog:'
         version: 0.25.1
@@ -566,10 +566,10 @@ importers:
     dependencies:
       '@effect/platform-node':
         specifier: 'catalog:'
-        version: 4.0.5(effect@4.0.5)(redis@6.2.1(@opentelemetry/api@1.9.1))
+        version: 4.0.6(effect@4.0.6)(redis@6.2.1(@opentelemetry/api@1.9.1))
       effect:
         specifier: 'catalog:'
-        version: 4.0.5
+        version: 4.0.6
       nypm:
         specifier: 'catalog:'
         version: 0.6.11
@@ -585,7 +585,7 @@ importers:
         version: 0.87.5
       '@effect/vitest':
         specifier: 'catalog:'
-        version: 4.0.5(effect@4.0.5)(vitest@5.0.5)
+        version: 4.0.6(effect@4.0.6)(vitest@5.0.5)
       '@oxc-node/cli':
         specifier: 'catalog:'
         version: 1.0.0
@@ -998,10 +998,10 @@ importers:
         version: 1.89.0
       effect:
         specifier: 'catalog:'
-        version: 4.0.5
+        version: 4.0.6
       effect-oxlint:
         specifier: 'catalog:'
-        version: 0.4.0(effect@4.0.5)
+        version: 0.4.0(effect@4.0.6)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -1011,10 +1011,10 @@ importers:
         version: 0.18.5
       '@effect/platform-node':
         specifier: 'catalog:'
-        version: 4.0.5(effect@4.0.5)(redis@6.2.1(@opentelemetry/api@1.9.1))
+        version: 4.0.6(effect@4.0.6)(redis@6.2.1(@opentelemetry/api@1.9.1))
       '@effect/vitest':
         specifier: 'catalog:'
-        version: 4.0.5(effect@4.0.5)(vitest@5.0.5)
+        version: 4.0.6(effect@4.0.6)(vitest@5.0.5)
       dedent:
         specifier: 'catalog:'
         version: 1.7.2
@@ -1105,16 +1105,16 @@ importers:
     dependencies:
       '@effect/platform-node':
         specifier: 'catalog:'
-        version: 4.0.5(effect@4.0.5)(redis@6.2.1(@opentelemetry/api@1.9.1))
+        version: 4.0.6(effect@4.0.6)(redis@6.2.1(@opentelemetry/api@1.9.1))
       '@opentunnel/client':
         specifier: 'catalog:'
-        version: 0.5.5(effect@4.0.5)
+        version: 0.5.5(effect@4.0.6)
       '@yielded/oauth':
         specifier: 'catalog:'
-        version: 0.1.0-beta.43(effect@4.0.5)
+        version: 0.1.0-beta.43(effect@4.0.6)
       effect:
         specifier: 'catalog:'
-        version: 4.0.5
+        version: 4.0.6
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -1124,7 +1124,7 @@ importers:
         version: 0.18.5
       '@effect/vitest':
         specifier: 'catalog:'
-        version: 4.0.5(effect@4.0.5)(vitest@5.0.5)
+        version: 4.0.6(effect@4.0.6)(vitest@5.0.5)
       publint:
         specifier: 'catalog:'
         version: 0.3.25
@@ -1142,7 +1142,7 @@ importers:
     devDependencies:
       '@effect/tsgo':
         specifier: 'catalog:'
-        version: 0.56.0
+        version: 0.56.1
       typescript:
         specifier: 'catalog:'
         version: 7.1.0-beta
@@ -1449,62 +1449,62 @@ packages:
     resolution: {integrity: sha512-np/zJgk71/PyHxtoqyUKLYcpQhoRBI+L6+1Z0ILk35JSQ/lvXzwlwOwddYZLDkeC4bdF2ukKekqKlla/F88R5w==}
     hasBin: true
 
-  '@effect/platform-node-shared@4.0.5':
-    resolution: {integrity: sha512-a8rCdEkfZBGe9C6bsIjxVZuRp73svIyK5IHwHdDAVsvZXjrbkxusfI+rZ8WlX31RP1mKizwI/E72GQTNfdMWHw==}
+  '@effect/platform-node-shared@4.0.6':
+    resolution: {integrity: sha512-0PhyC4uG30xGtsajnxjkcBWfTjNRzUh4ZKl1Kvo/MNyCTb+W2O+fBzf7wCRCoqt+nLudiq4V7vX40Q8XIBuMaQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      effect: ^4.0.5
+      effect: ^4.0.6
 
-  '@effect/platform-node@4.0.5':
-    resolution: {integrity: sha512-v4KD5fWvEUa4QmWFpZFbBsRhmfnTP6ETCME2r9ifyXVDPjhfpxpTZl41prjgQFMqZBHdWWCl7YC5ImbXv5ui5g==}
+  '@effect/platform-node@4.0.6':
+    resolution: {integrity: sha512-gXvGHAy0/8PZbWvMMguloDUyeSP+rzYEo3FSEqUuGduxo9ORcGioDxPI+GOLCIFfam7VuNkmSUxBOiRMIrMrBw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      effect: ^4.0.5
+      effect: ^4.0.6
       redis: '>=5.0.0 <7.0.0'
 
-  '@effect/tsgo-darwin-arm64@0.56.0':
-    resolution: {integrity: sha512-08yYRU3OOw/jKzy582EF741xKvLJ2HK6GO+L2zuSR97b61ES7fER2fxg1xp4mv8u2Fc3bBRvk7026GzdKEGFgw==}
+  '@effect/tsgo-darwin-arm64@0.56.1':
+    resolution: {integrity: sha512-u+bBq71VkQ7P6jpfvxXWE8Cc8/cx4d8uKGTqfjSMrHeZq1AvZiap1s9SB5DlfhEo7F+UkHe0bqgt1IGMS2mg5w==}
     cpu: [arm64]
     os: [darwin]
 
-  '@effect/tsgo-darwin-x64@0.56.0':
-    resolution: {integrity: sha512-UQvYvVaam+EVMYm9gfHBx1WpKwLlW+ptjb2UD7qGhZdg+GzxMbl26AhuuqV2t/dN9shZ6EcFE2+++ThISMp/9g==}
+  '@effect/tsgo-darwin-x64@0.56.1':
+    resolution: {integrity: sha512-8SvtdT+GnoVoA35dl3tqNuherO1ONFHaOrHtjYSr8+A56Doc2OGNs8vmoZly/MqmLsv6LdSwn4Z2z8cRsOfoVw==}
     cpu: [x64]
     os: [darwin]
 
-  '@effect/tsgo-linux-arm64@0.56.0':
-    resolution: {integrity: sha512-zzzo/w7lLqiCMuJOI+jbjIuhHob3ccmth1bD9m1E98ukMuHhIqQMOXKU9EreoQkCGeoVrxGqHbXkl6E/+68/Sg==}
+  '@effect/tsgo-linux-arm64@0.56.1':
+    resolution: {integrity: sha512-8mZmBqArSJddSMWjfB7NMRQhn8wsVOlNKL6pHedYFqMIJpb0PQ+dvhtNraNpcRTEKW5qA8fTz/PVGNOB+I8ceg==}
     cpu: [arm64]
     os: [linux]
 
-  '@effect/tsgo-linux-arm@0.56.0':
-    resolution: {integrity: sha512-3WuPwP8vQPqKVpfGmKlnguuAZb7NGUyAhIHQjZnaINU6Aim7WczOy2WOmKjDPSKRlonU2WyYT+Q5T3B7f0VTLw==}
+  '@effect/tsgo-linux-arm@0.56.1':
+    resolution: {integrity: sha512-VZ7i6AjJ5WcchsJRn2e8XNp/7y8mqNgOLqsLEToce8yBXEtIdtWX+3czVtSXRc1njpQ7x3kiAQ8aNGl/vhu9OQ==}
     cpu: [arm]
     os: [linux]
 
-  '@effect/tsgo-linux-x64@0.56.0':
-    resolution: {integrity: sha512-R0d3dGf8qKPtvjff+J9HL0UjIBIES6xZiU16rMMezI4K52b+DGQkaWi1OX3tSgGivjlV+NSN7UhPJ2pYKufglw==}
+  '@effect/tsgo-linux-x64@0.56.1':
+    resolution: {integrity: sha512-ialBMBFPswE73wnbIDf+1JippkVp8iX3hJnaITm8hD+brAOUq2r+zZNN1DqWUT+sUEVKh4+eOquOfmt9ujGWmg==}
     cpu: [x64]
     os: [linux]
 
-  '@effect/tsgo-win32-arm64@0.56.0':
-    resolution: {integrity: sha512-uVaLdXULUZx9U30YxlVu5PBiu+1a+9/UT2Ex7jQpIasnJy1CHWlhMbfCD/+7Ez1vqG5fLOvUESoQu5XSjs3Lnw==}
+  '@effect/tsgo-win32-arm64@0.56.1':
+    resolution: {integrity: sha512-MJRQf72vVutBccPMlukukWT6xGpWDWtyFQExwEzxZRwmWXtYOqWw1/ApbwMK+TO5+RedAkwIMXvBKF7BgpsA/A==}
     cpu: [arm64]
     os: [win32]
 
-  '@effect/tsgo-win32-x64@0.56.0':
-    resolution: {integrity: sha512-Cf6SDixFTkp7Aoeg2eRwJps/2BG9lvx2m+iVRjUzxdqkTbCCNKmmOAIyDslNZm2sMwaDUw/iN/BPGqxx7xMxww==}
+  '@effect/tsgo-win32-x64@0.56.1':
+    resolution: {integrity: sha512-gZU0cnO08PMIYVZOhBZtuq1egCHem2lF6pUCqierqNf+niDxowtDpQevHDKOU1OTeeqk8h2VnwIKUNkRX45Nqw==}
     cpu: [x64]
     os: [win32]
 
-  '@effect/tsgo@0.56.0':
-    resolution: {integrity: sha512-/S5G8RJjtaVjE/RhwFNTvWQwFAQyDGc+3Ig4Oynvlo3gJu8le4MUgM/DBjoiwkwBsQ+BhufGDCBpwojplerGlw==}
+  '@effect/tsgo@0.56.1':
+    resolution: {integrity: sha512-T5dDXNbR3yMkqxopv4KIaEhkv1EQ5jlwJdpzjNBEfCKxH1WanVoBhwU2M0fq+u17ATYWdzMt3vXV896Rz348jA==}
     hasBin: true
 
-  '@effect/vitest@4.0.5':
-    resolution: {integrity: sha512-q64paZ/i4V2NiRhTyqCmT2KiDbFjlxc2EZrZca8GGt+Nf8844946HyJM5bPk/q+YeRkFSxIrlCs+J+LSfky/wA==}
+  '@effect/vitest@4.0.6':
+    resolution: {integrity: sha512-oKNbtyUHK5+0o730CXwojULEu7f3+c235pYFD4U5T//o+hHrJbYbZU4bRkcv936tPr5IOnmujeyQiC/LuJJjHw==}
     peerDependencies:
-      effect: ^4.0.5
+      effect: ^4.0.6
       vitest: '>=5.0.0 <6.0.0'
 
   '@emnapi/core@1.11.1':
@@ -2365,12 +2365,14 @@ packages:
   '@opentelemetry/sdk-trace-base@2.12.0':
     resolution: {integrity: sha512-JOERgZCxRM06FEJ5kEWxlSRChah6MmXDx3KwCruqEv/iEyLkTokCSemf2y1w8oIHtfrr8EVTpzebq/31vn2Cpg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-node@2.12.0':
     resolution: {integrity: sha512-9DufH1IlmQMoKAfot5y/FhTP1RnmhLb5K6eKmJO/bvzPjYwPAazoiAUbTZFdPbqxOXN0FEbhZx/e6SB1Og4jmg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -2388,12 +2390,12 @@ packages:
     resolution: {integrity: sha512-GXrYg9WMMRiqfGVmrqBm10Gcs9N/0EyqzVd2CzrAlhqeI06OxQWgPgC0B/wOkCTUhu0AuUwObcQrgeKs85FENQ==}
     engines: {bun: '>=1.4.0', node: '>=22'}
     peerDependencies:
-      effect: 4.0.5
+      effect: 4.0.6
 
   '@opentunnel/protocol@0.5.5':
     resolution: {integrity: sha512-fHB1K+nQIUSGzMGpa7F/9FjSvTH2PIthb+pZiuY7ZJK9QeUbq4wS8syUt3YcKX7PpI1tbNH1JdYhPbcTh0/j2w==}
     peerDependencies:
-      effect: 4.0.5
+      effect: 4.0.6
 
   '@ota-meshi/ast-token-store@0.3.0':
     resolution: {integrity: sha512-XRO0zi2NIUKq2lUk3T1ecFSld1fMWRKE6naRFGkgkdeosx7IslyUKNv5Dcb5PJTja9tHJoFu0v/7yEpAkrkrTg==}
@@ -4902,8 +4904,8 @@ packages:
   effect@4.0.0-beta.83:
     resolution: {integrity: sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w==}
 
-  effect@4.0.5:
-    resolution: {integrity: sha512-BY4/28NlpOd99yzmV741xbVGmp+1U7tks4oB7F/Png64bTa5tm5eCA6W0RiXsnuLDDoJpjfVSo4Dnq4BZb/89Q==}
+  effect@4.0.6:
+    resolution: {integrity: sha512-Tc3mkzuLR6t6P9dhLt0D2GrxYtmU5td4XEJEiXCmILz53IRIfJyHsKZWjTA3xEjiwpNTtXBgI4iqYPxMztBDrw==}
 
   electron-to-chromium@1.5.444:
     resolution: {integrity: sha512-5ss/uJfoDYDHT0lfJzT6FbcskIzROIOPf0BbbFkGcvDzoJU7i//9GDrwwIHQVmIsrAGiF3ihpADBRIsrEFt1rQ==}
@@ -7457,6 +7459,10 @@ packages:
     resolution: {integrity: sha512-u4UB2/IrKdU6lFxumHmmo1a3fCQO5tzQllRorfoRS63txhrB7xTpSn1PftwC4qEHkOaqP95fCWW4lJzwErwzhQ==}
     engines: {node: '>=22.19.0'}
 
+  undici@8.12.3:
+    resolution: {integrity: sha512-+fdndUTwBP86cVjihTp21hZHo7d6oj1c/47XPA3lL8mM0XHs+C4EkcjmgRsFnFk2f/UONGDy9ItBItmXsLOQHw==}
+    engines: {node: '>=22.19.0'}
+
   unicorn-magic@0.3.0:
     resolution: {integrity: sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==}
     engines: {node: '>=18'}
@@ -8267,59 +8273,59 @@ snapshots:
 
   '@effect/language-service@0.87.5': {}
 
-  '@effect/platform-node-shared@4.0.5(effect@4.0.5)':
+  '@effect/platform-node-shared@4.0.6(effect@4.0.6)':
     dependencies:
       '@types/ws': 8.18.2
-      effect: 4.0.5
+      effect: 4.0.6
       ws: 8.22.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@effect/platform-node@4.0.5(effect@4.0.5)(redis@6.2.1(@opentelemetry/api@1.9.1))':
+  '@effect/platform-node@4.0.6(effect@4.0.6)(redis@6.2.1(@opentelemetry/api@1.9.1))':
     dependencies:
-      '@effect/platform-node-shared': 4.0.5(effect@4.0.5)
-      effect: 4.0.5
+      '@effect/platform-node-shared': 4.0.6(effect@4.0.6)
+      effect: 4.0.6
       redis: 6.2.1(@opentelemetry/api@1.9.1)
-      undici: 8.11.2
+      undici: 8.12.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@effect/tsgo-darwin-arm64@0.56.0':
+  '@effect/tsgo-darwin-arm64@0.56.1':
     optional: true
 
-  '@effect/tsgo-darwin-x64@0.56.0':
+  '@effect/tsgo-darwin-x64@0.56.1':
     optional: true
 
-  '@effect/tsgo-linux-arm64@0.56.0':
+  '@effect/tsgo-linux-arm64@0.56.1':
     optional: true
 
-  '@effect/tsgo-linux-arm@0.56.0':
+  '@effect/tsgo-linux-arm@0.56.1':
     optional: true
 
-  '@effect/tsgo-linux-x64@0.56.0':
+  '@effect/tsgo-linux-x64@0.56.1':
     optional: true
 
-  '@effect/tsgo-win32-arm64@0.56.0':
+  '@effect/tsgo-win32-arm64@0.56.1':
     optional: true
 
-  '@effect/tsgo-win32-x64@0.56.0':
+  '@effect/tsgo-win32-x64@0.56.1':
     optional: true
 
-  '@effect/tsgo@0.56.0':
+  '@effect/tsgo@0.56.1':
     optionalDependencies:
-      '@effect/tsgo-darwin-arm64': 0.56.0
-      '@effect/tsgo-darwin-x64': 0.56.0
-      '@effect/tsgo-linux-arm': 0.56.0
-      '@effect/tsgo-linux-arm64': 0.56.0
-      '@effect/tsgo-linux-x64': 0.56.0
-      '@effect/tsgo-win32-arm64': 0.56.0
-      '@effect/tsgo-win32-x64': 0.56.0
+      '@effect/tsgo-darwin-arm64': 0.56.1
+      '@effect/tsgo-darwin-x64': 0.56.1
+      '@effect/tsgo-linux-arm': 0.56.1
+      '@effect/tsgo-linux-arm64': 0.56.1
+      '@effect/tsgo-linux-x64': 0.56.1
+      '@effect/tsgo-win32-arm64': 0.56.1
+      '@effect/tsgo-win32-x64': 0.56.1
 
-  '@effect/vitest@4.0.5(effect@4.0.5)(vitest@5.0.5)':
+  '@effect/vitest@4.0.6(effect@4.0.6)(vitest@5.0.5)':
     dependencies:
-      effect: 4.0.5
+      effect: 4.0.6
       vitest: 5.0.5(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@vitest/browser-preview@5.0.5)(@vitest/ui@5.0.5)(@voidzero-dev/vite-plus-core@1.3.0(@arethetypeswrong/core@0.18.5)(@types/node@24.19.2)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@7.1.0-beta)(yaml@2.9.1))
 
   '@emnapi/core@1.11.1':
@@ -9298,14 +9304,14 @@ snapshots:
 
   '@opentelemetry/semantic-conventions@1.43.0': {}
 
-  '@opentunnel/client@0.5.5(effect@4.0.5)':
+  '@opentunnel/client@0.5.5(effect@4.0.6)':
     dependencies:
-      '@opentunnel/protocol': 0.5.5(effect@4.0.5)
-      effect: 4.0.5
+      '@opentunnel/protocol': 0.5.5(effect@4.0.6)
+      effect: 4.0.6
 
-  '@opentunnel/protocol@0.5.5(effect@4.0.5)':
+  '@opentunnel/protocol@0.5.5(effect@4.0.6)':
     dependencies:
-      effect: 4.0.5
+      effect: 4.0.6
 
   '@ota-meshi/ast-token-store@0.3.0': {}
 
@@ -10743,19 +10749,19 @@ snapshots:
     transitivePeerDependencies:
       - typanion
 
-  '@yielded/crypto@0.1.0-beta.43(effect@4.0.5)':
+  '@yielded/crypto@0.1.0-beta.43(effect@4.0.6)':
     dependencies:
-      effect: 4.0.5
+      effect: 4.0.6
 
-  '@yielded/jose@0.1.0-beta.43(effect@4.0.5)':
+  '@yielded/jose@0.1.0-beta.43(effect@4.0.6)':
     dependencies:
-      '@yielded/crypto': 0.1.0-beta.43(effect@4.0.5)
-      effect: 4.0.5
+      '@yielded/crypto': 0.1.0-beta.43(effect@4.0.6)
+      effect: 4.0.6
 
-  '@yielded/oauth@0.1.0-beta.43(effect@4.0.5)':
+  '@yielded/oauth@0.1.0-beta.43(effect@4.0.6)':
     dependencies:
-      '@yielded/jose': 0.1.0-beta.43(effect@4.0.5)
-      effect: 4.0.5
+      '@yielded/jose': 0.1.0-beta.43(effect@4.0.6)
+      effect: 4.0.6
 
   '@yuku-core/binding-android-arm64@0.19.0':
     optional: true
@@ -11233,10 +11239,10 @@ snapshots:
       minimatch: 10.2.6
       semver: 7.8.5
 
-  effect-oxlint@0.4.0(effect@4.0.5):
+  effect-oxlint@0.4.0(effect@4.0.6):
     dependencies:
       '@oxlint/plugins': 1.89.0
-      effect: 4.0.5
+      effect: 4.0.6
 
   effect@4.0.0-beta.83:
     dependencies:
@@ -11251,7 +11257,7 @@ snapshots:
       uuid: 14.0.0
       yaml: 2.9.1
 
-  effect@4.0.5: {}
+  effect@4.0.6: {}
 
   electron-to-chromium@1.5.444: {}
 
@@ -14281,7 +14287,10 @@ snapshots:
 
   undici-types@8.3.0: {}
 
-  undici@8.11.2: {}
+  undici@8.11.2:
+    optional: true
+
+  undici@8.12.3: {}
 
   unicorn-magic@0.3.0: {}
 
