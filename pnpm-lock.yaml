@@ -348,8 +348,8 @@ catalogs:
       specifier: 3.9.0
       version: 3.9.0
     eslint-plugin-zod:
-      specifier: 5.2.1
-      version: 5.2.1
+      specifier: 5.2.2
+      version: 5.2.2
     eslint-typegen:
       specifier: 2.3.1
       version: 2.3.1
@@ -744,7 +744,7 @@ importers:
         version: 3.9.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-zod:
         specifier: 'catalog:'
-        version: 5.2.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.89.0(oxlint-tsgolint@7.0.2004)(vite-plus@1.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/ui@5.0.5)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.1)))(zod@4.6.7)
+        version: 5.2.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.89.0(oxlint-tsgolint@7.0.2004)(vite-plus@1.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/ui@5.0.5)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.1)))(zod@4.6.7)
       globals:
         specifier: 'catalog:'
         version: 17.13.0
@@ -952,7 +952,7 @@ importers:
         version: 6.1.7
       eslint-plugin-zod:
         specifier: 'catalog:'
-        version: 5.2.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.89.0(oxlint-tsgolint@7.0.2004)(vite-plus@1.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@vitest/ui@5.0.5)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@7.1.0-beta)(yaml@2.9.1)))(zod@4.6.7)
+        version: 5.2.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.89.0(oxlint-tsgolint@7.0.2004)(vite-plus@1.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@vitest/ui@5.0.5)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@7.1.0-beta)(yaml@2.9.1)))(zod@4.6.7)
     devDependencies:
       '@2digits/eslint-config':
         specifier: workspace:*
@@ -1813,8 +1813,8 @@ packages:
       eslint:
         optional: true
 
-  '@eslint-zod/utils@6.3.0':
-    resolution: {integrity: sha512-ADmB5Hq/uzTgvOOeypzKnDPuXk/5q7yP4ce7MsCfLwGEb27Q9wYu6FVwJufKAcISgJGCVjlIb3w/zkzShvVsUQ==}
+  '@eslint-zod/utils@6.4.0':
+    resolution: {integrity: sha512-S5txT8FeUircxA9w/Uhe3GJXvcOTI4TK5CsAbrgecLsgCRsV67+2MBk6FT3/GjgfXgFahox10iwm9LOePDhnjA==}
     engines: {node: ^20.19 || ^22.12 || >=24}
 
   '@eslint/compat@2.1.1':
@@ -2365,12 +2365,14 @@ packages:
   '@opentelemetry/sdk-trace-base@2.12.0':
     resolution: {integrity: sha512-JOERgZCxRM06FEJ5kEWxlSRChah6MmXDx3KwCruqEv/iEyLkTokCSemf2y1w8oIHtfrr8EVTpzebq/31vn2Cpg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-node@2.12.0':
     resolution: {integrity: sha512-9DufH1IlmQMoKAfot5y/FhTP1RnmhLb5K6eKmJO/bvzPjYwPAazoiAUbTZFdPbqxOXN0FEbhZx/e6SB1Og4jmg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -5204,8 +5206,8 @@ packages:
     peerDependencies:
       eslint: '>=9.38.0'
 
-  eslint-plugin-zod@5.2.1:
-    resolution: {integrity: sha512-FK2fgpv9xnpK0Nk/AnsNvvBGQfzBTWNQ3twnoCiMT7O6K7CbI0q+RVxv5p0bN4QVpjTKR/WqcKhBQTPFZnW/tA==}
+  eslint-plugin-zod@5.2.2:
+    resolution: {integrity: sha512-aLV0f3/T5FTHAfHhRUm+AhRisjSXAXnfEsHSu2PrDc+W2TtX2expljKoWogKS6/LAAk31tykmjyj8zXgFbNgyA==}
     engines: {node: ^20.19 || ^22.12 || >=24}
     peerDependencies:
       eslint: ^9 || ^10
@@ -8597,7 +8599,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint-zod/utils@6.3.0':
+  '@eslint-zod/utils@6.4.0':
     dependencies:
       '@typescript-eslint/types': 8.72.0
       esquery: 1.7.0
@@ -11684,9 +11686,9 @@ snapshots:
       natural-compare: 1.4.0
       yaml-eslint-parser: 2.1.0
 
-  eslint-plugin-zod@5.2.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.89.0(oxlint-tsgolint@7.0.2004)(vite-plus@1.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/ui@5.0.5)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.1)))(zod@4.6.7):
+  eslint-plugin-zod@5.2.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.89.0(oxlint-tsgolint@7.0.2004)(vite-plus@1.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/ui@5.0.5)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.1)))(zod@4.6.7):
     dependencies:
-      '@eslint-zod/utils': 6.3.0
+      '@eslint-zod/utils': 6.4.0
       '@typescript-eslint/types': 8.72.0
       typescript: 6.0.3
     optionalDependencies:
@@ -11694,9 +11696,9 @@ snapshots:
       oxlint: 1.89.0(oxlint-tsgolint@7.0.2004)(vite-plus@1.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/ui@5.0.5)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.1))
       zod: 4.6.7
 
-  eslint-plugin-zod@5.2.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.89.0(oxlint-tsgolint@7.0.2004)(vite-plus@1.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@vitest/ui@5.0.5)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@7.1.0-beta)(yaml@2.9.1)))(zod@4.6.7):
+  eslint-plugin-zod@5.2.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.89.0(oxlint-tsgolint@7.0.2004)(vite-plus@1.3.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@vitest/ui@5.0.5)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@7.1.0-beta)(yaml@2.9.1)))(zod@4.6.7):
     dependencies:
-      '@eslint-zod/utils': 6.3.0
+      '@eslint-zod/utils': 6.4.0
       '@typescript-eslint/types': 8.72.0
       typescript: 6.0.3
     optionalDependencies:
