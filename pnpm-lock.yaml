@@ -219,8 +219,8 @@ catalogs:
       specifier: 1.19.3
       version: 1.19.3
     '@opentunnel/client':
-      specifier: 0.5.5
-      version: 0.5.5
+      specifier: 0.6.1
+      version: 0.6.1
     '@oxc-node/cli':
       specifier: 1.0.0
       version: 1.0.0
@@ -1108,7 +1108,7 @@ importers:
         version: 4.0.5(effect@4.0.5)(redis@6.2.1(@opentelemetry/api@1.9.1))
       '@opentunnel/client':
         specifier: 'catalog:'
-        version: 0.5.5(effect@4.0.5)
+        version: 0.6.1(effect@4.0.5)(undici@8.11.2)
       '@yielded/oauth':
         specifier: 'catalog:'
         version: 0.1.0-beta.43(effect@4.0.5)
@@ -2365,12 +2365,14 @@ packages:
   '@opentelemetry/sdk-trace-base@2.12.0':
     resolution: {integrity: sha512-JOERgZCxRM06FEJ5kEWxlSRChah6MmXDx3KwCruqEv/iEyLkTokCSemf2y1w8oIHtfrr8EVTpzebq/31vn2Cpg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-node@2.12.0':
     resolution: {integrity: sha512-9DufH1IlmQMoKAfot5y/FhTP1RnmhLb5K6eKmJO/bvzPjYwPAazoiAUbTZFdPbqxOXN0FEbhZx/e6SB1Og4jmg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -2384,14 +2386,18 @@ packages:
     resolution: {integrity: sha512-eSYWTm620tTk45EKSedaUL8MFYI8hW164hIXsgIHyxu3VobUB3fFCu5t0hQby6OoWRPsG1KkKUG2M5UadiLiVg==}
     engines: {node: '>=14'}
 
-  '@opentunnel/client@0.5.5':
-    resolution: {integrity: sha512-GXrYg9WMMRiqfGVmrqBm10Gcs9N/0EyqzVd2CzrAlhqeI06OxQWgPgC0B/wOkCTUhu0AuUwObcQrgeKs85FENQ==}
+  '@opentunnel/client@0.6.1':
+    resolution: {integrity: sha512-OuVNlWywQebIXCtkixjVHebOsR3KFRxJ0DSZry6Dzj4hHaHIf3eTVmQ7VwLCjuVmw+ctU2qHIP6RxuAPr07WDw==}
     engines: {bun: '>=1.4.0', node: '>=22'}
     peerDependencies:
       effect: 4.0.5
+      undici: '>=7.0.0'
+    peerDependenciesMeta:
+      undici:
+        optional: true
 
-  '@opentunnel/protocol@0.5.5':
-    resolution: {integrity: sha512-fHB1K+nQIUSGzMGpa7F/9FjSvTH2PIthb+pZiuY7ZJK9QeUbq4wS8syUt3YcKX7PpI1tbNH1JdYhPbcTh0/j2w==}
+  '@opentunnel/protocol@0.6.1':
+    resolution: {integrity: sha512-fdckKvQ4TEJSQ2Ia/M/GKmDbCTCw148Wc1zo6HcpUBjSwsFeKs6Tbql4Uih1oIVR8NVqtGrcPZukVVvWFyOEHA==}
     peerDependencies:
       effect: 4.0.5
 
@@ -9298,12 +9304,14 @@ snapshots:
 
   '@opentelemetry/semantic-conventions@1.43.0': {}
 
-  '@opentunnel/client@0.5.5(effect@4.0.5)':
+  '@opentunnel/client@0.6.1(effect@4.0.5)(undici@8.11.2)':
     dependencies:
-      '@opentunnel/protocol': 0.5.5(effect@4.0.5)
+      '@opentunnel/protocol': 0.6.1(effect@4.0.5)
       effect: 4.0.5
+    optionalDependencies:
+      undici: 8.11.2
 
-  '@opentunnel/protocol@0.5.5(effect@4.0.5)':
+  '@opentunnel/protocol@0.6.1(effect@4.0.5)':
     dependencies:
       effect: 4.0.5
 
