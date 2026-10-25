@@ -1,3 +1,11 @@
+## @2digits/oxlint-config@2.1.6
+
+### Update eslint-plugin-zod to 5.2.2
+
+
+
+### Update oxlint-tsgolint to 7.0.2005
+
 ## @2digits/oxlint-config@2.1.5
 
 ### Correct development commands to run repository scripts

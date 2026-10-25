@@ -1,3 +1,7 @@
+## @2digits/tsconfig@1.0.5
+
+### Update @effect/tsgo to 0.57.0
+
 ## @2digits/tsconfig@1.0.4
 
 ### Update TypeScript to 7.1.0-beta

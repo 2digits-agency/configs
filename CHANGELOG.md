@@ -1,3 +1,47 @@
+## @2digits/config-monorepo@0.1.15
+
+### Update @effect/tsgo to 0.57.0
+
+
+
+### Update oxlint-tsgolint to 7.0.2005
+
+
+
+### Update pkg-pr-new to 0.0.92
+
+
+
+### Update vite-plus to 1.4.0
+
+
+
+### Update knip to 6.43.0
+
+
+
+### Update baseline-browser-mapping to 2.11.32
+
+
+
+### Update @voidzero-dev/vite-plus-core to 1.4.0
+
+
+
+### Update voidzero-dev/setup-vp to 1.22.0
+
+
+
+### Allow eslint-vitest-rule-tester skills
+
+- Enabled dependency-provided skills and ignored generated `pnpm-*` skill directories.
+
+### Update @oxc-node/cli to 1.0.1
+
+
+
+### Update GitButler skill to 0.5.2244
+
 ## @2digits/config-monorepo@0.1.14
 
 ### Remove the repository-specific Pitchfork lint exception

@@ -1,3 +1,7 @@
+## @2digits/oxlint-plugin@0.3.5
+
+### Update effect to 4.0.6
+
 ## @2digits/oxlint-plugin@0.3.4
 
 ### Correct development commands to run repository scripts
