@@ -12,8 +12,6 @@ import { OrbitClient, OrbitMcpError, type OrbitClientShape } from '../src/mcp/Or
 import { McpLoggerLayer } from '../src/mcp/logger.js';
 import { OrbitToolsLive } from '../src/mcp/proxy.js';
 
-type Registration = Parameters<Context.Service.Shape<typeof McpServer.McpServer>['addTool']>[0];
-
 const tool = McpSchema.Tool.make({
   name: 'UpdateProject',
   title: 'Update project',
@@ -30,6 +28,8 @@ const tool = McpSchema.Tool.make({
 });
 
 const register = Effect.fn('OrbitProxy.test.register')(function* (callTool: OrbitClientShape['callTool']) {
+  type Registration = Parameters<Context.Service.Shape<typeof McpServer.McpServer>['addTool']>[0];
+
   const registrations: Array<Registration> = [];
 
   const transport = Layer.merge(

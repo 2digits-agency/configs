@@ -94,8 +94,6 @@ interface StatementPair {
 
 type PaddingLineSequence = readonly [Token, Token];
 
-type SelectorMatches = ReadonlyMap<string, ReadonlySet<ESTree.Node>>;
-
 /**
  * A spacing policy; later matching entries override earlier entries.
  */
@@ -592,6 +590,8 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
       Opt.flatMap((current) => current.upper),
     );
   }
+
+  type SelectorMatches = ReadonlyMap<string, ReadonlySet<ESTree.Node>>;
 
   function match(node: ESTree.Node, matcher: StatementOption, matchedNodes: SelectorMatches): boolean {
     let inner = node;
