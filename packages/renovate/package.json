@@ -12,7 +12,7 @@
   "scripts": {
     "build": "oxnode build.ts",
     "test": "renovate-config-validator ./default.json ./src/*.json --strict",
-    "types": "tsc --noEmit"
+    "types": "tsrs --noEmit"
   },
   "devDependencies": {
     "@2digits/tsconfig": "workspace:*",
@@ -20,6 +20,7 @@
     "@types/node": "catalog:",
     "nolyfill": "catalog:",
     "renovate": "catalog:",
+    "tsrs": "catalog:",
     "typescript": "catalog:"
   },
   "public": false

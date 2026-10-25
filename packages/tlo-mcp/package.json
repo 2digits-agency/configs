@@ -23,7 +23,7 @@
     "run": "vp run build && node ./dist/bin.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "types": "tsc --noEmit"
+    "types": "tsrs --noEmit"
   },
   "dependencies": {
     "@effect/platform-node": "catalog:",
@@ -36,6 +36,7 @@
     "@arethetypeswrong/core": "catalog:",
     "@effect/vitest": "catalog:",
     "publint": "catalog:",
+    "tsrs": "catalog:",
     "typescript": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"

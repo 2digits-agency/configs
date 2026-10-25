@@ -35,7 +35,7 @@
     "build": "vp pack --minify",
     "dev": "vp pack --watch",
     "test": "vitest run",
-    "types": "tsc --noEmit"
+    "types": "tsrs --noEmit"
   },
   "dependencies": {
     "@oxlint/plugins": "catalog:",
@@ -47,9 +47,11 @@
     "@arethetypeswrong/core": "catalog:",
     "@effect/platform-node": "catalog:",
     "@effect/vitest": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "dedent": "catalog:",
     "oxlint": "catalog:",
     "publint": "catalog:",
+    "tsrs": "catalog:",
     "typescript": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"

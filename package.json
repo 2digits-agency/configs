@@ -25,7 +25,7 @@
     "lint:pkg": "manypkg check",
     "lint:pkg:fix": "manypkg fix",
     "lint:root": "eslint .",
-    "prepare": "effect-tsgo patch --typescript",
+    "prepare": "effect-tsgo patch --typescript --tsrs",
     "tegami": "oxnode scripts/tegami.mts",
     "test": "turbo test",
     "types": "turbo types"
@@ -47,6 +47,7 @@
     "oxlint-tsgolint": "catalog:",
     "pkg-pr-new": "catalog:",
     "tegami": "catalog:",
+    "tsrs": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
