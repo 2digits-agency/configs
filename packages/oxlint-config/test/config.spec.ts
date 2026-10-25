@@ -85,11 +85,6 @@ const sharedEslintJavascriptRules = Object.fromEntries(
   ),
 );
 
-// `DummyRuleMap` also has a string index signature; remapping keeps only the explicitly declared keys.
-type DeclaredZodRule = keyof {
-  [TRule in keyof DummyRuleMap as TRule extends `zod/${string}` ? TRule : never]: unknown;
-};
-
 function collectPluginsAndRules(config: OxlintConfig): Array<string> {
   const nested = config.extends ?? [];
 
@@ -144,12 +139,14 @@ describe('oxlint config', () => {
     ]);
   });
 
-  it('uses every native React Compiler rule', ({ expect }) => {
-    expect(reactConfig.jsPlugins.map(({ name }) => name)).not.toContain('react-compiler');
+  describe('uses every native React Compiler rule', () => {
+    it("doesn't use the 'react-compiler' plugin", () => {
+      expect(reactConfig.jsPlugins.map(({ name }) => name)).not.toContain('react-compiler');
+    });
 
-    for (const rule of reactCompilerRules) {
+    it.for(reactCompilerRules)('$name is an error', (rule) => {
       expect(reactConfig.rules[rule], rule).toBe('error');
-    }
+    });
   });
 
   it('matches shared non-core ESLint rule behavior', () => {
@@ -221,6 +218,11 @@ describe('oxlint config', () => {
         .map((rule) => `zod/${rule}`)
         .toSorted(),
     );
+
+    // `DummyRuleMap` also has a string index signature; remapping keeps only the explicitly declared keys.
+    type DeclaredZodRule = keyof {
+      [TRule in keyof DummyRuleMap as TRule extends `zod/${string}` ? TRule : never]: unknown;
+    };
 
     expectTypeOf<keyof typeof zodConfig.rules>().toEqualTypeOf<DeclaredZodRule>();
   });
