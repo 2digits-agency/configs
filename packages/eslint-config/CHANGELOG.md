@@ -1,3 +1,40 @@
+## @2digits/eslint-config@5.9.6
+
+### Update eslint-plugin-unicorn to 79.0.0
+
+- Extended `unicorn/prefer-smaller-scope` checks to type aliases.
+- Added generated types for the `unicorn/comment-content` `ignore` option and `unicorn/no-top-level-side-effects` `checkUnknownCalls` option.
+
+### Update @vitest/eslint-plugin to 1.6.28
+
+
+
+### Update eslint-plugin-zod to 5.2.2
+
+
+
+### Update eslint-plugin-antfu to 3.3.1
+
+- Added generated option types for `antfu/reasonable-newline`.
+
+### Update @eslint-react/kit to 5.28.8
+
+
+
+### Update eslint-plugin-jsdoc to 65.4.2
+
+
+
+### Update eslint-plugin-de-morgan to 2.3.0
+
+
+
+### Update @eslint-react/eslint-plugin to 5.28.8
+
+
+
+### Update @next/eslint-plugin-next to 16.4.3
+
 ## @2digits/eslint-config@5.9.5
 
 ### Update `eslint-plugin-zod` to 5.2.1
