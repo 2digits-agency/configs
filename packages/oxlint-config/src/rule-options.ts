@@ -22,6 +22,8 @@ interface NoConflictingChecksOptions {
 declare module 'oxlint' {
   interface DummyRuleMap extends TwoDigitsRuleMap {
     '2digits/padding-line-between-statements'?: AllowWarnDeny | [AllowWarnDeny, ...Array<PaddingLineOption>];
+    'boolean/no-negated-conjunction'?: AllowWarnDeny;
+    'boolean/no-negated-disjunction'?: AllowWarnDeny;
     'stylistic/jsx-curly-newline'?: AllowWarnDeny;
     'stylistic/jsx-newline'?: RuleWithOptions<{
       readonly allowMultilines?: boolean;

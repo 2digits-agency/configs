@@ -1,6 +1,7 @@
 import { defineConfig } from 'oxlint';
 
 import { twoDigitsPluginConfig } from './configs/2digits';
+import { booleanConfig } from './configs/boolean';
 import { importConfig } from './configs/import';
 import { javascriptConfig } from './configs/javascript';
 import { jsdocConfig } from './configs/jsdoc';
@@ -23,6 +24,7 @@ export const baseConfig = defineConfig({
     nodeConfig,
     oxcConfig,
     jsdocConfig,
+    booleanConfig,
     zodConfig,
     twoDigitsPluginConfig,
   ],
