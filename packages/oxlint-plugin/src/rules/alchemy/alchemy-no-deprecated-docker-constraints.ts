@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Docker from 'alchemy/Docker';
 
 import { importedApi, plainOptions } from '../../fixes';
 import { argumentAt, defineEffectRule, isApi, objectProperty, ruleMeta } from '../../utils';
@@ -17,7 +18,7 @@ export const alchemyNoDeprecatedDockerConstraints: Rule = defineEffectRule(
   },
   (context, getState) => ({
     CallExpression(node) {
-      if (!isApi(node.callee, getState(), 'Docker', 'Service')) {
+      if (!isApi(node.callee, getState(), 'Docker', 'Service' satisfies keyof typeof Docker)) {
         return;
       }
 

@@ -1,7 +1,9 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import type * as EffectBarrel from 'effect';
 import * as Arr from 'effect/Array';
 import type * as Console from 'effect/Console';
 import type * as Effect from 'effect/Effect';
+import type * as Fn from 'effect/Function';
 
 import {
   argumentAt,
@@ -41,7 +43,10 @@ function loggerName(node: ESTree.Expression, state: FileState): string | undefin
 
   const callee = unwrapExpression(expression.callee);
 
-  if (callee.type === 'CallExpression' && isApiPath(callee.callee, state, ['Effect', 'logWithLevel'])) {
+  if (
+    callee.type === 'CallExpression' &&
+    isApiPath(callee.callee, state, ['Effect', 'logWithLevel' satisfies keyof typeof Effect])
+  ) {
     return 'Effect.logWithLevel';
   }
 
@@ -63,16 +68,21 @@ function asStep(node: ESTree.Expression | undefined, state: FileState): string |
   if (
     step.type === 'CallExpression' &&
     step.arguments.length === 1 &&
-    isApiPath(step.callee, state, ['Effect', 'as'])
+    isApiPath(step.callee, state, ['Effect', 'as' satisfies keyof typeof Effect])
   ) {
     return 'as';
   }
 
-  return isAnyApi(step, state, 'Effect', ['asSome', 'asVoid']) ? canonicalPath(step, state)?.[1] : undefined;
+  return isAnyApi(step, state, 'Effect', ['asSome', 'asVoid'] satisfies ReadonlyArray<keyof typeof Effect>)
+    ? canonicalPath(step, state)?.[1]
+    : undefined;
 }
 
 function isPipeFunction(node: ESTree.Node, state: FileState): boolean {
-  return isApiPath(node, state, ['pipe']) || isApiPath(node, state, ['Function', 'pipe']);
+  return (
+    isApiPath(node, state, ['pipe' satisfies keyof typeof EffectBarrel]) ||
+    isApiPath(node, state, ['Function', 'pipe' satisfies keyof typeof Fn])
+  );
 }
 
 interface Match {

@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Arr from 'effect/Array';
 
 import { defineEffectRule, isApi, ruleMeta, staticPropertyName } from '../../utils';
 
@@ -19,7 +20,7 @@ export const preferEffectArraySort: Rule = defineEffectRule(
         state.hasEffectImport &&
         node.callee.type === 'MemberExpression' &&
         staticPropertyName(node.callee) === 'sort' &&
-        !isApi(node.callee, state, 'Array', 'sort')
+        !isApi(node.callee, state, 'Array', 'sort' satisfies keyof typeof Arr)
       ) {
         context.report({ node, messageId: 'effectArraySort' });
       }

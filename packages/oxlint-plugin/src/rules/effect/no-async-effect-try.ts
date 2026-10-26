@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import {
   argumentAt,
@@ -23,7 +24,7 @@ export const noAsyncEffectTry: Rule = defineEffectRule(
   ),
   (context, getState) => ({
     CallExpression(node) {
-      if (!isApi(node.callee, getState(), 'Effect', 'try')) {
+      if (!isApi(node.callee, getState(), 'Effect', 'try' satisfies keyof typeof Effect)) {
         return;
       }
 

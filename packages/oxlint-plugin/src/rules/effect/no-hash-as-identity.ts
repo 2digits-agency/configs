@@ -1,4 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import type * as Hash from 'effect/Hash';
 
 import {
   argumentAt,
@@ -13,7 +14,7 @@ import {
 const keyedMethods: ReadonlySet<string> = new Set(['delete', 'get', 'has', 'set']);
 
 function isHashCall(node: ESTree.Node, state: FileState): node is ESTree.CallExpression {
-  return node.type === 'CallExpression' && isApi(node.callee, state, 'Hash', 'hash');
+  return node.type === 'CallExpression' && isApi(node.callee, state, 'Hash', 'hash' satisfies keyof typeof Hash);
 }
 
 export const noHashAsIdentity: Rule = defineEffectRule(

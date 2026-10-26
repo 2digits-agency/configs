@@ -1,5 +1,6 @@
 import type { Context, ESTree, Rule, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import type * as Config from 'effect/Config';
 
 import { importedApi } from '../../fixes';
 import {
@@ -80,7 +81,10 @@ export const noFunctionConfigDefault: Rule = defineEffectRule(
   ),
   (context, getState) => ({
     CallExpression(node) {
-      if (!isApi(node.callee, getState(), 'Config', 'withDefault') || !importedApi(context, node.callee)) {
+      if (
+        !isApi(node.callee, getState(), 'Config', 'withDefault' satisfies keyof typeof Config) ||
+        !importedApi(context, node.callee)
+      ) {
         return;
       }
 
@@ -92,7 +96,7 @@ export const noFunctionConfigDefault: Rule = defineEffectRule(
 
       if (
         receiver?.type === 'CallExpression' &&
-        isApi(receiver.callee, getState(), 'Config', 'succeed') &&
+        isApi(receiver.callee, getState(), 'Config', 'succeed' satisfies keyof typeof Config) &&
         importedApi(context, receiver.callee) &&
         isFunctionNode(argumentAt(receiver, 0))
       ) {

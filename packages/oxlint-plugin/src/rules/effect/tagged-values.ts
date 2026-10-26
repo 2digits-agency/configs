@@ -1,4 +1,5 @@
 import type { ESTree } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 
@@ -10,7 +11,11 @@ const isBroadEffectCatchCallee = Match.type<ESTree.Expression>().pipe(
       type: 'MemberExpression',
       computed: false,
       object: { type: 'Identifier', name: 'Effect' },
-      property: { type: 'Identifier', name: Match.is('catch', 'catchAll', 'catchIf') },
+      property: {
+        type: 'Identifier',
+        // `catchAll` is the Effect v3 name, which the current Effect types no longer export.
+        name: Match.is('catch' satisfies keyof typeof Effect, 'catchAll', 'catchIf' satisfies keyof typeof Effect),
+      },
     },
     Fn.constTrue,
   ),
@@ -23,7 +28,10 @@ const isMatchPatternCallee = Match.type<ESTree.Expression>().pipe(
       type: 'MemberExpression',
       computed: false,
       object: { type: 'Identifier', name: 'Match' },
-      property: { type: 'Identifier', name: Match.is('when', 'not') },
+      property: {
+        type: 'Identifier',
+        name: Match.is(...(['when', 'not'] as const satisfies ReadonlyArray<keyof typeof Match>)),
+      },
     },
     Fn.constTrue,
   ),

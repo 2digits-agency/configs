@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Schema from 'effect/Schema';
 
 import { defineEffectRule, isApi, ruleMeta } from '../../utils';
 
@@ -14,7 +15,10 @@ export const requireSchemaClassBrand: Rule = defineEffectRule(
   ),
   (context, getState) => ({
     CallExpression(node) {
-      if (isApi(node.callee, getState(), 'Schema', 'Class') && (node.typeArguments?.params.length ?? 0) < 2) {
+      if (
+        isApi(node.callee, getState(), 'Schema', 'Class' satisfies keyof typeof Schema) &&
+        (node.typeArguments?.params.length ?? 0) < 2
+      ) {
         context.report({ node, messageId: 'missingBrand' });
       }
     },

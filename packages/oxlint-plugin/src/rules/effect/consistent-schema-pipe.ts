@@ -1,7 +1,9 @@
 import type { Context, ESTree, Rule } from '@oxlint/plugins';
+import type * as EffectBarrel from 'effect';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
+import type * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
 import { importedApi } from '../../fixes';
@@ -18,7 +20,7 @@ import {
 } from '../../utils';
 
 // Lists follow docs/adr/0001 for the catalog's Effect version; revisit them when Effect adds Schema functions.
-const modifiers = new Set([
+const modifiers: ReadonlySet<string> = new Set([
   'flip',
   'fromFormData',
   'fromJsonString',
@@ -46,9 +48,9 @@ const modifiers = new Set([
   'toEncoded',
   'toType',
   'UndefinedOr',
-]);
+] satisfies ReadonlyArray<keyof typeof Schema>);
 
-const wrappers = new Set([
+const wrappers: ReadonlySet<string> = new Set([
   'Array',
   'ArrayEnsure',
   'Chunk',
@@ -59,9 +61,9 @@ const wrappers = new Set([
   'Redacted',
   'Tree',
   'UniqueArray',
-]);
+] satisfies ReadonlyArray<keyof typeof Schema>);
 
-const dataLastSteps = new Set([
+const dataLastSteps: ReadonlySet<string> = new Set([
   'annotate',
   'annotateEncoded',
   'annotateKey',
@@ -91,10 +93,15 @@ const dataLastSteps = new Set([
   'withDecodingDefaultKey',
   'withDecodingDefaultType',
   'withDecodingDefaultTypeKey',
-]);
+] satisfies ReadonlyArray<keyof typeof Schema>);
 
 // Schema methods that return a schema, so a head built from them still has `.pipe`.
-const schemaMethods = new Set(['annotate', 'annotateKey', 'check', 'mapFields']);
+const schemaMethods: ReadonlySet<string> = new Set([
+  'annotate',
+  'annotateKey',
+  'check',
+  'mapFields',
+] satisfies ReadonlyArray<keyof Schema.Struct<Schema.Struct.Fields>>);
 
 // Heads that can take `.pipe(...)` without parentheses.
 const memberSafeHeads = new Set<string>(['CallExpression', 'Identifier', 'MemberExpression', 'ThisExpression']);
@@ -305,7 +312,8 @@ function isMethodPipe(
 
 function isFunctionPipe(node: ESTree.CallExpression, context: Context, state: FileState): boolean {
   return (
-    (isApiPath(node.callee, state, ['pipe']) || isApiPath(node.callee, state, ['Function', 'pipe'])) &&
+    (isApiPath(node.callee, state, ['pipe' satisfies keyof typeof EffectBarrel]) ||
+      isApiPath(node.callee, state, ['Function', 'pipe' satisfies keyof typeof Fn])) &&
     importedApi(context, node.callee)
   );
 }

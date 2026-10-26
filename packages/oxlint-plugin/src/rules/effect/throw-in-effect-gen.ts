@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import type * as Effect from 'effect/Effect';
 
 import {
   argumentAt,
@@ -13,15 +14,17 @@ import {
   type FunctionNode,
 } from '../../utils';
 
-const generatorMethods: ReadonlyArray<string> = ['fn', 'fnUntraced', 'gen'];
+const generatorMethods = ['fn', 'fnUntraced', 'gen'] as const satisfies ReadonlyArray<keyof typeof Effect>;
 
-const curriedGeneratorMethods: ReadonlyArray<string> = ['fn', 'fnUntraced'];
+const curriedGeneratorMethods = ['fn', 'fnUntraced'] as const satisfies ReadonlyArray<keyof typeof Effect>;
+
+const tryMethods = ['try', 'tryPromise'] as const satisfies ReadonlyArray<keyof typeof Effect>;
 
 function capturedByEffectTry(node: FunctionNode, state: FileState): boolean {
   const parent = node.parent;
 
   if (parent.type === 'CallExpression' && argumentAt(parent, 0) === node) {
-    return isAnyApi(parent.callee, state, 'Effect', ['try', 'tryPromise']);
+    return isAnyApi(parent.callee, state, 'Effect', tryMethods);
   }
 
   if (parent.type !== 'Property' || parent.key.type !== 'Identifier' || parent.key.name !== 'try') {
@@ -33,7 +36,7 @@ function capturedByEffectTry(node: FunctionNode, state: FileState): boolean {
   return (
     object.type === 'ObjectExpression' &&
     object.parent.type === 'CallExpression' &&
-    isAnyApi(object.parent.callee, state, 'Effect', ['try', 'tryPromise'])
+    isAnyApi(object.parent.callee, state, 'Effect', tryMethods)
   );
 }
 

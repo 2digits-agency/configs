@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import { defineEffectRule, isAnyApi, isLiteral, objectProperty, ruleMeta } from '../../utils';
 import { objectArgument } from './utils';
@@ -16,7 +17,7 @@ export const noZeroRetryTimes: Rule = defineEffectRule(
     CallExpression(node) {
       const state = getState();
 
-      if (!isAnyApi(node.callee, state, 'Effect', ['retry', 'repeat'])) {
+      if (!isAnyApi(node.callee, state, 'Effect', ['retry', 'repeat'] satisfies ReadonlyArray<keyof typeof Effect>)) {
         return;
       }
 

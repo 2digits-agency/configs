@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import { argumentAt, defineEffectRule, functionUsesFirstParameter, isApi, isFunctionNode, ruleMeta } from '../../utils';
 
@@ -14,7 +15,7 @@ export const preferWithSpan: Rule = defineEffectRule(
   ),
   (context, getState) => ({
     CallExpression(node) {
-      if (!isApi(node.callee, getState(), 'Effect', 'useSpan')) {
+      if (!isApi(node.callee, getState(), 'Effect', 'useSpan' satisfies keyof typeof Effect)) {
         return;
       }
 

@@ -1,6 +1,7 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
+import type * as Schema from 'effect/Schema';
 
 import {
   defineEffectRule,
@@ -11,7 +12,15 @@ import {
   unwrapExpression,
 } from '../../utils';
 
-const schemaMapMethods: ReadonlySet<string> = new Set(['mapElements', 'mapFields', 'mapMembers']);
+const schemaMapMethods: ReadonlySet<string> = new Set([
+  'mapElements',
+  'mapFields',
+  'mapMembers',
+] satisfies ReadonlyArray<
+  | keyof Schema.Struct<Schema.Struct.Fields>
+  | keyof Schema.Tuple<Schema.Tuple.Elements>
+  | keyof Schema.Union<ReadonlyArray<Schema.Constraint>>
+>);
 
 function methodCall(node: ESTree.Expression, method: string): ESTree.CallExpression | undefined {
   const expression = unwrapExpression(node);

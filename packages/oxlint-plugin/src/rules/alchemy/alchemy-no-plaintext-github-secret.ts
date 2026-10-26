@@ -25,6 +25,7 @@ function isPlaintextSecret(node: ESTree.Expression, state: FileState): boolean {
     return true;
   }
 
+  // Effect v3 name, which the current Effect types no longer export (v4 has `Config.String`).
   return value.type === 'CallExpression' && isApi(value.callee, state, 'Config', 'string');
 }
 
@@ -42,6 +43,7 @@ export const alchemyNoPlaintextGithubSecret: Rule = defineEffectRule(
     CallExpression(node) {
       const state = getState();
 
+      // Not checked against `alchemy/GitHub`, whose types are too heavy for the repo's type-aware ESLint run.
       if (!isApi(node.callee, state, 'GitHub', 'Secret')) {
         return;
       }

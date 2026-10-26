@@ -101,6 +101,7 @@ catalog:
   effect-oxlint: 0.4.0
   '@yielded/oauth': 0.1.0-beta.46
   '@opentunnel/client': 0.6.1
+  alchemy: 2.0.0-beta.83
 
 overrides:
   '@opentunnel/client>effect': 'catalog:'
@@ -173,4 +174,6 @@ permissions:
   protobufjs:
     build: false
   re2:
+    build: false
+  workerd:
     build: false

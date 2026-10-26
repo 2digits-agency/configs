@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Duration from 'effect/Duration';
 
 import { namespaceImport } from '../../fixes';
 import { defineEffectRule, ruleMeta } from '../../utils';
@@ -32,7 +33,10 @@ export const preferEffectDuration: Rule = defineEffectRule(
 
           return [
             ...imported.fixes,
-            fixer.replaceText(duration, `${imported.name}.millis(${context.sourceCode.getText(duration)})`),
+            fixer.replaceText(
+              duration,
+              `${imported.name}.${'millis' satisfies keyof typeof Duration}(${context.sourceCode.getText(duration)})`,
+            ),
           ];
         },
       });

@@ -1,4 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import type * as Duration from 'effect/Duration';
+import type * as Effect from 'effect/Effect';
 
 import {
   argumentAt,
@@ -23,7 +25,7 @@ function zeroDuration(node: ESTree.Expression, state: FileState): boolean {
     return /^0\s*(?:nanos?|micros?|millis?|seconds?|minutes?|hours?|days?|weeks?)$/i.test(expression.value);
   }
 
-  if (isApi(expression, state, 'Duration', 'zero')) {
+  if (isApi(expression, state, 'Duration', 'zero' satisfies keyof typeof Duration)) {
     return true;
   }
 
@@ -54,7 +56,11 @@ export const preferYieldNow: Rule = defineEffectRule(
 
       const duration = argumentAt(node, 0);
 
-      if (duration !== undefined && isApi(node.callee, state, 'Effect', 'sleep') && zeroDuration(duration, state)) {
+      if (
+        duration !== undefined &&
+        isApi(node.callee, state, 'Effect', 'sleep' satisfies keyof typeof Effect) &&
+        zeroDuration(duration, state)
+      ) {
         context.report({ node, messageId: 'zeroSleep' });
       }
     },

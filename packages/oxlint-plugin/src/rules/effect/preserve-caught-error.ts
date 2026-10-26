@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import {
   containsIdentifier,
@@ -13,7 +14,11 @@ import {
 } from '../../utils';
 import { callbackApi, functionProperty } from './utils';
 
-const errorHandlerMethods = new Set(['catch', 'catchAll', 'mapError']);
+const errorHandlerMethods: ReadonlySet<string> = new Set([
+  ...(['catch', 'mapError'] satisfies ReadonlyArray<keyof typeof Effect>),
+  // Effect v3 name, which the current Effect types no longer export.
+  'catchAll',
+]);
 
 function wrapperDropsCause(node: FunctionNode, state: FileState): boolean {
   const callPath = callbackApi(node, state);
@@ -22,7 +27,10 @@ function wrapperDropsCause(node: FunctionNode, state: FileState): boolean {
 
   const isHandler =
     (callPath?.[0] === 'Effect' && callPath[1] !== undefined && errorHandlerMethods.has(callPath[1])) ||
-    (optionsCall !== undefined && isAnyApi(optionsCall.callee, state, 'Effect', ['try', 'tryPromise']));
+    (optionsCall !== undefined &&
+      isAnyApi(optionsCall.callee, state, 'Effect', ['try', 'tryPromise'] satisfies ReadonlyArray<
+        keyof typeof Effect
+      >));
 
   if (!isHandler || !node.body) {
     return false;
