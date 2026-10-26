@@ -78,6 +78,37 @@ describe('default statement spacing', () => {
     });
   });
 
+  it('keeps grouped empty case clauses together so --fix does not cause no-fallthrough', () => {
+    const cases = ts`
+      export function label(kind: string): string {
+        switch (kind) {
+          case 'a':
+          case 'b': {
+            return 'ab';
+          }
+
+          default: {
+            return 'other';
+          }
+        }
+      }
+    `;
+
+    const config = ts`
+      import lint from '${presetUrl}';
+
+      export default lint();
+    `;
+
+    withTemporaryProject({ 'cases.ts': cases, 'oxlint.config.mjs': config }, (directory) => {
+      const result = runOxlint(directory, '--fix', 'cases.ts');
+
+      expect(result.status, result.output).toBe(0);
+
+      expect(readFileSync(path.join(directory, 'cases.ts'), 'utf8')).toBe(cases);
+    });
+  });
+
   it.for([
     spacingRule("'off'"),
     spacingRule(anySpacing),

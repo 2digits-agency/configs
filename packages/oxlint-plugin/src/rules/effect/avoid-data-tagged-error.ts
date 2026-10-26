@@ -4,7 +4,7 @@ import { defineEffectRule, isApi, ruleMeta } from '../../utils';
 
 export const avoidDataTaggedError: Rule = defineEffectRule(
   ruleMeta('suggestion', 'Prefer schema-based tagged errors so errors have a serializable contract.', {
-    taggedError: 'Prefer Schema.TaggedErrorClass over Data.TaggedError.',
+    taggedError: 'Prefer Schema.TaggedError over Data.TaggedError.',
   }),
   (context, getState) => ({
     CallExpression(node) {
