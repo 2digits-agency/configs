@@ -3,21 +3,49 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import zodPlugin from 'eslint-plugin-zod';
-import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
+import { describe, expect, it } from 'vite-plus/test';
 
 import eslintTwoDigits from '@2digits/eslint-config';
 import { recommendedRules } from '@2digits/oxlint-plugin';
 
-import withTwoDigits, { twoDigits, type DummyRuleMap, type OxlintConfig } from '../src';
-import { twoDigitsPluginConfig } from '../src/configs/2digits';
-import { javascriptConfig } from '../src/configs/javascript';
-import { nodeConfig } from '../src/configs/node';
-import { reactConfig } from '../src/configs/react';
-import { typescriptRulesConfig } from '../src/configs/typescript';
-import { unicornConfig } from '../src/configs/unicorn';
-import { vitestConfig } from '../src/configs/vitest';
-import { zodConfig } from '../src/configs/zod';
+import twoDigits, { type FlatConfigItem, type RuleName } from '../src';
+import { javascript, node, react, twoDigitsPlugin, typescript, unicorn, vitest, zod } from '../src/configs';
 import { runOxlint, withTemporaryProject } from './oxlint';
+
+/**
+ * The rules of the named config object.
+ *
+ * @param configs Config objects returned by a config function.
+ * @param name Config object name.
+ */
+function rulesOf(configs: Array<FlatConfigItem>, name: string) {
+  return configs.find((config) => config.name === name)?.rules ?? {};
+}
+
+const javascriptRules = rulesOf(javascript(), '2digits:javascript');
+
+const reactConfig = react().find(({ name }) => name === '2digits:react/rules');
+
+const reactRules = reactConfig?.rules ?? {};
+
+const zodConfig = zod().at(0);
+
+const zodRules = zodConfig?.rules ?? {};
+
+const twoDigitsPluginConfig = twoDigitsPlugin().at(0);
+
+const twoDigitsPluginRules = twoDigitsPluginConfig?.rules ?? {};
+
+/**
+ * The first JS plugin of a config object, normalized to its object form.
+ *
+ * @param config Config object.
+ */
+function jsPluginOf(config: FlatConfigItem | undefined) {
+  const [entry] = config?.jsPlugins ?? [];
+
+  return typeof entry === 'string' ? { name: entry, specifier: entry } : entry;
+}
 
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 
@@ -50,7 +78,7 @@ const reactCompilerRules = [
   'react/unsupported-syntax',
   'react/use-memo',
   'react/void-use-memo',
-] satisfies Array<keyof typeof reactConfig.rules>;
+] satisfies Array<RuleName>;
 
 const eslintConfig = await eslintTwoDigits({
   css: false,
@@ -74,7 +102,7 @@ const eslintJavascriptConfig = eslintConfig.find(({ name }) => name === '2digits
 
 // Oxlint carries TypeScript `_` ignore patterns and preserves case-sensitive Fallow directives.
 const sharedJavascriptRuleNames = new Set(
-  Object.entries(javascriptConfig.rules)
+  Object.entries(javascriptRules)
     .filter(([rule, value]) => value !== undefined && rule !== 'no-unused-vars' && rule !== 'capitalized-comments')
     .map(([rule]) => rule),
 );
@@ -85,52 +113,59 @@ const sharedEslintJavascriptRules = Object.fromEntries(
   ),
 );
 
-function collectPluginsAndRules(config: OxlintConfig): Array<string> {
-  const nested = config.extends ?? [];
-
-  return [
-    ...(config.plugins ?? []),
-    ...Object.keys(config.rules ?? {}),
-    ...nested.flatMap((child) => collectPluginsAndRules(child)),
-  ];
-}
-
-const defaultPresetEffectEntries = collectPluginsAndRules(twoDigits).filter((entry) => entry.startsWith('effecttsgo'));
-
 describe('oxlint config', () => {
-  it('preserves top-level defaults when extending the config', () => {
-    const config = withTwoDigits(
-      {
-        rules: {
-          'eslint/no-console': 'warn',
-        },
-      },
-      {
-        rules: {
-          'eslint/no-console': 'off',
-        },
-      },
-    );
+  const toggledConfig = twoDigits(
+    {
+      ignores: { ignores: ['generated/**'] },
+      js: { overrides: { 'eslint/no-console': 'warn' } },
+      react: false,
+      ts: true,
+      vitest: { files: ['**/*.check.ts'] },
+      zod: false,
+    },
+    { options: { reportUnusedDisableDirectives: 'allow' } },
+    { files: ['**/*.ts'], rules: { 'eslint/no-console': 'off' } },
+  );
 
-    expect(config.env).toMatchObject({ browser: true, node: true });
+  it('merges root options and appends consumer configs after the built-in configs', () => {
+    expect(toggledConfig.options).toStrictEqual({
+      denyWarnings: true,
+      reportUnusedDisableDirectives: 'allow',
+      typeAware: true,
+    });
 
-    expect(config.ignorePatterns).toContain('**/fixtures/**');
+    expect(toggledConfig.ignorePatterns).toContain('/**/fixtures/**');
 
-    expect(config.rules?.['eslint/no-console']).toBe('off');
+    expect(toggledConfig.ignorePatterns?.at(-1)).toBe('/generated/**');
 
-    expect(twoDigits.env).toMatchObject({ browser: true, node: true });
+    expect(toggledConfig.overrides?.at(-1)).toMatchObject({
+      files: ['**/*.ts'],
+      rules: { 'eslint/no-console': 'off' },
+    });
+  });
+
+  it('applies config options and integration toggles', () => {
+    const javascriptOverride = toggledConfig.overrides?.find(({ rules }) => rules?.['eslint/no-console'] === 'warn');
+
+    const vitestOverride = toggledConfig.overrides?.find(({ rules }) => rules?.['vitest/no-focused-tests'] === 'error');
+
+    expect(javascriptOverride?.env).toStrictEqual({ browser: true, node: true });
+
+    expect(vitestOverride?.files).toStrictEqual(['**/*.check.ts']);
+
+    expect(JSON.stringify(toggledConfig)).not.toMatch(/"react\/jsx-key"|"zod\//u);
   });
 
   it('matches all shared ESLint JavaScript rules', () => {
     expect(eslintJavascriptConfig?.rules).toBeDefined();
 
-    expect(javascriptConfig.rules).toMatchObject(sharedEslintJavascriptRules);
+    expect(javascriptRules).toMatchObject(sharedEslintJavascriptRules);
   });
 
   it('exposes the Fallow directive exception through the shared preset', () => {
-    const config = withTwoDigits();
+    const config = twoDigits();
 
-    const javascript = config.extends?.find((child) => child.rules?.['capitalized-comments'] !== undefined);
+    const javascript = config.overrides?.find((override) => override.rules?.['capitalized-comments'] !== undefined);
 
     expect(javascript?.rules?.['capitalized-comments']).toStrictEqual([
       'error',
@@ -141,24 +176,26 @@ describe('oxlint config', () => {
 
   describe('uses every native React Compiler rule', () => {
     it("doesn't use the 'react-compiler' plugin", () => {
-      expect(reactConfig.jsPlugins.map(({ name }) => name)).not.toContain('react-compiler');
+      expect(jsPluginOf(reactConfig)?.name).toBe('stylistic');
+
+      expect(reactConfig?.jsPlugins).toHaveLength(1);
     });
 
     it.for(reactCompilerRules)('$name is an error', (rule) => {
-      expect(reactConfig.rules[rule], rule).toBe('error');
+      expect(reactRules[rule], rule).toBe('error');
     });
   });
 
   it('matches shared non-core ESLint rule behavior', () => {
     expect({
-      node: nodeConfig.rules['node/handle-callback-err'],
-      react: reactConfig.rules['react/hook-use-state'],
+      node: rulesOf(node(), '2digits:node')['node/handle-callback-err'],
+      react: reactRules['react/hook-use-state'],
     }).toStrictEqual({
       node: ['error', '^(err|error)$'],
       react: 'error',
     });
 
-    expect(typescriptRulesConfig.rules).toMatchObject({
+    expect(rulesOf(typescript(), '2digits:typescript/rules')).toMatchObject({
       'typescript/consistent-type-exports': ['error'],
       'typescript/no-confusing-void-expression': 'off',
       'typescript/no-explicit-any': ['error'],
@@ -180,7 +217,7 @@ describe('oxlint config', () => {
       ],
     });
 
-    expect(unicornConfig.rules).toMatchObject({
+    expect(rulesOf(unicorn(), '2digits:unicorn')).toMatchObject({
       'unicorn/prefer-at': 'error',
       'unicorn/prefer-object-from-entries': 'error',
       'unicorn/prefer-structured-clone': 'error',
@@ -188,7 +225,7 @@ describe('oxlint config', () => {
       'unicorn/throw-new-error': 'off',
     });
 
-    expect(vitestConfig.rules).toMatchObject({
+    expect(rulesOf(vitest(), '2digits:vitest/rules')).toMatchObject({
       'vitest/consistent-test-it': ['error', { fn: 'it', withinDescribe: 'it' }],
       'vitest/expect-expect': [
         'error',
@@ -202,43 +239,32 @@ describe('oxlint config', () => {
   });
 
   it('configures eslint-plugin-zod', () => {
-    const plugin = zodConfig.jsPlugins.at(0);
+    expect(jsPluginOf(zodConfig)).toMatchObject({ name: 'zod' });
 
-    expect(plugin?.name).toBe('zod');
+    expect(jsPluginOf(zodConfig)?.specifier).toContain('eslint-plugin-zod');
 
-    expect(plugin?.specifier).toContain('eslint-plugin-zod');
+    expect(zodRules['zod/array-style']).toStrictEqual(['error', { style: 'function' }]);
 
-    expect(zodConfig.rules['zod/array-style']).toStrictEqual(['error', { style: 'function' }]);
-
-    // Every plugin rule is configured or explicitly left unset, and declared for type-checked consumer configs.
+    // Every plugin rule is configured or explicitly left unset.
     const { rules } = zodPlugin as typeof zodPlugin & { rules: Record<string, unknown> };
 
-    expect(Object.keys(zodConfig.rules).toSorted()).toStrictEqual(
+    expect(Object.keys(zodRules).toSorted()).toStrictEqual(
       Object.keys(rules)
         .map((rule) => `zod/${rule}`)
         .toSorted(),
     );
-
-    // `DummyRuleMap` also has a string index signature; remapping keeps only the explicitly declared keys.
-    type DeclaredZodRule = keyof {
-      [TRule in keyof DummyRuleMap as TRule extends `zod/${string}` ? TRule : never]: unknown;
-    };
-
-    expectTypeOf<keyof typeof zodConfig.rules>().toEqualTypeOf<DeclaredZodRule>();
   });
 
   it('configures every recommended 2digits rule', () => {
-    const plugin = twoDigitsPluginConfig.jsPlugins.at(0);
-
     const { '2digits/padding-line-between-statements': _spacing, ...otherRecommendedRules } = recommendedRules;
 
-    expect(plugin?.name).toBe('2digits');
+    expect(jsPluginOf(twoDigitsPluginConfig)).toMatchObject({ name: '2digits' });
 
-    expect(plugin?.specifier).toContain('oxlint-plugin/dist/index.mjs');
+    expect(jsPluginOf(twoDigitsPluginConfig)?.specifier).toContain('oxlint-plugin/dist/index.mjs');
 
-    expect(twoDigitsPluginConfig.rules).toMatchObject(otherRecommendedRules);
+    expect(twoDigitsPluginRules).toMatchObject(otherRecommendedRules);
 
-    expect(twoDigitsPluginConfig.rules['2digits/padding-line-between-statements'][0]).toBe('error');
+    expect(twoDigitsPluginRules['2digits/padding-line-between-statements']).toContain('error');
 
     expect([
       recommendedRules['2digits/prefer-effect-filesystem'],
@@ -254,7 +280,7 @@ describe('oxlint config', () => {
   });
 
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
-    expect(defaultPresetEffectEntries).toStrictEqual([]);
+    expect(JSON.stringify(twoDigits({ react: true, ts: true, vitest: true, zod: true }))).not.toContain('effecttsgo');
   });
 
   it('loads and executes eslint-plugin-zod', () => {

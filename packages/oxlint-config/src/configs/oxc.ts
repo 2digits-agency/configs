@@ -1,35 +1,38 @@
-import { defineConfig } from 'oxlint';
+import type { FlatConfigItem } from 'oxlint-flat-config';
 
-export const oxcConfig = defineConfig({
-  plugins: ['oxc'],
-
-  rules: {
-    'oxc/approx-constant': 'error',
-    'oxc/bad-array-method-on-arguments': 'error',
-    'oxc/bad-bitwise-operator': 'error',
-    'oxc/bad-char-at-comparison': 'error',
-    'oxc/bad-comparison-sequence': 'error',
-    'oxc/bad-match-all-arg': 'error',
-    'oxc/bad-min-max-func': 'error',
-    'oxc/bad-object-literal-comparison': 'error',
-    'oxc/bad-replace-all-arg': 'error',
-    'oxc/branches-sharing-code': 'error',
-    'oxc/const-comparisons': 'error',
-    'oxc/double-comparisons': 'error',
-    'oxc/erasing-op': 'error',
-    'oxc/misrefactored-assign-op': 'error',
-    'oxc/missing-throw': 'error',
-    'oxc/no-accumulating-spread': 'error',
-    'oxc/no-async-await': undefined,
-    'oxc/no-async-endpoint-handlers': undefined,
-    'oxc/no-barrel-file': ['error', { threshold: 10_000 }],
-    'oxc/no-const-enum': 'error',
-    'oxc/no-map-spread': undefined,
-    'oxc/no-optional-chaining': undefined,
-    'oxc/no-rest-spread-properties': undefined,
-    'oxc/no-this-in-exported-function': 'error',
-    'oxc/number-arg-out-of-range': 'error',
-    'oxc/only-used-in-recursion': 'error',
-    'oxc/uninvoked-array-callback': 'error',
-  },
-});
+export function oxc(): Array<FlatConfigItem> {
+  return [
+    {
+      name: '2digits:oxc',
+      rules: {
+        'oxc/approx-constant': 'error',
+        'oxc/bad-array-method-on-arguments': 'error',
+        'oxc/bad-bitwise-operator': 'error',
+        'oxc/bad-char-at-comparison': 'error',
+        'oxc/bad-comparison-sequence': 'error',
+        'oxc/bad-match-all-arg': 'error',
+        'oxc/bad-min-max-func': 'error',
+        'oxc/bad-object-literal-comparison': 'error',
+        'oxc/bad-replace-all-arg': 'error',
+        'oxc/branches-sharing-code': 'error',
+        'oxc/const-comparisons': 'error',
+        'oxc/double-comparisons': 'error',
+        'oxc/erasing-op': 'error',
+        'oxc/misrefactored-assign-op': 'error',
+        'oxc/missing-throw': 'error',
+        'oxc/no-accumulating-spread': 'error',
+        'oxc/no-async-await': undefined,
+        'oxc/no-async-endpoint-handlers': undefined,
+        'oxc/no-barrel-file': ['error', { threshold: 10_000 }],
+        'oxc/no-const-enum': 'error',
+        'oxc/no-map-spread': undefined,
+        'oxc/no-optional-chaining': undefined,
+        'oxc/no-rest-spread-properties': undefined,
+        'oxc/no-this-in-exported-function': 'error',
+        'oxc/number-arg-out-of-range': 'error',
+        'oxc/only-used-in-recursion': 'error',
+        'oxc/uninvoked-array-callback': 'error',
+      },
+    },
+  ];
+}
