@@ -18,6 +18,7 @@ import { noAsyncEffectTry } from './effect/no-async-effect-try';
 import { noDiscardedRunPromise } from './effect/no-discarded-run-promise';
 import { noDiscardedSchemaChecks } from './effect/no-discarded-schema-checks';
 import { noEffectAlchemyBarrelImports } from './effect/no-effect-alchemy-barrel-imports';
+import { noEffectAsOnLog } from './effect/no-effect-as-on-log';
 import { noEmptyEffectCallback } from './effect/no-empty-effect-callback';
 import { noEmptySchemaStruct } from './effect/no-empty-schema-struct';
 import { noFunctionConfigDefault } from './effect/no-function-config-default';
@@ -77,6 +78,7 @@ export const rules = {
   'no-async-effect-try': noAsyncEffectTry,
   'no-discarded-run-promise': noDiscardedRunPromise,
   'no-discarded-schema-checks': noDiscardedSchemaChecks,
+  'no-effect-as-on-log': noEffectAsOnLog,
   'no-empty-effect-callback': noEmptyEffectCallback,
   'no-empty-schema-struct': noEmptySchemaStruct,
   'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,

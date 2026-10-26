@@ -35,6 +35,9 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Schema compiler hoisting from t3code: `no-inline-schema-compile` reports `Schema.decode*`, `Schema.encode*`,
   `Schema.is`, and `Schema.asserts` compilers that are built and invoked inside a function body when their schema
   could be hoisted to module scope.
+- Log results: `no-effect-as-on-log` reports `Effect.as`, `Effect.asSome` and `Effect.asVoid` applied to an
+  `Effect.log*` or `Console.*` log effect (`.pipe(Effect.as(x))`, `pipe(log, Effect.as(x))` or data-first). Write
+  `Effect.gen` that `yield*`s the log and returns the value instead.
 - Schema chain style: `consistent-schema-pipe` applies Schema modifiers and data-last steps with `.pipe(...)`
   (`Schema.String.pipe(Schema.optionalKey)`) and calls Schema wrappers such as `Schema.Array(...)` directly. See
   [ADR 0001](../../docs/adr/0001-schema-modifiers-pipe-wrappers-call.md).
