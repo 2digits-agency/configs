@@ -1,3 +1,15 @@
+## @2digits/eslint-config@5.9.8
+
+### Update @typescript-eslint/parser to 8.72.1
+
+
+
+### Update typescript-eslint to 8.72.1
+
+
+
+### Update @typescript-eslint/utils to 8.72.1
+
 ## @2digits/eslint-config@5.9.7
 
 ### Type-check with tsrs

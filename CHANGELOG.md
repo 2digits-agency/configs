@@ -1,3 +1,15 @@
+## @2digits/config-monorepo@0.1.17
+
+### Update @effect/tsgo to 0.59.0
+
+
+
+### Update tsrs to 0.20.0-ts7.1.0-beta
+
+
+
+### Update renovate to 44.186.2
+
 ## @2digits/config-monorepo@0.1.16
 
 ### Type-check with tsrs
