@@ -32,7 +32,7 @@
     "docs:dev": "eslint-config-inspector",
     "test": "vitest run",
     "test:watch": "vitest",
-    "types": "tsgo --noEmit"
+    "types": "tsrs --noEmit"
   },
   "dependencies": {
     "@2digits/constants": "workspace:*",
@@ -91,7 +91,6 @@
     "@eslint/config-inspector": "catalog:",
     "@types/react": "catalog:",
     "@typescript-eslint/scope-manager": "catalog:",
-    "@typescript/native-preview": "catalog:eslint",
     "dedent": "catalog:",
     "eslint": "catalog:",
     "eslint-typegen": "catalog:",
@@ -100,6 +99,7 @@
     "tailwindcss": "catalog:",
     "tinyexec": "catalog:",
     "tinyglobby": "catalog:",
+    "tsrs": "catalog:",
     "typescript": "catalog:eslint",
     "vite-plus": "catalog:",
     "vitest": "catalog:",

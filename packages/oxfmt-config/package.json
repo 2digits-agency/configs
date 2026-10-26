@@ -28,7 +28,7 @@
     "dev": "vp pack --watch --config-loader unconfig",
     "test": "vitest run",
     "test:watch": "vitest",
-    "types": "tsc --noEmit"
+    "types": "tsrs --noEmit"
   },
   "dependencies": {
     "@2digits/constants": "workspace:*",
@@ -39,9 +39,11 @@
     "@2digits/tsconfig": "workspace:*",
     "@arethetypeswrong/core": "catalog:",
     "@types/node": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "oxfmt": "catalog:",
     "prettier": "catalog:",
     "publint": "catalog:",
+    "tsrs": "catalog:",
     "typescript": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
