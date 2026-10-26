@@ -1,3 +1,11 @@
+## @2digits/oxlint-config@2.2.0
+
+### Enable `eslint-plugin-de-morgan`
+
+The preset now loads `eslint-plugin-de-morgan` as the `boolean` JS plugin, matching the ESLint config, and reports
+negated conjunctions and disjunctions such as `!(a && b)` with `boolean/no-negated-conjunction` and
+`boolean/no-negated-disjunction`.
+
 ## @2digits/oxlint-config@2.1.7
 
 ### Type-check with tsrs

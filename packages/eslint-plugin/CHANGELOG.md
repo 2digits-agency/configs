@@ -1,3 +1,11 @@
+## @2digits/eslint-plugin@4.0.36
+
+### Update @typescript-eslint/utils to 8.72.1
+
+
+
+### Update @typescript-eslint/scope-manager to 8.72.1
+
 ## @2digits/eslint-plugin@4.0.35
 
 ### Type-check with tsrs

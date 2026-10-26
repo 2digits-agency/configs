@@ -1,3 +1,7 @@
+## @2digits/cli@2.0.35
+
+### Update nypm to 0.6.12
+
 ## @2digits/cli@2.0.34
 
 ### Type-check with tsrs

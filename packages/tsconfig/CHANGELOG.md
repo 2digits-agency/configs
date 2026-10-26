@@ -1,3 +1,9 @@
+## @2digits/tsconfig@1.0.6
+
+### Expand Effect namespace imports
+
+Prefer namespace imports for all public packages in the Alchemy, Effect, and Yielded auth monorepos, keeping the existing barrel-import exception for `@effect/vitest`.
+
 ## @2digits/tsconfig@1.0.5
 
 ### Update @effect/tsgo to 0.57.0
