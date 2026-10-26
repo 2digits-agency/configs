@@ -16,10 +16,11 @@ const effectImportAliases: Readonly<Record<string, string>> = {
   String: 'Str',
 };
 
-const moduleNamePattern = /^\p{Lu}/u;
+const moduleNamePattern = /^\p{Lu}[^_]*$/u;
 
 /**
- * Effect and Alchemy module namespaces are PascalCase; lowercase exports are plain values.
+ * Effect and Alchemy module namespaces are PascalCase; lowercase and SCREAMING_SNAKE exports such as `ALCHEMY_DEV` are
+ * plain values.
  *
  * @param name Exported or submodule name.
  */

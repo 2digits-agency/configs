@@ -14,7 +14,10 @@ testRule('no-effect-alchemy-barrel-imports', noEffectAlchemyBarrelImports, {
 });
 
 testRule('no-effect-alchemy-barrel-imports', noEffectAlchemyBarrelImports, {
-  valid: `import * as Cloudflare from 'alchemy/Cloudflare'`,
+  valid: `
+    import * as Cloudflare from 'alchemy/Cloudflare'
+    import { ALCHEMY_DEV } from 'alchemy'
+  `,
   invalid: `import { Cloudflare } from 'alchemy'`,
   output: `import * as Cloudflare from 'alchemy/Cloudflare';`,
   messageId: 'barrelImport',

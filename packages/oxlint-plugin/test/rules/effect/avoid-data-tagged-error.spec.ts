@@ -4,7 +4,7 @@ import { testRule } from '../../rule-tester';
 testRule('avoid-data-tagged-error', avoidDataTaggedError, {
   valid: `
     import * as Schema from 'effect/Schema'
-    class ApiError extends Schema.TaggedErrorClass<ApiError>()('ApiError', {}) {}
+    class ApiError extends Schema.TaggedError<ApiError>()('ApiError', {}) {}
   `,
   invalid: `
     import { TaggedError as Tagged } from 'effect/Data'

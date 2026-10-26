@@ -18,6 +18,7 @@ export const twoDigitsPluginConfig = defineConfig({
       'error',
       { blankLine: 'always', prev: '*', next: '*' },
       { blankLine: 'any', prev: 'import', next: 'import' },
+      { blankLine: 'any', prev: 'case', next: 'case' },
     ],
   },
 });
