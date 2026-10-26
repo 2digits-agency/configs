@@ -1,3 +1,14 @@
+## @2digits/cli@2.0.34
+
+### Type-check with tsrs
+
+- Type checks now run on [tsrs](https://github.com/oxc-project/tsrs) 0.18.0, the Rust port of the TypeScript 7 compiler, instead of `tsc` and `tsgo`.
+- `effect-tsgo patch --tsrs` now patches tsrs on install, so type checks still report Effect diagnostics.
+
+### Remove the unused Effect language service dependency
+
+- Removed `@effect/language-service` from CLI development dependencies and its Knip exclusion.
+
 ## @2digits/cli@2.0.33
 
 ### Update @effect/platform-node to 4.0.6

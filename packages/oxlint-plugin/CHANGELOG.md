@@ -1,3 +1,16 @@
+## @2digits/oxlint-plugin@0.3.6
+
+### Type-check with tsrs
+
+- Type checks now run on [tsrs](https://github.com/oxc-project/tsrs) 0.18.0, the Rust port of the TypeScript 7 compiler, instead of `tsc` and `tsgo`.
+- `effect-tsgo patch --tsrs` now patches tsrs on install, so type checks still report Effect diagnostics.
+
+### Fix three misleading lint results
+
+- The default `2digits/padding-line-between-statements` options no longer require a blank line between grouped `case` clauses. `--fix` used to split `case 'a':` from `case 'b':`, which then failed `no-fallthrough`.
+- `2digits/avoid-data-tagged-error` now recommends `Schema.TaggedError`; Effect 4 does not export `Schema.TaggedErrorClass`.
+- `2digits/no-effect-alchemy-barrel-imports` no longer treats SCREAMING_SNAKE values such as `ALCHEMY_DEV` as modules, so it stops suggesting and autofixing to the nonexistent `alchemy/ALCHEMY_DEV`.
+
 ## @2digits/oxlint-plugin@0.3.5
 
 ### Update effect to 4.0.6

@@ -1,3 +1,12 @@
+## @2digits/tlo-mcp@2.0.10
+
+### Type-check with tsrs
+
+- Type checks now run on [tsrs](https://github.com/oxc-project/tsrs) 0.18.0, the Rust port of the TypeScript 7 compiler, instead of `tsc` and `tsgo`.
+- `effect-tsgo patch --tsrs` now patches tsrs on install, so type checks still report Effect diagnostics.
+
+### Update @yielded/oauth to 0.1.0-beta.46
+
 ## @2digits/tlo-mcp@2.0.9
 
 ### Update @effect/platform-node to 4.0.6

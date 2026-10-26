@@ -1,3 +1,10 @@
+## @2digits/constants@1.1.21
+
+### Type-check with tsrs
+
+- Type checks now run on [tsrs](https://github.com/oxc-project/tsrs) 0.18.0, the Rust port of the TypeScript 7 compiler, instead of `tsc` and `tsgo`.
+- `effect-tsgo patch --tsrs` now patches tsrs on install, so type checks still report Effect diagnostics.
+
 ## @2digits/constants@1.1.20
 
 ### Configure declaration generation with the current Vite+ API

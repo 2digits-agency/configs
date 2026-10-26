@@ -1,149 +1,95 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.57.0\n"
-    filename: 2026-10-25-bright-herons-cedar.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/constants:\n    type: patch\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n  npm:@2digits/opencode-plugin:\n    type: patch\n  npm:@2digits/oxfmt-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/prettier-config:\n    type: patch\n  npm:@2digits/renovate-config:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Type-check with tsrs\n\n- Type checks now run on [tsrs](https://github.com/oxc-project/tsrs) 0.18.0, the Rust port of the TypeScript 7 compiler, instead of `tsc` and `tsgo`.\n- `effect-tsgo patch --tsrs` now patches tsrs on install, so type checks still report Effect diagnostics.\n"
+    filename: 2026-10-25-brisk-kites-poplar.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update oxlint-tsgolint to 7.0.2005\n"
-    filename: 2026-10-25-fair-eagles-larch.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update baseline-browser-mapping to 2.11.33\n"
+    filename: 2026-10-26-crisp-falcons-ash.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pkg-pr-new to 0.0.92\n"
-    filename: 2026-10-25-grand-puffins-hazel.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Migrate dependency build approvals to permissions\n\n- Replaced `allowBuilds` with per-package `permissions` in `pnpm-workspace.yaml`.\n- Disabled builds for `core-js-pure`, `protobufjs`, and `re2`, and removed explicit approvals for `@parcel/watcher` and `better-sqlite3`.\n"
+    filename: 2026-10-26-gentle-ravens-pine.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update vite-plus to 1.4.0\n"
-    filename: 2026-10-25-light-beavers-alder.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n## Remove the unused Effect language service dependency\n\n- Removed `@effect/language-service` from CLI development dependencies and its Knip exclusion.\n"
+    filename: 2026-10-26-lucky-finches-beech.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update knip to 6.43.0\n"
-    filename: 2026-10-25-lucky-martens-ivy.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-drizzle to 1.0.0-rc.5\n"
+    filename: 2026-10-26-bright-herons-cedar.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update baseline-browser-mapping to 2.11.32\n"
-    filename: 2026-10-25-merry-storks-spruce.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-storybook to 10.6.4\n"
+    filename: 2026-10-26-calm-foxes-willow.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update @voidzero-dev/vite-plus-core to 1.4.0\n"
-    filename: 2026-10-25-proud-geese-heather.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @tanstack/eslint-plugin-query to 5.105.0\n"
+    filename: 2026-10-26-quiet-otters-maple.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update voidzero-dev/setup-vp to 1.22.0\n"
-    filename: 2026-10-25-ready-moles-aspen.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update graphql-config to 6.0.0\n"
+    filename: 2026-10-26-swift-robins-birch.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Allow eslint-vitest-rule-tester skills\n\n- Enabled dependency-provided skills and ignored generated `pnpm-*` skill directories.\n"
-    filename: 2026-10-25-tidy-larks-cypress.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n### Fix three misleading lint results\n\n- The default `2digits/padding-line-between-statements` options no longer require a blank line between grouped `case` clauses. `--fix` used to split `case 'a':` from `case 'b':`, which then failed `no-fallthrough`.\n- `2digits/avoid-data-tagged-error` now recommends `Schema.TaggedError`; Effect 4 does not export `Schema.TaggedErrorClass`.\n- `2digits/no-effect-alchemy-barrel-imports` no longer treats SCREAMING_SNAKE values such as `ALCHEMY_DEV` as modules, so it stops suggesting and autofixing to the nonexistent `alchemy/ALCHEMY_DEV`.\n"
+    filename: 2026-10-26-steady-wrens-oak.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update @oxc-node/cli to 1.0.1\n"
-    filename: 2026-10-25-warm-robins-ash.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update GitButler skill to 0.5.2244\n"
-    filename: 2026-10-25-wise-owls-rowan.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @effect/platform-node to 4.0.6\n"
-    filename: 2026-10-25-calm-otters-maple.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update effect to 4.0.6\n"
-    filename: 2026-10-25-clear-finches-moss.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-unicorn to 79.0.0\n\n- Extended `unicorn/prefer-smaller-scope` checks to type aliases.\n- Added generated types for the `unicorn/comment-content` `ignore` option and `unicorn/no-top-level-side-effects` `checkUnknownCalls` option.\n"
-    filename: 2026-10-25-bold-swans-thyme.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @vitest/eslint-plugin to 1.6.28\n"
-    filename: 2026-10-25-crisp-lynxes-oak.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update eslint-plugin-zod to 5.2.2\n"
-    filename: 2026-10-25-even-cranes-clover.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-antfu to 3.3.1\n\n- Added generated option types for `antfu/reasonable-newline`.\n"
-    filename: 2026-10-25-fresh-wrens-fern.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/kit to 5.28.8\n"
-    filename: 2026-10-25-gentle-ravens-birch.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-jsdoc to 65.4.2\n"
-    filename: 2026-10-25-kind-pandas-sage.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-de-morgan to 2.3.0\n"
-    filename: 2026-10-25-mild-hawks-reed.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @eslint-react/eslint-plugin to 5.28.8\n"
-    filename: 2026-10-25-quiet-foxes-willow.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @next/eslint-plugin-next to 16.4.3\n"
-    filename: 2026-10-25-swift-badgers-pine.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update posthog-node to 5.57.2\n"
-    filename: 2026-10-25-neat-sparrows-yew.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update @opencode-ai/plugin to 1.19.4\n"
-    filename: 2026-10-25-soft-falcons-elm.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @opentunnel/client to 0.6.1\n"
-    filename: 2026-10-25-keen-seals-laurel.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @yielded/oauth to 0.1.0-beta.44\n"
-    filename: 2026-10-25-still-doves-juniper.md
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @yielded/oauth to 0.1.0-beta.46\n"
+    filename: 2026-10-26-mellow-badgers-elm.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-10-25-bright-herons-cedar.md
-      - 2026-10-25-fair-eagles-larch.md
-      - 2026-10-25-grand-puffins-hazel.md
-      - 2026-10-25-light-beavers-alder.md
-      - 2026-10-25-lucky-martens-ivy.md
-      - 2026-10-25-merry-storks-spruce.md
-      - 2026-10-25-proud-geese-heather.md
-      - 2026-10-25-ready-moles-aspen.md
-      - 2026-10-25-tidy-larks-cypress.md
-      - 2026-10-25-warm-robins-ash.md
-      - 2026-10-25-wise-owls-rowan.md
+      - 2026-10-25-brisk-kites-poplar.md
+      - 2026-10-26-crisp-falcons-ash.md
+      - 2026-10-26-gentle-ravens-pine.md
     id: npm:@2digits/config-monorepo
     updated: true
   - changelogIds:
-      - 2026-10-25-calm-otters-maple.md
-      - 2026-10-25-clear-finches-moss.md
+      - 2026-10-25-brisk-kites-poplar.md
+      - 2026-10-26-lucky-finches-beech.md
     id: npm:@2digits/cli
     updated: true
-  - id: npm:@2digits/constants
-    updated: false
   - changelogIds:
-      - 2026-10-25-bold-swans-thyme.md
-      - 2026-10-25-crisp-lynxes-oak.md
-      - 2026-10-25-even-cranes-clover.md
-      - 2026-10-25-fresh-wrens-fern.md
-      - 2026-10-25-gentle-ravens-birch.md
-      - 2026-10-25-kind-pandas-sage.md
-      - 2026-10-25-mild-hawks-reed.md
-      - 2026-10-25-quiet-foxes-willow.md
-      - 2026-10-25-swift-badgers-pine.md
+      - 2026-10-25-brisk-kites-poplar.md
+    id: npm:@2digits/constants
+    updated: true
+  - changelogIds:
+      - 2026-10-25-brisk-kites-poplar.md
+      - 2026-10-26-bright-herons-cedar.md
+      - 2026-10-26-calm-foxes-willow.md
+      - 2026-10-26-quiet-otters-maple.md
+      - 2026-10-26-swift-robins-birch.md
     id: npm:@2digits/eslint-config
     updated: true
-  - id: npm:@2digits/eslint-plugin
-    updated: false
   - changelogIds:
-      - 2026-10-25-neat-sparrows-yew.md
-      - 2026-10-25-soft-falcons-elm.md
+      - 2026-10-25-brisk-kites-poplar.md
+    id: npm:@2digits/eslint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-10-25-brisk-kites-poplar.md
     id: npm:@2digits/opencode-plugin
     updated: true
-  - id: npm:@2digits/oxfmt-config
-    updated: false
   - changelogIds:
-      - 2026-10-25-even-cranes-clover.md
-      - 2026-10-25-fair-eagles-larch.md
+      - 2026-10-25-brisk-kites-poplar.md
+    id: npm:@2digits/oxfmt-config
+    updated: true
+  - changelogIds:
+      - 2026-10-25-brisk-kites-poplar.md
+      - 2026-10-26-steady-wrens-oak.md
     id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-10-25-clear-finches-moss.md
+      - 2026-10-25-brisk-kites-poplar.md
+      - 2026-10-26-steady-wrens-oak.md
     id: npm:@2digits/oxlint-plugin
     updated: true
-  - id: npm:@2digits/prettier-config
-    updated: false
-  - id: npm:@2digits/renovate-config
-    updated: false
   - changelogIds:
-      - 2026-10-25-calm-otters-maple.md
-      - 2026-10-25-clear-finches-moss.md
-      - 2026-10-25-keen-seals-laurel.md
-      - 2026-10-25-still-doves-juniper.md
+      - 2026-10-25-brisk-kites-poplar.md
+    id: npm:@2digits/prettier-config
+    updated: true
+  - changelogIds:
+      - 2026-10-25-brisk-kites-poplar.md
+    id: npm:@2digits/renovate-config
+    updated: true
+  - changelogIds:
+      - 2026-10-25-brisk-kites-poplar.md
+      - 2026-10-26-mellow-badgers-elm.md
     id: npm:@2digits/tlo-mcp
     updated: true
-  - changelogIds:
-      - 2026-10-25-bright-herons-cedar.md
-    id: npm:@2digits/tsconfig
-    updated: true
+  - id: npm:@2digits/tsconfig
+    updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
