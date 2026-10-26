@@ -1,3 +1,19 @@
+## @2digits/config-monorepo@0.1.16
+
+### Type-check with tsrs
+
+- Type checks now run on [tsrs](https://github.com/oxc-project/tsrs) 0.18.0, the Rust port of the TypeScript 7 compiler, instead of `tsc` and `tsgo`.
+- `effect-tsgo patch --tsrs` now patches tsrs on install, so type checks still report Effect diagnostics.
+
+### Update baseline-browser-mapping to 2.11.33
+
+
+
+### Migrate dependency build approvals to permissions
+
+- Replaced `allowBuilds` with per-package `permissions` in `pnpm-workspace.yaml`.
+- Disabled builds for `core-js-pure`, `protobufjs`, and `re2`, and removed explicit approvals for `@parcel/watcher` and `better-sqlite3`.
+
 ## @2digits/config-monorepo@0.1.15
 
 ### Update @effect/tsgo to 0.57.0

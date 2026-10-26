@@ -1,3 +1,10 @@
+## @2digits/prettier-config@4.0.52
+
+### Type-check with tsrs
+
+- Type checks now run on [tsrs](https://github.com/oxc-project/tsrs) 0.18.0, the Rust port of the TypeScript 7 compiler, instead of `tsc` and `tsgo`.
+- `effect-tsgo patch --tsrs` now patches tsrs on install, so type checks still report Effect diagnostics.
+
 ## @2digits/prettier-config@4.0.51
 
 ### Update prettier to 3.9.10

@@ -1,3 +1,10 @@
+## @2digits/eslint-plugin@4.0.35
+
+### Type-check with tsrs
+
+- Type checks now run on [tsrs](https://github.com/oxc-project/tsrs) 0.18.0, the Rust port of the TypeScript 7 compiler, instead of `tsc` and `tsgo`.
+- `effect-tsgo patch --tsrs` now patches tsrs on install, so type checks still report Effect diagnostics.
+
 ## @2digits/eslint-plugin@4.0.34
 
 ### Update typescript-eslint to 8.71.2
