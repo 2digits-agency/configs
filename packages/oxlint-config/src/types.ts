@@ -34,3 +34,31 @@ export interface OptionsWithIgnores {
    */
   ignores?: Array<string>;
 }
+
+export interface OptionsWithDrizzle extends OptionsOverrides {
+  /**
+   * Object names which refer to a Drizzle instance.
+   *
+   * @default ```['drizzle', 'db']```
+   */
+  drizzleObjectName?: string | Array<string>;
+}
+
+export interface OptionsWithStorybook extends OptionsWithFiles {
+  /**
+   * The storybook configuration directory.
+   *
+   * @default '.storybook'
+   */
+  storybookDirectory?: string;
+}
+
+export interface OptionsWithTailwind extends OptionsOverrides {
+  /**
+   * Tailwind CSS v4 stylesheet entrypoint, absolute or relative to the project root.
+   *
+   * When omitted, a `tailwind.config.ts` (preferred) or `tailwind.config.js` is discovered by walking up to the Git
+   * root and loaded through Tailwind v4's `@config` directive. When none is found, the Tailwind config is not enabled.
+   */
+  cssConfigPath?: string;
+}

@@ -20,5 +20,7 @@ export default defineConfig({
   },
   test: {
     include: ['test/**/*.spec.ts'],
+    // Fixture tests spawn the real Oxlint binary, which loads every JS plugin.
+    testTimeout: 30_000,
   },
 });

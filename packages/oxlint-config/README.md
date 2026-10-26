@@ -20,6 +20,18 @@ export default twoDigits(
 );
 ```
 
+Like the ESLint config, the preset also loads these ESLint plugins through Oxlint's `jsPlugins`, using the same rule
+prefixes, options and toggles:
+
+- Always on: `antfu`, `boolean` (de-morgan), `sonar`, `regexp`, and `depend` (toggle with `depend`).
+- When their package is installed: `turbo`, `next`, `storybook`, `tailwind`, `tanstackQuery`, `tanstackRouter` and
+  `drizzle`. Each accepts `overrides`; `next` and `storybook` accept `files`, `storybook` accepts `storybookDirectory`,
+  `tailwind` accepts `cssConfigPath`, and `drizzle` accepts `drizzleObjectName`.
+
+Next.js rules that Oxlint implements natively run as `nextjs/*`; only `next/no-location-assign-relative-destination`
+comes from `@next/eslint-plugin-next`. The ESLint config's `comments`, `css`, `jsonc`, `yaml`, `toml`, `markdown`,
+`graphql`, `github-action` and `pnpm` configs aren't ported (see the changelog).
+
 The default preset enables `2digits/padding-line-between-statements`: statements require a blank line between them,
 including variable declarations, control flow, and returns. Consecutive imports may stay grouped; existing import
 group spacing is preserved. Run Oxlint with `--fix` to insert missing blank lines.

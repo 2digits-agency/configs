@@ -9,7 +9,20 @@ import eslintTwoDigits from '@2digits/eslint-config';
 import { recommendedRules } from '@2digits/oxlint-plugin';
 
 import twoDigits, { type FlatConfigItem, type RuleName } from '../src';
-import { javascript, node, react, twoDigitsPlugin, typescript, unicorn, vitest, zod } from '../src/configs';
+import {
+  antfu,
+  boolean,
+  javascript,
+  node,
+  react,
+  regexp,
+  sonar,
+  twoDigitsPlugin,
+  typescript,
+  unicorn,
+  vitest,
+  zod,
+} from '../src/configs';
 import { runOxlint, withTemporaryProject } from './oxlint';
 
 /**
@@ -20,6 +33,15 @@ import { runOxlint, withTemporaryProject } from './oxlint';
  */
 function rulesOf(configs: Array<FlatConfigItem>, name: string) {
   return configs.find((config) => config.name === name)?.rules ?? {};
+}
+
+/**
+ * The plugin rules of a rule map, without core rules.
+ *
+ * @param rules Rule map.
+ */
+function pluginRules(rules: object = {}) {
+  return Object.fromEntries(Object.entries(rules).filter(([rule]) => rule.includes('/')));
 }
 
 const javascriptRules = rulesOf(javascript(), '2digits:javascript');
@@ -50,6 +72,8 @@ function jsPluginOf(config: FlatConfigItem | undefined) {
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
+
+const pluginsFixtureDirectory = fileURLToPath(new URL('fixtures/plugins', import.meta.url));
 
 const headerFixtureDirectory = fileURLToPath(new URL('fixtures/http-api-headers', import.meta.url));
 
@@ -281,6 +305,44 @@ describe('oxlint config', () => {
 
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(JSON.stringify(twoDigits({ react: true, ts: true, vitest: true, zod: true }))).not.toContain('effecttsgo');
+  });
+
+  it.for([
+    { name: '2digits:antfu', configs: antfu() },
+    { name: '2digits:boolean', configs: boolean() },
+    { name: '2digits:regexp', configs: regexp() },
+    { name: '2digits:sonar', configs: sonar() },
+  ])('matches the plugin rules of the ESLint $name config', ({ name, configs }) => {
+    const eslintRules = pluginRules(eslintConfig.find((config) => config.name === name)?.rules);
+
+    expect(Object.keys(eslintRules)).not.toHaveLength(0);
+
+    expect(pluginRules(rulesOf(configs, name))).toStrictEqual(eslintRules);
+  });
+
+  it('loads and executes every ported ESLint plugin', () => {
+    const { status, output } = runOxlint(pluginsFixtureDirectory, '.');
+
+    expect(status, output).toBe(1);
+
+    for (const diagnostic of [
+      'antfu(top-level-function)',
+      'boolean(no-negated-disjunction)',
+      'depend(ban-dependencies)',
+      'drizzle(enforce-delete-with-where)',
+      // The native `nextjs` plugin and the `next` JS plugin both print as `next`.
+      'next(no-img-element)',
+      'next(no-location-assign-relative-destination)',
+      'regexp(prefer-d)',
+      'sonar(no-identical-functions)',
+      'storybook(default-exports)',
+      'tailwindcss(no-contradicting-classname)',
+      'tanstack-query(no-rest-destructuring)',
+      'tanstack-router(create-route-property-order)',
+      'turbo(no-undeclared-env-vars)',
+    ]) {
+      expect(output, diagnostic).toContain(diagnostic);
+    }
   });
 
   it('loads and executes eslint-plugin-zod', () => {

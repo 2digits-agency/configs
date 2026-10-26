@@ -971,9 +971,48 @@ importers:
       '@2digits/oxlint-plugin':
         specifier: workspace:*
         version: link:../oxlint-plugin
+      '@next/eslint-plugin-next':
+        specifier: 'catalog:'
+        version: 16.4.3(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
       '@stylistic/eslint-plugin':
         specifier: 'catalog:'
         version: 5.10.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+      '@tanstack/eslint-plugin-query':
+        specifier: 'catalog:'
+        version: 5.105.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta)
+      '@tanstack/eslint-plugin-router':
+        specifier: 'catalog:'
+        version: 1.162.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta)
+      empathic:
+        specifier: 'catalog:'
+        version: 2.1.0
+      eslint-plugin-antfu:
+        specifier: 'catalog:'
+        version: 3.3.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+      eslint-plugin-de-morgan:
+        specifier: 'catalog:'
+        version: 2.3.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+      eslint-plugin-depend:
+        specifier: 'catalog:'
+        version: 1.5.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+      eslint-plugin-drizzle:
+        specifier: 'catalog:'
+        version: 1.0.0-rc.5(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+      eslint-plugin-regexp:
+        specifier: 'catalog:'
+        version: 3.3.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+      eslint-plugin-sonarjs:
+        specifier: 'catalog:'
+        version: 4.2.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+      eslint-plugin-storybook:
+        specifier: 'catalog:'
+        version: 10.6.4(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta)
+      eslint-plugin-tailwindcss:
+        specifier: 'catalog:'
+        version: 4.4.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(tailwindcss@4.3.3)(typescript@7.1.0-beta)
+      eslint-plugin-turbo:
+        specifier: 'catalog:'
+        version: 2.11.10(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(turbo@2.11.10)
       eslint-plugin-zod:
         specifier: 'catalog:'
         version: 5.2.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(oxlint@1.89.0(oxlint-tsgolint@7.0.2005)(vite-plus@1.4.0(@arethetypeswrong/core@0.18.5)(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@typescript/native-preview@7.0.0-dev.20260707.2)(@vitest/ui@5.0.5)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@7.1.0-beta)(yaml@2.9.1)))(zod@4.6.7)
@@ -1011,6 +1050,9 @@ importers:
       publint:
         specifier: 'catalog:'
         version: 0.3.25
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 4.3.3
       tsrs:
         specifier: 'catalog:'
         version: 0.20.0-ts7.1.0-beta
@@ -10104,9 +10146,26 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@tanstack/eslint-plugin-query@5.105.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta)':
+    dependencies:
+      '@typescript-eslint/utils': 8.72.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta)
+      eslint: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
+    optionalDependencies:
+      typescript: 7.1.0-beta
+    transitivePeerDependencies:
+      - supports-color
+
   '@tanstack/eslint-plugin-router@1.162.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/utils': 8.72.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
+      eslint: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  '@tanstack/eslint-plugin-router@1.162.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta)':
+    dependencies:
+      '@typescript-eslint/utils': 8.72.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta)
       eslint: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
@@ -10332,6 +10391,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@typescript-eslint/project-service@8.72.1(supports-color@7.2.0)(typescript@7.1.0-beta)':
+    dependencies:
+      '@typescript-eslint/tsconfig-utils': 8.72.1(typescript@7.1.0-beta)
+      '@typescript-eslint/types': 8.72.0
+      debug: 4.4.3(supports-color@7.2.0)
+      typescript: 7.1.0-beta
+    transitivePeerDependencies:
+      - supports-color
+
   '@typescript-eslint/scope-manager@8.72.1':
     dependencies:
       '@typescript-eslint/types': 8.72.0
@@ -10344,6 +10412,10 @@ snapshots:
   '@typescript-eslint/tsconfig-utils@8.72.1(typescript@6.0.3)':
     dependencies:
       typescript: 6.0.3
+
+  '@typescript-eslint/tsconfig-utils@8.72.1(typescript@7.1.0-beta)':
+    dependencies:
+      typescript: 7.1.0-beta
 
   '@typescript-eslint/type-utils@8.72.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
@@ -10389,6 +10461,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@typescript-eslint/typescript-estree@8.72.1(supports-color@7.2.0)(typescript@7.1.0-beta)':
+    dependencies:
+      '@typescript-eslint/project-service': 8.72.1(supports-color@7.2.0)(typescript@7.1.0-beta)
+      '@typescript-eslint/tsconfig-utils': 8.72.1(typescript@7.1.0-beta)
+      '@typescript-eslint/types': 8.72.0
+      '@typescript-eslint/visitor-keys': 8.72.1
+      debug: 4.4.3(supports-color@7.2.0)
+      minimatch: 10.2.6
+      semver: 7.8.5
+      tinyglobby: 0.2.17
+      ts-api-utils: 2.5.0(typescript@7.1.0-beta)
+      typescript: 7.1.0-beta
+    transitivePeerDependencies:
+      - supports-color
+
   '@typescript-eslint/utils@8.72.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
@@ -10397,6 +10484,17 @@ snapshots:
       '@typescript-eslint/typescript-estree': 8.72.1(supports-color@7.2.0)(typescript@6.0.3)
       eslint: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
       typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@typescript-eslint/utils@8.72.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta)':
+    dependencies:
+      '@eslint-community/eslint-utils': 4.10.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+      '@typescript-eslint/scope-manager': 8.72.1
+      '@typescript-eslint/types': 8.72.0
+      '@typescript-eslint/typescript-estree': 8.72.1(supports-color@7.2.0)(typescript@7.1.0-beta)
+      eslint: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
+      typescript: 7.1.0-beta
     transitivePeerDependencies:
       - supports-color
 
@@ -11676,6 +11774,15 @@ snapshots:
       - supports-color
       - typescript
 
+  eslint-plugin-storybook@10.6.4(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta):
+    dependencies:
+      '@typescript-eslint/types': 8.72.0
+      '@typescript-eslint/utils': 8.72.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta)
+      eslint: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   eslint-plugin-tailwindcss@4.4.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(tailwindcss@4.3.3)(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/utils': 8.72.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
@@ -11687,6 +11794,20 @@ snapshots:
       tailwindcss: 4.3.3
     optionalDependencies:
       typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  eslint-plugin-tailwindcss@4.4.0(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(tailwindcss@4.3.3)(typescript@7.1.0-beta):
+    dependencies:
+      '@typescript-eslint/utils': 8.72.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@7.1.0-beta)
+      eslint: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
+      postcss: 8.5.16
+      postcss-nested: 7.0.2(postcss@8.5.16)
+      synckit: 0.11.12
+      tailwind-api-utils: 1.0.3(tailwindcss@4.3.3)
+      tailwindcss: 4.3.3
+    optionalDependencies:
+      typescript: 7.1.0-beta
     transitivePeerDependencies:
       - supports-color
 
@@ -14290,6 +14411,10 @@ snapshots:
   ts-api-utils@2.5.0(typescript@6.0.3):
     dependencies:
       typescript: 6.0.3
+
+  ts-api-utils@2.5.0(typescript@7.1.0-beta):
+    dependencies:
+      typescript: 7.1.0-beta
 
   ts-pattern@5.9.2: {}
 
