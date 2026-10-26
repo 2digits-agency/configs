@@ -33,13 +33,18 @@ function preferNamespaceImportImpl(context: RuleContext, { settings }: RuleToolk
 
           const quotedSource = `${quote}${settings.importSource}${quote}`;
 
+          const namespaceImport = `${importPrefix} * as ${defaultSpecifier.local.name} from ${quotedSource}${semi}`;
+
           if (node.specifiers.length === 1) {
-            return fixer.remove(node);
+            return fixer.replaceText(node, namespaceImport);
           }
 
           const namedSpecifiers = importText.slice(importText.indexOf('{'), importText.indexOf('}') + 1);
 
-          return fixer.replaceText(node, `${importPrefix} ${namedSpecifiers} from ${quotedSource}${semi}`);
+          return fixer.replaceText(
+            node,
+            `${namespaceImport}\n${importPrefix} ${namedSpecifiers} from ${quotedSource}${semi}`,
+          );
         },
         message: `Prefer importing React as 'import * as React from "${settings.importSource}"';`,
         node: node.specifiers.length > 1 ? defaultSpecifier : node,

@@ -3,35 +3,24 @@ import * as parser from 'jsonc-eslint-parser';
 
 import { GLOB_JSON, GLOB_JSON5, GLOB_JSONC } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
+import { mergeRules } from '../utils';
 
 export function jsonc(): Array<TypedFlatConfigItem> {
   return [
     ...configs['flat/base'].map((config) => ({ ...config, name: '2digits:jsonc/base' })),
 
-    {
-      name: '2digits:jsonc/json',
-      files: [GLOB_JSON],
+    ...(
+      [
+        ['json', GLOB_JSON],
+        ['jsonc', GLOB_JSONC],
+        ['json5', GLOB_JSON5],
+      ] as const
+    ).map(([format, glob]) => ({
+      name: `2digits:jsonc/${format}`,
+      files: [glob],
       ...SHARED_OPTIONS,
-      rules: {
-        ...collectRules(configs['flat/recommended-with-json']),
-      },
-    },
-    {
-      name: '2digits:jsonc/jsonc',
-      files: [GLOB_JSONC],
-      ...SHARED_OPTIONS,
-      rules: {
-        ...collectRules(configs['flat/recommended-with-jsonc']),
-      },
-    },
-    {
-      name: '2digits:jsonc/json5',
-      files: [GLOB_JSON5],
-      ...SHARED_OPTIONS,
-      rules: {
-        ...collectRules(configs['flat/recommended-with-json5']),
-      },
-    },
+      rules: mergeRules(configs[`flat/recommended-with-${format}`]),
+    })),
 
     {
       name: '2digits:jsonc/package.json',
@@ -194,9 +183,3 @@ const SHARED_OPTIONS = {
     jsonc: plugin,
   },
 } satisfies Pick<TypedFlatConfigItem, 'plugins' | 'languageOptions'>;
-
-type FlatConfigName = Extract<keyof typeof configs, `flat/${string}`>;
-
-function collectRules(config: (typeof configs)[FlatConfigName]) {
-  return Object.fromEntries(config.flatMap(({ rules }) => Object.entries(rules ?? {})));
-}
