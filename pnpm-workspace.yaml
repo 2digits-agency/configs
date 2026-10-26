@@ -1,16 +1,6 @@
 packages:
   - packages/*
 
-allowBuilds:
-  '@parcel/watcher': true
-  better-sqlite3: true
-  core-js-pure: true
-  dtrace-provider: true
-  esbuild: true
-  msgpackr-extract: false
-  protobufjs: true
-  re2: true
-
 catalog:
   '@arethetypeswrong/core': 0.18.5
   '@effect/language-service': 0.87.5
@@ -35,7 +25,7 @@ catalog:
   '@prettier/plugin-oxc': 0.2.3
   '@prettier/plugin-xml': 3.4.2
   '@stylistic/eslint-plugin': 5.10.0
-  '@tanstack/eslint-plugin-query': 5.104.5
+  '@tanstack/eslint-plugin-query': 5.105.0
   '@tanstack/eslint-plugin-router': 1.162.0
   '@types/node': 24.19.2
   '@types/react': 19.3.0
@@ -55,7 +45,7 @@ catalog:
   eslint-plugin-antfu: 3.3.1
   eslint-plugin-de-morgan: 2.3.0
   eslint-plugin-depend: 1.5.0
-  eslint-plugin-drizzle: 0.2.3
+  eslint-plugin-drizzle: 1.0.0-rc.5
   eslint-plugin-github-action: 0.4.0
   eslint-plugin-jsdoc: 65.4.2
   eslint-plugin-jsonc: 3.4.2
@@ -64,7 +54,7 @@ catalog:
   eslint-plugin-react-compiler: 19.1.0-rc.2
   eslint-plugin-regexp: 3.3.1
   eslint-plugin-sonarjs: 4.2.2
-  eslint-plugin-storybook: 10.6.3
+  eslint-plugin-storybook: 10.6.4
   eslint-plugin-tailwindcss: 4.4.0
   eslint-plugin-toml: 1.5.0
   eslint-plugin-turbo: 2.11.10
@@ -75,7 +65,7 @@ catalog:
   eslint-vitest-rule-tester: 3.2.0
   eslint: 10.13.0
   globals: 17.13.0
-  graphql-config: 5.1.8
+  graphql-config: 6.0.0
   jsonc-eslint-parser: 3.3.0
   knip: 6.43.0
   local-pkg: 1.2.1
@@ -92,7 +82,7 @@ catalog:
   prettier: 3.9.10
   publint: 0.3.25
   react: 19.3.1
-  renovate: 44.181.6
+  renovate: 44.182.2
   tailwind-csstree: 0.4.1
   tailwindcss: 4.3.3
   tegami: 1.5.0
@@ -109,7 +99,7 @@ catalog:
   yaml-eslint-parser: 2.1.0
   zod: 4.6.7
   effect-oxlint: 0.4.0
-  '@yielded/oauth': 0.1.0-beta.44
+  '@yielded/oauth': 0.1.0-beta.46
   '@opentunnel/client': 0.6.1
 
 overrides:
@@ -120,7 +110,7 @@ overrides:
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
   array.prototype.flatmap: npm:@nolyfill/array.prototype.flatmap@1.0.44
   array.prototype.tosorted: npm:@nolyfill/array.prototype.tosorted@1.0.44
-  baseline-browser-mapping: 2.11.32
+  baseline-browser-mapping: 2.11.33
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
   '@typescript-eslint/types': 8.72.0
   eslint-plugin-sonarjs>typescript: 'catalog:eslint'
@@ -170,5 +160,17 @@ catalogs:
     typescript: 6.0.3
 
 permissions:
+  core-js-pure:
+    build: false
+  dtrace-provider:
+    build: true
+  esbuild:
+    build: true
   eslint-vitest-rule-tester:
     skills: true
+  msgpackr-extract:
+    build: false
+  protobufjs:
+    build: false
+  re2:
+    build: false
