@@ -13,7 +13,7 @@ const source = ts`
     const fullPath = value.path;
     // Keep this comment with the next declaration.
     const name = fullPath.trim();
-    return name;
+    return name || 'unnamed';
   }
   export const defaultName = filename({ path: ' example ' });
 `;
@@ -28,7 +28,7 @@ const expectedSource = ts`
     // Keep this comment with the next declaration.
     const name = fullPath.trim();
 
-    return name;
+    return name || 'unnamed';
   }
 
   export const defaultName = filename({ path: ' example ' });

@@ -5,3 +5,5 @@ export const GLOB_TS = '**/*.{ts,cts,mts}';
 export const GLOB_TSX = '**/*.tsx';
 
 export const GLOB_TESTS = '**/*.{test,spec}.{ts,tsx}';
+
+export const GLOB_STORIES = '**/*.stories.tsx';
