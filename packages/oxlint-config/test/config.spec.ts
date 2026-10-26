@@ -23,6 +23,8 @@ const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url))
 
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
 
+const booleanFixtureDirectory = fileURLToPath(new URL('fixtures/boolean', import.meta.url));
+
 const headerFixtureDirectory = fileURLToPath(new URL('fixtures/http-api-headers', import.meta.url));
 
 const invalidFixture = 'invalid.mjs';
@@ -263,6 +265,16 @@ describe('oxlint config', () => {
     expect(status).toBe(1);
 
     expect(output).toContain('zod(array-style)');
+  });
+
+  it('loads and executes eslint-plugin-de-morgan', () => {
+    const { status, output } = runOxlint(booleanFixtureDirectory, invalidFixture);
+
+    expect(status).toBe(1);
+
+    expect(output).toContain('boolean(no-negated-conjunction)');
+
+    expect(output).toContain('boolean(no-negated-disjunction)');
   });
 
   it('loads and executes @2digits/oxlint-plugin', () => {
