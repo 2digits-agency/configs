@@ -1,94 +1,80 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.59.0\n"
-    filename: 2026-10-26-bright-otters-maple.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update pnpm to 12.16.0\n"
+    filename: 2026-10-27-brisk-cedar-otter.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update tsrs to 0.20.0-ts7.1.0-beta\n"
-    filename: 2026-10-26-quick-martens-ash.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: minor\n---\n\n## Ship a `monorepo-linting` agent skill\n\nThe package now ships an agent skill that explains how to set up fast typed linting in pnpm and Turborepo monorepos: one ESLint config per package, Turborepo caching instead of `eslint --cache`, and how to diagnose slow lint runs.\n\npnpm 12.11 and later links it into your agent skill directories on install once you approve it with `pnpm approve @2digits/eslint-config`, or add this to `pnpm-workspace.yaml`:\n\n```yaml\npermissions:\n  '@2digits/eslint-config':\n    skills: true\n```\n"
+    filename: 2026-10-27-swift-lint-skill.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update renovate to 44.186.2\n"
-    filename: 2026-10-26-soft-ravens-pine.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Respect `ts.tsconfigRootDir` for TypeScript files\n\n`.ts` files now use the `tsconfigRootDir` passed in the `ts` options instead of always using `process.cwd()`.\n"
+    filename: 2026-10-27-ts-root-dir.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n---\n\n## Update nypm to 0.6.12\n"
-    filename: 2026-10-26-bold-finches-elm.md
+  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update oxfmt to 0.75.0\n"
+    filename: 2026-10-27-silver-pine-wren.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @typescript-eslint/parser to 8.72.1\n"
-    filename: 2026-10-26-calm-foxes-cedar.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: major\n---\n\n### Mirror the ESLint config's factory, built on oxlint-flat-config\n\n`@2digits/oxlint-config` now has the same shape as `@2digits/eslint-config`: the default export\n`twoDigits(options, ...userConfigs)` composes named\n[oxlint-flat-config](https://github.com/liangmiQwQ/oxlint-flat-config) objects (`2digits:javascript`,\n`2digits:typescript/rules`, `2digits:vitest/rules`, ...) and appends your flat config objects after them, so later\nobjects win.\n\n- `ts`, `react`, `vitest` and `zod` are enabled when their package is installed. Pass `true`/`false` or an options\n  object to override; `js`, `ts`, `react`, `vitest` and `zod` accept `overrides` for their rules.\n- Vitest rules apply to test files only, and React rules to `.ts` and `.tsx` files only, like the ESLint config. Both\n  accept `files`.\n- Test globals and the relaxed `no-unused-expressions` now apply to `*.test.ts(x)` and `*.spec.ts(x)` files; the\n  previous glob matched no files. The `vitest.typecheck` setting (option `vitest.typecheck`) now reaches Oxlint.\n\nMigration:\n\n- Replace `withTwoDigits(config)` with `twoDigits(options, ...configs)`.\n- Replace `ignorePatterns: [...]` with `twoDigits({ ignores: { ignores: [...] } })`. Patterns are anchored to the config\n  directory, so write `**/dist` to match at any depth.\n- Replace `overrides: [{ files, rules }]` with separate `{ files, rules }` objects.\n- Drop `plugins` and `categories`; every built-in plugin is enabled and only configured rules run.\n- The `./base` and `./typescript` entry points are removed.\n"
+    filename: 2026-10-26-flat-oxlint-preset.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update typescript-eslint to 8.72.1\n"
-    filename: 2026-10-26-fair-robins-oak.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Update oxlint to 1.90.0\n"
+    filename: 2026-10-27-amber-finch-grove.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update @typescript-eslint/utils to 8.72.1\n"
-    filename: 2026-10-26-kind-badgers-willow.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Update `@oxlint/plugins` to 1.90.0\n"
+    filename: 2026-10-27-quiet-maple-heron.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update @typescript-eslint/scope-manager to 8.72.1\n"
-    filename: 2026-10-26-swift-herons-birch.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n### Enable `eslint-plugin-de-morgan`\n\nThe preset now loads `eslint-plugin-de-morgan` as the `boolean` JS plugin, matching the ESLint config, and reports\nnegated conjunctions and disjunctions such as `!(a && b)` with `boolean/no-negated-conjunction` and\n`boolean/no-negated-disjunction`.\n"
-    filename: 2026-10-26-de-morgan-oxlint.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: minor\n---\n\n### Add `no-effect-as-on-log`\n\nReports `Effect.as`, `Effect.asSome` and `Effect.asVoid` on `Effect.log*` and `Console.*` log effects, such as\n`Effect.logInfo('ignored').pipe(Effect.as(false))`. Use `Effect.gen` to `yield*` the log and return the value instead.\nThe rule is part of `recommendedRules`.\n"
-    filename: 2026-10-26-plain-larks-alder.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Expand Effect namespace imports\n\nPrefer namespace imports for all public packages in the Alchemy, Effect, and Yielded auth monorepos, keeping the existing barrel-import exception for `@effect/vitest`.\n"
-    filename: 2026-10-26-7c9f2a.md
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Pin the `@effect/tsgo` peer dependency\n\nThe optional `@effect/tsgo` peer dependency now uses the same exact version as the development dependency (0.59.0)\ninstead of `^0.45.0`, so installing the version that `effect.json` targets no longer causes a peer mismatch.\n"
+    filename: 2026-10-27-d5ed5c79.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-10-26-bright-otters-maple.md
-      - 2026-10-26-quick-martens-ash.md
-      - 2026-10-26-soft-ravens-pine.md
+      - 2026-10-27-brisk-cedar-otter.md
     id: npm:@2digits/config-monorepo
-    updated: true
-  - changelogIds:
-      - 2026-10-26-bold-finches-elm.md
-    id: npm:@2digits/cli
-    updated: true
-  - changelogIds:
-      - 2026-10-26-calm-foxes-cedar.md
-      - 2026-10-26-fair-robins-oak.md
-      - 2026-10-26-kind-badgers-willow.md
-    id: npm:@2digits/eslint-config
-    updated: true
-  - changelogIds:
-      - 2026-10-26-kind-badgers-willow.md
-      - 2026-10-26-swift-herons-birch.md
-    id: npm:@2digits/eslint-plugin
     updated: true
   - id: npm:@2digits/constants
     updated: false
-  - id: npm:@2digits/oxfmt-config
+  - id: npm:@2digits/cli
     updated: false
   - changelogIds:
-      - 2026-10-26-de-morgan-oxlint.md
-    id: npm:@2digits/oxlint-config
+      - 2026-10-27-swift-lint-skill.md
+      - 2026-10-27-ts-root-dir.md
+    id: npm:@2digits/eslint-config
     updated: true
+  - id: npm:@2digits/eslint-plugin
+    updated: false
   - id: npm:@2digits/opencode-plugin
     updated: false
   - changelogIds:
-      - 2026-10-26-plain-larks-alder.md
-    id: npm:@2digits/oxlint-plugin
+      - 2026-10-27-silver-pine-wren.md
+    id: npm:@2digits/oxfmt-config
+    updated: true
+  - changelogIds:
+      - 2026-10-26-flat-oxlint-preset.md
+      - 2026-10-27-amber-finch-grove.md
+    id: npm:@2digits/oxlint-config
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
   - id: npm:@2digits/renovate-config
     updated: false
+  - changelogIds:
+      - 2026-10-27-quiet-maple-heron.md
+    id: npm:@2digits/oxlint-plugin
+    updated: true
   - id: npm:@2digits/tlo-mcp
     updated: false
   - changelogIds:
-      - 2026-10-26-7c9f2a.md
+      - 2026-10-27-d5ed5c79.md
     id: npm:@2digits/tsconfig
     updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
+  - id: npm:@2digits/constants
   - id: npm:@2digits/cli
   - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
-  - id: npm:@2digits/constants
+  - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
-  - id: npm:@2digits/opencode-plugin
-  - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/prettier-config
   - id: npm:@2digits/renovate-config
+  - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig
