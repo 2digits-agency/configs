@@ -9,9 +9,6 @@ export default defineConfig({
     fixedExtension: true,
     attw: { profile: 'esm-only', level: 'error' },
     publint: { strict: true },
-    format: 'esm',
-    platform: 'node',
-    shims: true,
     exports: true,
   },
   test: {

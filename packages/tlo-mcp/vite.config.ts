@@ -4,7 +4,10 @@ export default defineConfig({
   pack: {
     entry: ['src/bin.ts'],
     dts: false,
-    noExternal: [/^@opentunnel\//],
+    deps: {
+      alwaysBundle: [/^@opentunnel\//],
+      onlyBundle: [/^@opentunnel\//],
+    },
     fixedExtension: true,
     exports: false,
     publint: { strict: true },

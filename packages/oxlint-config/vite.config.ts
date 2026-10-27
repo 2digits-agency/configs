@@ -5,7 +5,6 @@ export default defineConfig({
     entry: ['src/index.ts', 'src/base.ts', 'src/typescript.ts'],
     dts: {
       generator: 'tsgo',
-      sourcemap: true,
     },
     fixedExtension: true,
     exports: {
@@ -16,7 +15,6 @@ export default defineConfig({
       level: 'error',
     },
     publint: { strict: true },
-    shims: true,
   },
   test: {
     include: ['test/**/*.spec.ts'],

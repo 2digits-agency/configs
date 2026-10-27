@@ -10,7 +10,6 @@ export default defineConfig({
     exports: true,
     attw: { profile: 'esm-only', level: 'error' },
     publint: { strict: true },
-    shims: true,
   },
   test: {
     testTimeout: 20_000,

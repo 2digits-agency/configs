@@ -22,8 +22,8 @@
   },
   "scripts": {
     "bin": "oxnode ./src/bin.ts",
-    "build": "vp pack --minify --config-loader unconfig",
-    "dev": "vp pack --watch --config-loader unconfig",
+    "build": "vp pack --minify",
+    "dev": "vp pack --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "types": "tsrs --noEmit"

@@ -29,8 +29,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vp pack --minify --config-loader unconfig",
-    "dev": "vp pack --watch --config-loader unconfig",
+    "build": "vp pack --minify",
+    "dev": "vp pack --watch",
     "types": "tsrs --noEmit"
   },
   "dependencies": {
