@@ -1,18 +1,18 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update `@effect/tsgo` to 0.61.0\n"
-    filename: 2026-10-27-calm-river-lynx.md
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update Effect tsgo\n\n- Updated `@effect/tsgo` to 0.62.0 to support the latest Effect diagnostics.\n"
+    filename: 2026-10-27-effect-tsgo-062.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: minor\n---\n\n## Enable the `flatMapIdentityToFlatten` Effect diagnostic\n\n- Reported `flatMap` calls with an identity callback as errors, suggesting `flatten` instead.\n"
-    filename: 2026-10-27-swift-fern-badger.md
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: minor\n---\n\n## Enable the `mapConstToAs` Effect diagnostic\n\n- Reported `Effect.map` callbacks that ignore their input and return a constant as errors, suggesting `Effect.as` instead.\n"
+    filename: 2026-10-27-map-const-to-as.md
     v: 0.0.0
 core:packages:
   - id: npm:@2digits/config-monorepo
     updated: false
   - id: npm:@2digits/cli
     updated: false
-  - id: npm:@2digits/eslint-config
-    updated: false
   - id: npm:@2digits/constants
+    updated: false
+  - id: npm:@2digits/eslint-config
     updated: false
   - id: npm:@2digits/eslint-plugin
     updated: false
@@ -31,15 +31,15 @@ core:packages:
   - id: npm:@2digits/tlo-mcp
     updated: false
   - changelogIds:
-      - 2026-10-27-calm-river-lynx.md
-      - 2026-10-27-swift-fern-badger.md
+      - 2026-10-27-effect-tsgo-062.md
+      - 2026-10-27-map-const-to-as.md
     id: npm:@2digits/tsconfig
     updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
-  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/constants
+  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
