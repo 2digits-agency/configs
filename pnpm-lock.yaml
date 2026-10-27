@@ -474,7 +474,7 @@ overrides:
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
   array.prototype.flatmap: npm:@nolyfill/array.prototype.flatmap@1.0.44
   array.prototype.tosorted: npm:@nolyfill/array.prototype.tosorted@1.0.44
-  baseline-browser-mapping: 2.11.33
+  baseline-browser-mapping: 2.11.34
   es-iterator-helpers: npm:@nolyfill/es-iterator-helpers@1.0.21
   '@typescript-eslint/types': 8.72.1
   eslint-plugin-sonarjs>typescript: 6.0.3
@@ -4693,8 +4693,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.11.33:
-    resolution: {integrity: sha512-yiVKDX+qCMRKBE084lXvq9EcwFUhKZ2nU8TK1EQQuOgPNR/lmbGxXOeDdlGUqC2Zz11Cs9rk1d/8NfgBmlkt0w==}
+  baseline-browser-mapping@2.11.34:
+    resolution: {integrity: sha512-Aqr8mA1kIvyJ3UY5YAY7ib8LSo1DmDMbMnVqGPtsKW1LxaFQFwn9Eb3yvq2fUKJsRvaXjnAV7R5osqETapzNiA==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -11329,7 +11329,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.11.33: {}
+  baseline-browser-mapping@2.11.34: {}
 
   bignumber.js@9.3.1: {}
 
@@ -11357,7 +11357,7 @@ snapshots:
 
   browserslist@4.29.3:
     dependencies:
-      baseline-browser-mapping: 2.11.33
+      baseline-browser-mapping: 2.11.34
       caniuse-lite: 1.0.30001814
       electron-to-chromium: 1.5.444
       node-releases: 2.0.57
