@@ -1,3 +1,13 @@
+## @2digits/tsconfig@1.1.0
+
+### Update `@effect/tsgo` to 0.61.0
+
+
+
+### Enable the `flatMapIdentityToFlatten` Effect diagnostic
+
+- Reported `flatMap` calls with an identity callback as errors, suggesting `flatten` instead.
+
 ## @2digits/tsconfig@1.0.7
 
 ### Pin the `@effect/tsgo` peer dependency
