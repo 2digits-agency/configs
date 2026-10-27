@@ -11,6 +11,8 @@
   "sideEffects": false,
   "scripts": {
     "build": "oxnode build.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "renovate-config-validator ./default.json ./src/*.json --strict",
     "types": "tsrs --noEmit"
   },

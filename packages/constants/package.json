@@ -23,6 +23,8 @@
   "scripts": {
     "build": "vp pack --minify",
     "dev": "vp pack --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "types": "tsrs --noEmit"
   },
   "devDependencies": {

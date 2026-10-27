@@ -47,6 +47,7 @@
         "**/*.yml",
         "**/*.md",
         "**/*.css",
+        "!packages/**",
         "!**/CHANGELOG.md",
         "!**/fixtures/**",
         "!openspec/**",
@@ -138,10 +139,17 @@
       ]
     },
     "lint": {
-      "dependsOn": ["topo", "^build"],
+      "dependsOn": ["topo", "^build", "@2digits/eslint-config#build"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.gitignore"],
       "outputLogs": "new-only"
     },
-    "lint:fix": {},
-    "//#lint:root:fix": {}
+    "lint:fix": {
+      "dependsOn": ["^build", "@2digits/eslint-config#build"],
+      "cache": false
+    },
+    "//#lint:root:fix": {
+      "dependsOn": ["@2digits/eslint-config#build"],
+      "cache": false
+    }
   }
 }

@@ -76,7 +76,9 @@ describe(buildConfig, () => {
 
     await buildConfig(createCtx(''));
 
-    expect(warn).toHaveBeenCalledOnce();
+    expect(warn).toHaveBeenCalledExactlyOnceWith(
+      expect.stringContaining('ignoring invalid POSTHOG_LLMA_CUSTOM_PROPERTIES JSON'),
+    );
 
     warn.mockClear();
 

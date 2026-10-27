@@ -15,7 +15,7 @@ Each workspace package (`apps/*`, `packages/*`) gets its own config and scripts:
 
 ```ts
 // apps/web/eslint.config.ts
-import twoDigits from '@2digits/eslint-config';
+import { twoDigits } from '@2digits/eslint-config';
 
 export default twoDigits({
   ts: { tsconfigRootDir: import.meta.dirname },
@@ -41,7 +41,7 @@ The root keeps a config only for root-level files and ignores the packages, so n
 
 ```ts
 // eslint.config.ts
-import twoDigits from '@2digits/eslint-config';
+import { twoDigits } from '@2digits/eslint-config';
 
 export default twoDigits({
   ts: { tsconfigRootDir: import.meta.dirname },

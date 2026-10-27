@@ -31,6 +31,8 @@
     "dev": "vp pack --watch",
     "docs": "eslint-config-inspector build",
     "docs:dev": "eslint-config-inspector",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest",
     "types": "tsrs --noEmit"

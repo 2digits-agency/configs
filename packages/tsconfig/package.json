@@ -25,7 +25,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
   "devDependencies": {
     "@effect/tsgo": "catalog:",
     "typescript": "catalog:"
