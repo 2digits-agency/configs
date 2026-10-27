@@ -26,8 +26,6 @@ const workerHandlers = new Set([
   'webSocketMessage',
 ]);
 
-// Not checked against `alchemy/Cloudflare`: its types load over a thousand files, which pushes the repo's type-aware
-// ESLint run past the default Node heap.
 const workerPaths: ReadonlyArray<ReadonlyArray<string>> = [
   ['Cloudflare', 'Worker'],
   ['Cloudflare', 'Workers', 'Worker'],

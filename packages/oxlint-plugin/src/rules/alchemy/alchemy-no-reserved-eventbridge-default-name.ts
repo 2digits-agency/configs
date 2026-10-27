@@ -1,5 +1,4 @@
 import type { Rule } from '@oxlint/plugins';
-import type * as EventBridge from 'alchemy/AWS/EventBridge';
 
 import { argumentAt, defineEffectRule, isApiPath, isLiteral, objectProperty, ruleMeta } from '../../utils';
 
@@ -15,8 +14,7 @@ export const alchemyNoReservedEventbridgeDefaultName: Rule = defineEffectRule(
   ),
   (context, getState) => ({
     CallExpression(node) {
-      // `alchemy/AWS` exports `alchemy/AWS/EventBridge` as `EventBridge`; the submodule is much cheaper to type check.
-      if (!isApiPath(node.callee, getState(), ['AWS', 'EventBridge', 'EventBus' satisfies keyof typeof EventBridge])) {
+      if (!isApiPath(node.callee, getState(), ['AWS', 'EventBridge', 'EventBus'])) {
         return;
       }
 
