@@ -16,7 +16,6 @@ export default defineConfig({
       level: 'error',
     },
     publint: { strict: true },
-    shims: true,
   },
   test: {
     include: ['test/**/*.spec.ts'],

@@ -15,7 +15,6 @@ export default defineConfig({
     exports: true,
     attw: { profile: 'esm-only', level: 'error' },
     publint: { strict: true },
-    shims: true,
     hooks(ctx) {
       ctx.hook('build:prepare', async () => {
         const sourceConfigs = await import('./src/configs');

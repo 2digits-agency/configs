@@ -10,6 +10,5 @@ export default defineConfig({
     attw: { profile: 'strict', level: 'error' },
     publint: { strict: true },
     format: ['esm', 'cjs'],
-    shims: true,
   },
 });
