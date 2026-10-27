@@ -1,3 +1,7 @@
+## @2digits/oxlint-plugin@0.4.1
+
+### Update `@oxlint/plugins` to 1.90.0
+
 ## @2digits/oxlint-plugin@0.4.0
 
 ### Add `no-effect-as-on-log`

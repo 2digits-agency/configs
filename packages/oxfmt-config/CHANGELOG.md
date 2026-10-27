@@ -1,3 +1,7 @@
+## @2digits/oxfmt-config@0.3.32
+
+### Update oxfmt to 0.75.0
+
 ## @2digits/oxfmt-config@0.3.31
 
 ### Type-check with tsrs

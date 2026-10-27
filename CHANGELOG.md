@@ -1,3 +1,7 @@
+## @2digits/config-monorepo@0.1.18
+
+### Update pnpm to 12.16.0
+
 ## @2digits/config-monorepo@0.1.17
 
 ### Update @effect/tsgo to 0.59.0

@@ -1,3 +1,10 @@
+## @2digits/tsconfig@1.0.7
+
+### Pin the `@effect/tsgo` peer dependency
+
+The optional `@effect/tsgo` peer dependency now uses the same exact version as the development dependency (0.59.0)
+instead of `^0.45.0`, so installing the version that `effect.json` targets no longer causes a peer mismatch.
+
 ## @2digits/tsconfig@1.0.6
 
 ### Expand Effect namespace imports
