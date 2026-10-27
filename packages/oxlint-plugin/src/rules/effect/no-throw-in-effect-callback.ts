@@ -1,9 +1,14 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import { defineEffectRule, enclosingFunction, isAnyApi, ruleMeta } from '../../utils';
 import { callbackApi, functionProperty } from './utils';
 
-const pureCallbackMethods = new Set(['andThen', 'map', 'mapError', 'tap', 'tapError', 'tapErrorCause']);
+const pureCallbackMethods: ReadonlySet<string> = new Set([
+  ...(['andThen', 'map', 'mapError', 'tap', 'tapError'] satisfies ReadonlyArray<keyof typeof Effect>),
+  // Effect v3 name, which the current Effect types no longer export.
+  'tapErrorCause',
+]);
 
 export const noThrowInEffectCallback: Rule = defineEffectRule(
   ruleMeta(
@@ -31,7 +36,10 @@ export const noThrowInEffectCallback: Rule = defineEffectRule(
 
       if (
         (path?.[0] === 'Effect' && path[1] !== undefined && pureCallbackMethods.has(path[1])) ||
-        (optionsCall !== undefined && isAnyApi(optionsCall.callee, state, 'Effect', ['try', 'tryPromise']))
+        (optionsCall !== undefined &&
+          isAnyApi(optionsCall.callee, state, 'Effect', ['try', 'tryPromise'] satisfies ReadonlyArray<
+            keyof typeof Effect
+          >))
       ) {
         context.report({ node, messageId: 'callbackThrow' });
       }

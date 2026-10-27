@@ -1,5 +1,7 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import type * as HttpMiddleware from 'effect/http/HttpMiddleware';
+import type * as HttpRouter from 'effect/http/HttpRouter';
 
 import { defineEffectRule, isApi, isLiteral, objectProperty, ruleMeta, unwrapExpression } from '../../utils';
 import { objectArgument } from './utils';
@@ -33,8 +35,9 @@ export const corsCredentialsWithWildcard: Rule = defineEffectRule(
       const state = getState();
 
       if (
-        !isApi(node.callee, state, 'HttpMiddleware', 'cors') &&
-        !isApi(node.callee, state, 'HttpRouter', 'cors') &&
+        !isApi(node.callee, state, 'HttpMiddleware', 'cors' satisfies keyof typeof HttpMiddleware) &&
+        !isApi(node.callee, state, 'HttpRouter', 'cors' satisfies keyof typeof HttpRouter) &&
+        // Effect v3 name, which the current Effect types no longer export.
         !isApi(node.callee, state, 'HttpApiBuilder', 'middlewareCors')
       ) {
         return;

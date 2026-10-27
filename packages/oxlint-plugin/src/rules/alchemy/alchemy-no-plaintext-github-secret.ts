@@ -25,6 +25,7 @@ function isPlaintextSecret(node: ESTree.Expression, state: FileState): boolean {
     return true;
   }
 
+  // Effect v3 name, which the current Effect types no longer export (v4 has `Config.String`).
   return value.type === 'CallExpression' && isApi(value.callee, state, 'Config', 'string');
 }
 

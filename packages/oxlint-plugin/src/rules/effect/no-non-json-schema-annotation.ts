@@ -1,5 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as P from 'effect/Predicate';
+import type * as Schema from 'effect/Schema';
 
 import {
   canonicalPath,
@@ -15,7 +16,11 @@ import { objectArgument } from './utils';
 
 const nonJsonGlobals: ReadonlySet<string> = new Set(['NaN', 'Infinity', 'undefined']);
 
-const annotateMethods: ReadonlySet<string> = new Set(['annotate', 'annotateEncoded', 'annotateKey']);
+const annotateMethods: ReadonlySet<string> = new Set([
+  'annotate',
+  'annotateEncoded',
+  'annotateKey',
+] satisfies ReadonlyArray<keyof typeof Schema>);
 
 const jsonValueAnnotations = ['default', 'examples'] as const;
 

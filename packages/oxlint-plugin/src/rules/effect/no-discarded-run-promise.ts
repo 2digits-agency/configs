@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import { defineEffectRule, isApi, isDiscarded, ruleMeta } from '../../utils';
 
@@ -16,10 +17,11 @@ export const noDiscardedRunPromise: Rule = defineEffectRule(
     CallExpression(node) {
       const state = getState();
 
-      const direct = isApi(node.callee, state, 'Effect', 'runPromise');
+      const direct = isApi(node.callee, state, 'Effect', 'runPromise' satisfies keyof typeof Effect);
 
       const withRuntime =
-        node.callee.type === 'CallExpression' && isApi(node.callee.callee, state, 'Effect', 'runPromiseWith');
+        node.callee.type === 'CallExpression' &&
+        isApi(node.callee.callee, state, 'Effect', 'runPromiseWith' satisfies keyof typeof Effect);
 
       if ((direct || withRuntime) && isDiscarded(node)) {
         context.report({ node, messageId: 'discarded' });

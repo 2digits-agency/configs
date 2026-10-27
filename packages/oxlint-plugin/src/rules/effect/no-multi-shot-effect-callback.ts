@@ -1,4 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import {
   argumentAt,
@@ -59,7 +60,7 @@ export const noMultiShotEffectCallback: Rule = defineEffectRule(
   ),
   (context, getState) => ({
     CallExpression(node) {
-      if (!isApi(node.callee, getState(), 'Effect', 'callback')) {
+      if (!isApi(node.callee, getState(), 'Effect', 'callback' satisfies keyof typeof Effect)) {
         return;
       }
 

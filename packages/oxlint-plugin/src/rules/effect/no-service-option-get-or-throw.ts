@@ -1,6 +1,10 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
+import type * as Opt from 'effect/Option';
 
 import { argumentAt, defineEffectRule, isAnyApi, isApi, ruleMeta, staticPath, unwrapExpression } from '../../utils';
+
+const getOrThrowMethods = ['getOrThrow', 'getOrThrowWith'] as const satisfies ReadonlyArray<keyof typeof Opt>;
 
 export const noServiceOptionGetOrThrow: Rule = defineEffectRule(
   ruleMeta(
@@ -16,12 +20,15 @@ export const noServiceOptionGetOrThrow: Rule = defineEffectRule(
     CallExpression(node) {
       const state = getState();
 
-      if (isAnyApi(node.callee, state, 'Option', ['getOrThrow', 'getOrThrowWith'])) {
+      if (isAnyApi(node.callee, state, 'Option', getOrThrowMethods)) {
         const option = argumentAt(node, 0);
 
         const yielded = option?.type === 'YieldExpression' ? option.argument : option;
 
-        if (yielded?.type === 'CallExpression' && isApi(yielded.callee, state, 'Effect', 'serviceOption')) {
+        if (
+          yielded?.type === 'CallExpression' &&
+          isApi(yielded.callee, state, 'Effect', 'serviceOption' satisfies keyof typeof Effect)
+        ) {
           context.report({ node, messageId: 'getOrThrow' });
         }
 
@@ -38,16 +45,16 @@ export const noServiceOptionGetOrThrow: Rule = defineEffectRule(
 
       if (
         source.type !== 'CallExpression' ||
-        !isApi(source.callee, state, 'Effect', 'serviceOption') ||
+        !isApi(source.callee, state, 'Effect', 'serviceOption' satisfies keyof typeof Effect) ||
         map?.type !== 'CallExpression' ||
-        !isApi(map.callee, state, 'Effect', 'map')
+        !isApi(map.callee, state, 'Effect', 'map' satisfies keyof typeof Effect)
       ) {
         return;
       }
 
       const mapper = argumentAt(map, 0);
 
-      if (mapper !== undefined && isAnyApi(mapper, state, 'Option', ['getOrThrow', 'getOrThrowWith'])) {
+      if (mapper !== undefined && isAnyApi(mapper, state, 'Option', getOrThrowMethods)) {
         context.report({ node, messageId: 'getOrThrow' });
       }
     },

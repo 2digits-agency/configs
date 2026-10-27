@@ -1,5 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import type * as Fn from 'effect/Function';
 import * as P from 'effect/Predicate';
 
 import { argumentAt, defineEffectRule, isApi, isFunctionNode, ruleMeta } from '../../utils';
@@ -30,7 +31,7 @@ export const dualNumericArityWithOptionalParameter: Rule = defineEffectRule(
 
       if (
         implementation === undefined ||
-        !isApi(node.callee, getState(), 'Function', 'dual') ||
+        !isApi(node.callee, getState(), 'Function', 'dual' satisfies keyof typeof Fn) ||
         arity?.type !== 'Literal' ||
         !P.isNumber(arity.value) ||
         !isFunctionNode(implementation)

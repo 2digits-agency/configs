@@ -1,23 +1,34 @@
 // oxlint-disable unicorn/no-array-method-this-argument
 import type { Context, ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import type * as Duration from 'effect/Duration';
+import type * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Num from 'effect/Number';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
+import type * as Schedule from 'effect/Schedule';
+import type * as Stream from 'effect/Stream';
 import * as Str from 'effect/String';
+import type * as TestClock from 'effect/testing/TestClock';
 
 import { importedApi } from '../../fixes';
 import { argumentAt, canonicalPath, objectProperty, unwrapExpression, type FileState } from '../../utils';
 
 type DurationPosition = 'first' | 'last' | 'options.duration';
 
+type DurationApi =
+  | `Effect.${keyof typeof Effect}`
+  | `Schedule.${keyof typeof Schedule}`
+  | `Stream.${keyof typeof Stream}`
+  | `TestClock.${keyof typeof TestClock}`;
+
 /**
  * Effect v4 APIs that accept `Duration.Input`, keyed by canonical path. Dual APIs take the duration last in both their
  * data-first and data-last forms.
  */
-const durationApis = new Map<string, DurationPosition>([
+const durationApis: ReadonlyMap<string, DurationPosition> = new Map<DurationApi, DurationPosition>([
   ['Effect.cachedInvalidateWithTTL', 'last'],
   ['Effect.cachedWithTTL', 'last'],
   ['Effect.delay', 'last'],
@@ -171,7 +182,10 @@ export function timeArithmetic(node: ESTree.Expression): { readonly millis: bool
   };
 }
 
-export type DurationUnit = 'days' | 'hours' | 'millis' | 'minutes' | 'seconds' | 'weeks';
+export type DurationUnit = Extract<
+  keyof typeof Duration,
+  'days' | 'hours' | 'millis' | 'minutes' | 'seconds' | 'weeks'
+>;
 
 const unitMillis: ReadonlyArray<readonly [DurationUnit, number]> = [
   ['weeks', 604_800_000],
@@ -205,12 +219,12 @@ export function durationConstructor(value: number, unit: DurationUnit): string {
     );
 
   if (millis === 0) {
-    return 'Duration.zero';
+    return `Duration.${'zero' satisfies keyof typeof Duration}`;
   }
 
   return Arr.findFirst(unitMillis, ([, size]) => Number.isSafeInteger(millis / size)).pipe(
     Opt.match({
-      onNone: () => `Duration.millis(${formatNumber(millis)})`,
+      onNone: () => `Duration.${'millis' satisfies keyof typeof Duration}(${formatNumber(millis)})`,
       onSome: ([name, size]) => `Duration.${name}(${formatNumber(millis / size)})`,
     }),
   );

@@ -1,5 +1,6 @@
 import type { Context, ESTree, Rule, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import type * as Schema from 'effect/Schema';
 
 import {
   canonicalPath,
@@ -13,7 +14,7 @@ import {
   type FileState,
 } from '../../utils';
 
-const compilerMethods = new Set([
+const compilerMethods: ReadonlySet<string> = new Set([
   'asserts',
   'decodeEffect',
   'decodeExit',
@@ -40,7 +41,7 @@ const compilerMethods = new Set([
   'encodeUnknownResult',
   'encodeUnknownSync',
   'is',
-]);
+] satisfies ReadonlyArray<keyof typeof Schema>);
 
 const moduleScopes = new Set<string>(['global', 'module']);
 

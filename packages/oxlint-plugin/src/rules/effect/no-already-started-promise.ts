@@ -1,10 +1,11 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import { argumentAt, defineEffectRule, isAnyApi, ruleMeta, type FileState, type FunctionNode } from '../../utils';
 import { functionResult, promiseInitializer, promiseThunkArgument } from './utils';
 
 function promiseThunk(node: ESTree.CallExpression, state: FileState): FunctionNode | undefined {
-  if (!isAnyApi(node.callee, state, 'Effect', ['promise', 'tryPromise'])) {
+  if (!isAnyApi(node.callee, state, 'Effect', ['promise', 'tryPromise'] satisfies ReadonlyArray<keyof typeof Effect>)) {
     return undefined;
   }
 

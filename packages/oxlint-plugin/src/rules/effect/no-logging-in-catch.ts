@@ -1,22 +1,28 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import type * as Effect from 'effect/Effect';
 
 import { callbackCall, canonicalPath, defineEffectRule, isFunctionNode, ruleMeta, type FileState } from '../../utils';
 
-const catchMethods = new Set([
-  'catch',
+const catchMethods: ReadonlySet<string> = new Set([
+  ...(['catch', 'catchIf', 'catchTag', 'orElseSucceed'] satisfies ReadonlyArray<keyof typeof Effect>),
+  // Effect v3 names, which the current Effect types no longer export.
   'catchAll',
   'catchAllCause',
-  'catchIf',
   'catchSome',
   'catchSomeCause',
-  'catchTag',
   'orElse',
   'orElseFail',
-  'orElseSucceed',
 ]);
 
-const logMethods = new Set(['log', 'logDebug', 'logError', 'logInfo', 'logTrace', 'logWarning']);
+const logMethods: ReadonlySet<string> = new Set([
+  'log',
+  'logDebug',
+  'logError',
+  'logInfo',
+  'logTrace',
+  'logWarning',
+] satisfies ReadonlyArray<keyof typeof Effect>);
 
 function catchCallback(node: ESTree.Node, state: FileState): { readonly method: string } | undefined {
   let parent = node.parent;

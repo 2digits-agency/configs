@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import { defineEffectRule, isApi, ruleMeta } from '../../utils';
 import { containingEffectGen, containingWorker } from './utils';
@@ -17,7 +18,7 @@ export const alchemyNoCloudflareInitFinalizer: Rule = defineEffectRule(
     CallExpression(node) {
       const state = getState();
 
-      if (!isApi(node.callee, state, 'Effect', 'addFinalizer')) {
+      if (!isApi(node.callee, state, 'Effect', 'addFinalizer' satisfies keyof typeof Effect)) {
         return;
       }
 

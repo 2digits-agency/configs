@@ -1,4 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 import * as Str from 'effect/String';
 
 import {
@@ -14,7 +15,7 @@ import {
 import { promiseThunkArgument } from './utils';
 
 function tryPromiseThunk(node: ESTree.CallExpression, state: FileState): FunctionNode | undefined {
-  if (!isApi(node.callee, state, 'Effect', 'tryPromise')) {
+  if (!isApi(node.callee, state, 'Effect', 'tryPromise' satisfies keyof typeof Effect)) {
     return undefined;
   }
 

@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import type * as Effect from 'effect/Effect';
 
 import { importedApi, namespaceImport } from '../../fixes';
 import { argumentAt, defineEffectRule, isApi, isFunctionNode, ruleMeta } from '../../utils';
@@ -18,7 +19,11 @@ export const noEmptyEffectCallback: Rule = defineEffectRule(
   },
   (context, getState) => ({
     CallExpression(node) {
-      if (!isApi(node.callee, getState(), 'Effect', 'callback') && !isApi(node.callee, getState(), 'Effect', 'async')) {
+      if (
+        !isApi(node.callee, getState(), 'Effect', 'callback' satisfies keyof typeof Effect) &&
+        // Effect v3 name, which the current Effect types no longer export.
+        !isApi(node.callee, getState(), 'Effect', 'async')
+      ) {
         return;
       }
 
@@ -47,7 +52,10 @@ export const noEmptyEffectCallback: Rule = defineEffectRule(
 
             const imported = namespaceImport(context, node, 'effect/Effect', 'Effect', fixer);
 
-            return [...imported.fixes, fixer.replaceText(node, `${imported.name}.never`)];
+            return [
+              ...imported.fixes,
+              fixer.replaceText(node, `${imported.name}.${'never' satisfies keyof typeof Effect}`),
+            ];
           },
         });
       }

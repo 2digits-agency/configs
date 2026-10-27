@@ -1,5 +1,6 @@
 import type { ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import type * as Effect from 'effect/Effect';
 
 import {
   callbackCall,
@@ -47,7 +48,9 @@ export function containingEffectGen(node: ESTree.Node, state: FileState): ESTree
 
   const call = callback === undefined ? undefined : callbackCall(callback);
 
-  return call !== undefined && isApi(call.callee, state, 'Effect', 'gen') ? call : undefined;
+  return call !== undefined && isApi(call.callee, state, 'Effect', 'gen' satisfies keyof typeof Effect)
+    ? call
+    : undefined;
 }
 
 export function containingHandler(node: ESTree.Node): string | undefined {

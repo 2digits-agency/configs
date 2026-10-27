@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import { defineEffectRule, isApi, ruleMeta } from '../../utils';
 
@@ -8,7 +9,7 @@ export const effectPromiseVsTryPromise: Rule = defineEffectRule(
   }),
   (context, getState) => ({
     CallExpression(node) {
-      if (isApi(node.callee, getState(), 'Effect', 'promise')) {
+      if (isApi(node.callee, getState(), 'Effect', 'promise' satisfies keyof typeof Effect)) {
         context.report({ node: node.callee, messageId: 'tryPromise' });
       }
     },

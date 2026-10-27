@@ -1,6 +1,10 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import { argumentAt, defineEffectRule, isAnyApi, isApi, ruleMeta, staticPath, unwrapExpression } from '../../utils';
+
+// `either` is the Effect v3 name, which the current Effect types no longer export.
+const wrapperMethods = ['option' satisfies keyof typeof Effect, 'either'];
 
 export const noOptionOfService: Rule = defineEffectRule(
   ruleMeta(
@@ -16,11 +20,15 @@ export const noOptionOfService: Rule = defineEffectRule(
     CallExpression(node) {
       const state = getState();
 
-      const wrapper = isAnyApi(node.callee, state, 'Effect', ['option', 'either']);
+      const wrapper = isAnyApi(node.callee, state, 'Effect', wrapperMethods);
 
       const wrapped = argumentAt(node, 0);
 
-      if (wrapper && wrapped?.type === 'CallExpression' && isApi(wrapped.callee, state, 'Effect', 'service')) {
+      if (
+        wrapper &&
+        wrapped?.type === 'CallExpression' &&
+        isApi(wrapped.callee, state, 'Effect', 'service' satisfies keyof typeof Effect)
+      ) {
         context.report({ node, messageId: 'mandatory' });
 
         return;
@@ -37,8 +45,8 @@ export const noOptionOfService: Rule = defineEffectRule(
       if (
         operator !== undefined &&
         source.type === 'CallExpression' &&
-        isApi(source.callee, state, 'Effect', 'service') &&
-        isAnyApi(operator, state, 'Effect', ['option', 'either'])
+        isApi(source.callee, state, 'Effect', 'service' satisfies keyof typeof Effect) &&
+        isAnyApi(operator, state, 'Effect', wrapperMethods)
       ) {
         context.report({ node, messageId: 'mandatory' });
       }

@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import type * as Effect from 'effect/Effect';
 
 import {
   argumentAt,
@@ -10,7 +11,7 @@ import {
 } from '../../utils';
 
 // Effect mask APIs, keyed by member, with the equivalent API to use when `restore` is unused.
-const maskReplacements: ReadonlyMap<string, string> = new Map([
+const maskReplacements: ReadonlyMap<string, string> = new Map<keyof typeof Effect, keyof typeof Effect>([
   ['interruptibleMask', 'interruptible'],
   ['uninterruptibleMask', 'uninterruptible'],
 ]);
