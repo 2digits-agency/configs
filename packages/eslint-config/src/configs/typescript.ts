@@ -6,7 +6,7 @@ import type { OptionsTypeScriptWithTypes, TypedFlatConfigItem } from '../types';
 import { interopDefault } from '../utils';
 
 export async function typescript(options: OptionsTypeScriptWithTypes = {}): Promise<Array<TypedFlatConfigItem>> {
-  const { overrides = {}, parserOptions = {} } = options;
+  const { overrides = {}, parserOptions = {}, tsconfigRootDir = process.cwd() } = options;
 
   const [{ plugin, configs, parser }, twoDigits] = await Promise.all([
     interopDefault(import('typescript-eslint')),
@@ -31,7 +31,7 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
       languageOptions: {
         parser,
         parserOptions: {
-          tsconfigRootDir: process.cwd(),
+          tsconfigRootDir,
           projectService: true,
           onUnsupportedTypeScriptVersion: 'ignore',
           ...parserOptions,

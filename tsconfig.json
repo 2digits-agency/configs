@@ -1,13 +1,6 @@
 {
   "$schema": "./node_modules/@effect/tsgo/schema.json",
   "extends": "@2digits/tsconfig/effect.json",
-  "include": [
-    "packages",
-    "scripts",
-    "./vite.config.ts",
-    "./eslint.config.ts",
-    "./oxlint.config.ts",
-    "./oxfmt.config.ts"
-  ],
+  "include": ["scripts", "./vite.config.ts", "./eslint.config.ts", "./oxlint.config.ts", "./oxfmt.config.ts"],
   "exclude": ["opensrc"]
 }

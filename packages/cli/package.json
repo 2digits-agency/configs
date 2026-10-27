@@ -24,6 +24,8 @@
     "bin": "oxnode ./src/bin.ts",
     "build": "vp pack --minify",
     "dev": "vp pack --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest",
     "types": "tsrs --noEmit"
