@@ -74,4 +74,14 @@ describe('factory', () => {
 
     await expect(snapshotJson(serialized)).toMatchFileSnapshot(fixtureSnapshotPath('factory', name));
   });
+
+  it('uses ts.tsconfigRootDir for TypeScript files', async ({ expect }) => {
+    const tsconfigRootDir = '/workspace/apps/web';
+
+    const config = await twoDigits({ ts: { tsconfigRootDir } });
+
+    const rules = config.find((entry) => entry.name === '2digits:typescript/rules');
+
+    expect(rules?.languageOptions?.parserOptions?.tsconfigRootDir).toBe(tsconfigRootDir);
+  });
 });
