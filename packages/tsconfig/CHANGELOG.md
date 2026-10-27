@@ -1,3 +1,13 @@
+## @2digits/tsconfig@1.2.0
+
+### Update Effect tsgo
+
+- Updated `@effect/tsgo` to 0.62.0 to support the latest Effect diagnostics.
+
+### Enable the `mapConstToAs` Effect diagnostic
+
+- Reported `Effect.map` callbacks that ignore their input and return a constant as errors, suggesting `Effect.as` instead.
+
 ## @2digits/tsconfig@1.1.0
 
 ### Update `@effect/tsgo` to 0.61.0
