@@ -2,7 +2,7 @@ import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 
 import type { PaddingLineOption } from '@2digits/oxlint-plugin';
 
-import withTwoDigits, { type DummyRuleMap } from '../src';
+import twoDigits, { type DummyRuleMap } from '../src';
 
 describe('statement spacing configuration types', () => {
   it('accepts variadic policies through the public config builder', () => {
@@ -14,9 +14,9 @@ describe('statement spacing configuration types', () => {
       ],
     } satisfies DummyRuleMap;
 
-    const config = withTwoDigits({ rules });
+    const config = twoDigits({}, { rules });
 
-    expect(config.rules?.['2digits/padding-line-between-statements']).toStrictEqual(
+    expect(config.overrides?.at(-1)?.rules?.['2digits/padding-line-between-statements']).toStrictEqual(
       rules['2digits/padding-line-between-statements'],
     );
 

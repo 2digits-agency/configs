@@ -1,5 +1,7 @@
-export const dtsFiles = ['**/*.d.ts'] as const;
+// Oxlint matches override globs without extglobs, so these spell out the ESLint config's `?([cm])` and `?(x)` patterns.
 
-export const testFiles = ['**/*.{test,spec}.ts?(x)'] as const;
+export const GLOB_TS = '**/*.{ts,cts,mts}';
 
-export const commonJsFiles = ['**/*.js', '**/*.cjs', '**/*.cts'] as const;
+export const GLOB_TSX = '**/*.tsx';
+
+export const GLOB_TESTS = '**/*.{test,spec}.{ts,tsx}';

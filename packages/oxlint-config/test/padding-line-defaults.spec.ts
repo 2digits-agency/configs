@@ -118,7 +118,7 @@ describe('default statement spacing', () => {
     const config = ts`
       import lint from '${presetUrl}';
 
-      export default lint(${consumerConfigs});
+      export default lint({}, ${consumerConfigs});
     `;
 
     withTemporaryProject({ ...projectFiles, 'oxlint.config.mjs': config }, (directory) => {

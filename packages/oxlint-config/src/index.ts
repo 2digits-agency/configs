@@ -1,8 +1,5 @@
 import './rule-options';
-import type { DummyRuleMap } from 'oxlint';
 
-export type { DummyRuleMap, DummyRuleMap as RuleMap, OxlintConfig, OxlintOverride } from 'oxlint';
+export type * from './types';
 
-export type RuleName = keyof DummyRuleMap;
-
-export { twoDigits, withTwoDigits as default, withTwoDigits } from './config';
+export { twoDigits as default, twoDigits } from './factory';

@@ -1,8 +1,18 @@
-import lint from '@2digits/oxlint-config';
+import { twoDigits } from '@2digits/oxlint-config';
 
-export default lint({
-  options: {
-    reportUnusedDisableDirectives: 'allow',
+export default twoDigits(
+  {
+    ignores: {
+      ignores: ['packages/**/_fixtures/**', 'packages/eslint-config/src/types.gen.d.ts'],
+    },
+    react: true,
+    ts: true,
+    vitest: true,
+    zod: true,
   },
-  ignorePatterns: ['packages/**/_fixtures/**', 'packages/eslint-config/src/types.gen.d.ts'],
-});
+  {
+    options: {
+      reportUnusedDisableDirectives: 'allow',
+    },
+  },
+);

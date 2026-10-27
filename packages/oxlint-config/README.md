@@ -1,17 +1,37 @@
 # @2digits/oxlint-config
 
+Like `@2digits/eslint-config`, the default export `twoDigits(options, ...userConfigs)` builds the config from named
+[oxlint-flat-config](https://github.com/liangmiQwQ/oxlint-flat-config) objects (`2digits:javascript`,
+`2digits:typescript/rules`, ...). The `ts`, `react`, `vitest` and `zod` configs are enabled when their package is
+installed, and accept `overrides` for their rules. Your flat config objects apply after the built-in ones; later objects
+win, like ESLint:
+
+```ts
+import { twoDigits } from '@2digits/oxlint-config';
+
+export default twoDigits(
+  {
+    ignores: { ignores: ['generated/**'] },
+    react: true,
+    vitest: { files: ['**/*.check.ts'] },
+  },
+  { options: { reportUnusedDisableDirectives: 'allow' } },
+  { files: ['scripts/**'], rules: { 'no-console': 'off' } },
+);
+```
+
 The default preset enables `2digits/padding-line-between-statements`: statements require a blank line between them,
 including variable declarations, control flow, and returns. Consecutive imports may stay grouped; existing import
 group spacing is preserved. Run Oxlint with `--fix` to insert missing blank lines.
 
-Override the rule through `lint({ rules: { '2digits/padding-line-between-statements': 'off' } })`, or supply your own
+Override the rule through `twoDigits({}, { rules: { '2digits/padding-line-between-statements': 'off' } })`, or supply your own
 spacing policies in its rule options.
 
 The shared preset keeps `capitalized-comments` enabled for ordinary prose, but preserves case-sensitive
 `fallow-ignore` suppression directives, including `fallow-ignore-next-line` and `fallow-ignore-file`.
 The exception matches the directive family at the start of a comment; prose mentioning a directive remains checked.
 
-The native autofix regression loads the built default export (`lint()`) without consumer overrides and checks both
+The native autofix regression loads the built default export (`twoDigits()`) without consumer overrides and checks both
 directive spellings byte-for-byte after two autofix passes. It also verifies lowercase prose is reported and fixed,
 already capitalized prose is unchanged, and similarly named prose is still fixed.
 
