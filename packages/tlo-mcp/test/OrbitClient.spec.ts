@@ -112,23 +112,19 @@ function orbit(onCall: (id: number | undefined, init: RequestInit | undefined) =
   return { sent, fetch };
 }
 
-function reply(body: unknown) {
-  return Effect.succeed(
-    new Response(`event: message\ndata: ${JSON.stringify(body)}\n\n`, {
-      headers: { 'content-type': 'text/event-stream' },
-    }),
-  );
-}
-
 describe('orbit MCP client', () => {
   it.effect('exposes only allowlisted tools and authenticates every request without redirects', () => {
-    const { sent, fetch } = orbit((id) =>
-      reply({
+    const { sent, fetch } = orbit((id) => {
+      const body = JSON.stringify({
         jsonrpc: '2.0',
         id,
         result: { content: [{ type: 'text', text: 'RATE_LIMITED: retry later' }], isError: true },
-      }),
-    );
+      });
+
+      return Effect.succeed(
+        new Response(`event: message\ndata: ${body}\n\n`, { headers: { 'content-type': 'text/event-stream' } }),
+      );
+    });
 
     return Effect.gen(function* () {
       const client = yield* OrbitClient;

@@ -42,6 +42,9 @@ const OrbitHttpClient = Layer.effect(
   Effect.gen(function* () {
     const auth = yield* OrbitAuth;
 
+    // Fail startup with the typed login error; later refresh failures surface as the transport error's cause.
+    yield* auth.accessToken;
+
     return (yield* HttpClient.HttpClient).pipe(
       HttpClient.mapRequestEffect((request) =>
         auth.accessToken.pipe(
@@ -62,14 +65,7 @@ const OrbitHttpClient = Layer.effect(
 export const OrbitClientLive = Layer.effect(
   OrbitClient,
   Effect.gen(function* () {
-    // Fail startup with the typed login error; later refresh failures surface as the transport error's cause.
-    yield* (yield* OrbitAuth).accessToken;
-
-    const transport = yield* McpClient.http({ protocol: McpProtocol.v2025_11_25, url: ORBIT_RESOURCE });
-
-    const client = yield* McpClient.make({ name: '@2digits/tlo-mcp', version: '1.0.0' }).pipe(
-      Effect.provideService(McpClient.Transport, transport),
-    );
+    const client = yield* McpClient.McpClient;
 
     const upstream = yield* client.listTools();
 
@@ -87,4 +83,14 @@ export const OrbitClientLive = Layer.effect(
       }),
     });
   }),
-).pipe(Layer.provide(OrbitHttpClient));
+).pipe(
+  Layer.provide(
+    McpClient.layerHttp({
+      name: '@2digits/tlo-mcp',
+      version: '1.0.0',
+      protocol: McpProtocol.v2025_11_25,
+      url: ORBIT_RESOURCE,
+    }),
+  ),
+  Layer.provide(OrbitHttpClient),
+);
