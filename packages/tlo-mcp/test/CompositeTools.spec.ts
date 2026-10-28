@@ -17,6 +17,7 @@ import * as McpSchema from 'effect/ai/McpSchema';
 import * as McpServer from 'effect/ai/McpServer';
 import * as HttpRouter from 'effect/http/HttpRouter';
 
+import { BoardContext } from '../src/composites/GetBoardContext.js';
 import { Workday } from '../src/composites/GetMyWorkday.js';
 import { TicketContext } from '../src/composites/GetTicketContext.js';
 import { gatewayRoutes } from '../src/http/gateway.js';
@@ -192,7 +193,7 @@ describe('composite tool registration', () => {
     Effect.gen(function* () {
       const { registrations } = yield* setup({});
 
-      const composites = ['GetMyWorkday', 'GetTicketContext'].map((name) => {
+      const composites = ['GetMyWorkday', 'GetTicketContext', 'GetBoardContext'].map((name) => {
         const tool = registrations.get(name)?.tool;
 
         return {
@@ -206,6 +207,7 @@ describe('composite tool registration', () => {
       expect(composites).toStrictEqual([
         { name: 'GetMyWorkday', readOnly: true, destructive: false, output: 'object' },
         { name: 'GetTicketContext', readOnly: true, destructive: false, output: 'object' },
+        { name: 'GetBoardContext', readOnly: true, destructive: false, output: 'object' },
       ]);
 
       expect(registrations.has('GetTimesheetWeek')).toBeTruthy();
@@ -396,6 +398,96 @@ describe('getTicketContext', () => {
   );
 });
 
+describe('composite errors', () => {
+  it.effect('return readable error results, and rate limits like forwarded tools', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup({
+        ListTickets: fixture('ListTickets-empty'),
+        GetTicketDetail: fixture('GetTicket-invalid-id'),
+        ListBoards: McpClientError.McpClientError.make({
+          reason: McpClientError.HttpError.make({ status: 429, retryAfter: '30' }),
+        }),
+      });
+
+      const missing = yield* call('GetTicketContext', { ticket: '1234' });
+
+      expect([missing.isError, textOf(missing)]).toStrictEqual([true, 'No ticket with number 1234 found.']);
+
+      const invalid = yield* call('GetTicketContext', { ticket: 'TCAAAAAAAAAAAAA' });
+
+      // Orbit answers isError: false with this text; the gateway still reports it as an error.
+      expect([invalid.isError, textOf(invalid)]).toStrictEqual([
+        true,
+        "MCP tool reported an error: Error: '9087' is not a valid TICKET API ID for this account.",
+      ]);
+
+      const limited = yield* call('GetBoardContext', { board: 'anything' });
+
+      expect([limited.isError, limited._meta, textOf(limited)]).toStrictEqual([
+        true,
+        { 'tlo-mcp/httpStatus': 429, 'tlo-mcp/retryAfter': '30' },
+        'Orbit rate limited this call; retry after 30. Not replayed.',
+      ]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
+describe('getBoardContext', () => {
+  const todos = fixture('ListTodos');
+
+  const boardReplies = {
+    ListBoards: fixture('ListBoards'),
+    ListBoardLists: fixture('ListBoardLists'),
+    ListTodos: ({ state }: Schema.JsonObject) =>
+      state === 'all'
+        ? todos
+        : `1 card(s):\r\n${todos.split('\r\n').find((line) => line.startsWith('- TDFPXAJVJE7RMQ5'))}\r\n`,
+    GetTodoDetail: fixture('GetTodoDetail'),
+  };
+
+  it.effect('groups cards under their columns, matching the board name case-insensitively', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup(boardReplies);
+
+      const board = yield* structured(
+        BoardContext,
+        yield* call('GetBoardContext', { board: '2045 client south | acief', includeDone: true, details: false }),
+      );
+
+      expect(board.board.id).toBe('BO1GWM3SZPBP5NP');
+
+      expect(board.columns.map((column) => [column.id, column.name, column.done, column.cards.length])).toStrictEqual([
+        ['KC18XMJS1WFQRM3', 'Backlog', false, 0],
+        ['KCNK9U9T62DZA49', 'To do', false, 11],
+        ['KC74DC1DK3EW51P', 'In Progress', false, 1],
+        ['KC96AKDWUHCK57J', 'In Review', false, 1],
+        ['KCJ8PZV17MNT4ZT', 'Live', false, 0],
+        ['KCQ5Y1MENXH9G89', 'Done', true, 1],
+      ]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('adds card detail by default and asks for an api_id when the name is ambiguous', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup(boardReplies);
+
+      const detailed = yield* structured(BoardContext, yield* call('GetBoardContext', { board: 'BO1GWM3SZPBP5NP' }));
+
+      const card = detailed.columns[2]?.cards[0];
+
+      expect([card?.id, card?.checklist, card?.linked?.length]).toStrictEqual([
+        'TDFPXAJVJE7RMQ5',
+        '0/0 done | comments 1 | files 0 | followers 0',
+        2,
+      ]);
+
+      const ambiguous = yield* call('GetBoardContext', { board: 'Client' });
+
+      expect(textOf(ambiguous)).toContain('"Client" matches 5 boards');
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
 const GATEWAY_KEY = Str.repeat(64)('b');
 
 const encodeJson = Schema.encodeEffect(Schema.Unknown.pipe(Schema.fromJsonString));
@@ -470,6 +562,10 @@ describe('composites over the HTTP gateway', () => {
         ...workdayReplies,
         GetTimesheetWeek: fixture('GetTimesheetWeek-open'),
         ...ticketReplies,
+        ListBoards: fixture('ListBoards'),
+        ListBoardLists: fixture('ListBoardLists'),
+        ListTodos: fixture('ListTodos'),
+        GetTodoDetail: fixture('GetTodoDetail'),
       });
 
       yield* send(
@@ -485,6 +581,7 @@ describe('composites over the HTTP gateway', () => {
       for (const [id, name, args] of [
         [2, 'GetMyWorkday', { date: '2026-10-28', scope: 'week' }],
         [3, 'GetTicketContext', { ticket: '9087' }],
+        [4, 'GetBoardContext', { board: 'BO1GWM3SZPBP5NP', details: false }],
       ] as const) {
         const { status, body } = yield* send('tools/call', { name, arguments: args }, id);
 
@@ -501,6 +598,11 @@ describe('composites over the HTTP gateway', () => {
           name: 'GetTicketContext',
           status: 200,
           body: { result: { isError: false, structuredContent: { commentCount: 3 } } },
+        },
+        {
+          name: 'GetBoardContext',
+          status: 200,
+          body: { result: { isError: false, structuredContent: { board: { id: 'BO1GWM3SZPBP5NP' } } } },
         },
       ]);
     }).pipe(Effect.scoped),
