@@ -6,6 +6,7 @@ import * as Layer from 'effect/Layer';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
+import * as McpClientError from 'effect/ai/McpClientError';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as HttpRouter from 'effect/http/HttpRouter';
 
@@ -16,6 +17,8 @@ import { OrbitClient } from '../src/mcp/OrbitClient.js';
 const key = Str.repeat(64)('a');
 
 const encodeJson = Schema.encodeEffect(Schema.Unknown.pipe(Schema.fromJsonString));
+
+const decodeJson = Schema.decodeEffect(Schema.Unknown.pipe(Schema.fromJsonString));
 
 const calls: Array<string> = [];
 
@@ -28,17 +31,23 @@ const upstream = Layer.succeed(OrbitClient, {
       inputSchema: { type: 'object' },
       annotations: { readOnlyHint: true },
     }),
+    McpSchema.Tool.make({ name: 'ListTickets', inputSchema: { type: 'object' }, annotations: { readOnlyHint: true } }),
   ],
-  callTool: Effect.fn('OrbitClient.test.callTool')((tool: McpSchema.Tool) =>
-    Effect.sync(() => {
-      calls.push(tool.name);
+  callTool: Effect.fn('OrbitClient.test.callTool')(function* (tool: McpSchema.Tool) {
+    calls.push(tool.name);
 
-      return McpSchema.CallToolResult.make({
-        content: [{ type: 'text', text: 'project' }],
-        structuredContent: { project: true },
+    // ListTickets stands in for any call that Orbit rate limits.
+    if (tool.name === 'ListTickets') {
+      return yield* McpClientError.McpClientError.make({
+        reason: McpClientError.HttpError.make({ status: 429, retryAfter: '17' }),
       });
-    }),
-  ),
+    }
+
+    return McpSchema.CallToolResult.make({
+      content: [{ type: 'text', text: 'project' }],
+      structuredContent: { project: true },
+    });
+  }),
 });
 
 const makeHandler = Effect.fn('Gateway.test.handler')(function* () {
@@ -102,7 +111,7 @@ describe('personal HTTP gateway', () => {
     }),
   );
 
-  it.effect('initializes, discovers official tools and forwards a read exactly once over HTTP', () =>
+  it.effect('initializes, discovers tools, forwards a read once and keeps Retry-After on rate limits over HTTP', () =>
     Effect.gen(function* () {
       calls.length = 0;
 
@@ -162,7 +171,18 @@ describe('personal HTTP gateway', () => {
 
       expect(result.text).toContain('structuredContent');
 
-      expect(calls).toStrictEqual(['ReadProject']);
+      const limited = yield* send('tools/call', { name: 'ListTickets', arguments: {} }, 4);
+
+      expect({ limited: yield* decodeJson(limited.text), calls }).toMatchObject({
+        limited: {
+          result: {
+            isError: true,
+            content: [{ type: 'text', text: 'Orbit rate limited this call; retry after 17. Not replayed.' }],
+            _meta: { 'tlo-mcp/httpStatus': 429, 'tlo-mcp/retryAfter': '17' },
+          },
+        },
+        calls: ['ReadProject', 'ListTickets'],
+      });
     }),
   );
 

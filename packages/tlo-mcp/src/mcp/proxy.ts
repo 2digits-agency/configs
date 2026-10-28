@@ -31,9 +31,32 @@ export const OrbitToolsLive = Layer.effectDiscard(
               McpSchema.InvalidParams.make({ message: 'Tool arguments must be a JSON object.', data }),
             ),
             Effect.flatMap((args) =>
-              upstream
-                .callTool(tool, args)
-                .pipe(Effect.mapError((error) => McpSchema.InternalError.make({ message: error.message }))),
+              upstream.callTool(tool, args).pipe(
+                /*
+                 * McpServer reduces InternalError to its message, so a rate limit becomes a tool error result
+                 * whose _meta keeps Orbit's Retry-After for clients that want to wait out the cooldown.
+                 */
+                Effect.catchReason('McpClientError', 'HttpError', ({ status, retryAfter }, error) =>
+                  status === 429
+                    ? Effect.succeed(
+                        McpSchema.CallToolResult.make({
+                          isError: true,
+                          content: [
+                            {
+                              type: 'text',
+                              text: `Orbit rate limited this call; retry after ${retryAfter ?? 'the server cooldown'}. Not replayed.`,
+                            },
+                          ],
+                          _meta: {
+                            'tlo-mcp/httpStatus': status,
+                            ...(retryAfter === undefined ? {} : { 'tlo-mcp/retryAfter': retryAfter }),
+                          },
+                        }),
+                      )
+                    : Effect.fail(error),
+                ),
+                Effect.mapError((error) => McpSchema.InternalError.make({ message: error.message })),
+              ),
             ),
           ),
         });
