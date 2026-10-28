@@ -420,8 +420,8 @@ catalogs:
       specifier: 44.190.2
       version: 44.190.2
     tailwind-csstree:
-      specifier: 0.4.1
-      version: 0.4.1
+      specifier: 0.4.2
+      version: 0.4.2
     tailwindcss:
       specifier: 4.3.3
       version: 4.3.3
@@ -777,7 +777,7 @@ importers:
         version: 2.4.0
       tailwind-csstree:
         specifier: 'catalog:'
-        version: 0.4.1(@eslint/css@2.0.1)
+        version: 0.4.2(@eslint/css@2.0.1)
       typescript-eslint:
         specifier: 'catalog:'
         version: 8.72.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
@@ -2479,12 +2479,14 @@ packages:
   '@opentelemetry/sdk-trace-base@2.12.0':
     resolution: {integrity: sha512-JOERgZCxRM06FEJ5kEWxlSRChah6MmXDx3KwCruqEv/iEyLkTokCSemf2y1w8oIHtfrr8EVTpzebq/31vn2Cpg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-node@2.12.0':
     resolution: {integrity: sha512-9DufH1IlmQMoKAfot5y/FhTP1RnmhLb5K6eKmJO/bvzPjYwPAazoiAUbTZFdPbqxOXN0FEbhZx/e6SB1Og4jmg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -7555,8 +7557,8 @@ packages:
     peerDependencies:
       tailwindcss: ^3.3.0 || ^4.0.0 || ^4.0.0-beta
 
-  tailwind-csstree@0.4.1:
-    resolution: {integrity: sha512-GOgf0lQhk13norDMdHbW6aK7wd5gFPrArzTkDgJH88w9AVtQQrROUqLVu3sgXqzPBUXIhd+tLASpKqba7+I68g==}
+  tailwind-csstree@0.4.2:
+    resolution: {integrity: sha512-/MJ9nTN/Eq7A4B7ycNoVAqh6LzW+813U11EDOj2ytGvZYt1YpU4L7BGZ6ZpHKyAtamRfRczJouK9wB3Q4Skw1Q==}
     engines: {node: '>=18.18'}
     peerDependencies:
       '@eslint/css': '>=1.0.0'
@@ -14639,7 +14641,7 @@ snapshots:
       local-pkg: 1.2.1
       tailwindcss: 4.3.3
 
-  tailwind-csstree@0.4.1(@eslint/css@2.0.1):
+  tailwind-csstree@0.4.2(@eslint/css@2.0.1):
     optionalDependencies:
       '@eslint/css': 2.0.1
 
