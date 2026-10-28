@@ -1,3 +1,9 @@
+## @2digits/eslint-config@5.10.1
+
+### Update Storybook ESLint plugin
+
+- Updated `eslint-plugin-storybook` to 10.6.5.
+
 ## @2digits/eslint-config@5.10.0
 
 ### Ship a `monorepo-linting` agent skill

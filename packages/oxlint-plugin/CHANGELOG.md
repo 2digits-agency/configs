@@ -1,3 +1,9 @@
+## @2digits/oxlint-plugin@0.4.2
+
+### Update Effect dependencies
+
+- Updated Effect and its Node platform integration to 4.0.7.
+
 ## @2digits/oxlint-plugin@0.4.1
 
 ### Update `@oxlint/plugins` to 1.90.0

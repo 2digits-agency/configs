@@ -1,3 +1,11 @@
+## @2digits/tsconfig@1.2.1
+
+### Enable additional Effect diagnostics
+
+- Enabled `failCauseToConstructor`, `manualMetricTapToTrack`, and `mapMapErrorToMapBoth` as errors.
+
+### Update `@effect/tsgo` to 0.63.0
+
 ## @2digits/tsconfig@1.2.0
 
 ### Update Effect tsgo
