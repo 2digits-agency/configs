@@ -20,3 +20,13 @@ started_at=$SECONDS
 printf 'Installing workspace dependencies...\n'
 vp install --frozen-lockfile
 printf 'Installed workspace dependencies in %ss.\n' "$((SECONDS - started_at))"
+
+# Package-local checks load these configs directly, without Turbo building them first.
+started_at=$SECONDS
+printf 'Building workspace tooling configs...\n'
+vpr build \
+  --filter=@2digits/eslint-config \
+  --filter=@2digits/oxlint-config \
+  --filter=@2digits/oxfmt-config \
+  --filter=@2digits/prettier-config
+printf 'Built workspace tooling configs in %ss.\n' "$((SECONDS - started_at))"
