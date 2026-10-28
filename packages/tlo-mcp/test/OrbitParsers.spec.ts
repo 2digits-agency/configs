@@ -7,7 +7,11 @@ import { describe, expect, it } from '@effect/vitest';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 
+import { GetRunningTimer } from '../src/orbit/GetRunningTimer.js';
 import { GetTimesheetWeek, type TimeEntry } from '../src/orbit/GetTimesheetWeek.js';
+import { ListAbsences } from '../src/orbit/ListAbsences.js';
+import { ListMyTasks } from '../src/orbit/ListMyTasks.js';
+import { ListPlannedEntries } from '../src/orbit/ListPlannedEntries.js';
 import { ListTimeEntries } from '../src/orbit/ListTimeEntries.js';
 
 /**
@@ -177,6 +181,78 @@ describe('list parsers', () => {
       );
 
       expect(entries.find((entry) => entry.id === 'ACNC5EVRCW4A2GT')?.description).toBe('Work\nnote');
+    }),
+  );
+
+  it.effect('reads planning entries with their series', () =>
+    Effect.gen(function* () {
+      const planned = yield* ListPlannedEntries.decode(fixture('ListPlannedEntries'));
+
+      expect(planned).toHaveLength(8);
+
+      expect(planned[1]).toMatchObject({
+        id: 'ACGC6QVZ73MDPVT',
+        minutes: 60,
+        kind: 'fixed-time',
+        work: '2275 Intern board / Placeholder CS',
+        seriesId: 'BPBT31GBME2HK8U',
+      });
+
+      expect(yield* ListPlannedEntries.decode(fixture('ListPlannedEntries-empty'))).toStrictEqual([]);
+    }),
+  );
+
+  it.effect('reads absences with approval state and note', () =>
+    Effect.gen(function* () {
+      const absences = yield* ListAbsences.decode(fixture('ListAbsences'));
+
+      expect(absences.map((absence) => [absence.date, absence.type, absence.state, absence.note])).toStrictEqual([
+        ['2026-11-02', 'Holiday', 'approved', undefined],
+        ['2026-11-03', 'Holiday', 'approved', undefined],
+        ['2026-11-20', 'Holiday', 'approved', 'privé'],
+        ['2026-11-23', 'Holiday', 'approved', 'privé'],
+        ['2026-12-25', 'Office Closed', 'approved', undefined],
+        ['2026-12-28', 'Holiday', 'pending', 'Vakantie'],
+        ['2026-12-29', 'Holiday', 'pending', 'Vakantie'],
+        ['2026-12-30', 'Holiday', 'pending', 'Vakantie'],
+        ['2026-12-31', 'Holiday', 'pending', 'Vakantie'],
+      ]);
+
+      expect(yield* ListAbsences.decode(fixture('ListAbsences-empty'))).toStrictEqual([]);
+    }),
+  );
+
+  it.effect('reads planning work and absence notes that contain a bare line feed', () =>
+    Effect.gen(function* () {
+      const [planned] = yield* ListPlannedEntries.decode(
+        fixture('ListPlannedEntries').replace('/ Morning stand-up 2026 |', '/ Morning\nstand-up 2026 |'),
+      );
+
+      expect(planned?.work).toBe('2050 Stand-up 2026 / Morning\nstand-up 2026');
+
+      const absences = yield* ListAbsences.decode(fixture('ListAbsences').replace('— privé ', '— privé\nmiddag '));
+
+      expect(absences.find(({ id }) => id === 'AB1MRN24STSHJZ2')?.note).toBe('privé\nmiddag');
+    }),
+  );
+
+  it.effect('reads bookable tasks with remaining budget, and the idle timer', () =>
+    Effect.gen(function* () {
+      const tasks = yield* ListMyTasks.decode(fixture('ListMyTasks'));
+
+      expect(tasks).toHaveLength(30);
+
+      expect(tasks.find((task) => task.id === 'PTSCJBQEWYX3KGQ')).toMatchObject({
+        label: '2050 Stand-up 2026 | Morning stand-up 2026',
+        projectNumber: '2050',
+        remainingMinutes: 158 * 60 + 51,
+      });
+
+      expect(tasks.find((task) => task.id === 'PTB3K18Q2XWAFHK')?.remainingMinutes).toBeUndefined();
+
+      expect(yield* ListMyTasks.decode(fixture('ListMyTasks-empty'))).toStrictEqual([]);
+
+      expect(yield* GetRunningTimer.decode(fixture('GetRunningTimer-idle'))).toMatchObject({ running: false });
     }),
   );
 });
