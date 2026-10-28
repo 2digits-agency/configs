@@ -8,6 +8,7 @@ import { describe, expect, it } from '@effect/vitest';
 import type * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
@@ -17,6 +18,7 @@ import * as McpServer from 'effect/ai/McpServer';
 import * as HttpRouter from 'effect/http/HttpRouter';
 
 import { Workday } from '../src/composites/GetMyWorkday.js';
+import { TicketContext } from '../src/composites/GetTicketContext.js';
 import { gatewayRoutes } from '../src/http/gateway.js';
 import { OrbitClient } from '../src/mcp/OrbitClient.js';
 import { OrbitToolsLive } from '../src/mcp/proxy.js';
@@ -178,12 +180,19 @@ const holidayWeeks = Effect.fn('CompositeTools.test.holidayWeeks')(function* () 
   });
 });
 
+const ticketReplies = {
+  ListTickets: fixture('ListTickets'),
+  GetTicketDetail: fixture('GetTicketDetail'),
+  ListTicketComments: fixture('ListTicketComments'),
+  ListTimeEntries: fixture('ListTimeEntries-ticket'),
+};
+
 describe('composite tool registration', () => {
   it.effect('registers read-only composites with output schemas next to the forwarded tools', () =>
     Effect.gen(function* () {
       const { registrations } = yield* setup({});
 
-      const composites = ['GetMyWorkday'].map((name) => {
+      const composites = ['GetMyWorkday', 'GetTicketContext'].map((name) => {
         const tool = registrations.get(name)?.tool;
 
         return {
@@ -196,6 +205,7 @@ describe('composite tool registration', () => {
 
       expect(composites).toStrictEqual([
         { name: 'GetMyWorkday', readOnly: true, destructive: false, output: 'object' },
+        { name: 'GetTicketContext', readOnly: true, destructive: false, output: 'object' },
       ]);
 
       expect(registrations.has('GetTimesheetWeek')).toBeTruthy();
@@ -347,6 +357,45 @@ describe('getMyWorkday', () => {
   );
 });
 
+describe('getTicketContext', () => {
+  it.effect('resolves a closed ticket number before reading detail, comments and time', () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup(ticketReplies);
+
+      yield* call('GetTicketContext', { ticket: '9087' });
+
+      expect(calls.map(({ name, args }) => [name, args])).toStrictEqual([
+        ['ListTickets', { query: '9087', state: 'NEW|OPEN|WAIT|CLOSED|DELETED|REQCLOSE', limit: 100 }],
+        ['GetTicketDetail', { ticketId: 'TCRFWYDSTH445WJ' }],
+        ['ListTicketComments', { ticketId: 'TCRFWYDSTH445WJ', limit: 100 }],
+        ['ListTimeEntries', { dateFrom: '2026-10-01', dateTo: '2026-10-20', text: '9087' }],
+      ]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('returns detail, comments and only the entries booked on the ticket, even with a dash in its name', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup(
+        R.map(ticketReplies, (text) => text.replaceAll('Support ticket D', 'Support — ticket D')),
+      );
+
+      const context = yield* structured(TicketContext, yield* call('GetTicketContext', { ticket: '9087' }));
+
+      expect(context.ticket).toMatchObject({ number: '9087', state: 'CLOSED', loggedMinutes: 60 });
+
+      expect(context.commentCount).toBe(3);
+
+      expect(context.timeEntries.map((entry) => entry.id)).toStrictEqual([
+        'AC6UHATHDJJ13PP',
+        'ACFERA67KXAJDCC',
+        'AC95BKNX6H2MNG2',
+      ]);
+
+      expect([context.loggedMinutes, context.mentionedIn]).toStrictEqual([60, ['ACNC5EVRCW4A2GT']]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
 const GATEWAY_KEY = Str.repeat(64)('b');
 
 const encodeJson = Schema.encodeEffect(Schema.Unknown.pipe(Schema.fromJsonString));
@@ -420,6 +469,7 @@ describe('composites over the HTTP gateway', () => {
       const send = yield* overHttp({
         ...workdayReplies,
         GetTimesheetWeek: fixture('GetTimesheetWeek-open'),
+        ...ticketReplies,
       });
 
       yield* send(
@@ -434,6 +484,7 @@ describe('composites over the HTTP gateway', () => {
 
       for (const [id, name, args] of [
         [2, 'GetMyWorkday', { date: '2026-10-28', scope: 'week' }],
+        [3, 'GetTicketContext', { ticket: '9087' }],
       ] as const) {
         const { status, body } = yield* send('tools/call', { name, arguments: args }, id);
 
@@ -445,6 +496,11 @@ describe('composites over the HTTP gateway', () => {
           name: 'GetMyWorkday',
           status: 200,
           body: { result: { isError: false, structuredContent: { to: '2026-11-01' } } },
+        },
+        {
+          name: 'GetTicketContext',
+          status: 200,
+          body: { result: { isError: false, structuredContent: { commentCount: 3 } } },
         },
       ]);
     }).pipe(Effect.scoped),

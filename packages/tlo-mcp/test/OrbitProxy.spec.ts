@@ -111,6 +111,7 @@ describe('orbit MCP proxy', () => {
       expect(Arr.map(registrations, ({ tool: { name } }) => name)).toStrictEqual([
         tool.name,
         'GetMyWorkday',
+        'GetTicketContext',
       ]);
 
       expect(registration.tool).toBe(tool);
