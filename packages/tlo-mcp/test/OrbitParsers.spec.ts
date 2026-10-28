@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from '@effect/vitest';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
+import * as Schema from 'effect/Schema';
 
 import { GetRunningTimer } from '../src/orbit/GetRunningTimer.js';
 import { GetTimesheetWeek, type TimeEntry } from '../src/orbit/GetTimesheetWeek.js';
@@ -13,6 +14,7 @@ import { ListAbsences } from '../src/orbit/ListAbsences.js';
 import { ListMyTasks } from '../src/orbit/ListMyTasks.js';
 import { ListPlannedEntries } from '../src/orbit/ListPlannedEntries.js';
 import { ListTimeEntries } from '../src/orbit/ListTimeEntries.js';
+import { GetTicketDetail, ListTicketComments, ListTickets } from '../src/orbit/tickets.js';
 
 /**
  * Raw Orbit text results (CRLF preserved) captured from live Orbit; names and free text are redacted.
@@ -257,6 +259,48 @@ describe('list parsers', () => {
   );
 });
 
+describe('ticket parsers', () => {
+  it.effect('reads ticket lists', () =>
+    Effect.gen(function* () {
+      const list = yield* ListTickets.decode(fixture('ListTickets'));
+
+      expect(list.tickets.map((ticket) => [ticket.number, ticket.ticketId])).toStrictEqual([
+        ['9087', 'TCRFWYDSTH445WJ'],
+      ]);
+
+      expect((yield* ListTickets.decode(fixture('ListTickets-empty'))).tickets).toStrictEqual([]);
+    }),
+  );
+
+  it.effect('reads ticket detail and converts its local times to Amsterdam timestamps', () =>
+    Effect.gen(function* () {
+      const detail = yield* GetTicketDetail.decode(fixture('GetTicketDetail'));
+
+      expect(iso(detail.createdDate)).toBe('2026-10-01T16:10:00.000+02:00[Europe/Amsterdam]');
+
+      expect(detail).toMatchObject({ number: '9087', state: 'CLOSED', loggedMinutes: 60 });
+
+      expect(detail.slaCloseDue).toBeNull();
+
+      expect(detail.otherOpenTicketsOfClient).toHaveLength(4);
+    }),
+  );
+
+  it.effect('reads ticket comments', () =>
+    Effect.gen(function* () {
+      const comments = yield* ListTicketComments.decode(fixture('ListTicketComments'));
+
+      expect(comments.comments.map((comment) => [comment.isInternal, comment.loggedMinutes])).toStrictEqual([
+        [true, 20],
+        [false, 0],
+        [false, 0],
+      ]);
+
+      expect(iso(comments.comments[0]?.date)).toBe('2026-10-20T11:38:00.000+02:00[Europe/Amsterdam]');
+    }),
+  );
+});
+
 describe('lines seen live', () => {
   it.effect('reads an entry whose description contains a bare line feed', () =>
     Effect.gen(function* () {
@@ -270,6 +314,45 @@ describe('lines seen live', () => {
         ],
         ['ACP3TV9HZE6LQ2M', '1931 Interne uren 2026 / Alex Example', undefined],
       ]);
+    }),
+  );
+});
+
+describe('format changes', () => {
+  it.effect('fail with a SchemaError naming the line Orbit sent', () =>
+    Effect.gen(function* () {
+      const week = yield* GetTimesheetWeek.decode(
+        fixture('GetTimesheetWeek-open').replace(
+          '| Mon 2026-10-26 | OPEN | 8h |',
+          '| Mon 2026-10-26 | OPEN | 8 hours |',
+        ),
+      ).pipe(Effect.flip);
+
+      expect(Schema.isSchemaError(week)).toBeTruthy();
+
+      expect(week.message).toContain('GetTimesheetWeek: line 5: Unexpected line: "| Mon 2026-10-26 | OPEN | 8 hours |');
+
+      const tasks = yield* ListMyTasks.decode(
+        fixture('ListMyTasks').replace('| 1h | PTEQ4TF9Y52WMP6 |', '| 1h | ? |'),
+      ).pipe(Effect.flip);
+
+      expect(tasks.message).toContain('ListMyTasks: line 5: Unexpected line');
+
+      const absences = yield* ListAbsences.decode(
+        fixture('ListAbsences').replace('| APPROVED  (api_id', '| ON HOLD  (api_id'),
+      ).pipe(Effect.flip);
+
+      expect(absences.message).toContain('ListAbsences: line 3: Unexpected line');
+    }),
+  );
+
+  it.effect('fail with the JSON path for JSON results', () =>
+    Effect.gen(function* () {
+      const error = yield* ListTicketComments.decode(
+        fixture('ListTicketComments').replace('"2026-10-20 11:38"', '"20-10-2026 11:38"'),
+      ).pipe(Effect.flip);
+
+      expect(error.message).toContain('["comments"][0]["date"]');
     }),
   );
 });
