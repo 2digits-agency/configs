@@ -112,6 +112,7 @@ describe('orbit MCP proxy', () => {
         tool.name,
         'GetMyWorkday',
         'GetTicketContext',
+        'GetBoardContext',
       ]);
 
       expect(registration.tool).toBe(tool);

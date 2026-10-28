@@ -15,12 +15,13 @@ import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
-import type * as McpClientError from 'effect/ai/McpClientError';
+import * as McpClientError from 'effect/ai/McpClientError';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as McpServer from 'effect/ai/McpServer';
 import * as HttpRouter from 'effect/http/HttpRouter';
 import * as TestClock from 'effect/testing/TestClock';
 
+import { BoardContext } from '../src/composites/GetBoardContext.js';
 import { Workday } from '../src/composites/GetMyWorkday.js';
 import { TicketContext } from '../src/composites/GetTicketContext.js';
 import { gatewayRoutes } from '../src/http/gateway.js';
@@ -224,7 +225,7 @@ describe('composite tool registration', () => {
     Effect.gen(function* () {
       const { registrations } = yield* setup({});
 
-      const composites = ['GetMyWorkday', 'GetTicketContext'].map((name) => {
+      const composites = ['GetMyWorkday', 'GetTicketContext', 'GetBoardContext'].map((name) => {
         const tool = registrations.get(name)?.tool;
 
         return {
@@ -238,6 +239,7 @@ describe('composite tool registration', () => {
       expect(composites).toStrictEqual([
         { name: 'GetMyWorkday', readOnly: true, destructive: false, output: 'object' },
         { name: 'GetTicketContext', readOnly: true, destructive: false, output: 'object' },
+        { name: 'GetBoardContext', readOnly: true, destructive: false, output: 'object' },
       ]);
 
       expect(registrations.has('GetTimesheetWeek')).toBeTruthy();
@@ -468,6 +470,215 @@ describe('getTicketContext', () => {
   );
 });
 
+describe('composite errors', () => {
+  it.effect('return readable error results, and rate limits like forwarded tools', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup({
+        ListTickets: fixture('ListTickets-empty'),
+        GetTicketDetail: fixture('GetTicket-invalid-id'),
+        ListBoards: McpClientError.McpClientError.make({
+          reason: McpClientError.HttpError.make({ status: 429, retryAfter: '30' }),
+        }),
+      });
+
+      const missing = yield* call('GetTicketContext', { ticket: '1234' });
+
+      expect([missing.isError, textOf(missing)]).toStrictEqual([true, 'No ticket with number 1234 found.']);
+
+      const invalid = yield* call('GetTicketContext', { ticket: 'TCAAAAAAAAAAAAA' });
+
+      // Orbit answers isError: false with this text; the gateway still reports it as an error.
+      expect([invalid.isError, textOf(invalid)]).toStrictEqual([
+        true,
+        "MCP tool reported an error: Error: '9087' is not a valid TICKET API ID for this account.",
+      ]);
+
+      const limited = yield* call('GetBoardContext', { board: 'anything' });
+
+      expect([limited.isError, limited._meta, textOf(limited)]).toStrictEqual([
+        true,
+        { 'tlo-mcp/httpStatus': 429, 'tlo-mcp/retryAfter': '30' },
+        'Orbit rate limited this call; retry after 30. Not replayed.',
+      ]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
+describe('orbit replies', () => {
+  it.effect('fail visibly when Orbit answers without exactly one text block', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup({
+        ...workdayReplies,
+        GetTimesheetWeek: fixture('GetTimesheetWeek-open'),
+        ListAbsences: McpSchema.CallToolResult.make({ content: [] }),
+      });
+
+      const result = yield* call('GetMyWorkday', { date: OPEN_WEDNESDAY, scope: 'week' });
+
+      expect([result.isError, textOf(result)]).toStrictEqual([true, 'Missing key\n  at [0]']);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('fail when a week does not cover the range, or the ticket search hit its cap', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup({ ...workdayReplies, GetTimesheetWeek: fixture('GetTimesheetWeek-mixed') });
+
+      const shifted = yield* call('GetMyWorkday', { date: OPEN_WEDNESDAY, scope: 'week' });
+
+      expect([shifted.isError, textOf(shifted)]).toStrictEqual([
+        true,
+        "Orbit's timesheets do not cover every day of 2026-10-26..2026-11-01.",
+      ]);
+
+      const tickets = yield* encodeJson({
+        count: 100,
+        tickets: Arr.replicate({ ticketId: 'TCRFWYDSTH445WJ', number: '19087', name: 'Other', state: 'OPEN' }, 100),
+      });
+
+      const { call: callTickets } = yield* setup({ ListTickets: tickets });
+
+      const capped = yield* callTickets('GetTicketContext', { ticket: '9087' });
+
+      expect(textOf(capped)).toBe(
+        'Ticket 9087 is not in the first 100 search results Orbit returned; pass the ticket api_id instead.',
+      );
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
+describe('getBoardContext', () => {
+  const todos = fixture('ListTodos');
+
+  const boardReplies = {
+    ListBoards: fixture('ListBoards'),
+    ListBoardLists: fixture('ListBoardLists'),
+    ListTodos: ({ state }: Schema.JsonObject) =>
+      state === 'all'
+        ? todos
+        : `1 card(s):\r\n${todos.split('\r\n').find((line) => line.startsWith('- TDFPXAJVJE7RMQ5'))}\r\n`,
+    GetTodoDetail: fixture('GetTodoDetail'),
+  };
+
+  it.effect('groups cards under their columns, matching the board name case-insensitively', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup(boardReplies);
+
+      const boardContextResult = yield* call('GetBoardContext', {
+        board: '2045 client south | acief',
+        includeDone: true,
+        details: false,
+      });
+
+      const board = yield* structured(BoardContext, boardContextResult);
+
+      expect(board.board.id).toBe('BO1GWM3SZPBP5NP');
+
+      expect(board.columns.map((column) => [column.id, column.name, column.done, column.cards.length])).toStrictEqual([
+        ['KC18XMJS1WFQRM3', 'Backlog', false, 0],
+        ['KCNK9U9T62DZA49', 'To do', false, 11],
+        ['KC74DC1DK3EW51P', 'In Progress', false, 1],
+        ['KC96AKDWUHCK57J', 'In Review', false, 1],
+        ['KCJ8PZV17MNT4ZT', 'Live', false, 0],
+        ['KCQ5Y1MENXH9G89', 'Done', true, 1],
+      ]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('adds card detail by default and asks for an api_id when the name is ambiguous', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup(boardReplies);
+
+      const boardContextResult = yield* call('GetBoardContext', { board: 'BO1GWM3SZPBP5NP' });
+
+      const detailed = yield* structured(BoardContext, boardContextResult);
+
+      const card = detailed.columns[2]?.cards[0];
+
+      expect([card?.id, card?.checklist, card?.linked?.length]).toStrictEqual([
+        'TDFPXAJVJE7RMQ5',
+        '0/0 done | comments 1 | files 0 | followers 0',
+        2,
+      ]);
+
+      const ambiguous = yield* call('GetBoardContext', { board: 'Client' });
+
+      expect(textOf(ambiguous)).toContain('"Client" matches 5 boards');
+
+      const [, other = ''] = Str.split(fixture('ListBoards'), '\r\n');
+
+      const { call: callMany } = yield* setup({
+        ...boardReplies,
+        ListBoards: `100 board(s):\r\n${Arr.join(Arr.replicate(other, 100), '\r\n')}\r\n`,
+      });
+
+      const capped = yield* callMany('GetBoardContext', { board: 'BO1GWM3SZPBP5NP' });
+
+      expect([capped.isError, textOf(capped)]).toMatchObject([
+        true,
+        expect.stringContaining('in the first 100 boards Orbit returned'),
+      ]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('splits card names that contain " | " off the known board name, and keeps the priority', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup({
+        ...boardReplies,
+        ListTodos: todos
+          .replace('| BL-01 vragen naar klant sturen |', '| FE | vragen naar klant sturen |')
+          .replace('| due 2026-10-22 | owner', '| due 2026-10-22 | prio high | owner'),
+      });
+
+      const boardContextResult = yield* call('GetBoardContext', {
+        board: 'BO1GWM3SZPBP5NP',
+        includeDone: true,
+        details: false,
+      });
+
+      const board = yield* structured(BoardContext, boardContextResult);
+
+      expect([board.columns[1]?.cards[0], board.cardsTruncated]).toMatchObject([
+        { id: 'TD8H65VYHYWE65T', name: 'FE | vragen naar klant sturen', priority: 'high' },
+        false,
+      ]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('fails when a card sits in a column ListBoardLists did not return, and flags the 100-card cap', () =>
+    Effect.gen(function* () {
+      const lists = fixture('ListBoardLists');
+
+      const { call } = yield* setup({
+        ...boardReplies,
+        ListBoardLists: Arr.join(
+          Arr.filter(Str.split(lists, '\r\n'), (line) => !Str.includes('KCNK9U9T62DZA49')(line)),
+          '\r\n',
+        ),
+      });
+
+      const changed = yield* call('GetBoardContext', { board: 'BO1GWM3SZPBP5NP', includeDone: true, details: false });
+
+      expect([changed.isError, textOf(changed)]).toMatchObject([
+        true,
+        expect.stringContaining('The board changed while it was read: card TD8H65VYHYWE65T is in column To do'),
+      ]);
+
+      const [, card = ''] = Str.split(todos, '\r\n');
+
+      const { call: callFull } = yield* setup({
+        ...boardReplies,
+        ListTodos: `100 card(s):\r\n${Arr.join(Arr.replicate(card, 100), '\r\n')}\r\n`,
+      });
+
+      const boardContextResult = yield* callFull('GetBoardContext', { board: 'BO1GWM3SZPBP5NP', details: false });
+
+      const full = yield* structured(BoardContext, boardContextResult);
+
+      expect(full.cardsTruncated).toBeTruthy();
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
 class HttpRequestError extends Schema.TaggedError<HttpRequestError, { readonly brand: unique symbol }>()(
   'HttpRequestError',
   { cause: Schema.Unknown },
@@ -554,6 +765,10 @@ describe('composites over the HTTP gateway', () => {
         ...workdayReplies,
         GetTimesheetWeek: fixture('GetTimesheetWeek-open'),
         ...ticketReplies,
+        ListBoards: fixture('ListBoards'),
+        ListBoardLists: fixture('ListBoardLists'),
+        ListTodos: fixture('ListTodos'),
+        GetTodoDetail: fixture('GetTodoDetail'),
       });
 
       yield* send(
@@ -569,6 +784,7 @@ describe('composites over the HTTP gateway', () => {
       for (const [id, name, args] of [
         [2, 'GetMyWorkday', { date: OPEN_WEDNESDAY, scope: 'week' }],
         [3, 'GetTicketContext', { ticket: '9087' }],
+        [4, 'GetBoardContext', { board: 'BO1GWM3SZPBP5NP', details: false }],
       ] as const) {
         const { status, body } = yield* send('tools/call', { name, arguments: args }, id);
 
@@ -585,6 +801,11 @@ describe('composites over the HTTP gateway', () => {
           name: 'GetTicketContext',
           status: 200,
           body: { result: { isError: false, structuredContent: { commentCount: 3 } } },
+        },
+        {
+          name: 'GetBoardContext',
+          status: 200,
+          body: { result: { isError: false, structuredContent: { board: { id: 'BO1GWM3SZPBP5NP' } } } },
         },
       ]);
     }).pipe(Effect.scoped),
