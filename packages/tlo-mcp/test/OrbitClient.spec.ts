@@ -9,7 +9,7 @@ import * as Struct from 'effect/Struct';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as TestClock from 'effect/testing/TestClock';
 
-import { OrbitClient, OrbitClientLive } from '../src/mcp/OrbitClient.js';
+import { OrbitClient, OrbitClientLive, OrbitMcpError } from '../src/mcp/OrbitClient.js';
 import { OrbitAuth } from '../src/oauth/OrbitAuth.js';
 import { OrbitAuthError } from '../src/oauth/session.js';
 
@@ -181,7 +181,9 @@ describe('orbit MCP client', () => {
     return Effect.gen(function* () {
       const error = yield* Layer.build(OrbitClientLive.pipe(Layer.provide(expired))).pipe(Effect.flip);
 
-      expect(error).toMatchObject({ _tag: 'OrbitMcpError', message: 'Orbit session expired. Run tlo-mcp login.' });
+      expect(error).toBeInstanceOf(OrbitMcpError);
+
+      expect(error.message).toBe('Orbit session expired. Run tlo-mcp login.');
 
       expect(sent).toStrictEqual([]);
     }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetch), Effect.scoped);
@@ -211,7 +213,7 @@ describe('orbit MCP client', () => {
 
         const error = yield* client.callTool(tool, {}).pipe(Effect.flip);
 
-        expect(error).toMatchObject({ _tag: 'OrbitMcpError' });
+        expect(error).toBeInstanceOf(OrbitMcpError);
 
         expect(error.message).toContain(message);
 
@@ -229,11 +231,15 @@ describe('orbit MCP client', () => {
 
     const { sent, fetch } = orbit((_id, init) =>
       Effect.callback<Response>((resume) => {
-        init?.signal?.addEventListener('abort', () => {
-          aborted = true;
+        init?.signal?.addEventListener(
+          'abort',
+          () => {
+            aborted = true;
 
-          resume(Effect.die('aborted'));
-        });
+            resume(Effect.die('aborted'));
+          },
+          { once: true },
+        );
       }),
     );
 

@@ -5,6 +5,7 @@ import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as Struct from 'effect/Struct';
 import * as McpClient from 'effect/ai/McpClient';
@@ -37,7 +38,7 @@ const isOrbitAuthError = Schema.is(OrbitAuthError);
 function orbitError(error: McpClientError.McpClientError) {
   const { reason } = error;
 
-  if (reason._tag === 'HttpError') {
+  if (P.isTagged(reason, 'HttpError')) {
     if (reason.status === 401 || reason.status === 403) {
       return OrbitMcpError.make({
         message: `Orbit HTTP ${reason.status}: authorization rejected. Run tlo-mcp login; a 403 can also mean insufficient rights.`,
@@ -54,7 +55,7 @@ function orbitError(error: McpClientError.McpClientError) {
   }
 
   const authFailure =
-    reason._tag === 'TransportError' && HttpClientError.isHttpClientError(reason.cause)
+    P.isTagged(reason, 'TransportError') && HttpClientError.isHttpClientError(reason.cause)
       ? reason.cause.reason.cause
       : undefined;
 
