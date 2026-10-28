@@ -6,10 +6,11 @@ import * as Layer from 'effect/Layer';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Struct from 'effect/Struct';
+import * as McpClientError from 'effect/ai/McpClientError';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as TestClock from 'effect/testing/TestClock';
 
-import { OrbitClient, OrbitClientLive, OrbitMcpError } from '../src/mcp/OrbitClient.js';
+import { OrbitClient, OrbitClientLive } from '../src/mcp/OrbitClient.js';
 import { OrbitAuth } from '../src/oauth/OrbitAuth.js';
 import { OrbitAuthError } from '../src/oauth/session.js';
 
@@ -149,15 +150,15 @@ describe('orbit MCP client', () => {
       });
 
       expect(sent).toStrictEqual([
-        { method: 'initialize', authorization: 'Bearer token-1', session: undefined, redirect: 'error' },
+        { method: 'initialize', authorization: 'Bearer token-2', session: undefined, redirect: 'error' },
         {
           method: 'notifications/initialized',
-          authorization: 'Bearer token-2',
+          authorization: 'Bearer token-3',
           session: 'orbit-session',
           redirect: 'error',
         },
-        { method: 'tools/list', authorization: 'Bearer token-3', session: 'orbit-session', redirect: 'error' },
-        { method: 'tools/call', authorization: 'Bearer token-4', session: 'orbit-session', redirect: 'error' },
+        { method: 'tools/list', authorization: 'Bearer token-4', session: 'orbit-session', redirect: 'error' },
+        { method: 'tools/call', authorization: 'Bearer token-5', session: 'orbit-session', redirect: 'error' },
       ]);
     }).pipe(
       Effect.provide(OrbitClientLive.pipe(Layer.provide(countingAuth()))),
@@ -166,7 +167,7 @@ describe('orbit MCP client', () => {
     );
   });
 
-  it.effect('fails startup with the Orbit login error before sending anything', () => {
+  it.effect('fails startup with the typed Orbit login error before sending anything', () => {
     const { sent, fetch } = orbit(() => Effect.die('Unexpected tool call'));
 
     const expired = Layer.succeed(
@@ -181,7 +182,7 @@ describe('orbit MCP client', () => {
     return Effect.gen(function* () {
       const error = yield* Layer.build(OrbitClientLive.pipe(Layer.provide(expired))).pipe(Effect.flip);
 
-      expect(error).toBeInstanceOf(OrbitMcpError);
+      expect(error).toBeInstanceOf(OrbitAuthError);
 
       expect(error.message).toBe('Orbit session expired. Run tlo-mcp login.');
 
@@ -189,14 +190,7 @@ describe('orbit MCP client', () => {
     }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetch), Effect.scoped);
   });
 
-  const statuses: Array<[number, string]> = [
-    [401, 'Orbit HTTP 401: authorization rejected. Run tlo-mcp login'],
-    [403, 'Orbit HTTP 403: authorization rejected. Run tlo-mcp login'],
-    [429, 'Orbit rate limited. Retry after 17; request not replayed.'],
-    [500, 'Orbit HTTP 500. Request not replayed.'],
-  ];
-
-  for (const [status, message] of statuses) {
+  for (const status of [401, 403, 429, 500]) {
     it.effect(`reports HTTP ${status} tool calls without replaying them`, () => {
       const { sent, fetch } = orbit(() =>
         Effect.succeed(new Response(undefined, { status, headers: { 'retry-after': '17' } })),
@@ -213,9 +207,9 @@ describe('orbit MCP client', () => {
 
         const error = yield* client.callTool(tool, {}).pipe(Effect.flip);
 
-        expect(error).toBeInstanceOf(OrbitMcpError);
+        expect(error.reason).toBeInstanceOf(McpClientError.HttpError);
 
-        expect(error.message).toContain(message);
+        expect(error.reason).toMatchObject({ status, retryAfter: '17' });
 
         expect(Arr.filter(sent, (request) => request.method === 'tools/call')).toHaveLength(1);
       }).pipe(
@@ -262,7 +256,7 @@ describe('orbit MCP client', () => {
 
       const error = yield* Fiber.join(pending).pipe(Effect.flip);
 
-      expect(error.message).toContain('Request not replayed');
+      expect(error.reason).toBeInstanceOf(McpClientError.TimeoutError);
 
       expect(aborted).toBeTruthy();
 

@@ -5,8 +5,7 @@ import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
-import * as P from 'effect/Predicate';
-import * as Schema from 'effect/Schema';
+import type * as Schema from 'effect/Schema';
 import * as Struct from 'effect/Struct';
 import * as McpClient from 'effect/ai/McpClient';
 import type * as McpClientError from 'effect/ai/McpClientError';
@@ -18,51 +17,8 @@ import * as HttpClientError from 'effect/http/HttpClientError';
 import * as HttpClientRequest from 'effect/http/HttpClientRequest';
 
 import { OrbitAuth } from '../oauth/OrbitAuth.js';
-import { ORBIT_RESOURCE, OrbitAuthError } from '../oauth/session.js';
+import { ORBIT_RESOURCE } from '../oauth/session.js';
 import { EXPOSED_TOOLS } from './tools.js';
-
-export class OrbitMcpError extends Schema.TaggedError<OrbitMcpError, { readonly brand: unique symbol }>()(
-  'OrbitMcpError',
-  {
-    message: Schema.String,
-  },
-) {}
-
-const isOrbitAuthError = Schema.is(OrbitAuthError);
-
-/**
- * Explain an upstream failure; McpClient never retries, so no request is replayed.
- *
- * @param error
- */
-function orbitError(error: McpClientError.McpClientError) {
-  const { reason } = error;
-
-  if (P.isTagged(reason, 'HttpError')) {
-    if (reason.status === 401 || reason.status === 403) {
-      return OrbitMcpError.make({
-        message: `Orbit HTTP ${reason.status}: authorization rejected. Run tlo-mcp login; a 403 can also mean insufficient rights.`,
-      });
-    }
-
-    if (reason.status === 429) {
-      return OrbitMcpError.make({
-        message: `Orbit rate limited. Retry after ${reason.retryAfter ?? 'the server cooldown'}; request not replayed.`,
-      });
-    }
-
-    return OrbitMcpError.make({ message: `Orbit HTTP ${reason.status}. Request not replayed.` });
-  }
-
-  const authFailure =
-    P.isTagged(reason, 'TransportError') && HttpClientError.isHttpClientError(reason.cause)
-      ? reason.cause.reason.cause
-      : undefined;
-
-  return OrbitMcpError.make({
-    message: isOrbitAuthError(authFailure) ? authFailure.message : `Orbit: ${reason.message}. Request not replayed.`,
-  });
-}
 
 export interface OrbitClientShape {
   /**
@@ -73,7 +29,7 @@ export interface OrbitClientShape {
   readonly callTool: (
     tool: McpSchema.Tool,
     arguments_: Schema.JsonObject,
-  ) => Effect.Effect<McpSchema.CallToolResult, OrbitMcpError>;
+  ) => Effect.Effect<McpSchema.CallToolResult, McpClientError.McpClientError>;
 }
 
 export class OrbitClient extends Context.Service<OrbitClient, OrbitClientShape>()('@2digits/tlo-mcp/mcp/OrbitClient') {}
@@ -106,6 +62,9 @@ const OrbitHttpClient = Layer.effect(
 export const OrbitClientLive = Layer.effect(
   OrbitClient,
   Effect.gen(function* () {
+    // Fail startup with the typed login error; later refresh failures surface as the transport error's cause.
+    yield* (yield* OrbitAuth).accessToken;
+
     const transport = yield* McpClient.http({ protocol: McpProtocol.v2025_11_25, url: ORBIT_RESOURCE });
 
     const client = yield* McpClient.make({ name: '@2digits/tlo-mcp', version: '1.0.0' }).pipe(
@@ -125,7 +84,7 @@ export const OrbitClientLive = Layer.effect(
       instructions: client.instructions,
       callTool: Effect.fn('OrbitClient.callTool')(function* (tool, args) {
         return yield* client.callTool({ tool, arguments: args }, { timeout: '120 seconds' });
-      }, Effect.mapError(orbitError)),
+      }),
     });
-  }).pipe(Effect.mapError(orbitError)),
+  }),
 ).pipe(Layer.provide(OrbitHttpClient));
