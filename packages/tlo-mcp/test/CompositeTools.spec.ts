@@ -11,6 +11,7 @@ import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as P from 'effect/Predicate';
+import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
@@ -18,8 +19,10 @@ import type * as McpClientError from 'effect/ai/McpClientError';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as McpServer from 'effect/ai/McpServer';
 import * as HttpRouter from 'effect/http/HttpRouter';
+import * as TestClock from 'effect/testing/TestClock';
 
 import { Workday } from '../src/composites/GetMyWorkday.js';
+import { TicketContext } from '../src/composites/GetTicketContext.js';
 import { gatewayRoutes } from '../src/http/gateway.js';
 import { OrbitClient } from '../src/mcp/OrbitClient.js';
 import { OrbitToolsLive } from '../src/mcp/proxy.js';
@@ -209,12 +212,19 @@ const holidayWeeks = Effect.fn('CompositeTools.test.holidayWeeks')(function* () 
   });
 });
 
+const ticketReplies = {
+  ListTickets: fixture('ListTickets'),
+  GetTicketDetail: fixture('GetTicketDetail'),
+  ListTicketComments: fixture('ListTicketComments'),
+  ListTimeEntries: fixture('ListTimeEntries-ticket'),
+};
+
 describe('composite tool registration', () => {
   it.effect('registers read-only composites with output schemas next to the forwarded tools', () =>
     Effect.gen(function* () {
       const { registrations } = yield* setup({});
 
-      const composites = ['GetMyWorkday'].map((name) => {
+      const composites = ['GetMyWorkday', 'GetTicketContext'].map((name) => {
         const tool = registrations.get(name)?.tool;
 
         return {
@@ -227,6 +237,7 @@ describe('composite tool registration', () => {
 
       expect(composites).toStrictEqual([
         { name: 'GetMyWorkday', readOnly: true, destructive: false, output: 'object' },
+        { name: 'GetTicketContext', readOnly: true, destructive: false, output: 'object' },
       ]);
 
       expect(registrations.has('GetTimesheetWeek')).toBeTruthy();
@@ -399,6 +410,64 @@ describe('getMyWorkday', () => {
   );
 });
 
+describe('getTicketContext', () => {
+  it.effect('resolves a closed ticket number, then reads detail, comments and time booked up to today', () =>
+    Effect.gen(function* () {
+      yield* TestClock.setTime(Date.UTC(2026, 9, 31, 10));
+
+      const { call, calls } = yield* setup(ticketReplies);
+
+      yield* call('GetTicketContext', { ticket: '9087' });
+
+      expect(calls.map(({ name, args }) => [name, args])).toStrictEqual([
+        ['ListTickets', { query: '9087', state: 'NEW|OPEN|WAIT|CLOSED|DELETED|REQCLOSE', limit: 100 }],
+        ['GetTicketDetail', { ticketId: 'TCRFWYDSTH445WJ' }],
+        ['ListTicketComments', { ticketId: 'TCRFWYDSTH445WJ', limit: 100 }],
+        ['ListTimeEntries', { dateFrom: '2026-10-01', dateTo: '2026-10-31', text: '9087' }],
+      ]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('counts only entries on this ticket number, even with a dash in its name, a shared or an old title', () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup(
+        R.map(ticketReplies, (text) =>
+          text
+            .replace(
+              'ticket "Support ticket D" — 9087 Support ticket D  (api_id: AC95BKNX6H2MNG2)',
+              'ticket "Old — title" — 9087 Old — title  (api_id: AC95BKNX6H2MNG2)',
+            )
+            .replaceAll('Support ticket D', 'Support — ticket D')
+            .replace(
+              '(api_id: AC95BKNX6H2MNG2) [locked: timesheet submitted (FINAL)]\r\n',
+              '(api_id: AC95BKNX6H2MNG2) [locked: timesheet submitted (FINAL)]\r\n- 2026-10-21 10:00 | Alex Example | 0h40 | ticket "Support — ticket D" — 1234 Support — ticket D related to 9087  (api_id: ACW4TQ8ZD2K6RMH)\r\n- 2026-10-22 10:00 | Alex Example | 2h [PLANNED] | ticket "Support — ticket D" — 9087 Support — ticket D  (api_id: ACPLANNED000001)\r\n- 2026-10-23 10:00 | Alex Example | 0h30 | ticket "Other" — 19087 Other  (api_id: ACOTHER00000001)\r\n',
+            ),
+        ),
+      );
+
+      const ticketContextResult = yield* call('GetTicketContext', { ticket: '9087' });
+
+      const context = yield* structured(TicketContext, ticketContextResult);
+
+      expect(context.ticket).toMatchObject({ number: '9087', state: 'CLOSED', loggedMinutes: 60 });
+
+      expect(context.commentCount).toBe(3);
+
+      expect(context.timeEntries.map((entry) => entry.id)).toStrictEqual([
+        'AC6UHATHDJJ13PP',
+        'ACFERA67KXAJDCC',
+        'AC95BKNX6H2MNG2',
+        'ACPLANNED000001',
+      ]);
+
+      // The planned entry is listed but not counted; 19087 and an entry without the number are not mentions.
+      expect([context.loggedMinutes, context.mentionedIn]).toStrictEqual([60, ['ACW4TQ8ZD2K6RMH']]);
+
+      expect([context.timeEntries[2]?.work, context.commentsTruncated]).toStrictEqual(['ticket "Old — title"', false]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
 class HttpRequestError extends Schema.TaggedError<HttpRequestError, { readonly brand: unique symbol }>()(
   'HttpRequestError',
   { cause: Schema.Unknown },
@@ -484,6 +553,7 @@ describe('composites over the HTTP gateway', () => {
       const send = yield* overHttp({
         ...workdayReplies,
         GetTimesheetWeek: fixture('GetTimesheetWeek-open'),
+        ...ticketReplies,
       });
 
       yield* send(
@@ -497,7 +567,8 @@ describe('composites over the HTTP gateway', () => {
       const results = [];
 
       for (const [id, name, args] of [
-        [2, 'GetMyWorkday', { date: '2026-10-28', scope: 'week' }],
+        [2, 'GetMyWorkday', { date: OPEN_WEDNESDAY, scope: 'week' }],
+        [3, 'GetTicketContext', { ticket: '9087' }],
       ] as const) {
         const { status, body } = yield* send('tools/call', { name, arguments: args }, id);
 
@@ -509,6 +580,11 @@ describe('composites over the HTTP gateway', () => {
           name: 'GetMyWorkday',
           status: 200,
           body: { result: { isError: false, structuredContent: { to: '2026-11-01' } } },
+        },
+        {
+          name: 'GetTicketContext',
+          status: 200,
+          body: { result: { isError: false, structuredContent: { commentCount: 3 } } },
         },
       ]);
     }).pipe(Effect.scoped),
