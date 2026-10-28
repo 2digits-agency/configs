@@ -14,6 +14,7 @@ import { ListAbsences } from '../src/orbit/ListAbsences.js';
 import { ListMyTasks } from '../src/orbit/ListMyTasks.js';
 import { ListPlannedEntries } from '../src/orbit/ListPlannedEntries.js';
 import { ListTimeEntries } from '../src/orbit/ListTimeEntries.js';
+import { GetTodoDetail, ListBoardLists, ListBoards, ListTodos } from '../src/orbit/boards.js';
 import { GetTicketDetail, ListTicketComments, ListTickets } from '../src/orbit/tickets.js';
 
 /**
@@ -424,6 +425,88 @@ describe('ticket parsers', () => {
   );
 });
 
+describe('board parsers', () => {
+  it.effect('reads boards and columns', () =>
+    Effect.gen(function* () {
+      const boards = yield* decode(ListBoards)(fixture('ListBoards'));
+
+      expect(boards[1]).toMatchObject({
+        id: 'BO1GWM3SZPBP5NP',
+        name: '2045 Client South | Acief',
+        listCount: 6,
+        cardCount: 14,
+      });
+
+      const listBoardsEmpty = yield* decode(ListBoards)(fixture('ListBoards-empty'));
+
+      expect(listBoardsEmpty).toStrictEqual([]);
+
+      const lists = yield* decode(ListBoardLists)(fixture('ListBoardLists'));
+
+      expect(lists.map((list) => [list.name, list.cardCount, list.done])).toStrictEqual([
+        ['Backlog', 0, false],
+        ['To do', 11, false],
+        ['In Progress', 1, false],
+        ['In Review', 1, false],
+        ['Live', 0, false],
+        ['Done', 1, true],
+      ]);
+
+      const listBoardListsTemplate = yield* decode(ListBoardLists)(fixture('ListBoardLists-template'));
+
+      expect(listBoardListsTemplate).toHaveLength(6);
+    }),
+  );
+
+  it.effect('reads cards, including done cards and cards without a due date', () =>
+    Effect.gen(function* () {
+      const cards = yield* decode(ListTodos)(fixture('ListTodos'));
+
+      expect(cards).toHaveLength(14);
+
+      expect(cards[2]).toMatchObject({
+        id: 'TD5TVDAC9FJUQJU',
+        heading: 'BL-02 — Transactiedatering en refunds | 2045 Client South | Acief',
+        listId: 'KCQ5Y1MENXH9G89',
+        list: 'Done',
+        done: true,
+        due: '2026-10-23',
+      });
+
+      expect(cards[13]).toMatchObject({ ownerId: 'UST7V7BUH3KZ2WQ', done: false });
+
+      // JSON-RPC cannot carry undefined, so absent values must be absent keys.
+      expect(cards[13]).not.toHaveProperty('due');
+
+      const listTodosEmpty = yield* decode(ListTodos)(fixture('ListTodos-empty'));
+
+      expect(listTodosEmpty).toStrictEqual([]);
+    }),
+  );
+
+  it.effect('reads card detail with a multi-line description and linked tasks', () =>
+    Effect.gen(function* () {
+      const detail = yield* decode(GetTodoDetail)(fixture('GetTodoDetail'));
+
+      expect(detail).toMatchObject({
+        id: 'TDFPXAJVJE7RMQ5',
+        listId: 'KC74DC1DK3EW51P',
+        list: 'In Progress',
+        ownerId: 'UST7V7BUH3KZ2WQ',
+        due: '2026-10-28',
+        checklist: '0/0 done | comments 1 | files 0 | followers 0',
+      });
+
+      expect(detail.description).toContain('\nWat: klant accordeert');
+
+      expect(detail.linked.map((link) => [link.type, link.id])).toStrictEqual([
+        ['PROJECT_TASK', 'PT3DCNCG9N22AMX'],
+        ['PROJECT_TASK', 'PTKHQ9S2H8MNE2S'],
+      ]);
+    }),
+  );
+});
+
 describe('lines seen live', () => {
   it.effect('reads an entry whose description contains a bare line feed', () =>
     Effect.gen(function* () {
@@ -437,6 +520,60 @@ describe('lines seen live', () => {
         ],
         ['ACP3TV9HZE6LQ2M', '1931 Interne uren 2026 / Alex Example', undefined],
       ]);
+    }),
+  );
+
+  it.effect('reads unassigned cards and card labels', () =>
+    Effect.gen(function* () {
+      const [card] = yield* decode(ListTodos)(fixture('ListTodos-unassigned'));
+
+      expect(card).toMatchObject({ id: 'TD71KP8DZSNRW1K', list: 'Sprint 7', listId: 'KCQVJRBER289UHQ' });
+
+      expect(card).not.toHaveProperty('ownerId');
+
+      const detail = yield* decode(GetTodoDetail)(fixture('GetTodoDetail-label'));
+
+      expect(detail.labels).toStrictEqual([{ id: 'BCVRJPA3A5CQC1E', name: 'Sprint 1' }]);
+
+      expect(detail).not.toHaveProperty('ownerId');
+    }),
+  );
+
+  it.effect('fails on an unknown card owner, and keeps a pipe in an absence user name out of the type', () =>
+    Effect.gen(function* () {
+      const owner = yield* decode(GetTodoDetail)(
+        fixture('GetTodoDetail-label').replace('Owner: unassigned', 'Owner: someone-else'),
+      ).pipe(Effect.flip);
+
+      expect(owner.message).toContain('Unexpected line: "Owner: someone-else"');
+
+      const [absence] = yield* decode(ListAbsences)(
+        fixture('ListAbsences').replace('| Alex Example |', '| Alex | Example |'),
+      );
+
+      expect(absence?.type).toBe('Holiday');
+    }),
+  );
+
+  it.effect('reads card priority from the list and the detail', () =>
+    Effect.gen(function* () {
+      const [card] = yield* decode(ListTodos)(fixture('ListTodos-priority'));
+
+      expect(card).toMatchObject({
+        heading: 'SU inplannen | 1008 CDP Implementatie proces | Client North | 2DIGITS Custom App',
+        due: '2024-10-30',
+        priority: 'high',
+        ownerId: 'USRRTYG4BXFMUDU',
+      });
+
+      const getTodoDetailPriority = yield* decode(GetTodoDetail)(fixture('GetTodoDetail-priority'));
+
+      expect(getTodoDetailPriority).toMatchObject({
+        name: 'SU inplannen',
+        due: '2024-10-30',
+        priority: 'high',
+        ownerId: 'USRRTYG4BXFMUDU',
+      });
     }),
   );
 });
