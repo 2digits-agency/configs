@@ -1,3 +1,9 @@
+## @2digits/tlo-mcp@2.0.11
+
+### Update Effect dependencies
+
+- Updated Effect and its Node platform integration to 4.0.7.
+
 ## @2digits/tlo-mcp@2.0.10
 
 ### Type-check with tsrs

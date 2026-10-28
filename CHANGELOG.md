@@ -1,3 +1,15 @@
+## @2digits/config-monorepo@0.1.19
+
+### Update `tsrs` to 0.20.1-ts7.1.0-beta
+
+
+
+### Update pnpm to 12.16.1
+
+- Updated pnpm to 12.16.1.
+
+### Update GitButler skill to 0.5.2253
+
 ## @2digits/config-monorepo@0.1.18
 
 ### Update pnpm to 12.16.0

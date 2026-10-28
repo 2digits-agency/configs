@@ -1,3 +1,9 @@
+## @2digits/opencode-plugin@0.2.48
+
+### Update OpenCode plugin dependency
+
+- Updated `@opencode-ai/plugin` to 1.19.5.
+
 ## @2digits/opencode-plugin@0.2.47
 
 ### Type-check with tsrs
