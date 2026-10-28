@@ -4,11 +4,12 @@ import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Logger from 'effect/Logger';
+import * as McpClientError from 'effect/ai/McpClientError';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as McpServer from 'effect/ai/McpServer';
 import { vi } from 'vite-plus/test';
 
-import { OrbitClient, OrbitMcpError, type OrbitClientShape } from '../src/mcp/OrbitClient.js';
+import { OrbitClient, type OrbitClientShape } from '../src/mcp/OrbitClient.js';
 import { McpLoggerLayer } from '../src/mcp/logger.js';
 import { OrbitToolsLive } from '../src/mcp/proxy.js';
 
@@ -100,8 +101,8 @@ describe('orbit MCP proxy', () => {
 
       const calls: Array<{ readonly name: string; readonly args: unknown }> = [];
 
-      const { registration, registrations } = yield* register((name, args) => {
-        calls.push({ name, args });
+      const { registration, registrations } = yield* register((upstreamTool, args) => {
+        calls.push({ name: upstreamTool.name, args });
 
         return Effect.succeed(result);
       });
@@ -137,7 +138,7 @@ describe('orbit MCP proxy', () => {
   it.effect('maps upstream failures directly to native InternalError without replay', () =>
     Effect.gen(function* () {
       const callTool = vi.fn<OrbitClientShape['callTool']>(() =>
-        Effect.fail(OrbitMcpError.make({ message: 'Orbit HTTP 403: request not replayed.' })),
+        Effect.fail(McpClientError.McpClientError.make({ reason: McpClientError.HttpError.make({ status: 403 }) })),
       );
 
       const { registration } = yield* register(callTool);
@@ -146,9 +147,9 @@ describe('orbit MCP proxy', () => {
 
       expect(error).toBeInstanceOf(McpSchema.InternalError);
 
-      expect(error.message).toBe('Orbit HTTP 403: request not replayed.');
+      expect(error.message).toBe('MCP HTTP status 403');
 
-      expect(callTool).toHaveBeenCalledExactlyOnceWith(tool.name, { projectId: 'PR-example' });
+      expect(callTool).toHaveBeenCalledExactlyOnceWith(tool, { projectId: 'PR-example' });
     }).pipe(Effect.provide(requestContext), Effect.scoped),
   );
 
