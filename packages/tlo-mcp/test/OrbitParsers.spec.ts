@@ -8,7 +8,11 @@ import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 import * as Schema from 'effect/Schema';
 
+import { GetRunningTimer } from '../src/orbit/GetRunningTimer.js';
 import { GetTimesheetWeek, type TimeEntry } from '../src/orbit/GetTimesheetWeek.js';
+import { ListAbsences } from '../src/orbit/ListAbsences.js';
+import { ListMyTasks } from '../src/orbit/ListMyTasks.js';
+import { ListPlannedEntries } from '../src/orbit/ListPlannedEntries.js';
 import { ListTimeEntries } from '../src/orbit/ListTimeEntries.js';
 
 /**
@@ -254,6 +258,119 @@ describe('list parsers', () => {
       );
 
       expect(entries.find((entry) => entry.id === 'ACNC5EVRCW4A2GT')?.description).toBe('Work\nnote');
+    }),
+  );
+
+  it.effect('keeps a " — " and quotes inside a ticket name in the work', () =>
+    Effect.gen(function* () {
+      const { days } = yield* decode(GetTimesheetWeek)(
+        fixture(OPEN_WEEK).replaceAll('Support ticket A', 'Support — ticket A'),
+      );
+
+      const entry = days[0]?.entries.find(({ id }) => id === 'ACZ3XD8VSWW6MU9');
+
+      expect([entry?.work, entry?.description]).toStrictEqual([
+        'ticket "Support — ticket A"',
+        '9353 Support — ticket A',
+      ]);
+
+      const { days: quoted } = yield* decode(GetTimesheetWeek)(
+        fixture(OPEN_WEEK).replaceAll('Support ticket A', 'Support "case" — ticket A'),
+      );
+
+      expect(quoted[0]?.entries.find(({ id }) => id === 'ACZ3XD8VSWW6MU9')?.work).toBe(
+        'ticket "Support "case" — ticket A"',
+      );
+    }),
+  );
+
+  it.effect('reads planning entries with their series', () =>
+    Effect.gen(function* () {
+      const planned = yield* decode(ListPlannedEntries)(fixture('ListPlannedEntries'));
+
+      expect(planned).toHaveLength(8);
+
+      expect(planned[1]).toMatchObject({
+        id: 'ACGC6QVZ73MDPVT',
+        minutes: 60,
+        kind: 'fixed-time',
+        work: '2275 Intern board / Placeholder CS',
+        seriesId: 'BPBT31GBME2HK8U',
+      });
+
+      const listPlannedEntriesEmpty = yield* decode(ListPlannedEntries)(fixture('ListPlannedEntries-empty'));
+
+      expect(listPlannedEntriesEmpty).toStrictEqual([]);
+    }),
+  );
+
+  it.effect('reads absences with approval state and note', () =>
+    Effect.gen(function* () {
+      const absences = yield* decode(ListAbsences)(fixture('ListAbsences'));
+
+      expect(absences.map((absence) => [absence.date, absence.type, absence.state, absence.note])).toStrictEqual([
+        ['2026-11-02', 'Holiday', 'approved', undefined],
+        ['2026-11-03', 'Holiday', 'approved', undefined],
+        ['2026-11-20', 'Holiday', 'approved', 'privé'],
+        ['2026-11-23', 'Holiday', 'approved', 'privé'],
+        ['2026-12-25', 'Office Closed', 'approved', undefined],
+        ['2026-12-28', 'Holiday', 'pending', 'Vakantie'],
+        ['2026-12-29', 'Holiday', 'pending', 'Vakantie'],
+        ['2026-12-30', 'Holiday', 'pending', 'Vakantie'],
+        ['2026-12-31', 'Holiday', 'pending', 'Vakantie'],
+      ]);
+
+      const listAbsencesEmpty = yield* decode(ListAbsences)(fixture('ListAbsences-empty'));
+
+      expect(listAbsencesEmpty).toStrictEqual([]);
+    }),
+  );
+
+  it.effect('reads planning work and absence notes that contain a bare line feed', () =>
+    Effect.gen(function* () {
+      const [planned] = yield* decode(ListPlannedEntries)(
+        fixture('ListPlannedEntries').replace('/ Morning stand-up 2026 |', '/ Morning\nstand-up 2026 |'),
+      );
+
+      expect(planned?.work).toBe('2050 Stand-up 2026 / Morning\nstand-up 2026');
+
+      const absences = yield* decode(ListAbsences)(fixture('ListAbsences').replace('— privé ', '— privé\nmiddag '));
+
+      expect(absences.find(({ id }) => id === 'AB1MRN24STSHJZ2')?.note).toBe('privé\nmiddag');
+    }),
+  );
+
+  it.effect('fails on timer text that is neither the idle message nor a running timer', () =>
+    Effect.gen(function* () {
+      const changed = yield* decode(GetRunningTimer)('No active timer.').pipe(Effect.flip);
+
+      expect(changed.message).toContain('Unexpected line: "No active timer."');
+
+      expect((yield* decode(GetRunningTimer)('').pipe(Effect.flip)).message).toContain('Unexpected line: ""');
+    }),
+  );
+
+  it.effect('reads bookable tasks with remaining budget, and the idle timer', () =>
+    Effect.gen(function* () {
+      const tasks = yield* decode(ListMyTasks)(fixture('ListMyTasks'));
+
+      expect(tasks).toHaveLength(30);
+
+      expect(tasks.find((task) => task.id === 'PTSCJBQEWYX3KGQ')).toMatchObject({
+        label: '2050 Stand-up 2026 | Morning stand-up 2026',
+        projectNumber: '2050',
+        remainingMinutes: 158 * 60 + 51,
+      });
+
+      expect(tasks.find((task) => task.id === 'PTB3K18Q2XWAFHK')?.remainingMinutes).toBeUndefined();
+
+      const listMyTasksEmpty = yield* decode(ListMyTasks)(fixture('ListMyTasks-empty'));
+
+      expect(listMyTasksEmpty).toStrictEqual([]);
+
+      const getRunningTimerIdle = yield* decode(GetRunningTimer)(fixture('GetRunningTimer-idle'));
+
+      expect(getRunningTimerIdle).toMatchObject({ running: false });
     }),
   );
 });
