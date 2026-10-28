@@ -1,7 +1,7 @@
 # @2digits/tlo-mcp
 
 One personal Teamleader Orbit gateway: local OAuth → authenticated HTTP MCP → OpenTunnel → Executor Cloud.
-Only Orbit tools are exposed. No local Executor, cookie adapter, Amp plugin, Vercel deployment or hosted OAuth bridge.
+Only the Orbit tools listed in `src/mcp/tools.ts` are exposed. No local Executor, cookie adapter, Amp plugin, Vercel deployment or hosted OAuth bridge.
 
 ## Run
 
@@ -17,7 +17,8 @@ The command:
 
 1. Creates/reuses a private gateway API key.
 2. Opens Orbit login if no local OAuth session exists (fresh client registration, state and PKCE).
-3. Discovers the official Orbit tools and starts `/mcp` on `127.0.0.1:4790`.
+3. Connects to Orbit with Effect's `McpClient` (MCP 2025-11-25), keeps only the allowlisted tools and starts `/mcp`
+   on `127.0.0.1:4790`.
 4. Connects an isolated `tlo-mcp` OpenTunnel profile with only the `tlo` route.
 5. Prints a public HTTPS endpoint and a ready-to-paste agent prompt for Executor Cloud.
 
@@ -81,7 +82,9 @@ handoff for the API key and verify one read-only tool after connecting.
 - The hostname is public/discoverable; route names are not authentication. Anyone possessing the gateway key
   can use your Orbit tools with your permissions, including writes. Executor policies do not protect against a leaked key.
 - Tools, schemas, annotations, instructions, structured content, errors and rate limits come from official Orbit.
-  Only tools are forwarded; resources/prompts/reverse requests are not exposed. No tool call is automatically replayed.
+  Only the allowlisted tools in `src/mcp/tools.ts` (timesheet, time entries, timers, tickets, todos and read-only
+  planning/project lookups) are forwarded; other Orbit tools are hidden and cannot be called. Startup warns when Orbit
+  no longer offers an allowlisted tool. Only tools are forwarded; resources/prompts/reverse requests are not exposed. No tool call is automatically replayed.
 - To rotate the gateway key, stop the gateway, remove only `gateway.key`, restart, and update the Executor connection.
 
 ## Re-login and logout

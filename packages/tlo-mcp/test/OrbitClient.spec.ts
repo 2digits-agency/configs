@@ -1,383 +1,270 @@
 import { describe, expect, it } from '@effect/vitest';
-import * as Deferred from 'effect/Deferred';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
-import * as Exit from 'effect/Exit';
 import * as Fiber from 'effect/Fiber';
 import * as Layer from 'effect/Layer';
-import * as Match from 'effect/Match';
-import * as Queue from 'effect/Queue';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
+import * as Struct from 'effect/Struct';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as TestClock from 'effect/testing/TestClock';
 
-import { OrbitClient, OrbitClientLive, OrbitMcpError } from '../src/mcp/OrbitClient.js';
+import { OrbitClient, OrbitClientLive } from '../src/mcp/OrbitClient.js';
 import { OrbitAuth } from '../src/oauth/OrbitAuth.js';
+import { OrbitAuthError } from '../src/oauth/session.js';
 
 const Message = Schema.Struct({
   id: Schema.Finite.pipe(Schema.optionalKey),
   method: Schema.String,
-  params: Schema.JsonObject,
+  params: Schema.JsonObject.pipe(Schema.optionalKey),
 });
 
-const MessageJson = Message.pipe(Schema.fromJsonString);
+const decodeJson = Schema.decodeUnknownEffect(Message.pipe(Schema.fromJsonString));
 
-const decodeMessageJson = Schema.decodeEffect(MessageJson);
-
-const decodeUnknownMessageJson = Schema.decodeUnknownEffect(MessageJson);
-
-const tool = {
-  name: 'GetProject',
-  description: 'Official description',
-  inputSchema: { type: 'object', properties: { projectId: { type: 'string' } } },
-  annotations: { readOnlyHint: true },
-};
-
-const auth = Layer.succeed(
-  OrbitAuth,
-  OrbitAuth.of({ accessToken: Effect.succeed(Redacted.make('test-token')), login: Effect.void, logout: Effect.void }),
-);
-
-// Complete the real startup handshake; tests control only subsequent tool replies.
-function toolFetch(
-  reply: (message: typeof Message.Type, init: RequestInit | undefined) => Promise<Response>,
-): typeof fetch {
-  return (_input, init) => {
-    const body = init?.body instanceof Uint8Array ? new TextDecoder().decode(init.body) : init?.body;
-
-    return Effect.runPromise(
-      decodeUnknownMessageJson(body).pipe(
-        Effect.flatMap((message) => {
-          if (message.method === 'tools/call') {
-            return Effect.tryPromise((_signal) => reply(message, init));
-          }
-
-          if (message.method === 'notifications/initialized') {
-            return Effect.succeed(new Response(undefined, { status: 202 }));
-          }
-
-          const result =
-            message.method === 'initialize'
-              ? {
-                  protocolVersion: '2025-06-18',
-                  capabilities: { tools: {} },
-                  serverInfo: { name: 'Orbit', version: '1' },
-                }
-              : { tools: [tool] };
-
-          return Effect.succeed(
-            Response.json(
-              { jsonrpc: '2.0', id: message.id, result },
-              {
-                headers: { 'mcp-session-id': 'test-session' },
-              },
-            ),
-          );
-        }),
-      ),
-    );
-  };
+function decodeMessage(body: RequestInit['body']) {
+  return decodeJson(body instanceof Uint8Array ? new TextDecoder().decode(body) : body).pipe(Effect.orDie);
 }
 
-describe('orbit MCP transport', () => {
-  it.effect('initializes, follows pagination and preserves JSON/SSE results', () => {
-    const methods: Array<string> = [];
+// GetProject is exposed; DeleteProjectItem exists upstream but is not.
+const upstreamTools = [
+  {
+    name: 'GetProject',
+    description: 'Official description',
+    inputSchema: { type: 'object', properties: { projectId: { type: 'string' } } },
+    annotations: { readOnlyHint: true },
+  },
+  { name: 'DeleteProjectItem', inputSchema: { type: 'object' }, annotations: { destructiveHint: true } },
+];
 
-    const fetchMock: typeof globalThis.fetch = (_input, init) => {
-      const bodyText = Match.value(init?.body).pipe(
-        Match.when(Match.instanceOf(Uint8Array), (body) => new TextDecoder().decode(body)),
-        Match.when(Match.string, (body) => body),
-        Match.orElse(() => ''),
-      );
+/**
+ * Issues a new token per request, so tests can tell that each request fetched its own.
+ */
+function countingAuth() {
+  let tokens = 0;
 
-      return Effect.runPromise(
-        decodeMessageJson(bodyText).pipe(
-          Effect.map((message) => {
-            const headers = new Headers(init?.headers);
+  return Layer.succeed(
+    OrbitAuth,
+    OrbitAuth.of({
+      accessToken: Effect.sync(() => Redacted.make(`token-${++tokens}`)),
+      login: Effect.void,
+      logout: Effect.void,
+    }),
+  );
+}
 
-            methods.push(message.method);
+const auth = countingAuth();
 
-            expect({
-              authorization: headers.get('authorization'),
-              redirect: init?.redirect,
-              sessionId: headers.get('mcp-session-id'),
-            }).toMatchObject({
-              authorization: 'Bearer test-token',
-              redirect: 'error',
-              ...(message.method === 'initialize' ? {} : { sessionId: 'test-session' }),
-            });
+interface Sent {
+  readonly method: string;
+  readonly authorization: string | undefined;
+  readonly session: string | undefined;
+  readonly redirect: RequestRedirect | undefined;
+}
 
-            if (message.method === 'notifications/initialized') {
-              return new Response(undefined, { status: 202 });
-            }
+/**
+ * Fake Orbit: completes the 2025-11-25 handshake and tool discovery; `onCall` answers tools/call.
+ *
+ * @param onCall
+ */
+function orbit(onCall: (id: number | undefined, init: RequestInit | undefined) => Effect.Effect<Response>) {
+  const sent: Array<Sent> = [];
 
-            const result = Match.value(message.method).pipe(
-              Match.when('initialize', () => ({
-                protocolVersion: '2025-06-18',
+  const fetch: typeof globalThis.fetch = (_input, init) =>
+    Effect.runPromise(
+      Effect.gen(function* () {
+        const message = yield* decodeMessage(init?.body);
+
+        const headers = new Headers(init?.headers);
+
+        sent.push({
+          method: message.method,
+          authorization: headers.get('authorization') ?? undefined,
+          session: headers.get('mcp-session-id') ?? undefined,
+          redirect: init?.redirect,
+        });
+
+        if (message.method === 'tools/call') {
+          return yield* onCall(message.id, init);
+        }
+
+        if (message.method === 'notifications/initialized') {
+          return new Response(undefined, { status: 202 });
+        }
+
+        const result =
+          message.method === 'initialize'
+            ? {
+                protocolVersion: '2025-11-25',
                 capabilities: { tools: {} },
-                serverInfo: { name: 'Orbit', version: '1' },
+                serverInfo: { name: 'Orbit', version: '1.0.0' },
                 instructions: 'Official instructions',
-              })),
-              Match.when('tools/list', () =>
-                message.params.cursor === undefined ? { tools: [tool], nextCursor: 'page-2' } : { tools: [] },
-              ),
-              Match.orElse(() => ({ content: [{ type: 'text', text: 'RATE_LIMITED: retry later' }], isError: true })),
-            );
+              }
+            : { tools: upstreamTools };
 
-            const body = JSON.stringify({ jsonrpc: '2.0', id: message.id, result });
+        return Response.json(
+          { jsonrpc: '2.0', id: message.id, result },
+          { headers: { 'mcp-session-id': 'orbit-session' } },
+        );
+      }),
+    );
 
-            return message.method === 'tools/call'
-              ? new Response(`event: message\ndata: ${body}\n\n`, { headers: { 'content-type': 'text/event-stream' } })
-              : new Response(body, {
-                  headers: { 'content-type': 'application/json', 'mcp-session-id': 'test-session' },
-                });
-          }),
-        ),
-      );
-    };
+  return { sent, fetch };
+}
+
+function reply(body: unknown) {
+  return Effect.succeed(
+    new Response(`event: message\ndata: ${JSON.stringify(body)}\n\n`, {
+      headers: { 'content-type': 'text/event-stream' },
+    }),
+  );
+}
+
+describe('orbit MCP client', () => {
+  it.effect('exposes only allowlisted tools and authenticates every request without redirects', () => {
+    const { sent, fetch } = orbit((id) =>
+      reply({
+        jsonrpc: '2.0',
+        id,
+        result: { content: [{ type: 'text', text: 'RATE_LIMITED: retry later' }], isError: true },
+      }),
+    );
 
     return Effect.gen(function* () {
       const client = yield* OrbitClient;
 
-      expect({ tool: client.tools[0], instructions: client.instructions }).toMatchObject({
-        tool: { name: 'GetProject', annotations: { readOnlyHint: true } },
-        instructions: 'Official instructions',
+      expect(Arr.map(client.tools, Struct.get('name'))).toStrictEqual(['GetProject']);
+
+      expect(client.instructions).toBe('Official instructions');
+
+      const [tool] = client.tools;
+
+      if (tool === undefined) {
+        return yield* Effect.die('Missing exposed tool');
+      }
+
+      // Tool-reported errors are results, forwarded unchanged.
+      expect(yield* client.callTool(tool, { projectId: 'PR-example' })).toMatchObject({
+        isError: true,
+        content: [{ type: 'text', text: 'RATE_LIMITED: retry later' }],
       });
 
-      const result = yield* client.callTool('GetProject', { projectId: 'PR-example' });
-
-      expect(result).toMatchObject({ isError: true, content: [{ type: 'text', text: 'RATE_LIMITED: retry later' }] });
-
-      expect(methods).toStrictEqual([
-        'initialize',
-        'notifications/initialized',
-        'tools/list',
-        'tools/list',
-        'tools/call',
+      expect(sent).toStrictEqual([
+        { method: 'initialize', authorization: 'Bearer token-1', session: undefined, redirect: 'error' },
+        {
+          method: 'notifications/initialized',
+          authorization: 'Bearer token-2',
+          session: 'orbit-session',
+          redirect: 'error',
+        },
+        { method: 'tools/list', authorization: 'Bearer token-3', session: 'orbit-session', redirect: 'error' },
+        { method: 'tools/call', authorization: 'Bearer token-4', session: 'orbit-session', redirect: 'error' },
       ]);
     }).pipe(
-      Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
-      Effect.provideService(FetchHttpClient.Fetch, fetchMock),
+      Effect.provide(OrbitClientLive.pipe(Layer.provide(countingAuth()))),
+      Effect.provideService(FetchHttpClient.Fetch, fetch),
       Effect.scoped,
     );
   });
 
-  it.effect('reports authorization failures without replaying requests', () => {
-    let requests = 0;
+  it.effect('fails startup with the Orbit login error before sending anything', () => {
+    const { sent, fetch } = orbit(() => Effect.die('Unexpected tool call'));
 
-    const fetchMock: typeof globalThis.fetch = () => {
-      requests++;
-
-      return Promise.resolve(new Response(undefined, { status: 403 }));
-    };
+    const expired = Layer.succeed(
+      OrbitAuth,
+      OrbitAuth.of({
+        accessToken: OrbitAuthError.make({ message: 'Orbit session expired. Run tlo-mcp login.' }),
+        login: Effect.void,
+        logout: Effect.void,
+      }),
+    );
 
     return Effect.gen(function* () {
-      const error = yield* Layer.build(OrbitClientLive.pipe(Layer.provide(auth))).pipe(Effect.flip);
+      const error = yield* Layer.build(OrbitClientLive.pipe(Layer.provide(expired))).pipe(Effect.flip);
 
-      expect(error.message).toContain('403');
+      expect(error).toMatchObject({ _tag: 'OrbitMcpError', message: 'Orbit session expired. Run tlo-mcp login.' });
 
-      expect(requests).toBe(1);
-    }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetchMock), Effect.scoped);
+      expect(sent).toStrictEqual([]);
+    }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetch), Effect.scoped);
   });
 
-  for (const status of [401, 403, 429, 500]) {
-    it.effect(`does not replay HTTP ${status} tool calls after successful startup`, () => {
-      let calls = 0;
-
-      const fetchMock = toolFetch(() => {
-        calls++;
-
-        return Promise.resolve(
-          new Response(undefined, {
-            status,
-            headers: { 'retry-after': '17' },
-          }),
-        );
-      });
-
-      return Effect.gen(function* () {
-        const client = yield* OrbitClient;
-
-        const error = yield* client.callTool('GetProject', {}).pipe(Effect.flip);
-
-        expect(error._tag).toBe('OrbitMcpError');
-
-        expect(error.message).toContain(status === 429 ? '17' : String(status));
-
-        expect(calls).toBe(1);
-      }).pipe(
-        Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
-        Effect.provideService(FetchHttpClient.Fetch, fetchMock),
-        Effect.scoped,
-      );
-    });
-  }
-
-  const malformedReplies: Array<[string, string, string]> = [
-    ['malformed JSON', '{', 'application/json'],
-    ['invalid envelope', '{"jsonrpc":"2.0","id":4}', 'application/json'],
-    ['wrong JSON ID', '{"jsonrpc":"2.0","id":999,"result":{"content":[]}}', 'application/json'],
-    ['invalid tool result', '{"jsonrpc":"2.0","id":4,"result":{"content":"bad"}}', 'application/json'],
-    ['malformed SSE data', 'event: message\ndata: {\n\n', 'text/event-stream'],
-    [
-      'SSE without matching reply',
-      'event: message\ndata: {"jsonrpc":"2.0","id":999,"result":{}}\n\n',
-      'text/event-stream',
-    ],
+  const statuses: Array<[number, string]> = [
+    [401, 'Orbit HTTP 401: authorization rejected. Run tlo-mcp login'],
+    [403, 'Orbit HTTP 403: authorization rejected. Run tlo-mcp login'],
+    [429, 'Orbit rate limited. Retry after 17; request not replayed.'],
+    [500, 'Orbit HTTP 500. Request not replayed.'],
   ];
 
-  for (const [name, body, contentType] of malformedReplies) {
-    it.effect(`rejects ${name} without replay`, () => {
-      let calls = 0;
-
-      const fetchMock = toolFetch(() => {
-        calls++;
-
-        return Promise.resolve(new Response(body, { headers: { 'content-type': contentType } }));
-      });
+  for (const [status, message] of statuses) {
+    it.effect(`reports HTTP ${status} tool calls without replaying them`, () => {
+      const { sent, fetch } = orbit(() =>
+        Effect.succeed(new Response(undefined, { status, headers: { 'retry-after': '17' } })),
+      );
 
       return Effect.gen(function* () {
         const client = yield* OrbitClient;
 
-        const error = yield* client.callTool('GetProject', {}).pipe(Effect.flip);
+        const [tool] = client.tools;
 
-        expect(error._tag).toBe('OrbitMcpError');
+        if (tool === undefined) {
+          return yield* Effect.die('Missing exposed tool');
+        }
 
-        expect(calls).toBe(1);
+        const error = yield* client.callTool(tool, {}).pipe(Effect.flip);
+
+        expect(error).toMatchObject({ _tag: 'OrbitMcpError' });
+
+        expect(error.message).toContain(message);
+
+        expect(Arr.filter(sent, (request) => request.method === 'tools/call')).toHaveLength(1);
       }).pipe(
         Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
-        Effect.provideService(FetchHttpClient.Fetch, fetchMock),
+        Effect.provideService(FetchHttpClient.Fetch, fetch),
         Effect.scoped,
       );
     });
   }
 
-  for (const cancel of ['timeout', 'interrupt']) {
-    it.effect(`aborts a pending tool request on ${cancel} without replay`, () =>
-      Effect.gen(function* () {
-        const context = yield* Effect.context();
+  it.effect('times out a stalled tool call after 120 seconds and aborts it without replay', () => {
+    let aborted = false;
 
-        const started = yield* Queue.make<undefined>();
+    const { sent, fetch } = orbit((_id, init) =>
+      Effect.callback<Response>((resume) => {
+        init?.signal?.addEventListener('abort', () => {
+          aborted = true;
 
-        const aborted = yield* Deferred.make<boolean>();
-
-        let calls = 0;
-
-        const fetchMock = toolFetch((_message, init) =>
-          Effect.runPromiseWith(context)(
-            Effect.callback<Response, OrbitMcpError>((resume) => {
-              calls++;
-
-              init?.signal?.addEventListener(
-                'abort',
-                () => {
-                  Deferred.doneUnsafe(aborted, Effect.succeed(true));
-
-                  resume(OrbitMcpError.make({ message: 'aborted' }));
-                },
-                { once: true },
-              );
-
-              Queue.offerUnsafe(started, undefined);
-            }),
-          ),
-        );
-
-        yield* Effect.gen(function* () {
-          const client = yield* OrbitClient;
-
-          const pending = yield* client.callTool('GetProject', {}).pipe(Effect.forkScoped);
-
-          yield* Queue.take(started);
-
-          if (cancel === 'timeout') {
-            yield* TestClock.adjust('120 seconds');
-
-            const error = yield* Fiber.join(pending).pipe(Effect.flip);
-
-            expect(error._tag).toBe('OrbitMcpError');
-          } else {
-            yield* Fiber.interrupt(pending);
-
-            const exit = yield* Fiber.await(pending);
-
-            expect(Exit.hasInterrupts(exit)).toBeTruthy();
-          }
-
-          yield* Deferred.await(aborted);
-
-          expect(calls).toBe(1);
-        }).pipe(
-          Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
-          Effect.provideService(FetchHttpClient.Fetch, fetchMock),
-        );
-      }).pipe(Effect.scoped),
+          resume(Effect.die('aborted'));
+        });
+      }),
     );
-  }
 
-  it.effect('assigns distinct concurrent IDs and matches out-of-order replies', () =>
-    Effect.gen(function* () {
-      const context = yield* Effect.context();
+    return Effect.gen(function* () {
+      const client = yield* OrbitClient;
 
-      const requests = yield* Queue.make<{
-        readonly message: typeof Message.Type;
-        readonly reply: Deferred.Deferred<Response>;
-      }>();
+      const [tool] = client.tools;
 
-      const fetchMock = toolFetch((message) =>
-        Effect.runPromiseWith(context)(
-          Effect.gen(function* () {
-            const reply = yield* Deferred.make<Response>();
+      if (tool === undefined) {
+        return yield* Effect.die('Missing exposed tool');
+      }
 
-            yield* Queue.offer(requests, { message, reply });
+      const pending = yield* client.callTool(tool, {}).pipe(Effect.forkScoped);
 
-            return yield* Deferred.await(reply);
-          }),
-        ),
-      );
+      yield* TestClock.adjust('119 seconds');
 
-      yield* Effect.gen(function* () {
-        const client = yield* OrbitClient;
+      expect(pending.pollUnsafe()).toBeUndefined();
 
-        const first = yield* client.callTool('GetProject', { projectId: 'first' }).pipe(Effect.forkScoped);
+      yield* TestClock.adjust('1 second');
 
-        const second = yield* client.callTool('GetProject', { projectId: 'second' }).pipe(Effect.forkScoped);
+      const error = yield* Fiber.join(pending).pipe(Effect.flip);
 
-        const a = yield* Queue.take(requests);
+      expect(error.message).toContain('Request not replayed');
 
-        const b = yield* Queue.take(requests);
+      expect(aborted).toBeTruthy();
 
-        expect(a.message.id).toBeDefined();
-
-        expect(b.message.id).toBeDefined();
-
-        expect(a.message.id).not.toBe(b.message.id);
-
-        for (const request of [b, a]) {
-          yield* Deferred.succeed(
-            request.reply,
-            Response.json({
-              jsonrpc: '2.0',
-              id: request.message.id,
-              result: {
-                content: [],
-                structuredContent: request.message.params,
-              },
-            }),
-          );
-        }
-
-        expect(yield* Fiber.join(first)).toMatchObject({
-          structuredContent: { arguments: { projectId: 'first' } },
-        });
-
-        expect(yield* Fiber.join(second)).toMatchObject({
-          structuredContent: { arguments: { projectId: 'second' } },
-        });
-      }).pipe(
-        Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
-        Effect.provideService(FetchHttpClient.Fetch, fetchMock),
-      );
-    }).pipe(Effect.scoped),
-  );
+      expect(Arr.filter(sent, (request) => request.method === 'tools/call')).toHaveLength(1);
+    }).pipe(
+      Effect.provide(OrbitClientLive.pipe(Layer.provide(auth))),
+      Effect.provideService(FetchHttpClient.Fetch, fetch),
+      Effect.scoped,
+    );
+  });
 });

@@ -29,9 +29,9 @@ const upstream = Layer.succeed(OrbitClient, {
       annotations: { readOnlyHint: true },
     }),
   ],
-  callTool: Effect.fn('OrbitClient.test.callTool')((name: string) =>
+  callTool: Effect.fn('OrbitClient.test.callTool')((tool: McpSchema.Tool) =>
     Effect.sync(() => {
-      calls.push(name);
+      calls.push(tool.name);
 
       return McpSchema.CallToolResult.make({
         content: [{ type: 'text', text: 'project' }],

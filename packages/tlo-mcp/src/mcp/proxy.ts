@@ -32,7 +32,7 @@ export const OrbitToolsLive = Layer.effectDiscard(
             ),
             Effect.flatMap((args) =>
               upstream
-                .callTool(tool.name, args)
+                .callTool(tool, args)
                 .pipe(Effect.mapError((error) => McpSchema.InternalError.make({ message: error.message }))),
             ),
           ),

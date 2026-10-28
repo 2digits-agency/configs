@@ -100,8 +100,8 @@ describe('orbit MCP proxy', () => {
 
       const calls: Array<{ readonly name: string; readonly args: unknown }> = [];
 
-      const { registration, registrations } = yield* register((name, args) => {
-        calls.push({ name, args });
+      const { registration, registrations } = yield* register((upstreamTool, args) => {
+        calls.push({ name: upstreamTool.name, args });
 
         return Effect.succeed(result);
       });
@@ -148,7 +148,7 @@ describe('orbit MCP proxy', () => {
 
       expect(error.message).toBe('Orbit HTTP 403: request not replayed.');
 
-      expect(callTool).toHaveBeenCalledExactlyOnceWith(tool.name, { projectId: 'PR-example' });
+      expect(callTool).toHaveBeenCalledExactlyOnceWith(tool, { projectId: 'PR-example' });
     }).pipe(Effect.provide(requestContext), Effect.scoped),
   );
 
