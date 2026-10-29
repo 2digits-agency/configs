@@ -327,8 +327,8 @@ catalogs:
       specifier: 19.1.0-rc.2
       version: 19.1.0-rc.2
     eslint-plugin-regexp:
-      specifier: 3.3.1
-      version: 3.3.1
+      specifier: 3.3.2
+      version: 3.3.2
     eslint-plugin-sonarjs:
       specifier: 4.2.2
       version: 4.2.2
@@ -735,7 +735,7 @@ importers:
         version: 19.1.0-rc.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)
       eslint-plugin-regexp:
         specifier: 'catalog:'
-        version: 3.3.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
+        version: 3.3.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-sonarjs:
         specifier: 'catalog:'
         version: 4.2.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
@@ -2479,12 +2479,14 @@ packages:
   '@opentelemetry/sdk-trace-base@2.12.0':
     resolution: {integrity: sha512-JOERgZCxRM06FEJ5kEWxlSRChah6MmXDx3KwCruqEv/iEyLkTokCSemf2y1w8oIHtfrr8EVTpzebq/31vn2Cpg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-node@2.12.0':
     resolution: {integrity: sha512-9DufH1IlmQMoKAfot5y/FhTP1RnmhLb5K6eKmJO/bvzPjYwPAazoiAUbTZFdPbqxOXN0FEbhZx/e6SB1Og4jmg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -5371,8 +5373,8 @@ packages:
       eslint:
         optional: true
 
-  eslint-plugin-regexp@3.3.1:
-    resolution: {integrity: sha512-58bGUci/AaWAo1ETj6Lsnmy6QXwnSyVONRA805828nnqp7vrTwdaQMc02vtowmYB3A5OB3SLr3r5HgmfxX4dLg==}
+  eslint-plugin-regexp@3.3.2:
+    resolution: {integrity: sha512-hdkHQVDUtP3+U66PMZSQxw++mburJyJbFY8fu8lryMvJ2glo7xjq1Ov8A/uczxNU+IS87TFXUUBIJ7dxqgcJwg==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=9.38.0'
@@ -6062,10 +6064,6 @@ packages:
   jsdoc-type-pratt-parser@5.9.2:
     resolution: {integrity: sha512-TYzkACp/wPvDJLRY7qpHXtrhgwoAaojIOnLaaVNi+AbPU2u1kkjfKd9hXXTq0qSAGsyYXvwUXt99h9I5iCmjjw==}
     engines: {node: '>=12.0.0'}
-
-  jsdoc-type-pratt-parser@9.2.2:
-    resolution: {integrity: sha512-eFY7Rlscvv/BpY6UsVsjKwMhu1tJO/F4U/vC9g3yeRy/JqszuO1UP6Vdq+85G+3FP6fEw/sWR8a5ftPFY86csw==}
-    engines: {node: ^22.22.2 || >=24.15.0}
 
   jsdoc-type-pratt-parser@9.4.0:
     resolution: {integrity: sha512-orXhi2Y06rag47r4SW4JPII6WlUJbp0xe9cIcqLaSbb/8tREcEZSq99Lu3AFfra6PAlMqTYIxV+ZHxl1dFUrWw==}
@@ -12032,13 +12030,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-regexp@3.3.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0)):
+  eslint-plugin-regexp@3.3.2(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0)):
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1(eslint@10.13.0(jiti@2.7.0)(supports-color@7.2.0))
       '@eslint-community/regexpp': 4.12.2
       comment-parser: 1.4.9
       eslint: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
-      jsdoc-type-pratt-parser: 9.2.2
+      jsdoc-type-pratt-parser: 9.4.0
       refa: 0.12.1
       regexp-ast-analysis: 0.7.1
       scslre: 0.3.0
@@ -12843,11 +12841,6 @@ snapshots:
       argparse: 2.0.1
 
   jsdoc-type-pratt-parser@5.9.2: {}
-
-  jsdoc-type-pratt-parser@9.2.2:
-    dependencies:
-      '@types/estree': 1.0.9
-      '@types/node': 26.4.1
 
   jsdoc-type-pratt-parser@9.4.0:
     dependencies:
