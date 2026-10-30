@@ -171,14 +171,14 @@ catalogs:
       specifier: 0.87.5
       version: 0.87.5
     '@effect/platform-node':
-      specifier: 4.0.7
-      version: 4.0.7
+      specifier: 4.1.1
+      version: 4.1.1
     '@effect/tsgo':
       specifier: 0.63.0
       version: 0.63.0
     '@effect/vitest':
-      specifier: 4.0.7
-      version: 4.0.7
+      specifier: 4.1.1
+      version: 4.1.1
     '@eslint-community/eslint-plugin-eslint-comments':
       specifier: 4.8.1
       version: 4.8.1
@@ -273,8 +273,8 @@ catalogs:
       specifier: 6.1.7
       version: 6.1.7
     effect:
-      specifier: 4.0.7
-      version: 4.0.7
+      specifier: 4.1.1
+      version: 4.1.1
     effect-oxlint:
       specifier: 0.4.0
       version: 0.4.0
@@ -467,8 +467,8 @@ catalogs:
       version: 6.0.3
 
 overrides:
-  '@opentunnel/client>effect': 4.0.7
-  '@opentunnel/protocol>effect': 4.0.7
+  '@opentunnel/client>effect': 4.1.1
+  '@opentunnel/protocol>effect': 4.1.1
   array-includes: npm:@nolyfill/array-includes@1.0.44
   array.prototype.findlast: npm:@nolyfill/array.prototype.findlast@1.0.44
   array.prototype.flat: npm:@nolyfill/array.prototype.flat@1.0.44
@@ -575,10 +575,10 @@ importers:
     dependencies:
       '@effect/platform-node':
         specifier: 'catalog:'
-        version: 4.0.7(effect@4.0.7)(redis@6.2.1(@opentelemetry/api@1.9.1))
+        version: 4.1.1(effect@4.1.1)(redis@6.2.1(@opentelemetry/api@1.9.1))
       effect:
         specifier: 'catalog:'
-        version: 4.0.7
+        version: 4.1.1
       nypm:
         specifier: 'catalog:'
         version: 0.6.12
@@ -591,7 +591,7 @@ importers:
         version: link:../tsconfig
       '@effect/vitest':
         specifier: 'catalog:'
-        version: 4.0.7(effect@4.0.7)(vitest@5.0.5)
+        version: 4.1.1(effect@4.1.1)(vitest@5.0.5)
       '@oxc-node/cli':
         specifier: 'catalog:'
         version: 1.0.1
@@ -1037,10 +1037,10 @@ importers:
         version: 1.90.0
       effect:
         specifier: 'catalog:'
-        version: 4.0.7
+        version: 4.1.1
       effect-oxlint:
         specifier: 'catalog:'
-        version: 0.4.0(effect@4.0.7)
+        version: 0.4.0(effect@4.1.1)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -1050,10 +1050,10 @@ importers:
         version: 0.18.5
       '@effect/platform-node':
         specifier: 'catalog:'
-        version: 4.0.7(effect@4.0.7)(redis@6.2.1(@opentelemetry/api@1.9.1))
+        version: 4.1.1(effect@4.1.1)(redis@6.2.1(@opentelemetry/api@1.9.1))
       '@effect/vitest':
         specifier: 'catalog:'
-        version: 4.0.7(effect@4.0.7)(vitest@5.0.5)
+        version: 4.1.1(effect@4.1.1)(vitest@5.0.5)
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20260707.2
@@ -1159,23 +1159,23 @@ importers:
     dependencies:
       '@effect/platform-node':
         specifier: 'catalog:'
-        version: 4.0.7(effect@4.0.7)(redis@6.2.1(@opentelemetry/api@1.9.1))
+        version: 4.1.1(effect@4.1.1)(redis@6.2.1(@opentelemetry/api@1.9.1))
       '@opentunnel/client':
         specifier: 'catalog:'
-        version: 0.6.1(effect@4.0.7)(undici@8.12.3)
+        version: 0.6.1(effect@4.1.1)(undici@8.12.3)
       '@yielded/oauth':
         specifier: 'catalog:'
-        version: 0.1.0-beta.46(effect@4.0.7)
+        version: 0.1.0-beta.46(effect@4.1.1)
       effect:
         specifier: 'catalog:'
-        version: 4.0.7
+        version: 4.1.1
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@effect/vitest':
         specifier: 'catalog:'
-        version: 4.0.7(effect@4.0.7)(vitest@5.0.5)
+        version: 4.1.1(effect@4.1.1)(vitest@5.0.5)
       publint:
         specifier: 'catalog:'
         version: 0.3.25
@@ -1503,18 +1503,18 @@ packages:
     resolution: {integrity: sha512-np/zJgk71/PyHxtoqyUKLYcpQhoRBI+L6+1Z0ILk35JSQ/lvXzwlwOwddYZLDkeC4bdF2ukKekqKlla/F88R5w==}
     hasBin: true
 
-  '@effect/platform-node-shared@4.0.7':
-    resolution: {integrity: sha512-uCeBJ00hliKQsb7gMfvyEXUL1XmUKQcRzKi1X8ISG0UxTDMAdPRigOyKDnKxUTxE5PoT4kxLHQvOxo6U405FGg==}
-    engines: {node: '>=18.0.0'}
+  '@effect/platform-node-shared@4.1.1':
+    resolution: {integrity: sha512-29zdEDs3i5W+t92+mWTFNSfzSHsTpZMcFZ9k4lkkz4tETlC1m4lRwjdjieJtvQ/bKHMnYrCtZwizsBFSf3L5Yg==}
+    engines: {node: '>=22.19.0'}
     peerDependencies:
-      effect: ^4.0.7
+      effect: ^4.1.1
 
-  '@effect/platform-node@4.0.7':
-    resolution: {integrity: sha512-YXUh0A4ZjuPAONt/yXb5zBM7zPR6eUPYUBtyj1374zq0P5SUpdcz8Lf54JSavXb8mdrc1glsXWHFVINpJyrlWA==}
-    engines: {node: '>=18.0.0'}
+  '@effect/platform-node@4.1.1':
+    resolution: {integrity: sha512-Oy3eP27XeipUgejftptHy0zf2W75HU8/yPKwBqdz8uYxAvWdf4c48OFYs6KJX/+uIEKdMjnF6mXYgbauWgIcVA==}
+    engines: {node: '>=22.19.0'}
     peerDependencies:
-      effect: ^4.0.7
-      redis: '>=5.0.0 <7.0.0'
+      effect: ^4.1.1
+      redis: '>=5.1.0 <7.0.0'
 
   '@effect/tsgo-darwin-arm64@0.63.0':
     resolution: {integrity: sha512-KBvYatuEol71+i+BERWuDRU9XE+4sTK78N83Ko6VNF5gy6yXiujj/bgtWs2P3cDGXsevAV6L+HtpuAWjAQKC6Q==}
@@ -1555,10 +1555,10 @@ packages:
     resolution: {integrity: sha512-bRbvVj+YLE/nBmcBWGAwsul3mjEYlqqOmWMxvwSVKq/oNnJEuZYgi2OFDeUf7q49E2g3w+oMHMWyN2QayZ77RQ==}
     hasBin: true
 
-  '@effect/vitest@4.0.7':
-    resolution: {integrity: sha512-WdF1w9K65ZyjeDAUfUxDOCBSEgVjUtJfM+G83KAE3mKoZcO6aGgrRoKgwiDKsACAmVWT3zG5hDhwNH3GQg++FQ==}
+  '@effect/vitest@4.1.1':
+    resolution: {integrity: sha512-VkE9EUXE4G7mXMmV3X3Iu+6k3pZswWjOf7PB2qiaHMoFAZAPtHp+eUZo9oJM4Ip5z+ghQ9K0IDAQM2iG6+w5MA==}
     peerDependencies:
-      effect: ^4.0.7
+      effect: ^4.1.1
       vitest: '>=5.0.0 <6.0.0'
 
   '@emnapi/core@1.11.1':
@@ -2479,12 +2479,14 @@ packages:
   '@opentelemetry/sdk-trace-base@2.12.0':
     resolution: {integrity: sha512-JOERgZCxRM06FEJ5kEWxlSRChah6MmXDx3KwCruqEv/iEyLkTokCSemf2y1w8oIHtfrr8EVTpzebq/31vn2Cpg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-node@2.12.0':
     resolution: {integrity: sha512-9DufH1IlmQMoKAfot5y/FhTP1RnmhLb5K6eKmJO/bvzPjYwPAazoiAUbTZFdPbqxOXN0FEbhZx/e6SB1Og4jmg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -2502,7 +2504,7 @@ packages:
     resolution: {integrity: sha512-OuVNlWywQebIXCtkixjVHebOsR3KFRxJ0DSZry6Dzj4hHaHIf3eTVmQ7VwLCjuVmw+ctU2qHIP6RxuAPr07WDw==}
     engines: {bun: '>=1.4.0', node: '>=22'}
     peerDependencies:
-      effect: 4.0.7
+      effect: 4.1.1
       undici: '>=7.0.0'
     peerDependenciesMeta:
       undici:
@@ -2511,7 +2513,7 @@ packages:
   '@opentunnel/protocol@0.6.1':
     resolution: {integrity: sha512-fdckKvQ4TEJSQ2Ia/M/GKmDbCTCw148Wc1zo6HcpUBjSwsFeKs6Tbql4Uih1oIVR8NVqtGrcPZukVVvWFyOEHA==}
     peerDependencies:
-      effect: 4.0.7
+      effect: 4.1.1
 
   '@ota-meshi/ast-token-store@0.3.0':
     resolution: {integrity: sha512-XRO0zi2NIUKq2lUk3T1ecFSld1fMWRKE6naRFGkgkdeosx7IslyUKNv5Dcb5PJTja9tHJoFu0v/7yEpAkrkrTg==}
@@ -5121,8 +5123,8 @@ packages:
   effect@4.0.0-beta.83:
     resolution: {integrity: sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w==}
 
-  effect@4.0.7:
-    resolution: {integrity: sha512-47CiUzNAmeLr40pDT9vKMxxtB8o3bdpZEKU4IUM3fVxsK2GYzPsV7fQoZP0I41A308BZd71nMxqJ0KRh3s9u2g==}
+  effect@4.1.1:
+    resolution: {integrity: sha512-XYu65BrcmNqu5i7PPvP4dqL+R5ma37zIsfuSPjcn78mog+6e5PkilNg7Xo+pBpjXJYlWEIpH4j91tMrfW05CMw==}
 
   electron-to-chromium@1.5.444:
     resolution: {integrity: sha512-5ss/uJfoDYDHT0lfJzT6FbcskIzROIOPf0BbbFkGcvDzoJU7i//9GDrwwIHQVmIsrAGiF3ihpADBRIsrEFt1rQ==}
@@ -8554,19 +8556,19 @@ snapshots:
 
   '@effect/language-service@0.87.5': {}
 
-  '@effect/platform-node-shared@4.0.7(effect@4.0.7)':
+  '@effect/platform-node-shared@4.1.1(effect@4.1.1)':
     dependencies:
       '@types/ws': 8.18.2
-      effect: 4.0.7
+      effect: 4.1.1
       ws: 8.22.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@effect/platform-node@4.0.7(effect@4.0.7)(redis@6.2.1(@opentelemetry/api@1.9.1))':
+  '@effect/platform-node@4.1.1(effect@4.1.1)(redis@6.2.1(@opentelemetry/api@1.9.1))':
     dependencies:
-      '@effect/platform-node-shared': 4.0.7(effect@4.0.7)
-      effect: 4.0.7
+      '@effect/platform-node-shared': 4.1.1(effect@4.1.1)
+      effect: 4.1.1
       redis: 6.2.1(@opentelemetry/api@1.9.1)
       undici: 8.12.3
     transitivePeerDependencies:
@@ -8604,9 +8606,9 @@ snapshots:
       '@effect/tsgo-win32-arm64': 0.63.0
       '@effect/tsgo-win32-x64': 0.63.0
 
-  '@effect/vitest@4.0.7(effect@4.0.7)(vitest@5.0.5)':
+  '@effect/vitest@4.1.1(effect@4.1.1)(vitest@5.0.5)':
     dependencies:
-      effect: 4.0.7
+      effect: 4.1.1
       vitest: 5.0.5(@opentelemetry/api@1.9.1)(@types/node@24.19.2)(@vitest/browser-preview@5.0.5)(@vitest/ui@5.0.5)(@voidzero-dev/vite-plus-core@1.4.0(@arethetypeswrong/core@0.18.5)(@types/node@24.19.2)(@typescript/native-preview@7.0.0-dev.20260707.2)(esbuild@0.28.0)(jiti@2.7.0)(publint@0.3.25)(tsx@4.23.13)(typescript@7.1.0-beta)(yaml@2.9.1))
 
   '@emnapi/core@1.11.1':
@@ -9679,16 +9681,16 @@ snapshots:
 
   '@opentelemetry/semantic-conventions@1.43.0': {}
 
-  '@opentunnel/client@0.6.1(effect@4.0.7)(undici@8.12.3)':
+  '@opentunnel/client@0.6.1(effect@4.1.1)(undici@8.12.3)':
     dependencies:
-      '@opentunnel/protocol': 0.6.1(effect@4.0.7)
-      effect: 4.0.7
+      '@opentunnel/protocol': 0.6.1(effect@4.1.1)
+      effect: 4.1.1
     optionalDependencies:
       undici: 8.12.3
 
-  '@opentunnel/protocol@0.6.1(effect@4.0.7)':
+  '@opentunnel/protocol@0.6.1(effect@4.1.1)':
     dependencies:
-      effect: 4.0.7
+      effect: 4.1.1
 
   '@ota-meshi/ast-token-store@0.3.0': {}
 
@@ -11199,19 +11201,19 @@ snapshots:
     transitivePeerDependencies:
       - typanion
 
-  '@yielded/crypto@0.1.0-beta.46(effect@4.0.7)':
+  '@yielded/crypto@0.1.0-beta.46(effect@4.1.1)':
     dependencies:
-      effect: 4.0.7
+      effect: 4.1.1
 
-  '@yielded/jose@0.1.0-beta.46(effect@4.0.7)':
+  '@yielded/jose@0.1.0-beta.46(effect@4.1.1)':
     dependencies:
-      '@yielded/crypto': 0.1.0-beta.46(effect@4.0.7)
-      effect: 4.0.7
+      '@yielded/crypto': 0.1.0-beta.46(effect@4.1.1)
+      effect: 4.1.1
 
-  '@yielded/oauth@0.1.0-beta.46(effect@4.0.7)':
+  '@yielded/oauth@0.1.0-beta.46(effect@4.1.1)':
     dependencies:
-      '@yielded/jose': 0.1.0-beta.46(effect@4.0.7)
-      effect: 4.0.7
+      '@yielded/jose': 0.1.0-beta.46(effect@4.1.1)
+      effect: 4.1.1
 
   '@yuku-core/binding-android-arm64@0.19.0':
     optional: true
@@ -11691,10 +11693,10 @@ snapshots:
       minimatch: 10.2.6
       semver: 7.8.5
 
-  effect-oxlint@0.4.0(effect@4.0.7):
+  effect-oxlint@0.4.0(effect@4.1.1):
     dependencies:
       '@oxlint/plugins': 1.90.0
-      effect: 4.0.7
+      effect: 4.1.1
 
   effect@4.0.0-beta.83:
     dependencies:
@@ -11709,7 +11711,7 @@ snapshots:
       uuid: 14.0.0
       yaml: 2.9.1
 
-  effect@4.0.7: {}
+  effect@4.1.1: {}
 
   electron-to-chromium@1.5.444: {}
 
