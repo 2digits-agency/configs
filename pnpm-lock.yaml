@@ -264,8 +264,8 @@ catalogs:
       specifier: 1.6.28
       version: 1.6.28
     '@yielded/oauth':
-      specifier: 0.1.0-beta.46
-      version: 0.1.0-beta.46
+      specifier: 0.1.0-beta.47
+      version: 0.1.0-beta.47
     dedent:
       specifier: 1.7.2
       version: 1.7.2
@@ -1165,7 +1165,7 @@ importers:
         version: 0.6.1(effect@4.0.7)(undici@8.12.3)
       '@yielded/oauth':
         specifier: 'catalog:'
-        version: 0.1.0-beta.46(effect@4.0.7)
+        version: 0.1.0-beta.47(effect@4.0.7)
       effect:
         specifier: 'catalog:'
         version: 4.0.7
@@ -2479,12 +2479,14 @@ packages:
   '@opentelemetry/sdk-trace-base@2.12.0':
     resolution: {integrity: sha512-JOERgZCxRM06FEJ5kEWxlSRChah6MmXDx3KwCruqEv/iEyLkTokCSemf2y1w8oIHtfrr8EVTpzebq/31vn2Cpg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-node@2.12.0':
     resolution: {integrity: sha512-9DufH1IlmQMoKAfot5y/FhTP1RnmhLb5K6eKmJO/bvzPjYwPAazoiAUbTZFdPbqxOXN0FEbhZx/e6SB1Og4jmg==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -4505,20 +4507,15 @@ packages:
     engines: {node: '>=18.12.0'}
     hasBin: true
 
-  '@yielded/crypto@0.1.0-beta.46':
-    resolution: {integrity: sha512-7S2jUzC9znjMCJqsNB2iPAmxyCH5TkSABMbmR8p8/RvJ1ARlMULg4HC5tlQYUs7gcG20s5MosjVFPsl4NQXBwA==}
+  '@yielded/jose@0.1.0-beta.47':
+    resolution: {integrity: sha512-xFrwhZ1ljgvF7fFrMCYDrO0ovIDnKDg0aXo3g/3w8ipUylrmyhPf0xCoAruGIuZTEoZNOb9Ct+6VZewKJoQCdQ==}
     peerDependencies:
-      effect: ^4.0.3
+      effect: ^4.1.0
 
-  '@yielded/jose@0.1.0-beta.46':
-    resolution: {integrity: sha512-qoON8svDiVWxpX1GN9QxbdMxTkzf8VhSXcrRiNIvi9WuMs7h5SMq5bfgrNIA6DQSly7+jaXxepObdl73Tr6ZFA==}
+  '@yielded/oauth@0.1.0-beta.47':
+    resolution: {integrity: sha512-5cIh18WLSuQSQSj17XUulSCiOwIyPf9jqPvGzfS99ldNrCaTljceh49OSnAgwFDwjmayRb9ptxSl9ezseFj49Q==}
     peerDependencies:
-      effect: ^4.0.3
-
-  '@yielded/oauth@0.1.0-beta.46':
-    resolution: {integrity: sha512-Z//WkyO8qFhkeJeqWcDSyqM1zU41nXtOWLKDZ6khVMDtMIl2uLav3NuB8f1aFKxpZJitnf6OnInLIY7tXXhNKQ==}
-    peerDependencies:
-      effect: ^4.0.3
+      effect: ^4.1.0
 
   '@yuku-core/binding-android-arm64@0.19.0':
     resolution: {integrity: sha512-wdL2XmTiZixAOaHk9Z0JJZ8u9Qm8d333Zjpc6gaxXFX+UR5BlsfxZ7a2+2Rm71pamppsPYGUGFq2oVLbh6DISw==}
@@ -11199,18 +11196,13 @@ snapshots:
     transitivePeerDependencies:
       - typanion
 
-  '@yielded/crypto@0.1.0-beta.46(effect@4.0.7)':
+  '@yielded/jose@0.1.0-beta.47(effect@4.0.7)':
     dependencies:
       effect: 4.0.7
 
-  '@yielded/jose@0.1.0-beta.46(effect@4.0.7)':
+  '@yielded/oauth@0.1.0-beta.47(effect@4.0.7)':
     dependencies:
-      '@yielded/crypto': 0.1.0-beta.46(effect@4.0.7)
-      effect: 4.0.7
-
-  '@yielded/oauth@0.1.0-beta.46(effect@4.0.7)':
-    dependencies:
-      '@yielded/jose': 0.1.0-beta.46(effect@4.0.7)
+      '@yielded/jose': 0.1.0-beta.47(effect@4.0.7)
       effect: 4.0.7
 
   '@yuku-core/binding-android-arm64@0.19.0':
