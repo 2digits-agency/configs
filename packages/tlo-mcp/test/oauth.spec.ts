@@ -1,4 +1,3 @@
-import * as NodeServices from '@effect/platform-node/NodeServices';
 import { assert, describe, expect, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
 import * as Deferred from 'effect/Deferred';
@@ -20,6 +19,7 @@ import { OrbitAuth, OrbitAuthLayer } from '../src/oauth/OrbitAuth.js';
 import { listenForLogin, validateCallback } from '../src/oauth/callback.js';
 import { ORBIT_ORIGIN, Session } from '../src/oauth/session.js';
 import { makeSessionStoreLayer, SessionStore } from '../src/oauth/store.js';
+import { PlatformLive } from '../src/platform.js';
 
 const fixture = Session.make({
   clientId: 'test-client',
@@ -206,7 +206,7 @@ describe('orbit OAuth', () => {
 
         expect(yield* store.load).toBeUndefined();
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' })));
-    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );
 
   it.effect('serializes concurrent refreshes and persists rotation before returning tokens', () =>
@@ -328,7 +328,7 @@ describe('orbit OAuth', () => {
 
         expect((yield* Ref.get(stored)).refreshToken?.pipe(Redacted.value)).toBe('rotated');
       }).pipe(
-        Effect.provide(auth.pipe(Layer.provide(NodeServices.layer))),
+        Effect.provide(auth.pipe(Layer.provide(PlatformLive))),
         Effect.provideService(FetchHttpClient.Fetch, fetchMock),
         Effect.scoped,
       );

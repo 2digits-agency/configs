@@ -1,4 +1,3 @@
-import * as NodeServices from '@effect/platform-node/NodeServices';
 import { describe, expect, it } from '@effect/vitest';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
@@ -13,6 +12,7 @@ import * as HttpRouter from 'effect/http/HttpRouter';
 import { connectionPrompt } from '../src/cli/connect.js';
 import { gatewayRoutes, loadGatewayKey } from '../src/http/gateway.js';
 import { OrbitClient } from '../src/mcp/OrbitClient.js';
+import { PlatformLive } from '../src/platform.js';
 
 const key = Str.repeat(64)('a');
 
@@ -54,7 +54,7 @@ const makeHandler = Effect.fn('Gateway.test.handler')(function* () {
   const handler = yield* Effect.acquireRelease(
     Effect.sync(() =>
       HttpRouter.toWebHandler(
-        gatewayRoutes(Redacted.make(key)).pipe(Layer.provide(upstream), Layer.provide(NodeServices.layer)),
+        gatewayRoutes(Redacted.make(key)).pipe(Layer.provide(upstream), Layer.provide(PlatformLive)),
         { disableLogger: true },
       ),
     ),
@@ -213,7 +213,7 @@ describe('personal HTTP gateway', () => {
       yield* fs.writeFileString(file, 'invalid');
 
       expect(yield* loadGatewayKey(file).pipe(Effect.flip)).toHaveProperty('_tag', 'GatewayError');
-    }).pipe(Effect.provide(NodeServices.layer)),
+    }).pipe(Effect.provide(PlatformLive)),
   );
 
   it('prints a connection prompt without secrets or an Orbit OAuth flow', () => {
