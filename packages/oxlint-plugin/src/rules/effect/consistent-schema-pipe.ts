@@ -42,6 +42,7 @@ const modifiers: ReadonlySet<string> = new Set([
   'required',
   'requiredKey',
   'toCodecArrayFromSingle',
+  'toCodecGoJson',
   'toCodecIso',
   'toCodecJson',
   'toCodecStringTree',

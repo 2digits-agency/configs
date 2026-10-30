@@ -35,6 +35,7 @@ for (const [messageId, invalid, output] of [
   ['wrapperPipe', `Schema.String.pipe(Schema.Array, Schema.Array)`, `Schema.Array(Schema.Array(Schema.String))`],
   ['wrapperPipe', `(value as Schema.Top).pipe(Schema.Array)`, `Schema.Array(value as Schema.Top)`],
   ['modifierCall', `Schema.fromJsonString(Session)`, `Session.pipe(Schema.fromJsonString)`],
+  ['modifierCall', `Schema.toCodecGoJson(Session)`, `Session.pipe(Schema.toCodecGoJson)`],
   ['wrapperPipe', `(first, second).pipe(Schema.Array)`, `Schema.Array((first, second))`],
   ['dataLastCall', `Schema.toTaggedUnion('_tag')(Event)`, `Event.pipe(Schema.toTaggedUnion('_tag'))`],
   ['dataLastCall', `Schema.brand('UserId')(Schema.String)`, `Schema.String.pipe(Schema.brand('UserId'))`],
@@ -145,6 +146,7 @@ for (const valid of [
   `${schema} Schema.String.pipe(Schema.optional).pipe(Schema.mutableKey)`,
   // Schema.Constraint has no `.pipe`, so heads that may only be a Constraint stay calls.
   `${schema} function f<T extends Schema.Constraint>(schema: T) { return Schema.toCodecJson(schema) }`,
+  `${schema} function f<T extends Schema.Constraint>(schema: T) { return Schema.toCodecGoJson(schema) }`,
   `${schema} const f = <T extends Schema.Constraint, U extends T>(schema: U) => Schema.brand('Id')(schema)`,
   `${pipe} function f<T>(schema: T) { return pipe(schema, Schema.optional) }`,
   `${schema} Schema.optional(value as Schema.ConstraintCodec<string>)`,
