@@ -306,8 +306,8 @@ catalogs:
       specifier: 1.5.0
       version: 1.5.0
     eslint-plugin-drizzle:
-      specifier: 1.0.0-rc.5
-      version: 1.0.0-rc.5
+      specifier: 1.0.0-rc.5-ab785fc
+      version: 1.0.0-rc.5-ab785fc
     eslint-plugin-github-action:
       specifier: 0.4.0
       version: 0.4.0
@@ -714,7 +714,7 @@ importers:
         version: 1.5.0(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-drizzle:
         specifier: 'catalog:'
-        version: 1.0.0-rc.5(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
+        version: 1.0.0-rc.5-ab785fc(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-github-action:
         specifier: 'catalog:'
         version: 0.4.0(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
@@ -3777,6 +3777,7 @@ packages:
   '@smithy/core@3.35.1':
     resolution: {integrity: sha512-i4YPS4B6ts7bjn7UwLnGjiZdprOvHvgGobFZsYK3GIY3E5hIqtj0rReU69BcTpGp+fvtraSNXeG1l+jtJvF55w==}
     engines: {node: '>=18.0.0'}
+    deprecated: Deprecated due to a bug in custom logger data redaction. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -5248,8 +5249,8 @@ packages:
     peerDependencies:
       eslint: '>=8.40.0'
 
-  eslint-plugin-drizzle@1.0.0-rc.5:
-    resolution: {integrity: sha512-E05hCKvs2C4yO/8unBSCyFKq7sIC2T825LCirDZmRXJoE7bg2gZ0kcMO9C9dFm4kI+E2GJCRT3Ejk27EMikCrw==}
+  eslint-plugin-drizzle@1.0.0-rc.5-ab785fc:
+    resolution: {integrity: sha512-kRNC2LS/6ay1lkX3UA3JJvtaesYZegFZ38W2XnS1XAiQubUZvWQlSHQaI82aDwqwgGsOS61qoanKINu/Hzqo3g==}
     peerDependencies:
       eslint: '>=8.0.0'
 
@@ -11836,7 +11837,7 @@ snapshots:
       module-replacements: 2.10.1
       semver: 7.8.5
 
-  eslint-plugin-drizzle@1.0.0-rc.5(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0)):
+  eslint-plugin-drizzle@1.0.0-rc.5-ab785fc(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0)):
     dependencies:
       eslint: 10.14.0(jiti@2.7.0)(supports-color@7.2.0)
 
