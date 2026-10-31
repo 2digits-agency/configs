@@ -1,3 +1,9 @@
+## @2digits/cli@2.0.36
+
+### Update Effect to 4.1.1
+
+- Updated `effect` and `@effect/platform-node` to `4.1.1`
+
 ## @2digits/cli@2.0.35
 
 ### Update nypm to 0.6.12

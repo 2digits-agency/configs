@@ -1,47 +1,62 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update `tsrs` to 0.20.1-ts7.1.0-beta\n"
-    filename: 2026-10-28-amber-forest-lark.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Require Node 26\n\n- Set the Node engine to `26.13.0`\n"
+    filename: 2026-10-31-bold-otters-node.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update pnpm to 12.16.1\n\n- Updated pnpm to 12.16.1.\n"
-    filename: 2026-10-28-d4b7.md
+  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update knip, pkg-pr-new and pnpm\n\n- Updated `knip` to `6.44.1`, `pkg-pr-new` to `0.0.93` and `pnpm` to `12.17.0`\n"
+    filename: 2026-10-31-nimble-owl-tooling.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/config-monorepo:\n    type: patch\n---\n\n## Update GitButler skill to 0.5.2253\n"
-    filename: 2026-10-28-gentle-river-finch.md
+  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update Effect to 4.1.1\n\n- Updated `effect` and `@effect/platform-node` to `4.1.1`\n"
+    filename: 2026-10-31-keen-gull-effect.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update Storybook ESLint plugin\n\n- Updated `eslint-plugin-storybook` to 10.6.5.\n"
-    filename: 2026-10-28-b2f5.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/eslint-plugin:\n    type: patch\n---\n\n## Update eslint to 10.14.0\n"
+    filename: 2026-10-31-brisk-lynx-eslint.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update OpenCode plugin dependency\n\n- Updated `@opencode-ai/plugin` to 1.19.5.\n"
-    filename: 2026-10-28-c3a6.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-regexp to 3.3.2\n"
+    filename: 2026-10-31-calm-wren-regexp.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Update Effect dependencies\n\n- Updated Effect and its Node platform integration to 4.0.7.\n"
-    filename: 2026-10-28-a1e4.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update tailwind-csstree to 0.4.2\n"
+    filename: 2026-10-31-swift-ibis-tailwind.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Enable additional Effect diagnostics\n\n- Enabled `failCauseToConstructor`, `manualMetricTapToTrack`, and `mapMapErrorToMapBoth` as errors.\n"
-    filename: 2026-10-28-brisk-otter-moon.md
+  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update posthog-node to 5.61.1\n"
+    filename: 2026-10-31-lucid-puma-posthog.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update `@effect/tsgo` to 0.63.0\n"
-    filename: 2026-10-28-quiet-cedar-bridge.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Recognize Go JSON Schema modifiers\n\nApply `Schema.toCodecGoJson` with `.pipe(...)`, consistently with other Schema modifiers. Generic schemas bounded only by `Schema.Constraint` remain unchanged.\n"
+    filename: 2026-10-30-c41d.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Expose only an allowlist of Orbit tools\n\nThe gateway now connects to Orbit with Effect's `McpClient` over MCP 2025-11-25 and forwards only 43 tools for\ntimesheets, time entries, timers, tickets, todos and read-only planning and project lookups. Other Orbit tools are no\nlonger listed or callable through the gateway.\n"
+    filename: 2026-10-28-b7c3.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Support Effect 4.1 crypto services\n\nMigrate gateway authentication and OAuth PKCE to Effect's Digest and SecureRandom services, provided explicitly by the Node runtime.\n\nKeep browser authorization URLs redacted in child-process diagnostics using Effect 4.1's redacted argument support.\n"
+    filename: 2026-10-30-f41c.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update @yielded/oauth to 0.1.0-beta.47\n"
+    filename: 2026-10-31-sunny-heron-oauth.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-10-28-amber-forest-lark.md
-      - 2026-10-28-d4b7.md
-      - 2026-10-28-gentle-river-finch.md
+      - 2026-10-31-bold-otters-node.md
+      - 2026-10-31-nimble-owl-tooling.md
     id: npm:@2digits/config-monorepo
+    updated: true
+  - changelogIds:
+      - 2026-10-31-keen-gull-effect.md
+    id: npm:@2digits/cli
     updated: true
   - id: npm:@2digits/constants
     updated: false
-  - id: npm:@2digits/cli
-    updated: false
   - changelogIds:
-      - 2026-10-28-b2f5.md
+      - 2026-10-31-bold-otters-node.md
+      - 2026-10-31-brisk-lynx-eslint.md
+      - 2026-10-31-calm-wren-regexp.md
+      - 2026-10-31-swift-ibis-tailwind.md
     id: npm:@2digits/eslint-config
     updated: true
-  - id: npm:@2digits/eslint-plugin
-    updated: false
   - changelogIds:
-      - 2026-10-28-c3a6.md
+      - 2026-10-31-brisk-lynx-eslint.md
+    id: npm:@2digits/eslint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-10-31-lucid-puma-posthog.md
     id: npm:@2digits/opencode-plugin
     updated: true
   - id: npm:@2digits/oxfmt-config
@@ -49,7 +64,8 @@ core:packages:
   - id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-10-28-a1e4.md
+      - 2026-10-30-c41d.md
+      - 2026-10-31-keen-gull-effect.md
     id: npm:@2digits/oxlint-plugin
     updated: true
   - id: npm:@2digits/prettier-config
@@ -57,18 +73,18 @@ core:packages:
   - id: npm:@2digits/renovate-config
     updated: false
   - changelogIds:
-      - 2026-10-28-a1e4.md
+      - 2026-10-28-b7c3.md
+      - 2026-10-30-f41c.md
+      - 2026-10-31-keen-gull-effect.md
+      - 2026-10-31-sunny-heron-oauth.md
     id: npm:@2digits/tlo-mcp
     updated: true
-  - changelogIds:
-      - 2026-10-28-brisk-otter-moon.md
-      - 2026-10-28-quiet-cedar-bridge.md
-    id: npm:@2digits/tsconfig
-    updated: true
+  - id: npm:@2digits/tsconfig
+    updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
-  - id: npm:@2digits/constants
   - id: npm:@2digits/cli
+  - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
