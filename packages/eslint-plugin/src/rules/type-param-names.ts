@@ -1,21 +1,15 @@
 import { createRule } from '../utils';
 
-const VALID_TYPE_PARAM = /^[T$][A-Z][a-z]+\d*$/;
-
 const HAS_PREFIX = /^[T$]/;
 
-const HAS_INITIAL = /^[T$][A-Z]/;
+// Checked in order; the first failing pattern is reported.
+const NAME_CHECKS = [
+  { pattern: HAS_PREFIX, messageId: 'prefix' },
+  { pattern: /^[T$][A-Z]/, messageId: 'initial' },
+  { pattern: /^[T$][A-Z][a-z]/, messageId: 'remainder' },
+] as const;
 
-const HAS_REMAINDER = /^[T$][A-Z][a-z]/;
-
-type MessageId = (typeof MessageId)[keyof typeof MessageId];
-
-const MessageId = {
-  prefix: 'prefix',
-  initial: 'initial',
-  remainder: 'remainder',
-  suggestRename: 'suggestRename',
-} as const;
+type MessageId = (typeof NAME_CHECKS)[number]['messageId'] | 'suggestRename';
 
 export const RULE_NAME = 'type-param-names';
 
@@ -41,7 +35,7 @@ export const typeParamNames = createRule<[], MessageId>({
       TSTypeParameterDeclaration(node) {
         const { params } = node;
 
-        if (params.length === 1 && params.at(0)?.name.name === 'T') {
+        if (params.length === 1 && params[0]?.name.name === 'T') {
           return;
         }
 
@@ -50,9 +44,9 @@ export const typeParamNames = createRule<[], MessageId>({
             name: { name },
           } = param;
 
-          const messageId = getMessageId(name);
+          const failed = NAME_CHECKS.find(({ pattern }) => !pattern.test(name));
 
-          if (!messageId) {
+          if (!failed) {
             continue;
           }
 
@@ -60,7 +54,7 @@ export const typeParamNames = createRule<[], MessageId>({
 
           context.report({
             node: param,
-            messageId,
+            messageId: failed.messageId,
             data: { name },
             suggest: [
               {
@@ -77,26 +71,6 @@ export const typeParamNames = createRule<[], MessageId>({
     };
   },
 });
-
-function getMessageId(name: string): MessageId | undefined {
-  if (VALID_TYPE_PARAM.test(name)) {
-    return undefined;
-  }
-
-  if (!HAS_PREFIX.test(name)) {
-    return MessageId.prefix;
-  }
-
-  if (!HAS_INITIAL.test(name)) {
-    return MessageId.initial;
-  }
-
-  if (!HAS_REMAINDER.test(name)) {
-    return MessageId.remainder;
-  }
-
-  return undefined;
-}
 
 function getSuggestion(name: string): string {
   if (!HAS_PREFIX.test(name)) {
