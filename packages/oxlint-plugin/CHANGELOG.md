@@ -1,3 +1,13 @@
+## @2digits/oxlint-plugin@0.4.3
+
+### Recognize Go JSON Schema modifiers
+
+Apply `Schema.toCodecGoJson` with `.pipe(...)`, consistently with other Schema modifiers. Generic schemas bounded only by `Schema.Constraint` remain unchanged.
+
+### Update Effect to 4.1.1
+
+- Updated `effect` and `@effect/platform-node` to `4.1.1`
+
 ## @2digits/oxlint-plugin@0.4.2
 
 ### Update Effect dependencies

@@ -1,3 +1,19 @@
+## @2digits/eslint-config@5.10.2
+
+### Require Node 26
+
+- Set the Node engine to `26.13.0`
+
+### Update eslint to 10.14.0
+
+
+
+### Update eslint-plugin-regexp to 3.3.2
+
+
+
+### Update tailwind-csstree to 0.4.2
+
 ## @2digits/eslint-config@5.10.1
 
 ### Update Storybook ESLint plugin

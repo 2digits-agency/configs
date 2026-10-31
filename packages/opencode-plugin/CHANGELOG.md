@@ -1,3 +1,7 @@
+## @2digits/opencode-plugin@0.2.49
+
+### Update posthog-node to 5.61.1
+
 ## @2digits/opencode-plugin@0.2.48
 
 ### Update OpenCode plugin dependency

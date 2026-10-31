@@ -1,3 +1,7 @@
+## @2digits/eslint-plugin@4.0.37
+
+### Update eslint to 10.14.0
+
 ## @2digits/eslint-plugin@4.0.36
 
 ### Update @typescript-eslint/utils to 8.72.1

@@ -1,3 +1,13 @@
+## @2digits/config-monorepo@0.1.20
+
+### Require Node 26
+
+- Set the Node engine to `26.13.0`
+
+### Update knip, pkg-pr-new and pnpm
+
+- Updated `knip` to `6.44.1`, `pkg-pr-new` to `0.0.93` and `pnpm` to `12.17.0`
+
 ## @2digits/config-monorepo@0.1.19
 
 ### Update `tsrs` to 0.20.1-ts7.1.0-beta

@@ -1,3 +1,23 @@
+## @2digits/tlo-mcp@2.1.0
+
+### Expose only an allowlist of Orbit tools
+
+The gateway now connects to Orbit with Effect's `McpClient` over MCP 2025-11-25 and forwards only 43 tools for
+timesheets, time entries, timers, tickets, todos and read-only planning and project lookups. Other Orbit tools are no
+longer listed or callable through the gateway.
+
+### Support Effect 4.1 crypto services
+
+Migrate gateway authentication and OAuth PKCE to Effect's Digest and SecureRandom services, provided explicitly by the Node runtime.
+
+Keep browser authorization URLs redacted in child-process diagnostics using Effect 4.1's redacted argument support.
+
+### Update Effect to 4.1.1
+
+- Updated `effect` and `@effect/platform-node` to `4.1.1`
+
+### Update @yielded/oauth to 0.1.0-beta.47
+
 ## @2digits/tlo-mcp@2.0.11
 
 ### Update Effect dependencies
