@@ -93,7 +93,7 @@ catalog:
   tsrs: 0.20.1-ts7.1.0-beta
   turbo: 2.11.10
   typescript-eslint: 8.72.1
-  typescript: 7.1.0-beta
+  typescript: 7.1.0-dev.20261031.1
   vite-plus: 1.4.0
   vite: npm:@voidzero-dev/vite-plus-core@1.4.0
   vitest: 5.0.5
@@ -158,7 +158,7 @@ verifyDepsBeforeRun: warn
 catalogs:
   # typescript-eslint still requires the TypeScript 6 compiler API.
   eslint:
-    typescript: 6.0.3
+    typescript: 7.0.2
 
 permissions:
   core-js-pure:
