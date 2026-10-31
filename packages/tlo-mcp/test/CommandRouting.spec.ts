@@ -1,4 +1,3 @@
-import * as NodeServices from '@effect/platform-node/NodeServices';
 import { describe, expect, it } from '@effect/vitest';
 import * as Cause from 'effect/Cause';
 import * as Effect from 'effect/Effect';
@@ -8,6 +7,7 @@ import * as Stdio from 'effect/Stdio';
 import { vi } from 'vite-plus/test';
 
 import { run } from '../src/cli/command.js';
+import { PlatformLive } from '../src/platform.js';
 
 const routing = vi.hoisted((): { routes: Array<string> } => ({ routes: [] }));
 
@@ -65,9 +65,7 @@ describe('command routing', () => {
           expect(Exit.isSuccess(exit)).toBeTruthy();
         }
       }).pipe(
-        Effect.provide(
-          Layer.merge(NodeServices.layer, Stdio.layerTest({ args: Effect.succeed(['unknown-stdio-command']) })),
-        ),
+        Effect.provide(Layer.merge(PlatformLive, Stdio.layerTest({ args: Effect.succeed(['unknown-stdio-command']) }))),
       ),
     );
   }
@@ -82,7 +80,7 @@ describe('command routing', () => {
         expect(Exit.isFailure(exit)).toBeTruthy();
 
         expect(routing.routes).toStrictEqual([]);
-      }).pipe(Effect.provide(Layer.merge(NodeServices.layer, Stdio.layerTest({})))),
+      }).pipe(Effect.provide(Layer.merge(PlatformLive, Stdio.layerTest({})))),
     );
   }
 });

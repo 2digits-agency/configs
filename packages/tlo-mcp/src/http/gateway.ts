@@ -4,7 +4,6 @@ import { timingSafeEqual } from 'node:crypto';
 import { homedir } from 'node:os';
 
 import * as ByteSize from 'effect/ByteSize';
-import * as Crypto from 'effect/Crypto';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
@@ -13,6 +12,8 @@ import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as McpProtocol from 'effect/ai/McpProtocol';
 import * as McpServer from 'effect/ai/McpServer';
+import * as Digest from 'effect/crypto/Digest';
+import * as SecureRandom from 'effect/crypto/SecureRandom';
 import * as Hex from 'effect/encoding/Hex';
 import * as HttpIncomingMessage from 'effect/http/HttpIncomingMessage';
 import * as HttpRouter from 'effect/http/HttpRouter';
@@ -51,7 +52,7 @@ export const loadGatewayKey = Effect.fn('Gateway.loadKey')(
   function* (file: string) {
     const fs = yield* FileSystem.FileSystem;
 
-    const crypto = yield* Crypto.Crypto;
+    const random = yield* SecureRandom.SecureRandom;
 
     const path = yield* Path.Path;
 
@@ -61,7 +62,7 @@ export const loadGatewayKey = Effect.fn('Gateway.loadKey')(
 
     yield* fs.chmod(directory, 0o700);
 
-    const bytes = yield* crypto.randomBytes(32);
+    const bytes = yield* random.randomBytes(32);
 
     yield* fs
       .writeFileString(file, Hex.encode(bytes), { flag: 'wx', mode: 0o600 })
@@ -83,11 +84,11 @@ export const loadGatewayKey = Effect.fn('Gateway.loadKey')(
 /**
  * Hash before comparing so both sides of the equality check have the same length.
  *
- * @param crypto
+ * @param digest
  * @param value
  */
-function sha256(crypto: Crypto.Crypto, value: string) {
-  return crypto.digest('SHA-256', encoder.encode(value)).pipe(Effect.orDie);
+function sha256(digest: Digest.Digest['Service'], value: string) {
+  return digest.digest(Digest.sha256, encoder.encode(value));
 }
 
 /**
@@ -98,17 +99,17 @@ function sha256(crypto: Crypto.Crypto, value: string) {
 function gatewayAuthentication(key: Redacted.Redacted) {
   return Layer.unwrap(
     Effect.gen(function* () {
-      // Resolve Crypto when the layer is built: request handlers do not receive the layer's services.
-      const crypto = yield* Crypto.Crypto;
+      // Resolve Digest when the layer is built: request handlers do not receive the layer's services.
+      const digest = yield* Digest.Digest;
 
-      const expected = yield* sha256(crypto, `Bearer ${Redacted.value(key)}`);
+      const expected = yield* sha256(digest, `Bearer ${Redacted.value(key)}`);
 
       return HttpRouter.middleware(
         (httpEffect) =>
           Effect.gen(function* () {
             const request = yield* HttpServerRequest.HttpServerRequest;
 
-            const received = yield* sha256(crypto, request.headers.authorization ?? '');
+            const received = yield* sha256(digest, request.headers.authorization ?? '');
 
             if (!timingSafeEqual(expected, received)) {
               return unauthorized;

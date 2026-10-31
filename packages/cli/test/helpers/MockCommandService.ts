@@ -15,7 +15,7 @@ import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
  */
 interface ExecutedCommand {
   readonly command: string;
-  readonly args: ReadonlyArray<string>;
+  readonly args: ChildProcess.StandardCommand['args'];
   readonly shell: boolean | string;
 }
 

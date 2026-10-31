@@ -2,7 +2,6 @@ import * as OAuth from '@yielded/oauth/OAuth';
 import * as Pkce from '@yielded/oauth/Pkce';
 import * as Clock from 'effect/Clock';
 import * as Context from 'effect/Context';
-import * as Crypto from 'effect/Crypto';
 import * as Effect from 'effect/Effect';
 import * as Eq from 'effect/Equal';
 import * as Exit from 'effect/Exit';
@@ -11,6 +10,8 @@ import * as Match from 'effect/Match';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Semaphore from 'effect/Semaphore';
+import * as Digest from 'effect/crypto/Digest';
+import * as SecureRandom from 'effect/crypto/SecureRandom';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as HttpClient from 'effect/http/HttpClient';
 import * as HttpClientRequest from 'effect/http/HttpClientRequest';
@@ -43,7 +44,9 @@ export const OrbitAuthLayer = Layer.effect(
   Effect.gen(function* () {
     const store = yield* SessionStore;
 
-    const crypto = yield* Crypto.Crypto;
+    const digest = yield* Digest.Digest;
+
+    const random = yield* SecureRandom.SecureRandom;
 
     const http = yield* HttpClient.HttpClient;
 
@@ -151,9 +154,9 @@ export const OrbitAuthLayer = Layer.effect(
     const openBrowser = Effect.fn('OrbitAuth.openBrowser')(
       function* (url: Redacted.Redacted) {
         const browser = yield* Match.value(process.platform).pipe(
-          Match.when('darwin', () => browserCommand`open ${Redacted.value(url)}`),
-          Match.when('win32', () => browserCommand`rundll32 url.dll,FileProtocolHandler ${Redacted.value(url)}`),
-          Match.orElse(() => browserCommand`xdg-open ${Redacted.value(url)}`),
+          Match.when('darwin', () => browserCommand`open ${url}`),
+          Match.when('win32', () => browserCommand`rundll32 url.dll,FileProtocolHandler ${url}`),
+          Match.orElse(() => browserCommand`xdg-open ${url}`),
         );
 
         return yield* browser.exitCode;
@@ -233,7 +236,8 @@ export const OrbitAuthLayer = Layer.effect(
       Effect.scoped,
       semaphore.withPermit,
       Effect.provideService(HttpClient.HttpClient, http),
-      Effect.provideService(Crypto.Crypto, crypto),
+      Effect.provideService(Digest.Digest, digest),
+      Effect.provideService(SecureRandom.SecureRandom, random),
       Effect.provideService(ChildProcessSpawner.ChildProcessSpawner, spawner),
       Effect.provideService(FetchHttpClient.RequestInit, { redirect: 'error' }),
       Effect.mapError((error) =>

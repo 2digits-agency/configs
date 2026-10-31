@@ -1,6 +1,6 @@
 ---
 name: but
-version: 0.5.2253
+version: 0.5.2259
 description: "Commit, push, branch, and manage version control with GitButler. Use for commits, selective dirty-file or hunk commits, branches, diffs, PRs, history edits, squashes, amends, undo, merge, fetching, pulling and syncing a branch with its remote, apply, unapply, and linked worktrees. For selected dirty files or hunks, inspect with `but diff`; use compact `but status` for commit order, branch/stack placement, or conflict overview; use `but status -fv` when file IDs or per-commit file details matter. Replaces git write commands, including fetch and pull. Applies in every checkout of the repository, even when a plain branch is checked out, including linked worktrees such as `.claude/worktrees/*`, and to git writes made while testing or cleaning up (stash, checkout -- <file>, restore, reset)."
 author: GitButler Team
 ---
@@ -40,6 +40,8 @@ but commit -b <branch> -m "<msg>" <id> <id>
 ```
 
 `but commit -b <branch> ...` creates the branch when it does not exist and prints the created commit. Do not run a separate `but branch new`, status command, or verification diff unless the task needs workspace information that the result does not provide.
+
+In a linked worktree, such as `.claude/worktrees/*`, omit `-b` so the commit goes on the branch the worktree has checked out. Use that branch as the new branch; do not stack another one on it.
 
 ## IDs
 
@@ -168,7 +170,7 @@ To make one existing branch depend on another: `but move <child-branch-name> --a
 Use a worktree when the task needs a separate checkout, for example to build or test one branch while other work stays in the main checkout.
 
 1. `but worktree new <branch-name>` checks out that branch in a new directory, creating it if needed (an existing branch must not be in the workspace), and prints that directory. Add `-A <commit>` to start the branch at that commit instead of the workspace base. Worktrees made by other tools must sit outside the repository directory or be listed in `.git/info/exclude`; otherwise a bare `but commit` in the main checkout records them in the branch.
-2. Run `but` from that directory, or with `but -C <path>`. There, a bare `but commit -m "<msg>"` or `but diff` takes that worktree's changes, a bare path names a file there, and the commit goes on the worktree's branch. If `but` says the worktree "is not managed by GitButler", it is archived: `but worktree unarchive <name>`. `but undo` refuses to restore a branch a worktree has checked out, so reverse a mistake there with the inverse command (`uncommit`, `reword`).
+2. Run `but` from that directory, or with `but -C <path>`. There, a bare `but commit -m "<msg>"` or `but diff` takes that worktree's changes, a bare path names a file there, and the commit goes on the worktree's branch. Do the work on that branch, also in a worktree another tool made. `-b <new-name>` is refused there; stack a new branch on it only when the user asks for a separate branch. If `but` says the worktree "is not managed by GitButler", it is archived: `but worktree unarchive <name>`. `but undo` refuses to restore a branch a worktree has checked out, so reverse a mistake there with the inverse command (`uncommit`, `reword`).
 3. `but status` from any checkout shows the worktree as a lane of its own, with the same IDs everywhere. `@` always means the main worktree's uncommitted changes; `<worktree>:@` names a linked worktree's changes from anywhere.
 4. Push and open PRs as for any branch (`but pr new <branch-name>`). `but pull` also rebases worktree branches. If that leaves a worktree commit `{conflicted}`, the branch name doesn't find it: take its commit ID from `but status` and run `but resolve conflicts <commit-id>`, then `but resolve apply <path>:<N> --commit <commit-id>`.
 5. When done, `but worktree remove <name>` deletes the directory and keeps the branch. It refuses while the worktree has uncommitted changes; `-f` discards them.
@@ -178,6 +180,10 @@ Use a worktree when the task needs a separate checkout, for example to build or 
 `but pr new <branch-name>` pushes the selected branch and its ancestors, then creates the PR in one step — no prior `but push`. Provide `-F -` with a heredoc or `-F <file>` (first line is the title), `-t`, or `-m` with real newlines (zsh/bash: `-m $'Title\n\nBody'`) so no editor opens. Do not write the message to a file inside the repository: the next `but commit` would commit it. If forge auth is missing, ask the user to run `but config forge auth` in a terminal; it refuses non-interactive runs.
 
 If you do create a PR for a stacked branch, use `but pr` — not `gh pr create` (only `but pr` sets PR bases and stack metadata; `gh pr create` breaks that). To publish a whole stack: `but pr new <top-branch-name> -t`. Manage with `but pr auto-merge|set-draft|set-ready <selector>`; selectors can be a branch name, current branch/stack CLI ID, or numeric review ID. See `but skill reference` for details.
+
+When `but pr new` prints a `<pr-created>` line, copy that line into the text of your reply. It tells the app running you that this session opened the PR.
+
+If you run in the Claude desktop app, end the `but pr new` line with the shell comment `# gh pr create`, for example `but pr new <branch-name> -F - <<'EOF' # gh pr create`. While `gitbutler/workspace` is checked out, the app counts a PR as opened by this session only when the command text contains `gh pr create`.
 
 ### Dependency conflict with another branch
 

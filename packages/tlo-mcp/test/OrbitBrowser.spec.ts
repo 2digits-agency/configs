@@ -1,4 +1,3 @@
-import * as NodeServices from '@effect/platform-node/NodeServices';
 import { describe, expect, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
 import * as Deferred from 'effect/Deferred';
@@ -19,6 +18,7 @@ import { OrbitAuth, OrbitAuthLayer } from '../src/oauth/OrbitAuth.js';
 import { listenForLogin } from '../src/oauth/callback.js';
 import { ORBIT_ORIGIN, type Session } from '../src/oauth/session.js';
 import { SessionStore } from '../src/oauth/store.js';
+import { PlatformLive } from '../src/platform.js';
 
 vi.mock(import('../src/oauth/callback.js'), () => ({ listenForLogin: vi.fn<typeof listenForLogin>() }));
 
@@ -52,7 +52,7 @@ describe('orbit browser and operation cleanup', () => {
 
       // oxlint-disable-next-line vitest/no-standalone-expect -- it.live is an Effect test.
       expect(yield* handle.isRunning).toBeFalsy();
-    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );
 
   for (const outcome of ['success', 'nonzero', 'timeout', 'interrupted']) {
@@ -208,13 +208,17 @@ describe('orbit browser and operation cleanup', () => {
 
           expect(command.options).toMatchObject({ forceKillAfter: '1 second', stdout: 'ignore', stderr: 'ignore' });
 
-          const url = new URL(command.args.at(-1) ?? '');
+          const argument = command.args.at(-1) ?? '';
+
+          const url = new URL(Redacted.isRedacted(argument) ? Redacted.value(argument) : argument);
 
           expect({
+            redacted: Redacted.isRedacted(argument),
             state: url.searchParams.get('state'),
             method: url.searchParams.get('code_challenge_method'),
             challenge: Boolean(url.searchParams.get('code_challenge')),
           }).toStrictEqual({
+            redacted: true,
             state: vi.mocked(listenForLogin).mock.calls.at(-1)?.[0],
             method: 'S256',
             challenge: true,
@@ -234,7 +238,7 @@ describe('orbit browser and operation cleanup', () => {
           Effect.provideService(FetchHttpClient.Fetch, fetchMock),
           Effect.ensuring(Effect.sync(() => stderr.mockRestore())),
         );
-      }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+      }).pipe(Effect.provide(PlatformLive), Effect.scoped),
     );
   }
 
@@ -327,6 +331,6 @@ describe('orbit browser and operation cleanup', () => {
         Effect.provide(OrbitAuthLayer.pipe(Layer.provide(store), Layer.provide(FetchHttpClient.layer))),
         Effect.provideService(FetchHttpClient.Fetch, fetchMock),
       );
-    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );
 });
