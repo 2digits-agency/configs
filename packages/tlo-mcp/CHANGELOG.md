@@ -1,3 +1,9 @@
+## @2digits/tlo-mcp@2.1.1
+
+### Update Effect to 4.1.2
+
+- Updated `effect` and `@effect/platform-node` to `4.1.2`
+
 ## @2digits/tlo-mcp@2.1.0
 
 ### Expose only an allowlist of Orbit tools

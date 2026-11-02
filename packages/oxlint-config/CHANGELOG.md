@@ -1,3 +1,9 @@
+## @2digits/oxlint-config@3.0.3
+
+### Update local-pkg to 2.0.0
+
+- Updated `local-pkg` to `2.0.0`, a major version bump
+
 ## @2digits/oxlint-config@3.0.0
 
 ### Mirror the ESLint config's factory, built on oxlint-flat-config

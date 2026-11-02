@@ -1,3 +1,23 @@
+## @2digits/eslint-config@5.10.3
+
+### Update @next/eslint-plugin-next to 16.4.4
+
+
+
+### Update local-pkg to 2.0.0
+
+- Updated `local-pkg` to `2.0.0`, a major version bump
+
+### Update @tanstack/eslint-plugin-query to 5.105.1
+
+
+
+### Update globals to 17.14.0
+
+
+
+### Update eslint-plugin-regexp to 3.3.3
+
 ## @2digits/eslint-config@5.10.2
 
 ### Require Node 26
