@@ -33,7 +33,7 @@ Create a commit
 - `-m, --message <MESSAGE>` The message to use for the commit. Can be supplied any amount of times, each value being appended to the preceding ones with a blank line in between. Without -m, -F or --no-message, a terminal opens the editor and a non-interactive run commits with an empty message.
 - `--no-message` Create the commit without a message
 - `-F, --file <FILE>` Read the commit message from FILE, or from stdin when FILE is -
-- `-b, --branch [<BRANCH>]` Place the commit on the branch BRANCH. With --above or --below, name the new branch created relative to the target branch. The name must not already exist; omit it for a generated name. Cannot be combined with commit or worktree targets. Otherwise, if BRANCH does not exist, it is created as an unstacked branch. If BRANCH is omitted, an unstacked branch with a generated name is created. If BRANCH is a worktree or a branch checked out in one, the commit is placed on the tip of that worktree's branch. Attempting to place a commit on a branch that exists but is not applied is an error.
+- `-b, --branch [<BRANCH>]` Place the commit on the branch BRANCH. With --above or --below, name the new branch created relative to the target branch. The name must not already exist; omit it for a generated name. Cannot be combined with commit or worktree targets. Otherwise, if BRANCH does not exist, it is created as an unstacked branch. If BRANCH is omitted, an unstacked branch with a generated name is created. If BRANCH is a worktree or a branch checked out in one, the commit is placed on the tip of that worktree's branch. Run from a linked worktree with a detached HEAD, a new BRANCH starts at that HEAD and is checked out there before the commit is placed on it. Attempting to place a commit on a branch that exists but is not applied is an error.
 - `-A, --above <BRANCH_OR_COMMIT>` Place the commit above BRANCH_OR_COMMIT, which must be an applied branch or commit. If BRANCH_OR_COMMIT is a commit, the new commit is placed on the same branch as the targeted commit. If BRANCH_OR_COMMIT is a branch, the new commit is placed on a new branch above the targeted branch. Use --branch <NAME> to name it; otherwise a name is generated.
 - `-B, --below <BRANCH_OR_COMMIT>` Place the commit below BRANCH_OR_COMMIT, which must be an applied branch or commit. If BRANCH_OR_COMMIT is a commit, the new commit is placed on the same branch as the targeted commit. If BRANCH_OR_COMMIT is a branch, the new commit is placed on a new branch below the targeted branch. Branches are treated as buckets, meaning that "below a branch" is treated as below the oldest ancestor on that branch. Use --branch <NAME> to name the new branch; otherwise a name is generated. If BRANCH_OR_COMMIT is a worktree, the new commit is placed on the tip of the branch that worktree has checked out.
 - `--empty` Create an empty commit even when there are changes
@@ -46,7 +46,7 @@ Create a new branch
 - `-B, --below <BRANCH_OR_COMMIT>` Place the branch below BRANCH_OR_COMMIT, which must be an applied branch or commit. If BRANCH_OR_COMMIT is a commit, the new branch is created below the commit. If BRANCH_OR_COMMIT is a branch, the new branch is created below the targeted branch.
 
 ### but branch delete <BRANCHES>...
-Delete branches and their commits from the workspace
+Delete branches and their commits from the workspace, or local branches that aren't applied
 - `<BRANCHES>...` One or more branches to delete
 
 ### but branch list [FILTER]
@@ -77,19 +77,19 @@ List worktrees, most recently updated first
 ### but worktree new [NAME]
 Create a worktree on a new branch at the workspace base or above a commit, or on an existing branch that isn't in the workspace
 - `[NAME]` The branch to check out, created if it doesn't exist, or a generated one
-- `-A, --above <COMMIT>` Start the new branch at COMMIT instead of the workspace base. Accepts a commit SHA or CLI ID, not a branch. Conflicted commits are refused.
+- `-A, --above <BRANCH_OR_COMMIT>` Start the new branch at BRANCH_OR_COMMIT instead of the workspace base. Accepts a branch by name or CLI ID, a commit by SHA or CLI ID, or any Git revision like origin/main. Conflicted commits and the GitButler workspace commit are refused.
 
 ### but worktree archive <WORKTREE>
-Hide a worktree from the workspace
-- `<WORKTREE>` The worktree, by CLI ID (see but wt list) or name
+Hide a worktree from the workspace until but runs inside it again
+- `<WORKTREE>` The worktree, by CLI ID (see but wt list), name, or path
 
 ### but worktree unarchive <WORKTREE>
 Show an archived worktree in the workspace again
-- `<WORKTREE>` The worktree, by CLI ID (see but wt list) or name
+- `<WORKTREE>` The worktree, by CLI ID (see but wt list), name, or path
 
 ### but worktree remove <WORKTREE>
 Remove a worktree from disk, like git worktree remove
-- `<WORKTREE>` The worktree, by CLI ID (see but wt list) or name
+- `<WORKTREE>` The worktree, by CLI ID (see but wt list), name, or path
 - `-f, --force` Remove the worktree even if it has uncommitted changes
 
 ### but discard [CHANGES]...
@@ -112,7 +112,7 @@ Resolve conflicts of a conflicted commit, without entering resolution mode
 - `--ours` Take the ours side: the new base the commit was rebased onto
 - `--theirs` Take the theirs side: the commit's own version
 - `--ai` Let the configured AI model merge the targeted conflicts
-- `-F, --file <FILE>` Read the replacement content from this file (otherwise from stdin)
+- `-F, --file <FILE>` Read the replacement content from FILE, or from stdin when FILE is -. Without it, the content is read from stdin
 
 ### but resolve status
 Show the status of conflict resolution, listing remaining conflicted files
