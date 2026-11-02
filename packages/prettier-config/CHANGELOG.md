@@ -1,3 +1,9 @@
+## @2digits/prettier-config@4.0.53
+
+### Update local-pkg to 2.0.0
+
+- Updated `local-pkg` to `2.0.0`, a major version bump
+
 ## @2digits/prettier-config@4.0.52
 
 ### Type-check with tsrs

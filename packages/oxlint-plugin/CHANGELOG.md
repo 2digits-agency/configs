@@ -1,3 +1,9 @@
+## @2digits/oxlint-plugin@0.4.4
+
+### Update Effect to 4.1.2
+
+- Updated `effect` and `@effect/platform-node` to `4.1.2`
+
 ## @2digits/oxlint-plugin@0.4.3
 
 ### Recognize Go JSON Schema modifiers

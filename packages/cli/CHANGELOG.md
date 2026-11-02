@@ -1,3 +1,9 @@
+## @2digits/cli@2.0.37
+
+### Update Effect to 4.1.2
+
+- Updated `effect` and `@effect/platform-node` to `4.1.2`
+
 ## @2digits/cli@2.0.36
 
 ### Update Effect to 4.1.1
