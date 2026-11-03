@@ -21,16 +21,14 @@ const runCli = Effect.fn('runCli')(function* (args: ReadonlyArray<string>) {
 
   yield* cli.pipe(
     // oxlint-disable-next-line effecttsgo/strict-effect-provide -- the test runs the CLI as its entry point
-    Effect.provide(
-      Layer.mergeAll(
-        CliConfig.layer(),
-        NodeServices.layer,
-        Stdio.layerTest({ args: Effect.succeed(args) }),
-        Layer.mock(PrettierSetupService, { setup: record('prettier') }),
-        Layer.mock(EslintSetupService, { setup: record('eslint') }),
-        Layer.mock(TurborepoSetupService, { setup: record('turbo') }),
-      ),
-    ),
+    Effect.provide([
+      CliConfig.layer(),
+      NodeServices.layer,
+      Stdio.layerTest({ args: Effect.succeed(args) }),
+      Layer.mock(PrettierSetupService, { setup: record('prettier') }),
+      Layer.mock(EslintSetupService, { setup: record('eslint') }),
+      Layer.mock(TurborepoSetupService, { setup: record('turbo') }),
+    ]),
   );
 
   return yield* Ref.get(ran);
@@ -44,7 +42,9 @@ describe('2d command', () => {
     { args: ['--no-prettier', '--eslint', '--turbo'], expected: ['eslint', 'turbo'] },
   ])('$args runs $expected', ({ args, expected }) =>
     Effect.gen(function* () {
-      deepStrictEqual(yield* runCli(args), expected);
+      const ranCommands = yield* runCli(args);
+
+      deepStrictEqual(ranCommands, expected);
     }),
   );
 });

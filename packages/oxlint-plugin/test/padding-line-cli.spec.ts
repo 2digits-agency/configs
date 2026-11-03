@@ -111,7 +111,9 @@ describe('statement spacing CLI', () => {
         expect(fixed.status, `${fixed.stdout}${fixed.stderr}`).toBe(0);
 
         for (const [filename, { fixed: expected }] of R.toEntries(sources)) {
-          expect(yield* fs.readFileString(path.join(directory, filename))).toBe(expected);
+          const content = yield* fs.readFileString(path.join(directory, filename));
+
+          expect(content).toBe(expected);
         }
       }
     }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),

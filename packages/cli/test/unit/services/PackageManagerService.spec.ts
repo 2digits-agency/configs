@@ -352,13 +352,12 @@ describe(PackageManagerService, () => {
 
           const path = yield* Path.Path;
 
-          yield* fs.writeFileString(
-            path.join(tempDir, 'package.json'),
-            yield* encodeUnknownJson({
-              name: 'test-no-scripts',
-              version: '1.0.0',
-            }),
-          );
+          const content = yield* encodeUnknownJson({
+            name: 'test-no-scripts',
+            version: '1.0.0',
+          });
+
+          yield* fs.writeFileString(path.join(tempDir, 'package.json'), content);
 
           const service = yield* PackageManagerService;
 
@@ -376,14 +375,13 @@ describe(PackageManagerService, () => {
 
           const path = yield* Path.Path;
 
-          yield* fs.writeFileString(
-            path.join(tempDir, 'package.json'),
-            yield* encodeUnknownJson({
-              name: 'test-empty-scripts',
-              version: '1.0.0',
-              scripts: {},
-            }),
-          );
+          const content = yield* encodeUnknownJson({
+            name: 'test-empty-scripts',
+            version: '1.0.0',
+            scripts: {},
+          });
+
+          yield* fs.writeFileString(path.join(tempDir, 'package.json'), content);
 
           const service = yield* PackageManagerService;
 
