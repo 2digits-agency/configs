@@ -1,3 +1,9 @@
+## @2digits/oxlint-config@3.0.4
+
+### Allow `it.live` in Vitest test blocks
+
+- Added `it.live` to `additionalTestBlockFunctions` for `vitest/expect-expect` and `vitest/no-standalone-expect`
+
 ## @2digits/oxlint-config@3.0.3
 
 ### Update local-pkg to 2.0.0

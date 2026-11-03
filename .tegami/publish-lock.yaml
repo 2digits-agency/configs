@@ -1,80 +1,60 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/cli:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Update Effect to 4.1.2\n\n- Updated `effect` and `@effect/platform-node` to `4.1.2`\n"
-    filename: 2026-11-02-quick-hawks-effect.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @tanstack/eslint-plugin-query to 5.105.3\n"
+    filename: 2026-11-03-amber-lynx-shelf.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @next/eslint-plugin-next to 16.4.4\n"
-    filename: 2026-11-02-bold-finch-next.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Allow `it.live` in Vitest test blocks\n\n- Added `it.live` to `additionalTestBlockFunctions` for `vitest/expect-expect` and `vitest/no-standalone-expect`\n"
+    filename: 2026-11-03-pale-finch-ember.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n  npm:@2digits/oxlint-config:\n    type: patch\n  npm:@2digits/prettier-config:\n    type: patch\n---\n\n## Update local-pkg to 2.0.0\n\n- Updated `local-pkg` to `2.0.0`, a major version bump\n"
-    filename: 2026-11-02-brave-heron-local-pkg.md
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.64.1\n"
+    filename: 2026-11-03-quiet-heron-dune.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @tanstack/eslint-plugin-query to 5.105.1\n"
-    filename: 2026-11-02-sharp-moose-query.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update globals to 17.14.0\n"
-    filename: 2026-11-02-swift-otter-globals.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update eslint-plugin-regexp to 3.3.3\n"
-    filename: 2026-11-02-tidy-ravens-regexp.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/opencode-plugin:\n    type: patch\n---\n\n## Update posthog-node to 5.61.2\n"
-    filename: 2026-11-02-lucid-lark-posthog.md
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update Effect language-service diagnostics\n\n- Added `effectSucceedWithUndefined`, `effectTryWithoutCatch`, `globalJson`, `globalJsonInEffect`, `mapSomeCatchNoSuchElement`, `matchBooleanToIsSuccess`, `provideMergeAllToArray`, `resultMatchToFromResult`, `suspendFailToFailSync`, `typeUnionToSchemaUnion` and `yieldInCallArgument` diagnostics\n- Removed `preferSchemaOverJson` diagnostic\n- Added `brandedSchemaClasses` for `Class`, `TaggedClass`, `Error`, `TaggedError` and `Opaque`\n- Added `taggedClass` naming rule for `default` pattern, skipping the `src/` path prefix\n"
+    filename: 2026-11-03-rapid-cedar-plum.md
     v: 0.0.0
 core:packages:
   - id: npm:@2digits/config-monorepo
     updated: false
-  - changelogIds:
-      - 2026-11-02-quick-hawks-effect.md
-    id: npm:@2digits/cli
-    updated: true
+  - id: npm:@2digits/cli
+    updated: false
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-11-02-bold-finch-next.md
-      - 2026-11-02-brave-heron-local-pkg.md
-      - 2026-11-02-sharp-moose-query.md
-      - 2026-11-02-swift-otter-globals.md
-      - 2026-11-02-tidy-ravens-regexp.md
+      - 2026-11-03-amber-lynx-shelf.md
     id: npm:@2digits/eslint-config
     updated: true
-  - changelogIds:
-      - 2026-11-02-lucid-lark-posthog.md
-    id: npm:@2digits/opencode-plugin
-    updated: true
-  - id: npm:@2digits/oxfmt-config
-    updated: false
   - id: npm:@2digits/eslint-plugin
     updated: false
+  - id: npm:@2digits/opencode-plugin
+    updated: false
+  - id: npm:@2digits/oxfmt-config
+    updated: false
   - changelogIds:
-      - 2026-11-02-quick-hawks-effect.md
-    id: npm:@2digits/oxlint-plugin
-    updated: true
-  - changelogIds:
-      - 2026-11-02-brave-heron-local-pkg.md
+      - 2026-11-03-pale-finch-ember.md
     id: npm:@2digits/oxlint-config
     updated: true
-  - changelogIds:
-      - 2026-11-02-brave-heron-local-pkg.md
-    id: npm:@2digits/prettier-config
-    updated: true
+  - id: npm:@2digits/oxlint-plugin
+    updated: false
+  - id: npm:@2digits/prettier-config
+    updated: false
   - id: npm:@2digits/renovate-config
     updated: false
-  - changelogIds:
-      - 2026-11-02-quick-hawks-effect.md
-    id: npm:@2digits/tlo-mcp
-    updated: true
-  - id: npm:@2digits/tsconfig
+  - id: npm:@2digits/tlo-mcp
     updated: false
+  - changelogIds:
+      - 2026-11-03-quiet-heron-dune.md
+      - 2026-11-03-rapid-cedar-plum.md
+    id: npm:@2digits/tsconfig
+    updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
   - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-config
+  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
-  - id: npm:@2digits/eslint-plugin
-  - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/oxlint-config
+  - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/prettier-config
   - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
