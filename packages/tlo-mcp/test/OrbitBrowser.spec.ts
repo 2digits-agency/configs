@@ -51,7 +51,9 @@ describe('orbit browser and operation cleanup', () => {
       }).pipe(Effect.scoped);
 
       // oxlint-disable-next-line vitest/no-standalone-expect -- it.live is an Effect test.
-      expect(yield* handle.isRunning).toBeFalsy();
+      const running = yield* handle.isRunning;
+
+      expect(running).toBeFalsy();
     }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );
 

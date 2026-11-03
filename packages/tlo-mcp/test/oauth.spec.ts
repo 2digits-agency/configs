@@ -105,7 +105,9 @@ describe('orbit OAuth', () => {
 
       expect(good.status).toBe(200);
 
-      expect(yield* callback.code).toBe('valid');
+      const code = yield* callback.code;
+
+      expect(code).toBe('valid');
 
       const replay = yield* http.get(`${callback.redirectUri}?state=test-state&code=valid`);
 
@@ -159,7 +161,9 @@ describe('orbit OAuth', () => {
 
       yield* Fiber.interrupt(login);
 
-      expect(Exit.hasInterrupts(yield* Fiber.await(login))).toBeTruthy();
+      const loginExit = yield* Fiber.await(login);
+
+      expect(Exit.hasInterrupts(loginExit)).toBeTruthy();
 
       const http = yield* HttpClient.HttpClient;
 
@@ -178,7 +182,9 @@ describe('orbit OAuth', () => {
       yield* Effect.gen(function* () {
         const store = yield* SessionStore;
 
-        expect(yield* store.load).toBeUndefined();
+        const initial = yield* store.load;
+
+        expect(initial).toBeUndefined();
 
         yield* store.save(fixture);
 
@@ -204,7 +210,9 @@ describe('orbit OAuth', () => {
 
         yield* store.clear;
 
-        expect(yield* store.load).toBeUndefined();
+        const cleared = yield* store.load;
+
+        expect(cleared).toBeUndefined();
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' })));
     }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );

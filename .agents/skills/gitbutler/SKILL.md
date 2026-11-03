@@ -1,6 +1,6 @@
 ---
 name: but
-version: 0.5.2261
+version: 0.5.2263
 description: "Commit, push, branch, and manage version control with GitButler. Use for commits, selective dirty-file or hunk commits, branches, diffs, PRs, history edits, squashes, amends, undo, merge, fetching, pulling and syncing a branch with its remote, apply, unapply, and linked worktrees. For selected dirty files or hunks, inspect with `but diff`; use compact `but status` for commit order, branch/stack placement, or conflict overview; use `but status -fv` when file IDs or per-commit file details matter. Replaces git write commands, including fetch and pull. Applies in every checkout of the repository, even when a plain branch is checked out, including linked worktrees such as `.claude/worktrees/*`, and to git writes made while testing or cleaning up (stash, checkout -- <file>, restore, reset)."
 author: GitButler Team
 ---
@@ -166,8 +166,6 @@ To make one existing branch depend on another: `but move <child-branch-name> --a
 **DO NOT** stack via `uncommit` + `branch delete` + `branch new --above`, and do not use `but undo` to unstack.
 
 ### Work in a linked worktree
-
-Use a worktree when the task needs a separate checkout, for example to build or test one branch while other work stays in the main checkout.
 
 1. `but worktree new <branch-name>` checks out that branch in a new directory, creating it if needed (an existing branch must not be in the workspace), and prints that directory. Add `-A <branch-or-commit>` to start the branch there instead of the workspace base; it takes any Git revision, like a SHA or `origin/main`. Worktrees made by other tools must sit outside the repository directory or be listed in `.git/info/exclude`; otherwise a bare `but commit` in the main checkout records them in the branch.
 2. Run `but` from that directory, or with `but -C <path>`. There, a bare `but commit -m "<msg>"` or `but diff` takes that worktree's changes, a bare path names a file there, and the commit goes on the worktree's branch. Do the work on that branch, also in a worktree another tool made. `-b <new-name>` is refused there, except in a worktree with a detached HEAD, where it names the worktree's branch; stack a new branch on it only when the user asks for a separate branch. `but undo` doesn't restore a branch a worktree has checked out. It refuses, or it reports success and leaves that branch as it is, so undoing a `move` out of the branch leaves the commit on neither branch. Reverse a command that changed the worktree's branch with its inverse (`uncommit`, `reword`, or `move` the commit back), also when you ran it from another checkout.

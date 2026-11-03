@@ -75,5 +75,5 @@ export const connect = Effect.fn('TloMcp.connect')(
     return yield* GatewayError.make({ message: 'The OpenTunnel connection stopped. Restart tlo-mcp.' });
   },
   Effect.scoped,
-  Effect.provide(Layer.mergeAll(OrbitAuthLive, SessionStoreLive, OpenTunnelClient.layer())),
+  Effect.provide([OrbitAuthLive, SessionStoreLive, OpenTunnelClient.layer()]),
 );

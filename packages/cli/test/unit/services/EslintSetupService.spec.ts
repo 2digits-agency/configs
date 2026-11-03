@@ -155,7 +155,9 @@ describe(EslintSetupService, () => {
 
           yield* service.setup();
 
-          deepStrictEqual(yield* getExecutedCommands, []);
+          const executedCommands = yield* getExecutedCommands;
+
+          deepStrictEqual(executedCommands, []);
         }),
       );
     }),

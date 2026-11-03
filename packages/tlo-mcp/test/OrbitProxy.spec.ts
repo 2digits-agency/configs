@@ -111,7 +111,9 @@ describe('orbit MCP proxy', () => {
 
       expect(registration.tool).toBe(tool);
 
-      expect(yield* registration.handle({ projectId: 'PR-example' })).toBe(result);
+      const handled = yield* registration.handle({ projectId: 'PR-example' });
+
+      expect(handled).toBe(result);
 
       expect(calls).toStrictEqual([{ name: tool.name, args: { projectId: 'PR-example' } }]);
     }).pipe(Effect.provide(requestContext), Effect.scoped),
