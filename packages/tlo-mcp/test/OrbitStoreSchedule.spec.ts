@@ -52,11 +52,15 @@ describe('orbit scoped persistence and lock policy', () => {
 
         yield* Fiber.interrupt(owner);
 
-        expect(yield* fs.exists(`${directory}/session.lock`)).toBeFalsy();
+        const lockExistsAfterInterrupt = yield* fs.exists(`${directory}/session.lock`);
+
+        expect(lockExistsAfterInterrupt).toBeFalsy();
 
         yield* Effect.scoped(store.lock);
 
-        expect(yield* fs.exists(`${directory}/session.lock`)).toBeFalsy();
+        const lockExistsAfterRelease = yield* fs.exists(`${directory}/session.lock`);
+
+        expect(lockExistsAfterRelease).toBeFalsy();
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' })));
     }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
   );
@@ -80,7 +84,9 @@ describe('orbit scoped persistence and lock policy', () => {
 
         expect(failure.message).toContain('After a crash only');
 
-        expect(yield* fs.readFileString(lockFile)).toBe('crashed-owner');
+        const lockContent = yield* fs.readFileString(lockFile);
+
+        expect(lockContent).toBe('crashed-owner');
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' })));
     }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
   );
@@ -120,7 +126,9 @@ describe('orbit scoped persistence and lock policy', () => {
 
         expect(attempts).toBe(1);
 
-        expect(yield* fs.exists(`${directory}/session.lock`)).toBeFalsy();
+        const lockExists = yield* fs.exists(`${directory}/session.lock`);
+
+        expect(lockExists).toBeFalsy();
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' }).pipe(Layer.provide(filesystem))));
     }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
   );
@@ -142,7 +150,9 @@ describe('orbit scoped persistence and lock policy', () => {
 
         expect(failure.message).toBe('protected operation failed');
 
-        expect(yield* fs.exists(`${directory}/session.lock`)).toBeFalsy();
+        const lockExists = yield* fs.exists(`${directory}/session.lock`);
+
+        expect(lockExists).toBeFalsy();
 
         yield* Effect.scoped(store.lock);
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' })));
@@ -175,9 +185,13 @@ describe('orbit scoped persistence and lock policy', () => {
 
         expect(failure.message).toContain('Could not persist');
 
-        expect(yield* fs.readFileString(`${directory}/session.json`)).toBe('original');
+        const sessionFile = yield* fs.readFileString(`${directory}/session.json`);
 
-        expect(yield* fs.readDirectory(directory)).toStrictEqual(['session.json']);
+        expect(sessionFile).toBe('original');
+
+        const entries = yield* fs.readDirectory(directory);
+
+        expect(entries).toStrictEqual(['session.json']);
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' }).pipe(Layer.provide(filesystem))));
     }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
   );

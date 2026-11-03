@@ -84,7 +84,9 @@ describe('orbit callback router', () => {
         ),
       ).toStrictEqual([200, 400]);
 
-      expect(['one', 'two']).toContain(yield* callback.code);
+      const callbackCode = yield* callback.code;
+
+      expect(['one', 'two']).toContain(callbackCode);
     }).pipe(Effect.provide(FetchHttpClient.layer), Effect.scoped),
   );
 
@@ -98,7 +100,9 @@ describe('orbit callback router', () => {
 
       expect(denied.status).toBe(400);
 
-      expect(yield* denied.text).toContain('Authorization denied');
+      const deniedText = yield* denied.text;
+
+      expect(deniedText).toContain('Authorization denied');
 
       const error = yield* Effect.flip(callback.code);
 

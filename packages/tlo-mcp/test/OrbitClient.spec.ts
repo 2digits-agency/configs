@@ -140,7 +140,9 @@ describe('orbit MCP client', () => {
       }
 
       // Tool-reported errors are results, forwarded unchanged.
-      expect(yield* client.callTool(tool, { projectId: 'PR-example' })).toMatchObject({
+      const toolResult = yield* client.callTool(tool, { projectId: 'PR-example' });
+
+      expect(toolResult).toMatchObject({
         isError: true,
         content: [{ type: 'text', text: 'RATE_LIMITED: retry later' }],
       });

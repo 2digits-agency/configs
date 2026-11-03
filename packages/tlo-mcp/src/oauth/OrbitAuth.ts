@@ -121,7 +121,9 @@ export const OrbitAuthLayer = Layer.effect(
         .refreshGrant({ refreshToken: session.refreshToken, resources: [ORBIT_RESOURCE] })
         .pipe(Effect.flatMap(OAuth.tokens));
 
-      const updated = Session.update(session, tokens, yield* Clock.currentTimeMillis);
+      const currentTime = yield* Clock.currentTimeMillis;
+
+      const updated = Session.update(session, tokens, currentTime);
 
       yield* store.save(updated);
 
@@ -220,7 +222,9 @@ export const OrbitAuthLayer = Layer.effect(
         })
         .pipe(Effect.flatMap(OAuth.tokens));
 
-      yield* store.save(Session.update(identity, tokens, yield* Clock.currentTimeMillis));
+      const currentTime = yield* Clock.currentTimeMillis;
+
+      yield* store.save(Session.update(identity, tokens, currentTime));
 
       yield* Effect.sync(() => {
         process.stderr.write('Orbit login complete.\n');

@@ -22,6 +22,13 @@ const decodeJson = Schema.decodeEffect(Schema.Unknown.pipe(Schema.fromJsonString
 
 const calls: Array<string> = [];
 
+class HttpRequestError extends Schema.TaggedError<HttpRequestError, { readonly brand: unique symbol }>()(
+  'HttpRequestError',
+  {
+    cause: Schema.Unknown,
+  },
+) {}
+
 const upstream = Layer.succeed(OrbitClient, {
   instructions: 'Official Orbit instructions',
   tools: [
@@ -58,7 +65,11 @@ const makeHandler = Effect.fn('Gateway.test.handler')(function* () {
         { disableLogger: true },
       ),
     ),
-    (handler) => Effect.tryPromise((_signal) => handler.dispose()).pipe(Effect.orDie),
+    (handler) =>
+      Effect.tryPromise({
+        try: (_signal) => handler.dispose(),
+        catch: (cause) => HttpRequestError.make({ cause }),
+      }).pipe(Effect.orDie),
   );
 
   return handler.handler;
@@ -71,16 +82,18 @@ describe('personal HTTP gateway', () => {
 
       for (const method of ['POST', 'GET', 'DELETE']) {
         for (const authorization of [undefined, 'Bearer wrong', `Basic ${key}`]) {
-          const response = yield* Effect.tryPromise((signal) =>
-            handle(
-              new Request(`https://gateway/mcp?key=${key}`, {
-                method,
-                signal,
-                headers: authorization === undefined ? {} : { authorization },
-                ...(method === 'POST' ? { body: 'not JSON' } : {}),
-              }),
-            ),
-          );
+          const response = yield* Effect.tryPromise({
+            try: (signal) =>
+              handle(
+                new Request(`https://gateway/mcp?key=${key}`, {
+                  method,
+                  signal,
+                  headers: authorization === undefined ? {} : { authorization },
+                  ...(method === 'POST' ? { body: 'not JSON' } : {}),
+                }),
+              ),
+            catch: (cause) => HttpRequestError.make({ cause }),
+          });
 
           expect(response.status).toBe(401);
 
@@ -96,16 +109,18 @@ describe('personal HTTP gateway', () => {
     Effect.gen(function* () {
       const handle = yield* makeHandler();
 
-      const response = yield* Effect.tryPromise((signal) =>
-        handle(
-          new Request('https://gateway/mcp', {
-            method: 'POST',
-            signal,
-            headers: { authorization: `Bearer ${key}`, origin: 'https://evil.example' },
-            body: '{}',
-          }),
-        ),
-      );
+      const response = yield* Effect.tryPromise({
+        try: (signal) =>
+          handle(
+            new Request('https://gateway/mcp', {
+              method: 'POST',
+              signal,
+              headers: { authorization: `Bearer ${key}`, origin: 'https://evil.example' },
+              body: '{}',
+            }),
+          ),
+        catch: (cause) => HttpRequestError.make({ cause }),
+      });
 
       expect(response.status).toBe(403);
     }),
@@ -127,28 +142,37 @@ describe('personal HTTP gateway', () => {
           ...(id === undefined ? {} : { id }),
         });
 
-        const response = yield* Effect.tryPromise((signal) =>
-          handle(
-            new Request('https://gateway/mcp', {
-              method: 'POST',
-              signal,
-              headers: {
-                authorization: `Bearer ${key}`,
-                'content-type': 'application/json',
-                accept: 'application/json, text/event-stream',
-                'mcp-protocol-version': '2025-06-18',
-                ...(session === undefined ? {} : { 'mcp-session-id': session }),
-              },
-              body,
-            }),
-          ),
-        );
+        const response = yield* Effect.tryPromise({
+          try: (signal) =>
+            handle(
+              new Request('https://gateway/mcp', {
+                method: 'POST',
+                signal,
+                headers: {
+                  authorization: `Bearer ${key}`,
+                  'content-type': 'application/json',
+                  accept: 'application/json, text/event-stream',
+                  'mcp-protocol-version': '2025-06-18',
+                  ...(session === undefined ? {} : { 'mcp-session-id': session }),
+                },
+                body,
+              }),
+            ),
+
+          catch: (cause) => HttpRequestError.make({ cause }),
+        });
 
         session = response.headers.get('mcp-session-id') ?? session;
 
         expect(response.headers.get('cache-control')).toBe('no-store');
 
-        return { response, text: yield* Effect.tryPromise((_signal) => response.text()) };
+        return {
+          response,
+          text: yield* Effect.tryPromise({
+            try: (_signal) => response.text(),
+            catch: (cause) => HttpRequestError.make({ cause }),
+          }),
+        };
       });
 
       const initialization = yield* send(
@@ -206,13 +230,17 @@ describe('personal HTTP gateway', () => {
 
       yield* fs.chmod(file, 0o644);
 
-      expect(yield* loadGatewayKey(file).pipe(Effect.flip)).toHaveProperty('_tag', 'GatewayError');
+      const insecureFailure = yield* loadGatewayKey(file).pipe(Effect.flip);
+
+      expect(insecureFailure).toHaveProperty('_tag', 'GatewayError');
 
       yield* fs.chmod(file, 0o600);
 
       yield* fs.writeFileString(file, 'invalid');
 
-      expect(yield* loadGatewayKey(file).pipe(Effect.flip)).toHaveProperty('_tag', 'GatewayError');
+      const malformedFailure = yield* loadGatewayKey(file).pipe(Effect.flip);
+
+      expect(malformedFailure).toHaveProperty('_tag', 'GatewayError');
     }).pipe(Effect.provide(PlatformLive)),
   );
 
