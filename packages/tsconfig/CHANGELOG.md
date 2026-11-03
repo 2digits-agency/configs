@@ -1,3 +1,16 @@
+## @2digits/tsconfig@1.2.2
+
+### Update @effect/tsgo to 0.64.1
+
+
+
+### Update Effect language-service diagnostics
+
+- Added `effectSucceedWithUndefined`, `effectTryWithoutCatch`, `globalJson`, `globalJsonInEffect`, `mapSomeCatchNoSuchElement`, `matchBooleanToIsSuccess`, `provideMergeAllToArray`, `resultMatchToFromResult`, `suspendFailToFailSync`, `typeUnionToSchemaUnion` and `yieldInCallArgument` diagnostics
+- Removed `preferSchemaOverJson` diagnostic
+- Added `brandedSchemaClasses` for `Class`, `TaggedClass`, `Error`, `TaggedError` and `Opaque`
+- Added `taggedClass` naming rule for `default` pattern, skipping the `src/` path prefix
+
 ## @2digits/tsconfig@1.2.1
 
 ### Enable additional Effect diagnostics

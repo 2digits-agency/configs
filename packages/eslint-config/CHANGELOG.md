@@ -1,3 +1,7 @@
+## @2digits/eslint-config@5.10.4
+
+### Update @tanstack/eslint-plugin-query to 5.105.3
+
 ## @2digits/eslint-config@5.10.3
 
 ### Update @next/eslint-plugin-next to 16.4.4
