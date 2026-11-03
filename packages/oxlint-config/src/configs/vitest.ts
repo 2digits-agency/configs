@@ -10,7 +10,9 @@ export function vitest(options: OptionsWithVitest = {}): Array<FlatConfigItem> {
     {
       name: '2digits:vitest/setup',
       settings: {
-        vitest: { typecheck },
+        vitest: {
+          typecheck,
+        },
       },
     },
     {
@@ -41,7 +43,7 @@ export function vitest(options: OptionsWithVitest = {}): Array<FlatConfigItem> {
         'vitest/expect-expect': [
           'error',
           {
-            additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped'],
+            additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live'],
             assertFunctionNames: ['expect', 'expectTypeOf', 'assert', 'assertType', 'assert*', '*Equal'],
           },
         ],
@@ -65,7 +67,10 @@ export function vitest(options: OptionsWithVitest = {}): Array<FlatConfigItem> {
         'vitest/no-mocks-import': 'error',
         'vitest/no-restricted-matchers': undefined,
         'vitest/no-restricted-vi-methods': undefined,
-        'vitest/no-standalone-expect': ['error', { additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped'] }],
+        'vitest/no-standalone-expect': [
+          'error',
+          { additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live'] },
+        ],
         'vitest/no-test-prefixes': 'error',
         'vitest/no-test-return-statement': 'error',
         'vitest/no-unneeded-async-expect-function': 'error',
