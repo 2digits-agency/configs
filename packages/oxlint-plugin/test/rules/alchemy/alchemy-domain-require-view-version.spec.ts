@@ -17,6 +17,7 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       `${header}\nexport class Status extends Domain.View('Status', { version: 0, from: [DailyImport] }) {}`,
       `${header}\nexport class Account extends Domain.Aggregate('Account', { id: AccountId }) {}`,
       `export class Status extends View('Status', { from: [DailyImport] }) {}`,
+      `import { View } from '@alchemy.run/domain'\nexport function render(View) { return View('Status', { from: [] }) }`,
     ],
     invalid: [
       {

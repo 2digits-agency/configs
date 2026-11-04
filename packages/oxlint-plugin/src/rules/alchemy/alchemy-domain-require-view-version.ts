@@ -18,7 +18,7 @@ export const alchemyDomainRequireViewVersion: Rule = defineEffectRule(
       const definition = argumentAt(node, 1);
 
       if (
-        domainBlock(node, getState()) === 'View' &&
+        domainBlock(node, getState(), context) === 'View' &&
         definition?.type === 'ObjectExpression' &&
         objectProperty(definition, 'version') === undefined
       ) {

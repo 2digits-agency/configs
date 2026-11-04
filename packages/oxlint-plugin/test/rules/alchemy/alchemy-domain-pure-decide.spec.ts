@@ -35,6 +35,7 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         'Effect.fn(function* (s, cmd) { const digest = yield* Digest.Digest; return [new Opened({ key: yield* digest.digest(Digest.sha256, cmd.body) })] })',
       )}`,
       aggregate('(s) => { const Date = { now: () => 0 }; return [new Opened({ at: Date.now() })] }'),
+      aggregate('(s) => { const Effect = { promise: () => 1 }; return [new Opened({ n: Effect.promise() })] }'),
       aggregate(
         '(s) => { const Clock = { currentTimeMillis: 0 }; return [new Opened({ at: Clock.currentTimeMillis })] }',
       ),

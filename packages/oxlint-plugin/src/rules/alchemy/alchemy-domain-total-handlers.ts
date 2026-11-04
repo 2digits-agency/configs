@@ -29,7 +29,7 @@ export const alchemyDomainTotalHandlers: Rule = defineEffectRule(
   ),
   (context, getState) => {
     function report(node: ESTree.Node, api: string): void {
-      const found = domainSection(node, getState());
+      const found = domainSection(node, getState(), context);
 
       if (found !== undefined && totalSections.get(found.block)?.has(found.section) === true) {
         context.report({ node, messageId: 'partial', data: { section: found.section, api } });

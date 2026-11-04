@@ -45,6 +45,12 @@ export const alchemyDomainPureImports: Rule = defineSyntaxRule(
       }
     }
 
+    function checkSource(source: ESTree.Node): void {
+      if (checked && source.type === 'Literal' && typeof source.value === 'string' && !isAllowed(source.value)) {
+        context.report({ node: source, messageId: 'import', data: { source: source.value } });
+      }
+    }
+
     return {
       Program(node) {
         checked = domainFile.test(context.filename) && importsDomain(node);
@@ -53,13 +59,11 @@ export const alchemyDomainPureImports: Rule = defineSyntaxRule(
       ExportAllDeclaration: check,
       ExportNamedDeclaration: check,
       ImportExpression(node) {
-        if (
-          checked &&
-          node.source.type === 'Literal' &&
-          typeof node.source.value === 'string' &&
-          !isAllowed(node.source.value)
-        ) {
-          context.report({ node: node.source, messageId: 'import', data: { source: node.source.value } });
+        checkSource(node.source);
+      },
+      CallExpression(node) {
+        if (node.callee.type === 'Identifier' && node.callee.name === 'require' && node.arguments[0] !== undefined) {
+          checkSource(node.arguments[0]);
         }
       },
     };

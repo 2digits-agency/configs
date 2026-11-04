@@ -47,7 +47,7 @@ export const alchemyDomainBlockFileName: Rule = defineEffectRule(
         declared = false;
       },
       CallExpression(node) {
-        const block = domainBlock(node, getState());
+        const block = domainBlock(node, getState(), context);
 
         const name = Arr.lastNonEmpty(Str.split(context.filename, /[/\\]/u));
 

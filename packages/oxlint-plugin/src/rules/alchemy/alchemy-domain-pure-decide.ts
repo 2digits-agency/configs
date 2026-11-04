@@ -2,7 +2,7 @@ import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import type * as Effect from 'effect/Effect';
 
-import { canonicalPath, defineEffectRule, isAnyApi, isGlobalIdentifier, ruleMeta, staticPath } from '../../utils';
+import { defineEffectRule, isGlobalIdentifier, ruleMeta, staticPath } from '../../utils';
 import { domainSection, importedPath, isImportReference } from './domain';
 
 type Impurity = 'io' | 'random' | 'time';
@@ -68,7 +68,7 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
   ),
   (context, getState) => {
     function report(node: ESTree.Node, impurity: Impurity | undefined, api: string): void {
-      if (impurity !== undefined && domainSection(node, getState())?.section === 'decide') {
+      if (impurity !== undefined && domainSection(node, getState(), context)?.section === 'decide') {
         context.report({ node, messageId: impurity, data: { api } });
       }
     }
@@ -118,8 +118,12 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
           report(node, 'time', 'Date()');
         } else if (isGlobalIdentifier(node.callee, context, 'fetch')) {
           report(node, 'io', 'fetch()');
-        } else if (isAnyApi(node.callee, getState(), 'Effect', effectIo)) {
-          report(node, 'io', Arr.join(canonicalPath(node.callee, getState()) ?? ['a promise'], '.'));
+        } else {
+          const path = importedPath(node.callee, getState(), context);
+
+          if (path?.length === 2 && path[0] === 'Effect' && effectIo.includes(path[1] ?? '')) {
+            report(node, 'io', Arr.join(path, '.'));
+          }
         }
       },
     };

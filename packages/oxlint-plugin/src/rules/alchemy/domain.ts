@@ -38,9 +38,10 @@ function isDomainBlock(name: string | undefined): name is DomainBlock {
  *
  * @param node Call to check.
  * @param state Import bindings of the file.
+ * @param context Rule context, to skip locals that shadow the import.
  */
-export function domainBlock(node: ESTree.CallExpression, state: FileState): DomainBlock | undefined {
-  const path = canonicalPath(node.callee, state);
+export function domainBlock(node: ESTree.CallExpression, state: FileState, context: Context): DomainBlock | undefined {
+  const path = importedPath(node.callee, state, context);
 
   const name = path?.[1];
 
@@ -93,10 +94,12 @@ export function importedPath(node: ESTree.Node, state: FileState, context: Conte
  *
  * @param node Node inside the definition.
  * @param state Import bindings of the file.
+ * @param context Rule context.
  */
 export function domainSection(
   node: ESTree.Node,
   state: FileState,
+  context: Context,
 ): { readonly block: DomainBlock; readonly section: string } | undefined {
   for (let child = node, parent = node.parent; parent; child = parent, parent = parent.parent) {
     if (parent.type !== 'Property' || parent.value !== child) {
@@ -115,7 +118,7 @@ export function domainSection(
       continue;
     }
 
-    const block = domainBlock(call, state);
+    const block = domainBlock(call, state, context);
 
     if (block === undefined) {
       continue;
