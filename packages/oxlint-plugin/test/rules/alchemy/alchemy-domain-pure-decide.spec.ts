@@ -35,6 +35,12 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         'Effect.fn(function* (s, cmd) { const digest = yield* Digest.Digest; return [new Opened({ key: yield* digest.digest(Digest.sha256, cmd.body) })] })',
       )}`,
       aggregate('(s) => { const Date = { now: () => 0 }; return [new Opened({ at: Date.now() })] }'),
+      aggregate(
+        '(s) => { const Clock = { currentTimeMillis: 0 }; return [new Opened({ at: Clock.currentTimeMillis })] }',
+      ),
+      `import { Jws, Signature } from 'effect/jose'\n${aggregate(
+        'Effect.fn(function* (s, cmd) { const { payload } = yield* Jws.verify(cmd.token, Signature.ed25519); return [new Opened({ payload })] })',
+      )}`,
       `import { currentTimeMillis } from 'effect/Clock'\n${aggregate('(s, { now: currentTimeMillis }) => [new Opened({ at: currentTimeMillis })]')}`,
       `import { currentTimeMillis } from 'effect/Clock'\n${aggregate('(s, cmd) => [new Opened({ currentTimeMillis: cmd.currentTimeMillis })]')}`,
       `${header}
@@ -50,6 +56,16 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
     invalid: [
       { code: aggregate('(s) => [new Opened({ at: Date.now() })]'), errors: [{ messageId: 'time' }] },
       { code: aggregate('(s) => [new Opened({ at: new Date() })]'), errors: [{ messageId: 'time' }] },
+      {
+        code: aggregate('(s) => [new Opened({ at: Date() })]'),
+        errors: [{ messageId: 'time', data: { api: 'Date()' } }],
+      },
+      {
+        code: `import { Jws } from 'effect/jose'\n${aggregate(
+          'Effect.fn(function* (s, cmd) { return [new Opened({ token: yield* Jws.sign(cmd.payload, key) })] })',
+        )}`,
+        errors: [{ messageId: 'random', data: { api: 'Jws.sign' } }],
+      },
       {
         code: aggregate(
           'Effect.fn(function* (s) { const at = yield* Clock.currentTimeMillis; return [new Opened({ at })] })',

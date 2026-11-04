@@ -3,8 +3,8 @@ import * as Arr from 'effect/Array';
 import type * as Option from 'effect/Option';
 import type * as Result from 'effect/Result';
 
-import { canonicalPath, defineEffectRule, ruleMeta } from '../../utils';
-import { domainSection, isImportReference } from './domain';
+import { defineEffectRule, ruleMeta } from '../../utils';
+import { domainSection, importedPath, isImportReference } from './domain';
 
 const totalSections: ReadonlyMap<string, ReadonlySet<string>> = new Map([
   ['Aggregate', new Set(['evolve', 'reply'])],
@@ -37,7 +37,7 @@ export const alchemyDomainTotalHandlers: Rule = defineEffectRule(
     }
 
     function checkGetter(node: ESTree.Node): void {
-      const path = canonicalPath(node, getState());
+      const path = importedPath(node, getState(), context);
 
       if (path?.length === 2 && throwingModules.has(path[0] ?? '') && throwingGetters.has(path[1] ?? '')) {
         report(node, `\`${Arr.join(path, '.')}\``);

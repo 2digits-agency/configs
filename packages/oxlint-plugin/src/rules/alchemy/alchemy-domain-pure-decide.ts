@@ -1,10 +1,9 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import type * as DateTime from 'effect/DateTime';
 import type * as Effect from 'effect/Effect';
 
 import { canonicalPath, defineEffectRule, isAnyApi, isGlobalIdentifier, ruleMeta, staticPath } from '../../utils';
-import { domainSection, isImportReference } from './domain';
+import { domainSection, importedPath, isImportReference } from './domain';
 
 type Impurity = 'io' | 'random' | 'time';
 
@@ -16,29 +15,42 @@ const globalImpurities: ReadonlyMap<string, Impurity> = new Map([
   ['crypto.getRandomValues', 'random'],
 ]);
 
-// Deterministic effect/crypto modules (Digest, Mac, Kdf, KeyFormat) stay allowed.
-const effectModuleImpurities: ReadonlyMap<string, Impurity> = new Map([
+// Every member of these modules reads time or randomness.
+const moduleImpurities: ReadonlyMap<string, Impurity> = new Map([
   ['Clock', 'time'],
   ['Random', 'random'],
   ['SecureRandom', 'random'],
-  ['Aead', 'random'],
-  ['Cipher', 'random'],
-  ['Signature', 'random'],
-  ['KeyAgreement', 'random'],
-  ['KeyWrap', 'random'],
-  ['Jwk', 'random'],
-  ['Jwe', 'random'],
-  ['Jws', 'random'],
-  ['Jwt', 'time'],
-  ['Jwks', 'io'],
 ]);
 
-const dateTimeNow: ReadonlyArray<string> = [
-  'now',
-  'nowAsDate',
-  'nowInCurrentZone',
-  'nowUnsafe',
-] satisfies ReadonlyArray<keyof typeof DateTime>;
+/*
+ * Single members of modules that are otherwise deterministic, such as `Jws.sign` next to `Jws.verify`. Crypto services
+ * count through their tag, since their methods are called on the yielded service. Digest, Mac, Kdf and KeyFormat stay
+ * allowed.
+ */
+const memberImpurities: ReadonlyMap<string, Impurity> = new Map([
+  ['DateTime.now', 'time'],
+  ['DateTime.nowAsDate', 'time'],
+  ['DateTime.nowInCurrentZone', 'time'],
+  ['DateTime.nowUnsafe', 'time'],
+  ['Aead.Aead', 'random'],
+  ['Cipher.Cipher', 'random'],
+  ['Signature.Signature', 'random'],
+  ['KeyAgreement.KeyAgreement', 'random'],
+  ['KeyWrap.KeyWrap', 'random'],
+  ['Jwk.generateKeyPair', 'random'],
+  ['Jwk.generateSecret', 'random'],
+  ['Jwe.encrypt', 'random'],
+  ['Jws.sign', 'random'],
+  ['Jws.verifyWithKeySet', 'io'],
+  ['Jwt.sign', 'random'],
+  ['Jwt.encrypt', 'random'],
+  ['Jwt.verify', 'time'],
+  ['Jwt.verifyWithKeySet', 'time'],
+  ['Jwt.decrypt', 'time'],
+  ['Jwks.Jwks', 'io'],
+  ['Jwks.makeRemote', 'io'],
+  ['Jwks.layerRemote', 'io'],
+]);
 
 const effectIo: ReadonlyArray<string> = ['promise', 'tryPromise'] satisfies ReadonlyArray<keyof typeof Effect>;
 
@@ -63,7 +75,7 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
 
     // `Clock.currentTimeMillis`, or `currentTimeMillis` imported from `effect/Clock`.
     function checkModule(node: ESTree.Node): void {
-      const canonical = canonicalPath(node, getState());
+      const canonical = importedPath(node, getState(), context);
 
       const module = canonical?.[0];
 
@@ -71,11 +83,9 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
         return;
       }
 
-      report(
-        node,
-        module === 'DateTime' && dateTimeNow.includes(canonical[1] ?? '') ? 'time' : effectModuleImpurities.get(module),
-        Arr.join(canonical, '.'),
-      );
+      const name = Arr.join(canonical, '.');
+
+      report(node, memberImpurities.get(name) ?? moduleImpurities.get(module), name);
     }
 
     return {
@@ -104,7 +114,9 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
         }
       },
       CallExpression(node) {
-        if (isGlobalIdentifier(node.callee, context, 'fetch')) {
+        if (isGlobalIdentifier(node.callee, context, 'Date')) {
+          report(node, 'time', 'Date()');
+        } else if (isGlobalIdentifier(node.callee, context, 'fetch')) {
           report(node, 'io', 'fetch()');
         } else if (isAnyApi(node.callee, getState(), 'Effect', effectIo)) {
           report(node, 'io', Arr.join(canonicalPath(node.callee, getState()) ?? ['a promise'], '.'));

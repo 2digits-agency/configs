@@ -52,11 +52,11 @@ See each rule's `meta.docs.url` for its upstream rule, issue, or framework docum
 The `alchemy-domain-*` rules check the conventions that keep an [`@alchemy.run/domain`](https://alchemy.run/domain)
 model correct. They only look at calls on a `@alchemy.run/domain` import, so other code is unaffected.
 
-- `alchemy-domain-pure-decide` reports time (`Date.now()`, `new Date()`, `Clock.*`, `DateTime.now`, `Jwt.*`),
-  randomness (`Math.random()`, `crypto.randomUUID()`, `Random.*`, and the `effect/crypto` and `effect/jose` modules that
-  generate keys, nonces or signatures, such as `SecureRandom`, `Aead` and `Jws`) and I/O (`fetch`, `Effect.promise`,
-  `Effect.tryPromise`, `Jwks.*`) inside an aggregate's `decide` handlers. Deterministic crypto (`Digest`, `Mac`, `Kdf`,
-  `KeyFormat`) is allowed. Read time from `decide`'s `now` argument and call external systems from a policy or saga.
+- `alchemy-domain-pure-decide` reports time (`Date()`, `Date.now()`, `new Date()`, `Clock.*`, `DateTime.now`,
+  `Jwt.verify`), randomness (`Math.random()`, `crypto.randomUUID()`, `Random.*`, `SecureRandom.*`, and the
+  `effect/crypto` and `effect/jose` APIs that generate keys, nonces or signatures, such as `Aead.Aead`, `Jwk.generateKeyPair`
+  and `Jws.sign`) and I/O (`fetch`, `Effect.promise`, `Effect.tryPromise`, `Jwks.Jwks`) inside an aggregate's `decide`
+  handlers. Deterministic crypto (`Digest`, `Mac`, `Kdf`, `KeyFormat`, `Jws.verify`) is allowed. Read time from `decide`'s `now` argument and call external systems from a policy or saga.
 - `alchemy-domain-total-handlers` reports `throw` and `Option`/`Result` `getOrThrow*` inside an aggregate's `evolve` and
   `reply` or a view's `evolve`. Keep any state the event can't follow instead.
 - `alchemy-domain-require-view-version` requires `version` on every `Domain.View`, so a change to what the view computes

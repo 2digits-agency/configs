@@ -18,6 +18,11 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
   {
     valid: [
       `${header}
+        export class Account extends Domain.Aggregate('Account', {
+          evolve: { Opened: (s, e) => { const Opt = { getOrThrow: (o) => o ?? s }; return Opt.getOrThrow(e.state) } },
+        }) {}
+      `,
+      `${header}
         import { getOrThrow } from 'effect/Option'
         export class Account extends Domain.Aggregate('Account', {
           evolve: { Opened: (s, e) => { const getOrThrow = (o) => o ?? s; return getOrThrow(e.state) } },

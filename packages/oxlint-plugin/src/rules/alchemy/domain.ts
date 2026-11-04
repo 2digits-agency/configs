@@ -1,7 +1,15 @@
 import type { Context, ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 
-import { argumentAt, canonicalPath, propertyName, resolveVariable, soleDefinition, type FileState } from '../../utils';
+import {
+  argumentAt,
+  canonicalPath,
+  propertyName,
+  resolveVariable,
+  soleDefinition,
+  staticPath,
+  type FileState,
+} from '../../utils';
 
 const domainBlocks = [
   'Aggregate',
@@ -62,6 +70,21 @@ export function isImportReference(
   }
 
   return soleDefinition(resolveVariable(context, parent, node.name))?.type === 'ImportBinding';
+}
+
+/**
+ * Like `canonicalPath`, but only when the root name resolves to the import at `node`, not to a local that shadows it.
+ *
+ * @param node Reference or member expression.
+ * @param state Import bindings of the file.
+ * @param context Rule context.
+ */
+export function importedPath(node: ESTree.Node, state: FileState, context: Context): ReadonlyArray<string> | undefined {
+  const root = staticPath(node)?.[0];
+
+  return root !== undefined && soleDefinition(resolveVariable(context, node, root))?.type === 'ImportBinding'
+    ? canonicalPath(node, state)
+    : undefined;
 }
 
 /**
