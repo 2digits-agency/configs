@@ -48,6 +48,11 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
     ],
     invalid: [
       {
+        filename: 'src/Orphan/Orphan.command.ts',
+        code: `${header}export class Orphan extends Domain.Event('Orphan', {}) {}`,
+        errors: [{ messageId: 'fileName', data: { block: 'Event', kind: 'event' } }],
+      },
+      {
         filename: 'src/Account/Account.ts',
         code: `${header}export class Account extends Domain.Aggregate('Account', {}) {}`,
         errors: [{ messageId: 'fileName', data: { block: 'Aggregate', kind: 'aggregate' } }],

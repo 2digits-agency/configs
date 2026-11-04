@@ -1,4 +1,4 @@
-import type { Rule } from '@oxlint/plugins';
+import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Str from 'effect/String';
 
@@ -42,9 +42,25 @@ export const alchemyDomainBlockFileName: Rule = defineEffectRule(
   (context, getState) => {
     let declared = false;
 
+    // Events and rejections in a command or external file, reported at the end unless that file declares its host.
+    let shared: Array<{ readonly node: ESTree.Node; readonly block: DomainBlock; readonly kind: string }> = [];
+
+    let hosted = false;
+
     return {
       before() {
         declared = false;
+
+        shared = [];
+
+        hosted = false;
+      },
+      'Program:exit': function reportUnhosted() {
+        if (!hosted) {
+          for (const { node, block, kind } of shared) {
+            context.report({ node, messageId: 'fileName', data: { block, kind } });
+          }
+        }
       },
       CallExpression(node) {
         const block = domainBlock(node, getState(), context);
@@ -58,12 +74,18 @@ export const alchemyDomainBlockFileName: Rule = defineEffectRule(
 
         const kind = block === undefined ? undefined : (fileKinds[block] ?? sharedKinds[block]);
 
-        if (
-          kind === undefined ||
-          testFile.test(name) ||
-          (block !== undefined && hostKinds.has(fileKind) && sharedKinds[block] !== undefined)
-        ) {
+        if (block === undefined || kind === undefined || testFile.test(name)) {
           return;
+        }
+
+        if (hostKinds.has(fileKind) && sharedKinds[block] !== undefined) {
+          shared.push({ node: node.callee, block, kind });
+
+          return;
+        }
+
+        if (fileKind === kind && hostKinds.has(fileKind)) {
+          hosted = true;
         }
 
         if (declared) {
