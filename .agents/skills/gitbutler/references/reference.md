@@ -16,20 +16,22 @@ Show an overview of the workspace state
 - `-v, --verbose` Show verbose output with commit author and timestamp
 - `-u, --upstream` Show detailed list of upstream commits that haven't been integrated yet
 
-### but diff [TARGET]
+### but diff [TARGETS]...
 Show the diff of changes in the repo
-- `[TARGET]` What to diff, by CLI ID: a commit, branch, committed file or hunk, uncommitted file or hunk, path prefix ending in /, or a worktree's uncommitted area. A commit lists its files and hunks with their IDs. If omitted shows the diff of all uncommitted changes of the checkout but runs in, with file and hunk IDs. For more details about CLI IDs, see but help cli-ids.
+- `[TARGETS]...` What to diff, by CLI ID: a commit, branch, committed file or hunk, uncommitted file or hunk, path of an uncommitted file or directory, or a worktree's uncommitted area. A commit lists its files and hunks with their IDs. If omitted shows the diff of all uncommitted changes of the checkout but runs in, with file and hunk IDs. For more details about CLI IDs, see but help cli-ids.
+- `--stat` Show the changed files and their line counts instead of the patches
 
 ### but show <COMMIT_OR_BRANCH>
 Show details of a commit or branch
 - `<COMMIT_OR_BRANCH>` The commit ID (short or full SHA), branch name, or CLI ID to show details for
 - `-v, --verbose` Show full commit messages and files changed for each commit
+- `--stat` Show how many lines each changed file added and removed. For a branch, this is the same as --verbose
 
 ## Branching and Committing
 
 ### but commit [CHANGES]...
 Create a commit
-- `[CHANGES]...` The files or hunks to commit, by CLI ID from but diff. If omitted, everything uncommitted in the checkout but runs in is committed.
+- `[CHANGES]...` The files or hunks to commit, by CLI ID from but diff or by path. If omitted, everything uncommitted in the checkout but runs in is committed.
 - `-m, --message <MESSAGE>` The message to use for the commit. Can be supplied any amount of times, each value being appended to the preceding ones with a blank line in between. Without -m, -F or --no-message, a terminal opens the editor and a non-interactive run commits with an empty message.
 - `--no-message` Create the commit without a message
 - `-F, --file <FILE>` Read the commit message from FILE, or from stdin when FILE is -
@@ -98,7 +100,7 @@ Discard branches, commits, or changes
 
 ### but resolve [TARGETS]...
 Resolve conflicts in a commit or in uncommitted files
-- `[TARGETS]...` A commit to enter resolution mode for, or one or more conflicted uncommitted files (as listed by but status) to mark as resolved with their current worktree content. Resolution mode checks the commit out until finish or cancel, and is refused while a single branch is checked out; the conflicts and apply subcommands resolve a commit without it, in either case
+- `[TARGETS]...` A commit to enter resolution mode for, or one or more conflicted uncommitted files (as listed by but status) to mark as resolved with their current worktree content. Resolution mode checks the commit out until finish or cancel, and is refused while a single branch is checked out or for a commit on a worktree's branch; the conflicts and apply subcommands resolve a commit without it, in either case
 - `--ai` Resolve the conflicts with the configured AI model and apply the result. With a commit ID this resolves only that commit; without one it resolves all conflicted commits in the workspace, oldest first. Undo the result with but undo.
 
 ### but resolve conflicts [COMMIT]
@@ -183,7 +185,8 @@ Amend uncommitted changes into the commits they belong to
 ### but reword <TARGET>
 Edit the commit message of the specified commit
 - `<TARGET>` Commit ID to edit, branch ID to rename, or anonymous branch ID to name
-- `-m, --message <MESSAGE>` The new commit message or branch name. Without it, a terminal opens the editor and a non-interactive run fails
+- `-m, --message <MESSAGE>` The new commit message or branch name. Without it or -F, a terminal opens the editor and a non-interactive run fails
+- `-F, --file <FILE>` Read the new commit message or branch name from FILE, or from stdin when FILE is -
 - `-f, --fix-formatting` Format the existing commit message to 72-char line wrapping without opening an editor
 
 ### but uncommit <SOURCES>...
@@ -193,7 +196,7 @@ Move commits, branches, or committed changes back into the uncommitted area
 ### but amend [SOURCES]...
 Amend uncommitted changes into a commit or branch
 - `[SOURCES]...` One or more uncommitted files or hunks to amend. If omitted, all uncommitted changes of the checkout but runs in are amended: @, or a linked worktree's.
-- `-t, --target <COMMIT_OR_BRANCH>` The commit to amend into; a branch means its newest commit [required]
+- `-t, --target <COMMIT_OR_BRANCH>` The commit to amend into; a branch means its newest commit. If omitted, the changes go to the newest commit of the branch checked out where they are. With gitbutler/workspace checked out that takes exactly one applied branch, and --target is required otherwise.
 
 ## Operation History
 
@@ -231,7 +234,7 @@ Push changes in a branch to remote
 - `[BRANCH]` Branch name or CLI ID to push; the branches below it in its stack are pushed with it. If omitted, a terminal prompts for a selection and a non-interactive run pushes every stack with unpushed commits
 - `-s, --skip-force-push-protection` Skip force push protection checks
 - `--no-hooks` Bypass pre-push hooks
-- `-d, --dry-run` Show what would be pushed without actually pushing
+- `-d, --dry-run` Show what would be pushed without pushing, and exit non-zero if the push would be refused
 
 ### but pull
 Update applied branches and worktrees onto the latest target
