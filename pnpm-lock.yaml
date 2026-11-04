@@ -213,8 +213,8 @@ catalogs:
       specifier: 0.25.1
       version: 0.25.1
     '@next/eslint-plugin-next':
-      specifier: 16.4.4
-      version: 16.4.4
+      specifier: 16.4.5
+      version: 16.4.5
     '@opencode-ai/plugin':
       specifier: 1.19.5
       version: 1.19.5
@@ -669,7 +669,7 @@ importers:
         version: 4.4.2(@types/node@26.6.6)(crossws@0.4.12(srvx@1.0.5))(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))(graphql@16.11.0)(supports-color@7.2.0)(typescript@6.0.3)
       '@next/eslint-plugin-next':
         specifier: 'catalog:'
-        version: 16.4.4(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
+        version: 16.4.5(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
       '@stylistic/eslint-plugin':
         specifier: 'catalog:'
         version: 5.10.0(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
@@ -2292,8 +2292,8 @@ packages:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
 
-  '@next/eslint-plugin-next@16.4.4':
-    resolution: {integrity: sha512-O3ZZhL+PMlqa8xgg8Sx/UeG1BGgl/jOGkyRZFC8pDZTNYBoIbbUZtwDotNR+aGsnROE321lOQ+MfwFjdVFz+FA==}
+  '@next/eslint-plugin-next@16.4.5':
+    resolution: {integrity: sha512-dNmc4y4En/34tWxaBFF2tG/R9GeiRwVPf7v8Az/Pqk8FcT4Uv0ePmrZKvWBL2nFy1QprPgJW+6XjfyV6jbRV3Q==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -3759,6 +3759,7 @@ packages:
   '@smithy/core@3.35.1':
     resolution: {integrity: sha512-i4YPS4B6ts7bjn7UwLnGjiZdprOvHvgGobFZsYK3GIY3E5hIqtj0rReU69BcTpGp+fvtraSNXeG1l+jtJvF55w==}
     engines: {node: '>=18.0.0'}
+    deprecated: Deprecated due to a bug in custom logger data redaction. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -9530,7 +9531,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.3
     optional: true
 
-  '@next/eslint-plugin-next@16.4.4(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))':
+  '@next/eslint-plugin-next@16.4.5(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))':
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
       fast-glob: 3.3.1
