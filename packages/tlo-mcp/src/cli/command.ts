@@ -1,5 +1,5 @@
 import * as Effect from 'effect/Effect';
-import * as Option from 'effect/Option';
+import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import * as Command from 'effect/cli/Command';
 import * as Flag from 'effect/cli/Flag';
@@ -36,17 +36,20 @@ const tloMcpCommand = Command.make(
     ),
     publicUrl: Flag.String('public-url').pipe(
       Flag.withSchema(
-        Schema.String.check(
-          Schema.isPattern(/^https:\/\/[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::\d{1,5})?\/?$/i),
-          // The pattern fixes the shape; URL parsing also rejects what it cannot express, such as ports above 65535.
-          Schema.makeFilter((value: string) => URL.canParse(value) || 'Expected a valid HTTPS origin'),
+        Schema.URLFromString.check(
+          Schema.makeFilter(
+            (url: URL) =>
+              // Only an origin normalizes to its own origin plus `/`: credentials, paths, queries and hashes do not.
+              (url.protocol === 'https:' && url.href === `${url.origin}/`) ||
+              'Expected an HTTPS origin, such as https://tlo.example.com',
+          ),
         ),
       ),
       Flag.withDescription('Serve on 0.0.0.0 behind this HTTPS origin instead of opening OpenTunnel'),
       Flag.optional,
     ),
   },
-  ({ port, publicUrl }) => connect(port, Option.getOrUndefined(publicUrl)),
+  ({ port, publicUrl }) => connect(port, Opt.getOrUndefined(publicUrl)),
 ).pipe(Command.withSubcommands([authCommand('login'), authCommand('logout')]));
 
 export const run = Effect.fn('TloMcp.run')(function* (args: ReadonlyArray<string>) {

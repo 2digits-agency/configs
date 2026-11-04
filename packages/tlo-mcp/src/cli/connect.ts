@@ -6,7 +6,6 @@ import * as NodeHttpServer from '@effect/platform-node/NodeHttpServer';
 import { OpenTunnelClient } from '@opentunnel/client/effect';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
-import * as Str from 'effect/String';
 import * as HttpRouter from 'effect/http/HttpRouter';
 
 import { GatewayError, gatewayKeyFile, gatewayRoutes, loadGatewayKey } from '../http/gateway.js';
@@ -28,7 +27,7 @@ Orbit login and refresh are handled by the gateway; do not register another Orbi
 }
 
 export const connect = Effect.fn('TloMcp.connect')(
-  function* (port: number, publicUrl?: string) {
+  function* (port: number, publicUrl?: URL) {
     const keyFile = yield* gatewayKeyFile;
 
     const key = yield* loadGatewayKey(keyFile);
@@ -61,10 +60,11 @@ export const connect = Effect.fn('TloMcp.connect')(
     );
 
     if (publicUrl !== undefined) {
-      const endpoint = `${Str.replace(/\/$/, '')(publicUrl)}/mcp`;
+      const endpoint = new URL('/mcp', publicUrl).href;
 
       yield* Effect.sync(() => {
         process.stderr.write(`TLO gateway ready: ${endpoint}\nGateway key: ${keyFile} (private; not printed)\n`);
+
         process.stdout.write(connectionPrompt(endpoint));
       });
 

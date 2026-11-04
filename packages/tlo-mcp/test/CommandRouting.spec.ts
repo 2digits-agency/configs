@@ -14,8 +14,8 @@ const routing = vi.hoisted((): { routes: Array<string> } => ({ routes: [] }));
 
 vi.mock(import('../src/cli/connect.js'), () =>
   import('effect/Effect').then((Effect) => ({
-    connect: Effect.fn('test.connect')(function* (_port: number, publicUrl?: string) {
-      routing.routes.push(publicUrl === undefined ? 'gateway' : `gateway ${publicUrl}`);
+    connect: Effect.fn('test.connect')(function* (_port: number, publicUrl?: URL) {
+      routing.routes.push(publicUrl === undefined ? 'gateway' : `gateway ${publicUrl.href}`);
 
       return yield* Effect.die('server stopped');
     }),
@@ -45,7 +45,7 @@ vi.mock(import('../src/oauth/OrbitAuth.js'), (importOriginal) =>
 describe('command routing', () => {
   for (const { args, route } of [
     { args: [], route: 'gateway' },
-    { args: ['--public-url', 'https://tlo--v1re.onamp.dev'], route: 'gateway https://tlo--v1re.onamp.dev' },
+    { args: ['--public-url', 'https://tlo--v1re.onamp.dev'], route: 'gateway https://tlo--v1re.onamp.dev/' },
     { args: ['login'], route: 'login' },
     { args: ['logout'], route: 'logout' },
   ]) {
