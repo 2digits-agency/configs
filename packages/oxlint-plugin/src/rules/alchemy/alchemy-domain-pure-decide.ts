@@ -92,6 +92,21 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
       report(node, memberImpurities.get(name) ?? moduleImpurities.get(module), name);
     }
 
+    // `Date` or `globalThis.Date`, when not shadowed.
+    function globalCallee(callee: ESTree.Node): string | undefined {
+      if (callee.type === 'Identifier') {
+        return isGlobalIdentifier(callee, context, callee.name) ? callee.name : undefined;
+      }
+
+      const path = staticPath(callee);
+
+      return callee.type === 'MemberExpression' &&
+        path?.length === 2 &&
+        isGlobalIdentifier(callee.object, context, 'globalThis')
+        ? path[1]
+        : undefined;
+    }
+
     return {
       // Inner members such as `DateTime.now` in `DateTime.now.pipe(...)` are checked too; longer paths are skipped.
       MemberExpression(node) {
@@ -122,14 +137,16 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
         }
       },
       NewExpression(node) {
-        if (node.arguments.length === 0 && isGlobalIdentifier(node.callee, context, 'Date')) {
+        if (node.arguments.length === 0 && globalCallee(node.callee) === 'Date') {
           report(node, 'time', 'new Date()');
         }
       },
       CallExpression(node) {
-        if (isGlobalIdentifier(node.callee, context, 'Date')) {
+        const callee = globalCallee(node.callee);
+
+        if (callee === 'Date') {
           report(node, 'time', 'Date()');
-        } else if (isGlobalIdentifier(node.callee, context, 'fetch')) {
+        } else if (callee === 'fetch') {
           report(node, 'io', 'fetch()');
         } else {
           const path = importedPath(node.callee, getState(), context);

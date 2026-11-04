@@ -29,6 +29,10 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       },
       { filename: 'src/server/ExactJournal.ts', code: `${header}import { HttpClient } from '@bylotte/exact'` },
       { filename: 'src/models/user.model.ts', code: `import mongoose from 'mongoose'` },
+      {
+        filename,
+        code: `${header}export function load(require) { return require('@aws-sdk/client-s3') }`,
+      },
     ],
     invalid: [
       {
@@ -40,6 +44,11 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         filename,
         code: `${header}export const s3 = () => import('@aws-sdk/client-s3')\nexport const id = () => import('./DailyImport.id.ts')`,
         errors: [{ messageId: 'import', data: { source: '@aws-sdk/client-s3' } }],
+      },
+      {
+        filename,
+        code: `${header}export const load = (name: string) => import(name)`,
+        errors: [{ messageId: 'dynamic' }],
       },
       {
         filename,

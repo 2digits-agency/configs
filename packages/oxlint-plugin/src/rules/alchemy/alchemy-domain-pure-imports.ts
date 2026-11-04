@@ -2,7 +2,7 @@ import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Str from 'effect/String';
 
-import { defineSyntaxRule, ruleMeta } from '../../utils';
+import { defineSyntaxRule, isGlobalIdentifier, ruleMeta } from '../../utils';
 
 const domainFile =
   /\.(?:aggregate|api|command|context|event|external|id|middleware|model|policy|projection|rejection|saga|stream|view)\.[cm]?tsx?$/u;
@@ -33,6 +33,8 @@ export const alchemyDomainPureImports: Rule = defineSyntaxRule(
     {
       import:
         'A domain block imports only `@alchemy.run/domain`, `effect` and relative files, not `{{source}}`. Put code that touches infrastructure in the server package.',
+      dynamic:
+        'A domain block imports only `@alchemy.run/domain`, `effect` and relative files, so its import sources must be string literals.',
     },
     'https://alchemy.run/domain',
   ),
@@ -46,7 +48,13 @@ export const alchemyDomainPureImports: Rule = defineSyntaxRule(
     }
 
     function checkSource(source: ESTree.Node): void {
-      if (checked && source.type === 'Literal' && typeof source.value === 'string' && !isAllowed(source.value)) {
+      if (!checked) {
+        return;
+      }
+
+      if (source.type !== 'Literal' || typeof source.value !== 'string') {
+        context.report({ node: source, messageId: 'dynamic' });
+      } else if (!isAllowed(source.value)) {
         context.report({ node: source, messageId: 'import', data: { source: source.value } });
       }
     }
@@ -62,7 +70,7 @@ export const alchemyDomainPureImports: Rule = defineSyntaxRule(
         checkSource(node.source);
       },
       CallExpression(node) {
-        if (node.callee.type === 'Identifier' && node.callee.name === 'require' && node.arguments[0] !== undefined) {
+        if (node.arguments[0] !== undefined && isGlobalIdentifier(node.callee, context, 'require')) {
           checkSource(node.arguments[0]);
         }
       },
