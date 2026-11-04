@@ -1,3 +1,11 @@
+## @2digits/eslint-config@5.10.5
+
+### Update ESLint plugins
+
+- `@next/eslint-plugin-next` 16.4.4 → 16.4.5
+- `eslint-plugin-jsdoc` 65.4.2 → 65.4.3
+- `eslint-plugin-yml` 3.9.0 → 3.10.0, with typed options for its new `yml/max-len` rule
+
 ## @2digits/eslint-config@5.10.4
 
 ### Update @tanstack/eslint-plugin-query to 5.105.3

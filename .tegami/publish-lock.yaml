@@ -1,15 +1,24 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update @tanstack/eslint-plugin-query to 5.105.3\n"
-    filename: 2026-11-03-amber-lynx-shelf.md
+  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update ESLint plugins\n\n- `@next/eslint-plugin-next` 16.4.4 → 16.4.5\n- `eslint-plugin-jsdoc` 65.4.2 → 65.4.3\n- `eslint-plugin-yml` 3.9.0 → 3.10.0, with typed options for its new `yml/max-len` rule\n"
+    filename: 2026-11-04-crisp-ash-jsdoc.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n---\n\n## Allow `it.live` in Vitest test blocks\n\n- Added `it.live` to `additionalTestBlockFunctions` for `vitest/expect-expect` and `vitest/no-standalone-expect`\n"
-    filename: 2026-11-03-pale-finch-ember.md
+  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update oxfmt to 0.76.0\n"
+    filename: 2026-11-04-quiet-fern-oxfmt.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.64.1\n"
-    filename: 2026-11-03-quiet-heron-dune.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Update oxlint to 1.91.0\n\n`@2digits/oxlint-config` now expects `oxlint` 1.91.0, and `@2digits/oxlint-plugin` uses `@oxlint/plugins` 1.91.0.\n"
+    filename: 2026-11-04-bright-gull-oxlint.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update Effect language-service diagnostics\n\n- Added `effectSucceedWithUndefined`, `effectTryWithoutCatch`, `globalJson`, `globalJsonInEffect`, `mapSomeCatchNoSuchElement`, `matchBooleanToIsSuccess`, `provideMergeAllToArray`, `resultMatchToFromResult`, `suspendFailToFailSync`, `typeUnionToSchemaUnion` and `yieldInCallArgument` diagnostics\n- Removed `preferSchemaOverJson` diagnostic\n- Added `brandedSchemaClasses` for `Class`, `TaggedClass`, `Error`, `TaggedError` and `Opaque`\n- Added `taggedClass` naming rule for `default` pattern, skipping the `src/` path prefix\n"
-    filename: 2026-11-03-rapid-cedar-plum.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Add read-only composite tools\n\nThe gateway now offers three tools that combine several Orbit reads in one call and return typed `structuredContent`:\n\n- `GetMyWorkday`: your timesheet for a day, week or range of up to 62 days. It lists entries with their locks, planned entries to confirm, gaps, overlaps and entries outside 09:00–17:30. It also returns absences, the running timer and bookable tasks with their remaining budget. Times are in Europe/Amsterdam.\n- `GetTicketContext`: a ticket by number or api_id, closed tickets included, with its detail, conversation and your logged time.\n- `GetBoardContext`: a board's columns, with their api_ids, and the cards in each column, optionally with card detail.\n\nWrites stay separate Orbit tools, so each write is still approved on its own. If Orbit changes its text format, the composite fails with an error instead of returning wrong data.\n"
+    filename: 2026-10-28-composite-tools.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Store the gateway key and session in the platform config directory\n\n`tlo-mcp` now resolves its directory with Effect's `UserDirectories`: `~/Library/Application Support/2digits/tlo-mcp` on macOS, and `$XDG_CONFIG_HOME/2digits/tlo-mcp` or `~/.config/2digits/tlo-mcp` elsewhere.\n\nA gateway key or Orbit session that an earlier version stored in `~/.config/2digits/tlo-mcp` keeps being used from there, so upgrading needs no new key and no new login. Startup prints the key path in use, with the matching `pbcopy` command on macOS. On macOS, Orbit credentials stay in the Keychain.\n"
+    filename: 2026-11-04-snug-otter-keydir.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.67.0\n"
+    filename: 2026-11-04-amber-wren-tsgo.md
+    v: 0.0.0
+  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Enable the `matchToResultOrOption` Effect diagnostic\n\nThe Effect config now reports `matchToResultOrOption` as an error. It flags `Effect.match` handlers, or a map step followed by a catch step, that only turn the outcome into a value, where `Effect.result`, `Effect.option` or `Effect.either` says the same thing directly.\n"
+    filename: 2026-11-04-steady-pike-result.md
     v: 0.0.0
 core:packages:
   - id: npm:@2digits/config-monorepo
@@ -19,30 +28,37 @@ core:packages:
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-11-03-amber-lynx-shelf.md
+      - 2026-11-04-crisp-ash-jsdoc.md
     id: npm:@2digits/eslint-config
     updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
   - id: npm:@2digits/opencode-plugin
     updated: false
-  - id: npm:@2digits/oxfmt-config
-    updated: false
   - changelogIds:
-      - 2026-11-03-pale-finch-ember.md
+      - 2026-11-04-quiet-fern-oxfmt.md
+    id: npm:@2digits/oxfmt-config
+    updated: true
+  - changelogIds:
+      - 2026-11-04-bright-gull-oxlint.md
     id: npm:@2digits/oxlint-config
     updated: true
-  - id: npm:@2digits/oxlint-plugin
+  - changelogIds:
+      - 2026-11-04-bright-gull-oxlint.md
+    id: npm:@2digits/oxlint-plugin
+    updated: true
+  - id: npm:@2digits/renovate-config
     updated: false
   - id: npm:@2digits/prettier-config
     updated: false
-  - id: npm:@2digits/renovate-config
-    updated: false
-  - id: npm:@2digits/tlo-mcp
-    updated: false
   - changelogIds:
-      - 2026-11-03-quiet-heron-dune.md
-      - 2026-11-03-rapid-cedar-plum.md
+      - 2026-10-28-composite-tools.md
+      - 2026-11-04-snug-otter-keydir.md
+    id: npm:@2digits/tlo-mcp
+    updated: true
+  - changelogIds:
+      - 2026-11-04-amber-wren-tsgo.md
+      - 2026-11-04-steady-pike-result.md
     id: npm:@2digits/tsconfig
     updated: true
 npm:packages:
@@ -55,7 +71,7 @@ npm:packages:
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxlint-plugin
-  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/renovate-config
+  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig
