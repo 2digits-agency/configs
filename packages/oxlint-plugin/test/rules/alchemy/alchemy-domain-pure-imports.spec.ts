@@ -1,0 +1,49 @@
+import { describe, it } from '@effect/vitest';
+import { RuleTester } from 'oxlint/plugins-dev';
+
+import { alchemyDomainPureImports } from '../../../src/rules/alchemy/alchemy-domain-pure-imports';
+
+RuleTester.describe = describe;
+
+RuleTester.it = it;
+
+const filename = 'src/DailyImport/DailyImport.aggregate.ts';
+
+const header = `import * as Domain from '@alchemy.run/domain'\n`;
+
+new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } }).run(
+  'alchemy-domain-pure-imports',
+  alchemyDomainPureImports,
+  {
+    valid: [
+      {
+        filename,
+        code: `${header}
+          import * as Schema from 'effect/Schema'
+          import { Effect } from 'effect'
+          import { RpcMiddleware } from 'effect/unstable/rpc'
+          import * as Story from '@alchemy.run/domain/Story'
+          import { DailyImportId } from './DailyImport.id.ts'
+          export { BusinessDay } from '../BusinessDay.ts'
+        `,
+      },
+      { filename: 'src/server/ExactJournal.ts', code: `${header}import { HttpClient } from '@bylotte/exact'` },
+      { filename: 'src/models/user.model.ts', code: `import mongoose from 'mongoose'` },
+    ],
+    invalid: [
+      {
+        filename,
+        code: `${header}import * as Cloudflare from 'alchemy/Cloudflare'`,
+        errors: [{ messageId: 'import', data: { source: 'alchemy/Cloudflare' } }],
+      },
+      {
+        filename: 'src/Session.middleware.ts',
+        code: `${header}import type { ExactToken } from '@bylotte/exact'\nexport * from '@bylotte/contracts'`,
+        errors: [
+          { messageId: 'import', data: { source: '@bylotte/exact' } },
+          { messageId: 'import', data: { source: '@bylotte/contracts' } },
+        ],
+      },
+    ],
+  },
+);

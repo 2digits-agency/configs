@@ -31,7 +31,9 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
   plus interruptible `Effect.tryPromise` thunks.
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
   and no root-barrel module imports. `@effect/vitest` and lowercase unstable barrels are intentionally exempt.
-- Alchemy v2 practices: every `alchemy-*` rule.
+- Alchemy v2 practices: every other `alchemy-*` rule.
+- Alchemy Domain modeling rules from the `@alchemy.run/domain` agent skill: the `alchemy-domain-*` rules. See
+  [Alchemy Domain models](#alchemy-domain-models).
 - Schema compiler hoisting from t3code: `no-inline-schema-compile` reports `Schema.decode*`, `Schema.encode*`,
   `Schema.is`, and `Schema.asserts` compilers that are built and invoked inside a function body when their schema
   could be hoisted to module scope.
@@ -44,6 +46,28 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
+
+## Alchemy Domain models
+
+The `alchemy-domain-*` rules check the conventions that keep an [`@alchemy.run/domain`](https://alchemy.run/domain)
+model correct. They only look at calls on a `@alchemy.run/domain` import, so other code is unaffected.
+
+- `alchemy-domain-pure-decide` reports time (`Date.now()`, `new Date()`, `Clock.*`, `DateTime.now`, `Jwt.*`),
+  randomness (`Math.random()`, `crypto.randomUUID()`, `Random.*`, and the `effect/crypto` and `effect/jose` modules that
+  generate keys, nonces or signatures, such as `SecureRandom`, `Aead` and `Jws`) and I/O (`fetch`, `Effect.promise`,
+  `Effect.tryPromise`, `Jwks.*`) inside an aggregate's `decide` handlers. Deterministic crypto (`Digest`, `Mac`, `Kdf`,
+  `KeyFormat`) is allowed. Read time from `decide`'s `now` argument and call external systems from a policy or saga.
+- `alchemy-domain-total-handlers` reports `throw` and `Option`/`Result` `getOrThrow*` inside an aggregate's `evolve` and
+  `reply` or a view's `evolve`. Keep any state the event can't follow instead.
+- `alchemy-domain-require-view-version` requires `version` on every `Domain.View`, so a change to what the view computes
+  sits next to the number that must be bumped for the deploy to rebuild it. `version: 0` keeps the current default.
+- `alchemy-domain-block-file-name` requires one block per file, named after its kind (`Account.aggregate.ts`,
+  `WithdrawMoney.command.ts`, `FraudCheck.external.ts`, `CurrentActor.context.ts`). Events and rejections may share
+  their command's file; in their own `.event.ts` or `.rejection.ts` file, one per file. Test and story files are skipped.
+- `alchemy-domain-pure-imports` restricts block files (`*.aggregate.ts`, `*.command.ts`, `*.middleware.ts`, ...) that
+  import `@alchemy.run/domain` to relative imports, `effect` and `@alchemy.run/domain`.
+
+None of them autofix. The rules are syntax-only, so a helper called from `decide` or `evolve` is not followed.
 
 ## Endpoint header schema keys
 
