@@ -36,7 +36,11 @@ const tloMcpCommand = Command.make(
     ),
     publicUrl: Flag.String('public-url').pipe(
       Flag.withSchema(
-        Schema.String.check(Schema.isPattern(/^https:\/\/[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::\d{1,5})?\/?$/i)),
+        Schema.String.check(
+          Schema.isPattern(/^https:\/\/[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::\d{1,5})?\/?$/i),
+          // The pattern fixes the shape; URL parsing also rejects what it cannot express, such as ports above 65535.
+          Schema.makeFilter((value: string) => URL.canParse(value) || 'Expected a valid HTTPS origin'),
+        ),
       ),
       Flag.withDescription('Serve on 0.0.0.0 behind this HTTPS origin instead of opening OpenTunnel'),
       Flag.optional,

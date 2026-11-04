@@ -76,6 +76,7 @@ describe('command routing', () => {
     'http://tlo.example',
     'https://tlo.example/mcp',
     'https://example.com:bogus',
+    'https://example.com:99999',
     'https://exa mple.com',
     'https://user@example.com',
   ]) {
