@@ -64,8 +64,9 @@ tlo-mcp --public-url https://tlo.example.com --port "$PORT"
 ```
 
 The gateway listens on `0.0.0.0:<port>` and reports `https://tlo.example.com/mcp`. It cannot open a browser there, so it
-needs an existing Orbit session: run `tlo-mcp login` on a machine with a browser and copy
-`~/.config/2digits/tlo-mcp/session.json` (mode `0600`) to the host. Without one it exits instead of waiting for a login.
+needs an existing Orbit session: run `tlo-mcp login` on a Linux machine you can open the login URL from and copy
+`2digits/tlo-mcp/session.json` (mode `0600`) from its config directory (`$XDG_CONFIG_HOME` or `~/.config`) to the same
+place on the host. macOS keeps the session in the Keychain instead, so it produces no `session.json` to copy. Without a session the gateway exits instead of waiting for a login.
 
 ## Connect Executor Cloud
 
