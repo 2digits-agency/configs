@@ -97,9 +97,18 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
       MemberExpression(node) {
         const path = staticPath(node);
 
-        const name = path === undefined ? undefined : Arr.join(path, '.');
+        let root: ESTree.Node = node;
 
-        if (name !== undefined && path?.length === 2 && isGlobalIdentifier(node.object, context, path[0] ?? '')) {
+        while (root.type === 'MemberExpression' || root.type === 'ChainExpression') {
+          root = root.type === 'ChainExpression' ? root.expression : root.object;
+        }
+
+        // `globalThis.Date.now` is the same as `Date.now`.
+        const global = path?.[0] === 'globalThis' ? path.slice(1) : path;
+
+        if (global?.length === 2 && isGlobalIdentifier(root, context, path?.[0] ?? '')) {
+          const name = Arr.join(global, '.');
+
           report(node, globalImpurities.get(name), `${name}()`);
 
           return;
