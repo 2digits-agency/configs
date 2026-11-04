@@ -72,17 +72,19 @@ describe('command routing', () => {
     );
   }
 
-  it.effect('rejects a non-HTTPS public URL without starting the gateway', () =>
-    Effect.gen(function* () {
-      routing.routes.length = 0;
+  for (const url of ['http://tlo.example', 'https://tlo.example/mcp', 'https://example.com:bogus', 'https://exa mple.com', 'https://user@example.com']) {
+    it.effect(`rejects public URL ${url} without starting the gateway`, () =>
+      Effect.gen(function* () {
+        routing.routes.length = 0;
 
-      const exit = yield* run(['--public-url', 'http://tlo.example/mcp']).pipe(Effect.exit);
+        const exit = yield* run(['--public-url', url]).pipe(Effect.exit);
 
-      expect(Exit.isFailure(exit)).toBeTruthy();
+        expect(Exit.isFailure(exit)).toBeTruthy();
 
-      expect(routing.routes).toStrictEqual([]);
-    }).pipe(Effect.provide(Layer.merge(PlatformLive, Stdio.layerTest({})))),
-  );
+        expect(routing.routes).toStrictEqual([]);
+      }).pipe(Effect.provide(Layer.merge(PlatformLive, Stdio.layerTest({})))),
+    );
+  }
 
   for (const command of ['legacy', 'unknown-command']) {
     it.effect(`rejects ${command} without starting any handler`, () =>
