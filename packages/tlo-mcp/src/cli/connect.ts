@@ -40,7 +40,9 @@ export const connect = Effect.fn('TloMcp.connect')(
     if ((yield* store.load) === undefined) {
       // A server behind a public URL has no browser for the loopback OAuth callback.
       if (publicUrl !== undefined) {
-        return yield* GatewayError.make({ message: 'No Orbit session. Run tlo-mcp login on a machine with a browser first.' });
+        return yield* GatewayError.make({
+          message: 'No Orbit session. Run tlo-mcp login on a machine with a browser first.',
+        });
       }
 
       yield* auth.login;

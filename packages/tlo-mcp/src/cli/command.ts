@@ -35,7 +35,9 @@ const tloMcpCommand = Command.make(
       Flag.withDefault(4790),
     ),
     publicUrl: Flag.String('public-url').pipe(
-      Flag.withSchema(Schema.String.check(Schema.isPattern(/^https:\/\/[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::\d{1,5})?\/?$/i))),
+      Flag.withSchema(
+        Schema.String.check(Schema.isPattern(/^https:\/\/[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::\d{1,5})?\/?$/i)),
+      ),
       Flag.withDescription('Serve on 0.0.0.0 behind this HTTPS origin instead of opening OpenTunnel'),
       Flag.optional,
     ),

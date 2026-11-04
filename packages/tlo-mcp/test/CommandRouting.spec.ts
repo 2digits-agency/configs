@@ -72,7 +72,13 @@ describe('command routing', () => {
     );
   }
 
-  for (const url of ['http://tlo.example', 'https://tlo.example/mcp', 'https://example.com:bogus', 'https://exa mple.com', 'https://user@example.com']) {
+  for (const url of [
+    'http://tlo.example',
+    'https://tlo.example/mcp',
+    'https://example.com:bogus',
+    'https://exa mple.com',
+    'https://user@example.com',
+  ]) {
     it.effect(`rejects public URL ${url} without starting the gateway`, () =>
       Effect.gen(function* () {
         routing.routes.length = 0;
