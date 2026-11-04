@@ -58,6 +58,10 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       { code: aggregate('(s) => [new Opened({ at: Date.now() })]'), errors: [{ messageId: 'time' }] },
       { code: aggregate('(s) => [new Opened({ at: new Date() })]'), errors: [{ messageId: 'time' }] },
       {
+        code: aggregate('(s) => [new Opened({ at: performance.timeOrigin })]'),
+        errors: [{ messageId: 'time', data: { api: 'performance.timeOrigin' } }],
+      },
+      {
         code: aggregate('Effect.fn(function* (s) { yield* Effect.sync(() => globalThis.fetch("/score")); return [] })'),
         errors: [{ messageId: 'io', data: { api: 'fetch()' } }],
       },

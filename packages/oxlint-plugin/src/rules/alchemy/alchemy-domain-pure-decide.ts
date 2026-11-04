@@ -10,6 +10,7 @@ type Impurity = 'io' | 'random' | 'time';
 const globalImpurities: ReadonlyMap<string, Impurity> = new Map([
   ['Date.now', 'time'],
   ['performance.now', 'time'],
+  ['performance.timeOrigin', 'time'],
   ['Math.random', 'random'],
   ['crypto.randomUUID', 'random'],
   ['crypto.getRandomValues', 'random'],
@@ -124,7 +125,9 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
         if (global?.length === 2 && isGlobalIdentifier(root, context, path?.[0] ?? '')) {
           const name = Arr.join(global, '.');
 
-          report(node, globalImpurities.get(name), `${name}()`);
+          const called = node.parent.type === 'CallExpression' && node.parent.callee === node;
+
+          report(node, globalImpurities.get(name), called ? `${name}()` : name);
 
           return;
         }

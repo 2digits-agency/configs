@@ -14,12 +14,17 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
   alchemyDomainRequireViewVersion,
   {
     valid: [
+      `${header}\nexport class Status extends Domain.View('Status', { ...shared, version: 2 }) {}`,
       `${header}\nexport class Status extends Domain.View('Status', { version: 0, from: [DailyImport] }) {}`,
       `${header}\nexport class Account extends Domain.Aggregate('Account', { id: AccountId }) {}`,
       `export class Status extends View('Status', { from: [DailyImport] }) {}`,
       `import { View } from '@alchemy.run/domain'\nexport function render(View) { return View('Status', { from: [] }) }`,
     ],
     invalid: [
+      {
+        code: `${header}\nexport class Status extends Domain.View('Status', { version: 2, ...shared }) {}`,
+        errors: [{ messageId: 'overridden' }],
+      },
       {
         code: `${header}\nexport class Status extends Domain.View('Status', { from: [DailyImport] } as const) {}`,
         errors: [{ messageId: 'missing' }],
