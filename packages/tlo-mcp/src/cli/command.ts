@@ -38,7 +38,7 @@ const tloMcpCommand = Command.make(
       Flag.withSchema(
         Schema.URLFromString.check(
           Schema.makeFilter(
-            (url: URL) =>
+            (url) =>
               // Only an origin normalizes to its own origin plus `/`: credentials, paths, queries and hashes do not.
               (url.protocol === 'https:' && url.href === `${url.origin}/`) ||
               'Expected an HTTPS origin, such as https://tlo.example.com',
