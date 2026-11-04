@@ -64,6 +64,14 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         `,
         errors: [{ messageId: 'partial', data: { section: 'evolve', api: '`Option.getOrThrowWith`' } }],
       },
+      {
+        code: `${header}
+          export class Account extends Domain.Aggregate('Account', {
+            evolve: { Renamed: (s, e) => Struct.evolve(s, { name: () => Opt.getOrThrow(e.name) }) },
+          }) {}
+        `,
+        errors: [{ messageId: 'partial', data: { section: 'evolve', api: '`Option.getOrThrow`' } }],
+      },
     ],
   },
 );

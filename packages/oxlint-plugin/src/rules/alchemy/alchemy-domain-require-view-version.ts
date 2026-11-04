@@ -1,5 +1,4 @@
 import type { Rule } from '@oxlint/plugins';
-import * as Arr from 'effect/Array';
 
 import { argumentAt, defineEffectRule, objectProperty, ruleMeta } from '../../utils';
 import { domainBlock } from './domain';
@@ -21,7 +20,6 @@ export const alchemyDomainRequireViewVersion: Rule = defineEffectRule(
       if (
         domainBlock(node, getState()) === 'View' &&
         definition?.type === 'ObjectExpression' &&
-        !Arr.some(definition.properties, (property) => property.type === 'SpreadElement') &&
         objectProperty(definition, 'version') === undefined
       ) {
         context.report({ node: node.callee, messageId: 'missing' });

@@ -19,11 +19,13 @@ const fileKinds: Partial<Record<DomainBlock, string>> = {
   View: 'view',
 };
 
-// Events and rejections may also live in the command file that records or returns them, so only their own files count.
+// Events and rejections may also live in the command or external system file that records or returns them.
 const sharedKinds: Partial<Record<DomainBlock, string>> = {
   Event: 'event',
   Rejection: 'rejection',
 };
+
+const hostKinds: ReadonlySet<string | undefined> = new Set(['command', 'external']);
 
 const testFile = /\.(?:test|spec|stories?)\.[cm]?[jt]sx?$/u;
 
@@ -49,14 +51,17 @@ export const alchemyDomainBlockFileName: Rule = defineEffectRule(
 
         const name = Arr.lastNonEmpty(Str.split(context.filename, /[/\\]/u));
 
-        const fileKind = Str.split(name, '.').at(-2);
+        const parts = Str.split(name, '.');
+
+        // `aggregate.ts` and `.aggregate.ts` lack the noun.
+        const fileKind = parts.length >= 3 && parts[0] !== '' ? parts.at(-2) : undefined;
 
         const kind = block === undefined ? undefined : (fileKinds[block] ?? sharedKinds[block]);
 
         if (
           kind === undefined ||
           testFile.test(name) ||
-          (fileKind !== kind && block !== undefined && sharedKinds[block] !== undefined)
+          (block !== undefined && hostKinds.has(fileKind) && sharedKinds[block] !== undefined)
         ) {
           return;
         }

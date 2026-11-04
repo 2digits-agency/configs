@@ -60,6 +60,12 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       },
       { code: aggregate('(s) => [new Opened({ id: crypto.randomUUID() })]'), errors: [{ messageId: 'random' }] },
       {
+        code: aggregate(
+          'Effect.fn(function* (s) { const at = yield* DateTime.now.pipe(Effect.map(DateTime.formatIso)); return [new Opened({ at })] })',
+        ),
+        errors: [{ messageId: 'time', data: { api: 'DateTime.now' } }],
+      },
+      {
         code: `import { SecureRandom } from 'effect/crypto'\n${aggregate(
           'Effect.fn(function* (s) { const random = yield* SecureRandom.SecureRandom; return [new Opened({ id: yield* random.uuidV4 })] })',
         )}`,

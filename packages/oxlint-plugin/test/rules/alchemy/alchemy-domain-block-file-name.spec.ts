@@ -27,7 +27,10 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       },
       {
         filename: 'src/Fraud/FraudCheck.external.ts',
-        code: `${header}export class FraudCheck extends Domain.ExternalSystem('FraudCheck', {}) {}`,
+        code: `${header}
+          export class FraudUnavailable extends Domain.Rejection('FraudUnavailable') {}
+          export class FraudCheck extends Domain.ExternalSystem('FraudCheck', {}) {}
+        `,
       },
       {
         filename: 'src/CurrentActor.context.ts',
@@ -58,6 +61,16 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         filename: 'src/Account/DepositMoney.command.ts',
         code: `${command}export class DepositMoney extends Domain.Command('DepositMoney', {}) {}`,
         errors: [{ messageId: 'oneBlock', data: { block: 'Command', kind: 'command' } }],
+      },
+      {
+        filename: 'src/Account/aggregate.ts',
+        code: `${header}export class Account extends Domain.Aggregate('Account', {}) {}`,
+        errors: [{ messageId: 'fileName', data: { block: 'Aggregate', kind: 'aggregate' } }],
+      },
+      {
+        filename: 'src/Account/Account.ts',
+        code: `${header}export class NotOpen extends Domain.Rejection('NotOpen') {}`,
+        errors: [{ messageId: 'fileName', data: { block: 'Rejection', kind: 'rejection' } }],
       },
       {
         filename: 'src/BookingUnit/BookingUnitChanged.event.ts',

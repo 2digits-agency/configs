@@ -69,9 +69,13 @@ export function domainSection(
 
     const block = domainBlock(call, state);
 
+    if (block === undefined) {
+      continue;
+    }
+
     const section = propertyName(parent as ESTree.ObjectProperty);
 
-    return block === undefined || section === undefined ? undefined : { block, section };
+    return section === undefined ? undefined : { block, section };
   }
 
   return undefined;

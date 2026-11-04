@@ -15,13 +15,16 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
   {
     valid: [
       `${header}\nexport class Status extends Domain.View('Status', { version: 0, from: [DailyImport] }) {}`,
-      `${header}\nexport class Status extends Domain.View('Status', { ...shared, from: [DailyImport] }) {}`,
       `${header}\nexport class Account extends Domain.Aggregate('Account', { id: AccountId }) {}`,
       `export class Status extends View('Status', { from: [DailyImport] }) {}`,
     ],
     invalid: [
       {
         code: `${header}\nexport class Status extends Domain.View('Status', { from: [DailyImport], evolve: {} }) {}`,
+        errors: [{ messageId: 'missing' }],
+      },
+      {
+        code: `${header}\nexport class Status extends Domain.View('Status', { ...shared, from: [DailyImport] }) {}`,
         errors: [{ messageId: 'missing' }],
       },
     ],

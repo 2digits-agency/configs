@@ -62,11 +62,8 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
     }
 
     return {
+      // Inner members such as `DateTime.now` in `DateTime.now.pipe(...)` are checked too; longer paths are skipped.
       MemberExpression(node) {
-        if (node.parent.type === 'MemberExpression' && node.parent.object === node) {
-          return;
-        }
-
         const path = staticPath(node);
 
         const name = path === undefined ? undefined : Arr.join(path, '.');
