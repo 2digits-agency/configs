@@ -1,5 +1,3 @@
-import { homedir } from 'node:os';
-
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
@@ -9,6 +7,7 @@ import * as Schema from 'effect/Schema';
 import type * as Scope from 'effect/Scope';
 import * as Stream from 'effect/Stream';
 import * as Str from 'effect/String';
+import * as UserDirectories from 'effect/persistence/UserDirectories';
 import * as ChildProcess from 'effect/process/ChildProcess';
 import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 
@@ -62,7 +61,11 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
 
       const platform = options.platform ?? process.platform;
 
-      const directory = options.directory ?? path.join(homedir(), '.config', '2digits', 'tlo-mcp');
+      const dirs = yield* UserDirectories.UserDirectories;
+
+      const config = yield* dirs.config('2digits');
+
+      const directory = options.directory ?? path.join(config, 'tlo-mcp');
 
       const file = path.join(directory, 'session.json');
 

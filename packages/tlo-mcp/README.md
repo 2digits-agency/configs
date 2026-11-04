@@ -60,11 +60,13 @@ absolute paths for `npx`/`node` if they are not found. Manage it with `pitchfork
 Paste the printed prompt into an agent with Executor tools. It registers a Streamable HTTP MCP integration with
 API-key auth: `Authorization: Bearer <gateway-key>`. **Do not configure Orbit OAuth in Executor.**
 
-The key is stored at `~/.config/2digits/tlo-mcp/gateway.key` (mode `0600`, directory `0700`).
-On macOS, copy it without printing it:
+The key is stored as `2digits/tlo-mcp/gateway.key` in the platform config directory (mode `0600`, directory `0700`):
+`~/Library/Application Support` on macOS, `$XDG_CONFIG_HOME` or `~/.config` elsewhere. A key created by an earlier
+version at `~/.config/2digits/tlo-mcp/gateway.key` keeps being used. Startup prints the path in use. On macOS, copy it
+without printing it:
 
 ```bash
-pbcopy < ~/.config/2digits/tlo-mcp/gateway.key
+pbcopy < "$HOME/Library/Application Support/2digits/tlo-mcp/gateway.key"
 ```
 
 Enter it directly in Executor's secure credential form, never in agent chat. On other platforms, open the private
