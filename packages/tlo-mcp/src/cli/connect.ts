@@ -6,6 +6,7 @@ import * as NodeHttpServer from '@effect/platform-node/NodeHttpServer';
 import { OpenTunnelClient } from '@opentunnel/client/effect';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Str from 'effect/String';
 import * as HttpRouter from 'effect/http/HttpRouter';
 
 import { GatewayError, gatewayKeyFile, gatewayRoutes, loadGatewayKey } from '../http/gateway.js';
@@ -22,12 +23,12 @@ Register an MCP integration named Teamleader Orbit (slug tlo_mcp) with a bearer-
 Use a secure credential handoff so I enter the gateway key directly in Executor; never ask me to paste it into chat.
 Create a personal connection, discover tools, and verify with one read-only tool. Do not change business data.
 If this endpoint already exists, reuse its integration/connection instead of creating duplicates.
-Orbit login and refresh are handled on my Mac; do not register another Orbit OAuth client.
+Orbit login and refresh are handled by the gateway; do not register another Orbit OAuth client.
 `;
 }
 
 export const connect = Effect.fn('TloMcp.connect')(
-  function* (port: number) {
+  function* (port: number, publicUrl?: string) {
     const keyFile = yield* gatewayKeyFile;
 
     const key = yield* loadGatewayKey(keyFile);
@@ -37,6 +38,11 @@ export const connect = Effect.fn('TloMcp.connect')(
     const auth = yield* OrbitAuth;
 
     if ((yield* store.load) === undefined) {
+      // A server behind a public URL has no browser for the loopback OAuth callback.
+      if (publicUrl !== undefined) {
+        return yield* GatewayError.make({ message: 'No Orbit session. Run tlo-mcp login on a machine with a browser first.' });
+      }
+
       yield* auth.login;
     }
 
@@ -45,12 +51,23 @@ export const connect = Effect.fn('TloMcp.connect')(
         Layer.provide(OrbitClientLive),
         Layer.provide(
           NodeHttpServer.layer(() => createServer({ maxHeaderSize: 8192, requestTimeout: 130_000 }), {
-            host: '127.0.0.1',
+            host: publicUrl === undefined ? '127.0.0.1' : '0.0.0.0',
             port,
           }),
         ),
       ),
     );
+
+    if (publicUrl !== undefined) {
+      const endpoint = `${Str.replace(/\/$/, '')(publicUrl)}/mcp`;
+
+      yield* Effect.sync(() => {
+        process.stderr.write(`TLO gateway ready: ${endpoint}\nGateway key: ${keyFile} (private; not printed)\n`);
+        process.stdout.write(connectionPrompt(endpoint));
+      });
+
+      return yield* Effect.never;
+    }
 
     yield* Effect.sync(() =>
       process.stderr.write('Connecting OpenTunnel (first certificate may take a few minutes)...\n'),

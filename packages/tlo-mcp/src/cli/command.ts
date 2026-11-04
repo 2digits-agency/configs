@@ -1,4 +1,5 @@
 import * as Effect from 'effect/Effect';
+import * as Option from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import * as Command from 'effect/cli/Command';
 import * as Flag from 'effect/cli/Flag';
@@ -33,8 +34,13 @@ const tloMcpCommand = Command.make(
       Flag.withSchema(Schema.Int.check(Schema.isBetween({ minimum: 1024, maximum: 65_535 }))),
       Flag.withDefault(4790),
     ),
+    publicUrl: Flag.String('public-url').pipe(
+      Flag.withSchema(Schema.String.check(Schema.isPattern(/^https:\/\/[^/?#]+\/?$/))),
+      Flag.withDescription('Serve on 0.0.0.0 behind this HTTPS origin instead of opening OpenTunnel'),
+      Flag.optional,
+    ),
   },
-  ({ port }) => connect(port),
+  ({ port, publicUrl }) => connect(port, Option.getOrUndefined(publicUrl)),
 ).pipe(Command.withSubcommands([authCommand('login'), authCommand('logout')]));
 
 export const run = Effect.fn('TloMcp.run')(function* (args: ReadonlyArray<string>) {

@@ -55,6 +55,18 @@ Run `pitchfork boot enable` so the supervisor starts at login. Boot-started supe
 absolute paths for `npx`/`node` if they are not found. Manage it with `pitchfork status global/tlo`,
 `pitchfork logs global/tlo`, and `pitchfork restart global/tlo`.
 
+## Run behind your own HTTPS URL
+
+On an always-on host that already terminates HTTPS (for example an Amp Box deployment), skip OpenTunnel:
+
+```bash
+tlo-mcp --public-url https://tlo.example.com --port "$PORT"
+```
+
+The gateway listens on `0.0.0.0:<port>` and reports `https://tlo.example.com/mcp`. It cannot open a browser there, so it
+needs an existing Orbit session: run `tlo-mcp login` on a machine with a browser and copy
+`~/.config/2digits/tlo-mcp/session.json` (mode `0600`) to the host. Without one it exits instead of waiting for a login.
+
 ## Connect Executor Cloud
 
 Paste the printed prompt into an agent with Executor tools. It registers a Streamable HTTP MCP integration with
