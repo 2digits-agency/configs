@@ -37,6 +37,11 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         errors: [{ messageId: 'import', data: { source: 'alchemy/Cloudflare' } }],
       },
       {
+        filename,
+        code: `${header}export const s3 = () => import('@aws-sdk/client-s3')\nexport const id = () => import('./DailyImport.id.ts')`,
+        errors: [{ messageId: 'import', data: { source: '@aws-sdk/client-s3' } }],
+      },
+      {
         filename: 'src/Session.middleware.ts',
         code: `${header}import type { ExactToken } from '@bylotte/exact'\nexport * from '@bylotte/contracts'`,
         errors: [

@@ -4,7 +4,7 @@ import type * as Option from 'effect/Option';
 import type * as Result from 'effect/Result';
 
 import { canonicalPath, defineEffectRule, ruleMeta } from '../../utils';
-import { domainSection } from './domain';
+import { domainSection, isReference } from './domain';
 
 const totalSections: ReadonlyMap<string, ReadonlySet<string>> = new Map([
   ['Aggregate', new Set(['evolve', 'reply'])],
@@ -36,15 +36,23 @@ export const alchemyDomainTotalHandlers: Rule = defineEffectRule(
       }
     }
 
+    function checkGetter(node: ESTree.Node): void {
+      const path = canonicalPath(node, getState());
+
+      if (path?.length === 2 && throwingModules.has(path[0] ?? '') && throwingGetters.has(path[1] ?? '')) {
+        report(node, `\`${Arr.join(path, '.')}\``);
+      }
+    }
+
     return {
       ThrowStatement(node) {
         report(node, '`throw`');
       },
-      CallExpression(node) {
-        const path = canonicalPath(node.callee, getState());
-
-        if (path?.length === 2 && throwingModules.has(path[0] ?? '') && throwingGetters.has(path[1] ?? '')) {
-          report(node, `\`${Arr.join(path, '.')}\``);
+      // References, not only calls, so point-free `pipe(s.running, Option.getOrThrow)` counts too.
+      MemberExpression: checkGetter,
+      Identifier(node) {
+        if (isReference(node)) {
+          checkGetter(node);
         }
       },
     };

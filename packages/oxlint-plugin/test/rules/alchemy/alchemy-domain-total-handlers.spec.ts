@@ -72,6 +72,15 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         `,
         errors: [{ messageId: 'partial', data: { section: 'evolve', api: '`Option.getOrThrow`' } }],
       },
+      {
+        code: `${header}
+          import { pipe } from 'effect/Function'
+          export class DailyImport extends Domain.Aggregate('DailyImport', {
+            reply: { Start: (s) => ({ runId: pipe(s.running, Opt.getOrThrow) }) },
+          }) {}
+        `,
+        errors: [{ messageId: 'partial', data: { section: 'reply', api: '`Option.getOrThrow`' } }],
+      },
     ],
   },
 );

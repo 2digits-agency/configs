@@ -52,6 +52,16 @@ export const alchemyDomainPureImports: Rule = defineSyntaxRule(
       ImportDeclaration: check,
       ExportAllDeclaration: check,
       ExportNamedDeclaration: check,
+      ImportExpression(node) {
+        if (
+          checked &&
+          node.source.type === 'Literal' &&
+          typeof node.source.value === 'string' &&
+          !isAllowed(node.source.value)
+        ) {
+          context.report({ node: node.source, messageId: 'import', data: { source: node.source.value } });
+        }
+      },
     };
   },
 );

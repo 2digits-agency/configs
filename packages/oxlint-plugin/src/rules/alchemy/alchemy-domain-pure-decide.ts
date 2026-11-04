@@ -4,7 +4,7 @@ import type * as DateTime from 'effect/DateTime';
 import type * as Effect from 'effect/Effect';
 
 import { canonicalPath, defineEffectRule, isAnyApi, isGlobalIdentifier, ruleMeta, staticPath } from '../../utils';
-import { domainSection } from './domain';
+import { domainSection, isReference } from './domain';
 
 type Impurity = 'io' | 'random' | 'time';
 
@@ -61,6 +61,23 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
       }
     }
 
+    // `Clock.currentTimeMillis`, or `currentTimeMillis` imported from `effect/Clock`.
+    function checkModule(node: ESTree.Node): void {
+      const canonical = canonicalPath(node, getState());
+
+      const module = canonical?.[0];
+
+      if (module === undefined || canonical?.length !== 2) {
+        return;
+      }
+
+      report(
+        node,
+        module === 'DateTime' && dateTimeNow.includes(canonical[1] ?? '') ? 'time' : effectModuleImpurities.get(module),
+        Arr.join(canonical, '.'),
+      );
+    }
+
     return {
       // Inner members such as `DateTime.now` in `DateTime.now.pipe(...)` are checked too; longer paths are skipped.
       MemberExpression(node) {
@@ -74,21 +91,12 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
           return;
         }
 
-        const canonical = canonicalPath(node, getState());
-
-        const module = canonical?.[0];
-
-        if (module === undefined || canonical?.length !== 2) {
-          return;
+        checkModule(node);
+      },
+      Identifier(node) {
+        if (isReference(node)) {
+          checkModule(node);
         }
-
-        report(
-          node,
-          module === 'DateTime' && dateTimeNow.includes(canonical[1] ?? '')
-            ? 'time'
-            : effectModuleImpurities.get(module),
-          Arr.join(canonical, '.'),
-        );
       },
       NewExpression(node) {
         if (node.arguments.length === 0 && isGlobalIdentifier(node.callee, context, 'Date')) {

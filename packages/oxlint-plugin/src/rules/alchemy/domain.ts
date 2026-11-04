@@ -40,6 +40,21 @@ export function domainBlock(node: ESTree.CallExpression, state: FileState): Doma
 }
 
 /**
+ * Whether an identifier reads a binding, rather than naming a property, as in `x.now` or `{ now: 1 }`.
+ *
+ * @param node Identifier to check.
+ * @param node.parent Its parent node.
+ */
+export function isReference(node: { readonly parent: ESTree.Node }): boolean {
+  const parent = node.parent;
+
+  return !(
+    (parent.type === 'MemberExpression' && parent.property === node && !parent.computed) ||
+    (parent.type === 'Property' && parent.key === node && parent.value !== node)
+  );
+}
+
+/**
  * The definition section (`decide`, `evolve`, `reply`, ...) of the `Domain.<Block>(name, definition)` call that
  * contains `node`.
  *

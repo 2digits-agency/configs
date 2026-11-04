@@ -35,6 +35,7 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         'Effect.fn(function* (s, cmd) { const digest = yield* Digest.Digest; return [new Opened({ key: yield* digest.digest(Digest.sha256, cmd.body) })] })',
       )}`,
       aggregate('(s) => { const Date = { now: () => 0 }; return [new Opened({ at: Date.now() })] }'),
+      `import { currentTimeMillis } from 'effect/Clock'\n${aggregate('(s, cmd) => [new Opened({ currentTimeMillis: cmd.currentTimeMillis })]')}`,
       `${header}
         export class Account extends Other.Aggregate('Account', { decide: { Open: () => [Date.now()] } }) {}
       `,
@@ -59,6 +60,12 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         errors: [{ messageId: 'time' }],
       },
       { code: aggregate('(s) => [new Opened({ id: crypto.randomUUID() })]'), errors: [{ messageId: 'random' }] },
+      {
+        code: `import { currentTimeMillis } from 'effect/Clock'\n${aggregate(
+          'Effect.fn(function* (s) { const at = yield* currentTimeMillis; return [new Opened({ at })] })',
+        )}`,
+        errors: [{ messageId: 'time', data: { api: 'Clock.currentTimeMillis' } }],
+      },
       {
         code: aggregate(
           'Effect.fn(function* (s) { const at = yield* DateTime.now.pipe(Effect.map(DateTime.formatIso)); return [new Opened({ at })] })',
