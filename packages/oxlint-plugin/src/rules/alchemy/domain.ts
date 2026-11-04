@@ -1,7 +1,7 @@
-import type { ESTree } from '@oxlint/plugins';
+import type { Context, ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 
-import { argumentAt, canonicalPath, propertyName, type FileState } from '../../utils';
+import { argumentAt, canonicalPath, propertyName, resolveVariable, soleDefinition, type FileState } from '../../utils';
 
 const domainBlocks = [
   'Aggregate',
@@ -40,18 +40,28 @@ export function domainBlock(node: ESTree.CallExpression, state: FileState): Doma
 }
 
 /**
- * Whether an identifier reads a binding, rather than naming a property, as in `x.now` or `{ now: 1 }`.
+ * Whether an identifier reads an import binding, rather than naming a property (`x.now`, `{ now: 1 }`) or reading a
+ * local that shadows the import.
  *
  * @param node Identifier to check.
+ * @param node.name Its name.
  * @param node.parent Its parent node.
+ * @param context Rule context.
  */
-export function isReference(node: { readonly parent: ESTree.Node }): boolean {
+export function isImportReference(
+  node: { readonly name: string; readonly parent: ESTree.Node },
+  context: Context,
+): boolean {
   const parent = node.parent;
 
-  return !(
+  if (
     (parent.type === 'MemberExpression' && parent.property === node && !parent.computed) ||
     (parent.type === 'Property' && parent.key === node && parent.value !== node)
-  );
+  ) {
+    return false;
+  }
+
+  return soleDefinition(resolveVariable(context, parent, node.name))?.type === 'ImportBinding';
 }
 
 /**

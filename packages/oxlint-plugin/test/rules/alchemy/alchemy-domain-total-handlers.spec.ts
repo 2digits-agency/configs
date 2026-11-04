@@ -18,6 +18,12 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
   {
     valid: [
       `${header}
+        import { getOrThrow } from 'effect/Option'
+        export class Account extends Domain.Aggregate('Account', {
+          evolve: { Opened: (s, e) => { const getOrThrow = (o) => o ?? s; return getOrThrow(e.state) } },
+        }) {}
+      `,
+      `${header}
         export class DailyImport extends Domain.Aggregate('DailyImport', {
           decide: { Start: (s) => { if (Opt.isNone(s.running)) throw new Error('decide may refuse') ; return [] } },
           evolve: { Started: (s, e) => (s._tag === 'Open' ? { ...s, runId: e.runId } : s) },

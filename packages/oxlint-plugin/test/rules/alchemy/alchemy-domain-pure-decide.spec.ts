@@ -35,6 +35,7 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         'Effect.fn(function* (s, cmd) { const digest = yield* Digest.Digest; return [new Opened({ key: yield* digest.digest(Digest.sha256, cmd.body) })] })',
       )}`,
       aggregate('(s) => { const Date = { now: () => 0 }; return [new Opened({ at: Date.now() })] }'),
+      `import { currentTimeMillis } from 'effect/Clock'\n${aggregate('(s, { now: currentTimeMillis }) => [new Opened({ at: currentTimeMillis })]')}`,
       `import { currentTimeMillis } from 'effect/Clock'\n${aggregate('(s, cmd) => [new Opened({ currentTimeMillis: cmd.currentTimeMillis })]')}`,
       `${header}
         export class Account extends Other.Aggregate('Account', { decide: { Open: () => [Date.now()] } }) {}

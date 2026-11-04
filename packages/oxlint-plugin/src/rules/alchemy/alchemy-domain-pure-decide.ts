@@ -4,7 +4,7 @@ import type * as DateTime from 'effect/DateTime';
 import type * as Effect from 'effect/Effect';
 
 import { canonicalPath, defineEffectRule, isAnyApi, isGlobalIdentifier, ruleMeta, staticPath } from '../../utils';
-import { domainSection, isReference } from './domain';
+import { domainSection, isImportReference } from './domain';
 
 type Impurity = 'io' | 'random' | 'time';
 
@@ -94,7 +94,7 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
         checkModule(node);
       },
       Identifier(node) {
-        if (isReference(node)) {
+        if (isImportReference(node, context)) {
           checkModule(node);
         }
       },

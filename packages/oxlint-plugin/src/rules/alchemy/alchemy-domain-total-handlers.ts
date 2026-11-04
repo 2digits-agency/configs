@@ -4,7 +4,7 @@ import type * as Option from 'effect/Option';
 import type * as Result from 'effect/Result';
 
 import { canonicalPath, defineEffectRule, ruleMeta } from '../../utils';
-import { domainSection, isReference } from './domain';
+import { domainSection, isImportReference } from './domain';
 
 const totalSections: ReadonlyMap<string, ReadonlySet<string>> = new Map([
   ['Aggregate', new Set(['evolve', 'reply'])],
@@ -51,7 +51,7 @@ export const alchemyDomainTotalHandlers: Rule = defineEffectRule(
       // References, not only calls, so point-free `pipe(s.running, Option.getOrThrow)` counts too.
       MemberExpression: checkGetter,
       Identifier(node) {
-        if (isReference(node)) {
+        if (isImportReference(node, context)) {
           checkGetter(node);
         }
       },
