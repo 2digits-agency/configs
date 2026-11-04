@@ -1,5 +1,6 @@
 import * as NodeServices from '@effect/platform-node/NodeServices';
 import { describe, expect, it } from '@effect/vitest';
+import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
@@ -107,7 +108,12 @@ describe('orbit MCP proxy', () => {
         return Effect.succeed(result);
       });
 
-      expect(registrations).toHaveLength(1);
+      expect(Arr.map(registrations, ({ tool: { name } }) => name)).toStrictEqual([
+        tool.name,
+        'GetMyWorkday',
+        'GetTicketContext',
+        'GetBoardContext',
+      ]);
 
       expect(registration.tool).toBe(tool);
 
