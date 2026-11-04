@@ -61,9 +61,9 @@ Paste the printed prompt into an agent with Executor tools. It registers a Strea
 API-key auth: `Authorization: Bearer <gateway-key>`. **Do not configure Orbit OAuth in Executor.**
 
 The key is stored as `2digits/tlo-mcp/gateway.key` in the platform config directory (mode `0600`, directory `0700`):
-`~/Library/Application Support` on macOS, `$XDG_CONFIG_HOME` or `~/.config` elsewhere. A key created by an earlier
-version at `~/.config/2digits/tlo-mcp/gateway.key` keeps being used. Startup prints the path in use. On macOS, copy it
-without printing it:
+`~/Library/Application Support` on macOS, `$XDG_CONFIG_HOME` or `~/.config` elsewhere. A key or session created by an
+earlier version in `~/.config/2digits/tlo-mcp` keeps being used from there. Startup prints the key path in use and, on
+macOS, the `pbcopy` command that copies it without printing it, for example:
 
 ```bash
 pbcopy < "$HOME/Library/Application Support/2digits/tlo-mcp/gateway.key"

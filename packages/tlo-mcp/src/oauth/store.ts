@@ -7,10 +7,10 @@ import * as Schema from 'effect/Schema';
 import type * as Scope from 'effect/Scope';
 import * as Stream from 'effect/Stream';
 import * as Str from 'effect/String';
-import * as UserDirectories from 'effect/persistence/UserDirectories';
 import * as ChildProcess from 'effect/process/ChildProcess';
 import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 
+import { configDirectory } from '../platform.js';
 import { OrbitAuthError, Session } from './session.js';
 
 const SessionJson = Session.pipe(Schema.fromJsonString);
@@ -61,11 +61,7 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
 
       const platform = options.platform ?? process.platform;
 
-      const dirs = yield* UserDirectories.UserDirectories;
-
-      const config = yield* dirs.config('2digits');
-
-      const directory = options.directory ?? path.join(config, 'tlo-mcp');
+      const directory = options.directory ?? (yield* configDirectory('session.json'));
 
       const file = path.join(directory, 'session.json');
 

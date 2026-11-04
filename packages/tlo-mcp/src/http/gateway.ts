@@ -18,35 +18,17 @@ import * as HttpIncomingMessage from 'effect/http/HttpIncomingMessage';
 import * as HttpRouter from 'effect/http/HttpRouter';
 import * as HttpServerRequest from 'effect/http/HttpServerRequest';
 import * as HttpServerResponse from 'effect/http/HttpServerResponse';
-import * as UserDirectories from 'effect/persistence/UserDirectories';
 
 import { OrbitClient } from '../mcp/OrbitClient.js';
 import { OrbitToolsLive } from '../mcp/proxy.js';
+import { configDirectory } from '../platform.js';
 
-/**
- * The key lives in the platform config directory. A key created before that move stays at
- * `~/.config/2digits/tlo-mcp/gateway.key` and keeps working, so Executor connections survive upgrades.
- */
 export const gatewayKeyFile = Effect.gen(function* () {
-  const fs = yield* FileSystem.FileSystem;
-
   const path = yield* Path.Path;
 
-  const dirs = yield* UserDirectories.UserDirectories;
+  const directory = yield* configDirectory('gateway.key');
 
-  const config = yield* dirs.config('2digits');
-
-  const home = yield* dirs.home;
-
-  const current = path.join(config, 'tlo-mcp', 'gateway.key');
-
-  const legacy = path.join(home, '.config', '2digits', 'tlo-mcp', 'gateway.key');
-
-  const currentExists = yield* fs.exists(current);
-
-  const legacyExists = yield* fs.exists(legacy);
-
-  return !currentExists && legacyExists ? legacy : current;
+  return path.join(directory, 'gateway.key');
 });
 
 const MAX_BODY_SIZE = ByteSize.mebibytes(1);
