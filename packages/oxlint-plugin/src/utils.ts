@@ -298,7 +298,7 @@ export function objectProperty(node: ESTree.ObjectExpression, name: string): EST
   );
 }
 
-const wrapperExpressionTypes: ReadonlySet<string> = new Set<WrapperExpression['type']>([
+export const wrapperExpressionTypes: ReadonlySet<string> = new Set<WrapperExpression['type']>([
   'ParenthesizedExpression',
   'TSAsExpression',
   'TSNonNullExpression',

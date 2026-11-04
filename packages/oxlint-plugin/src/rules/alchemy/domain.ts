@@ -9,6 +9,8 @@ import {
   soleDefinition,
   staticPath,
   type FileState,
+  unwrapExpression,
+  wrapperExpressionTypes,
 } from '../../utils';
 
 const domainBlocks = [
@@ -108,12 +110,20 @@ export function domainSection(
 
     const definition = parent.parent;
 
-    const call = definition.parent;
+    // Skip `as const`, `satisfies Definition` and parentheses around the definition.
+    let call = definition.parent;
+
+    while (call !== null && wrapperExpressionTypes.has(call.type)) {
+      call = call.parent;
+    }
+
+    const argument = call?.type === 'CallExpression' ? argumentAt(call, 1) : undefined;
 
     if (
+      argument === undefined ||
       definition.type !== 'ObjectExpression' ||
       call?.type !== 'CallExpression' ||
-      argumentAt(call, 1) !== definition
+      unwrapExpression(argument) !== definition
     ) {
       continue;
     }

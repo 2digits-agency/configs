@@ -1,6 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 
-import { argumentAt, defineEffectRule, objectProperty, ruleMeta } from '../../utils';
+import { argumentAt, defineEffectRule, objectProperty, ruleMeta, unwrapExpression } from '../../utils';
 import { domainBlock } from './domain';
 
 export const alchemyDomainRequireViewVersion: Rule = defineEffectRule(
@@ -15,7 +15,9 @@ export const alchemyDomainRequireViewVersion: Rule = defineEffectRule(
   ),
   (context, getState) => ({
     CallExpression(node) {
-      const definition = argumentAt(node, 1);
+      const argument = argumentAt(node, 1);
+
+      const definition = argument === undefined ? undefined : unwrapExpression(argument);
 
       if (
         domainBlock(node, getState(), context) === 'View' &&

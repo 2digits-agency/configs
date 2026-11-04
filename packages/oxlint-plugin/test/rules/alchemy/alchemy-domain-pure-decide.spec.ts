@@ -58,6 +58,18 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       { code: aggregate('(s) => [new Opened({ at: Date.now() })]'), errors: [{ messageId: 'time' }] },
       { code: aggregate('(s) => [new Opened({ at: new Date() })]'), errors: [{ messageId: 'time' }] },
       {
+        code: aggregate(
+          'Effect.fn(function* (s, cmd) { return (yield* DateTime.isPast(cmd.due)) ? [] : [new Opened({})] })',
+        ),
+        errors: [{ messageId: 'time', data: { api: 'DateTime.isPast' } }],
+      },
+      {
+        code: `${header}
+          export class Account extends Domain.Aggregate('Account', { decide: { Open: () => [Date.now()] } } satisfies Definition) {}
+        `,
+        errors: [{ messageId: 'time' }],
+      },
+      {
         code: aggregate('(s) => [new Opened({ at: Date() })]'),
         errors: [{ messageId: 'time', data: { api: 'Date()' } }],
       },

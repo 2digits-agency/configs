@@ -21,6 +21,10 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
     ],
     invalid: [
       {
+        code: `${header}\nexport class Status extends Domain.View('Status', { from: [DailyImport] } as const) {}`,
+        errors: [{ messageId: 'missing' }],
+      },
+      {
         code: `${header}\nexport class Status extends Domain.View('Status', { from: [DailyImport], evolve: {} }) {}`,
         errors: [{ messageId: 'missing' }],
       },
