@@ -69,6 +69,11 @@ export const alchemyDomainPureImports: Rule = defineSyntaxRule(
       ImportExpression(node) {
         checkSource(node.source);
       },
+      TSImportEqualsDeclaration(node) {
+        if (node.moduleReference.type === 'TSExternalModuleReference') {
+          checkSource(node.moduleReference.expression);
+        }
+      },
       CallExpression(node) {
         if (node.arguments[0] !== undefined && isGlobalIdentifier(node.callee, context, 'require')) {
           checkSource(node.arguments[0]);

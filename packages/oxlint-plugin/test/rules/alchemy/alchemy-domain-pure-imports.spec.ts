@@ -47,6 +47,11 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       },
       {
         filename,
+        code: `${header}import S3 = require('@aws-sdk/client-s3')`,
+        errors: [{ messageId: 'import', data: { source: '@aws-sdk/client-s3' } }],
+      },
+      {
+        filename,
         code: `${header}export const load = (name: string) => import(name)`,
         errors: [{ messageId: 'dynamic' }],
       },
