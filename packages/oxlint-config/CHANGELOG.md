@@ -1,3 +1,9 @@
+## @2digits/oxlint-config@3.0.5
+
+### Update oxlint to 1.91.0
+
+`@2digits/oxlint-config` now expects `oxlint` 1.91.0, and `@2digits/oxlint-plugin` uses `@oxlint/plugins` 1.91.0.
+
 ## @2digits/oxlint-config@3.0.4
 
 ### Allow `it.live` in Vitest test blocks

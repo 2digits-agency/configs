@@ -1,3 +1,21 @@
+## @2digits/tlo-mcp@2.2.0
+
+### Add read-only composite tools
+
+The gateway now offers three tools that combine several Orbit reads in one call and return typed `structuredContent`:
+
+- `GetMyWorkday`: your timesheet for a day, week or range of up to 62 days. It lists entries with their locks, planned entries to confirm, gaps, overlaps and entries outside 09:00–17:30. It also returns absences, the running timer and bookable tasks with their remaining budget. Times are in Europe/Amsterdam.
+- `GetTicketContext`: a ticket by number or api_id, closed tickets included, with its detail, conversation and your logged time.
+- `GetBoardContext`: a board's columns, with their api_ids, and the cards in each column, optionally with card detail.
+
+Writes stay separate Orbit tools, so each write is still approved on its own. If Orbit changes its text format, the composite fails with an error instead of returning wrong data.
+
+### Store the gateway key and session in the platform config directory
+
+`tlo-mcp` now resolves its directory with Effect's `UserDirectories`: `~/Library/Application Support/2digits/tlo-mcp` on macOS, and `$XDG_CONFIG_HOME/2digits/tlo-mcp` or `~/.config/2digits/tlo-mcp` elsewhere.
+
+A gateway key or Orbit session that an earlier version stored in `~/.config/2digits/tlo-mcp` keeps being used from there, so upgrading needs no new key and no new login. Startup prints the key path in use, with the matching `pbcopy` command on macOS. On macOS, Orbit credentials stay in the Keychain.
+
 ## @2digits/tlo-mcp@2.1.1
 
 ### Update Effect to 4.1.2
