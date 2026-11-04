@@ -1,5 +1,3 @@
-import { homedir } from 'node:os';
-
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
@@ -12,6 +10,7 @@ import * as Str from 'effect/String';
 import * as ChildProcess from 'effect/process/ChildProcess';
 import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 
+import { configDirectory } from '../platform.js';
 import { OrbitAuthError, Session } from './session.js';
 
 const SessionJson = Session.pipe(Schema.fromJsonString);
@@ -62,7 +61,7 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
 
       const platform = options.platform ?? process.platform;
 
-      const directory = options.directory ?? path.join(homedir(), '.config', '2digits', 'tlo-mcp');
+      const directory = options.directory ?? (yield* configDirectory('session.json'));
 
       const file = path.join(directory, 'session.json');
 

@@ -8,7 +8,7 @@ import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as HttpRouter from 'effect/http/HttpRouter';
 
-import { GatewayError, gatewayRoutes, KEY_FILE, loadGatewayKey } from '../http/gateway.js';
+import { GatewayError, gatewayKeyFile, gatewayRoutes, loadGatewayKey } from '../http/gateway.js';
 import { openTunnel } from '../http/tunnel.js';
 import { OrbitClientLive } from '../mcp/OrbitClient.js';
 import { OrbitAuth, OrbitAuthLive } from '../oauth/OrbitAuth.js';
@@ -28,7 +28,9 @@ Orbit login and refresh are handled on my Mac; do not register another Orbit OAu
 
 export const connect = Effect.fn('TloMcp.connect')(
   function* (port: number) {
-    const key = yield* loadGatewayKey(KEY_FILE);
+    const keyFile = yield* gatewayKeyFile;
+
+    const key = yield* loadGatewayKey(keyFile);
 
     const store = yield* SessionStore;
 
@@ -57,10 +59,10 @@ export const connect = Effect.fn('TloMcp.connect')(
     const { endpoint, closed } = yield* openTunnel(port);
 
     yield* Effect.sync(() => {
-      process.stderr.write(`TLO gateway ready: ${endpoint}\nGateway key: ${KEY_FILE} (private; not printed)\n`);
+      process.stderr.write(`TLO gateway ready: ${endpoint}\nGateway key: ${keyFile} (private; not printed)\n`);
 
       if (process.platform === 'darwin') {
-        process.stderr.write(`Copy the key for Executor's secure credential form: pbcopy < "${KEY_FILE}"\n`);
+        process.stderr.write(`Copy the key for Executor's secure credential form: pbcopy < "${keyFile}"\n`);
       }
 
       process.stderr.write(

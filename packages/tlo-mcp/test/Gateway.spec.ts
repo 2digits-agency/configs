@@ -1,4 +1,5 @@
 import { describe, expect, it } from '@effect/vitest';
+import * as ConfigProvider from 'effect/ConfigProvider';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
@@ -8,11 +9,12 @@ import * as Str from 'effect/String';
 import * as McpClientError from 'effect/ai/McpClientError';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as HttpRouter from 'effect/http/HttpRouter';
+import * as UserDirectories from 'effect/persistence/UserDirectories';
 
 import { connectionPrompt } from '../src/cli/connect.js';
-import { gatewayRoutes, loadGatewayKey } from '../src/http/gateway.js';
+import { gatewayKeyFile, gatewayRoutes, loadGatewayKey } from '../src/http/gateway.js';
 import { OrbitClient } from '../src/mcp/OrbitClient.js';
-import { PlatformLive } from '../src/platform.js';
+import { configDirectory, PlatformLive } from '../src/platform.js';
 
 const key = Str.repeat(64)('a');
 
@@ -242,6 +244,74 @@ describe('personal HTTP gateway', () => {
 
       expect(malformedFailure).toHaveProperty('_tag', 'GatewayError');
     }).pipe(Effect.provide(PlatformLive)),
+  );
+
+  it.effect('stores the key in the config directory and keeps using a legacy ~/.config key', () =>
+    Effect.gen(function* () {
+      const fs = yield* FileSystem.FileSystem;
+
+      const home = yield* fs.makeTempDirectoryScoped();
+
+      const current = `${home}/Library/Application Support/2digits/tlo-mcp/gateway.key`;
+
+      const legacy = `${home}/.config/2digits/tlo-mcp/gateway.key`;
+
+      const resolve = gatewayKeyFile.pipe(
+        Effect.provide([
+          UserDirectories.layerPlatform('darwin'),
+          ConfigProvider.layer(ConfigProvider.fromUnknown({ HOME: home })),
+        ]),
+      );
+
+      const fresh = yield* resolve;
+
+      expect(fresh).toBe(current);
+
+      yield* fs.makeDirectory(`${home}/.config/2digits/tlo-mcp`, { recursive: true });
+
+      yield* fs.writeFileString(legacy, key);
+
+      const fallback = yield* resolve;
+
+      expect(fallback).toBe(legacy);
+
+      yield* fs.makeDirectory(`${home}/Library/Application Support/2digits/tlo-mcp`, { recursive: true });
+
+      yield* fs.writeFileString(current, key);
+
+      const preferred = yield* resolve;
+
+      expect(preferred).toBe(current);
+    }).pipe(Effect.provide(PlatformLive), Effect.scoped),
+  );
+
+  it.effect('keeps a legacy ~/.config session when XDG_CONFIG_HOME points elsewhere', () =>
+    Effect.gen(function* () {
+      const fs = yield* FileSystem.FileSystem;
+
+      const home = yield* fs.makeTempDirectoryScoped();
+
+      const legacy = `${home}/.config/2digits/tlo-mcp`;
+
+      const resolve = configDirectory('session.json').pipe(
+        Effect.provide([
+          UserDirectories.layerPlatform('linux'),
+          ConfigProvider.layer(ConfigProvider.fromUnknown({ HOME: home, XDG_CONFIG_HOME: `${home}/xdg` })),
+        ]),
+      );
+
+      const fresh = yield* resolve;
+
+      expect(fresh).toBe(`${home}/xdg/2digits/tlo-mcp`);
+
+      yield* fs.makeDirectory(legacy, { recursive: true });
+
+      yield* fs.writeFileString(`${legacy}/session.json`, '{}');
+
+      const fallback = yield* resolve;
+
+      expect(fallback).toBe(legacy);
+    }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );
 
   it('prints a connection prompt without secrets or an Orbit OAuth flow', () => {

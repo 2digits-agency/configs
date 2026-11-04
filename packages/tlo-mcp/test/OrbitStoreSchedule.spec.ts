@@ -1,4 +1,3 @@
-import * as NodeServices from '@effect/platform-node/NodeServices';
 import { describe, expect, it } from '@effect/vitest';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
@@ -12,6 +11,7 @@ import * as TestClock from 'effect/testing/TestClock';
 
 import { OrbitAuthError, Session } from '../src/oauth/session.js';
 import { makeSessionStoreLayer, SessionStore } from '../src/oauth/store.js';
+import { PlatformLive } from '../src/platform.js';
 
 const TEMP_PREFIX = 'orbit-store-';
 
@@ -62,7 +62,7 @@ describe('orbit scoped persistence and lock policy', () => {
 
         expect(lockExistsAfterRelease).toBeFalsy();
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' })));
-    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );
 
   it.effect('never steals an old lock or deletes it after failed acquisition', () =>
@@ -88,7 +88,7 @@ describe('orbit scoped persistence and lock policy', () => {
 
         expect(lockContent).toBe('crashed-owner');
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' })));
-    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );
 
   it.effect('reports permission failures without advising lock removal or retrying', () =>
@@ -130,7 +130,7 @@ describe('orbit scoped persistence and lock policy', () => {
 
         expect(lockExists).toBeFalsy();
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' }).pipe(Layer.provide(filesystem))));
-    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );
 
   it.effect('releases its lock when the protected operation fails', () =>
@@ -156,7 +156,7 @@ describe('orbit scoped persistence and lock policy', () => {
 
         yield* Effect.scoped(store.lock);
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' })));
-    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );
 
   it.effect('preserves credentials and removes scoped temporary files when atomic replacement fails', () =>
@@ -193,6 +193,6 @@ describe('orbit scoped persistence and lock policy', () => {
 
         expect(entries).toStrictEqual(['session.json']);
       }).pipe(Effect.provide(makeSessionStoreLayer({ directory, platform: 'linux' }).pipe(Layer.provide(filesystem))));
-    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    }).pipe(Effect.provide(PlatformLive), Effect.scoped),
   );
 });

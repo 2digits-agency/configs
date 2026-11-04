@@ -1,7 +1,6 @@
 // Native timing-safe equality is intentional at the HTTP authentication boundary.
 // @effect-diagnostics-next-line nodeBuiltinImport:off
 import { timingSafeEqual } from 'node:crypto';
-import { homedir } from 'node:os';
 
 import * as ByteSize from 'effect/ByteSize';
 import * as Effect from 'effect/Effect';
@@ -22,8 +21,15 @@ import * as HttpServerResponse from 'effect/http/HttpServerResponse';
 
 import { OrbitClient } from '../mcp/OrbitClient.js';
 import { OrbitToolsLive } from '../mcp/proxy.js';
+import { configDirectory } from '../platform.js';
 
-export const KEY_FILE = `${homedir()}/.config/2digits/tlo-mcp/gateway.key`;
+export const gatewayKeyFile = Effect.gen(function* () {
+  const path = yield* Path.Path;
+
+  const directory = yield* configDirectory('gateway.key');
+
+  return path.join(directory, 'gateway.key');
+});
 
 const MAX_BODY_SIZE = ByteSize.mebibytes(1);
 
