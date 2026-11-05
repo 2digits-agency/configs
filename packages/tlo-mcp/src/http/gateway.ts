@@ -1,7 +1,3 @@
-// Native timing-safe equality is intentional at the HTTP authentication boundary.
-// @effect-diagnostics-next-line nodeBuiltinImport:off
-import { timingSafeEqual } from 'node:crypto';
-
 import * as ByteSize from 'effect/ByteSize';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
@@ -12,6 +8,7 @@ import * as Schema from 'effect/Schema';
 import * as McpProtocol from 'effect/ai/McpProtocol';
 import * as McpServer from 'effect/ai/McpServer';
 import * as Digest from 'effect/crypto/Digest';
+import * as Mac from 'effect/crypto/Mac';
 import * as SecureRandom from 'effect/crypto/SecureRandom';
 import * as Hex from 'effect/encoding/Hex';
 import * as HttpIncomingMessage from 'effect/http/HttpIncomingMessage';
@@ -117,7 +114,7 @@ function gatewayAuthentication(key: Redacted.Redacted) {
 
             const received = yield* sha256(digest, request.headers.authorization ?? '');
 
-            if (!timingSafeEqual(expected, received)) {
+            if (!Mac.timingSafeEqual(expected, received)) {
               return unauthorized;
             }
 

@@ -1,6 +1,3 @@
-// Native boundaries: Effect Crypto has no constant-time equality; NodeHttpServer requires a server factory.
-// @effect-diagnostics-next-line nodeBuiltinImport:off
-import { timingSafeEqual } from 'node:crypto';
 // @effect-diagnostics-next-line nodeBuiltinImport:off
 import { createServer } from 'node:http';
 
@@ -8,6 +5,7 @@ import * as NodeHttpServer from '@effect/platform-node/NodeHttpServer';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
 import * as P from 'effect/Predicate';
+import * as Mac from 'effect/crypto/Mac';
 import * as HttpRouter from 'effect/http/HttpRouter';
 import * as HttpServer from 'effect/http/HttpServer';
 import * as HttpServerRequest from 'effect/http/HttpServerRequest';
@@ -49,11 +47,9 @@ export function validateCallback(url: URL, state: string): string | undefined {
     return undefined;
   }
 
-  const expectedBytes = Buffer.from(state);
+  const encoder = new TextEncoder();
 
-  const receivedBytes = Buffer.from(received);
-
-  if (expectedBytes.length !== receivedBytes.length || !timingSafeEqual(expectedBytes, receivedBytes)) {
+  if (!Mac.timingSafeEqual(encoder.encode(state), encoder.encode(received))) {
     return undefined;
   }
 

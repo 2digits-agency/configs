@@ -1,6 +1,3 @@
-/**
- * @effect-diagnostics unstableApiUsage:off
- */
 import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';

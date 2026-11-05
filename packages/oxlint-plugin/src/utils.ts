@@ -59,6 +59,7 @@ function submodulePath(source: string): ReadonlyArray<string> {
 const modulePath = Match.type<string>().pipe(
   Match.withReturnType<ReadonlyArray<string> | undefined>(),
   Match.when('alchemy', Fn.constant(['Alchemy'])),
+  Match.when('@alchemy.run/domain', Fn.constant(['Domain'])),
   Match.when(Match.is('effect', '@effect/platform'), Fn.constant([])),
   Match.whenOr(Str.startsWith('effect/'), Str.startsWith('alchemy/'), Str.startsWith('@effect/'), submodulePath),
   Match.orElse(Fn.constUndefined),
@@ -297,7 +298,7 @@ export function objectProperty(node: ESTree.ObjectExpression, name: string): EST
   );
 }
 
-const wrapperExpressionTypes: ReadonlySet<string> = new Set<WrapperExpression['type']>([
+export const wrapperExpressionTypes: ReadonlySet<string> = new Set<WrapperExpression['type']>([
   'ParenthesizedExpression',
   'TSAsExpression',
   'TSNonNullExpression',
