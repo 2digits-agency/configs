@@ -84,8 +84,8 @@ handoff for the API key and verify one read-only tool after connecting.
 - The hostname is public/discoverable; route names are not authentication. Anyone possessing the gateway key
   can use your Orbit tools with your permissions, including writes. Executor policies do not protect against a leaked key.
 - Tools, schemas, annotations, instructions, structured content, errors and rate limits come from official Orbit.
-  Only the allowlisted tools in `src/mcp/tools.ts` (timesheet, time entries, timers, tickets, todos and read-only
-  planning/project lookups) are forwarded; other Orbit tools are hidden and cannot be called. Startup warns when Orbit
+  Only the allowlisted tools in `src/mcp/tools.ts` (timesheet, time entries, timers, tickets, todos, adding project
+  tasks and read-only planning/project lookups) are forwarded; other Orbit tools are hidden and cannot be called. Startup warns when Orbit
   no longer offers an allowlisted tool. Only tools are forwarded; resources/prompts/reverse requests are not exposed. No tool call is automatically replayed.
 - To rotate the gateway key, stop the gateway, remove only `gateway.key`, restart, and update the Executor connection.
 
