@@ -23,7 +23,8 @@ export interface OrbitTool<TArgs extends Schema.Top, TResult extends Schema.Top>
   readonly result: TResult;
 }
 
-export const ApiId = Schema.String.check(Schema.isPattern(/^[A-Z0-9]{15}$/)).annotate({
+// The `u` flag lets the pattern reach JSON schemas; Effect only exports patterns in that regex dialect.
+export const ApiId = Schema.String.check(Schema.isPattern(/^[A-Z0-9]{15}$/u)).annotate({
   description: 'Orbit api_id',
 });
 

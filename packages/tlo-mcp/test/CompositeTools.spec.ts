@@ -249,7 +249,11 @@ describe('composite tool registration', () => {
 
       // The gateway's AddProjectTask replaces Orbit's: its schema is the one clients see.
       expect(registrations.get('AddProjectTask')?.tool.inputSchema).toMatchObject({
-        properties: { startDate: { type: 'string' }, assignees: { type: 'array' } },
+        properties: {
+          startDate: { type: 'string' },
+          assignees: { type: 'array' },
+          chapterId: { type: 'string', pattern: '^[A-Z0-9]{15}$' },
+        },
         required: ['projectId', 'name'],
       });
     }).pipe(Effect.provide(requestContext), Effect.scoped),
@@ -438,7 +442,8 @@ describe('addProjectTask', () => {
         startDate: MEETING_DAY,
         endDate: MEETING_DAY,
         assignees: ['UST7V7BUH3KZ2WQ', 'Niels Mentink'],
-        retainerId: 'NONE',
+        // eslint-disable-next-line unicorn/no-null -- the JSON input for no retainer
+        retainerId: null,
       });
 
       expect(calls).toStrictEqual([
@@ -486,13 +491,13 @@ describe('addProjectTask', () => {
       const invalid = yield* Effect.forEach(
         [
           { projectId: '2238', name: '  ' },
-          { projectId: ' 2238', name: 'Meeting' },
+          { projectId: '22 38', name: 'Meeting' },
           { projectId: '2238', name: 'Meeting', assignees: ['Niels, Rob'] },
           { projectId: '2238', name: 'Meeting', assignees: [] },
           { projectId: '2238', name: 'Meeting', endDate: '2026-02-30' },
           { projectId: '2238', name: 'Meeting', billingMode: 'FIXED' },
           { projectId: '2238', name: 'Meeting', workloadHours: -1 },
-          { projectId: '2238', name: 'Meeting', retainerId: 'none' },
+          { projectId: '2238', name: 'Meeting', retainerId: 'NONE' },
         ],
         (input) => Effect.flip(call('AddProjectTask', input)).pipe(Effect.map(({ message }) => message)),
       );

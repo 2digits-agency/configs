@@ -12,6 +12,12 @@ const Text = Schema.String.check(Schema.isTrimmed(), Schema.isNonEmpty());
 
 const Hours = Schema.Finite.check(Schema.isGreaterThanOrEqualTo(0));
 
+const ProjectNumber = Schema.String.check(Schema.isPattern(/^\S+$/u)).annotate({
+  description: 'Project number the user sees, such as "2238"',
+});
+
+const Username = Text.check(Schema.isPattern(/^[^,]+$/u)).annotate({ description: 'Unique user name' });
+
 /**
  * Orbit's `AddProjectTask` with typed, documented parameters. It is still one Orbit write per call, so Executor
  * approves every task separately; the gateway replaces the forwarded tool of the same name.
@@ -20,7 +26,7 @@ export const AddProjectTask = Tool.make('AddProjectTask', {
   description:
     'Add a work task to a DRAFT or OPEN project, so time can be booked on it. Check GetProject first: it lists the chapters and existing tasks, so you do not add a duplicate. Orbit extends the project end date when endDate is later. If the result is unexpected, check GetProject before calling again: a repeated call adds a second task.',
   parameters: Schema.Struct({
-    projectId: Text.annotate({ description: 'Project api_id (starts with PR) or the project number, such as "2238"' }),
+    projectId: Schema.Union([ApiId, ProjectNumber]).annotate({ description: 'Project api_id or project number' }),
     name: Text.annotate({ description: 'Task name as shown in the project and in time entries' }),
     description: Text.annotate({ description: 'Task description' }).pipe(Schema.optionalKey),
     workloadHours: Hours.annotate({
@@ -32,8 +38,8 @@ export const AddProjectTask = Tool.make('AddProjectTask', {
       description: 'End date as yyyy-MM-dd, not before startDate. A date after the project end extends the project',
     }).pipe(Schema.optionalKey),
     assignees: Schema.NonEmptyArray(
-      Text.check(Schema.isPattern(/^[^,]+$/)).annotate({
-        description: 'User api_id or unique user name, or a group or division api_id',
+      Schema.Union([ApiId, Username]).annotate({
+        description: 'User, group or division api_id, or a unique user name',
       }),
     )
       .annotate({
@@ -63,10 +69,10 @@ export const AddProjectTask = Tool.make('AddProjectTask', {
           'SUBSCRIPTION projects only: ESTIMATE bills the budgeted hours each period, HOURS the delivered hours. Omit for the account default',
       })
       .pipe(Schema.optionalKey),
-    retainerId: Schema.Union([ApiId, Schema.Literal('NONE')])
+    retainerId: Schema.NullOr(ApiId)
       .annotate({
         description:
-          'Retainer api_id to charge the hours on, or NONE for no retainer. Omit for the default: the project retainer on HOURS projects',
+          'Retainer api_id to charge the hours on, or null for no retainer. Omit for the default: the project retainer on HOURS projects',
       })
       .pipe(Schema.optionalKey),
   }),
@@ -80,7 +86,7 @@ export const AddProjectTask = Tool.make('AddProjectTask', {
 
 export const addProjectTask = Effect.fn('AddProjectTask')(function* (
   orbit: OrbitShape,
-  { startDate, endDate, assignees, ...params }: Tool.Parameters<typeof AddProjectTask>,
+  { startDate, endDate, assignees, retainerId, ...params }: Tool.Parameters<typeof AddProjectTask>,
 ) {
   if (startDate !== undefined && endDate !== undefined && endDate < startDate) {
     return yield* Effect.fail(OrbitReadError.make({ message: `endDate ${endDate} is before startDate ${startDate}.` }));
@@ -91,5 +97,7 @@ export const addProjectTask = Effect.fn('AddProjectTask')(function* (
     ...(startDate === undefined ? {} : { startDt: startDate }),
     ...(endDate === undefined ? {} : { endDt: endDate }),
     ...(assignees === undefined ? {} : { assignedTo: Arr.join(assignees, ',') }),
+    // Orbit takes NONE for no retainer.
+    ...(retainerId === undefined ? {} : { retainerId: retainerId ?? 'NONE' }),
   });
 }, Effect.mapError(toReadError));
