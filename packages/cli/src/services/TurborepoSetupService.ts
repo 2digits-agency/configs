@@ -166,7 +166,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
           const existingScript = scripts[taskName] ?? '';
 
           // Only update if not already using turbo
-          if (existingScript.includes('turbo')) {
+          if (Str.includes('turbo')(existingScript)) {
             continue;
           }
 
