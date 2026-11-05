@@ -30,7 +30,7 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       `,
       `${header}
         export class DailyImport extends Domain.Aggregate('DailyImport', {
-          decide: { Start: (s) => { if (Opt.isNone(s.running)) throw new Error('decide may refuse') ; return [] } },
+          decide: { Start: Effect.fn(function* (s) { if (Opt.isSome(s.running)) return yield* new Running({}); return [] }) },
           evolve: { Started: (s, e) => (s._tag === 'Open' ? { ...s, runId: e.runId } : s) },
           reply: { Start: (s) => ({ runId: Opt.getOrNull(s.running) }) },
         }) {}
@@ -46,6 +46,14 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       `,
     ],
     invalid: [
+      {
+        code: `${header}
+          export class DailyImport extends Domain.Aggregate('DailyImport', {
+            decide: { Start: (s) => { if (Opt.isSome(s.running)) throw new Error('already running'); return [] } },
+          }) {}
+        `,
+        errors: [{ messageId: 'reject', data: { api: '`throw`' } }],
+      },
       {
         code: `${header}
           export class DailyImport extends Domain.Aggregate('DailyImport', {

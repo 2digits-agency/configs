@@ -58,12 +58,13 @@ model correct. They only look at calls on a `@alchemy.run/domain` import, so oth
   and `Jws.sign`) and I/O (`fetch`, `Effect.promise`, `Effect.tryPromise`, `Jwks.Jwks`) inside an aggregate's `decide`
   handlers. Deterministic crypto (`Digest`, `Mac`, `Kdf`, `KeyFormat`, `Jws.verify`) is allowed. Read time from `decide`'s `now` argument and call external systems from a policy or saga.
 - `alchemy-domain-total-handlers` reports `throw` and `Option`/`Result` `getOrThrow*` inside an aggregate's `evolve` and
-  `reply` or a view's `evolve`. Keep any state the event can't follow instead.
+  `reply` or a view's `evolve`. Keep any state the event can't follow instead. In `decide` it reports them too: return a
+  rejection instead.
 - `alchemy-domain-require-view-version` requires `version` on every `Domain.View`, so a change to what the view computes
   sits next to the number that must be bumped for the deploy to rebuild it. `version: 0` keeps the current default.
 - `alchemy-domain-block-file-name` requires one block per file, named after its kind (`Account.aggregate.ts`,
   `WithdrawMoney.command.ts`, `FraudCheck.external.ts`, `CurrentActor.context.ts`). Events and rejections may share
-  the file of the command or external system that uses them; in their own `.event.ts` or `.rejection.ts` file, one per file. Test and story files are skipped.
+  the file of the command, external system or stream that uses them; in their own `.event.ts` or `.rejection.ts` file, one per file. Test and story files are skipped.
 - `alchemy-domain-pure-imports` restricts block files (`*.aggregate.ts`, `*.command.ts`, `*.middleware.ts`, ...) that
   import `@alchemy.run/domain` to relative imports, `effect` and `@alchemy.run/domain`.
 

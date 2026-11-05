@@ -20,10 +20,12 @@ const throwingGetters: ReadonlySet<string> = new Set(['getOrThrow', 'getOrThrowW
 export const alchemyDomainTotalHandlers: Rule = defineEffectRule(
   ruleMeta(
     'problem',
-    'Require Alchemy Domain evolve and reply handlers to be total.',
+    'Require Alchemy Domain evolve and reply handlers to be total, and decide handlers to reject instead of throwing.',
     {
       partial:
         '`{{section}}` must be total and never fail: {{api}} throws when the state is not what it expects. Keep any state the event cannot follow, such as `s._tag === "Open" ? { ...s, ... } : s`.',
+      reject:
+        '`decide` never throws: {{api}} becomes a defect the caller cannot handle. Return a rejection the command lists in `rejects` instead, or `return yield* rejection` in an `Effect.fn`.',
     },
     'https://alchemy.run/domain/aggregate',
   ),
@@ -31,7 +33,13 @@ export const alchemyDomainTotalHandlers: Rule = defineEffectRule(
     function report(node: ESTree.Node, api: string): void {
       const found = domainSection(node, getState(), context);
 
-      if (found !== undefined && totalSections.get(found.block)?.has(found.section) === true) {
+      if (found === undefined) {
+        return;
+      }
+
+      if (found.block === 'Aggregate' && found.section === 'decide') {
+        context.report({ node, messageId: 'reject', data: { api } });
+      } else if (totalSections.get(found.block)?.has(found.section) === true) {
         context.report({ node, messageId: 'partial', data: { section: found.section, api } });
       }
     }

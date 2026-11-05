@@ -19,13 +19,13 @@ const fileKinds: Partial<Record<DomainBlock, string>> = {
   View: 'view',
 };
 
-// Events and rejections may also live in the command or external system file that records or returns them.
+// Events and rejections may also live in the command, external system or stream file that records or returns them.
 const sharedKinds: Partial<Record<DomainBlock, string>> = {
   Event: 'event',
   Rejection: 'rejection',
 };
 
-const hostKinds: ReadonlySet<string | undefined> = new Set(['command', 'external']);
+const hostKinds: ReadonlySet<string | undefined> = new Set(['command', 'external', 'stream']);
 
 const testFile = /\.(?:test|spec|stories?)\.[cm]?[jt]sx?$/u;
 

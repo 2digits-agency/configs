@@ -20,6 +20,13 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
   alchemyDomainBlockFileName,
   {
     valid: [
+      {
+        filename: 'src/Account/AccountCard.stream.ts',
+        code: `${header}
+          export class CardChanged extends Domain.Event('CardChanged', {}) {}
+          export class AccountCard extends Domain.Stream('AccountCard', { entries: [CardChanged] }) {}
+        `,
+      },
       { filename: 'src/Account/WithdrawMoney.command.ts', code: command },
       {
         filename: 'src/Account/Account.aggregate.ts',
