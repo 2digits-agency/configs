@@ -7,6 +7,7 @@ import { OpenTunnelClient } from '@opentunnel/client/effect';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as HttpRouter from 'effect/http/HttpRouter';
+import * as NetAddress from 'effect/net/NetAddress';
 
 import { GatewayError, gatewayKeyFile, gatewayRoutes, loadGatewayKey } from '../http/gateway.js';
 import { openTunnel } from '../http/tunnel.js';
@@ -52,7 +53,7 @@ export const connect = Effect.fn('TloMcp.connect')(
         Layer.provide(OrbitClientLive),
         Layer.provide(
           NodeHttpServer.layer(() => createServer({ maxHeaderSize: 8192, requestTimeout: 130_000 }), {
-            host: publicUrl === undefined ? '127.0.0.1' : '0.0.0.0',
+            host: NetAddress.formatIp(publicUrl === undefined ? NetAddress.ipv4Loopback : NetAddress.ipv4Unspecified),
             port,
           }),
         ),
