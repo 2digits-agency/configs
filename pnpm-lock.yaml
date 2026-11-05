@@ -219,8 +219,8 @@ catalogs:
       specifier: 1.19.5
       version: 1.19.5
     '@opentunnel/client':
-      specifier: 0.6.1
-      version: 0.6.1
+      specifier: 0.6.2
+      version: 0.6.2
     '@oxc-node/cli':
       specifier: 1.0.1
       version: 1.0.1
@@ -1162,7 +1162,7 @@ importers:
         version: 4.1.2(effect@4.1.2)(redis@6.2.1(@opentelemetry/api@1.10.0))
       '@opentunnel/client':
         specifier: 'catalog:'
-        version: 0.6.1(effect@4.1.2)(undici@8.12.3)
+        version: 0.6.2(effect@4.1.2)(undici@8.12.3)
       '@yielded/oauth':
         specifier: 'catalog:'
         version: 0.1.0-beta.47(effect@4.1.2)
@@ -2482,8 +2482,8 @@ packages:
     resolution: {integrity: sha512-eSYWTm620tTk45EKSedaUL8MFYI8hW164hIXsgIHyxu3VobUB3fFCu5t0hQby6OoWRPsG1KkKUG2M5UadiLiVg==}
     engines: {node: '>=14'}
 
-  '@opentunnel/client@0.6.1':
-    resolution: {integrity: sha512-OuVNlWywQebIXCtkixjVHebOsR3KFRxJ0DSZry6Dzj4hHaHIf3eTVmQ7VwLCjuVmw+ctU2qHIP6RxuAPr07WDw==}
+  '@opentunnel/client@0.6.2':
+    resolution: {integrity: sha512-rcfq/Q8ViIEkSA7oCW3ntbM/W1BKUB2o+wDWgfAjuJ/MNhBIEG90sEyG8FGZ8zZekbxSrtKp3wPTaTN5ceZTbg==}
     engines: {bun: '>=1.4.0', node: '>=22'}
     peerDependencies:
       effect: 4.1.2
@@ -2492,8 +2492,8 @@ packages:
       undici:
         optional: true
 
-  '@opentunnel/protocol@0.6.1':
-    resolution: {integrity: sha512-fdckKvQ4TEJSQ2Ia/M/GKmDbCTCw148Wc1zo6HcpUBjSwsFeKs6Tbql4Uih1oIVR8NVqtGrcPZukVVvWFyOEHA==}
+  '@opentunnel/protocol@0.6.2':
+    resolution: {integrity: sha512-4XgCGOBufE1iNpOMIVH9/S+HjhIgma9qWDgf4G4tminjqG5M7XDN21TJNb7vKce2U5oXLANfVsX3JrDqWxsUTw==}
     peerDependencies:
       effect: 4.1.2
 
@@ -3484,6 +3484,7 @@ packages:
   '@smithy/core@3.35.1':
     resolution: {integrity: sha512-i4YPS4B6ts7bjn7UwLnGjiZdprOvHvgGobFZsYK3GIY3E5hIqtj0rReU69BcTpGp+fvtraSNXeG1l+jtJvF55w==}
     engines: {node: '>=18.0.0'}
+    deprecated: Deprecated due to a bug in custom logger data redaction. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -9369,14 +9370,14 @@ snapshots:
 
   '@opentelemetry/semantic-conventions@1.43.0': {}
 
-  '@opentunnel/client@0.6.1(effect@4.1.2)(undici@8.12.3)':
+  '@opentunnel/client@0.6.2(effect@4.1.2)(undici@8.12.3)':
     dependencies:
-      '@opentunnel/protocol': 0.6.1(effect@4.1.2)
+      '@opentunnel/protocol': 0.6.2(effect@4.1.2)
       effect: 4.1.2
     optionalDependencies:
       undici: 8.12.3
 
-  '@opentunnel/protocol@0.6.1(effect@4.1.2)':
+  '@opentunnel/protocol@0.6.2(effect@4.1.2)':
     dependencies:
       effect: 4.1.2
 
