@@ -4,7 +4,7 @@ import * as Schema from 'effect/Schema';
 import * as Tool from 'effect/ai/Tool';
 
 import { AddProjectTask as OrbitAddProjectTask, ProjectTaskAdded } from '../orbit/AddProjectTask.js';
-import type { OrbitShape } from '../orbit/Orbit.js';
+import { Orbit } from '../orbit/Orbit.js';
 import { ApiId, LocalDate } from '../orbit/text.js';
 import { OrbitReadError, toReadError } from './OrbitReadError.js';
 
@@ -84,20 +84,29 @@ export const AddProjectTask = Tool.make('AddProjectTask', {
   .annotate(Tool.Destructive, false)
   .annotate(Tool.Idempotent, false);
 
-export const addProjectTask = Effect.fn('AddProjectTask')(function* (
-  orbit: OrbitShape,
-  { startDate, endDate, assignees, retainerId, ...params }: Tool.Parameters<typeof AddProjectTask>,
-) {
-  if (startDate !== undefined && endDate !== undefined && endDate < startDate) {
-    return yield* Effect.fail(OrbitReadError.make({ message: `endDate ${endDate} is before startDate ${startDate}.` }));
-  }
+export const AddProjectTaskHandler = Effect.gen(function* () {
+  const orbit = yield* Orbit;
 
-  return yield* orbit.call(OrbitAddProjectTask, {
-    ...params,
-    ...(startDate === undefined ? {} : { startDt: startDate }),
-    ...(endDate === undefined ? {} : { endDt: endDate }),
-    ...(assignees === undefined ? {} : { assignedTo: Arr.join(assignees, ',') }),
-    // Orbit takes NONE for no retainer.
-    ...(retainerId === undefined ? {} : { retainerId: retainerId ?? 'NONE' }),
-  });
-}, Effect.mapError(toReadError));
+  return Effect.fn('AddProjectTask')(function* ({
+    startDate,
+    endDate,
+    assignees,
+    retainerId,
+    ...params
+  }: Tool.Parameters<typeof AddProjectTask>) {
+    if (startDate !== undefined && endDate !== undefined && endDate < startDate) {
+      return yield* Effect.fail(
+        OrbitReadError.make({ message: `endDate ${endDate} is before startDate ${startDate}.` }),
+      );
+    }
+
+    return yield* orbit.call(OrbitAddProjectTask, {
+      ...params,
+      ...(startDate === undefined ? {} : { startDt: startDate }),
+      ...(endDate === undefined ? {} : { endDt: endDate }),
+      ...(assignees === undefined ? {} : { assignedTo: Arr.join(assignees, ',') }),
+      // Orbit takes NONE for no retainer.
+      ...(retainerId === undefined ? {} : { retainerId: retainerId ?? 'NONE' }),
+    });
+  }, Effect.mapError(toReadError));
+});

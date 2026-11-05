@@ -8,7 +8,7 @@ import * as Tool from 'effect/ai/Tool';
 
 import { TimeEntry } from '../orbit/GetTimesheetWeek.js';
 import { ListTimeEntries } from '../orbit/ListTimeEntries.js';
-import type { OrbitShape } from '../orbit/Orbit.js';
+import { Orbit } from '../orbit/Orbit.js';
 import { ApiId, Minutes, TIME_ZONE } from '../orbit/text.js';
 import { GetTicketDetail, ListTicketComments, ListTickets, TicketComment, TicketDetail } from '../orbit/tickets.js';
 import { OrbitReadError, toReadError } from './OrbitReadError.js';
@@ -50,77 +50,78 @@ export const GetTicketContext = Tool.make('GetTicketContext', {
   .annotate(Tool.Destructive, false)
   .annotate(Tool.Idempotent, true);
 
-export const getTicketContext = Effect.fn('GetTicketContext')(function* (
-  orbit: OrbitShape,
-  { ticket }: Tool.Parameters<typeof GetTicketContext>,
-) {
-  const query = Str.trim(ticket);
+export const GetTicketContextHandler = Effect.gen(function* () {
+  const orbit = yield* Orbit;
 
-  let ticketId = query;
+  return Effect.fn('GetTicketContext')(function* ({ ticket }: Tool.Parameters<typeof GetTicketContext>) {
+    const query = Str.trim(ticket);
 
-  if (!API_ID.test(query)) {
-    const { tickets } = yield* orbit.call(ListTickets, { query, state: ALL_STATES, limit: TICKET_LIMIT });
+    let ticketId = query;
 
-    const found = Arr.findFirst(tickets, ({ number }) => number === query);
+    if (!API_ID.test(query)) {
+      const { tickets } = yield* orbit.call(ListTickets, { query, state: ALL_STATES, limit: TICKET_LIMIT });
 
-    if (Opt.isNone(found)) {
-      return yield* Effect.fail(
-        OrbitReadError.make({
-          message:
-            tickets.length >= TICKET_LIMIT
-              ? `Ticket ${query} is not in the first ${TICKET_LIMIT} search results Orbit returned; pass the ticket api_id instead.`
-              : `No ticket with number ${query} found.`,
-        }),
-      );
+      const found = Arr.findFirst(tickets, ({ number }) => number === query);
+
+      if (Opt.isNone(found)) {
+        return yield* Effect.fail(
+          OrbitReadError.make({
+            message:
+              tickets.length >= TICKET_LIMIT
+                ? `Ticket ${query} is not in the first ${TICKET_LIMIT} search results Orbit returned; pass the ticket api_id instead.`
+                : `No ticket with number ${query} found.`,
+          }),
+        );
+      }
+
+      ticketId = found.value.ticketId;
     }
 
-    ticketId = found.value.ticketId;
-  }
+    const [detail, comments] = yield* Effect.all(
+      [orbit.call(GetTicketDetail, { ticketId }), orbit.call(ListTicketComments, { ticketId, limit: COMMENT_LIMIT })],
+      { concurrency: 'unbounded' },
+    );
 
-  const [detail, comments] = yield* Effect.all(
-    [orbit.call(GetTicketDetail, { ticketId }), orbit.call(ListTicketComments, { ticketId, limit: COMMENT_LIMIT })],
-    { concurrency: 'unbounded' },
-  );
+    /*
+     * ListTimeEntries has no ticket filter; Orbit puts the ticket number in the description of ticket entries. Search up
+     * to today, because time can still be booked on a ticket after it closed.
+     */
+    const now = yield* DateTime.now;
 
-  /*
-   * ListTimeEntries has no ticket filter; Orbit puts the ticket number in the description of ticket entries. Search up
-   * to today, because time can still be booked on a ticket after it closed.
-   */
-  const now = yield* DateTime.now;
+    const entries = yield* orbit.call(ListTimeEntries, {
+      dateFrom: DateTime.formatIsoDate(detail.createdDate),
+      dateTo: DateTime.formatIsoDate(DateTime.setZoneNamedUnsafe(now, TIME_ZONE)),
+      text: detail.number,
+    });
 
-  const entries = yield* orbit.call(ListTimeEntries, {
-    dateFrom: DateTime.formatIsoDate(detail.createdDate),
-    dateTo: DateTime.formatIsoDate(DateTime.setZoneNamedUnsafe(now, TIME_ZONE)),
-    text: detail.number,
-  });
+    /*
+     * Orbit writes ticket entries as `ticket "<name>" — <number> <name>`. Match the number only: titles are not unique,
+     * and an entry keeps the title it was booked under after a rename.
+     */
+    function onTicket({ work, description = '' }: TimeEntry) {
+      const [number] = Str.split(description, ' ');
 
-  /*
-   * Orbit writes ticket entries as `ticket "<name>" — <number> <name>`. Match the number only: titles are not unique,
-   * and an entry keeps the title it was booked under after a rename.
-   */
-  function onTicket({ work, description = '' }: TimeEntry) {
-    const [number] = Str.split(description, ' ');
+      return Str.startsWith('ticket "')(work) && number === detail.number;
+    }
 
-    return Str.startsWith('ticket "')(work) && number === detail.number;
-  }
+    // Orbit's text search also matches substrings (19087) and other fields, so a mention needs the number as a token.
+    function mentions({ work, description = '' }: TimeEntry) {
+      return Arr.contains(Str.split(`${work} ${description}`, /\D+/), detail.number);
+    }
 
-  // Orbit's text search also matches substrings (19087) and other fields, so a mention needs the number as a token.
-  function mentions({ work, description = '' }: TimeEntry) {
-    return Arr.contains(Str.split(`${work} ${description}`, /\D+/), detail.number);
-  }
+    const timeEntries = Arr.filter(entries.entries, onTicket);
 
-  const timeEntries = Arr.filter(entries.entries, onTicket);
+    const mentionedIn = Arr.filter(entries.entries, (entry) => !onTicket(entry) && mentions(entry));
 
-  const mentionedIn = Arr.filter(entries.entries, (entry) => !onTicket(entry) && mentions(entry));
-
-  return TicketContext.make({
-    ticket: detail,
-    comments: comments.comments,
-    commentCount: comments.count,
-    commentsTruncated: comments.comments.length >= COMMENT_LIMIT,
-    timeEntries,
-    timeEntriesTruncated: entries.truncated,
-    loggedMinutes: Arr.reduce(timeEntries, 0, (sum, entry) => (entry.kind === 'logged' ? sum + entry.minutes : sum)),
-    mentionedIn: Arr.map(mentionedIn, ({ id }) => id),
-  });
-}, Effect.mapError(toReadError));
+    return TicketContext.make({
+      ticket: detail,
+      comments: comments.comments,
+      commentCount: comments.count,
+      commentsTruncated: comments.comments.length >= COMMENT_LIMIT,
+      timeEntries,
+      timeEntriesTruncated: entries.truncated,
+      loggedMinutes: Arr.reduce(timeEntries, 0, (sum, entry) => (entry.kind === 'logged' ? sum + entry.minutes : sum)),
+      mentionedIn: Arr.map(mentionedIn, ({ id }) => id),
+    });
+  }, Effect.mapError(toReadError));
+});

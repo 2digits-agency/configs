@@ -13,7 +13,7 @@ import { EntryKind, GetTimesheetWeek, TimeEntry, type TimesheetDay } from '../or
 import { Absence, ListAbsences } from '../orbit/ListAbsences.js';
 import { BookableTask, ListMyTasks } from '../orbit/ListMyTasks.js';
 import { ListPlannedEntries, type PlannedEntry, PlanningKind } from '../orbit/ListPlannedEntries.js';
-import type { OrbitShape } from '../orbit/Orbit.js';
+import { Orbit } from '../orbit/Orbit.js';
 import { ApiId, LocalDate, Minutes, TIME_ZONE, Timestamp } from '../orbit/text.js';
 import { OrbitReadError, toReadError } from './OrbitReadError.js';
 
@@ -230,77 +230,78 @@ function workdayDay(
   });
 }
 
-export const getMyWorkday = Effect.fn('GetMyWorkday')(function* (
-  orbit: OrbitShape,
-  params: Tool.Parameters<typeof GetMyWorkday>,
-) {
-  const from = params.to === undefined && params.scope === 'week' ? mondayOf(params.date) : params.date;
+export const GetMyWorkdayHandler = Effect.gen(function* () {
+  const orbit = yield* Orbit;
 
-  const to = params.to ?? (params.scope === 'week' ? addDays(from, 6) : from);
+  return Effect.fn('GetMyWorkday')(function* (params: Tool.Parameters<typeof GetMyWorkday>) {
+    const from = params.to === undefined && params.scope === 'week' ? mondayOf(params.date) : params.date;
 
-  if (to < from || to > addDays(from, RANGE_LIMIT - 1)) {
-    return yield* Effect.fail(
-      OrbitReadError.make({ message: `Range ${from}..${to} must be 1 to ${RANGE_LIMIT} days.` }),
+    const to = params.to ?? (params.scope === 'week' ? addDays(from, 6) : from);
+
+    if (to < from || to > addDays(from, RANGE_LIMIT - 1)) {
+      return yield* Effect.fail(
+        OrbitReadError.make({ message: `Range ${from}..${to} must be 1 to ${RANGE_LIMIT} days.` }),
+      );
+    }
+
+    const mondays = Arr.unfold(mondayOf(from), (monday) =>
+      monday > to ? Opt.none() : Opt.some([monday, addDays(monday, 7)] as const),
     );
-  }
 
-  const mondays = Arr.unfold(mondayOf(from), (monday) =>
-    monday > to ? Opt.none() : Opt.some([monday, addDays(monday, 7)] as const),
-  );
+    const range = { dateFrom: from, dateTo: to };
 
-  const range = { dateFrom: from, dateTo: to };
-
-  const [weeks, absences, planned, runningTimer, bookableTasks] = yield* Effect.all(
-    [
-      // oxlint-disable-next-line unicorn/no-array-for-each
-      Effect.forEach(mondays, (date) => orbit.call(GetTimesheetWeek, { date }), { concurrency: WEEK_CONCURRENCY }),
-      orbit.call(ListAbsences, range),
-      orbit.call(ListPlannedEntries, range),
-      orbit.call(GetRunningTimer, {}),
-      orbit.call(ListMyTasks, {}),
-    ],
-    { concurrency: 'unbounded' },
-  );
-
-  const timesheetDays = Arr.filter(
-    Arr.flatMap(weeks, (week) => week.days),
-    (day) => day.date >= from && day.date <= to,
-  );
-
-  const expected = Arr.unfold(from, (date) => (date > to ? Opt.none() : Opt.some([date, addDays(date, 1)] as const)));
-
-  if (
-    Arr.join(
-      Arr.map(timesheetDays, ({ date }) => date),
-      ',',
-    ) !== Arr.join(expected, ',')
-  ) {
-    return yield* Effect.fail(
-      OrbitReadError.make({ message: `Orbit's timesheets do not cover every day of ${from}..${to}.` }),
+    const [weeks, absences, planned, runningTimer, bookableTasks] = yield* Effect.all(
+      [
+        // oxlint-disable-next-line unicorn/no-array-for-each
+        Effect.forEach(mondays, (date) => orbit.call(GetTimesheetWeek, { date }), { concurrency: WEEK_CONCURRENCY }),
+        orbit.call(ListAbsences, range),
+        orbit.call(ListPlannedEntries, range),
+        orbit.call(GetRunningTimer, {}),
+        orbit.call(ListMyTasks, {}),
+      ],
+      { concurrency: 'unbounded' },
     );
-  }
 
-  const days = Arr.map(timesheetDays, (day) => workdayDay(day, planned, params));
+    const timesheetDays = Arr.filter(
+      Arr.flatMap(weeks, (week) => week.days),
+      (day) => day.date >= from && day.date <= to,
+    );
 
-  function total(key: 'capacityMinutes' | 'loggedMinutes' | 'plannedMinutes' | 'absenceMinutes' | 'missingMinutes') {
-    return Arr.reduce(days, 0, (sum, day) => sum + day[key]);
-  }
+    const expected = Arr.unfold(from, (date) => (date > to ? Opt.none() : Opt.some([date, addDays(date, 1)] as const)));
 
-  return Workday.make({
-    from,
-    to,
-    timeZone: TIME_ZONE,
-    workingHours: slot(WORK_START, WORK_END),
-    totals: {
-      capacityMinutes: total('capacityMinutes'),
-      loggedMinutes: total('loggedMinutes'),
-      plannedMinutes: total('plannedMinutes'),
-      absenceMinutes: total('absenceMinutes'),
-      missingMinutes: total('missingMinutes'),
-    },
-    days,
-    absences,
-    runningTimer,
-    bookableTasks,
-  });
-}, Effect.mapError(toReadError));
+    if (
+      Arr.join(
+        Arr.map(timesheetDays, ({ date }) => date),
+        ',',
+      ) !== Arr.join(expected, ',')
+    ) {
+      return yield* Effect.fail(
+        OrbitReadError.make({ message: `Orbit's timesheets do not cover every day of ${from}..${to}.` }),
+      );
+    }
+
+    const days = Arr.map(timesheetDays, (day) => workdayDay(day, planned, params));
+
+    function total(key: 'capacityMinutes' | 'loggedMinutes' | 'plannedMinutes' | 'absenceMinutes' | 'missingMinutes') {
+      return Arr.reduce(days, 0, (sum, day) => sum + day[key]);
+    }
+
+    return Workday.make({
+      from,
+      to,
+      timeZone: TIME_ZONE,
+      workingHours: slot(WORK_START, WORK_END),
+      totals: {
+        capacityMinutes: total('capacityMinutes'),
+        loggedMinutes: total('loggedMinutes'),
+        plannedMinutes: total('plannedMinutes'),
+        absenceMinutes: total('absenceMinutes'),
+        missingMinutes: total('missingMinutes'),
+      },
+      days,
+      absences,
+      runningTimer,
+      bookableTasks,
+    });
+  }, Effect.mapError(toReadError));
+});
