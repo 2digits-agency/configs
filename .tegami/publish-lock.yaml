@@ -1,24 +1,27 @@
 core:changelogs:
-  - content: "---\npackages:\n  npm:@2digits/eslint-config:\n    type: patch\n---\n\n## Update ESLint plugins\n\n- `@next/eslint-plugin-next` 16.4.4 → 16.4.5\n- `eslint-plugin-jsdoc` 65.4.2 → 65.4.3\n- `eslint-plugin-yml` 3.9.0 → 3.10.0, with typed options for its new `yml/max-len` rule\n"
-    filename: 2026-11-04-crisp-ash-jsdoc.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `@tanstack/eslint-plugin-query` to 5.106.1\n\nThe TanStack Query rules now come from `@tanstack/eslint-plugin-query` 5.106.1.\n"
+    filename: 2026-11-05-tanstack-query-bump.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxfmt-config:\n    type: patch\n---\n\n## Update oxfmt to 0.76.0\n"
-    filename: 2026-11-04-quiet-fern-oxfmt.md
+  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 5.62.0\n\nThe plugin now sends telemetry with `posthog-node` 5.62.0.\n"
+    filename: 2026-11-05-posthog-bump.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-config:\n    type: patch\n  npm:@2digits/oxlint-plugin:\n    type: patch\n---\n\n## Update oxlint to 1.91.0\n\n`@2digits/oxlint-config` now expects `oxlint` 1.91.0, and `@2digits/oxlint-plugin` uses `@oxlint/plugins` 1.91.0.\n"
-    filename: 2026-11-04-bright-gull-oxlint.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: minor\n---\n\n### Add Alchemy Domain rules\n\nFive rules check the conventions of the `@alchemy.run/domain` agent skill:\n\n- `alchemy-domain-pure-decide`: no time, randomness or I/O in an aggregate's `decide`.\n- `alchemy-domain-total-handlers`: no `throw` or `getOrThrow` in `evolve` and `reply`.\n- `alchemy-domain-require-view-version`: every `Domain.View` declares its `version`.\n- `alchemy-domain-block-file-name`: one block per file, named `<Noun>.<kind>.ts`.\n- `alchemy-domain-pure-imports`: block files import only `@alchemy.run/domain`, `effect` and relative files.\n\nThe rules only check code that imports `@alchemy.run/domain` and are part of `recommendedRules`.\n"
+    filename: 2026-11-04-alchemy-domain-rules.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Add read-only composite tools\n\nThe gateway now offers three tools that combine several Orbit reads in one call and return typed `structuredContent`:\n\n- `GetMyWorkday`: your timesheet for a day, week or range of up to 62 days. It lists entries with their locks, planned entries to confirm, gaps, overlaps and entries outside 09:00–17:30. It also returns absences, the running timer and bookable tasks with their remaining budget. Times are in Europe/Amsterdam.\n- `GetTicketContext`: a ticket by number or api_id, closed tickets included, with its detail, conversation and your logged time.\n- `GetBoardContext`: a board's columns, with their api_ids, and the cards in each column, optionally with card detail.\n\nWrites stay separate Orbit tools, so each write is still approved on its own. If Orbit changes its text format, the composite fails with an error instead of returning wrong data.\n"
-    filename: 2026-10-28-composite-tools.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Serve behind a public HTTPS URL without OpenTunnel\n\n`tlo-mcp --public-url https://example.com` listens on `0.0.0.0` and reports `https://example.com/mcp` as the endpoint instead of opening an OpenTunnel. Use it on an always-on host that already has HTTPS, such as an Amp Box. This mode needs an existing Orbit session: run `tlo-mcp login` on a Linux machine and copy its `session.json` to the host (macOS keeps the session in the Keychain).\n"
+    filename: 2026-11-04-6bbb762b.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tlo-mcp:\n    type: patch\n---\n\n## Store the gateway key and session in the platform config directory\n\n`tlo-mcp` now resolves its directory with Effect's `UserDirectories`: `~/Library/Application Support/2digits/tlo-mcp` on macOS, and `$XDG_CONFIG_HOME/2digits/tlo-mcp` or `~/.config/2digits/tlo-mcp` elsewhere.\n\nA gateway key or Orbit session that an earlier version stored in `~/.config/2digits/tlo-mcp` keeps being used from there, so upgrading needs no new key and no new login. Startup prints the key path in use, with the matching `pbcopy` command on macOS. On macOS, Orbit credentials stay in the Keychain.\n"
-    filename: 2026-11-04-snug-otter-keydir.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Update `@opentunnel/client` to 0.6.2\n\nThe gateway tunnel now uses `@opentunnel/client` 0.6.2.\n"
+    filename: 2026-11-05-opentunnel-bump.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Update @effect/tsgo to 0.67.0\n"
-    filename: 2026-11-04-amber-wren-tsgo.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Add `AddProjectTask`\n\nAgents can now add a task to a draft or open project, for example to book time on it. The gateway defines this tool itself instead of forwarding Orbit's, so its parameters are typed and documented:\n\n- `startDate` and `endDate` must be existing `yyyy-MM-dd` dates, and `endDate` may not be before `startDate`.\n- `projectId` takes an api_id or a project number.\n- `assignees` is a list of api_ids (user, group or division) or unique user names, instead of a comma-separated string.\n- `retainerId` is an api_id, or `null` for no retainer. `billingMode` only accepts `ESTIMATE` or `HOURS`, `workloadHours` must be finite and not negative, and `rate` finite and above 0 (use `nonBillable` for unbilled work).\n\nInvalid input is rejected before Orbit is called. The result returns the new task's `taskId`, so time can be booked on it right away. Each call is still exactly one Orbit write, so Executor approves every task separately. When a task ends after the project, Orbit moves the project's end date to the task's end date.\n\n### Show the api_id pattern in tool schemas\n\nTool input and output schemas now include the 15-character pattern of Orbit api_ids, so clients can check ids before calling.\n\n### Expose `ListRates`\n\nThe read-only `ListRates` tool is now forwarded, so agents can pick the matching rate card for `AddProjectTask`.\n"
+    filename: 2026-11-05-tlo-add-project-task.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/tsconfig:\n    type: patch\n---\n\n## Enable the `matchToResultOrOption` Effect diagnostic\n\nThe Effect config now reports `matchToResultOrOption` as an error. It flags `Effect.match` handlers, or a map step followed by a catch step, that only turn the outcome into a value, where `Effect.result`, `Effect.option` or `Effect.either` says the same thing directly.\n"
-    filename: 2026-11-04-steady-pike-result.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Compare gateway keys and OAuth state with Effect's `Mac.timingSafeEqual`\n\nThe gateway's bearer-key check and the OAuth callback's `state` check now use `Mac.timingSafeEqual` from `effect/crypto` instead of `node:crypto`. Behavior is unchanged: a mismatched or differently sized value is still rejected.\n"
+    filename: 2026-11-05-tlo-effect-timing-safe-equal.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.67.3\n\nThe Effect language service now runs on `@effect/tsgo` 0.67.3, which also reports native `String.includes` calls through `preferEffectString`.\n"
+    filename: 2026-11-05-effect-tsgo-bump.md
     v: 0.0.0
 core:packages:
   - id: npm:@2digits/config-monorepo
@@ -28,37 +31,36 @@ core:packages:
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-11-04-crisp-ash-jsdoc.md
+      - 2026-11-05-tanstack-query-bump.md
     id: npm:@2digits/eslint-config
     updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
-  - id: npm:@2digits/opencode-plugin
+  - changelogIds:
+      - 2026-11-05-posthog-bump.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
+  - id: npm:@2digits/oxfmt-config
     updated: false
-  - changelogIds:
-      - 2026-11-04-quiet-fern-oxfmt.md
-    id: npm:@2digits/oxfmt-config
+  - id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-11-04-bright-gull-oxlint.md
-    id: npm:@2digits/oxlint-config
-    updated: true
-  - changelogIds:
-      - 2026-11-04-bright-gull-oxlint.md
+      - 2026-11-04-alchemy-domain-rules.md
     id: npm:@2digits/oxlint-plugin
     updated: true
-  - id: npm:@2digits/renovate-config
-    updated: false
   - id: npm:@2digits/prettier-config
     updated: false
+  - id: npm:@2digits/renovate-config
+    updated: false
   - changelogIds:
-      - 2026-10-28-composite-tools.md
-      - 2026-11-04-snug-otter-keydir.md
+      - 2026-11-04-6bbb762b.md
+      - 2026-11-05-opentunnel-bump.md
+      - 2026-11-05-tlo-add-project-task.md
+      - 2026-11-05-tlo-effect-timing-safe-equal.md
     id: npm:@2digits/tlo-mcp
     updated: true
   - changelogIds:
-      - 2026-11-04-amber-wren-tsgo.md
-      - 2026-11-04-steady-pike-result.md
+      - 2026-11-05-effect-tsgo-bump.md
     id: npm:@2digits/tsconfig
     updated: true
 npm:packages:
@@ -71,7 +73,7 @@ npm:packages:
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxlint-plugin
-  - id: npm:@2digits/renovate-config
   - id: npm:@2digits/prettier-config
+  - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig
