@@ -1,6 +1,7 @@
 /**
  * Orbit tools the gateway exposes; every other upstream tool is hidden and cannot be called. Names must match Orbit
- * exactly. Startup logs a warning when Orbit no longer offers one.
+ * exactly. Startup logs a warning when Orbit no longer offers one. A gateway tool in `CompositeTools` with the same
+ * name replaces the forwarded tool.
  */
 export const EXPOSED_TOOLS: ReadonlyArray<string> = [
   // Timesheet and time entries
@@ -26,6 +27,7 @@ export const EXPOSED_TOOLS: ReadonlyArray<string> = [
   'ListProjects',
   'GetProject',
   'GetProjectOpenItems',
+  'ListRates',
   'AddProjectTask',
 
   // Planning (read-only)

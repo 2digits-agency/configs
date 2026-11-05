@@ -25,7 +25,7 @@ type OrbitResult = Schema.Top & { readonly Encoded: string; readonly DecodingSer
 
 export interface OrbitShape {
   /**
-   * Call a read-only Orbit tool and decode its text result. Never retried.
+   * Call an Orbit tool and decode its text result. Never retried.
    */
   readonly call: <TArgs extends OrbitArgs, TResult extends OrbitResult>(
     tool: OrbitTool<TArgs, TResult>,

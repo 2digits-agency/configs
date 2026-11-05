@@ -1,3 +1,4 @@
+import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
@@ -64,7 +65,8 @@ export const OrbitToolsLive = Layer.effectDiscard(
     // oxlint-disable-next-line unicorn/no-array-for-each
     yield* Effect.forEach(
       // oxlint-disable-next-line unicorn/no-array-method-this-argument
-      upstream.tools,
+      // A gateway tool with the same name replaces the forwarded one.
+      Arr.filter(upstream.tools, ({ name }) => !(name in CompositeTools.tools)),
       Effect.fn('OrbitProxyLive.tool')(function* (tool) {
         yield* server.addTool({
           tool,
@@ -90,7 +92,7 @@ export const OrbitToolsLive = Layer.effectDiscard(
       { discard: true },
     );
 
-    // Read-only composites next to the forwarded allowlist; they call Orbit through the same client.
+    // Gateway tools next to the forwarded allowlist; they call Orbit through the same client.
     yield* McpServer.registerToolkit(CompositeTools).pipe(
       Effect.provideService(
         McpServer.McpServer,

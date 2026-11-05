@@ -15,7 +15,7 @@ import * as Str from 'effect/String';
 export const TIME_ZONE = 'Europe/Amsterdam';
 
 /**
- * A read-only Orbit tool: the schema of its arguments and the schema that decodes its text result.
+ * An Orbit tool: the schema of its arguments and the schema that decodes its text result.
  */
 export interface OrbitTool<TArgs extends Schema.Top, TResult extends Schema.Top> {
   readonly name: string;
