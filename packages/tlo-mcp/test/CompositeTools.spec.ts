@@ -1,15 +1,12 @@
-/**
- * @effect-diagnostics preferEffectArray:off preferEffectString:off nodeBuiltinImport:off
- */
-import { readFileSync } from 'node:fs';
-
 import * as NodeServices from '@effect/platform-node/NodeServices';
 import { describe, expect, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
 import type * as Context from 'effect/Context';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
 import * as Layer from 'effect/Layer';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
@@ -28,26 +25,26 @@ import { gatewayRoutes } from '../src/http/gateway.js';
 import { OrbitClient } from '../src/mcp/OrbitClient.js';
 import { OrbitToolsLive } from '../src/mcp/proxy.js';
 import { PlatformLive } from '../src/platform.js';
+import { fixture } from './fixture.js';
 
-function fixture(name: string) {
-  return readFileSync(new URL(`fixtures/orbit/${name}.txt`, import.meta.url), 'utf8');
-}
-
-const UPSTREAM = [
-  'GetTimesheetWeek',
-  'ListAbsences',
-  'ListPlannedEntries',
-  'GetRunningTimer',
-  'ListMyTasks',
-  'ListTimeEntries',
-  'ListTickets',
-  'GetTicketDetail',
-  'ListTicketComments',
-  'ListBoards',
-  'ListBoardLists',
-  'ListTodos',
-  'GetTodoDetail',
-].map((name) => McpSchema.Tool.make({ name, inputSchema: { type: 'object' } }));
+const UPSTREAM = Arr.map(
+  [
+    'GetTimesheetWeek',
+    'ListAbsences',
+    'ListPlannedEntries',
+    'GetRunningTimer',
+    'ListMyTasks',
+    'ListTimeEntries',
+    'ListTickets',
+    'GetTicketDetail',
+    'ListTicketComments',
+    'ListBoards',
+    'ListBoardLists',
+    'ListTodos',
+    'GetTodoDetail',
+  ],
+  (name) => McpSchema.Tool.make({ name, inputSchema: { type: 'object' } }),
+);
 
 type Reply = string | McpSchema.CallToolResult | McpClientError.McpClientError;
 
@@ -179,9 +176,11 @@ const workdayReplies = {
 const openWeek = Effect.fn('CompositeTools.test.openWeek')(function* () {
   const { call, calls } = yield* setup({
     ...workdayReplies,
-    GetTimesheetWeek: fixture('GetTimesheetWeek-open')
-      .replace('- Mon 09:15 0h45', '- Mon 09:15 1h')
-      .replace('- Mon 17:00 0h30', '- Mon 17:00 1h'),
+    GetTimesheetWeek: Fn.pipe(
+      fixture('GetTimesheetWeek-open'),
+      Str.replace('- Mon 09:15 0h45', '- Mon 09:15 1h'),
+      Str.replace('- Mon 17:00 0h30', '- Mon 17:00 1h'),
+    ),
   });
 
   const result = yield* call('GetMyWorkday', { date: OPEN_WEDNESDAY, scope: 'week' });
@@ -225,7 +224,7 @@ describe('composite tool registration', () => {
     Effect.gen(function* () {
       const { registrations } = yield* setup({});
 
-      const composites = ['GetMyWorkday', 'GetTicketContext', 'GetBoardContext'].map((name) => {
+      const composites = Arr.map(['GetMyWorkday', 'GetTicketContext', 'GetBoardContext'], (name) => {
         const tool = registrations.get(name)?.tool;
 
         return {
@@ -256,11 +255,14 @@ describe('getMyWorkday', () => {
 
       expect([workday.from, workday.to]).toStrictEqual(['2026-10-26', '2026-11-01']);
 
-      expect(calls.filter(({ name }) => name === 'GetTimesheetWeek').map(({ args }) => args)).toStrictEqual([
-        { date: '2026-10-26' },
-      ]);
+      expect(
+        Arr.map(
+          Arr.filter(calls, ({ name }) => name === 'GetTimesheetWeek'),
+          ({ args }) => args,
+        ),
+      ).toStrictEqual([{ date: '2026-10-26' }]);
 
-      expect(calls.find(({ name }) => name === 'ListAbsences')?.args).toStrictEqual({
+      expect(Opt.getOrUndefined(Arr.findFirst(calls, ({ name }) => name === 'ListAbsences'))?.args).toStrictEqual({
         dateFrom: '2026-10-26',
         dateTo: '2026-11-01',
       });
@@ -280,10 +282,10 @@ describe('getMyWorkday', () => {
       const { workday } = yield* openWeek();
 
       expect(
-        workday.days.map((day) => ({
+        Arr.map(workday.days, (day) => ({
           date: day.date,
           dayOff: day.dayOff,
-          gaps: day.gaps.map(({ from, to }) => `${from}-${to}`),
+          gaps: Arr.map(day.gaps, ({ from, to }) => `${from}-${to}`),
           overlaps: day.overlaps,
           outside: day.outsideWorkingHours,
         })),
@@ -311,10 +313,10 @@ describe('getMyWorkday', () => {
     Effect.gen(function* () {
       const { call } = yield* setup({
         ...workdayReplies,
-        GetTimesheetWeek: fixture('GetTimesheetWeek-mixed').replace(
+        GetTimesheetWeek: Str.replace(
           '- Mon 14:00 2h',
           '- Mon 07:30 1h ABSENCE Dentist  (api_id: ABEARLY00000001)\r\n- Mon 13:30 1h ABSENCE Doctor  (api_id: ABDOCTOR0000001)\r\n- Mon 14:00 2h',
-        ),
+        )(fixture('GetTimesheetWeek-mixed')),
       });
 
       const workdayResult = yield* call('GetMyWorkday', { date: '2026-11-30', scope: 'day' });
@@ -356,15 +358,14 @@ describe('getMyWorkday', () => {
 
       const workday = yield* structured(Workday, workdayResult);
 
-      expect(calls.filter(({ name }) => name === 'GetTimesheetWeek').map(({ args }) => args.date)).toStrictEqual([
-        '2026-11-30',
-        '2026-12-07',
-        '2026-12-14',
-        '2026-12-21',
-        HOLIDAY_MONDAY,
-      ]);
+      expect(
+        Arr.map(
+          Arr.filter(calls, ({ name }) => name === 'GetTimesheetWeek'),
+          ({ args }) => args.date,
+        ),
+      ).toStrictEqual(['2026-11-30', '2026-12-07', '2026-12-14', '2026-12-21', HOLIDAY_MONDAY]);
 
-      const monday = workday.days.find((day) => day.date === HOLIDAY_MONDAY);
+      const monday = Opt.getOrUndefined(Arr.findFirst(workday.days, (day) => day.date === HOLIDAY_MONDAY));
 
       expect(monday?.unconfirmedPlanned).toStrictEqual([
         {
@@ -379,7 +380,7 @@ describe('getMyWorkday', () => {
         expect.objectContaining({ id: 'ACGC6QVZ73MDPVT', taskId: 'PT42D4KQVJPHKGJ', planningKind: 'fixed-time' }),
       ]);
 
-      expect([monday?.dayOff, monday?.entries.map((entry) => entry.kind)]).toStrictEqual([
+      expect([monday?.dayOff, Arr.map(monday?.entries ?? [], (entry) => entry.kind)]).toStrictEqual([
         true,
         ['planned', 'planned'],
       ]);
@@ -394,7 +395,7 @@ describe('getMyWorkday', () => {
 
       const filtered = yield* structured(Workday, workdayResult);
 
-      expect(filtered.days[0]?.entries.map((entry) => entry.id)).toStrictEqual(['ACGC6QVZ73MDPVT']);
+      expect(Arr.map(filtered.days[0]?.entries ?? [], (entry) => entry.id)).toStrictEqual(['ACGC6QVZ73MDPVT']);
 
       const tooLong = yield* call('GetMyWorkday', { date: '2026-10-01', to: '2027-01-01' });
 
@@ -421,7 +422,7 @@ describe('getTicketContext', () => {
 
       yield* call('GetTicketContext', { ticket: '9087' });
 
-      expect(calls.map(({ name, args }) => [name, args])).toStrictEqual([
+      expect(Arr.map(calls, ({ name, args }) => [name, args])).toStrictEqual([
         ['ListTickets', { query: '9087', state: 'NEW|OPEN|WAIT|CLOSED|DELETED|REQCLOSE', limit: 100 }],
         ['GetTicketDetail', { ticketId: 'TCRFWYDSTH445WJ' }],
         ['ListTicketComments', { ticketId: 'TCRFWYDSTH445WJ', limit: 100 }],
@@ -434,16 +435,18 @@ describe('getTicketContext', () => {
     Effect.gen(function* () {
       const { call } = yield* setup(
         R.map(ticketReplies, (text) =>
-          text
-            .replace(
+          Fn.pipe(
+            text,
+            Str.replace(
               'ticket "Support ticket D" — 9087 Support ticket D  (api_id: AC95BKNX6H2MNG2)',
               'ticket "Old — title" — 9087 Old — title  (api_id: AC95BKNX6H2MNG2)',
-            )
-            .replaceAll('Support ticket D', 'Support — ticket D')
-            .replace(
+            ),
+            Str.replaceAll('Support ticket D', 'Support — ticket D'),
+            Str.replace(
               '(api_id: AC95BKNX6H2MNG2) [locked: timesheet submitted (FINAL)]\r\n',
               '(api_id: AC95BKNX6H2MNG2) [locked: timesheet submitted (FINAL)]\r\n- 2026-10-21 10:00 | Alex Example | 0h40 | ticket "Support — ticket D" — 1234 Support — ticket D related to 9087  (api_id: ACW4TQ8ZD2K6RMH)\r\n- 2026-10-22 10:00 | Alex Example | 2h [PLANNED] | ticket "Support — ticket D" — 9087 Support — ticket D  (api_id: ACPLANNED000001)\r\n- 2026-10-23 10:00 | Alex Example | 0h30 | ticket "Other" — 19087 Other  (api_id: ACOTHER00000001)\r\n',
             ),
+          ),
         ),
       );
 
@@ -455,7 +458,7 @@ describe('getTicketContext', () => {
 
       expect(context.commentCount).toBe(3);
 
-      expect(context.timeEntries.map((entry) => entry.id)).toStrictEqual([
+      expect(Arr.map(context.timeEntries, (entry) => entry.id)).toStrictEqual([
         'AC6UHATHDJJ13PP',
         'ACFERA67KXAJDCC',
         'AC95BKNX6H2MNG2',
@@ -555,7 +558,7 @@ describe('getBoardContext', () => {
     ListTodos: ({ state }: Schema.JsonObject) =>
       state === 'all'
         ? todos
-        : `1 card(s):\r\n${todos.split('\r\n').find((line) => line.startsWith('- TDFPXAJVJE7RMQ5'))}\r\n`,
+        : `1 card(s):\r\n${Opt.getOrUndefined(Arr.findFirst(Str.split(todos, '\r\n'), Str.startsWith('- TDFPXAJVJE7RMQ5')))}\r\n`,
     GetTodoDetail: fixture('GetTodoDetail'),
   };
 
@@ -573,7 +576,9 @@ describe('getBoardContext', () => {
 
       expect(board.board.id).toBe('BO1GWM3SZPBP5NP');
 
-      expect(board.columns.map((column) => [column.id, column.name, column.done, column.cards.length])).toStrictEqual([
+      expect(
+        Arr.map(board.columns, (column) => [column.id, column.name, column.done, column.cards.length]),
+      ).toStrictEqual([
         ['KC18XMJS1WFQRM3', 'Backlog', false, 0],
         ['KCNK9U9T62DZA49', 'To do', false, 11],
         ['KC74DC1DK3EW51P', 'In Progress', false, 1],
@@ -624,9 +629,11 @@ describe('getBoardContext', () => {
     Effect.gen(function* () {
       const { call } = yield* setup({
         ...boardReplies,
-        ListTodos: todos
-          .replace('| BL-01 vragen naar klant sturen |', '| FE | vragen naar klant sturen |')
-          .replace('| due 2026-10-22 | owner', '| due 2026-10-22 | prio high | owner'),
+        ListTodos: Fn.pipe(
+          todos,
+          Str.replace('| BL-01 vragen naar klant sturen |', '| FE | vragen naar klant sturen |'),
+          Str.replace('| due 2026-10-22 | owner', '| due 2026-10-22 | prio high | owner'),
+        ),
       });
 
       const boardContextResult = yield* call('GetBoardContext', {

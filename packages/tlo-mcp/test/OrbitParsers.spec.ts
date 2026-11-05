@@ -1,12 +1,10 @@
-/**
- * @effect-diagnostics preferEffectArray:off preferEffectString:off nodeBuiltinImport:off
- */
-import { readFileSync } from 'node:fs';
-
 import { describe, expect, it } from '@effect/vitest';
+import * as Arr from 'effect/Array';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
+import * as Str from 'effect/String';
 
 import { GetRunningTimer } from '../src/orbit/GetRunningTimer.js';
 import { GetTimesheetWeek, type TimeEntry } from '../src/orbit/GetTimesheetWeek.js';
@@ -16,15 +14,7 @@ import { ListPlannedEntries } from '../src/orbit/ListPlannedEntries.js';
 import { ListTimeEntries } from '../src/orbit/ListTimeEntries.js';
 import { GetTodoDetail, ListBoardLists, ListBoards, ListTodos } from '../src/orbit/boards.js';
 import { GetTicketDetail, ListTicketComments, ListTickets } from '../src/orbit/tickets.js';
-
-/**
- * Raw Orbit text results (CRLF preserved) captured from live Orbit; names and free text are redacted.
- *
- * @param name
- */
-function fixture(name: string) {
-  return readFileSync(new URL(`fixtures/orbit/${name}.txt`, import.meta.url), 'utf8');
-}
+import { fixture } from './fixture.js';
 
 const OPEN_WEEK = 'GetTimesheetWeek-open';
 
@@ -69,7 +59,7 @@ describe('timesheet week parser', () => {
 
       expect(week.userId).toBe('UST7V7BUH3KZ2WQ');
 
-      expect(week.days.map((day) => [day.date, day.state, day.loggedMinutes, day.absenceMinutes])).toStrictEqual([
+      expect(Arr.map(week.days, (day) => [day.date, day.state, day.loggedMinutes, day.absenceMinutes])).toStrictEqual([
         ['2026-10-26', 'OPEN', 480, 0],
         ['2026-10-27', 'OPEN', 480, 0],
         ['2026-10-28', 'OPEN', 480, 0],
@@ -79,7 +69,7 @@ describe('timesheet week parser', () => {
         ['2026-11-01', 'OPEN', 0, 0],
       ]);
 
-      expect(week.days.map((day) => day.entries.length)).toStrictEqual([14, 7, 7, 1, 1, 0, 0]);
+      expect(Arr.map(week.days, (day) => day.entries.length)).toStrictEqual([14, 7, 7, 1, 1, 0, 0]);
     }),
   );
 
@@ -122,17 +112,17 @@ describe('timesheet week parser', () => {
     Effect.gen(function* () {
       const week = yield* decode(GetTimesheetWeek)(fixture('GetTimesheetWeek-final'));
 
-      const entries = week.days.flatMap((day) => day.entries);
+      const entries = Arr.flatMap(week.days, (day) => day.entries);
 
-      expect(new Set(week.days.map((day) => day.state))).toStrictEqual(new Set(['FINAL']));
+      expect(new Set(Arr.map(week.days, (day) => day.state))).toStrictEqual(new Set(['FINAL']));
 
-      expect(new Set(entries.map((entry) => [entry.lock, entry.editable].join(',')))).toStrictEqual(
-        new Set(['timesheet submitted (FINAL),false']),
-      );
+      expect(
+        new Set(Arr.map(entries, (entry) => Arr.join([String(entry.lock), String(entry.editable)], ','))),
+      ).toStrictEqual(new Set(['timesheet submitted (FINAL),false']));
 
       expect(iso(entries[0]?.start)).toBe('2026-10-19T09:00:00.000+02:00[Europe/Amsterdam]');
 
-      expect(entries.find((entry) => entry.id === 'ACE543N9G4T9WS2')?.minutes).toBe(115);
+      expect(Opt.getOrUndefined(Arr.findFirst(entries, (entry) => entry.id === 'ACE543N9G4T9WS2'))?.minutes).toBe(115);
     }),
   );
 
@@ -144,7 +134,7 @@ describe('timesheet week parser', () => {
 
       expect(monday).toMatchObject({ plannedMinutes: 75, absenceMinutes: 480 });
 
-      expect(monday?.entries.map((entry) => [entry.kind, entry.pendingApproval])).toStrictEqual([
+      expect(Arr.map(monday?.entries ?? [], (entry) => [entry.kind, entry.pendingApproval])).toStrictEqual([
         ['planned', undefined],
         ['absence', true],
         ['planned', undefined],
@@ -161,18 +151,18 @@ describe('timesheet week parser', () => {
       const open = fixture(OPEN_WEEK);
 
       const swapped = yield* decode(GetTimesheetWeek)(
-        open.replace('| Day | State | Logged | Planned |', '| Day | State | Planned | Logged |'),
+        Str.replace('| Day | State | Logged | Planned |', '| Day | State | Planned | Logged |')(open),
       ).pipe(Effect.flip);
 
       expect(swapped.message).toContain('Unexpected line: "| Day | State | Planned | Logged |');
 
-      const tableOnly = open.split('\r\n', 4).join('\r\n');
+      const tableOnly = Arr.join(Arr.take(Str.split(open, '\r\n'), 4), '\r\n');
 
       const noDays = yield* decode(GetTimesheetWeek)(tableOnly).pipe(Effect.flip);
 
       expect(noDays.message).toBe('Expected a value with a length of 7\n  at ["days"]');
 
-      const duration = yield* decode(GetTimesheetWeek)(open.replace('- Mon 09:00 0h15', '- Mon 09:00 0h99')).pipe(
+      const duration = yield* decode(GetTimesheetWeek)(Str.replace('- Mon 09:00 0h15', '- Mon 09:00 0h99')(open)).pipe(
         Effect.flip,
       );
 
@@ -181,7 +171,7 @@ describe('timesheet week parser', () => {
       );
 
       const date = yield* decode(ListTimeEntries)(
-        fixture('ListTimeEntries-ticket').replace('- 2026-10-20 12:10', '- 2026-02-30 12:10'),
+        Str.replace('- 2026-10-20 12:10', '- 2026-02-30 12:10')(fixture('ListTimeEntries-ticket')),
       ).pipe(Effect.flip);
 
       expect(date.message).toBe('Expected an existing yyyy-MM-dd HH:mm\n  at ["entries"][0]["start"]');
@@ -193,25 +183,27 @@ describe('timesheet week parser', () => {
       const open = fixture(OPEN_WEEK);
 
       const noColumns = yield* decode(GetTimesheetWeek)(
-        open.replace('| Day | State | Logged | Planned | Absence | Capacity |\r\n', ''),
+        Str.replace('| Day | State | Logged | Planned | Absence | Capacity |\r\n', '')(open),
       ).pipe(Effect.flip);
 
       expect(noColumns.message).toBe('Expected a value with a length of 1\n  at ["columns"]');
 
-      const shifted = yield* decode(GetTimesheetWeek)(open.replace('| Tue 2026-10-27 |', '| Mon 2026-10-27 |')).pipe(
-        Effect.flip,
-      );
+      const shifted = yield* decode(GetTimesheetWeek)(
+        Str.replace('| Tue 2026-10-27 |', '| Mon 2026-10-27 |')(open),
+      ).pipe(Effect.flip);
 
       expect(shifted.message).toContain('Expected day rows Mon to Sun with consecutive dates from the week start');
 
       const mixed = fixture('GetTimesheetWeek-mixed');
 
-      const scheduled = yield* decode(GetTimesheetWeek)(mixed.replace('[PLANNED]', '[SCHEDULED]')).pipe(Effect.flip);
+      const scheduled = yield* decode(GetTimesheetWeek)(Str.replace('[PLANNED]', '[SCHEDULED]')(mixed)).pipe(
+        Effect.flip,
+      );
 
       expect(scheduled.message).toContain('Unexpected line: "- Wed 10:00 0h30 [SCHEDULED]');
 
       const awaiting = yield* decode(GetTimesheetWeek)(
-        fixture('GetTimesheetWeek-planned').replace('(pending approval)', '(awaiting approval)'),
+        Str.replace('(pending approval)', '(awaiting approval)')(fixture('GetTimesheetWeek-planned')),
       ).pipe(Effect.flip);
 
       expect(awaiting.message).toContain('Unexpected line: "- Mon 09:00 8h ABSENCE (awaiting approval)');
@@ -224,7 +216,7 @@ describe('list parsers', () => {
     Effect.gen(function* () {
       const ticket = yield* decode(ListTimeEntries)(fixture('ListTimeEntries-ticket'));
 
-      expect(ticket.entries.map((entry) => [entry.id, entry.minutes, entry.kind, entry.work])).toStrictEqual([
+      expect(Arr.map(ticket.entries, (entry) => [entry.id, entry.minutes, entry.kind, entry.work])).toStrictEqual([
         ['AC6UHATHDJJ13PP', 20, 'logged', 'ticket "Support ticket D"'],
         ['ACNC5EVRCW4A2GT', 30, 'logged', '1931 Interne uren 2026 / Alex Example'],
         ['ACFERA67KXAJDCC', 30, 'logged', 'ticket "Support ticket D"'],
@@ -233,7 +225,7 @@ describe('list parsers', () => {
 
       const planned = yield* decode(ListTimeEntries)(fixture('ListTimeEntries-planned'));
 
-      expect(new Set(planned.entries.map((entry) => entry.kind))).toStrictEqual(new Set(['planned']));
+      expect(new Set(Arr.map(planned.entries, (entry) => entry.kind))).toStrictEqual(new Set(['planned']));
 
       expect(planned.entries).toHaveLength(9);
     }),
@@ -244,7 +236,7 @@ describe('list parsers', () => {
       const text = fixture('ListTimeEntries-ticket');
 
       const capped = yield* decode(ListTimeEntries)(
-        text.replace('4 time entries:', '100 time entries (more exist — narrow the filters):'),
+        Str.replace('4 time entries:', '100 time entries (more exist — narrow the filters):')(text),
       );
 
       expect([(yield* decode(ListTimeEntries)(text)).truncated, capped.truncated]).toStrictEqual([false, true]);
@@ -256,20 +248,22 @@ describe('list parsers', () => {
   it.effect('reads time entries whose description contains a bare line feed', () =>
     Effect.gen(function* () {
       const { entries } = yield* decode(ListTimeEntries)(
-        fixture('ListTimeEntries-ticket').replace('— Work note', '— Work\nnote'),
+        Str.replace('— Work note', '— Work\nnote')(fixture('ListTimeEntries-ticket')),
       );
 
-      expect(entries.find((entry) => entry.id === 'ACNC5EVRCW4A2GT')?.description).toBe('Work\nnote');
+      expect(Opt.getOrUndefined(Arr.findFirst(entries, (entry) => entry.id === 'ACNC5EVRCW4A2GT'))?.description).toBe(
+        'Work\nnote',
+      );
     }),
   );
 
   it.effect('keeps a " — " and quotes inside a ticket name in the work', () =>
     Effect.gen(function* () {
       const { days } = yield* decode(GetTimesheetWeek)(
-        fixture(OPEN_WEEK).replaceAll('Support ticket A', 'Support — ticket A'),
+        Str.replaceAll('Support ticket A', 'Support — ticket A')(fixture(OPEN_WEEK)),
       );
 
-      const entry = days[0]?.entries.find(({ id }) => id === 'ACZ3XD8VSWW6MU9');
+      const entry = Opt.getOrUndefined(Arr.findFirst(days[0]?.entries ?? [], ({ id }) => id === 'ACZ3XD8VSWW6MU9'));
 
       expect([entry?.work, entry?.description]).toStrictEqual([
         'ticket "Support — ticket A"',
@@ -277,12 +271,12 @@ describe('list parsers', () => {
       ]);
 
       const { days: quoted } = yield* decode(GetTimesheetWeek)(
-        fixture(OPEN_WEEK).replaceAll('Support ticket A', 'Support "case" — ticket A'),
+        Str.replaceAll('Support ticket A', 'Support "case" — ticket A')(fixture(OPEN_WEEK)),
       );
 
-      expect(quoted[0]?.entries.find(({ id }) => id === 'ACZ3XD8VSWW6MU9')?.work).toBe(
-        'ticket "Support "case" — ticket A"',
-      );
+      expect(
+        Opt.getOrUndefined(Arr.findFirst(quoted[0]?.entries ?? [], ({ id }) => id === 'ACZ3XD8VSWW6MU9'))?.work,
+      ).toBe('ticket "Support "case" — ticket A"');
     }),
   );
 
@@ -310,7 +304,7 @@ describe('list parsers', () => {
     Effect.gen(function* () {
       const absences = yield* decode(ListAbsences)(fixture('ListAbsences'));
 
-      expect(absences.map((absence) => [absence.date, absence.type, absence.state, absence.note])).toStrictEqual([
+      expect(Arr.map(absences, (absence) => [absence.date, absence.type, absence.state, absence.note])).toStrictEqual([
         ['2026-11-02', 'Holiday', 'approved', undefined],
         ['2026-11-03', 'Holiday', 'approved', undefined],
         ['2026-11-20', 'Holiday', 'approved', 'privé'],
@@ -331,14 +325,18 @@ describe('list parsers', () => {
   it.effect('reads planning work and absence notes that contain a bare line feed', () =>
     Effect.gen(function* () {
       const [planned] = yield* decode(ListPlannedEntries)(
-        fixture('ListPlannedEntries').replace('/ Morning stand-up 2026 |', '/ Morning\nstand-up 2026 |'),
+        Str.replace('/ Morning stand-up 2026 |', '/ Morning\nstand-up 2026 |')(fixture('ListPlannedEntries')),
       );
 
       expect(planned?.work).toBe('2050 Stand-up 2026 / Morning\nstand-up 2026');
 
-      const absences = yield* decode(ListAbsences)(fixture('ListAbsences').replace('— privé ', '— privé\nmiddag '));
+      const absences = yield* decode(ListAbsences)(
+        Str.replace('— privé ', '— privé\nmiddag ')(fixture('ListAbsences')),
+      );
 
-      expect(absences.find(({ id }) => id === 'AB1MRN24STSHJZ2')?.note).toBe('privé\nmiddag');
+      expect(Opt.getOrUndefined(Arr.findFirst(absences, ({ id }) => id === 'AB1MRN24STSHJZ2'))?.note).toBe(
+        'privé\nmiddag',
+      );
     }),
   );
 
@@ -358,13 +356,15 @@ describe('list parsers', () => {
 
       expect(tasks).toHaveLength(30);
 
-      expect(tasks.find((task) => task.id === 'PTSCJBQEWYX3KGQ')).toMatchObject({
+      expect(Opt.getOrUndefined(Arr.findFirst(tasks, (task) => task.id === 'PTSCJBQEWYX3KGQ'))).toMatchObject({
         label: '2050 Stand-up 2026 | Morning stand-up 2026',
         projectNumber: '2050',
         remainingMinutes: 158 * 60 + 51,
       });
 
-      expect(tasks.find((task) => task.id === 'PTB3K18Q2XWAFHK')?.remainingMinutes).toBeUndefined();
+      expect(
+        Opt.getOrUndefined(Arr.findFirst(tasks, (task) => task.id === 'PTB3K18Q2XWAFHK'))?.remainingMinutes,
+      ).toBeUndefined();
 
       const listMyTasksEmpty = yield* decode(ListMyTasks)(fixture('ListMyTasks-empty'));
 
@@ -382,7 +382,7 @@ describe('ticket parsers', () => {
     Effect.gen(function* () {
       const list = yield* decode(ListTickets)(fixture('ListTickets'));
 
-      expect(list.tickets.map((ticket) => [ticket.number, ticket.ticketId])).toStrictEqual([
+      expect(Arr.map(list.tickets, (ticket) => [ticket.number, ticket.ticketId])).toStrictEqual([
         ['9087', 'TCRFWYDSTH445WJ'],
       ]);
 
@@ -414,7 +414,7 @@ describe('ticket parsers', () => {
     Effect.gen(function* () {
       const comments = yield* decode(ListTicketComments)(fixture('ListTicketComments'));
 
-      expect(comments.comments.map((comment) => [comment.isInternal, comment.loggedMinutes])).toStrictEqual([
+      expect(Arr.map(comments.comments, (comment) => [comment.isInternal, comment.loggedMinutes])).toStrictEqual([
         [true, 20],
         [false, 0],
         [false, 0],
@@ -443,7 +443,7 @@ describe('board parsers', () => {
 
       const lists = yield* decode(ListBoardLists)(fixture('ListBoardLists'));
 
-      expect(lists.map((list) => [list.name, list.cardCount, list.done])).toStrictEqual([
+      expect(Arr.map(lists, (list) => [list.name, list.cardCount, list.done])).toStrictEqual([
         ['Backlog', 0, false],
         ['To do', 11, false],
         ['In Progress', 1, false],
@@ -499,7 +499,7 @@ describe('board parsers', () => {
 
       expect(detail.description).toContain('\nWat: klant accordeert');
 
-      expect(detail.linked.map((link) => [link.type, link.id])).toStrictEqual([
+      expect(Arr.map(detail.linked, (link) => [link.type, link.id])).toStrictEqual([
         ['PROJECT_TASK', 'PT3DCNCG9N22AMX'],
         ['PROJECT_TASK', 'PTKHQ9S2H8MNE2S'],
       ]);
@@ -512,7 +512,7 @@ describe('lines seen live', () => {
     Effect.gen(function* () {
       const week = yield* decode(GetTimesheetWeek)(fixture('GetTimesheetWeek-multiline'));
 
-      expect(week.days[4]?.entries.map((entry) => [entry.id, entry.work, entry.description])).toStrictEqual([
+      expect(Arr.map(week.days[4]?.entries ?? [], (entry) => [entry.id, entry.work, entry.description])).toStrictEqual([
         [
           'ACK7RM2XWQ4D8BN',
           '1931 Interne uren 2026 / Alex Example',
@@ -542,13 +542,13 @@ describe('lines seen live', () => {
   it.effect('fails on an unknown card owner, and keeps a pipe in an absence user name out of the type', () =>
     Effect.gen(function* () {
       const owner = yield* decode(GetTodoDetail)(
-        fixture('GetTodoDetail-label').replace('Owner: unassigned', 'Owner: someone-else'),
+        Str.replace('Owner: unassigned', 'Owner: someone-else')(fixture('GetTodoDetail-label')),
       ).pipe(Effect.flip);
 
       expect(owner.message).toContain('Unexpected line: "Owner: someone-else"');
 
       const [absence] = yield* decode(ListAbsences)(
-        fixture('ListAbsences').replace('| Alex Example |', '| Alex | Example |'),
+        Str.replace('| Alex Example |', '| Alex | Example |')(fixture('ListAbsences')),
       );
 
       expect(absence?.type).toBe('Holiday');
@@ -582,7 +582,7 @@ describe('format changes', () => {
   it.effect('fail with a SchemaError naming the line Orbit sent', () =>
     Effect.gen(function* () {
       const week = yield* decode(GetTimesheetWeek)(
-        fixture(OPEN_WEEK).replace('| Mon 2026-10-26 | OPEN | 8h |', '| Mon 2026-10-26 | OPEN | 8 hours |'),
+        Str.replace('| Mon 2026-10-26 | OPEN | 8h |', '| Mon 2026-10-26 | OPEN | 8 hours |')(fixture(OPEN_WEEK)),
       ).pipe(Effect.flip);
 
       expect(Schema.isSchemaError(week)).toBeTruthy();
@@ -592,7 +592,7 @@ describe('format changes', () => {
       );
 
       const tasks = yield* decode(ListMyTasks)(
-        fixture('ListMyTasks').replace('| 1h | PTEQ4TF9Y52WMP6 |', '| 1h | ? |'),
+        Str.replace('| 1h | PTEQ4TF9Y52WMP6 |', '| 1h | ? |')(fixture('ListMyTasks')),
       ).pipe(Effect.flip);
 
       expect(tasks.message).toContain('Unexpected line: "| 1929 2D | Existing business Sales');
@@ -600,7 +600,7 @@ describe('format changes', () => {
       expect(tasks.message).toContain('at [0]');
 
       const absences = yield* decode(ListAbsences)(
-        fixture('ListAbsences').replace('| APPROVED  (api_id', '| ON HOLD  (api_id'),
+        Str.replace('| APPROVED  (api_id', '| ON HOLD  (api_id')(fixture('ListAbsences')),
       ).pipe(Effect.flip);
 
       expect(absences.message).toContain('Unexpected line');
@@ -610,7 +610,7 @@ describe('format changes', () => {
   it.effect('fail with the JSON path for JSON results', () =>
     Effect.gen(function* () {
       const error = yield* decode(ListTicketComments)(
-        fixture('ListTicketComments').replace('"2026-10-20 11:38"', '"20-10-2026 11:38"'),
+        Str.replace('"2026-10-20 11:38"', '"20-10-2026 11:38"')(fixture('ListTicketComments')),
       ).pipe(Effect.flip);
 
       expect(error.message).toContain('["comments"][0]["date"]');
