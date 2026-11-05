@@ -1,3 +1,9 @@
+## @2digits/eslint-config@5.10.6
+
+### Update `@tanstack/eslint-plugin-query` to 5.106.1
+
+The TanStack Query rules now come from `@tanstack/eslint-plugin-query` 5.106.1.
+
 ## @2digits/eslint-config@5.10.5
 
 ### Update ESLint plugins

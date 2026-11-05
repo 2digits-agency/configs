@@ -1,3 +1,9 @@
+## @2digits/tsconfig@1.2.4
+
+### Update `@effect/tsgo` to 0.67.3
+
+The Effect language service now runs on `@effect/tsgo` 0.67.3, which also reports native `String.includes` calls through `preferEffectString`.
+
 ## @2digits/tsconfig@1.2.3
 
 ### Update @effect/tsgo to 0.67.0
