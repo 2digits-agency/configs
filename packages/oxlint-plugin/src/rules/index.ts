@@ -1,3 +1,8 @@
+import { alchemyDomainBlockFileName } from './alchemy/alchemy-domain-block-file-name';
+import { alchemyDomainPureDecide } from './alchemy/alchemy-domain-pure-decide';
+import { alchemyDomainPureImports } from './alchemy/alchemy-domain-pure-imports';
+import { alchemyDomainRequireViewVersion } from './alchemy/alchemy-domain-require-view-version';
+import { alchemyDomainTotalHandlers } from './alchemy/alchemy-domain-total-handlers';
 import { alchemyNoCloudflareInitFinalizer } from './alchemy/alchemy-no-cloudflare-init-finalizer';
 import { alchemyNoDeprecatedDockerConstraints } from './alchemy/alchemy-no-deprecated-docker-constraints';
 import { alchemyNoDeprecatedResource } from './alchemy/alchemy-no-deprecated-resource';
@@ -59,6 +64,11 @@ import { throwInEffectGen } from './effect/throw-in-effect-gen';
 import { paddingLineBetweenStatements } from './padding-line-between-statements';
 
 export const rules = {
+  'alchemy-domain-block-file-name': alchemyDomainBlockFileName,
+  'alchemy-domain-pure-decide': alchemyDomainPureDecide,
+  'alchemy-domain-pure-imports': alchemyDomainPureImports,
+  'alchemy-domain-require-view-version': alchemyDomainRequireViewVersion,
+  'alchemy-domain-total-handlers': alchemyDomainTotalHandlers,
   'alchemy-no-cloudflare-init-finalizer': alchemyNoCloudflareInitFinalizer,
   'alchemy-no-deprecated-docker-constraints': alchemyNoDeprecatedDockerConstraints,
   'alchemy-no-deprecated-resource': alchemyNoDeprecatedResource,
