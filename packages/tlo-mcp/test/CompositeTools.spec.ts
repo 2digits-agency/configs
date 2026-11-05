@@ -24,6 +24,7 @@ import { TicketContext } from '../src/composites/GetTicketContext.js';
 import { gatewayRoutes } from '../src/http/gateway.js';
 import { OrbitClient } from '../src/mcp/OrbitClient.js';
 import { OrbitToolsLive } from '../src/mcp/proxy.js';
+import { ProjectTaskAdded } from '../src/orbit/AddProjectTask.js';
 import { PlatformLive } from '../src/platform.js';
 import { fixture } from './fixture.js';
 
@@ -42,6 +43,7 @@ const UPSTREAM = Arr.map(
     'ListBoardLists',
     'ListTodos',
     'GetTodoDetail',
+    'AddProjectTask',
   ],
   (name) => McpSchema.Tool.make({ name, inputSchema: { type: 'object' } }),
 );
@@ -224,7 +226,7 @@ describe('composite tool registration', () => {
     Effect.gen(function* () {
       const { registrations } = yield* setup({});
 
-      const composites = Arr.map(['GetMyWorkday', 'GetTicketContext', 'GetBoardContext'], (name) => {
+      const composites = Arr.map(['GetMyWorkday', 'GetTicketContext', 'GetBoardContext', 'AddProjectTask'], (name) => {
         const tool = registrations.get(name)?.tool;
 
         return {
@@ -239,9 +241,20 @@ describe('composite tool registration', () => {
         { name: 'GetMyWorkday', readOnly: true, destructive: false, output: 'object' },
         { name: 'GetTicketContext', readOnly: true, destructive: false, output: 'object' },
         { name: 'GetBoardContext', readOnly: true, destructive: false, output: 'object' },
+        { name: 'AddProjectTask', readOnly: false, destructive: false, output: 'object' },
       ]);
 
       expect(registrations.has('GetTimesheetWeek')).toBeTruthy();
+
+      // The gateway's AddProjectTask replaces Orbit's: its schema is the one clients see.
+      expect(registrations.get('AddProjectTask')?.tool.inputSchema).toMatchObject({
+        properties: {
+          startDate: { type: 'string' },
+          assignees: { type: 'array' },
+          chapterId: { type: 'string', pattern: '^[A-Z0-9]{15}$' },
+        },
+        required: ['projectId', 'name'],
+      });
     }).pipe(Effect.provide(requestContext), Effect.scoped),
   );
 });
@@ -409,6 +422,118 @@ describe('getMyWorkday', () => {
       expect(invalid.message).toBe(
         `Invalid parameters for tool 'GetMyWorkday': Expected an existing date as yyyy-MM-dd\n  at ["date"]`,
       );
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
+const MEETING_DAY = '2026-11-05';
+
+const TASK_ADDED =
+  'Task "Interne meeting" added (0.3h), default rate card "Specialist", assigned to Niels Mentink [UST7V7BUH3KZ2WQ]. api_id: PTZVTW47TJ5J6JT. Open project (api_id PR9TQKGXE3D3CYU)';
+
+describe('addProjectTask', () => {
+  it.effect("maps typed parameters to Orbit's arguments and returns the new task's api_id", () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup({ AddProjectTask: TASK_ADDED });
+
+      const result = yield* call('AddProjectTask', {
+        projectId: '2238',
+        name: 'Interne meeting',
+        workloadHours: 0.25,
+        startDate: MEETING_DAY,
+        endDate: MEETING_DAY,
+        assignees: ['UST7V7BUH3KZ2WQ', 'Niels Mentink'],
+        // eslint-disable-next-line unicorn/no-null -- the JSON input for no retainer
+        retainerId: null,
+      });
+
+      expect(calls).toStrictEqual([
+        {
+          name: 'AddProjectTask',
+          args: {
+            projectId: '2238',
+            name: 'Interne meeting',
+            workloadHours: 0.25,
+            startDt: MEETING_DAY,
+            endDt: MEETING_DAY,
+            assignedTo: 'UST7V7BUH3KZ2WQ,Niels Mentink',
+            retainerId: 'NONE',
+          },
+        },
+      ]);
+
+      const added = yield* structured(ProjectTaskAdded, result);
+
+      expect(added).toStrictEqual({
+        taskId: 'PTZVTW47TJ5J6JT',
+        projectId: 'PR9TQKGXE3D3CYU',
+        message: TASK_ADDED,
+      });
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('rejects invalid parameters before calling Orbit', () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup({ AddProjectTask: TASK_ADDED });
+
+      const reversed = yield* call('AddProjectTask', {
+        projectId: '2238',
+        name: 'Interne meeting',
+        startDate: '2026-11-06',
+        endDate: MEETING_DAY,
+      });
+
+      expect([reversed.isError, textOf(reversed)]).toStrictEqual([
+        true,
+        `endDate ${MEETING_DAY} is before startDate 2026-11-06.`,
+      ]);
+
+      // oxlint-disable-next-line unicorn/no-array-for-each
+      const invalid = yield* Effect.forEach(
+        [
+          { projectId: '2238', name: '  ' },
+          { projectId: '22 38', name: 'Meeting' },
+          { projectId: '2238', name: 'Meeting', assignees: ['Niels, Rob'] },
+          { projectId: '2238', name: 'Meeting', assignees: [] },
+          { projectId: '2238', name: 'Meeting', endDate: '2026-02-30' },
+          { projectId: '2238', name: 'Meeting', billingMode: 'FIXED' },
+          { projectId: '2238', name: 'Meeting', workloadHours: -1 },
+          { projectId: '2238', name: 'Meeting', retainerId: 'NONE' },
+        ],
+        (input) => Effect.flip(call('AddProjectTask', input)).pipe(Effect.map(({ message }) => message)),
+      );
+
+      expect(invalid).toHaveLength(8);
+
+      expect(Arr.every(invalid, Str.startsWith("Invalid parameters for tool 'AddProjectTask'"))).toBeTruthy();
+
+      expect(calls).toStrictEqual([]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect("reports Orbit's errors, and an unfamiliar confirmation as success so it is not retried", () =>
+    Effect.gen(function* () {
+      const { call } = yield* setup({
+        AddProjectTask: ({ name }) =>
+          name === 'Closed'
+            ? 'Error: project 2000 is CLOSED; tasks can only be added to DRAFT or OPEN projects.'
+            : 'Task added.',
+      });
+
+      const closed = yield* call('AddProjectTask', { projectId: '2000', name: 'Closed' });
+
+      expect([closed.isError, textOf(closed)]).toStrictEqual([
+        true,
+        'MCP tool reported an error: Error: project 2000 is CLOSED; tasks can only be added to DRAFT or OPEN projects.',
+      ]);
+
+      const unfamiliar = yield* call('AddProjectTask', { projectId: '2238', name: 'Meeting' });
+
+      expect(unfamiliar.isError).toBeFalsy();
+
+      const confirmation = yield* structured(ProjectTaskAdded, unfamiliar);
+
+      expect(confirmation).toStrictEqual({ message: 'Task added.' });
     }).pipe(Effect.provide(requestContext), Effect.scoped),
   );
 });
