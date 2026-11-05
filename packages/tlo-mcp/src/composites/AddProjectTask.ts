@@ -69,7 +69,7 @@ export const AddProjectTask = Tool.make('AddProjectTask', {
           'SUBSCRIPTION projects only: ESTIMATE bills the budgeted hours each period, HOURS the delivered hours. Omit for the account default',
       })
       .pipe(Schema.optionalKey),
-    retainerId: Schema.NullOr(ApiId)
+    retainerId: ApiId.pipe(Schema.NullOr)
       .annotate({
         description:
           'Retainer api_id to charge the hours on, or null for no retainer. Omit for the default: the project retainer on HOURS projects',
