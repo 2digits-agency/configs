@@ -4,6 +4,7 @@ import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
 import * as Layer from 'effect/Layer';
 import * as Stdio from 'effect/Stdio';
+import * as Str from 'effect/String';
 import { vi } from 'vite-plus/test';
 
 import { run } from '../src/cli/command.js';
@@ -13,8 +14,8 @@ const routing = vi.hoisted((): { routes: Array<string> } => ({ routes: [] }));
 
 vi.mock(import('../src/cli/connect.js'), () =>
   import('effect/Effect').then((Effect) => ({
-    connect: Effect.fn('test.connect')(function* (_port: number) {
-      routing.routes.push('gateway');
+    connect: Effect.fn('test.connect')(function* (_port: number, publicUrl?: URL) {
+      routing.routes.push(publicUrl === undefined ? 'gateway' : `gateway ${publicUrl.href}`);
 
       return yield* Effect.die('server stopped');
     }),
@@ -44,6 +45,7 @@ vi.mock(import('../src/oauth/OrbitAuth.js'), (importOriginal) =>
 describe('command routing', () => {
   for (const { args, route } of [
     { args: [], route: 'gateway' },
+    { args: ['--public-url', 'https://tlo--v1re.onamp.dev'], route: 'gateway https://tlo--v1re.onamp.dev/' },
     { args: ['login'], route: 'login' },
     { args: ['logout'], route: 'logout' },
   ]) {
@@ -55,7 +57,7 @@ describe('command routing', () => {
 
         expect(routing.routes).toStrictEqual([route]);
 
-        if (route === 'gateway') {
+        if (Str.startsWith('gateway')(route)) {
           expect(Exit.isFailure(exit)).toBeTruthy();
 
           if (Exit.isFailure(exit)) {
@@ -67,6 +69,27 @@ describe('command routing', () => {
       }).pipe(
         Effect.provide(Layer.merge(PlatformLive, Stdio.layerTest({ args: Effect.succeed(['unknown-stdio-command']) }))),
       ),
+    );
+  }
+
+  for (const url of [
+    'http://tlo.example',
+    'https://tlo.example/mcp',
+    'https://example.com:bogus',
+    'https://example.com:99999',
+    'https://exa mple.com',
+    'https://user@example.com',
+  ]) {
+    it.effect(`rejects public URL ${url} without starting the gateway`, () =>
+      Effect.gen(function* () {
+        routing.routes.length = 0;
+
+        const exit = yield* run(['--public-url', url]).pipe(Effect.exit);
+
+        expect(Exit.isFailure(exit)).toBeTruthy();
+
+        expect(routing.routes).toStrictEqual([]);
+      }).pipe(Effect.provide(Layer.merge(PlatformLive, Stdio.layerTest({})))),
     );
   }
 
