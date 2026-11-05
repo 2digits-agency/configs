@@ -26,7 +26,7 @@ export const AddProjectTask = Tool.make('AddProjectTask', {
     workloadHours: Hours.annotate({
       description: 'Budgeted hours; per invoicing period when recurring. Omit for no budget',
     }).pipe(Schema.optionalKey),
-    // annotateKey: the JSON schema drops annotations of LocalDate's custom check.
+    // The JSON schema drops annotations of LocalDate's custom check, so describe the dates on their keys.
     startDate: LocalDate.annotateKey({ description: 'Start date as yyyy-MM-dd' }).pipe(Schema.optionalKey),
     endDate: LocalDate.annotateKey({
       description: 'End date as yyyy-MM-dd, not before startDate. A date after the project end extends the project',

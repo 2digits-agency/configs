@@ -482,6 +482,7 @@ describe('addProjectTask', () => {
         `endDate ${MEETING_DAY} is before startDate 2026-11-06.`,
       ]);
 
+      // oxlint-disable-next-line unicorn/no-array-for-each
       const invalid = yield* Effect.forEach(
         [
           { projectId: '2238', name: '  ' },
@@ -498,7 +499,9 @@ describe('addProjectTask', () => {
 
       expect(invalid).toHaveLength(8);
 
-      expect(invalid.every((message) => message.startsWith("Invalid parameters for tool 'AddProjectTask'"))).toBe(true);
+      expect(
+        invalid.every((message) => message.startsWith("Invalid parameters for tool 'AddProjectTask'")),
+      ).toBeTruthy();
 
       expect(calls).toStrictEqual([]);
     }).pipe(Effect.provide(requestContext), Effect.scoped),
