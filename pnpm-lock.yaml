@@ -399,8 +399,8 @@ catalogs:
       specifier: 2.4.0
       version: 2.4.0
     posthog-node:
-      specifier: 5.62.0
-      version: 5.62.0
+      specifier: 5.63.1
+      version: 5.63.1
     prettier:
       specifier: 3.9.10
       version: 3.9.10
@@ -890,7 +890,7 @@ importers:
         version: 1.19.5
       posthog-node:
         specifier: 'catalog:'
-        version: 5.62.0(@opentelemetry/api@1.10.0)
+        version: 5.63.1(@opentelemetry/api@1.10.0)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -3316,11 +3316,11 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@posthog/core@1.63.2':
-    resolution: {integrity: sha512-GC03SzHTTDB1tnwT6dvVdSs5tsbNXC+rg7vPLtlFCGtl9tWNzqRcpUes+pe3qgkeOaSEEQ7/pWZMyfvCf6SN3w==}
+  '@posthog/core@1.64.1':
+    resolution: {integrity: sha512-2ziryOLWTxftHrTLhGYQzLHDpPughaRRi/+L1vhg4cQFHJfgTevMzAz21R1zR7MKFDkyJ9lCJD/K2jxIkGbnfg==}
 
-  '@posthog/types@1.420.0':
-    resolution: {integrity: sha512-WrfsR3hynbNOkQor6TrQJrI+7UzStZs2rjFzQ+xK9mRCUH6TLMLfBSR+ibGoKreatb76Uh30b6lSZLWbOgdTsg==}
+  '@posthog/types@1.421.1':
+    resolution: {integrity: sha512-475eg+usYiQ2m7GfxgylnBTVa3aPsEfaE6gQoDvg5nEkWAjcNiGm1u3WsESOErfrFFUajpYcxc71JCzfdoJ8gg==}
 
   '@prettier/plugin-oxc@0.2.3':
     resolution: {integrity: sha512-6TYRFBxthmW0IULsZjik2Gu62jc17xPILlcSIXTXfrhDH4etIcissalZ+RO5oweMWidM3jJ38QJbkD2C6J0/LA==}
@@ -3484,6 +3484,7 @@ packages:
   '@smithy/core@3.35.1':
     resolution: {integrity: sha512-i4YPS4B6ts7bjn7UwLnGjiZdprOvHvgGobFZsYK3GIY3E5hIqtj0rReU69BcTpGp+fvtraSNXeG1l+jtJvF55w==}
     engines: {node: '>=18.0.0'}
+    deprecated: Deprecated due to a bug in custom logger data redaction. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -6789,8 +6790,8 @@ packages:
     resolution: {integrity: sha512-zkd+e9S1AQHhmaBKye9zlFHWjOwVgqXl1q3ECYy8561K7qxR2cREf/STLskulBFd78k6AOFeA+ff1TtEzk9bAA==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-node@5.62.0:
-    resolution: {integrity: sha512-hXKw6m4juSNZMd6FQHhPwrLpnHqmshh0PPUtNfqXNezZF4eG38h2yykfB1PNwDDk7E7tGRvJgiJyq/XWuDXB5A==}
+  posthog-node@5.63.1:
+    resolution: {integrity: sha512-CwJ1JEbFYtXYf8rctJdQy8S61bGNenqf1lBd5xw9z6MGMlfRwtWRrs96D3I3yV5MzKPctyGp0wPtYSTECBcLbQ==}
     engines: {node: ^20.20.0 || >=22.22.0}
     peerDependencies:
       '@opentelemetry/api': ^1.2.0
@@ -9863,11 +9864,11 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@posthog/core@1.63.2':
+  '@posthog/core@1.64.1':
     dependencies:
-      '@posthog/types': 1.420.0
+      '@posthog/types': 1.421.1
 
-  '@posthog/types@1.420.0': {}
+  '@posthog/types@1.421.1': {}
 
   '@prettier/plugin-oxc@0.2.3':
     dependencies:
@@ -13568,9 +13569,9 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.2
 
-  posthog-node@5.62.0(@opentelemetry/api@1.10.0):
+  posthog-node@5.63.1(@opentelemetry/api@1.10.0):
     dependencies:
-      '@posthog/core': 1.63.2
+      '@posthog/core': 1.64.1
     optionalDependencies:
       '@opentelemetry/api': 1.10.0
 
