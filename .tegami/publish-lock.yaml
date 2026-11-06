@@ -1,27 +1,6 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `@tanstack/eslint-plugin-query` to 5.106.1\n\nThe TanStack Query rules now come from `@tanstack/eslint-plugin-query` 5.106.1.\n"
-    filename: 2026-11-05-tanstack-query-bump.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 5.62.0\n\nThe plugin now sends telemetry with `posthog-node` 5.62.0.\n"
-    filename: 2026-11-05-posthog-bump.md
-    v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: minor\n---\n\n### Add Alchemy Domain rules\n\nFive rules check the conventions of the `@alchemy.run/domain` agent skill:\n\n- `alchemy-domain-pure-decide`: no time, randomness or I/O in an aggregate's `decide`.\n- `alchemy-domain-total-handlers`: no `throw` or `getOrThrow` in `evolve` and `reply`.\n- `alchemy-domain-require-view-version`: every `Domain.View` declares its `version`.\n- `alchemy-domain-block-file-name`: one block per file, named `<Noun>.<kind>.ts`.\n- `alchemy-domain-pure-imports`: block files import only `@alchemy.run/domain`, `effect` and relative files.\n\nThe rules only check code that imports `@alchemy.run/domain` and are part of `recommendedRules`.\n"
-    filename: 2026-11-04-alchemy-domain-rules.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Serve behind a public HTTPS URL without OpenTunnel\n\n`tlo-mcp --public-url https://example.com` listens on `0.0.0.0` and reports `https://example.com/mcp` as the endpoint instead of opening an OpenTunnel. Use it on an always-on host that already has HTTPS, such as an Amp Box. This mode needs an existing Orbit session: run `tlo-mcp login` on a Linux machine and copy its `session.json` to the host (macOS keeps the session in the Keychain).\n"
-    filename: 2026-11-04-6bbb762b.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Update `@opentunnel/client` to 0.6.2\n\nThe gateway tunnel now uses `@opentunnel/client` 0.6.2.\n"
-    filename: 2026-11-05-opentunnel-bump.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Add `AddProjectTask`\n\nAgents can now add a task to a draft or open project, for example to book time on it. The gateway defines this tool itself instead of forwarding Orbit's, so its parameters are typed and documented:\n\n- `startDate` and `endDate` must be existing `yyyy-MM-dd` dates, and `endDate` may not be before `startDate`.\n- `projectId` takes an api_id or a project number.\n- `assignees` is a list of api_ids (user, group or division) or unique user names, instead of a comma-separated string.\n- `retainerId` is an api_id, or `null` for no retainer. `billingMode` only accepts `ESTIMATE` or `HOURS`, `workloadHours` must be finite and not negative, and `rate` finite and above 0 (use `nonBillable` for unbilled work).\n\nInvalid input is rejected before Orbit is called. The result returns the new task's `taskId`, so time can be booked on it right away. Each call is still exactly one Orbit write, so Executor approves every task separately. When a task ends after the project, Orbit moves the project's end date to the task's end date.\n\n### Show the api_id pattern in tool schemas\n\nTool input and output schemas now include the 15-character pattern of Orbit api_ids, so clients can check ids before calling.\n\n### Expose `ListRates`\n\nThe read-only `ListRates` tool is now forwarded, so agents can pick the matching rate card for `AddProjectTask`.\n"
-    filename: 2026-11-05-tlo-add-project-task.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Compare gateway keys and OAuth state with Effect's `Mac.timingSafeEqual`\n\nThe gateway's bearer-key check and the OAuth callback's `state` check now use `Mac.timingSafeEqual` from `effect/crypto` instead of `node:crypto`. Behavior is unchanged: a mismatched or differently sized value is still rejected.\n"
-    filename: 2026-11-05-tlo-effect-timing-safe-equal.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.67.3\n\nThe Effect language service now runs on `@effect/tsgo` 0.67.3, which also reports native `String.includes` calls through `preferEffectString`.\n"
-    filename: 2026-11-05-effect-tsgo-bump.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Add `CloseTicketSilently`\n\nThe gateway now offers `CloseTicketSilently`, which closes a ticket without notifying the client. Until now agents could only close a ticket with `CloseTicket`, which sends the client a closing message. The tool takes the ticket number or the api_id. Like the other writes, each close is a single Orbit write that Executor approves separately.\n"
+    filename: 2026-11-06-tlo-close-ticket-silently.md
     v: 0.0.0
 core:packages:
   - id: npm:@2digits/config-monorepo
@@ -30,50 +9,39 @@ core:packages:
     updated: false
   - id: npm:@2digits/constants
     updated: false
-  - changelogIds:
-      - 2026-11-05-tanstack-query-bump.md
-    id: npm:@2digits/eslint-config
-    updated: true
+  - id: npm:@2digits/opencode-plugin
+    updated: false
   - id: npm:@2digits/eslint-plugin
     updated: false
-  - changelogIds:
-      - 2026-11-05-posthog-bump.md
-    id: npm:@2digits/opencode-plugin
-    updated: true
   - id: npm:@2digits/oxfmt-config
     updated: false
   - id: npm:@2digits/oxlint-config
-    updated: true
-  - changelogIds:
-      - 2026-11-04-alchemy-domain-rules.md
-    id: npm:@2digits/oxlint-plugin
-    updated: true
+    updated: false
+  - id: npm:@2digits/oxlint-plugin
+    updated: false
   - id: npm:@2digits/prettier-config
+    updated: false
+  - id: npm:@2digits/eslint-config
     updated: false
   - id: npm:@2digits/renovate-config
     updated: false
   - changelogIds:
-      - 2026-11-04-6bbb762b.md
-      - 2026-11-05-opentunnel-bump.md
-      - 2026-11-05-tlo-add-project-task.md
-      - 2026-11-05-tlo-effect-timing-safe-equal.md
+      - 2026-11-06-tlo-close-ticket-silently.md
     id: npm:@2digits/tlo-mcp
     updated: true
-  - changelogIds:
-      - 2026-11-05-effect-tsgo-bump.md
-    id: npm:@2digits/tsconfig
-    updated: true
+  - id: npm:@2digits/tsconfig
+    updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
   - id: npm:@2digits/constants
-  - id: npm:@2digits/eslint-config
-  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
+  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/prettier-config
+  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig
