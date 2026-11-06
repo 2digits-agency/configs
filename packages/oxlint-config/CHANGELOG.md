@@ -1,3 +1,14 @@
+## @2digits/oxlint-config@3.1.0
+
+### Update Oxlint
+
+- Updated `oxlint` and `@oxlint/plugins` to 1.92.0 and `oxlint-tsgolint` to 7.0.2006.
+
+### Enable new type-aware TypeScript rules
+
+- Enabled `typescript/no-unsafe-enum-assignment`, which reports plain numbers or strings used where an enum value is expected.
+- Enabled `typescript/no-generated-empty-object-type`, which reports utility types that resolve to `{}`, such as `Omit<T, keyof T>`.
+
 ## @2digits/oxlint-config@3.0.5
 
 ### Update oxlint to 1.91.0

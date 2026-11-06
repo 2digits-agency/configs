@@ -1,3 +1,9 @@
+## @2digits/opencode-plugin@0.2.52
+
+### Update PostHog Node SDK
+
+- Updated `posthog-node` to 5.63.1.
+
 ## @2digits/opencode-plugin@0.2.51
 
 ### Update `posthog-node` to 5.62.0

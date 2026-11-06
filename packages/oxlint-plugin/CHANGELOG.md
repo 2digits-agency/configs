@@ -1,3 +1,9 @@
+## @2digits/oxlint-plugin@0.5.1
+
+### Update Oxlint
+
+- Updated `oxlint` and `@oxlint/plugins` to 1.92.0 and `oxlint-tsgolint` to 7.0.2006.
+
 ## @2digits/oxlint-plugin@0.5.0
 
 ### Add Alchemy Domain rules
