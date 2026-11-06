@@ -1,6 +1,21 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Add `CloseTicketSilently`\n\nThe gateway now offers `CloseTicketSilently`, which closes a ticket without notifying the client. Until now agents could only close a ticket with `CloseTicket`, which sends the client a closing message. The tool takes the ticket number or the api_id. Like the other writes, each close is a single Orbit write that Executor approves separately.\n"
-    filename: 2026-11-06-tlo-close-ticket-silently.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update ESLint plugins\n\n- Updated `eslint-plugin-jsdoc` to 65.4.4 and `eslint-plugin-storybook` to 10.6.6.\n"
+    filename: 2026-11-06-189760b0.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update PostHog Node SDK\n\n- Updated `posthog-node` to 5.63.1.\n"
+    filename: 2026-11-06-a484cdab.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxfmt-config\":\n    type: patch\n---\n\n### Update Oxfmt\n\n- Updated `oxfmt` to 0.77.0.\n"
+    filename: 2026-11-06-03580ac9.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: patch\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Update Oxlint\n\n- Updated `oxlint` and `@oxlint/plugins` to 1.92.0 and `oxlint-tsgolint` to 7.0.2006.\n"
+    filename: 2026-11-06-261f18f0.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: minor\n---\n\n### Enable new type-aware TypeScript rules\n\n- Enabled `typescript/no-unsafe-enum-assignment`, which reports plain numbers or strings used where an enum value is expected.\n- Enabled `typescript/no-generated-empty-object-type`, which reports utility types that resolve to `{}`, such as `Omit<T, keyof T>`.\n"
+    filename: 2026-11-06-3ee32e89.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update Effect tsgo\n\n- Updated `@effect/tsgo` to 0.67.4.\n"
+    filename: 2026-11-06-953a76e2.md
     v: 0.0.0
 core:packages:
   - id: npm:@2digits/config-monorepo
@@ -9,39 +24,50 @@ core:packages:
     updated: false
   - id: npm:@2digits/constants
     updated: false
-  - id: npm:@2digits/opencode-plugin
-    updated: false
+  - changelogIds:
+      - 2026-11-06-189760b0.md
+    id: npm:@2digits/eslint-config
+    updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
-  - id: npm:@2digits/oxfmt-config
-    updated: false
-  - id: npm:@2digits/oxlint-config
-    updated: false
-  - id: npm:@2digits/oxlint-plugin
-    updated: false
+  - changelogIds:
+      - 2026-11-06-a484cdab.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
+  - changelogIds:
+      - 2026-11-06-03580ac9.md
+    id: npm:@2digits/oxfmt-config
+    updated: true
+  - changelogIds:
+      - 2026-11-06-261f18f0.md
+      - 2026-11-06-3ee32e89.md
+    id: npm:@2digits/oxlint-config
+    updated: true
+  - changelogIds:
+      - 2026-11-06-261f18f0.md
+    id: npm:@2digits/oxlint-plugin
+    updated: true
   - id: npm:@2digits/prettier-config
-    updated: false
-  - id: npm:@2digits/eslint-config
     updated: false
   - id: npm:@2digits/renovate-config
     updated: false
-  - changelogIds:
-      - 2026-11-06-tlo-close-ticket-silently.md
-    id: npm:@2digits/tlo-mcp
-    updated: true
-  - id: npm:@2digits/tsconfig
+  - id: npm:@2digits/tlo-mcp
     updated: false
+  - changelogIds:
+      - 2026-11-06-953a76e2.md
+    id: npm:@2digits/tsconfig
+    updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
   - id: npm:@2digits/constants
-  - id: npm:@2digits/opencode-plugin
+  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
+  - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/prettier-config
-  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig

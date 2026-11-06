@@ -1,3 +1,9 @@
+## @2digits/eslint-config@5.10.7
+
+### Update ESLint plugins
+
+- Updated `eslint-plugin-jsdoc` to 65.4.4 and `eslint-plugin-storybook` to 10.6.6.
+
 ## @2digits/eslint-config@5.10.6
 
 ### Update `@tanstack/eslint-plugin-query` to 5.106.1
