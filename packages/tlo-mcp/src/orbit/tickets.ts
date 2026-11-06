@@ -81,3 +81,9 @@ export const ListTicketComments = {
   args: Schema.Struct({ ticketId: ApiId, limit: Schema.Int }),
   result: CommentList.pipe(Schema.fromJsonString),
 };
+
+export const CloseTicketSilently = {
+  name: 'CloseTicketSilently',
+  args: Schema.Struct({ ticketId: ApiId }),
+  result: Schema.String,
+};

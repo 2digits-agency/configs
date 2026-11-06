@@ -99,7 +99,7 @@ handoff for the API key and verify one read-only tool after connecting.
 - Tools, schemas, annotations, instructions, structured content, errors and rate limits come from official Orbit.
   Only the allowlisted tools in `src/mcp/tools.ts` (timesheet, time entries, timers, tickets, todos and read-only
   planning/project lookups) are forwarded; other Orbit tools are hidden and cannot be called. Startup warns when Orbit
-  no longer offers an allowlisted tool. `AddProjectTask` is the gateway's own tool with a stricter schema; each call
+  no longer offers an allowlisted tool. `AddProjectTask` and `CloseTicketSilently` are the gateway's own tools with stricter schemas; each call
   is still exactly one Orbit write. Only tools are forwarded; resources/prompts/reverse requests are not exposed. No tool call is automatically replayed.
 - To rotate the gateway key, stop the gateway, remove only `gateway.key`, restart, and update the Executor connection.
 
