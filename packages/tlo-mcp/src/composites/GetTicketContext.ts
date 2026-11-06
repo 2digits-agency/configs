@@ -8,7 +8,7 @@ import * as Tool from 'effect/ai/Tool';
 
 import { TimeEntry } from '../orbit/GetTimesheetWeek.js';
 import { ListTimeEntries } from '../orbit/ListTimeEntries.js';
-import { Orbit } from '../orbit/Orbit.js';
+import { Orbit, type OrbitShape } from '../orbit/Orbit.js';
 import { ApiId, Minutes, TIME_ZONE } from '../orbit/text.js';
 import { GetTicketDetail, ListTicketComments, ListTickets, TicketComment, TicketDetail } from '../orbit/tickets.js';
 import { OrbitReadError, toReadError } from './OrbitReadError.js';
@@ -20,6 +20,34 @@ const API_ID = /^[A-Z0-9]{15}$/;
 const COMMENT_LIMIT = 100;
 
 const TICKET_LIMIT = 100;
+
+/**
+ * The api_id of a ticket given by its number or api_id. Searches all states, so closed tickets are found too.
+ */
+export const findTicketId = Effect.fn('findTicketId')(function* (orbit: OrbitShape, ticket: string) {
+  const query = Str.trim(ticket);
+
+  if (API_ID.test(query)) {
+    return query;
+  }
+
+  const { tickets } = yield* orbit.call(ListTickets, { query, state: ALL_STATES, limit: TICKET_LIMIT });
+
+  const found = Arr.findFirst(tickets, ({ number }) => number === query);
+
+  if (Opt.isNone(found)) {
+    return yield* Effect.fail(
+      OrbitReadError.make({
+        message:
+          tickets.length >= TICKET_LIMIT
+            ? `Ticket ${query} is not in the first ${TICKET_LIMIT} search results Orbit returned; pass the ticket api_id instead.`
+            : `No ticket with number ${query} found.`,
+      }),
+    );
+  }
+
+  return found.value.ticketId;
+});
 
 export class TicketContext extends Schema.Class<TicketContext, { readonly brand: unique symbol }>('TicketContext')({
   ticket: TicketDetail,
@@ -38,7 +66,7 @@ export class TicketContext extends Schema.Class<TicketContext, { readonly brand:
 
 export const GetTicketContext = Tool.make('GetTicketContext', {
   description:
-    'Read-only context for one support ticket by its number (e.g. 9087) or api_id, in one call: full detail, the conversation (newest first), and your time entries on it. Finds closed tickets too. Times are Europe/Amsterdam. Use Orbit write tools (ReplyToTicket, AddInternalComment, CloseTicket) for changes.',
+    'Read-only context for one support ticket by its number (e.g. 9087) or api_id, in one call: full detail, the conversation (newest first), and your time entries on it. Finds closed tickets too. Times are Europe/Amsterdam. Use the write tools (ReplyToTicket, AddInternalComment, CloseTicket, CloseTicketSilently) for changes.',
   parameters: Schema.Struct({
     ticket: Schema.String.annotate({ description: 'Ticket number such as "9087", or the ticket api_id' }),
   }),
@@ -54,28 +82,7 @@ export const GetTicketContextHandler = Effect.gen(function* () {
   const orbit = yield* Orbit;
 
   return Effect.fn('GetTicketContext')(function* ({ ticket }: Tool.Parameters<typeof GetTicketContext>) {
-    const query = Str.trim(ticket);
-
-    let ticketId = query;
-
-    if (!API_ID.test(query)) {
-      const { tickets } = yield* orbit.call(ListTickets, { query, state: ALL_STATES, limit: TICKET_LIMIT });
-
-      const found = Arr.findFirst(tickets, ({ number }) => number === query);
-
-      if (Opt.isNone(found)) {
-        return yield* Effect.fail(
-          OrbitReadError.make({
-            message:
-              tickets.length >= TICKET_LIMIT
-                ? `Ticket ${query} is not in the first ${TICKET_LIMIT} search results Orbit returned; pass the ticket api_id instead.`
-                : `No ticket with number ${query} found.`,
-          }),
-        );
-      }
-
-      ticketId = found.value.ticketId;
-    }
+    const ticketId = yield* findTicketId(orbit, ticket);
 
     const [detail, comments] = yield* Effect.all(
       [orbit.call(GetTicketDetail, { ticketId }), orbit.call(ListTicketComments, { ticketId, limit: COMMENT_LIMIT })],

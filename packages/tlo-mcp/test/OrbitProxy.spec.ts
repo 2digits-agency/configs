@@ -114,6 +114,7 @@ describe('orbit MCP proxy', () => {
         'GetTicketContext',
         'GetBoardContext',
         'AddProjectTask',
+        'CloseTicketSilently',
       ]);
 
       expect(registration.tool).toBe(tool);

@@ -46,6 +46,7 @@ export const EXPOSED_TOOLS: ReadonlyArray<string> = [
   'AddInternalComment',
   'ReplyToTicket',
   'CloseTicket',
+  'CloseTicketSilently',
 
   // Boards and todos
   'ListBoards',

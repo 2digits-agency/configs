@@ -18,6 +18,7 @@ import * as McpServer from 'effect/ai/McpServer';
 import * as HttpRouter from 'effect/http/HttpRouter';
 import * as TestClock from 'effect/testing/TestClock';
 
+import { TicketClosedSilently } from '../src/composites/CloseTicketSilently.js';
 import { BoardContext } from '../src/composites/GetBoardContext.js';
 import { Workday } from '../src/composites/GetMyWorkday.js';
 import { TicketContext } from '../src/composites/GetTicketContext.js';
@@ -44,6 +45,7 @@ const UPSTREAM = Arr.map(
     'ListTodos',
     'GetTodoDetail',
     'AddProjectTask',
+    'CloseTicketSilently',
   ],
   (name) => McpSchema.Tool.make({ name, inputSchema: { type: 'object' } }),
 );
@@ -226,22 +228,26 @@ describe('composite tool registration', () => {
     Effect.gen(function* () {
       const { registrations } = yield* setup({});
 
-      const composites = Arr.map(['GetMyWorkday', 'GetTicketContext', 'GetBoardContext', 'AddProjectTask'], (name) => {
-        const tool = registrations.get(name)?.tool;
+      const composites = Arr.map(
+        ['GetMyWorkday', 'GetTicketContext', 'GetBoardContext', 'AddProjectTask', 'CloseTicketSilently'],
+        (name) => {
+          const tool = registrations.get(name)?.tool;
 
-        return {
-          name,
-          readOnly: tool?.annotations?.readOnlyHint,
-          destructive: tool?.annotations?.destructiveHint,
-          output: tool?.outputSchema?.type,
-        };
-      });
+          return {
+            name,
+            readOnly: tool?.annotations?.readOnlyHint,
+            destructive: tool?.annotations?.destructiveHint,
+            output: tool?.outputSchema?.type,
+          };
+        },
+      );
 
       expect(composites).toStrictEqual([
         { name: 'GetMyWorkday', readOnly: true, destructive: false, output: 'object' },
         { name: 'GetTicketContext', readOnly: true, destructive: false, output: 'object' },
         { name: 'GetBoardContext', readOnly: true, destructive: false, output: 'object' },
         { name: 'AddProjectTask', readOnly: false, destructive: false, output: 'object' },
+        { name: 'CloseTicketSilently', readOnly: false, destructive: false, output: 'object' },
       ]);
 
       expect(registrations.has('GetTimesheetWeek')).toBeTruthy();
@@ -534,6 +540,63 @@ describe('addProjectTask', () => {
       const confirmation = yield* structured(ProjectTaskAdded, unfamiliar);
 
       expect(confirmation).toStrictEqual({ message: 'Task added.' });
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
+describe('closeTicketSilently', () => {
+  it.effect('resolves a ticket number and closes that api_id with one Orbit write', () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup({
+        ListTickets: fixture('ListTickets'),
+        CloseTicketSilently: 'Silently closed ticket TCRFWYDSTH445WJ.',
+      });
+
+      const result = yield* call('CloseTicketSilently', { ticket: '9087' });
+
+      expect(Arr.map(calls, ({ name, args }) => [name, args])).toStrictEqual([
+        ['ListTickets', { query: '9087', state: 'NEW|OPEN|WAIT|CLOSED|DELETED|REQCLOSE', limit: 100 }],
+        ['CloseTicketSilently', { ticketId: 'TCRFWYDSTH445WJ' }],
+      ]);
+
+      const closed = yield* structured(TicketClosedSilently, result);
+
+      expect(closed).toStrictEqual({
+        ticketId: 'TCRFWYDSTH445WJ',
+        message: 'Silently closed ticket TCRFWYDSTH445WJ.',
+      });
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('passes an api_id straight to Orbit, and closes nothing for an unknown number or invalid input', () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup({
+        ListTickets: fixture('ListTickets'),
+        CloseTicketSilently: 'Error: Only open tickets can be accepted',
+      });
+
+      const alreadyClosed = yield* call('CloseTicketSilently', { ticket: 'TC8GN5EJB8ACT6E' });
+
+      expect([alreadyClosed.isError, textOf(alreadyClosed)]).toStrictEqual([
+        true,
+        'MCP tool reported an error: Error: Only open tickets can be accepted',
+      ]);
+
+      const unknown = yield* call('CloseTicketSilently', { ticket: '9481' });
+
+      expect([unknown.isError, textOf(unknown)]).toStrictEqual([true, 'No ticket with number 9481 found.']);
+
+      // oxlint-disable-next-line unicorn/no-array-for-each
+      const invalid = yield* Effect.forEach(['#9481', '', 'tc8gn5ejb8act6e'], (ticket) =>
+        Effect.flip(call('CloseTicketSilently', { ticket })).pipe(Effect.map(({ message }) => message)),
+      );
+
+      expect(Arr.every(invalid, Str.startsWith("Invalid parameters for tool 'CloseTicketSilently'"))).toBeTruthy();
+
+      expect(Arr.map(calls, ({ name, args }) => [name, args])).toStrictEqual([
+        ['CloseTicketSilently', { ticketId: 'TC8GN5EJB8ACT6E' }],
+        ['ListTickets', { query: '9481', state: 'NEW|OPEN|WAIT|CLOSED|DELETED|REQCLOSE', limit: 100 }],
+      ]);
     }).pipe(Effect.provide(requestContext), Effect.scoped),
   );
 });
