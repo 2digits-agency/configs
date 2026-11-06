@@ -1,5 +1,5 @@
 import { ScopeType } from '@typescript-eslint/scope-manager';
-import { AST_NODE_TYPES, ESLintUtils, type TSESLint, type TSESTree } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, ASTUtils, ESLintUtils, type TSESLint, type TSESTree } from '@typescript-eslint/utils';
 import * as tsutils from 'ts-api-utils';
 import type ts from 'typescript';
 
@@ -22,17 +22,15 @@ const SIMPLE_METHODS = new Map([
   ['some', new Set(['Boolean'])],
 ]);
 
-const COMPARE_METHODS = new Set(['sort', 'toSorted']);
+// Methods whose callback receives more than the element, mapped to the arguments the fix forwards.
+const MULTI_ARGUMENT_METHODS = new Map([
+  ['reduce', 'acc, element'],
+  ['reduceRight', 'acc, element'],
+  ['sort', 'a, b'],
+  ['toSorted', 'a, b'],
+]);
 
-const REDUCE_METHODS = new Set(['reduce', 'reduceRight']);
-
-const ALL_METHODS = new Set([...SIMPLE_METHODS.keys(), ...REDUCE_METHODS, ...COMPARE_METHODS]);
-
-const arrayTypeCache = new WeakMap<TSESTree.Node, boolean>();
-
-function isGlobalIdentifier(node: TSESTree.Node, name: string): boolean {
-  return node.type === AST_NODE_TYPES.Identifier && node.name === name;
-}
+const ALL_METHODS = new Set([...SIMPLE_METHODS.keys(), ...MULTI_ARGUMENT_METHODS.keys()]);
 
 function isIgnoredCallback(
   methodName: string,
@@ -60,15 +58,12 @@ function isIgnoredCallback(
   return reference.resolved.scope.type === ScopeType.global;
 }
 
-function isInlineFunction(node: TSESTree.Node): boolean {
-  return node.type === AST_NODE_TYPES.ArrowFunctionExpression || node.type === AST_NODE_TYPES.FunctionExpression;
-}
-
 function isBindCall(node: TSESTree.Node): boolean {
   return (
     node.type === AST_NODE_TYPES.CallExpression &&
     node.callee.type === AST_NODE_TYPES.MemberExpression &&
-    isGlobalIdentifier(node.callee.property, 'bind')
+    node.callee.property.type === AST_NODE_TYPES.Identifier &&
+    node.callee.property.name === 'bind'
   );
 }
 
@@ -90,7 +85,7 @@ function getCallbackName(node: TSESTree.Node): string {
   return 'callback';
 }
 
-const needsParenthesesItems = [
+const NEEDS_PARENTHESES = new Set<TSESTree.Node['type']>([
   AST_NODE_TYPES.SequenceExpression,
   AST_NODE_TYPES.YieldExpression,
   AST_NODE_TYPES.ArrowFunctionExpression,
@@ -100,13 +95,10 @@ const needsParenthesesItems = [
   AST_NODE_TYPES.BinaryExpression,
   AST_NODE_TYPES.UnaryExpression,
   AST_NODE_TYPES.UpdateExpression,
-] as const;
-
-type NeedsParenthesesNode = Extract<TSESTree.Node, { type: (typeof needsParenthesesItems)[number] }>;
-
-function needsParentheses(node: TSESTree.Node): node is NeedsParenthesesNode {
-  return needsParenthesesItems.includes(node.type as never);
-}
+  AST_NODE_TYPES.TSAsExpression,
+  AST_NODE_TYPES.TSSatisfiesExpression,
+  AST_NODE_TYPES.TSTypeAssertion,
+]);
 
 function isArrayType(checker: ts.TypeChecker, type: ts.Type) {
   return tsutils
@@ -134,7 +126,7 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
   create(context) {
     const parserServices = ESLintUtils.getParserServices(context, true);
 
-    if (!parserServices.program || !('getTypeAtLocation' in parserServices)) {
+    if (!parserServices.program) {
       return {};
     }
 
@@ -145,41 +137,25 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
 
       const { name: methodName } = property as TSESTree.Identifier;
 
-      if (!ALL_METHODS.has(methodName)) {
+      if (!ALL_METHODS.has(methodName) || node.arguments.length > 2) {
         return;
       }
 
-      const { arguments: nodeArgs } = node;
-
-      if (nodeArgs.length === 0 || nodeArgs.length > 2) {
-        return;
-      }
-
-      const [callback] = nodeArgs;
+      const [callback] = node.arguments;
 
       if (
         !callback ||
         callback.type === AST_NODE_TYPES.SpreadElement ||
-        isInlineFunction(callback) ||
+        ASTUtils.isFunction(callback) ||
         isBindCall(callback) ||
         isIgnoredCallback(methodName, callback, context.sourceCode)
       ) {
         return;
       }
 
-      let isArray = arrayTypeCache.get(object);
+      const objectType = checker.getTypeAtLocation(parserServices.esTreeNodeToTSNodeMap.get(object));
 
-      if (isArray === undefined) {
-        const tsNode = parserServices.esTreeNodeToTSNodeMap.get(object);
-
-        const objectType = checker.getTypeAtLocation(tsNode);
-
-        isArray = isArrayType(checker, objectType);
-
-        arrayTypeCache.set(object, isArray);
-      }
-
-      if (!isArray) {
+      if (!isArrayType(checker, objectType)) {
         return;
       }
 
@@ -187,19 +163,15 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
 
       const callbackText = context.sourceCode.getText(callback);
 
-      const wrappedCallback = needsParentheses(callback) ? `(${callbackText})` : callbackText;
+      const wrappedCallback = NEEDS_PARENTHESES.has(callback.type) ? `(${callbackText})` : callbackText;
 
-      const isReduceMethod = REDUCE_METHODS.has(methodName);
+      const args = MULTI_ARGUMENT_METHODS.get(methodName) ?? 'element';
 
-      const isCompareMethod = COMPARE_METHODS.has(methodName);
+      const call = `${wrappedCallback}(${args})`;
 
-      const params = isReduceMethod ? '(acc, element)' : isCompareMethod ? '(a, b)' : '(element)';
+      const body = methodName === 'forEach' ? `{ ${call}; }` : call;
 
-      const args = isReduceMethod ? 'acc, element' : isCompareMethod ? 'a, b' : 'element';
-
-      const body = methodName === 'forEach' ? `{ ${wrappedCallback}(${args}); }` : `${wrappedCallback}(${args})`;
-
-      const fixedCallback = `${params} => ${body}`;
+      const fixedCallback = `(${args}) => ${body}`;
 
       context.report({
         node: callback,

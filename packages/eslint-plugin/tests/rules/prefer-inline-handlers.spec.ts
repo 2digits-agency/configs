@@ -238,6 +238,28 @@ const invalids: Array<InvalidTestCase> = [
     `,
     errors: [{ messageId: 'preferInlineHandler', data: { name: 'handleClick' } }],
   },
+
+  {
+    code: tsx`
+      export function MyComponent() {
+        function handleClick(handleClick: unknown) {
+          console.log(handleClick);
+        }
+
+        return <button onClick={handleClick}>Click</button>;
+      }
+    `,
+    output: tsx`
+      export function MyComponent() {
+        
+
+        return <button onClick={(handleClick: unknown) => {
+          console.log(handleClick);
+        }}>Click</button>;
+      }
+    `,
+    errors: [{ messageId: 'preferInlineHandler', data: { name: 'handleClick' } }],
+  },
 ];
 
 await run({

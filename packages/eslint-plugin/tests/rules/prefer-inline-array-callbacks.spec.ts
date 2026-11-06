@@ -145,6 +145,16 @@ const invalids: Array<InvalidTestCase> = [
     errors: [{ messageId: 'noCallbackReference', data: { name: 'method', method: 'map' } }],
   },
   {
+    code: typescript`const arr = [1, 2, 3]; arr.map(fn as (x: number) => number)`,
+    output: typescript`const arr = [1, 2, 3]; arr.map((element) => (fn as (x: number) => number)(element))`,
+    errors: [{ messageId: 'noCallbackReference', data: { name: 'callback', method: 'map' } }],
+  },
+  {
+    code: typescript`const arr = [1, 2, 3]; arr.map(fn satisfies Mapper)`,
+    output: typescript`const arr = [1, 2, 3]; arr.map((element) => (fn satisfies Mapper)(element))`,
+    errors: [{ messageId: 'noCallbackReference', data: { name: 'callback', method: 'map' } }],
+  },
+  {
     code: typescript`const arr = [3, 1, 2]; arr.toSorted(compareFn)`,
     output: typescript`const arr = [3, 1, 2]; arr.toSorted((a, b) => compareFn(a, b))`,
     errors: [{ messageId: 'noCallbackReference', data: { name: 'compareFn', method: 'toSorted' } }],

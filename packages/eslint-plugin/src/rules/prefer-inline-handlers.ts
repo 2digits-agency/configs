@@ -1,74 +1,17 @@
-import type { Scope, Variable } from '@typescript-eslint/scope-manager';
-import { AST_NODE_TYPES, type TSESLint, type TSESTree } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, ASTUtils, type TSESLint, type TSESTree } from '@typescript-eslint/utils';
 
 import { createRule } from '../utils';
 
 type MessageId = 'preferInlineHandler';
 
-const MEMO_HOOKS = new Set(['useCallback', 'useMemo']);
-
-const FUNCTION_NODE_TYPES = new Set<TSESTree.Node['type']>([
-  AST_NODE_TYPES.ArrowFunctionExpression,
-  AST_NODE_TYPES.FunctionDeclaration,
-  AST_NODE_TYPES.FunctionExpression,
-]);
-
-const componentBoundaryCache = new WeakMap<TSESTree.Node, TSESTree.Node | undefined>();
-
-function getComponentBoundary(node: TSESTree.Node): TSESTree.Node | undefined {
-  const cached = componentBoundaryCache.get(node);
-
-  if (cached !== undefined) {
-    return cached;
-  }
-
-  let { parent: current } = node;
-
-  let result: TSESTree.Node | undefined;
-
-  while (current) {
-    if (FUNCTION_NODE_TYPES.has(current.type)) {
-      result = current;
-
-      break;
+function isInsideFunction(node: TSESTree.Node): boolean {
+  for (let current = node.parent; current; current = current.parent) {
+    if (ASTUtils.isFunction(current)) {
+      return true;
     }
-
-    current = current.parent;
-  }
-
-  componentBoundaryCache.set(node, result);
-
-  return result;
-}
-
-function isWrappedInMemoHook(init: TSESTree.Expression): boolean {
-  if (init.type !== AST_NODE_TYPES.CallExpression) {
-    return false;
-  }
-
-  const { callee } = init;
-
-  if (callee.type === AST_NODE_TYPES.Identifier) {
-    return MEMO_HOOKS.has(callee.name);
   }
 
   return false;
-}
-
-function findVariable(scope: Scope, name: string): Variable | undefined {
-  let currentScope: Scope | null = scope;
-
-  while (currentScope) {
-    const found = currentScope.set.get(name);
-
-    if (found) {
-      return found;
-    }
-
-    currentScope = currentScope.upper;
-  }
-
-  return undefined;
 }
 
 function getHandlerText(
@@ -124,9 +67,10 @@ export const preferInlineHandlers = createRule<[], MessageId>({
       declarationNode: TSESTree.Node,
       handlerNode: TSESTree.ArrowFunctionExpression | TSESTree.FunctionExpression | TSESTree.FunctionDeclaration,
     ) {
-      const scope = sourceCode.getScope(declarationNode);
-
-      const variable = findVariable(scope, identifier.name);
+      // Look the name up among the declaration's own variables: a function's scope also holds its parameters.
+      const variable = sourceCode
+        .getDeclaredVariables(declarationNode)
+        .find((declared) => declared.identifiers.includes(identifier));
 
       if (!variable) {
         return;
@@ -176,24 +120,16 @@ export const preferInlineHandlers = createRule<[], MessageId>({
     }
 
     return {
-      'VariableDeclarator[init.type=ArrowFunctionExpression], VariableDeclarator[init.type=FunctionExpression]':
-        function VariableDeclaratorChecker(node: TSESTree.VariableDeclarator) {
-          if (
-            node.id.type !== AST_NODE_TYPES.Identifier ||
-            !node.init ||
-            !getComponentBoundary(node) ||
-            isWrappedInMemoHook(node.init)
-          ) {
-            return;
-          }
+      VariableDeclarator(node) {
+        if (node.id.type !== AST_NODE_TYPES.Identifier || !ASTUtils.isFunction(node.init) || !isInsideFunction(node)) {
+          return;
+        }
 
-          const handlerNode = node.init as TSESTree.ArrowFunctionExpression | TSESTree.FunctionExpression;
+        reportIfSingleUse(node.id, node, node.init);
+      },
 
-          reportIfSingleUse(node.id, node, handlerNode);
-        },
-
-      FunctionDeclaration(node: TSESTree.FunctionDeclaration) {
-        if (!node.id || !getComponentBoundary(node)) {
+      FunctionDeclaration(node) {
+        if (!node.id || !isInsideFunction(node)) {
           return;
         }
 
