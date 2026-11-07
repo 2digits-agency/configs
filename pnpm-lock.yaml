@@ -417,8 +417,8 @@ catalogs:
       specifier: 19.3.1
       version: 19.3.1
     renovate:
-      specifier: 44.221.5
-      version: 44.221.5
+      specifier: 44.222.0
+      version: 44.222.0
     tailwind-csstree:
       specifier: 0.4.2
       version: 0.4.2
@@ -1147,7 +1147,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 44.221.5(supports-color@7.2.0)(typanion@3.14.0)
+        version: 44.222.0(supports-color@7.2.0)(typanion@3.14.0)
       tsrs:
         specifier: 'catalog:'
         version: 0.22.0-ts7.1.0-beta
@@ -1485,8 +1485,8 @@ packages:
     resolution: {integrity: sha512-y7/yvZ2TPAnR9+jnc00klvNNLkJiXFFrQA/hlLCcxA9a2A4zQIOimyFQ9XfwYKiGD1fb5GY8vbKIIgO8d5Tb2A==}
     engines: {node: '>= 20.12.0'}
 
-  '@containerbase/base@14.66.2':
-    resolution: {integrity: sha512-czWg6MRXT7adkvST888PqqahRh29sD/l/KtkgUCaq0tQEWP3k4tfAGbuEWI2mcMsb3XbvzV0cs+PizreV3kHzQ==}
+  '@containerbase/base@14.66.5':
+    resolution: {integrity: sha512-5vbXTmyX+pZzIQWKc9x0E0wkSwwPLuO+tLf0IehPt+PBTdbpmmAQ9DAKW+CypEYYvFz9Pl7w65XyjXjtgqB1Hw==}
     engines: {node: '>=24.10.0'}
     peerDependencies:
       zod: ^4.0.0
@@ -1494,8 +1494,8 @@ packages:
       zod:
         optional: true
 
-  '@containerbase/base@14.66.5':
-    resolution: {integrity: sha512-5vbXTmyX+pZzIQWKc9x0E0wkSwwPLuO+tLf0IehPt+PBTdbpmmAQ9DAKW+CypEYYvFz9Pl7w65XyjXjtgqB1Hw==}
+  '@containerbase/base@14.66.6':
+    resolution: {integrity: sha512-vN2qUAEAYqyI81BEA4b4+N2qc0CBZGb+RQq5+pudYIQMe/naDuCNIr2QIjQSR5EGHvi0zlr8gXH+IWEcD2pboA==}
     engines: {node: '>=24.10.0'}
     peerDependencies:
       zod: ^4.0.0
@@ -3703,8 +3703,8 @@ packages:
     peerDependencies:
       '@redis/client': ^6.2.1
 
-  '@renovatebot/base-image@13.160.9':
-    resolution: {integrity: sha512-sp3/3oNAA/jpG1TwqwlTfcmbIsXZofwa6TGvaCc6KYTQ0d1uOzCDf2eH5gDF7K5nLu2KKoO58zFbDNDQ8DKv6g==}
+  '@renovatebot/base-image@13.161.1':
+    resolution: {integrity: sha512-juJskfxqrMY9pZUF6SWpCzgpFGN5NaR8jPrG9dD7zfIJTsRXHxrGuLbqtkBoZvAMX2uRB06Mh4P3unwvm/Znhg==}
     engines: {node: '>=24.10.0'}
     peerDependencies:
       zod: ^4.0.0
@@ -3771,6 +3771,9 @@ packages:
   '@smithy/core@3.35.1':
     resolution: {integrity: sha512-i4YPS4B6ts7bjn7UwLnGjiZdprOvHvgGobFZsYK3GIY3E5hIqtj0rReU69BcTpGp+fvtraSNXeG1l+jtJvF55w==}
     engines: {node: '>=18.0.0'}
+    deprecated: |-
+      Deprecated due to a bug in custom logger data redaction. Upgrade to the latest version. If you used a custom logger with this
+        version, review your logs and rotate any credentials or other secrets. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -6619,8 +6622,8 @@ packages:
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
     hasBin: true
 
-  node-html-parser@9.0.5:
-    resolution: {integrity: sha512-LpUc74Ax3L6AsxTEqoep0GDqCBbsPjtn74sYaiazxGXfwhe6iqD4E5sHTJFCU+wBxVMX+Dd7mvLim0QM1vsvpw==}
+  node-html-parser@9.0.6:
+    resolution: {integrity: sha512-q3ETJ2gU+VlERyYbiJ5JQ6+mMVV1Bc6mZQ7MdJ30moq+h3oN0kQGj3rWDORaSX1SOLSkPbY/bN+sBzDlliVOBA==}
 
   node-releases@2.0.57:
     resolution: {integrity: sha512-kQK9LGGFiHtrWiNhZtA7Qbw17AQz+dmsEKODRIVTXA9+e5MS/2gZEBhYJt13GrAz5/IOZKddH/0Z3TP/Zgo+yw==}
@@ -7336,8 +7339,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@44.221.5:
-    resolution: {integrity: sha512-D8jUS7bzAWCPdRe2UuoGdusda2J4/f6i3YbWw7r8cwA68AW63HCE1e4jlra/INSnPnbWW1kLFAmYuYPZfXdWWQ==}
+  renovate@44.222.0:
+    resolution: {integrity: sha512-pr6ejUC8jngO3b5RYMWP3H5MzbpkaozKRLcpeR7ssP3fTrmYIdNplVtdvOBRI3Mxug4DrYCUbL4PwVS5hU8ASQ==}
     engines: {node: ^24.11.0 || ^26.13.0, pnpm: ^11.0.0}
     hasBin: true
 
@@ -8577,13 +8580,13 @@ snapshots:
       fast-wrap-ansi: 0.2.2
       sisteransi: 1.0.5
 
-  '@containerbase/base@14.66.2(zod@4.6.7)':
+  '@containerbase/base@14.66.5(zod@4.6.7)':
     dependencies:
       semver: 7.8.5
     optionalDependencies:
       zod: 4.6.7
 
-  '@containerbase/base@14.66.5(zod@4.6.7)':
+  '@containerbase/base@14.66.6(zod@4.6.7)':
     dependencies:
       semver: 7.8.5
     optionalDependencies:
@@ -10406,9 +10409,9 @@ snapshots:
     dependencies:
       '@redis/client': 6.2.1(@opentelemetry/api@1.10.0)
 
-  '@renovatebot/base-image@13.160.9(zod@4.6.7)':
+  '@renovatebot/base-image@13.161.1(zod@4.6.7)':
     dependencies:
-      '@containerbase/base': 14.66.5(zod@4.6.7)
+      '@containerbase/base': 14.66.6(zod@4.6.7)
     optionalDependencies:
       zod: 4.6.7
 
@@ -10428,7 +10431,7 @@ snapshots:
 
   '@renovatebot/osv-offline-db@4.5.10(supports-color@7.2.0)(zod@4.6.7)':
     dependencies:
-      '@containerbase/base': 14.66.2(zod@4.6.7)
+      '@containerbase/base': 14.66.5(zod@4.6.7)
       debug: 4.4.3(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
@@ -13617,7 +13620,7 @@ snapshots:
       which: 7.0.0
     optional: true
 
-  node-html-parser@9.0.5:
+  node-html-parser@9.0.6:
     dependencies:
       css-select: 5.2.2
       entities: 8.1.0
@@ -14333,7 +14336,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@44.221.5(supports-color@7.2.0)(typanion@3.14.0):
+  renovate@44.222.0(supports-color@7.2.0)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1139.0
       '@aws-sdk/client-ec2': 3.1139.0
@@ -14366,7 +14369,7 @@ snapshots:
       '@pnpm/parse-overrides': 1001.0.4
       '@qnighy/marshal': 0.1.3
       '@redis/client': 6.3.1(@opentelemetry/api@1.10.0)
-      '@renovatebot/base-image': 13.160.9(zod@4.6.7)
+      '@renovatebot/base-image': 13.161.1(zod@4.6.7)
       '@renovatebot/detect-tools': 5.0.0
       '@renovatebot/good-enough-parser': 4.0.3
       '@renovatebot/osv-offline': 4.5.10(supports-color@7.2.0)(zod@4.6.7)
@@ -14426,7 +14429,7 @@ snapshots:
       moo: 0.5.3
       ms: 2.1.3
       neotraverse: 1.0.1
-      node-html-parser: 9.0.5
+      node-html-parser: 9.0.6
       p-all: 5.0.1
       p-map: 7.1.1
       p-queue: 9.3.5
