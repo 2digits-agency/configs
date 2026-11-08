@@ -10,7 +10,7 @@ import { recommendedRules } from '@2digits/oxlint-plugin';
 
 import twoDigits, { type FlatConfigItem, type RuleName } from '../src';
 import { javascript, node, react, twoDigitsPlugin, typescript, unicorn, vitest, zod } from '../src/configs';
-import { runOxlint, withTemporaryProject } from './oxlint';
+import { presetUrl, runOxlint, withTemporaryProject } from './oxlint';
 
 /**
  * The rules of the named config object.
@@ -185,6 +185,179 @@ describe('oxlint config', () => {
 
     it.for(reactCompilerRules)('$name is an error', (rule) => {
       expect(reactRules[rule], rule).toBe('error');
+    });
+  });
+
+  describe('native React web checks', () => {
+    it('requires explicit web opt-in and inherits the React file scope', () => {
+      for (const react of [true, { web: false }, { enable: false, web: true }]) {
+        expect(JSON.stringify(twoDigits({ react }))).not.toContain('jsx-a11y/alt-text');
+      }
+
+      for (const web of [true, { files: undefined }]) {
+        const config = twoDigits({ react: { enable: true, files: ['ui/**/*.tsx'], web } });
+
+        const webConfig = config.overrides?.find(({ rules }) => rules?.['jsx-a11y/alt-text'] === 'error');
+
+        expect(webConfig?.files).toStrictEqual(['ui/**/*.tsx']);
+
+        expect(webConfig?.rules?.['react/no-unknown-property']).toStrictEqual([
+          'error',
+          { ignore: ['cmdk-input-wrapper'] },
+        ]);
+      }
+
+      expect(reactRules['react/no-unstable-nested-components']).toStrictEqual(['error', { allowAsProps: true }]);
+    });
+
+    it('supports a separate web scope and preserves web overrides before consumer configs', () => {
+      const config = twoDigits(
+        {
+          react: {
+            enable: true,
+            files: ['**/*.tsx'],
+            web: {
+              files: ['apps/web/**/*.tsx'],
+              overrides: { 'jsx-a11y/alt-text': 'off' },
+            },
+          },
+        },
+        { files: ['apps/web/legacy/**'], rules: { 'jsx-a11y/alt-text': 'warn' } },
+      );
+
+      const web = config.overrides?.find(({ rules }) => rules?.['jsx-a11y/html-has-lang'] === 'error');
+
+      expect(web?.files).toStrictEqual(['apps/web/**/*.tsx']);
+
+      expect(web?.rules?.['jsx-a11y/alt-text']).toBe('off');
+
+      expect(config.overrides?.at(-1)).toMatchObject({
+        files: ['apps/web/legacy/**'],
+        rules: { 'jsx-a11y/alt-text': 'warn' },
+      });
+    });
+
+    // Load the built public preset; isolate the new native rules from unrelated style and type policies.
+    const nativeConfig = `
+      import twoDigits from '${presetUrl}';
+      const config = twoDigits({
+        react: { enable: true, web: { files: ['web-*.tsx'] } }, ts: false, vitest: false, zod: false,
+      });
+      export default {
+        ...config,
+        jsPlugins: [],
+        options: { ...config.options, typeAware: false },
+        overrides: config.overrides.map(({ jsPlugins, ...override }) => ({
+          ...override,
+          rules: Object.fromEntries(Object.entries(override.rules ?? {}).filter(([name]) =>
+            name.startsWith('jsx-a11y/') || name === 'react/no-unknown-property'
+              || name === 'react/no-unstable-nested-components')),
+        })),
+      };
+    `;
+
+    it('reports all 15 accessibility checks and invalid DOM props only in the web scope', () => {
+      const invalid = `
+        export function Page() {
+          return <>
+            <html />
+            <img src="logo.png" />
+            <iframe src="/embed" />
+            <label>Name</label>
+            <div aria-labl="Name" />
+            <div aria-hidden="sometimes" />
+            <div role="unknown" />
+            <meta aria-label="Name" />
+            <div role="checkbox" />
+            <div role="heading" aria-level={2} aria-checked="true" />
+            <button aria-hidden="true" />
+            <div tabIndex={1} />
+            <div onClick={() => {}} />
+            <ul onClick={() => {}} />
+            <svg stroke-linecap="round" />
+            <div cmdk-input-wrapper="" />
+          </>;
+        }
+      `;
+
+      const valid = `
+        export function Page() {
+          return <html lang="en"><body>
+            <img src="logo.png" alt="Company" />
+            <iframe src="/embed" title="Product demo" />
+            <label htmlFor="name">Name</label><input id="name" />
+            <label>Email<input type="email" /></label>
+            <div aria-label="Name" aria-hidden="false" />
+            <div role="checkbox" aria-checked="false" tabIndex={0} />
+            <div role="heading" aria-level={2} />
+            <button type="button" onClick={() => {}}>Save</button>
+            <svg strokeLinecap="round" />
+            <div cmdk-input-wrapper="" data-state="open" />
+          </body></html>;
+        }
+      `;
+
+      withTemporaryProject(
+        {
+          'oxlint.config.mjs': nativeConfig,
+          'web-invalid.tsx': invalid,
+          'web-valid.tsx': valid,
+          'native.tsx': invalid,
+        },
+        (directory) => {
+          const bad = runOxlint(directory, 'web-invalid.tsx');
+
+          expect(bad.status, bad.output).toBe(1);
+
+          for (const rule of [
+            'alt-text',
+            'aria-props',
+            'aria-proptypes',
+            'aria-role',
+            'aria-unsupported-elements',
+            'click-events-have-key-events',
+            'html-has-lang',
+            'iframe-has-title',
+            'label-has-associated-control',
+            'no-aria-hidden-on-focusable',
+            'no-noninteractive-element-interactions',
+            'no-static-element-interactions',
+            'role-has-required-aria-props',
+            'role-supports-aria-props',
+            'tabindex-no-positive',
+          ]) {
+            expect(bad.output, rule).toContain(`jsx-a11y(${rule})`);
+          }
+
+          // Both the misspelled ARIA property and the SVG property are invalid DOM properties.
+          expect(bad.output.match(/react\(no-unknown-property\)/gu), bad.output).toHaveLength(2);
+
+          const good = runOxlint(directory, 'web-valid.tsx', 'native.tsx');
+
+          expect(good.status, good.output).toBe(0);
+        },
+      );
+    });
+
+    it('rejects local component definitions but permits stable components, translation callbacks and render props', () => {
+      const invalid = readFileSync(new URL('fixtures/react/nested-invalid.tsx', import.meta.url), 'utf8');
+
+      const valid = readFileSync(new URL('fixtures/react/nested-valid.tsx', import.meta.url), 'utf8');
+
+      withTemporaryProject(
+        { 'oxlint.config.mjs': nativeConfig, 'invalid.tsx': invalid, 'valid.tsx': valid },
+        (directory) => {
+          const bad = runOxlint(directory, 'invalid.tsx');
+
+          expect(bad.status, bad.output).toBe(1);
+
+          expect(bad.output.match(/react\(no-unstable-nested-components\)/gu)).toHaveLength(1);
+
+          const good = runOxlint(directory, 'valid.tsx');
+
+          expect(good.status, good.output).toBe(0);
+        },
+      );
     });
   });
 

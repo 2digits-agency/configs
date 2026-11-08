@@ -19,6 +19,16 @@ export interface OptionsWithFiles extends OptionsOverrides {
   files?: Array<string>;
 }
 
+export interface OptionsWithReact extends OptionsWithFiles {
+  /**
+   * Enable native web accessibility and DOM property checks. Disabled by default for React Native compatibility.
+   * Inherits React's file patterns unless `web.files` is provided; web rule overrides belong in `web.overrides`.
+   *
+   * @default false
+   */
+  web?: boolean | OptionsWithFiles;
+}
+
 export interface OptionsWithVitest extends OptionsWithFiles {
   /**
    * Enable type-aware Vitest lint rules for `expectTypeOf` and related APIs.
