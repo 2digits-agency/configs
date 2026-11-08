@@ -16,6 +16,9 @@ const tester = new RuleTester({
 
 const imports = `
   import * as Effect from 'effect/Effect'
+  import * as Fn from 'effect/Function'
+  import * as Opt from 'effect/Option'
+  import * as Str from 'effect/String'
   import * as Match from 'effect/Match'
   import * as Schema from 'effect/Schema'
 `;
@@ -40,6 +43,8 @@ tester.run('no-trivial-wrapper', noTrivialWrapper, {
     'function isMode(value: string): value is Mode { return modes.has(value) }',
     'export function isOperator(operator) { return operators.has(operator) }',
     'export function enclosingFunction(node) { return findAncestor(node, isFunctionNode) }',
+    `${imports} function title(owner) { return Opt.match(owner, { onNone: () => 'none', onSome: (o) => o.name }) }`,
+    `${imports} function slug(value: string) { return Fn.pipe(value, Str.trim, Str.toLowerCase) }`,
     "import * as Arr from 'effect/Array'\nfunction isList(value: Item | ReadonlyArray<Item>): value is ReadonlyArray<Item> { return Arr.isArray(value) }",
   ],
   invalid: [
@@ -58,6 +63,14 @@ tester.run('no-trivial-wrapper', noTrivialWrapper, {
     {
       code: `${imports} export function render(value) { return Match.valueTags(value, cases) }`,
       errors: [{ messageId: 'forwardsWithArguments', data: { name: 'render', callee: 'Match.valueTags' } }],
+    },
+    {
+      code: `${imports} function isInternal(email: string) { return Fn.pipe(email, Str.includes('@example.com')) }`,
+      errors: [{ messageId: 'forwardsWithArguments', data: { name: 'isInternal', callee: 'Fn.pipe' } }],
+    },
+    {
+      code: "import { pipe } from 'effect/Function'\nimport * as Str from 'effect/String'\nfunction trim(value) { return pipe(value, Str.trim) }",
+      errors: [{ messageId: 'forwardsWithArguments', data: { name: 'trim', callee: 'pipe' } }],
     },
     {
       code: 'const send = (...args) => transport(...args)',

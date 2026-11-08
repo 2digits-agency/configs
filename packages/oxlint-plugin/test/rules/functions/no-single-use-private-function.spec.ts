@@ -1,4 +1,5 @@
 import { describe, it } from '@effect/vitest';
+import * as Str from 'effect/String';
 import { RuleTester } from 'oxlint/plugins-dev';
 
 import { noSingleUsePrivateFunction } from '../../../src/rules/functions/no-single-use-private-function';
@@ -22,6 +23,8 @@ tester.run('no-single-use-private-function', noSingleUsePrivateFunction, {
     'const double = (x) => x * 2\nexport const a = double(1)\nexport default double',
     'function walk(node) { return node.children.map(walk) }\nexport const tree = walk(root)',
     'function unused(x) { return x }',
+    'function catalog<const A>(entries: A) { return entries }\nexport const routes = catalog([1, 2])',
+    `function r(e){return [${Str.repeat(200)('e,')}]}\nexport const a = r(1)`,
     'function isMode(value: string): value is Mode { return modes.has(value) }\nexport const a = values.filter(isMode)',
     'function countdown(n) { return n > 0 ? countdown(n - 1) : 0 }',
     'const limit = 10\nexport const a = limit',

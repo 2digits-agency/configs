@@ -40,6 +40,7 @@ tester.run('no-forwarding-lambda', noForwardingLambda, {
     `${imports} Effect.acquireRelease(open, (connection) => close(connection))`,
     `${imports} Stream.scan(0, (total) => reset(total))`,
     `${imports} Effect.map((id) => makeLoader(config)(id))`,
+    `${imports} Schema.declare((input): input is Report => isReport(input))`,
   ],
   invalid: [
     {

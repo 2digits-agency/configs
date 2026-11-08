@@ -18,11 +18,14 @@ import { isTypeGuard } from './forwarding';
 
 interface Candidate {
   readonly declaration: ESTree.Node;
-  readonly guard: boolean;
+  // Type guards and generic functions, whose narrowing or inference inlining would lose.
+  readonly typed: boolean;
   readonly name: ESTree.BindingIdentifier;
 }
 
 const defaultMaxLines = 3;
+
+const maxLineWidth = 120;
 
 const fnPath = ['Effect', 'fn' satisfies keyof typeof Effect];
 
@@ -49,7 +52,13 @@ function candidates(
   state: FileState,
 ): ReadonlyArray<Candidate> {
   if (statement.type === 'FunctionDeclaration' && statement.id && statement.body) {
-    return [{ declaration: statement, guard: isTypeGuard(statement), name: statement.id }];
+    return [
+      {
+        declaration: statement,
+        typed: isTypeGuard(statement) || Boolean(statement.typeParameters),
+        name: statement.id,
+      },
+    ];
   }
 
   if (statement.type !== 'VariableDeclaration') {
@@ -65,7 +74,11 @@ function candidates(
 
     const init = unwrapExpression(declarator.init);
 
-    found.push({ declaration: declarator, guard: isFunctionNode(init) && isTypeGuard(init), name: declarator.id });
+    found.push({
+      declaration: declarator,
+      typed: isFunctionNode(init) && (isTypeGuard(init) || Boolean(init.typeParameters)),
+      name: declarator.id,
+    });
   }
 
   return found;
@@ -126,13 +139,16 @@ export const noSingleUsePrivateFunction: Rule = defineEffectRule(
       const exported = locallyExportedNames(program);
 
       for (const statement of program.body) {
-        for (const { declaration, guard, name } of candidates(statement, getState())) {
-          // Components (PascalCase), hooks (`useX`) and type guards, whose narrowing inlining would lose, stay named.
+        for (const { declaration, typed, name } of candidates(statement, getState())) {
+          const text = context.sourceCode.getText(declaration);
+
+          // Components (PascalCase) and hooks (`useX`) stay named; the width limit keeps minified code out.
           if (
-            guard ||
+            typed ||
             exported.has(name.name) ||
             /^\p{Lu}|^use\p{Lu}/u.test(name.name) ||
-            Str.split(context.sourceCode.getText(declaration), '\n').length > limit
+            Str.split(text, '\n').length > limit ||
+            text.length > limit * maxLineWidth
           ) {
             continue;
           }

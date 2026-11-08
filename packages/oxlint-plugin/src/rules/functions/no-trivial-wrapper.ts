@@ -2,14 +2,7 @@ import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Str from 'effect/String';
 
-import {
-  canonicalPath,
-  defineEffectRule,
-  isFunctionNode,
-  ruleMeta,
-  type FileState,
-  type FunctionNode,
-} from '../../utils';
+import { defineEffectRule, isAnyApi, isFunctionNode, ruleMeta, type FileState, type FunctionNode } from '../../utils';
 import { forwardedCall, isDetachableCallee, isEffectGuard, isTypeGuard } from './forwarding';
 
 const maxCalleeLength = 60;
@@ -44,8 +37,13 @@ function report(context: Context, state: FileState, node: FunctionNode, name: ES
         ))) ||
     // `set.has` loses its `this` when passed as a value, so the wrapper is how a module exposes it.
     !isDetachableCallee(callee, state) ||
-    // Fixed arguments only have a constant to hoist when the callee is an Effect API, such as `Match.valueTags`.
-    (!forwarding.exact && canonicalPath(callee.type === 'CallExpression' ? callee.callee : callee, state) === undefined)
+    /*
+     * Fixed arguments only leave a constant to hoist for `Match.valueTags(x, cases)`, as `Match.typeTags`, and a
+     * one-step `pipe(x, step)`, as `step`. Others, such as `Cron.parseUnsafe(x, zone)`, are a named partial application.
+     */
+    (!forwarding.exact &&
+      !isAnyApi(callee, state, 'Match', ['valueTags']) &&
+      (!isAnyApi(callee, state, 'Function', ['pipe']) || forwarding.call.arguments.length !== 2))
   ) {
     return;
   }

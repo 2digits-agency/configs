@@ -3,7 +3,7 @@ import * as Arr from 'effect/Array';
 import * as Str from 'effect/String';
 
 import { canonicalPath, defineEffectRule, ruleMeta, type FileState, type FunctionNode } from '../../utils';
-import { forwardedCall, isDetachableCallee } from './forwarding';
+import { forwardedCall, isDetachableCallee, isEffectGuard, isTypeGuard } from './forwarding';
 
 // Modules whose callbacks also receive an index or key, so `Arr.map(xs, f)` would pass `f` a second argument.
 const indexedModules: ReadonlySet<string> = new Set([
@@ -170,7 +170,13 @@ function check(context: Context, state: FileState, node: FunctionNode): void {
 
   const forwarding = forwardedCall(node);
 
-  if (forwarding === undefined || !forwarding.exact || !isDetachableCallee(forwarding.call.callee, state)) {
+  if (
+    forwarding === undefined ||
+    !forwarding.exact ||
+    !isDetachableCallee(forwarding.call.callee, state) ||
+    // A type predicate, as `Schema.declare` needs, is lost when passing a callee that only returns `boolean`.
+    (isTypeGuard(node) && !isEffectGuard(forwarding.call.callee, state))
+  ) {
     return;
   }
 
