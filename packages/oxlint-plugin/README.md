@@ -245,8 +245,8 @@ These rules report functions that only add an indirection, so the underlying cal
   to hoist (`Match.typeTags`, `Schema.is(User)`). Method calls that need their `this`, such as `set.has(value)`, are
   exempt. Type predicates are exempt unless they wrap an Effect guard on an untyped or `unknown` parameter.
 - `no-forwarding-lambda`: a callback of an Effect API that only forwards its parameters, such as
-  `Effect.map((user) => toDto(user))`. APIs that pass an index or key as a second argument, such as
-  `Array`, `Record`, `Effect.forEach` and `Stream.map`, are exempt, and so are factory calls other than Effect APIs.
+  `Effect.map((user) => toDto(user))`. APIs whose callbacks receive more than one argument, such as the index of `Array`, `Record`,
+  `Effect.forEach` and `Stream.map` or the `Exit` of `Effect.acquireRelease`, are exempt, and so are factory calls other than Effect APIs.
 - `no-single-use-private-function`: a non-exported top-level function, or `Effect.fn` constant, that is referenced
   exactly once and is at most `maxLines` lines long (default `3`). Inline it at its call site. Components, hooks,
   type predicates and recursive functions are exempt.

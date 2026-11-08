@@ -37,6 +37,8 @@ tester.run('no-forwarding-lambda', noForwardingLambda, {
     'Effect.map((value) => parse(value))',
     `${imports} Stream.map((chunk) => decode(chunk))`,
     `${imports} Effect.findFirstFilter(values, (value) => check(value))`,
+    `${imports} Effect.acquireRelease(open, (connection) => close(connection))`,
+    `${imports} Stream.scan(0, (total) => reset(total))`,
     `${imports} Effect.map((id) => makeLoader(config)(id))`,
   ],
   invalid: [
