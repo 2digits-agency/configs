@@ -1,6 +1,6 @@
 import plugin from '@eslint/shell';
 
-import { GLOB_SHELL } from '../globs';
+import { GLOB_MARKDOWN, GLOB_SHELL } from '../globs';
 import type { TypedFlatConfigItem } from '../types';
 
 export function shell(): Array<TypedFlatConfigItem> {
@@ -8,6 +8,8 @@ export function shell(): Array<TypedFlatConfigItem> {
     {
       name: '2digits:shell',
       files: [GLOB_SHELL],
+      // Shell blocks in Markdown often hold placeholders like `<package>` that fail to parse.
+      ignores: [`${GLOB_MARKDOWN}/**`],
       language: 'shell/bash',
       plugins: {
         shell: plugin,

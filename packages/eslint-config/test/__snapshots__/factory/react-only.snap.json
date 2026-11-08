@@ -1267,6 +1267,9 @@
     "files": [
       "**/*.{sh,bash}"
     ],
+    "ignores": [
+      "**/*.md/**"
+    ],
     "plugins": [
       "shell"
     ],
