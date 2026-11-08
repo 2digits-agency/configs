@@ -10,6 +10,7 @@ import {
   defineEffectRule,
   enclosingFunction,
   isApiPath,
+  isConstDeclaration,
   isLiteral,
   resolveVariable,
   ruleMeta,
@@ -221,8 +222,7 @@ export const noMillisArithmetic: Rule = defineEffectRule(
       const declarator = definition?.node;
 
       return declarator?.type === 'VariableDeclarator' &&
-        declarator.parent.type === 'VariableDeclaration' &&
-        declarator.parent.kind === 'const' &&
+        isConstDeclaration(declarator.parent) &&
         declarator.id === definition?.name &&
         declarator.init !== null
         ? millisKind(declarator.init, depth + 1)

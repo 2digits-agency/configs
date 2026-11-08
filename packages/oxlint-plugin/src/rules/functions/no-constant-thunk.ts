@@ -6,6 +6,7 @@ import * as Match from 'effect/Match';
 import {
   canonicalPath,
   defineEffectRule,
+  isConstDeclaration,
   isFunctionNode,
   resolveVariable,
   ruleMeta,
@@ -126,7 +127,7 @@ function isConstantIdentifier(node: ESTree.Node & { readonly name: string }, env
   return (
     definition?.type !== 'Variable' ||
     definition.parent?.type !== 'VariableDeclaration' ||
-    definition.parent.kind === 'const'
+    isConstDeclaration(definition.parent)
   );
 }
 

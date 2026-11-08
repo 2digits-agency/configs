@@ -2,7 +2,7 @@ import type { Context, ESTree, Fix, Fixer } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 
-import { isStringLiteral, resolveVariable, staticPath } from './utils';
+import { isStringLiteral, plainProperty, resolveVariable, staticPath } from './utils';
 
 /**
  * Only rewrite API roots that still resolve to runtime imports.
@@ -102,12 +102,10 @@ export function namespaceImport(
 export function plainOptions(node: ESTree.ObjectExpression, destination: string): boolean {
   const names = new Set<string>();
 
-  return Arr.every(node.properties, (property) => {
-    if (property.type !== 'Property' || property.computed || property.method || property.kind !== 'init') {
-      return false;
-    }
+  return Arr.every(node.properties, (member) => {
+    const property = plainProperty(member);
 
-    if (property.key.type !== 'Identifier' && property.key.type !== 'Literal') {
+    if (property === undefined || (property.key.type !== 'Identifier' && property.key.type !== 'Literal')) {
       return false;
     }
 
