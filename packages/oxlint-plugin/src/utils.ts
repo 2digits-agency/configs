@@ -215,8 +215,18 @@ export function soleDefinition(variable: Variable | undefined): Definition | und
   return variable?.defs.length === 1 ? variable.defs[0] : undefined;
 }
 
+/**
+ * Whether `node` names the global `name`. Globals from `env` or `globals` config resolve to a variable without
+ * definitions, so only a declaration in the file shadows them.
+ *
+ * @param node Reference.
+ * @param context Rule context.
+ * @param name Global name.
+ */
 export function isGlobalIdentifier(node: ESTree.Node, context: Context, name: string): boolean {
-  return node.type === 'Identifier' && node.name === name && resolveVariable(context, node, name) === undefined;
+  return (
+    node.type === 'Identifier' && node.name === name && (resolveVariable(context, node, name)?.defs.length ?? 0) === 0
+  );
 }
 
 export function canonicalPath(node: ESTree.Node, state: FileState): ReadonlyArray<string> | undefined {
