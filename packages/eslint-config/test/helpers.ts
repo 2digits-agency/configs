@@ -195,7 +195,7 @@ function serializeLanguageOptions(
     serialized.globals = { _count: Object.keys(globals).length };
   }
 
-  if (ecmaVersion) {
+  if (ecmaVersion !== undefined) {
     serialized.ecmaVersion = ecmaVersion;
   }
 

@@ -22,9 +22,7 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<Array<Typ
 
   let rules = {} as typeof flatRecommended;
 
-  if (gqlSchema) {
-    rules = flatRecommended;
-  } else {
+  if (gqlSchema === undefined) {
     for (const rule of Object.keys(flatRecommended) as Array<keyof typeof rules>) {
       const ruleName = rule.replace('@graphql-eslint/', '') as keyof typeof gql.rules;
 
@@ -37,6 +35,8 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<Array<Typ
 
       rules[rule] = flatRecommended[rule] as never;
     }
+  } else {
+    rules = flatRecommended;
   }
 
   const recommended = renamePluginsInRules(rules, PluginNameMap);
