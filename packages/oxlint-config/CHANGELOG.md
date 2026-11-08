@@ -1,3 +1,16 @@
+## @2digits/oxlint-config@3.2.0
+
+### Add native React web accessibility checks
+
+- Added an opt-in `react.web` profile with 15 native accessibility rules and DOM property validation, including a narrow `cmdk-input-wrapper` exception. Web checks inherit the React file scope and support separate file patterns and overrides for mixed web/native repositories.
+- Enabled `react/no-unstable-nested-components` for React with `allowAsProps: true`, preserving translation callbacks and render props alongside the existing React Compiler checks.
+
+### Report numbers used as booleans
+
+- Enabled `strict-boolean-expressions` (`ts/` in ESLint, `typescript/` in Oxlint) with `allowNumber: false` and `allowNullableNumber: false`. It reports conditions like `if (count)`, `if (str.indexOf(x))` and `items.length && <List />`, where `0` (or `NaN`) is a valid value but reads as `false`. Compare explicitly instead, for example `count !== 0`, `str.includes(x)` or `items.length > 0`.
+- Strings, `any` and nullable strings, booleans, enums and objects are still allowed. The rule also reports conditions on objects that are never nullish and on unions of different kinds of values, such as `string | number`.
+- Projects that are not ready can turn the rule off with `overrides` on the `ts` options.
+
 ## @2digits/oxlint-config@3.1.0
 
 ### Update Oxlint

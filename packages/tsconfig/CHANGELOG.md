@@ -1,3 +1,9 @@
+## @2digits/tsconfig@1.2.6
+
+### Update Effect tsgo
+
+- Updated `@effect/tsgo` to 0.67.5.
+
 ## @2digits/tsconfig@1.2.5
 
 ### Update Effect tsgo
