@@ -7,7 +7,6 @@ import * as Exit from 'effect/Exit';
 import * as Fiber from 'effect/Fiber';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
-import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
@@ -21,7 +20,7 @@ import * as Url from 'effect/http/Url';
 import * as TestClock from 'effect/testing/TestClock';
 
 import { OrbitAuth, OrbitAuthLayer } from '../src/oauth/OrbitAuth.js';
-import { listenForLogin, validateCallback } from '../src/oauth/callback.js';
+import { InvalidCallback, listenForLogin, validateCallback } from '../src/oauth/callback.js';
 import { ORBIT_ORIGIN, OrbitAuthError, Session } from '../src/oauth/session.js';
 import { makeSessionStoreLayer, SessionStore } from '../src/oauth/store.js';
 import { PlatformLive } from '../src/platform.js';
@@ -88,21 +87,24 @@ describe('orbit OAuth', () => {
       'state=secret&code=',
       'state=secret&code=x&code=y',
     ]) {
-      assertSuccess(validateCallback(parseUrl(`http://127.0.0.1/callback?${query}`), 'secret'), Opt.none());
+      assertFailure(validateCallback(parseUrl(`http://127.0.0.1/callback?${query}`), 'secret'), InvalidCallback.make());
     }
 
-    assertSuccess(validateCallback(parseUrl('http://127.0.0.1/wrong?state=secret&code=x'), 'secret'), Opt.none());
+    assertFailure(
+      validateCallback(parseUrl('http://127.0.0.1/wrong?state=secret&code=x'), 'secret'),
+      InvalidCallback.make(),
+    );
 
-    assertSuccess(validateCallback(parseUrl('http://127.0.0.1/callback?state=secret&code=x'), 'secret'), Opt.some('x'));
+    assertSuccess(validateCallback(parseUrl('http://127.0.0.1/callback?state=secret&code=x'), 'secret'), 'x');
 
     assertFailure(
       validateCallback(parseUrl('http://127.0.0.1/callback?state=secret&error=access_denied'), 'secret'),
       OrbitAuthError.make({ message: 'Orbit authorization was denied.' }),
     );
 
-    assertSuccess(
+    assertFailure(
       validateCallback(parseUrl('http://127.0.0.1/callback?state=wrong&error=access_denied'), 'secret'),
-      Opt.none(),
+      InvalidCallback.make(),
     );
   });
 

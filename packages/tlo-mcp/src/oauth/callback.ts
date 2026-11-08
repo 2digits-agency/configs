@@ -5,9 +5,11 @@ import * as NodeHttpServer from '@effect/platform-node/NodeHttpServer';
 import * as Arr from 'effect/Array';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
+import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as Result from 'effect/Result';
+import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 import * as Mac from 'effect/crypto/Mac';
 import * as HttpRouter from 'effect/http/HttpRouter';
@@ -41,12 +43,20 @@ function soleParameter(url: URL, name: string): Opt.Option<string> {
 }
 
 /**
+ * A callback that is not the answer to this login attempt: wrong path or state, or no single non-empty code.
+ */
+export class InvalidCallback extends Schema.TaggedError<InvalidCallback, { readonly brand: unique symbol }>()(
+  'InvalidCallback',
+  {},
+) {}
+
+/**
  * Reject unsolicited callbacks without consuming the legitimate login attempt.
  *
  * @param url
  * @param state
  */
-export function validateCallback(url: URL, state: string): Result.Result<Opt.Option<string>, OrbitAuthError> {
+export function validateCallback(url: URL, state: string): Result.Result<string, InvalidCallback | OrbitAuthError> {
   const encoder = new TextEncoder();
 
   const solicited =
@@ -56,14 +66,14 @@ export function validateCallback(url: URL, state: string): Result.Result<Opt.Opt
     );
 
   if (!solicited) {
-    return Result.succeed(Opt.none());
+    return Result.fail(InvalidCallback.make());
   }
 
   if (url.searchParams.has('error')) {
     return Result.fail(OrbitAuthError.make({ message: 'Orbit authorization was denied.' }));
   }
 
-  return Result.succeed(Opt.filter(soleParameter(url, 'code'), Str.isNonEmpty));
+  return Result.fromOption(Opt.filter(soleParameter(url, 'code'), Str.isNonEmpty), () => InvalidCallback.make());
 }
 
 export const listenForLogin = Effect.fn('OrbitAuth.listenForLogin')(function* (state: string) {
@@ -90,16 +100,16 @@ export const listenForLogin = Effect.fn('OrbitAuth.listenForLogin')(function* (s
       return invalid;
     }
 
-    const callback = Result.match(Url.fromString(request.url, redirectUri), {
-      onFailure: () => Result.succeed(Opt.none<string>()),
-      onSuccess: (url) => validateCallback(url, state),
-    });
+    const callback = Url.fromString(request.url, redirectUri).pipe(
+      Result.mapError(() => InvalidCallback.make()),
+      Result.flatMap((url) => validateCallback(url, state)),
+    );
 
     return yield* Result.match(callback, {
-      onFailure: (error) => Deferred.fail(result, error).pipe(Effect.map((first) => (first ? denied : invalid))),
-      onSuccess: Opt.match({
-        onNone: () => Effect.succeed(invalid),
-        onSome: (code) => Deferred.succeed(result, code).pipe(Effect.map((first) => (first ? accepted : invalid))),
+      onSuccess: (code) => Deferred.succeed(result, code).pipe(Effect.map((first) => (first ? accepted : invalid))),
+      onFailure: Match.typeTags<InvalidCallback | OrbitAuthError>()({
+        InvalidCallback: () => Effect.succeed(invalid),
+        OrbitAuthError: (error) => Deferred.fail(result, error).pipe(Effect.map((first) => (first ? denied : invalid))),
       }),
     });
   });
