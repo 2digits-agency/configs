@@ -2,7 +2,6 @@ import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
-import * as Str from 'effect/String';
 import * as Struct from 'effect/Struct';
 
 import {
@@ -14,7 +13,14 @@ import {
   walkNodes,
   type FileState,
 } from '../../utils';
-import { durationArgument, durationConstructor, numericValue, timeArithmetic, type DurationUnit } from './duration';
+import {
+  durationArgument,
+  durationConstructor,
+  nameWords,
+  numericValue,
+  timeArithmetic,
+  type DurationUnit,
+} from './duration';
 
 type NumericDeclarator = ESTree.VariableDeclarator & {
   readonly id: ESTree.BindingIdentifier;
@@ -62,12 +68,6 @@ const durationWords = new Set([
   'week',
 ]);
 
-const words = Fn.flow(
-  Str.split(/[_$]+|(?<=[\da-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/u),
-  Arr.filter(Str.isNonEmpty),
-  Arr.map(Str.toLowerCase),
-);
-
 // Conversion factors (`MS_PER_SECOND`, see also `SECONDS_IN_MINUTE` below), rates (`REQUESTS_PER_SECOND`), and timestamps (`CREATED_AT_MS`) are not durations.
 const nonDurationWords = new Set(['at', 'epoch', 'per', 'timestamp']);
 
@@ -85,7 +85,7 @@ function isUnit(named: NameUnit): named is DurationUnit {
  * @param name Binding name.
  */
 function nameUnit(name: string): NameUnit {
-  const parts = words(name);
+  const parts = nameWords(name);
 
   const inIndex = parts.indexOf('in');
 
