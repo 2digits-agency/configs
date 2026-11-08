@@ -48,6 +48,13 @@ tester.run(ruleName, preferEffectDurationTypes, {
     `${effect} declare module 'sdk' { interface Options { timeoutMs: number } }`,
     `${effect} declare global { interface Window { idleMs: number } }`,
     { code: `${effect} export interface Options { timeoutMs: number }`, filename: 'sdk.d.ts' },
+    { code: `${effect} export interface Options { timeoutMs: number }`, filename: 'sdk.d.mts' },
+    { code: `${effect} export interface Options { timeoutMs: number }`, filename: 'sdk.d.cts' },
+    `${effect} declare class Client { timeoutMs: number }`,
+    `${effect} declare const config: { timeoutMs: number };`,
+    // Pipelines that decode the number into something else.
+    `${schema} const Job = Schema.Struct({ backoffMs: Schema.Number.pipe(Schema.decodeTo(Schema.Duration, transformation)) });`,
+    `${schema} const Job = Schema.Struct({ backoffMs: Schema.Finite.pipe(Schema.optionalKey, toDuration) });`,
     // Overloads are reported at the implementation only.
     `${effect} declare function poll(intervalMs: number): void;`,
   ],
@@ -79,6 +86,11 @@ tester.run(ruleName, preferEffectDurationTypes, {
       [
         `${schema} const Options = Schema.Struct({ 'ttl_ms': Schema.Number.check(Schema.isGreaterThan(0)) });`,
         'ttl_ms',
+        'durationSchema',
+      ],
+      [
+        `${schema} const Options = Schema.Struct({ ttlMs: Schema.Number.pipe(Schema.check(Schema.isGreaterThan(0)), Schema.brand('Ttl')) });`,
+        'ttlMs',
         'durationSchema',
       ],
       [

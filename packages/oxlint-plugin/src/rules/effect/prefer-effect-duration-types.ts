@@ -1,7 +1,7 @@
 import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 import type * as Schema from 'effect/Schema';
-import * as Str from 'effect/String';
 
 import {
   canonicalPath,
@@ -37,11 +37,38 @@ const schemaWrappers: ReadonlySet<string> = new Set<SchemaApi>([
   'optionalKey',
 ]);
 
-const schemaMethods: ReadonlySet<string> = new Set(['annotate', 'check', 'pipe']);
+// Pipe steps that keep a number a number. Any other step, such as `Schema.decodeTo(Schema.Duration, ...)`, may not.
+const numberPreservingSteps: ReadonlySet<string> = new Set<SchemaApi>([
+  'annotate',
+  'annotateKey',
+  'brand',
+  'check',
+  'withConstructorDefault',
+  'withDecodingDefault',
+  'withDecodingDefaultKey',
+]);
+
+function schemaApiName(node: ESTree.Node, state: FileState): string | undefined {
+  const path = canonicalPath(node, state);
+
+  return path?.length === 2 && path[0] === 'Schema' ? path[1] : undefined;
+}
+
+function isNumberPreservingStep(node: ESTree.Argument, state: FileState): boolean {
+  if (node.type === 'SpreadElement') {
+    return false;
+  }
+
+  const step = unwrapExpression(node);
+
+  return step.type === 'CallExpression'
+    ? numberPreservingSteps.has(schemaApiName(step.callee, state) ?? '')
+    : schemaWrappers.has(schemaApiName(step, state) ?? '');
+}
 
 /**
  * Whether a schema decodes to a plain number: `Schema.Number`, `Schema.Int`, and those wrapped in `optional`, `NullOr`
- * and similar, or refined with `.pipe(...)` or `.check(...)`.
+ * and similar, refined with `.check(...)`, or piped only through modifiers, checks, brands, annotations and defaults.
  *
  * @param node Field schema.
  * @param state Effect import bindings for the file.
@@ -50,27 +77,28 @@ function isNumberSchema(node: ESTree.Expression, state: FileState): boolean {
   const expression = unwrapExpression(node);
 
   if (expression.type !== 'CallExpression') {
-    const path = canonicalPath(expression, state);
-
-    return path?.length === 2 && path[0] === 'Schema' && numberSchemas.has(path[1] ?? '');
+    return numberSchemas.has(schemaApiName(expression, state) ?? '');
   }
 
   const callee = expression.callee;
 
-  const path = canonicalPath(callee, state);
-
   const first = expression.arguments[0];
 
-  if (path?.length === 2 && path[0] === 'Schema' && schemaWrappers.has(path[1] ?? '')) {
+  if (schemaWrappers.has(schemaApiName(callee, state) ?? '')) {
     return first !== undefined && first.type !== 'SpreadElement' && isNumberSchema(first, state);
   }
 
-  return (
-    callee.type === 'MemberExpression' &&
-    schemaMethods.has(staticPropertyName(callee) ?? '') &&
-    callee.object.type !== 'Super' &&
-    isNumberSchema(callee.object, state)
-  );
+  if (callee.type !== 'MemberExpression' || callee.object.type === 'Super' || !isNumberSchema(callee.object, state)) {
+    return false;
+  }
+
+  const method = staticPropertyName(callee);
+
+  if (method === 'pipe') {
+    return Arr.every(expression.arguments, (step) => isNumberPreservingStep(step, state));
+  }
+
+  return method === 'annotate' || method === 'check';
 }
 
 /**
@@ -105,24 +133,25 @@ function keyName(node: ESTree.PropertyDefinition | ESTree.TSPropertySignature): 
 }
 
 /**
- * Whether a declaration describes data that this code does not own: ambient declarations (`.d.ts` files, `declare
- * module`, `declare global`) and parameter types of callbacks that a non-Effect API calls.
+ * Whether a declaration describes data that this code does not own: ambient declarations (`.d.ts` files and `declare`
+ * modules, globals, classes and variables) and parameter types of callbacks that a non-Effect API calls.
  *
  * @param node Declaration to inspect.
  * @param context Rule context.
  * @param state Effect import bindings for the file.
  */
 function isForeignDeclaration(node: ESTree.Node, context: Context, state: FileState): boolean {
-  if (Str.endsWith('.d.ts')(context.filename)) {
+  if (/\.d\.[cm]?ts$/u.test(context.filename)) {
     return true;
   }
 
-  const module = findAncestor(
+  // `declare module`, `declare global`, `declare class` and `declare const` describe code defined elsewhere.
+  const ambient = findAncestor(
     node,
-    (ancestor): ancestor is ESTree.TSModuleDeclaration => ancestor.type === 'TSModuleDeclaration',
+    (ancestor): ancestor is ESTree.Node => P.hasProperty(ancestor, 'declare') && ancestor.declare,
   );
 
-  if (module?.declare === true) {
+  if (ambient !== undefined) {
     return true;
   }
 

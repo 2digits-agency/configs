@@ -138,7 +138,8 @@ There is **no autofix**: the constant changes from `number` to `Duration`. Conve
 
 `prefer-effect-duration-types` reports parameters and fields named `*Ms`, `*Millis`, or `*Milliseconds` that are typed as
 `number` (optionally `| undefined` or `| null`, or with a number default) or decoded with `Schema.Number`, `Schema.Int`,
-or `Schema.Finite` (also inside `optional`, `optionalKey`, `NullOr`, `.pipe(...)` and `.check(...)`):
+or `Schema.Finite` (also inside `optional`, `optionalKey`, `NullOr` and `.check(...)`, or piped only through modifiers,
+checks, brands, annotations and defaults):
 
 ```ts
 import * as Schema from 'effect/Schema';
@@ -151,7 +152,7 @@ const Job = Schema.Struct({ backoffMs: Schema.Number }); // Use Schema.DurationF
 ```
 
 It only targets code the file owns. Callback parameters of non-Effect APIs (`sdk.on('done', (elapsedMs: number) => ...)`),
-ambient declarations (`.d.ts`, `declare module`, `declare global`), overload signatures, and timestamp names (`*AtMs`,
+ambient declarations (`.d.ts`/`.d.mts`/`.d.cts` files and `declare` modules, globals, classes and variables), overload signatures, and timestamp names (`*AtMs`,
 `startMs`, `deadlineMs`, `lastSeenMs`) are skipped. For schemas that decode external data, `Schema.DurationFromMillis`
 keeps milliseconds in the encoded data while the decoded field is a `Duration`, so the advice also holds at a boundary.
 
