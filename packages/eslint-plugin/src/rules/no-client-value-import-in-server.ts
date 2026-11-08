@@ -127,7 +127,7 @@ function findClientValueImports(checker: ts.TypeChecker, declaration: ts.ImportD
         return moduleIsClient;
       }
 
-      if (!(target.flags & ts.SymbolFlags.Value)) {
+      if ((target.flags & ts.SymbolFlags.Value) === 0) {
         return false;
       }
 
@@ -180,7 +180,9 @@ function findIndirectClientValueImport(
 function resolveBinding(checker: ts.TypeChecker, binding: ts.Identifier): ts.Symbol | undefined {
   const symbol = checker.getSymbolAtLocation(binding);
 
-  return symbol !== undefined && symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol;
+  return symbol === undefined || (symbol.flags & ts.SymbolFlags.Alias) === 0
+    ? symbol
+    : checker.getAliasedSymbol(symbol);
 }
 
 // Unresolved bindings count as values, because their import is kept.
