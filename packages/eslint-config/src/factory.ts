@@ -24,6 +24,7 @@ import {
   prettier,
   react,
   regexp,
+  shell,
   sonar,
   storybook,
   tailwind,
@@ -120,6 +121,7 @@ export async function twoDigits(
     jsonc(),
     toml(),
     yaml(),
+    shell(),
     markdown(),
     githubActions(),
   );

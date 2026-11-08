@@ -1263,6 +1263,27 @@
     ]
   },
   {
+    "name": "2digits:shell",
+    "files": [
+      "**/*.{sh,bash}"
+    ],
+    "plugins": [
+      "shell"
+    ],
+    "rules": [
+      "shell/no-backticks",
+      "shell/no-expansions-in-single-quotes",
+      "shell/no-ls-iteration",
+      "shell/no-unquoted-expansions",
+      "shell/no-unused-vars",
+      "shell/no-useless-cat",
+      "shell/no-useless-echo",
+      "shell/no-variables-in-printf-format",
+      "shell/require-cd-guard",
+      "shell/require-read-r"
+    ]
+  },
+  {
     "name": "2digits:markdown/setup",
     "plugins": [
       "markdown"

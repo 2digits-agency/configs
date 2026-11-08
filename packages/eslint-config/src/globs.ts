@@ -22,6 +22,8 @@ export const GLOB_TOML = '**/*.toml';
 
 export const GLOB_MISE_TOML = '**/{mise,.mise}?(.*).toml';
 
+export const GLOB_SHELL = '**/*.{sh,bash}';
+
 export const GLOB_GITHUB_ACTIONS = '.github/workflows/*.y?(a)ml';
 
 export const GLOB_MARKDOWN = '**/*.md';
