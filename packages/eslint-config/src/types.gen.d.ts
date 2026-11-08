@@ -9,6 +9,11 @@ export interface RuleOptions {
    */
   '@2digits/if-curly'?: Linter.RuleEntry<[]>
   /**
+   * Disallow importing values from 'use client' modules into 'use server' and 'server-only' modules, where they are client references
+   * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/no-client-value-import-in-server.ts
+   */
+  '@2digits/no-client-value-import-in-server'?: Linter.RuleEntry<[]>
+  /**
    * Disallow slicing or rewriting a UTC ISO string to get a local date or time
    * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/no-utc-iso-slicing.ts
    */
@@ -28,6 +33,11 @@ export interface RuleOptions {
    * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/type-param-names.ts
    */
   '@2digits/type-param-names'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow misspelled 'use client', 'use server' and 'use cache' directives, which do nothing
+   * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/valid-directive.ts
+   */
+  '@2digits/valid-directive'?: Linter.RuleEntry<[]>
   /**
    * Enforce getter and setter pairs in objects and classes
    * @see https://eslint.org/docs/latest/rules/accessor-pairs

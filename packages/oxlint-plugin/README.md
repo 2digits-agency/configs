@@ -45,6 +45,9 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
   `.pipe`. Both strings are UTC, so a sliced date is the previous day just after midnight in Europe/Amsterdam. Format
   in an explicit zone with `DateTime.setZone` and `DateTime.formatIsoDate`/`formatIsoZoned`, or `Intl.DateTimeFormat`
   with `timeZone`. It runs in every file, with or without Effect, and `@2digits/eslint-plugin` ships the same rule.
+- React Server Components directives: `valid-directive` reports misspelled directives such as `'use Client'` or
+  `'use  server'`, which silently do nothing, and `no-export-all-in-client` reports `export *` in a `'use client'`
+  module, which Next.js rejects at build time.
 - Schema chain style: `consistent-schema-pipe` applies Schema modifiers and data-last steps with `.pipe(...)`
   (`Schema.String.pipe(Schema.optionalKey)`) and calls Schema wrappers such as `Schema.Array(...)` directly. See
   [ADR 0001](../../docs/adr/0001-schema-modifiers-pipe-wrappers-call.md).

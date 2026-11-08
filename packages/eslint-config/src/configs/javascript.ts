@@ -118,6 +118,11 @@ export function javascript(options: OptionsOverrides = {}): Array<TypedFlatConfi
           'WithStatement',
           'TSEnumDeclaration',
           'TSExportAssignment',
+          {
+            selector:
+              'Program:has(> ExpressionStatement[directive="use client"]) > ExportAllDeclaration:not([exportKind="type"])',
+            message: "Next.js does not support `export *` in a 'use client' module. Re-export each name instead.",
+          },
         ],
         'no-self-assign': ['error', { props: true }],
         'no-self-compare': 'error',

@@ -16,6 +16,9 @@
       "ignore": ["fixtures/**"],
       "ignoreDependencies": ["react", "@types/react"]
     },
+    "packages/eslint-plugin": {
+      "ignore": ["tests/fixtures/**"]
+    },
     "packages/cli": {
       "ignore": ["test/fixtures/**"]
     },

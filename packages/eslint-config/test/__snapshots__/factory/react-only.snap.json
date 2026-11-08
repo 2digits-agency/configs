@@ -1384,10 +1384,12 @@
     },
     "rules": [
       "@2digits/if-curly",
+      "@2digits/no-client-value-import-in-server",
       "@2digits/no-utc-iso-slicing",
       "@2digits/prefer-inline-array-callbacks",
       "@2digits/prefer-inline-handlers",
       "@2digits/type-param-names",
+      "@2digits/valid-directive",
       "- constructor-super",
       "- getter-return",
       "- no-array-constructor",
