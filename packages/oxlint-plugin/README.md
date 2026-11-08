@@ -134,6 +134,49 @@ There is **no autofix**: the constant changes from `number` to `Duration`. Conve
 `Duration.toMillis` or `Duration.toSeconds`, read configurable durations with `Config.Duration`, and use
 `Schema.DurationFromMillis` for schema fields.
 
+### Millisecond parameters, fields, and arithmetic
+
+`prefer-effect-duration-types` reports parameters and fields named `*Ms`, `*Millis`, or `*Milliseconds` that are typed as
+`number` (optionally `| undefined` or `| null`, or with a number default) or decoded with `Schema.Number`, `Schema.Int`,
+or `Schema.Finite` (also inside `optional`, `optionalKey`, `NullOr` and `.check(...)`, or piped only through modifiers,
+checks, brands, annotations and defaults):
+
+```ts
+import * as Schema from 'effect/Schema';
+
+function poll(intervalMs: number) {} // Type it as Duration.Input
+interface Options {
+  readonly timeoutMs: number;
+} // Type it as Duration.Duration
+const Job = Schema.Struct({ backoffMs: Schema.Number }); // Use Schema.DurationFromMillis or Schema.Duration
+```
+
+It only targets code the file owns. Callback parameters of non-Effect APIs (`sdk.on('done', (elapsedMs: number) => ...)`),
+ambient declarations (`.d.ts`/`.d.mts`/`.d.cts` files and `declare` modules, globals, classes and variables), overload signatures, and timestamp names (`*AtMs`,
+`startMs`, `deadlineMs`, `lastSeenMs`) are skipped. For schemas that decode external data, `Schema.DurationFromMillis`
+keeps milliseconds in the encoded data while the decoded field is a `Duration`, so the advice also holds at a boundary.
+
+`no-millis-arithmetic` reports `+ - * /`, `< <= > >=`, and `=== !==` when an operand is a millisecond number:
+a `Duration.toMillis(...)` or `DateTime.toEpochMillis(...)` call, a `yield* Clock.currentTimeMillis` result, a local
+binding named `*Ms`/`*Millis`/`*_MS`, a `this.*Ms` field, or a `const` that holds one of these. The message names the
+replacement, such as `Duration.sum`, `Duration.times`, `Duration.isGreaterThan`, `DateTime.addDuration`,
+`DateTime.distance`, or `DateTime.isLessThan`:
+
+```ts
+import * as DateTime from 'effect/DateTime';
+import * as Duration from 'effect/Duration';
+
+Duration.toMillis(timeout) + Duration.toMillis(delay); // Duration.sum
+DateTime.toEpochMillis(now) > expiresAtMs; // DateTime.isGreaterThan
+const elapsed = endMs - startMs; // DateTime.distance
+```
+
+To keep false positives from code that only relays someone else's milliseconds, it ignores fields of other objects
+(`response.durationMs`), bindings destructured from objects (`const { durationMs } = response`), callback parameters of
+non-Effect APIs, string concatenation, and `=== undefined`/`=== null` presence checks. A conversion passed straight to a
+non-Effect API (`setTimeout(run, Duration.toMillis(delay))`) is the intended boundary and is not reported. A chain such as
+`toMillis(a) + toMillis(b) > limitMs` is reported once.
+
 ### Function-valued Config defaults
 
 `no-function-config-default` reports inline zero-parameter functions passed to Effect's eager `Config.withDefault` API,

@@ -57,7 +57,7 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<Array<Typ
         'gql/naming-convention': ['error', { allowLeadingUnderscore: true } as never],
 
         // Prepr identifies objects with `_id`. The rule only checks names that exist on a type, and one selected name is enough.
-        ...(gqlSchema && { 'gql/require-selections': ['error', { fieldName: ['id', '_id'] }] }),
+        ...(gqlSchema !== undefined && { 'gql/require-selections': ['error', { fieldName: ['id', '_id'] }] }),
 
         ...overrides,
       },

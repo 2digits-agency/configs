@@ -45,6 +45,43 @@ export function callbackApi(node: FunctionNode, state: FileState): ReadonlyArray
   return call === undefined ? undefined : canonicalPath(call.callee, state);
 }
 
+function callHost(node: FunctionNode): ESTree.CallExpression | ESTree.NewExpression | undefined {
+  const parent = node.parent;
+
+  const argument = parent.type === 'Property' && parent.value === node ? parent.parent : node;
+
+  const call = argument.parent;
+
+  return (call?.type === 'CallExpression' || call?.type === 'NewExpression') &&
+    call.arguments.includes(argument as ESTree.Expression)
+    ? call
+    : undefined;
+}
+
+/**
+ * Whether a function is a callback whose signature a non-Effect API dictates: passed to a call or constructor, directly
+ * or as an option property, whose callee does not resolve to an Effect or Alchemy import (`setTimeout`, `xs.map`,
+ * `sdk.retry({ onRetry })`). Callbacks of Effect APIs, such as `Effect.fn(...)` or `Effect.map`, are not foreign.
+ *
+ * @param node Function to inspect.
+ * @param state Effect import bindings for the file.
+ */
+export function isForeignCallback(node: FunctionNode, state: FileState): boolean {
+  const call = callHost(node);
+
+  if (call === undefined) {
+    return false;
+  }
+
+  let callee: ESTree.Node = call.callee;
+
+  while (callee.type === 'CallExpression') {
+    callee = callee.callee;
+  }
+
+  return canonicalPath(callee, state) === undefined;
+}
+
 const promiseChainMethods: ReadonlySet<string> = new Set(['catch', 'finally', 'then']);
 
 function isPromiseConstruction(node: ESTree.NewExpression): boolean {

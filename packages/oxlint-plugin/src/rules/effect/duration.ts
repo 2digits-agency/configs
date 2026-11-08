@@ -1,7 +1,7 @@
 // oxlint-disable unicorn/no-array-method-this-argument
 import type { Context, ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
-import type * as Duration from 'effect/Duration';
+import * as Duration from 'effect/Duration';
 import type * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
@@ -182,18 +182,79 @@ export function timeArithmetic(node: ESTree.Expression): { readonly millis: bool
   };
 }
 
+/**
+ * Split a binding name into lowercase words: `requestTimeoutMs`, `REQUEST_TIMEOUT_MS` and `request$timeout$ms` all
+ * become `['request', 'timeout', 'ms']`.
+ */
+export const nameWords: (name: string) => Array<string> = Fn.flow(
+  Str.split(/[_$]+|(?<=[\da-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/u),
+  Arr.filter(Str.isNonEmpty),
+  Arr.map(Str.toLowerCase),
+);
+
+/**
+ * What a millisecond number stands for: a point in time (epoch millis) or an amount of time.
+ */
+export type MillisKind = 'duration' | 'instant';
+
+const millisWords = new Set(['millis', 'milliseconds', 'ms']);
+
+const instantWords = new Set([
+  'at',
+  'created',
+  'deadline',
+  'end',
+  'ended',
+  'epoch',
+  'last',
+  'now',
+  'since',
+  'start',
+  'started',
+  'timestamp',
+  'until',
+  'updated',
+]);
+
+/**
+ * Classify a binding name that ends in a millisecond unit (`timeoutMs`, `TTL_MILLIS`, `expiresAtMs`). Names that
+ * mention a point in time (`at`, `now`, `start`, `deadline`, `epoch`, ...) are instants; other names are durations.
+ * Only the last word decides the unit, so `MS_PER_SECOND` and `items` are not milliseconds.
+ *
+ * @param name Binding or property name.
+ */
+export function millisName(name: string): MillisKind | undefined {
+  const parts = nameWords(name);
+
+  if (!millisWords.has(parts.at(-1) ?? '')) {
+    return undefined;
+  }
+
+  return Arr.some(parts, (part) => instantWords.has(part)) ? 'instant' : 'duration';
+}
+
 export type DurationUnit = Extract<
   keyof typeof Duration,
   'days' | 'hours' | 'millis' | 'minutes' | 'seconds' | 'weeks'
 >;
 
-const unitMillis: ReadonlyArray<readonly [DurationUnit, number]> = [
-  ['weeks', 604_800_000],
-  ['days', 86_400_000],
-  ['hours', 3_600_000],
-  ['minutes', 60_000],
-  ['seconds', 1000],
-  ['millis', 1],
+const constructors: Readonly<Record<DurationUnit, (amount: number) => Duration.Duration>> = {
+  weeks: Duration.weeks,
+  days: Duration.days,
+  hours: Duration.hours,
+  minutes: Duration.minutes,
+  seconds: Duration.seconds,
+  millis: Duration.millis,
+};
+
+// Largest unit first, so the suggestion picks the biggest unit that holds a whole number.
+const unitConversions: ReadonlyArray<readonly [DurationUnit, (self: Duration.Duration) => number]> = [
+  ['weeks', Duration.toWeeks],
+  ['days', Duration.toDays],
+  ['hours', Duration.toHours],
+  ['minutes', Duration.toMinutes],
+  ['seconds', Duration.toSeconds],
+  ['millis', Duration.toMillis],
 ];
 
 function formatNumber(value: number): string {
@@ -211,21 +272,17 @@ function formatNumber(value: number): string {
  * @param unit Unit of `value`.
  */
 export function durationConstructor(value: number, unit: DurationUnit): string {
-  const millis =
-    value *
-    Arr.findFirst(unitMillis, ([name]) => name === unit).pipe(
-      Opt.map(([, size]) => size),
-      Opt.getOrElse(() => 1),
-    );
+  const duration = constructors[unit](value);
 
-  if (millis === 0) {
+  if (Duration.isZero(duration)) {
     return `Duration.${'zero' satisfies keyof typeof Duration}`;
   }
 
-  return Arr.findFirst(unitMillis, ([, size]) => Number.isSafeInteger(millis / size)).pipe(
+  return Arr.findFirst(unitConversions, ([, convert]) => Number.isSafeInteger(convert(duration))).pipe(
     Opt.match({
-      onNone: () => `Duration.${'millis' satisfies keyof typeof Duration}(${formatNumber(millis)})`,
-      onSome: ([name, size]) => `Duration.${name}(${formatNumber(millis / size)})`,
+      onNone: () =>
+        `Duration.${'millis' satisfies keyof typeof Duration}(${duration.pipe(Duration.toMillis, formatNumber)})`,
+      onSome: ([name, convert]) => `Duration.${name}(${formatNumber(convert(duration))})`,
     }),
   );
 }
