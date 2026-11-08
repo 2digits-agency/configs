@@ -36,6 +36,8 @@ export * from './react';
 
 export * from './regexp';
 
+export * from './shell';
+
 export * from './sonar';
 
 export * from './storybook';

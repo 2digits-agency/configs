@@ -4352,6 +4352,56 @@ Backward pagination arguments
    */
   'semi-style'?: Linter.RuleEntry<SemiStyle>
   /**
+   * Disallow legacy backtick command substitution in favor of `$(...)`
+   * @see https://github.com/eslint/shell/blob/main/docs/rules/no-backticks.md
+   */
+  'shell/no-backticks'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow expansion-like syntax inside single quotes, where it is not expanded
+   * @see https://github.com/eslint/shell/blob/main/docs/rules/no-expansions-in-single-quotes.md
+   */
+  'shell/no-expansions-in-single-quotes'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow iterating over `ls` output, which breaks on special characters
+   * @see https://github.com/eslint/shell/blob/main/docs/rules/no-ls-iteration.md
+   */
+  'shell/no-ls-iteration'?: Linter.RuleEntry<[]>
+  /**
+   * Require quoting parameter expansions and command substitutions that are subject to word splitting
+   * @see https://github.com/eslint/shell/blob/main/docs/rules/no-unquoted-expansions.md
+   */
+  'shell/no-unquoted-expansions'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow variables that are assigned but never used
+   * @see https://github.com/eslint/shell/blob/main/docs/rules/no-unused-vars.md
+   */
+  'shell/no-unused-vars'?: Linter.RuleEntry<ShellNoUnusedVars>
+  /**
+   * Disallow useless `cat` at the start of a pipeline
+   * @see https://github.com/eslint/shell/blob/main/docs/rules/no-useless-cat.md
+   */
+  'shell/no-useless-cat'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow useless `echo` inside command substitutions
+   * @see https://github.com/eslint/shell/blob/main/docs/rules/no-useless-echo.md
+   */
+  'shell/no-useless-echo'?: Linter.RuleEntry<[]>
+  /**
+   * Disallow variables in the printf format string; use %s placeholders instead
+   * @see https://github.com/eslint/shell/blob/main/docs/rules/no-variables-in-printf-format.md
+   */
+  'shell/no-variables-in-printf-format'?: Linter.RuleEntry<[]>
+  /**
+   * Require `cd` failures to be handled, e.g. `cd ... || exit`
+   * @see https://github.com/eslint/shell/blob/main/docs/rules/require-cd-guard.md
+   */
+  'shell/require-cd-guard'?: Linter.RuleEntry<[]>
+  /**
+   * Require `read -r` so backslashes are not mangled
+   * @see https://github.com/eslint/shell/blob/main/docs/rules/require-read-r.md
+   */
+  'shell/require-read-r'?: Linter.RuleEntry<[]>
+  /**
    * Alternatives in regular expressions should be grouped when used with anchors
    * @see https://sonarsource.github.io/rspec/#/rspec/S5850/javascript
    */
@@ -14346,6 +14396,10 @@ type SemiSpacing = []|[{
 }]
 // ----- semi-style -----
 type SemiStyle = []|[("last" | "first")]
+// ----- shell/no-unused-vars -----
+type ShellNoUnusedVars = []|[{
+  allowed?: string[]
+}]
 // ----- sonar/arrow-function-convention -----
 type SonarArrowFunctionConvention = []|[{
   requireParameterParentheses?: boolean
@@ -18334,4 +18388,4 @@ type ZodSchemaErrorPropertyStyle = []|[{
   example?: string
 }]
 // Names of all the configs
-export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:depend' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:next/proxy' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack-query' | '2digits:tanstack-router' | '2digits:toml' | '2digits:toml:mise' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:vitest/setup' | '2digits:vitest/rules' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier' | '2digits:zod'
+export type ConfigNames = '2digits:antfu' | '2digits:boolean' | '2digits:comments' | '2digits:css' | '2digits:depend' | '2digits:drizzle' | '2digits:github-actions/setup' | '2digits:github-actions/recommended' | '2digits:graphql' | '2digits:ignores' | '2digits:gitignore' | '2digits:javascript' | '2digits:jsdoc' | '2digits:jsonc/base' | '2digits:jsonc/base' | '2digits:jsonc/json' | '2digits:jsonc/jsonc' | '2digits:jsonc/json5' | '2digits:jsonc/package.json' | '2digits:jsonc/tsconfig.json' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:jsonc/prettier' | '2digits:markdown/setup' | '2digits:markdown/processor' | '2digits:markdown/parser' | '2digits:markdown/rules' | '2digits:markdown/disables' | '2digits:next/setup' | '2digits:next/rules' | '2digits:next/proxy' | '2digits:node' | '2digits:pnpm/package-json' | '2digits:pnpm/pnpm-workspace-yaml' | '2digits:prettier' | '2digits:react/setup' | '2digits:react/rules' | '2digits:regexp' | '2digits:shell' | '2digits:sonar' | '2digits:storybook/setup' | '2digits:storybook/rules' | '2digits:storybook/disables' | '2digits:storybook/config' | '2digits:tailwind' | '2digits:tanstack-query' | '2digits:tanstack-router' | '2digits:toml' | '2digits:toml:mise' | '2digits:turbo' | '2digits:typescript/setup' | '2digits:typescript/rules' | '2digits:typescript/disables/dts' | '2digits:typescript/disables/test' | '2digits:typescript/disables/cjs' | '2digits:unicorn' | '2digits:vitest/setup' | '2digits:vitest/rules' | '2digits:yaml/setup' | '2digits:yaml/base' | '2digits:yaml/recommended' | '2digits:yaml/standard' | '2digits:yaml/prettier' | '2digits:zod'

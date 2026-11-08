@@ -31,6 +31,7 @@ export const PluginNameMap = {
   yml: 'yml',
   zod: 'zod',
   toml: 'toml',
+  shell: 'shell',
 } as const;
 
 export const storybookPackages = [
