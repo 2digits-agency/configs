@@ -33,7 +33,7 @@ export function react(options: OptionsWithFiles = {}): Array<FlatConfigItem> {
         'react/jsx-no-script-url': 'warn',
         'react/jsx-no-target-blank': 'error',
         'react/jsx-no-useless-fragment': 'off',
-        'react/no-array-index-key': 'warn',
+        'react/no-array-index-key': 'error',
         'react/no-children-prop': 'error',
         'react/no-clone-element': 'warn',
         'react/no-danger': 'warn',

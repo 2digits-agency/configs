@@ -100,6 +100,7 @@ export async function react(
 
         'react-extra/immutability': 'error',
         'react-extra/refs': 'error',
+        'react-extra/no-array-index-key': 'error',
         'react-extra/no-duplicate-key': 'error',
         'react-extra/static-components': 'error',
 
