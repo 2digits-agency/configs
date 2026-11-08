@@ -8,7 +8,7 @@ var log = console.log;
 
 // Define a class using ES6 class syntax
 class Person {
-  // @ts-ignore - Ignoring for the sake of example
+  // @ts-expect-error - Ignoring for the sake of example
   constructor(name, age) {
     this.name = name;
     this.age = age;
@@ -35,7 +35,7 @@ const multilineString = `
 `;
 
 // Use destructuring assignment to extract values from an object
-// @ts-ignore - Ignoring for the sake of example
+// @ts-expect-error - Ignoring for the sake of example
 const { name, age } = people[0];
 log(`First person in the array is ${name} and they are ${age} years old.`, multilineString);
 
@@ -49,12 +49,12 @@ try {
   // Attempt to parse an invalid JSON string
   JSON.parse('invalid JSON');
 } catch (error) {
-  // @ts-ignore - Ignoring for the sake of example
+  // @ts-expect-error - Ignoring for the sake of example
   console.error('Error parsing JSON:', error.message);
 }
 
 // Use a ternary conditional operator
-// @ts-ignore - Ignoring for the sake of example
+// @ts-expect-error - Ignoring for the sake of example
 const isEven = (num) => num % 2 === 0;
 const number = 7;
 log(`${number} is ${isEven(number) ? 'even' : 'odd'}.`);
@@ -71,6 +71,6 @@ let d = false;
 const foo = () => {};
 
 if (a || b || !(!c && !d) || (d && b)) {
-  // @ts-ignore - Ignoring for the sake of example
+  // @ts-expect-error - Ignoring for the sake of example
   foo();
 }

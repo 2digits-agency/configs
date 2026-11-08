@@ -19,7 +19,10 @@ export function typescript(options: OptionsOverrides = {}): Array<FlatConfigItem
         'typescript/adjacent-overload-signatures': 'error',
         'typescript/array-type': ['error', { default: 'generic', readonly: 'generic' }],
         'typescript/await-thenable': 'error',
-        'typescript/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
+        'typescript/ban-ts-comment': [
+          'error',
+          { 'ts-expect-error': 'allow-with-description', 'ts-ignore': true, minimumDescriptionLength: 10 },
+        ],
         'typescript/ban-tslint-comment': 'error',
         'typescript/ban-types': undefined,
         'typescript/class-literal-property-style': 'error',

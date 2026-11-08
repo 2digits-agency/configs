@@ -42,7 +42,10 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
         ...rules,
         'ts/array-type': ['error', { default: 'generic', readonly: 'generic' }],
         'ts/restrict-template-expressions': ['error', { allowNumber: true }],
-        'ts/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
+        'ts/ban-ts-comment': [
+          'error',
+          { 'ts-expect-error': 'allow-with-description', 'ts-ignore': true, minimumDescriptionLength: 10 },
+        ],
         'ts/consistent-type-exports': ['error'],
         'ts/consistent-type-imports': [
           'error',
