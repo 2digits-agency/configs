@@ -185,17 +185,12 @@ export function timeArithmetic(node: ESTree.Expression): { readonly millis: bool
 /**
  * Split a binding name into lowercase words: `requestTimeoutMs`, `REQUEST_TIMEOUT_MS` and `request$timeout$ms` all
  * become `['request', 'timeout', 'ms']`.
- *
- * @param name Binding or property name.
  */
-export function nameWords(name: string): Array<string> {
-  return Fn.pipe(
-    name,
-    Str.split(/[_$]+|(?<=[\da-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/u),
-    Arr.filter(Str.isNonEmpty),
-    Arr.map(Str.toLowerCase),
-  );
-}
+export const nameWords: (name: string) => Array<string> = Fn.flow(
+  Str.split(/[_$]+|(?<=[\da-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/u),
+  Arr.filter(Str.isNonEmpty),
+  Arr.map(Str.toLowerCase),
+);
 
 /**
  * What a millisecond number stands for: a point in time (epoch millis) or an amount of time.
