@@ -1,6 +1,8 @@
 import * as Arr from 'effect/Array';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
+import * as Match from 'effect/Match';
+import * as Num from 'effect/Number';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
@@ -20,6 +22,11 @@ const API_ID = /^[A-Z0-9]{15}$/;
 const COMMENT_LIMIT = 100;
 
 const TICKET_LIMIT = 100;
+
+const loggedMinutes = Match.type<TimeEntry>().pipe(
+  Match.when({ kind: 'logged' }, ({ minutes }) => minutes),
+  Match.orElse(() => 0),
+);
 
 /**
  * The api_id of a ticket given by its number or api_id. Searches all states, so closed tickets are found too.
@@ -127,7 +134,7 @@ export const GetTicketContextHandler = Effect.gen(function* () {
       commentsTruncated: comments.comments.length >= COMMENT_LIMIT,
       timeEntries,
       timeEntriesTruncated: entries.truncated,
-      loggedMinutes: Arr.reduce(timeEntries, 0, (sum, entry) => (entry.kind === 'logged' ? sum + entry.minutes : sum)),
+      loggedMinutes: Num.sumAll(Arr.map(timeEntries, loggedMinutes)),
       mentionedIn: Arr.map(mentionedIn, ({ id }) => id),
     });
   }, Effect.mapError(toReadError));

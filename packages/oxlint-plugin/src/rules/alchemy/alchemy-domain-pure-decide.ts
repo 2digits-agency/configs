@@ -1,6 +1,7 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import type * as Effect from 'effect/Effect';
+import * as Match from 'effect/Match';
 
 import { defineEffectRule, isGlobalIdentifier, ruleMeta, staticPath } from '../../utils';
 import { domainSection, importedPath, isImportReference } from './domain';
@@ -145,19 +146,17 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
         }
       },
       CallExpression(node) {
-        const callee = globalCallee(node.callee);
+        Match.value(globalCallee(node.callee)).pipe(
+          Match.when('Date', () => report(node, 'time', 'Date()')),
+          Match.when('fetch', () => report(node, 'io', 'fetch()')),
+          Match.orElse(() => {
+            const path = importedPath(node.callee, getState(), context);
 
-        if (callee === 'Date') {
-          report(node, 'time', 'Date()');
-        } else if (callee === 'fetch') {
-          report(node, 'io', 'fetch()');
-        } else {
-          const path = importedPath(node.callee, getState(), context);
-
-          if (path?.length === 2 && path[0] === 'Effect' && effectIo.includes(path[1] ?? '')) {
-            report(node, 'io', Arr.join(path, '.'));
-          }
-        }
+            if (path?.length === 2 && path[0] === 'Effect' && effectIo.includes(path[1] ?? '')) {
+              report(node, 'io', Arr.join(path, '.'));
+            }
+          }),
+        );
       },
     };
   },

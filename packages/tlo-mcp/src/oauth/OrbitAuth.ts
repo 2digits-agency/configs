@@ -82,7 +82,7 @@ export const OrbitAuthLayer = Layer.effect(
     );
 
     const discover = yield* discoverEndpoints().pipe(
-      Effect.cachedWithTTL((exit) => (Exit.isSuccess(exit) ? Infinity : 0)),
+      Effect.cachedWithTTL(Exit.match({ onFailure: () => 0, onSuccess: () => Infinity })),
     );
 
     const accessToken = Effect.fn('OrbitAuth.accessToken')(function* () {
