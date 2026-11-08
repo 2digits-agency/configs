@@ -148,7 +148,7 @@ function generateConfigContent(options: Record<string, boolean | undefined>): st
     .map(([key, value]) =>
       key === 'tailwind' && value === true
         ? `      tailwind: { cssConfigPath: './styles.css' },`
-        : `      ${key}: ${value},`,
+        : `      ${key}: ${String(value)},`,
     )
     .join('\n');
 

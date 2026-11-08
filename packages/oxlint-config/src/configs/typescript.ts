@@ -134,7 +134,10 @@ export function typescript(options: OptionsOverrides = {}): Array<FlatConfigItem
             allowRegExp: false,
           },
         ],
-        'typescript/restrict-template-expressions': ['error', { allowNumber: true }],
+        'typescript/restrict-template-expressions': [
+          'error',
+          { allowBoolean: false, allowNullish: false, allowNumber: true },
+        ],
         'typescript/return-await': ['error', 'error-handling-correctness-only'],
         'typescript/strict-boolean-expressions': undefined,
         'typescript/strict-void-return': 'off',

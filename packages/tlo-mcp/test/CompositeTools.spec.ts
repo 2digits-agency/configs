@@ -746,7 +746,7 @@ describe('getBoardContext', () => {
     ListTodos: ({ state }: Schema.JsonObject) =>
       state === 'all'
         ? todos
-        : `1 card(s):\r\n${Opt.getOrUndefined(Arr.findFirst(Str.split(todos, '\r\n'), Str.startsWith('- TDFPXAJVJE7RMQ5')))}\r\n`,
+        : `1 card(s):\r\n${Opt.getOrThrow(Arr.findFirst(Str.split(todos, '\r\n'), Str.startsWith('- TDFPXAJVJE7RMQ5')))}\r\n`,
     GetTodoDetail: fixture('GetTodoDetail'),
   };
 

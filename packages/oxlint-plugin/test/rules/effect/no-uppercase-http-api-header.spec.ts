@@ -37,7 +37,7 @@ for (const method of ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'
     ["import { HttpApiEndpoint as Endpoint } from 'effect/unstable/httpapi';", 'Endpoint'],
     ["import * as Api from 'effect/unstable/httpapi';", 'Api.HttpApiEndpoint'],
     ["import * as Endpoint from 'effect/unstable/httpapi/HttpApiEndpoint';", 'Endpoint'],
-  ]) {
+  ] as const) {
     testRule(ruleName, noUppercaseHttpApiHeader, {
       valid: `${declaration} ${endpoint}.${method}('me', '/me', { headers: { authorization: Schema.String } });`,
       invalid: `${declaration} ${endpoint}.${method}(endpointName, endpointPath, { headers: { Authorization: Schema.String } });`,
