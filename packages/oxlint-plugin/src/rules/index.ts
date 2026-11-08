@@ -63,6 +63,10 @@ import { preserveCaughtError } from './effect/preserve-caught-error';
 import { requireSchemaClassBrand } from './effect/require-schema-class-brand';
 import { requireTryPromiseAbortSignal } from './effect/require-try-promise-abort-signal';
 import { throwInEffectGen } from './effect/throw-in-effect-gen';
+import { noConstantThunk } from './functions/no-constant-thunk';
+import { noForwardingLambda } from './functions/no-forwarding-lambda';
+import { noSingleUsePrivateFunction } from './functions/no-single-use-private-function';
+import { noTrivialWrapper } from './functions/no-trivial-wrapper';
 import { noUtcIsoSlicing } from './no-utc-iso-slicing';
 import { paddingLineBetweenStatements } from './padding-line-between-statements';
 import { noBrowserApiInRender } from './react/no-browser-api-in-render';
@@ -93,6 +97,7 @@ export const rules = {
   'no-already-started-promise': noAlreadyStartedPromise,
   'no-async-effect-try': noAsyncEffectTry,
   'no-browser-api-in-render': noBrowserApiInRender,
+  'no-constant-thunk': noConstantThunk,
   'no-discarded-run-promise': noDiscardedRunPromise,
   'no-discarded-schema-checks': noDiscardedSchemaChecks,
   'no-effect-as-on-log': noEffectAsOnLog,
@@ -100,6 +105,7 @@ export const rules = {
   'no-empty-schema-struct': noEmptySchemaStruct,
   'no-export-all-in-client': noExportAllInClient,
   'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,
+  'no-forwarding-lambda': noForwardingLambda,
   'no-function-config-default': noFunctionConfigDefault,
   'no-hash-as-identity': noHashAsIdentity,
   'no-inline-schema-compile': noInlineSchemaCompile,
@@ -113,8 +119,10 @@ export const rules = {
   'no-option-of-service': noOptionOfService,
   'no-overwritten-discriminant': noOverwrittenDiscriminant,
   'no-service-option-get-or-throw': noServiceOptionGetOrThrow,
+  'no-single-use-private-function': noSingleUsePrivateFunction,
   'no-service-constructor-imports': noServiceConstructorImports,
   'no-throw-in-effect-callback': noThrowInEffectCallback,
+  'no-trivial-wrapper': noTrivialWrapper,
   'no-uppercase-http-api-header': noUppercaseHttpApiHeader,
   'no-utc-iso-slicing': noUtcIsoSlicing,
   'no-zero-retry-times': noZeroRetryTimes,
