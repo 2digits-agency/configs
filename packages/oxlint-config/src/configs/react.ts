@@ -1,10 +1,11 @@
 import type { FlatConfigItem } from 'oxlint-flat-config';
 
 import { GLOB_TS, GLOB_TSX } from '../globs';
-import type { OptionsWithFiles } from '../types';
+import type { OptionsWithReact } from '../types';
+import { reactWeb } from './reactWeb';
 
-export function react(options: OptionsWithFiles = {}): Array<FlatConfigItem> {
-  const { files = [GLOB_TS, GLOB_TSX], overrides = {} } = options;
+export function react(options: OptionsWithReact = {}): Array<FlatConfigItem> {
+  const { files = [GLOB_TS, GLOB_TSX], overrides = {}, web = false } = options;
 
   return [
     {
@@ -83,7 +84,7 @@ export function react(options: OptionsWithFiles = {}): Array<FlatConfigItem> {
         'react/no-this-in-sfc': undefined,
         'react/no-unescaped-entities': undefined,
         'react/no-unknown-property': 'off',
-        'react/no-unstable-nested-components': 'off',
+        'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
         'react/only-export-components': undefined,
         'react/prefer-es6-class': undefined,
         'react/prefer-function-component': undefined,
@@ -122,5 +123,6 @@ export function react(options: OptionsWithFiles = {}): Array<FlatConfigItem> {
         ...overrides,
       },
     },
+    ...(web === false ? [] : reactWeb(web === true ? { files } : { ...web, files: web.files ?? files })),
   ];
 }
