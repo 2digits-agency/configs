@@ -45,6 +45,7 @@ import { noUppercaseHttpApiHeader } from './effect/no-uppercase-http-api-header'
 import { noZeroRetryTimes } from './effect/no-zero-retry-times';
 import { preferDataMatch } from './effect/prefer-data-match';
 import { preferEffectAlchemyNamespaceImports } from './effect/prefer-effect-alchemy-namespace-imports';
+import { preferEffectArrayOps } from './effect/prefer-effect-array-ops';
 import { preferEffectArraySort } from './effect/prefer-effect-array-sort';
 import { preferEffectDateTime } from './effect/prefer-effect-datetime';
 import { preferEffectDuration } from './effect/prefer-effect-duration';
@@ -56,8 +57,11 @@ import { preferEffectFilter } from './effect/prefer-effect-filter';
 import { preferEffectHeaders } from './effect/prefer-effect-headers';
 import { preferEffectMatch } from './effect/prefer-effect-match';
 import { preferEffectPath } from './effect/prefer-effect-path';
+import { preferEffectPredicate } from './effect/prefer-effect-predicate';
 import { preferEffectUrl } from './effect/prefer-effect-url';
+import { preferEqual } from './effect/prefer-equal';
 import { preferHoistedMatch } from './effect/prefer-hoisted-match';
+import { preferStructAssign } from './effect/prefer-struct-assign';
 import { preferUninterruptible } from './effect/prefer-uninterruptible';
 import { preferWithSpan } from './effect/prefer-with-span';
 import { preferYieldNow } from './effect/prefer-yield-now';
@@ -131,6 +135,7 @@ export const rules = {
   'padding-line-between-statements': paddingLineBetweenStatements,
   'prefer-data-match': preferDataMatch,
   'prefer-effect-alchemy-namespace-imports': preferEffectAlchemyNamespaceImports,
+  'prefer-effect-array-ops': preferEffectArrayOps,
   'prefer-effect-array-sort': preferEffectArraySort,
   'prefer-effect-datetime': preferEffectDateTime,
   'prefer-effect-duration': preferEffectDuration,
@@ -142,8 +147,11 @@ export const rules = {
   'prefer-effect-headers': preferEffectHeaders,
   'prefer-effect-match': preferEffectMatch,
   'prefer-effect-path': preferEffectPath,
+  'prefer-effect-predicate': preferEffectPredicate,
   'prefer-effect-url': preferEffectUrl,
   'prefer-hoisted-match': preferHoistedMatch,
+  'prefer-equal': preferEqual,
+  'prefer-struct-assign': preferStructAssign,
   'prefer-uninterruptible': preferUninterruptible,
   'prefer-with-span': preferWithSpan,
   'prefer-yield-now': preferYieldNow,
