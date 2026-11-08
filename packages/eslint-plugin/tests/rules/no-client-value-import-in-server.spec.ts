@@ -60,6 +60,12 @@ const valids: Array<ValidTestCase> = [
 
     import type { validationSchema } from './schemas';
   `,
+  // TypeScript erases an import of only an interface, so the schema module is never loaded.
+  typescript`
+    'use server';
+
+    import { SchemaProps } from './schemas';
+  `,
 ].map((code) => ({ code, filename }));
 
 const invalids: Array<InvalidTestCase> = [
@@ -129,5 +135,22 @@ describe(RULE_NAME, () => {
     rule: noClientValueImportInServer,
     valid: valids,
     invalid: invalids,
+  });
+});
+
+describe(`${RULE_NAME} without type information`, () => {
+  void run({
+    name: RULE_NAME,
+    rule: noClientValueImportInServer,
+    valid: [
+      {
+        code: typescript`
+          'use server';
+
+          import { ErrorMessage } from './Form';
+        `,
+        filename: 'actions.js',
+      },
+    ],
   });
 });

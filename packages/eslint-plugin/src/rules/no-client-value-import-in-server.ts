@@ -1,4 +1,4 @@
-import { AST_NODE_TYPES, ESLintUtils, type TSESTree } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, type TSESTree } from '@typescript-eslint/utils';
 import ts from 'typescript';
 
 import { createRule } from '../utils';
@@ -30,11 +30,12 @@ export const noClientValueImportInServer = createRule<[], MessageId>({
     defaultOptions: [],
   },
   create(context) {
-    const parserServices = ESLintUtils.getParserServices(context, true);
+    const { parserServices } = context.sourceCode;
 
-    const { program } = parserServices;
+    // Only @typescript-eslint/parser with type information provides a program; other parsers get no checks.
+    const { program, esTreeNodeToTSNodeMap, tsNodeToESTreeNodeMap } = parserServices ?? {};
 
-    if (!program) {
+    if (!program || !esTreeNodeToTSNodeMap || !tsNodeToESTreeNodeMap) {
       return {};
     }
 
@@ -51,19 +52,25 @@ export const noClientValueImportInServer = createRule<[], MessageId>({
             continue;
           }
 
-          const declaration = parserServices.esTreeNodeToTSNodeMap.get(statement);
+          const declaration = esTreeNodeToTSNodeMap.get(statement);
 
           const direct = findClientValueImports(checker, declaration);
 
           for (const { binding, source } of direct) {
             context.report({
-              node: parserServices.tsNodeToESTreeNodeMap.get(binding),
+              node: tsNodeToESTreeNodeMap.get(binding),
               messageId: 'clientValueImport',
               data: { name: binding.text, source },
             });
           }
 
-          if (direct.length > 0) {
+          const { importClause } = declaration;
+
+          if (
+            importClause === undefined ||
+            direct.length > 0 ||
+            valueBindings(importClause).every((binding) => !isValueBinding(checker, binding))
+          ) {
             continue;
           }
 
@@ -114,13 +121,11 @@ function findClientValueImports(checker: ts.TypeChecker, declaration: ts.ImportD
 
   return valueBindings(importClause)
     .filter((binding) => {
-      const symbol = checker.getSymbolAtLocation(binding);
+      const target = resolveBinding(checker, binding);
 
-      if (symbol === undefined) {
+      if (target === undefined) {
         return moduleIsClient;
       }
-
-      const target = symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol;
 
       if (!(target.flags & ts.SymbolFlags.Value)) {
         return false;
@@ -170,6 +175,19 @@ function findIndirectClientValueImport(
   }
 
   return undefined;
+}
+
+function resolveBinding(checker: ts.TypeChecker, binding: ts.Identifier): ts.Symbol | undefined {
+  const symbol = checker.getSymbolAtLocation(binding);
+
+  return symbol !== undefined && symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol;
+}
+
+// Unresolved bindings count as values, because their import is kept.
+function isValueBinding(checker: ts.TypeChecker, binding: ts.Identifier): boolean {
+  const target = resolveBinding(checker, binding);
+
+  return target === undefined || (target.flags & ts.SymbolFlags.Value) !== 0;
 }
 
 function valueBindings(importClause: ts.ImportClause): Array<ts.Identifier> {
