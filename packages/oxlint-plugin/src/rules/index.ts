@@ -63,6 +63,7 @@ import { preserveCaughtError } from './effect/preserve-caught-error';
 import { requireSchemaClassBrand } from './effect/require-schema-class-brand';
 import { requireTryPromiseAbortSignal } from './effect/require-try-promise-abort-signal';
 import { throwInEffectGen } from './effect/throw-in-effect-gen';
+import { noUtcIsoSlicing } from './no-utc-iso-slicing';
 import { paddingLineBetweenStatements } from './padding-line-between-statements';
 
 export const rules = {
@@ -110,6 +111,7 @@ export const rules = {
   'no-service-constructor-imports': noServiceConstructorImports,
   'no-throw-in-effect-callback': noThrowInEffectCallback,
   'no-uppercase-http-api-header': noUppercaseHttpApiHeader,
+  'no-utc-iso-slicing': noUtcIsoSlicing,
   'no-zero-retry-times': noZeroRetryTimes,
   'padding-line-between-statements': paddingLineBetweenStatements,
   'prefer-effect-alchemy-namespace-imports': preferEffectAlchemyNamespaceImports,

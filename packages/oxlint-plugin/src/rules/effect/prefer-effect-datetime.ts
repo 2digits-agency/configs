@@ -9,7 +9,8 @@ export const preferEffectDateTime: Rule = defineEffectRule(
     'suggestion',
     'Prefer Effect DateTime formatting so time-zone behavior is explicit and composable.',
     {
-      effectDateTime: 'Convert to DateTime and use DateTime.format, DateTime.formatIso, or another explicit formatter.',
+      effectDateTime:
+        'Convert to DateTime and format it in an explicit zone: DateTime.setZone with DateTime.formatIsoDate, formatIsoOffset or formatIsoZoned, or DateTime.format with timeZone. DateTime.formatIso is UTC, like toISOString: use it only for UTC instants, never slice it for a local date.',
     },
     'https://www.effect.website/docs/v4/api/effect/DateTime',
   ),
