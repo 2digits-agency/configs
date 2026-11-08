@@ -1,21 +1,24 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update ESLint plugins\n\n- Updated `eslint-plugin-jsdoc` to 65.4.4 and `eslint-plugin-storybook` to 10.6.6.\n"
-    filename: 2026-11-06-189760b0.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: minor\n---\n\n### Lint shell scripts\n\n- Added `@eslint/shell` with its recommended rules for `*.sh` and `*.bash` files, parsed as Bash. Shell code blocks in Markdown are not linted.\n"
+    filename: 2026-11-08-1a3c8aec.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update PostHog Node SDK\n\n- Updated `posthog-node` to 5.63.1.\n"
-    filename: 2026-11-06-a484cdab.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Require `_id` selections in GraphQL operations\n\n- `gql/require-selections` now also checks `_id`, the identifier field Prepr uses. Types with only `id` still require `id`. A type with both fields passes when either one is selected.\n"
+    filename: 2026-11-08-4d9e2b17.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxfmt-config\":\n    type: patch\n---\n\n### Update Oxfmt\n\n- Updated `oxfmt` to 0.77.0.\n"
-    filename: 2026-11-06-03580ac9.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update ESLint plugins\n\n- Updated `@tanstack/eslint-plugin-query` to 5.107.1 and `eslint-plugin-jsdoc` to 65.4.5.\n"
+    filename: 2026-11-08-5e1d7a42.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: patch\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Update Oxlint\n\n- Updated `oxlint` and `@oxlint/plugins` to 1.92.0 and `oxlint-tsgolint` to 7.0.2006.\n"
-    filename: 2026-11-06-261f18f0.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: minor\n  \"@2digits/oxlint-config\":\n    type: minor\n---\n\n### Report numbers used as booleans\n\n- Enabled `strict-boolean-expressions` (`ts/` in ESLint, `typescript/` in Oxlint) with `allowNumber: false` and `allowNullableNumber: false`. It reports conditions like `if (count)`, `if (str.indexOf(x))` and `items.length && <List />`, where `0` (or `NaN`) is a valid value but reads as `false`. Compare explicitly instead, for example `count !== 0`, `str.includes(x)` or `items.length > 0`.\n- Strings, `any` and nullable strings, booleans, enums and objects are still allowed. The rule also reports conditions on objects that are never nullish and on unions of different kinds of values, such as `string | number`.\n- Projects that are not ready can turn the rule off with `overrides` on the `ts` options.\n"
+    filename: 2026-11-08-e2f15369.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: minor\n---\n\n### Enable new type-aware TypeScript rules\n\n- Enabled `typescript/no-unsafe-enum-assignment`, which reports plain numbers or strings used where an enum value is expected.\n- Enabled `typescript/no-generated-empty-object-type`, which reports utility types that resolve to `{}`, such as `Omit<T, keyof T>`.\n"
-    filename: 2026-11-06-3ee32e89.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: minor\n---\n\n### Add native React web accessibility checks\n\n- Added an opt-in `react.web` profile with 15 native accessibility rules and DOM property validation, including a narrow `cmdk-input-wrapper` exception. Web checks inherit the React file scope and support separate file patterns and overrides for mixed web/native repositories.\n- Enabled `react/no-unstable-nested-components` for React with `allowAsProps: true`, preserving translation callbacks and render props alongside the existing React Compiler checks.\n"
+    filename: 2026-11-08-66bf078a.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update Effect tsgo\n\n- Updated `@effect/tsgo` to 0.67.4.\n"
-    filename: 2026-11-06-953a76e2.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Report millisecond arithmetic and millisecond-typed parameters\n\n- Added `no-millis-arithmetic`, which reports arithmetic and comparisons on `Duration.toMillis(...)`, `DateTime.toEpochMillis(...)`, `Clock.currentTimeMillis` results and `*Ms`/`*Millis` bindings, and names the `Duration` or `DateTime` function to use instead.\n- Added `prefer-effect-duration-types`, which reports `*Ms`/`*Millis` parameters and fields typed as `number` or decoded with `Schema.Number`, and suggests `Duration.Input`, `Duration.Duration`, `Schema.DurationFromMillis` or `Schema.Duration`. Callbacks of non-Effect APIs and ambient declarations are skipped.\n"
+    filename: 2026-11-08-be59f9e6.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update Effect tsgo\n\n- Updated `@effect/tsgo` to 0.67.5.\n"
+    filename: 2026-11-08-b83f0c19.md
     v: 0.0.0
 core:packages:
   - id: npm:@2digits/config-monorepo
@@ -24,27 +27,26 @@ core:packages:
     updated: false
   - id: npm:@2digits/constants
     updated: false
-  - changelogIds:
-      - 2026-11-06-189760b0.md
-    id: npm:@2digits/eslint-config
-    updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
+  - id: npm:@2digits/opencode-plugin
+    updated: false
   - changelogIds:
-      - 2026-11-06-a484cdab.md
-    id: npm:@2digits/opencode-plugin
+      - 2026-11-08-1a3c8aec.md
+      - 2026-11-08-4d9e2b17.md
+      - 2026-11-08-5e1d7a42.md
+      - 2026-11-08-e2f15369.md
+    id: npm:@2digits/eslint-config
     updated: true
+  - id: npm:@2digits/oxfmt-config
+    updated: false
   - changelogIds:
-      - 2026-11-06-03580ac9.md
-    id: npm:@2digits/oxfmt-config
-    updated: true
-  - changelogIds:
-      - 2026-11-06-261f18f0.md
-      - 2026-11-06-3ee32e89.md
+      - 2026-11-08-66bf078a.md
+      - 2026-11-08-e2f15369.md
     id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-11-06-261f18f0.md
+      - 2026-11-08-be59f9e6.md
     id: npm:@2digits/oxlint-plugin
     updated: true
   - id: npm:@2digits/prettier-config
@@ -54,16 +56,16 @@ core:packages:
   - id: npm:@2digits/tlo-mcp
     updated: false
   - changelogIds:
-      - 2026-11-06-953a76e2.md
+      - 2026-11-08-b83f0c19.md
     id: npm:@2digits/tsconfig
     updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
   - id: npm:@2digits/constants
-  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
+  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxlint-plugin

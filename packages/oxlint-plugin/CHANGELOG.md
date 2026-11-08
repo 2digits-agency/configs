@@ -1,3 +1,10 @@
+## @2digits/oxlint-plugin@0.6.0
+
+### Report millisecond arithmetic and millisecond-typed parameters
+
+- Added `no-millis-arithmetic`, which reports arithmetic and comparisons on `Duration.toMillis(...)`, `DateTime.toEpochMillis(...)`, `Clock.currentTimeMillis` results and `*Ms`/`*Millis` bindings, and names the `Duration` or `DateTime` function to use instead.
+- Added `prefer-effect-duration-types`, which reports `*Ms`/`*Millis` parameters and fields typed as `number` or decoded with `Schema.Number`, and suggests `Duration.Input`, `Duration.Duration`, `Schema.DurationFromMillis` or `Schema.Duration`. Callbacks of non-Effect APIs and ambient declarations are skipped.
+
 ## @2digits/oxlint-plugin@0.5.1
 
 ### Update Oxlint

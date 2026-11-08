@@ -1,3 +1,23 @@
+## @2digits/eslint-config@5.11.0
+
+### Lint shell scripts
+
+- Added `@eslint/shell` with its recommended rules for `*.sh` and `*.bash` files, parsed as Bash. Shell code blocks in Markdown are not linted.
+
+### Require `_id` selections in GraphQL operations
+
+- `gql/require-selections` now also checks `_id`, the identifier field Prepr uses. Types with only `id` still require `id`. A type with both fields passes when either one is selected.
+
+### Update ESLint plugins
+
+- Updated `@tanstack/eslint-plugin-query` to 5.107.1 and `eslint-plugin-jsdoc` to 65.4.5.
+
+### Report numbers used as booleans
+
+- Enabled `strict-boolean-expressions` (`ts/` in ESLint, `typescript/` in Oxlint) with `allowNumber: false` and `allowNullableNumber: false`. It reports conditions like `if (count)`, `if (str.indexOf(x))` and `items.length && <List />`, where `0` (or `NaN`) is a valid value but reads as `false`. Compare explicitly instead, for example `count !== 0`, `str.includes(x)` or `items.length > 0`.
+- Strings, `any` and nullable strings, booleans, enums and objects are still allowed. The rule also reports conditions on objects that are never nullish and on unions of different kinds of values, such as `string | number`.
+- Projects that are not ready can turn the rule off with `overrides` on the `ts` options.
+
 ## @2digits/eslint-config@5.10.7
 
 ### Update ESLint plugins
