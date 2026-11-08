@@ -9,6 +9,11 @@ export interface RuleOptions {
    */
   '@2digits/if-curly'?: Linter.RuleEntry<[]>
   /**
+   * Disallow slicing or rewriting a UTC ISO string to get a local date or time
+   * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/no-utc-iso-slicing.ts
+   */
+  '@2digits/no-utc-iso-slicing'?: Linter.RuleEntry<[]>
+  /**
    * Disallow passing function references to array methods
    * @see https://github.com/2digits-agency/configs/tree/main/packages/eslint-plugin/src/rules/prefer-inline-array-callbacks.ts
    */
