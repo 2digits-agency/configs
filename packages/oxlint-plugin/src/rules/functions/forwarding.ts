@@ -132,8 +132,9 @@ export function isEffectGuard(callee: ESTree.Expression | ESTree.Super, state: F
 }
 
 /**
- * Whether a callee can be passed as a value without losing `this`: a binding, an imported module function, or a call
- * that builds a function from them, such as `Schema.is(User)`.
+ * Whether a callee can be passed as a value without losing `this` or changing when it is built: a binding, an imported
+ * module function, or an Effect API call that builds a function, such as `Schema.is(User)`. A call to any other factory
+ * runs on every call of the wrapper, and only once after passing its result.
  *
  * @param node Callee of the forwarded call.
  * @param state Import bindings of the file.
@@ -147,5 +148,5 @@ export function isDetachableCallee(node: ESTree.Expression | ESTree.Super, state
     return canonicalPath(node, state) !== undefined;
   }
 
-  return node.type === 'CallExpression' && isDetachableCallee(node.callee, state);
+  return node.type === 'CallExpression' && node.callee.type !== 'Identifier' && isDetachableCallee(node.callee, state);
 }

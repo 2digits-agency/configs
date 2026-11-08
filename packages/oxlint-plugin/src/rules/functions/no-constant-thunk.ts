@@ -44,6 +44,25 @@ const pureModules: ReadonlySet<string> = new Set([
   'pipe',
 ]);
 
+/*
+ * Modules whose functions call their callbacks right away, such as `Option.map(some, f)` or `pipe(value, f)`, so the
+ * result is only constant when no function argument can read changing state.
+ */
+const eagerModules: ReadonlySet<string> = new Set([
+  'BigDecimal',
+  'Data',
+  'DateTime',
+  'Duration',
+  'Exit',
+  'Option',
+  'Result',
+  'String',
+  'Struct',
+  'pipe',
+]);
+
+const eagerMembers: ReadonlySet<string> = new Set(['pipe', 'value', 'valueTags']);
+
 // `Effect.runSync`, `DateTime.nowUnsafe`, `Ref.makeUnsafe` and similar run effects or read mutable state.
 const impureMember = /^run|unsafe/iu;
 
@@ -69,10 +88,34 @@ function isConstantCall(node: ESTree.CallExpression, env: Constness): boolean {
       isConstantCall(callee.object, env)) ||
     (callee.type === 'CallExpression' && isConstantCall(callee, env));
 
+  const eager = eagerModules.has(path[0] ?? '') || eagerMembers.has(path[1] ?? '');
+
   return (
     !node.optional &&
     (pureApi || pureBuilder) &&
-    Arr.every(node.arguments, (argument) => argument.type !== 'SpreadElement' && isConstant(argument, env))
+    Arr.every(
+      node.arguments,
+      (argument) =>
+        argument.type !== 'SpreadElement' && isConstant(argument, env) && (!eager || !isLocalFunction(argument, env)),
+    )
+  );
+}
+
+// A function whose body this rule doesn't see: an inline function, or a local or imported function binding.
+function isLocalFunction(node: ESTree.Expression, env: Constness): boolean {
+  if (node.type !== 'Identifier') {
+    return isFunctionNode(node);
+  }
+
+  const definition = soleDefinition(resolveVariable(env.context, node, node.name));
+
+  return (
+    definition?.type === 'FunctionName' ||
+    definition?.type === 'ImportBinding' ||
+    (definition?.type === 'Variable' &&
+      definition.node.type === 'VariableDeclarator' &&
+      definition.node.init !== null &&
+      isFunctionNode(definition.node.init))
   );
 }
 
@@ -107,8 +150,15 @@ function isConstant(node: ESTree.Node, env: Constness): boolean {
       TSAsExpression: ({ expression }) => isConstant(expression, env),
       TSSatisfiesExpression: ({ expression }) => isConstant(expression, env),
       TSNonNullExpression: ({ expression }) => isConstant(expression, env),
+      /*
+       * A property of a module, such as `Schema.String`, or of a value built by a constant call; any other object may
+       * be mutated between calls.
+       */
       MemberExpression: (member) =>
-        isConstant(member.object, env) && (!member.computed || isConstant(member.property, env)),
+        canonicalPath(member, env.state) !== undefined ||
+        (member.object.type === 'CallExpression' &&
+          isConstantCall(member.object, env) &&
+          (!member.computed || isConstant(member.property, env))),
       UnaryExpression: ({ argument, operator }) => operator !== 'delete' && isConstant(argument, env),
       BinaryExpression: ({ left, right }) => isConstant(left, env) && isConstant(right, env),
       LogicalExpression: ({ left, right }) => isConstant(left, env) && isConstant(right, env),

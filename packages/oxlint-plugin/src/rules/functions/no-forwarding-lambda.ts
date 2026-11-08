@@ -14,29 +14,42 @@ const indexedModules: ReadonlySet<string> = new Set([
   'Iterable',
   'MutableHashMap',
   'MutableHashSet',
+  'MutableList',
   'Record',
   'Trie',
   'Tuple',
+  'TxChunk',
+  'TxHashMap',
 ]);
 
-// Callbacks of other modules, such as `Effect.forEach`, that also receive an index.
-const indexedMembers: ReadonlySet<string> = new Set([
-  'dropUntil',
-  'dropWhile',
-  'every',
-  'exists',
-  'filter',
-  'filterMap',
-  'findFirst',
-  'forEach',
-  'mapAccum',
-  'partition',
-  'reduce',
-  'reduceRight',
-  'some',
-  'takeUntil',
-  'takeWhile',
-  'validate',
+/*
+ * Callbacks of other Effect APIs that also receive an index, found from the `(…, i: number) =>` callback signatures in
+ * the `effect` 4.1 declarations.
+ */
+const indexedApis: ReadonlySet<string> = new Set([
+  'Channel.filterArrayEffect',
+  'Channel.map',
+  'Channel.mapEffect',
+  'Effect.filter',
+  'Effect.findFirst',
+  'Effect.findFirstFilter',
+  'Effect.forEach',
+  'Effect.partition',
+  'Effect.reduce',
+  'Effect.validate',
+  'Stream.dropUntil',
+  'Stream.dropUntilEffect',
+  'Stream.dropWhile',
+  'Stream.dropWhileEffect',
+  'Stream.filterEffect',
+  'Stream.map',
+  'Stream.mapArray',
+  'Stream.mapArrayEffect',
+  'Stream.mapEffect',
+  'Stream.takeUntil',
+  'Stream.takeUntilEffect',
+  'Stream.takeWhile',
+  'Stream.takeWhileEffect',
 ]);
 
 function receivesOneArgument(call: ESTree.CallExpression, state: FileState): boolean {
@@ -44,14 +57,8 @@ function receivesOneArgument(call: ESTree.CallExpression, state: FileState): boo
 
   const module = path?.[0];
 
-  const member = path?.at(-1);
-
   return (
-    module !== undefined &&
-    member !== undefined &&
-    path?.length === 2 &&
-    !indexedModules.has(module) &&
-    !indexedMembers.has(member)
+    module !== undefined && path?.length === 2 && !indexedModules.has(module) && !indexedApis.has(Arr.join(path, '.'))
   );
 }
 

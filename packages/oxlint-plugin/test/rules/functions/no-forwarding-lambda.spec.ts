@@ -19,6 +19,7 @@ const imports = `
   import * as Effect from 'effect/Effect'
   import * as Opt from 'effect/Option'
   import * as Schema from 'effect/Schema'
+  import * as Stream from 'effect/Stream'
 `;
 
 tester.run('no-forwarding-lambda', noForwardingLambda, {
@@ -34,6 +35,9 @@ tester.run('no-forwarding-lambda', noForwardingLambda, {
     `${imports} values.map((value) => parse(value))`,
     `${imports} register((value) => parse(value))`,
     'Effect.map((value) => parse(value))',
+    `${imports} Stream.map((chunk) => decode(chunk))`,
+    `${imports} Effect.findFirstFilter(values, (value) => check(value))`,
+    `${imports} Effect.map((id) => makeLoader(config)(id))`,
   ],
   invalid: [
     {
@@ -47,6 +51,10 @@ tester.run('no-forwarding-lambda', noForwardingLambda, {
     {
       code: `${imports} Effect.flatMap((input) => Schema.decodeUnknownEffect(User)(input))`,
       errors: [{ messageId: 'forwardingLambda', data: { callee: '`Schema.decodeUnknownEffect(User)`' } }],
+    },
+    {
+      code: `${imports} Stream.tap((output) => Effect.logDebug(output))`,
+      errors: [{ messageId: 'forwardingLambda', data: { callee: '`Effect.logDebug`' } }],
     },
     {
       code: `${imports} Effect.catchTag('NotFound', function (error) { return recover(error) })`,

@@ -19,6 +19,8 @@ const imports = `
   import * as DateTime from 'effect/DateTime'
   import * as Duration from 'effect/Duration'
   import * as Effect from 'effect/Effect'
+  import { pipe } from 'effect/Function'
+  import * as Opt from 'effect/Option'
   import * as Schema from 'effect/Schema'
 `;
 
@@ -39,6 +41,9 @@ tester.run('no-constant-thunk', noConstantThunk, {
     `${imports} export function run() { const inner = () => Schema.String; return inner }`,
     `${imports} function ruleImpl(context) { return {} }\nexport function rule() { return ruleImpl }`,
     `${imports} export const handler = () => (event) => Effect.log(event)`,
+    `${imports} const state = { count: 0 }\nfunction current() { return state.count }`,
+    `${imports} function readClock() { return Date.now() }\nfunction now() { return pipe(0, readClock) }`,
+    `${imports} function jitter() { return Opt.map(Opt.some(1), (n) => n + Math.random()) }`,
   ],
   invalid: [
     {
@@ -60,6 +65,14 @@ tester.run('no-constant-thunk', noConstantThunk, {
     {
       code: `${imports} function program() { return Effect.gen(function* () { yield* Effect.log('x') }) }`,
       errors: [{ messageId: 'constantThunk', data: { name: 'program' } }],
+    },
+    {
+      code: `${imports} function fields() { return Schema.Struct({ id: Schema.String }).fields }`,
+      errors: [{ messageId: 'constantThunk', data: { name: 'fields' } }],
+    },
+    {
+      code: `${imports} function label() { return pipe('id', Opt.some) }`,
+      errors: [{ messageId: 'constantThunk', data: { name: 'label' } }],
     },
     {
       code: `${imports} const host = 'example.com'\nfunction url() { return \`https://\${host}/api\` }`,
