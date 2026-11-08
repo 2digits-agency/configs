@@ -86,16 +86,8 @@ export class PackageManagerService extends Context.Service<PackageManagerService
           const childProcess = yield* command;
 
           const { exitCode, stderr } = yield* Effect.all({
-            stdout: childProcess.stdout.pipe(
-              Stream.decodeText(),
-              Stream.tap((output) => Effect.logDebug(output)),
-              Stream.mkString,
-            ),
-            stderr: childProcess.stderr.pipe(
-              Stream.decodeText(),
-              Stream.tap((output) => Effect.logDebug(output)),
-              Stream.mkString,
-            ),
+            stdout: childProcess.stdout.pipe(Stream.decodeText(), Stream.tap(Effect.logDebug), Stream.mkString),
+            stderr: childProcess.stderr.pipe(Stream.decodeText(), Stream.tap(Effect.logDebug), Stream.mkString),
             exitCode: childProcess.exitCode,
           });
 

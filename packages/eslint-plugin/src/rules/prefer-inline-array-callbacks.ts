@@ -30,10 +30,6 @@ const ALL_METHODS = new Set([...SIMPLE_METHODS.keys(), ...REDUCE_METHODS, ...COM
 
 const arrayTypeCache = new WeakMap<TSESTree.Node, boolean>();
 
-function isGlobalIdentifier(node: TSESTree.Node, name: string): boolean {
-  return node.type === AST_NODE_TYPES.Identifier && node.name === name;
-}
-
 function isIgnoredCallback(
   methodName: string,
   callback: TSESTree.Node,
@@ -60,15 +56,12 @@ function isIgnoredCallback(
   return reference.resolved.scope.type === ScopeType.global;
 }
 
-function isInlineFunction(node: TSESTree.Node): boolean {
-  return node.type === AST_NODE_TYPES.ArrowFunctionExpression || node.type === AST_NODE_TYPES.FunctionExpression;
-}
-
 function isBindCall(node: TSESTree.Node): boolean {
   return (
     node.type === AST_NODE_TYPES.CallExpression &&
     node.callee.type === AST_NODE_TYPES.MemberExpression &&
-    isGlobalIdentifier(node.callee.property, 'bind')
+    node.callee.property.type === AST_NODE_TYPES.Identifier &&
+    node.callee.property.name === 'bind'
   );
 }
 
@@ -160,7 +153,8 @@ export const preferInlineArrayCallbacks = createRule<[], MessageId>({
       if (
         !callback ||
         callback.type === AST_NODE_TYPES.SpreadElement ||
-        isInlineFunction(callback) ||
+        callback.type === AST_NODE_TYPES.ArrowFunctionExpression ||
+        callback.type === AST_NODE_TYPES.FunctionExpression ||
         isBindCall(callback) ||
         isIgnoredCallback(methodName, callback, context.sourceCode)
       ) {

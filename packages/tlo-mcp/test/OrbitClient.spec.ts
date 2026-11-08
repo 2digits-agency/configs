@@ -22,10 +22,6 @@ const Message = Schema.Struct({
 
 const decodeJson = Schema.decodeUnknownEffect(Message.pipe(Schema.fromJsonString));
 
-function decodeMessage(body: RequestInit['body']) {
-  return decodeJson(body instanceof Uint8Array ? new TextDecoder().decode(body) : body).pipe(Effect.orDie);
-}
-
 // GetProject is exposed; DeleteProjectItem exists upstream but is not.
 const upstreamTools = [
   {
@@ -73,7 +69,11 @@ function orbit(onCall: (id: number | undefined, init: RequestInit | undefined) =
   const fetch: typeof globalThis.fetch = (_input, init) =>
     Effect.runPromise(
       Effect.gen(function* () {
-        const message = yield* decodeMessage(init?.body);
+        const body = init?.body;
+
+        const message = yield* decodeJson(body instanceof Uint8Array ? new TextDecoder().decode(body) : body).pipe(
+          Effect.orDie,
+        );
 
         const headers = new Headers(init?.headers);
 
