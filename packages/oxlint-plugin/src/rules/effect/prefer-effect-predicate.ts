@@ -2,6 +2,7 @@ import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
+import * as Str from 'effect/String';
 
 import {
   defineEffectRule,
@@ -56,6 +57,9 @@ const instancePredicates: Readonly<Record<string, string>> = {
   Symbol: 'P.isSymbol',
   Uint8Array: 'P.isUint8Array',
 };
+
+// `x instanceof String` only matches `new String(…)`, so P.isString is a different check, not a rewrite.
+const boxedConstructors: ReadonlySet<string> = new Set(['BigInt', 'Boolean', 'Number', 'String', 'Symbol']);
 
 function isFunctionLike(node: ESTree.Node): node is FunctionLike {
   return (
@@ -155,6 +159,10 @@ export const preferEffectPredicate: Rule = defineEffectRule(
     {
       predicate:
         'Use {{predicate}} from Effect instead of this check. Decode unknown input with Schema.is or a Schema decoder instead of narrowing it by hand.',
+      objectPredicate:
+        "Use {{predicate}} from Effect instead of this check. Unlike typeof x === 'object', it treats null as not an object.",
+      boxedInstance:
+        '`instanceof {{constructor}}` only matches boxed objects such as `new {{constructor}}(…)`, never primitive values. To check for the primitive, use {{predicate}}.',
     },
     'https://www.effect.website/docs/v4/api/effect/Predicate',
   ),
@@ -171,7 +179,15 @@ export const preferEffectPredicate: Rule = defineEffectRule(
         return;
       }
 
-      context.report({ node, messageId: 'predicate', data: { predicate } });
+      const constructor = node.operator === 'instanceof' ? context.sourceCode.getText(node.right) : '';
+
+      if (boxedConstructors.has(constructor)) {
+        context.report({ node, messageId: 'boxedInstance', data: { constructor, predicate } });
+      } else if (Str.includes('P.isObjectOrArray')(predicate)) {
+        context.report({ node, messageId: 'objectPredicate', data: { predicate } });
+      } else {
+        context.report({ node, messageId: 'predicate', data: { predicate } });
+      }
     },
   }),
 );

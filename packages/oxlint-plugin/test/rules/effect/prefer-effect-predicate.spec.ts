@@ -19,14 +19,12 @@ for (const [invalid, predicate] of [
   ["'number' !== typeof value", 'P.not(P.isNumber)'],
   ["typeof value === 'undefined'", 'P.isUndefined'],
   ["typeof value !== 'undefined'", 'P.isNotUndefined'],
-  ["typeof value === 'object'", 'P.isObjectOrArray'],
   ['value === undefined', 'P.isUndefined'],
   ['undefined !== value', 'P.isNotUndefined'],
   ['value == null', 'P.isNullish'],
   ['value != undefined', 'P.isNotNullish'],
   ['value === null', 'P.isNull'],
   ['null !== value', 'P.isNotNull'],
-  ['value instanceof String', 'P.isString'],
   ['value instanceof Date', 'P.isDate'],
   ['value instanceof Array', 'Arr.isArray'],
   ["function isName(input: unknown): boolean { return typeof input === 'string' }", 'P.isString'],
@@ -40,6 +38,24 @@ for (const [invalid, predicate] of [
     `,
     messageId: 'predicate',
     data: { predicate },
+  });
+}
+
+for (const [invalid, messageId, data] of [
+  ["typeof value === 'object'", 'objectPredicate', { predicate: 'P.isObjectOrArray' }],
+  ["typeof value !== 'object'", 'objectPredicate', { predicate: 'P.not(P.isObjectOrArray)' }],
+  ['value instanceof String', 'boxedInstance', { constructor: 'String', predicate: 'P.isString' }],
+  ['value instanceof Number', 'boxedInstance', { constructor: 'Number', predicate: 'P.isNumber' }],
+] as const) {
+  testRule('prefer-effect-predicate', preferEffectPredicate, {
+    valid,
+    invalid: `
+      import * as Effect from 'effect/Effect'
+      declare const value: unknown
+      ${invalid}
+    `,
+    messageId,
+    data,
   });
 }
 

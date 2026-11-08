@@ -225,9 +225,11 @@ These rules only run in files that import Effect, report without autofixes, and 
 
 - `prefer-effect-predicate` reports `typeof x === '…'`, comparisons with `undefined` or `null`, and `instanceof` on
   built-ins such as `String`, `Date`, or `Array`, and names the guard to use: `P.isString`, `P.not(P.isNumber)`,
-  `P.isNotUndefined`, `P.isNotNullish`, `P.isDate`, or `Arr.isArray`. Checks inside type guards (`(u): u is Foo =>`)
-  and `typeof` on undeclared globals such as `typeof window` are allowed. `Array.isArray` is left to
-  `preferEffectArray`.
+  `P.isNotUndefined`, `P.isNotNullish`, `P.isDate`, or `Arr.isArray`. Two suggestions are not one-to-one rewrites, and
+  their messages say so: `instanceof String` (and `Number`, `Boolean`, `BigInt`, `Symbol`) only matches boxed objects
+  while `P.isString` matches primitives, and `P.isObjectOrArray` rejects `null`, which `typeof x === 'object'` accepts.
+  Checks inside type guards (`(u): u is Foo =>`) and `typeof` on undeclared globals such as `typeof window` are allowed.
+  `Array.isArray` is left to `preferEffectArray`.
 - `prefer-effect-array-ops` reports `[...new Set(xs)]` and `Array.from(new Set(xs))` (use `Arr.dedupe`), `xs[0]` (use
   `Arr.head`), `.length` compared with `0` (use `Arr.isReadonlyArrayEmpty` or `Arr.isReadonlyArrayNonEmpty`, or
   `Str.isEmpty`/`Str.isNonEmpty` for strings), and `(x) => x.field` passed to any `map` (use `Struct.get('field')`).
