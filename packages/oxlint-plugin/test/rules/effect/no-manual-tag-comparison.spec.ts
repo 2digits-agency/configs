@@ -16,7 +16,7 @@ for (const invalid of [
     valid: `
       Predicate.isTagged('Ready')(value);
       Match.value(value).pipe(Match.tag('Ready', handleReady));
-      if (value.status === 'Ready') handleReady(value);
+      if (value.state === 'Ready') handleReady(value);
       Effect.catch(error => error._tag === 'NotFound' ? recover : fail);
       value._tag === tag;
       value[key] === 'Ready';
@@ -32,3 +32,47 @@ testRule(name, rule, {
   invalid: 'switch (value._tag) { case "Ready": handleReady(value); }',
   messageId: 'manualSwitch',
 });
+
+for (const invalid of [
+  'order.disposition === "ship";',
+  '"physical" !== item["productKind"];',
+  'Effect.catch(error => error.disposition === "retry" ? recover : fail);',
+]) {
+  testRule(name, rule, {
+    options: [{ discriminants: ['disposition', 'productKind'] }],
+    valid: `
+      order.status === 'Ready';
+      order.disposition === nextDisposition;
+      order.disposition === 1;
+      Effect.catch(error => error._tag === 'NotFound' ? recover : fail);
+    `,
+    invalid,
+    messageId: 'manualDiscriminantComparison',
+  });
+}
+
+testRule(name, rule, {
+  options: [{ discriminants: ['disposition'] }],
+  valid: 'switch (order.status) { case "ship": ship(order); }',
+  invalid: 'switch (order.disposition) { case "ship": ship(order); }',
+  messageId: 'manualDiscriminantSwitch',
+});
+
+testRule(name, rule, {
+  options: [{ discriminants: ['disposition'] }],
+  valid: 'Predicate.isTagged(value, "Ready");',
+  invalid: 'value._tag === "Ready";',
+  messageId: 'manualComparison',
+});
+
+for (const invalid of ['if (value.status === "Ready") handleReady(value);', '"circle" !== shape.kind;']) {
+  testRule(name, rule, {
+    valid: `
+      value.state === 'Ready';
+      response.status === 200;
+      Effect.catch(error => error._tag === 'NotFound' ? recover : fail);
+    `,
+    invalid,
+    messageId: 'manualDiscriminantComparison',
+  });
+}

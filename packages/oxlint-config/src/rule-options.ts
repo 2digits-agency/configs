@@ -1,11 +1,18 @@
 import type { AllowWarnDeny } from 'oxlint';
 
-import type { PaddingLineOption, RuleName as TwoDigitsRuleName } from '@2digits/oxlint-plugin';
+import type {
+  NoManualTagComparisonOptions,
+  PaddingLineOption,
+  RuleName as TwoDigitsRuleName,
+} from '@2digits/oxlint-plugin';
 
 type RuleWithOptions<T> = AllowWarnDeny | [AllowWarnDeny, T];
 
 type TwoDigitsRuleMap = Partial<
-  Record<`2digits/${Exclude<TwoDigitsRuleName, 'padding-line-between-statements'>}`, AllowWarnDeny>
+  Record<
+    `2digits/${Exclude<TwoDigitsRuleName, 'no-manual-tag-comparison' | 'padding-line-between-statements'>}`,
+    AllowWarnDeny
+  >
 >;
 
 interface NoConflictingChecksOptions {
@@ -21,6 +28,7 @@ interface NoConflictingChecksOptions {
  */
 declare module 'oxlint' {
   interface DummyRuleMap extends TwoDigitsRuleMap {
+    '2digits/no-manual-tag-comparison'?: RuleWithOptions<NoManualTagComparisonOptions>;
     '2digits/padding-line-between-statements'?: AllowWarnDeny | [AllowWarnDeny, ...Array<PaddingLineOption>];
     'boolean/no-negated-conjunction'?: AllowWarnDeny;
     'boolean/no-negated-disjunction'?: AllowWarnDeny;

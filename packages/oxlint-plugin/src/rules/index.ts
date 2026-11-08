@@ -43,6 +43,7 @@ import { noServiceOptionGetOrThrow } from './effect/no-service-option-get-or-thr
 import { noThrowInEffectCallback } from './effect/no-throw-in-effect-callback';
 import { noUppercaseHttpApiHeader } from './effect/no-uppercase-http-api-header';
 import { noZeroRetryTimes } from './effect/no-zero-retry-times';
+import { preferDataMatch } from './effect/prefer-data-match';
 import { preferEffectAlchemyNamespaceImports } from './effect/prefer-effect-alchemy-namespace-imports';
 import { preferEffectArraySort } from './effect/prefer-effect-array-sort';
 import { preferEffectDateTime } from './effect/prefer-effect-datetime';
@@ -56,6 +57,7 @@ import { preferEffectHeaders } from './effect/prefer-effect-headers';
 import { preferEffectMatch } from './effect/prefer-effect-match';
 import { preferEffectPath } from './effect/prefer-effect-path';
 import { preferEffectUrl } from './effect/prefer-effect-url';
+import { preferHoistedMatch } from './effect/prefer-hoisted-match';
 import { preferUninterruptible } from './effect/prefer-uninterruptible';
 import { preferWithSpan } from './effect/prefer-with-span';
 import { preferYieldNow } from './effect/prefer-yield-now';
@@ -127,6 +129,7 @@ export const rules = {
   'no-utc-iso-slicing': noUtcIsoSlicing,
   'no-zero-retry-times': noZeroRetryTimes,
   'padding-line-between-statements': paddingLineBetweenStatements,
+  'prefer-data-match': preferDataMatch,
   'prefer-effect-alchemy-namespace-imports': preferEffectAlchemyNamespaceImports,
   'prefer-effect-array-sort': preferEffectArraySort,
   'prefer-effect-datetime': preferEffectDateTime,
@@ -140,6 +143,7 @@ export const rules = {
   'prefer-effect-match': preferEffectMatch,
   'prefer-effect-path': preferEffectPath,
   'prefer-effect-url': preferEffectUrl,
+  'prefer-hoisted-match': preferHoistedMatch,
   'prefer-uninterruptible': preferUninterruptible,
   'prefer-with-span': preferWithSpan,
   'prefer-yield-now': preferYieldNow,

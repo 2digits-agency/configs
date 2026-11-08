@@ -8,6 +8,7 @@ interface RuleCase {
   readonly invalid: string;
   readonly messageId: string;
   readonly valid: string;
+  readonly options?: RuleTester.ValidTestCase['options'];
   readonly output?: string | null;
 }
 
@@ -25,12 +26,15 @@ const tester = new RuleTester({
 });
 
 export function testRule(name: RuleName, rule: Rule, ruleCase: RuleCase): void {
+  const options = ruleCase.options === undefined ? {} : { options: ruleCase.options };
+
   tester.run(name, rule, {
-    valid: [{ code: ruleCase.valid, filename: 'valid.ts' }],
+    valid: [{ code: ruleCase.valid, filename: 'valid.ts', ...options }],
     invalid: [
       {
         code: ruleCase.invalid,
         filename: 'invalid.ts',
+        ...options,
         errors: [{ messageId: ruleCase.messageId }],
         ...(ruleCase.output === undefined ? {} : { output: ruleCase.output }),
       },

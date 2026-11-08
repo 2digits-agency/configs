@@ -23,7 +23,37 @@ function comparedValue(test: ESTree.Expression, context: Context): string | unde
 }
 
 /**
- * Prefer Match for switches in Effect files and repeated literal ternary comparisons.
+ * Whether every test in a ternary or `else if` chain compares the same expression against a literal, at least twice.
+ *
+ * @param node Head of the chain.
+ * @param context Rule context.
+ */
+function isLiteralComparisonChain(node: ESTree.ConditionalExpression | ESTree.IfStatement, context: Context): boolean {
+  const value = comparedValue(node.test, context);
+
+  if (value === undefined) {
+    return false;
+  }
+
+  let next: ESTree.Node | null = node.alternate;
+
+  let literalChecks = 1;
+
+  while (next?.type === 'ConditionalExpression' || next?.type === 'IfStatement') {
+    if (comparedValue(next.test, context) !== value) {
+      return false;
+    }
+
+    literalChecks += 1;
+
+    next = next.alternate;
+  }
+
+  return literalChecks > 1;
+}
+
+/**
+ * Prefer Match for switches and `else if` chains in Effect files, and for repeated literal ternary comparisons.
  */
 export const preferEffectMatch: Rule = defineEffectRule(
   ruleMeta(
@@ -32,6 +62,8 @@ export const preferEffectMatch: Rule = defineEffectRule(
     {
       effectMatch: 'Use Match.type, Match.value, or Match.tags with Match.exhaustive instead of switch.',
       preferMatch: 'Use Match from Effect instead of a chained literal ternary.',
+      ifChain:
+        'Use Match.type, Match.value, or Match.discriminators with Match.exhaustive instead of an `else if` chain comparing the same value against literals.',
     },
     'https://www.effect.website/docs/v4/api/effect/Match',
   ),
@@ -41,32 +73,17 @@ export const preferEffectMatch: Rule = defineEffectRule(
         context.report({ node, messageId: 'effectMatch' });
       }
     },
+    IfStatement(node) {
+      if (node.parent.type === 'IfStatement' && node.parent.alternate === node) {
+        return;
+      }
+
+      if (getState().hasEffectImport && isLiteralComparisonChain(node, context)) {
+        context.report({ node, messageId: 'ifChain' });
+      }
+    },
     ConditionalExpression(node) {
-      if (node.parent.type === 'ConditionalExpression') {
-        return;
-      }
-
-      const value = comparedValue(node.test, context);
-
-      if (value === undefined) {
-        return;
-      }
-
-      let alternate = node.alternate;
-
-      let literalChecks = 1;
-
-      while (alternate.type === 'ConditionalExpression') {
-        if (comparedValue(alternate.test, context) !== value) {
-          return;
-        }
-
-        literalChecks += 1;
-
-        alternate = alternate.alternate;
-      }
-
-      if (literalChecks > 1) {
+      if (node.parent.type !== 'ConditionalExpression' && isLiteralComparisonChain(node, context)) {
         context.report({ node, messageId: 'preferMatch' });
       }
     },
