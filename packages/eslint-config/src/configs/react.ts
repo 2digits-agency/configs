@@ -103,6 +103,7 @@ export async function react(
         'react-extra/no-duplicate-key': 'error',
         'react-extra/static-components': 'error',
 
+        'react-extra/dom-no-dangerously-set-innerhtml': 'error',
         'react-extra/dom-no-missing-button-type': 'error',
         'react-extra/dom-no-missing-iframe-sandbox': 'error',
         'react-extra/dom-no-unsafe-target-blank': 'error',

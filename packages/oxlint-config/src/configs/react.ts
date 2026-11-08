@@ -37,7 +37,7 @@ export function react(options: OptionsWithReact = {}): Array<FlatConfigItem> {
         'react/no-array-index-key': 'warn',
         'react/no-children-prop': 'error',
         'react/no-clone-element': 'warn',
-        'react/no-danger': 'warn',
+        'react/no-danger': 'error',
         'react/no-danger-with-children': 'error',
         'react/no-did-mount-set-state': 'warn',
         'react/no-direct-mutation-state': 'error',
