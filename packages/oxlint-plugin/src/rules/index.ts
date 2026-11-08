@@ -65,6 +65,7 @@ import { requireTryPromiseAbortSignal } from './effect/require-try-promise-abort
 import { throwInEffectGen } from './effect/throw-in-effect-gen';
 import { noUtcIsoSlicing } from './no-utc-iso-slicing';
 import { paddingLineBetweenStatements } from './padding-line-between-statements';
+import { noBrowserApiInRender } from './react/no-browser-api-in-render';
 
 export const rules = {
   'alchemy-domain-block-file-name': alchemyDomainBlockFileName,
@@ -89,6 +90,7 @@ export const rules = {
   'effect-promise-vs-trypromise': effectPromiseVsTryPromise,
   'no-already-started-promise': noAlreadyStartedPromise,
   'no-async-effect-try': noAsyncEffectTry,
+  'no-browser-api-in-render': noBrowserApiInRender,
   'no-discarded-run-promise': noDiscardedRunPromise,
   'no-discarded-schema-checks': noDiscardedSchemaChecks,
   'no-effect-as-on-log': noEffectAsOnLog,

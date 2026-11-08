@@ -3363,6 +3363,7 @@ Backward pagination arguments
    * @see https://eslint-react.xyz/docs/rules/no-array-index-key
    */
   'react-extra/no-array-index-key'?: Linter.RuleEntry<[]>
+  'react-extra/no-browser-api-in-render'?: Linter.RuleEntry<[]>
   /**
    * Disallows the use of 'Children.count' from the 'react' package.
    * @see https://eslint-react.xyz/docs/rules/no-children-count

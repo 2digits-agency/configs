@@ -3,6 +3,7 @@ import { renamePluginsInRules } from 'eslint-flat-config-utils';
 
 import { PluginNameMap } from '../constants';
 import { GLOB_TS, GLOB_TSX } from '../globs';
+import { noBrowserApiInRender } from '../rules/react/no-browser-api-in-render';
 import { noUnnecessaryUseCallback } from '../rules/react/no-unnecessary-use-callback';
 import { noUnnecessaryUseMemo } from '../rules/react/no-unnecessary-use-memo';
 import { preferDestructuringAssignment } from '../rules/react/prefer-destructuring-assignment';
@@ -82,6 +83,7 @@ export async function react(
         'react-extra/exhaustive-deps': 'error',
         'react-extra/globals': 'error',
         'react-extra/purity': 'error',
+        'react-extra/no-browser-api-in-render': 'error',
         'react-extra/no-unused-class-component-members': 'error',
         'react-extra/no-unnecessary-use-callback': 'error',
         'react-extra/no-unnecessary-use-prefix': 'error',
@@ -129,6 +131,7 @@ export async function react(
 }
 
 const reactKitPlugin = eslintReactKit()
+  .use(withRuleName(noBrowserApiInRender, 'noBrowserApiInRender'))
   .use(withRuleName(noUnnecessaryUseCallback, 'noUnnecessaryUseCallback'))
   .use(withRuleName(noUnnecessaryUseMemo, 'noUnnecessaryUseMemo'))
   .use(withRuleName(preferDestructuringAssignment, 'preferDestructuringAssignment'))

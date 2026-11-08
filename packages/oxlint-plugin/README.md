@@ -48,6 +48,11 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Schema chain style: `consistent-schema-pipe` applies Schema modifiers and data-last steps with `.pipe(...)`
   (`Schema.String.pipe(Schema.optionalKey)`) and calls Schema wrappers such as `Schema.Array(...)` directly. See
   [ADR 0001](../../docs/adr/0001-schema-modifiers-pipe-wrappers-call.md).
+- React hydration: `no-browser-api-in-render` reports reads of `window`, `document`, `navigator`, `localStorage` and
+  `sessionStorage` (also through `globalThis`) in a component or hook body, or in a `useState`, `useReducer` or
+  `useMemo` callback, even behind a `typeof window` guard. Effects, event handlers, other callbacks and
+  `useSyncExternalStore` snapshots are allowed. Components are PascalCase functions that contain JSX; hooks are `use*`
+  functions. The same rule is `react-extra/no-browser-api-in-render` in `@2digits/eslint-config`.
 
 See each rule's `meta.docs.url` for its upstream rule, issue, or framework documentation. Copied-code attribution is in
 [`NOTICE`](./NOTICE).
