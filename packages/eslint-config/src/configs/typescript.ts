@@ -70,6 +70,19 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
         'ts/method-signature-style': ['error', 'property'],
         'ts/switch-exhaustiveness-check': 'off',
         'ts/prefer-optional-chain': 'error',
+        'ts/strict-boolean-expressions': [
+          'error',
+          {
+            allowAny: true,
+            allowNullableBoolean: true,
+            allowNullableEnum: true,
+            allowNullableNumber: false,
+            allowNullableObject: true,
+            allowNullableString: true,
+            allowNumber: false,
+            allowString: true,
+          },
+        ],
 
         ...twoDigits.configs.recommended.rules,
 

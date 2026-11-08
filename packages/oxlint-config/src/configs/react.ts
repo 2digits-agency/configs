@@ -123,6 +123,6 @@ export function react(options: OptionsWithReact = {}): Array<FlatConfigItem> {
         ...overrides,
       },
     },
-    ...(web ? reactWeb(typeof web === 'boolean' ? { files } : { ...web, files: web.files ?? files }) : []),
+    ...(web === false ? [] : reactWeb(web === true ? { files } : { ...web, files: web.files ?? files })),
   ];
 }
