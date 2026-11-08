@@ -28,7 +28,16 @@ function guardPath(test: ESTree.Expression, state: FileState): ReadonlyArray<str
 }
 
 /**
- * Whether a branch ends in `return value`, without yields or awaits that a match handler could not hold.
+ * Whether a branch yields or awaits, which a synchronous match handler cannot hold.
+ *
+ * @param node Branch to search.
+ */
+function suspends(node: ESTree.Node): boolean {
+  return walkNodes(node, (child) => child.type === 'YieldExpression' || child.type === 'AwaitExpression');
+}
+
+/**
+ * Whether a branch ends in `return value` and does not suspend.
  *
  * @param node Branch statement.
  */
@@ -39,11 +48,7 @@ function returnsValue(node: ESTree.Statement | null | undefined): boolean {
 
   const last = node.type === 'BlockStatement' ? node.body.at(-1) : node;
 
-  return (
-    last?.type === 'ReturnStatement' &&
-    last.argument !== null &&
-    !walkNodes(node, (child) => child.type === 'YieldExpression' || child.type === 'AwaitExpression')
-  );
+  return last?.type === 'ReturnStatement' && last.argument !== null && !suspends(node);
 }
 
 /**
@@ -87,7 +92,7 @@ export const preferDataMatch: Rule = defineEffectRule(
       ConditionalExpression(node) {
         const path = guardPath(node.test, getState());
 
-        if (path !== undefined) {
+        if (path !== undefined && !suspends(node.consequent) && !suspends(node.alternate)) {
           report(node, path);
         }
       },

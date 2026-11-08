@@ -29,6 +29,12 @@ const valid = `
     log(option.value)
     return option.value
   }
+  function* yieldTernary(option: Option.Option<number>) {
+    return Option.isSome(option) ? yield* load(option.value) : 0
+  }
+  async function awaitTernary(exit: Exit.Exit<number>) {
+    return Exit.isSuccess(exit) ? 0 : await retry()
+  }
   const local = { isSome: (value: unknown) => value !== undefined }
   local.isSome(value) ? 1 : 2
   isSome(value) ? 1 : 2
