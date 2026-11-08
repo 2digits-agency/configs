@@ -83,6 +83,7 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
             allowString: true,
           },
         ],
+        'ts/no-unused-expressions': ['error', { enforceForJSX: true }],
 
         ...twoDigits.configs.recommended.rules,
 

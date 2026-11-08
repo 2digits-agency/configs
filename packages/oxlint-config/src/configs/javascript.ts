@@ -165,7 +165,10 @@ export function javascript(options: OptionsOverrides = {}): Array<FlatConfigItem
         'no-unsafe-finally': 'error',
         'no-unsafe-negation': 'error',
         'no-unsafe-optional-chaining': 'error',
-        'no-unused-expressions': ['error', { allowShortCircuit: true, allowTaggedTemplates: true, allowTernary: true }],
+        'no-unused-expressions': [
+          'error',
+          { allowShortCircuit: true, allowTaggedTemplates: true, allowTernary: true, enforceForJSX: true },
+        ],
         'no-unused-labels': 'error',
         'no-unused-private-class-members': 'error',
         'no-unused-vars': [
