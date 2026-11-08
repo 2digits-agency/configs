@@ -1,6 +1,7 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import { callbackCall, canonicalPath, defineEffectRule, isFunctionNode, ruleMeta, type FileState } from '../../utils';
 
@@ -36,7 +37,7 @@ function catchCallback(node: ESTree.Node, state: FileState): { readonly method: 
 
         const method = path?.[1];
 
-        if (method !== undefined && path?.[0] === 'Effect' && catchMethods.has(method)) {
+        if (P.isNotUndefined(method) && path?.[0] === 'Effect' && catchMethods.has(method)) {
           return { method };
         }
       }
@@ -59,15 +60,17 @@ export const noLoggingInCatch: Rule = defineEffectRule(
       const path = canonicalPath(node.callee, state);
 
       const logger =
-        path?.[1] !== undefined && path[0] === 'Effect' && logMethods.has(path[1]) ? Arr.join(path, '.') : undefined;
+        P.isNotUndefined(path?.[1]) && path[0] === 'Effect' && logMethods.has(path[1])
+          ? Arr.join(path, '.')
+          : undefined;
 
-      if (logger === undefined) {
+      if (P.isUndefined(logger)) {
         return;
       }
 
       const callback = catchCallback(node, state);
 
-      if (callback !== undefined) {
+      if (P.isNotUndefined(callback)) {
         context.report({
           node,
           messageId: 'logging',

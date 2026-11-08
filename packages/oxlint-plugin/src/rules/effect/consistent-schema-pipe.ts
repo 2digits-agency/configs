@@ -3,6 +3,7 @@ import type * as EffectBarrel from 'effect';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import type * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
@@ -17,6 +18,7 @@ import {
   staticPath,
   staticPropertyName,
   type FileState,
+  argumentAt,
 } from '../../utils';
 
 // Lists follow docs/adr/0001 for the catalog's Effect version; revisit them when Effect adds Schema functions.
@@ -152,7 +154,7 @@ const pureLeaves = new Set<string>([
 ]);
 
 function allPure(nodes: ReadonlyArray<ESTree.Node | null>, context: Context, state: FileState): boolean {
-  return Arr.every(nodes, (node) => node === null || isPure(node, context, state));
+  return Arr.every(nodes, (node) => P.isNull(node) || isPure(node, context, state));
 }
 
 // Expressions whose evaluation has no observable effect, so a fix may move them. Schema factories count as pure.
@@ -188,7 +190,7 @@ function isPure(node: ESTree.Node, context: Context, state: FileState): boolean 
   const callee = node.callee.type === 'CallExpression' ? node.callee.callee : node.callee;
 
   return (
-    schemaMember(callee, context, state) !== undefined &&
+    P.isNotUndefined(schemaMember(callee, context, state)) &&
     (node.callee === callee || isPure(node.callee, context, state)) &&
     allPure(node.arguments, context, state)
   );
@@ -205,11 +207,11 @@ function typePath(node: ESTree.TSTypeName, state: FileState): ReadonlyArray<stri
 
   const left = typePath(node.left, state);
 
-  return left === undefined ? undefined : [...left, node.right.name];
+  return P.isUndefined(left) ? undefined : [...left, node.right.name];
 }
 
 function typeParameter(name: string, from: ESTree.Node): ESTree.TSTypeParameter | undefined {
-  for (let node: ESTree.Node | null = from.parent; node !== null; node = node.parent) {
+  for (let node: ESTree.Node | null = from.parent; P.isNotNull(node); node = node.parent) {
     const parameter =
       'typeParameters' in node && node.typeParameters?.type === 'TSTypeParameterDeclaration'
         ? Fn.pipe(
@@ -219,7 +221,7 @@ function typeParameter(name: string, from: ESTree.Node): ESTree.TSTypeParameter 
           )
         : undefined;
 
-    if (parameter !== undefined) {
+    if (P.isNotUndefined(parameter)) {
       return parameter;
     }
   }
@@ -241,7 +243,7 @@ function hasPipe(declared: ESTree.TSType, from: ESTree.Node, state: FileState): 
 
     const member = path?.length === 2 && path[0] === 'Schema' ? path[1] : undefined;
 
-    if (member !== undefined) {
+    if (P.isNotUndefined(member)) {
       // Schema.Constraint and its subtypes are not Pipeable, unlike Schema.Top and the schemas built on it.
       return !Str.startsWith('Constraint')(member);
     }
@@ -249,7 +251,7 @@ function hasPipe(declared: ESTree.TSType, from: ESTree.Node, state: FileState): 
     const parameter: ESTree.TSTypeParameter | undefined =
       type.typeName.type === 'Identifier' ? typeParameter(type.typeName.name, scope) : undefined;
 
-    if (parameter === undefined || seen.has(parameter)) {
+    if (P.isUndefined(parameter) || seen.has(parameter)) {
       return seen.size === 0 ? undefined : false;
     }
 
@@ -264,9 +266,10 @@ function hasPipe(declared: ESTree.TSType, from: ESTree.Node, state: FileState): 
 }
 
 function declaredType(node: ESTree.IdentifierReference, context: Context): ESTree.TSTypeAnnotation | undefined {
-  const name = resolveVariable(context, node, node.name)?.defs[0]?.name;
-
-  return name !== undefined && 'typeAnnotation' in name ? (name.typeAnnotation ?? undefined) : undefined;
+  return Arr.head(resolveVariable(context, node, node.name)?.defs ?? []).pipe(
+    Opt.flatMapNullishOr(({ name }) => ('typeAnnotation' in name ? name.typeAnnotation : undefined)),
+    Opt.getOrUndefined,
+  );
 }
 
 // Without types, only the declared type of a head shows that it cannot take `.pipe(...)`, e.g. a generic schema.
@@ -283,7 +286,7 @@ function headLacksPipe(node: ESTree.Expression, context: Context, state: FileSta
 
   const annotation = head.type === 'Identifier' ? declaredType(head, context) : undefined;
 
-  return annotation !== undefined && hasPipe(annotation.typeAnnotation, annotation, state) === false;
+  return P.isNotUndefined(annotation) && hasPipe(annotation.typeAnnotation, annotation, state) === false;
 }
 
 function hasSpread(node: ESTree.CallExpression): boolean {
@@ -329,7 +332,10 @@ function isKnownStep(node: ESTree.Node, context: Context, state: FileState): boo
 
 // A Schema constructor or value, a schema chain, or a schema method called on one of those.
 function isSchemaHead(node: ESTree.Expression, context: Context, state: FileState): boolean {
-  if (constructorName.test(schemaMember(node, context, state) ?? '') || flatten(node, context, state) !== undefined) {
+  if (
+    constructorName.test(schemaMember(node, context, state) ?? '') ||
+    P.isNotUndefined(flatten(node, context, state))
+  ) {
     return true;
   }
 
@@ -339,7 +345,7 @@ function isSchemaHead(node: ESTree.Expression, context: Context, state: FileStat
 
   const name = schemaMember(node.callee, context, state);
 
-  if (name !== undefined) {
+  if (P.isNotUndefined(name)) {
     return constructorName.test(name) || isSchemaFunction(name);
   }
 
@@ -359,8 +365,8 @@ function functionPipeParts(
   const [head, first] = node.arguments;
 
   if (
-    head === undefined ||
-    first === undefined ||
+    P.isUndefined(head) ||
+    P.isUndefined(first) ||
     head.type === 'SpreadElement' ||
     node.typeArguments ||
     hasSpread(node) ||
@@ -393,7 +399,7 @@ function appendStep(
 function callChain(node: ESTree.CallExpression, context: Context, state: FileState): Chain | undefined {
   const argument = soleArgument(node);
 
-  if (argument === undefined) {
+  if (P.isUndefined(argument)) {
     return undefined;
   }
 
@@ -414,7 +420,7 @@ function callChain(node: ESTree.CallExpression, context: Context, state: FileSta
 
   const stepName = node.callee.type === 'CallExpression' ? schemaMember(node.callee.callee, context, state) : undefined;
 
-  if (stepName === undefined || !dataLastSteps.has(stepName)) {
+  if (P.isUndefined(stepName) || !dataLastSteps.has(stepName)) {
     return undefined;
   }
 
@@ -438,7 +444,7 @@ function pipeChain(node: ESTree.CallExpression, context: Context, state: FileSta
       ? ([node.callee.object, node.arguments as ReadonlyArray<ESTree.Expression>] as const)
       : undefined;
 
-  if (parts === undefined) {
+  if (P.isUndefined(parts)) {
     return undefined;
   }
 
@@ -450,7 +456,7 @@ function pipeChain(node: ESTree.CallExpression, context: Context, state: FileSta
 
   // Steps after an extracted wrapper move into a later pipe, so they would be built after earlier steps ran.
   const reordersEffects =
-    firstWrapper !== undefined &&
+    P.isNotUndefined(firstWrapper) &&
     Arr.some(args.slice(names.indexOf(firstWrapper) + 1), (arg) => !isPure(arg, context, state));
 
   return appendSteps(
@@ -458,7 +464,7 @@ function pipeChain(node: ESTree.CallExpression, context: Context, state: FileSta
     Arr.map(args, (arg, index) => ({ text: context.sourceCode.getText(arg), wrapper: isWrapper(names[index]) })),
     functionPipe
       ? { kind: 'functionPipe' }
-      : firstWrapper === undefined
+      : P.isUndefined(firstWrapper)
         ? undefined
         : { kind: 'wrapperPipe', name: firstWrapper },
     reordersEffects,
@@ -506,9 +512,9 @@ function isNestedInChain(node: ESTree.CallExpression, context: Context, state: F
   // The first argument of a method pipe is a step, not the head.
   return (
     parent.type === 'CallExpression' &&
-    parent.arguments[0] === node &&
+    argumentAt(parent, 0) === node &&
     (isFunctionPipe(parent, context, state) || !isMethodPipe(parent)) &&
-    flatten(parent, context, state) !== undefined
+    P.isNotUndefined(flatten(parent, context, state))
   );
 }
 
@@ -571,14 +577,14 @@ export const consistentSchemaPipe: Rule = defineEffectRule(
 
       const chain = flatten(node, context, state);
 
-      if (chain?.violation === undefined || isNestedInChain(node, context, state)) {
+      if (P.isUndefined(chain?.violation) || isNestedInChain(node, context, state)) {
         return;
       }
 
       const { head } = chain;
 
       // Unless a wrapper comes first, the fix calls `.pipe(...)` on the head itself.
-      if (chain.steps[0]?.wrapper === false && headLacksPipe(head, context, state)) {
+      if (Opt.exists(Arr.head(chain.steps), ({ wrapper }) => !wrapper) && headLacksPipe(head, context, state)) {
         return;
       }
 

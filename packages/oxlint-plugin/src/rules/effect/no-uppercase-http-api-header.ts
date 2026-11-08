@@ -55,13 +55,13 @@ function isEndpointCall(node: ESTree.CallExpression, context: Context): boolean 
 
   const method = path?.at(-1);
 
-  if (path === undefined || root === undefined || method === undefined || !endpointMethods.has(method)) {
+  if (P.isUndefined(path) || P.isUndefined(root) || P.isUndefined(method) || !endpointMethods.has(method)) {
     return false;
   }
 
   const definition = soleDefinition(resolveVariable(context, node, root));
 
-  return definition !== undefined && isEndpointImport(definition, path);
+  return P.isNotUndefined(definition) && isEndpointImport(definition, path);
 }
 
 function directProperties(node: ESTree.Expression | undefined): Array<ESTree.ObjectProperty> | undefined {
@@ -84,7 +84,7 @@ function directProperties(node: ESTree.Expression | undefined): Array<ESTree.Obj
       propertyName(property) ??
       (property.key.type === 'Literal' && P.isNumber(property.key.value) ? String(property.key.value) : undefined);
 
-    if (name === undefined || names.has(name)) {
+    if (P.isUndefined(name) || names.has(name)) {
       return undefined;
     }
 
@@ -118,14 +118,14 @@ export const noUppercaseHttpApiHeader: Rule = defineSyntaxRule(
         Opt.getOrUndefined(Arr.findFirst(options ?? [], (property) => propertyName(property) === 'headers'))?.value,
       );
 
-      if (headers === undefined) {
+      if (P.isUndefined(headers)) {
         return;
       }
 
       for (const property of headers) {
         const name = propertyName(property);
 
-        if (name !== undefined && /[A-Z]/u.test(name)) {
+        if (P.isNotUndefined(name) && /[A-Z]/u.test(name)) {
           context.report({ node: property.key, messageId: 'uppercase', data: { name } });
         }
       }

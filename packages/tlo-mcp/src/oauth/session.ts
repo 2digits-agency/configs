@@ -1,4 +1,5 @@
 import type * as OAuth from '@yielded/oauth/OAuth';
+import * as P from 'effect/Predicate';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 
@@ -31,15 +32,15 @@ export class Session extends Schema.Class<Session, { readonly brand: unique symb
 
     return this.make({
       clientId: client.clientId,
-      ...(client.clientSecret === undefined ? {} : { clientSecret: client.clientSecret }),
+      ...(P.isUndefined(client.clientSecret) ? {} : { clientSecret: client.clientSecret }),
       accessToken: tokens.accessToken,
-      ...(refreshToken === undefined ? {} : { refreshToken }),
-      ...(tokens.expiresIn === undefined ? {} : { expiresAt: now + tokens.expiresIn * 1000 }),
+      ...(P.isUndefined(refreshToken) ? {} : { refreshToken }),
+      ...(P.isUndefined(tokens.expiresIn) ? {} : { expiresAt: now + tokens.expiresIn * 1000 }),
     });
   }
 
   static needsRefresh(session: Session, now: number) {
-    return session.expiresAt === undefined || session.expiresAt <= now + 60_000;
+    return P.isUndefined(session.expiresAt) || session.expiresAt <= now + 60_000;
   }
 }
 
@@ -51,7 +52,7 @@ export class OrbitAuthError extends Schema.TaggedError<OrbitAuthError, { readonl
 ) {}
 
 export function authentication(session: Pick<Session, 'clientSecret'>): OAuth.Authentication {
-  return session.clientSecret === undefined
+  return P.isUndefined(session.clientSecret)
     ? { method: 'none', publicClient: true }
     : { method: 'client_secret_post', secret: session.clientSecret.pipe(Redacted.value, Redacted.make) };
 }

@@ -1,5 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import { argumentAt, defineEffectRule, isAnyApi, ruleMeta, type FileState, type FunctionNode } from '../../utils';
 import { functionResult, promiseInitializer, promiseThunkArgument } from './utils';
@@ -37,7 +38,7 @@ export const noAlreadyStartedPromise: Rule = defineEffectRule(
       CallExpression(node) {
         const thunk = promiseThunk(node, getState());
 
-        const result = thunk === undefined ? undefined : functionResult(thunk);
+        const result = P.isUndefined(thunk) ? undefined : functionResult(thunk);
 
         if (result?.type === 'Identifier' && prestartedPromises.has(result.name)) {
           context.report({ node: result, messageId: 'prestarted' });

@@ -3,6 +3,7 @@ import * as ConfigProvider from 'effect/ConfigProvider';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
+import * as P from 'effect/Predicate';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
@@ -90,7 +91,7 @@ describe('personal HTTP gateway', () => {
                 new Request(`https://gateway/mcp?key=${key}`, {
                   method,
                   signal,
-                  headers: authorization === undefined ? {} : { authorization },
+                  headers: P.isUndefined(authorization) ? {} : { authorization },
                   ...(method === 'POST' ? { body: 'not JSON' } : {}),
                 }),
               ),
@@ -141,7 +142,7 @@ describe('personal HTTP gateway', () => {
           jsonrpc: '2.0',
           method,
           params,
-          ...(id === undefined ? {} : { id }),
+          ...(P.isUndefined(id) ? {} : { id }),
         });
 
         const response = yield* Effect.tryPromise({
@@ -155,7 +156,7 @@ describe('personal HTTP gateway', () => {
                   'content-type': 'application/json',
                   accept: 'application/json, text/event-stream',
                   'mcp-protocol-version': '2025-06-18',
-                  ...(session === undefined ? {} : { 'mcp-session-id': session }),
+                  ...(P.isUndefined(session) ? {} : { 'mcp-session-id': session }),
                 },
                 body,
               }),

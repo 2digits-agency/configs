@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 
 import { canonicalPath, defineEffectRule, ruleMeta } from '../../utils';
 
@@ -25,7 +26,7 @@ export const alchemyNoDeprecatedResource: Rule = defineEffectRule(
     CallExpression(node) {
       const path = canonicalPath(node.callee, getState());
 
-      if (path === undefined) {
+      if (P.isUndefined(path)) {
         return;
       }
 
@@ -33,7 +34,7 @@ export const alchemyNoDeprecatedResource: Rule = defineEffectRule(
 
       const replacement = deprecatedResources.get(api);
 
-      if (replacement !== undefined) {
+      if (P.isNotUndefined(replacement)) {
         context.report({ node: node.callee, messageId: 'deprecated', data: { api, replacement } });
       }
     },

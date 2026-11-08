@@ -1,6 +1,7 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import { importedApi, namespaceImport } from '../../fixes';
 import { argumentAt, defineEffectRule, isApi, isFunctionNode, ruleMeta } from '../../utils';
@@ -30,10 +31,10 @@ export const noEmptyEffectCallback: Rule = defineEffectRule(
       const register = argumentAt(node, 0);
 
       if (
-        register !== undefined &&
+        P.isNotUndefined(register) &&
         isFunctionNode(register) &&
         register.body?.type === 'BlockStatement' &&
-        register.body.body.length === 0
+        Arr.isReadonlyArrayEmpty(register.body.body)
       ) {
         context.report({
           node,
@@ -45,7 +46,7 @@ export const noEmptyEffectCallback: Rule = defineEffectRule(
               register.async ||
               register.generator ||
               Arr.some(register.params, (parameter) => parameter.type !== 'Identifier') ||
-              context.sourceCode.getCommentsInside(node).length > 0
+              Arr.isReadonlyArrayNonEmpty(context.sourceCode.getCommentsInside(node))
             ) {
               return;
             }

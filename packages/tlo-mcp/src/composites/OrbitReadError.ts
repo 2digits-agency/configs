@@ -29,6 +29,6 @@ export function toReadError(error: McpClientError.McpClientError | Schema.Schema
 
   return OrbitReadError.make({
     message: error.message,
-    ...(http === undefined ? {} : Struct.pick(http, ['status', 'retryAfter'])),
+    ...(P.isUndefined(http) ? {} : Struct.pick(http, ['status', 'retryAfter'])),
   });
 }

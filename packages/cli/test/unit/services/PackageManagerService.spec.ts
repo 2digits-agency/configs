@@ -10,8 +10,10 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { clearExecutedCommands, getExecutedCommands, MockCommandExecutor } from '../../helpers/MockCommandService.js';
@@ -115,14 +117,14 @@ describe(PackageManagerService, () => {
 
           const executed = yield* getExecutedCommands;
 
-          assertTrue(executed.length > 0);
+          assertTrue(Arr.isReadonlyArrayNonEmpty(executed));
 
           // Should have executed a pnpm add command
           const addCommand = Opt.getOrUndefined(
             Arr.findFirst(executed, (cmd) => Str.includes('add')(cmd.command) || cmd.shell === true),
           );
 
-          assertTrue(addCommand !== undefined);
+          assertTrue(P.isNotUndefined(addCommand));
 
           expect(executed.at(0)?.command).toMatchInlineSnapshot(
             `"pnpm add --workspace-root -D prettier @2digits/prettier-config"`,
@@ -150,7 +152,7 @@ describe(PackageManagerService, () => {
           // Should execute 2 commands (one for deps, one for devDeps)
           assertTrue(executed.length >= 2);
 
-          expect(Arr.map(executed, (e) => e.command)).toMatchInlineSnapshot(`
+          expect(Arr.map(executed, Struct.get('command'))).toMatchInlineSnapshot(`
             [
               "pnpm add --workspace-root -D vitest",
               "pnpm add --workspace-root effect",
@@ -246,13 +248,7 @@ describe(PackageManagerService, () => {
           const original = yield* service.readPackageJson();
 
           yield* service.writePackageJson({
-            content: {
-              ...original,
-              scripts: {
-                ...original.scripts,
-                newScript: 'echo "new"',
-              },
-            },
+            content: { ...original, scripts: { ...original.scripts, newScript: 'echo "new"' } },
           });
 
           const updated = yield* service.readPackageJson();

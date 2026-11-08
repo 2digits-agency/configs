@@ -2,6 +2,7 @@ import type { ESTree } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
+import * as P from 'effect/Predicate';
 
 import { callbackCall, enclosingFunction, isEqualityOperator, isStringLiteral, staticPropertyName } from '../../utils';
 
@@ -92,9 +93,9 @@ export function discriminantFromComparison(
 export function isInsideBroadEffectHandler(node: ESTree.Node): boolean {
   const callback = enclosingFunction(node);
 
-  const call = callback === undefined ? undefined : callbackCall(callback);
+  const call = P.isUndefined(callback) ? undefined : callbackCall(callback);
 
-  return call !== undefined && isBroadEffectCatchCallee(call.callee);
+  return P.isNotUndefined(call) && isBroadEffectCatchCallee(call.callee);
 }
 
 /**

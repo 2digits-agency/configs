@@ -7,6 +7,7 @@ import * as Layer from 'effect/Layer';
 import * as PlatformError from 'effect/PlatformError';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
+import * as Struct from 'effect/Struct';
 import * as TestClock from 'effect/testing/TestClock';
 
 import { OrbitAuthError, Session } from '../src/oauth/session.js';
@@ -99,21 +100,23 @@ describe('orbit scoped persistence and lock policy', () => {
 
       let attempts = 0;
 
-      const filesystem = Layer.succeed(FileSystem.FileSystem, {
-        ...fs,
-        writeFileString: Effect.fn('Test.writeFileString')(function* () {
-          attempts++;
+      const filesystem = Layer.succeed(
+        FileSystem.FileSystem,
+        Struct.assign(fs, {
+          writeFileString: Effect.fn('Test.writeFileString')(function* () {
+            attempts++;
 
-          return yield* new PlatformError.PlatformError(
-            new PlatformError.SystemError(
-              PermissionDenied.make({
-                module: 'FileSystem',
-                method: 'writeFileString',
-              }),
-            ),
-          );
+            return yield* new PlatformError.PlatformError(
+              new PlatformError.SystemError(
+                PermissionDenied.make({
+                  module: 'FileSystem',
+                  method: 'writeFileString',
+                }),
+              ),
+            );
+          }),
         }),
-      });
+      );
 
       yield* Effect.gen(function* () {
         const store = yield* SessionStore;
@@ -167,14 +170,16 @@ describe('orbit scoped persistence and lock policy', () => {
 
       yield* fs.writeFileString(`${directory}/session.json`, 'original', { mode: 0o600 });
 
-      const filesystem = Layer.succeed(FileSystem.FileSystem, {
-        ...fs,
-        rename: Effect.fn('Test.rename')(function* () {
-          return yield* new PlatformError.PlatformError(
-            new PlatformError.SystemError(PermissionDenied.make({ module: 'FileSystem', method: 'rename' })),
-          );
+      const filesystem = Layer.succeed(
+        FileSystem.FileSystem,
+        Struct.assign(fs, {
+          rename: Effect.fn('Test.rename')(function* () {
+            return yield* new PlatformError.PlatformError(
+              new PlatformError.SystemError(PermissionDenied.make({ module: 'FileSystem', method: 'rename' })),
+            );
+          }),
         }),
-      });
+      );
 
       yield* Effect.gen(function* () {
         const store = yield* SessionStore;

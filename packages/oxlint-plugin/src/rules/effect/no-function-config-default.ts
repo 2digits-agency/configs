@@ -1,6 +1,7 @@
 import type { Context, ESTree, Rule, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import type * as Config from 'effect/Config';
+import * as P from 'effect/Predicate';
 
 import { importedApi } from '../../fixes';
 import {
@@ -29,7 +30,7 @@ function resolveConst(node: ESTree.Expression, context: Context): ESTree.Express
     const declaration = definition?.node;
 
     if (
-      variable === undefined ||
+      P.isUndefined(variable) ||
       seen.has(variable) ||
       declaration?.type !== 'VariableDeclarator' ||
       declaration.id.type !== 'Identifier' ||
@@ -59,7 +60,7 @@ function receivingConfig(node: ESTree.CallExpression): ESTree.Expression | undef
   if (
     node.arguments.length === 1 &&
     parent.type === 'CallExpression' &&
-    parent.arguments[0] === node &&
+    argumentAt(parent, 0) === node &&
     parent.callee.type === 'MemberExpression' &&
     staticPropertyName(parent.callee) === 'pipe'
   ) {
@@ -92,7 +93,7 @@ export const noFunctionConfigDefault: Rule = defineEffectRule(
 
       const config = receivingConfig(node);
 
-      const receiver = config === undefined ? undefined : resolveConst(config, context);
+      const receiver = P.isUndefined(config) ? undefined : resolveConst(config, context);
 
       if (
         receiver?.type === 'CallExpression' &&
@@ -103,7 +104,7 @@ export const noFunctionConfigDefault: Rule = defineEffectRule(
         return;
       }
 
-      if (isFunctionNode(fallback) && fallback.params.length === 0) {
+      if (isFunctionNode(fallback) && Arr.isReadonlyArrayEmpty(fallback.params)) {
         context.report({ node: fallback, messageId: 'functionDefault' });
       }
     },

@@ -4,6 +4,7 @@ import * as Arr from 'effect/Array';
 import type * as Console from 'effect/Console';
 import type * as Effect from 'effect/Effect';
 import type * as Fn from 'effect/Function';
+import * as P from 'effect/Predicate';
 
 import {
   argumentAt,
@@ -59,7 +60,7 @@ function loggerName(node: ESTree.Expression, state: FileState): string | undefin
 
 // The `Effect.as*` method of a data-last pipe step: `Effect.as(value)`, `Effect.asVoid` or `Effect.asSome`.
 function asStep(node: ESTree.Expression | undefined, state: FileState): string | undefined {
-  if (node === undefined) {
+  if (P.isUndefined(node)) {
     return undefined;
   }
 
@@ -102,7 +103,7 @@ function matchCall(node: ESTree.CallExpression, state: FileState): Match | undef
 
     const method = asStep(step, state);
 
-    return step === undefined || logger === undefined || method === undefined
+    return P.isUndefined(step) || P.isUndefined(logger) || P.isUndefined(method)
       ? undefined
       : { logger, method, node: step };
   }
@@ -111,13 +112,13 @@ function matchCall(node: ESTree.CallExpression, state: FileState): Match | undef
   if (isPipeFunction(callee, state)) {
     const self = argumentAt(node, 0);
 
-    const logger = self === undefined ? undefined : loggerName(self, state);
+    const logger = P.isUndefined(self) ? undefined : loggerName(self, state);
 
     const step = argumentAt(node, 1);
 
     const method = asStep(step, state);
 
-    return step === undefined || logger === undefined || method === undefined
+    return P.isUndefined(step) || P.isUndefined(logger) || P.isUndefined(method)
       ? undefined
       : { logger, method, node: step };
   }
@@ -127,13 +128,13 @@ function matchCall(node: ESTree.CallExpression, state: FileState): Match | undef
 
   const self = argumentAt(node, 0);
 
-  if (method === undefined || self === undefined || (method === 'as' && node.arguments.length !== 2)) {
+  if (P.isUndefined(method) || P.isUndefined(self) || (method === 'as' && node.arguments.length !== 2)) {
     return undefined;
   }
 
   const logger = loggerName(self, state);
 
-  return logger === undefined ? undefined : { logger, method, node };
+  return P.isUndefined(logger) ? undefined : { logger, method, node };
 }
 
 export const noEffectAsOnLog: Rule = defineEffectRule(
@@ -146,7 +147,7 @@ export const noEffectAsOnLog: Rule = defineEffectRule(
     CallExpression(node) {
       const match = matchCall(node, getState());
 
-      if (match === undefined) {
+      if (P.isUndefined(match)) {
         return;
       }
 

@@ -3,6 +3,7 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import * as P from 'effect/Predicate';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as McpProtocol from 'effect/ai/McpProtocol';
@@ -118,7 +119,7 @@ function gatewayAuthentication(key: Redacted.Redacted) {
               return unauthorized;
             }
 
-            if (request.headers.origin !== undefined) {
+            if (P.isNotUndefined(request.headers.origin)) {
               return forbidden;
             }
 

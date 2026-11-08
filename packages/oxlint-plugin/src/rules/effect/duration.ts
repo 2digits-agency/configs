@@ -75,9 +75,11 @@ export function durationArgument(
 ): ESTree.Expression | undefined {
   const path = canonicalPath(node.callee, state);
 
-  const position = path === undefined ? undefined : durationApis.get(Arr.join(path, '.'));
+  const position = P.isUndefined(path) ? undefined : durationApis.get(Arr.join(path, '.'));
 
-  return position !== undefined && importedApi(context, node.callee) ? durationExpressions[position](node) : undefined;
+  return P.isNotUndefined(position) && importedApi(context, node.callee)
+    ? durationExpressions[position](node)
+    : undefined;
 }
 
 type Arithmetic = (left: number, right: number) => number;
@@ -108,7 +110,7 @@ export function numericValue(node: ESTree.Expression): number | undefined {
   if (expression.type === 'UnaryExpression' && (expression.operator === '-' || expression.operator === '+')) {
     const argument = numericValue(expression.argument);
 
-    return argument === undefined || expression.operator === '+' ? argument : -argument;
+    return P.isUndefined(argument) || expression.operator === '+' ? argument : -argument;
   }
 
   if (expression.type !== 'BinaryExpression' || expression.left.type === 'PrivateIdentifier') {
@@ -119,7 +121,7 @@ export function numericValue(node: ESTree.Expression): number | undefined {
 
   const right = numericValue(expression.right);
 
-  if (left === undefined || right === undefined) {
+  if (P.isUndefined(left) || P.isUndefined(right)) {
     return undefined;
   }
 
@@ -141,7 +143,7 @@ function factors(node: ESTree.Expression): Array<number> | undefined {
 
   const right = factors(expression.right);
 
-  return left === undefined || right === undefined ? undefined : Arr.appendAll(left, right);
+  return P.isUndefined(left) || P.isUndefined(right) ? undefined : Arr.appendAll(left, right);
 }
 
 // Minute, hour, and day sizes in milliseconds are unambiguous on their own.
@@ -160,7 +162,7 @@ const timeFactors = new Set([7, 24, 60, 1000, 3600, 86_400]);
 export function timeArithmetic(node: ESTree.Expression): { readonly millis: boolean } | undefined {
   const product = factors(node);
 
-  if (product === undefined || product.length < 2) {
+  if (P.isUndefined(product) || product.length < 2) {
     return undefined;
   }
 

@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import { defineEffectRule, isAnyApi, isLiteral, objectProperty, ruleMeta } from '../../utils';
 import { objectArgument } from './utils';
@@ -23,13 +24,13 @@ export const noZeroRetryTimes: Rule = defineEffectRule(
 
       const options = objectArgument(node);
 
-      if (options === undefined) {
+      if (P.isUndefined(options)) {
         return;
       }
 
       const times = objectProperty(options, 'times');
 
-      if (times !== undefined && isLiteral(times.value, 0)) {
+      if (P.isNotUndefined(times) && isLiteral(times.value, 0)) {
         context.report({ node: times, messageId: 'zeroTimes' });
       }
     },

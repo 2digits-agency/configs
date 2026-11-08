@@ -3,11 +3,14 @@ import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fiber from 'effect/Fiber';
 import * as Layer from 'effect/Layer';
+import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Struct from 'effect/Struct';
 import * as McpClientError from 'effect/ai/McpClientError';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
+import * as Headers from 'effect/http/Headers';
 import * as TestClock from 'effect/testing/TestClock';
 
 import { OrbitClient, OrbitClientLive } from '../src/mcp/OrbitClient.js';
@@ -71,16 +74,16 @@ function orbit(onCall: (id: number | undefined, init: RequestInit | undefined) =
       Effect.gen(function* () {
         const body = init?.body;
 
-        const message = yield* decodeJson(body instanceof Uint8Array ? new TextDecoder().decode(body) : body).pipe(
+        const message = yield* decodeJson(P.isUint8Array(body) ? new TextDecoder().decode(body) : body).pipe(
           Effect.orDie,
         );
 
-        const headers = new Headers(init?.headers);
+        const headers = Headers.fromInput(init?.headers);
 
         sent.push({
           method: message.method,
-          authorization: headers.get('authorization') ?? undefined,
-          session: headers.get('mcp-session-id') ?? undefined,
+          authorization: Opt.getOrUndefined(Headers.get(headers, 'authorization')),
+          session: Opt.getOrUndefined(Headers.get(headers, 'mcp-session-id')),
           redirect: init?.redirect,
         });
 
@@ -135,7 +138,7 @@ describe('orbit MCP client', () => {
 
       const [tool] = client.tools;
 
-      if (tool === undefined) {
+      if (P.isUndefined(tool)) {
         return yield* Effect.die('Missing exposed tool');
       }
 
@@ -199,7 +202,7 @@ describe('orbit MCP client', () => {
 
         const [tool] = client.tools;
 
-        if (tool === undefined) {
+        if (P.isUndefined(tool)) {
           return yield* Effect.die('Missing exposed tool');
         }
 
@@ -240,7 +243,7 @@ describe('orbit MCP client', () => {
 
       const [tool] = client.tools;
 
-      if (tool === undefined) {
+      if (P.isUndefined(tool)) {
         return yield* Effect.die('Missing exposed tool');
       }
 

@@ -121,7 +121,7 @@ function isForeignBinding(definition: Definition, state: FileState): boolean {
 
   const owner = enclosingFunction(definition.name);
 
-  return owner !== undefined && isForeignCallback(owner, state);
+  return P.isNotUndefined(owner) && isForeignCallback(owner, state);
 }
 
 /**
@@ -209,13 +209,13 @@ export const noMillisArithmetic: Rule = defineEffectRule(
     function identifierKind(node: ESTree.IdentifierReference, depth: number): MillisKind | undefined {
       const definition = soleDefinition(resolveVariable(context, node, node.name));
 
-      if (definition !== undefined && isForeignBinding(definition, getState())) {
+      if (P.isNotUndefined(definition) && isForeignBinding(definition, getState())) {
         return undefined;
       }
 
       const named = millisName(node.name);
 
-      if (named !== undefined) {
+      if (P.isNotUndefined(named)) {
         return named;
       }
 
@@ -224,7 +224,7 @@ export const noMillisArithmetic: Rule = defineEffectRule(
       return declarator?.type === 'VariableDeclarator' &&
         isConstDeclaration(declarator.parent) &&
         declarator.id === definition?.name &&
-        declarator.init !== null
+        P.isNotNull(declarator.init)
         ? millisKind(declarator.init, depth + 1)
         : undefined;
     }
@@ -244,7 +244,7 @@ export const noMillisArithmetic: Rule = defineEffectRule(
       if (expression.type === 'MemberExpression') {
         const name = expression.object.type === 'ThisExpression' ? staticPropertyName(expression) : undefined;
 
-        return name === undefined ? undefined : millisName(name);
+        return P.isUndefined(name) ? undefined : millisName(name);
       }
 
       if (expression.type === 'CallExpression') {
@@ -255,7 +255,7 @@ export const noMillisArithmetic: Rule = defineEffectRule(
       if (expression.type === 'YieldExpression') {
         const argument = expression.argument;
 
-        return argument !== null &&
+        return P.isNotNull(argument) &&
           expression.delegate &&
           isApiPath(argument, getState(), ['Clock', 'currentTimeMillis']) &&
           importedApi(context, argument)
@@ -269,7 +269,7 @@ export const noMillisArithmetic: Rule = defineEffectRule(
 
       const operands = operandsOf(expression, depth);
 
-      return operands === undefined ? undefined : resultKind(expression.operator, operands);
+      return P.isUndefined(operands) ? undefined : resultKind(expression.operator, operands);
     }
 
     function operandsOf(node: ESTree.BinaryExpression, depth: number): Operands | undefined {
@@ -293,7 +293,7 @@ export const noMillisArithmetic: Rule = defineEffectRule(
 
       const right = millisKind(node.right, depth);
 
-      return left === undefined && right === undefined ? undefined : { left, right };
+      return P.isUndefined(left) && P.isUndefined(right) ? undefined : { left, right };
     }
 
     return {
@@ -307,7 +307,7 @@ export const noMillisArithmetic: Rule = defineEffectRule(
         const outer = enclosingBinary(node);
 
         // Report a chain such as `toMillis(a) + toMillis(b) > limitMs` once, at its outermost operator.
-        if (operands === undefined || (outer !== undefined && operandsOf(outer, 0) !== undefined)) {
+        if (P.isUndefined(operands) || (P.isNotUndefined(outer) && P.isNotUndefined(operandsOf(outer, 0)))) {
           return;
         }
 
@@ -317,7 +317,7 @@ export const noMillisArithmetic: Rule = defineEffectRule(
           node,
           messageId: 'millisArithmetic',
           data: {
-            operand: context.sourceCode.getText(operands.left === undefined ? node.right : node.left),
+            operand: context.sourceCode.getText(P.isUndefined(operands.left) ? node.right : node.left),
             what: instant ? 'a timestamp' : 'a duration',
             module: instant ? 'DateTime' : 'Duration',
             suggestion: suggestion(node, operands),

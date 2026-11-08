@@ -1,8 +1,9 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 import * as Str from 'effect/String';
 
-import { defineSyntaxRule, isGlobalIdentifier, ruleMeta } from '../../utils';
+import { defineSyntaxRule, isGlobalIdentifier, ruleMeta, argumentAt } from '../../utils';
 
 const domainFile =
   /\.(?:aggregate|api|command|context|event|external|id|middleware|model|policy|projection|rejection|saga|stream|view)\.[cm]?tsx?$/u;
@@ -42,7 +43,7 @@ export const alchemyDomainPureImports: Rule = defineSyntaxRule(
     let checked = false;
 
     function check(node: ESTree.ImportDeclaration | ESTree.ExportAllDeclaration | ESTree.ExportNamedDeclaration): void {
-      if (checked && node.source !== null && !isAllowed(node.source.value)) {
+      if (checked && P.isNotNull(node.source) && !isAllowed(node.source.value)) {
         context.report({ node: node.source, messageId: 'import', data: { source: node.source.value } });
       }
     }
@@ -52,7 +53,7 @@ export const alchemyDomainPureImports: Rule = defineSyntaxRule(
         return;
       }
 
-      if (source.type !== 'Literal' || typeof source.value !== 'string') {
+      if (source.type !== 'Literal' || !P.isString(source.value)) {
         context.report({ node: source, messageId: 'dynamic' });
       } else if (!isAllowed(source.value)) {
         context.report({ node: source, messageId: 'import', data: { source: source.value } });
@@ -75,8 +76,10 @@ export const alchemyDomainPureImports: Rule = defineSyntaxRule(
         }
       },
       CallExpression(node) {
-        if (node.arguments[0] !== undefined && isGlobalIdentifier(node.callee, context, 'require')) {
-          checkSource(node.arguments[0]);
+        const source = argumentAt(node, 0);
+
+        if (P.isNotUndefined(source) && isGlobalIdentifier(node.callee, context, 'require')) {
+          checkSource(source);
         }
       },
     };

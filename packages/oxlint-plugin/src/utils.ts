@@ -82,7 +82,7 @@ function collectState(program: ESTree.Program): FileState {
 
     const path = modulePath(source);
 
-    if (path === undefined) {
+    if (P.isUndefined(path)) {
       continue;
     }
 
@@ -148,7 +148,7 @@ export function ruleMeta(
     docs: {
       description,
       recommended: true,
-      ...(url === undefined ? {} : { url }),
+      ...(P.isUndefined(url) ? {} : { url }),
     },
     schema: [],
     messages,
@@ -175,7 +175,7 @@ export function staticPath(node: ESTree.Node): ReadonlyArray<string> | undefined
 
     const property = staticPropertyName(current);
 
-    if (property === undefined) {
+    if (P.isUndefined(property)) {
       return undefined;
     }
 
@@ -195,10 +195,10 @@ export function staticPath(node: ESTree.Node): ReadonlyArray<string> | undefined
  * @param name Local binding name.
  */
 export function resolveVariable(context: Context, node: ESTree.Node, name: string): Variable | undefined {
-  for (let scope: Scope | null = context.sourceCode.getScope(node); scope !== null; scope = scope.upper) {
+  for (let scope: Scope | null = context.sourceCode.getScope(node); P.isNotNull(scope); scope = scope.upper) {
     const variable = scope.set.get(name);
 
-    if (variable !== undefined) {
+    if (P.isNotUndefined(variable)) {
       return variable;
     }
   }
@@ -212,7 +212,7 @@ export function resolveVariable(context: Context, node: ESTree.Node, name: strin
  * @param variable Resolved variable.
  */
 export function soleDefinition(variable: Variable | undefined): Definition | undefined {
-  return variable?.defs.length === 1 ? variable.defs[0] : undefined;
+  return variable?.defs.length === 1 ? Opt.getOrUndefined(Arr.head(variable.defs)) : undefined;
 }
 
 /**
@@ -234,13 +234,13 @@ export function canonicalPath(node: ESTree.Node, state: FileState): ReadonlyArra
 
   const first = path?.[0];
 
-  if (path === undefined || first === undefined) {
+  if (P.isUndefined(path) || P.isUndefined(first)) {
     return undefined;
   }
 
   const imported = state.bindings.get(first);
 
-  return imported === undefined ? undefined : [...imported, ...path.slice(1)];
+  return P.isUndefined(imported) ? undefined : [...imported, ...path.slice(1)];
 }
 
 export function isApi(node: ESTree.Node, state: FileState, namespace: string, member: string): boolean {
@@ -307,7 +307,7 @@ export function argumentAt(
 ): ESTree.Expression | undefined {
   const argument = node.arguments[index];
 
-  return argument === undefined || argument.type === 'SpreadElement' ? undefined : argument;
+  return P.isUndefined(argument) || argument.type === 'SpreadElement' ? undefined : argument;
 }
 
 export const propertyName = Match.type<ESTree.ObjectProperty>().pipe(
@@ -370,7 +370,7 @@ export function walkNodes(root: ESTree.Node, visit: (node: ESTree.Node) => boole
 
   const seen = new WeakSet<object>();
 
-  while (pending.length > 0) {
+  while (Arr.isReadonlyArrayNonEmpty(pending)) {
     const value = pending.pop();
 
     if (!P.isObjectOrArray(value) || seen.has(value)) {
@@ -394,15 +394,18 @@ export function containsIdentifier(root: ESTree.Node, name: string): boolean {
 }
 
 export function firstIdentifierParameter(node: FunctionNode): ESTree.BindingIdentifier | undefined {
-  const parameter = node.params[0];
-
-  return parameter?.type === 'Identifier' ? parameter : undefined;
+  return Opt.getOrUndefined(
+    Opt.filter(
+      Arr.head(node.params),
+      (parameter): parameter is ESTree.BindingIdentifier => parameter.type === 'Identifier',
+    ),
+  );
 }
 
 export function functionUsesFirstParameter(node: FunctionNode): boolean {
   const parameter = firstIdentifierParameter(node);
 
-  if (parameter === undefined || !node.body || Str.startsWith('_')(parameter.name)) {
+  if (P.isUndefined(parameter) || !node.body || Str.startsWith('_')(parameter.name)) {
     return false;
   }
 

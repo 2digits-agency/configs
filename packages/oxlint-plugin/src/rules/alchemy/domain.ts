@@ -1,5 +1,7 @@
 import type { Context, ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 
 import {
   argumentAt,
@@ -83,11 +85,12 @@ export function isImportReference(
  * @param context Rule context.
  */
 export function importedPath(node: ESTree.Node, state: FileState, context: Context): ReadonlyArray<string> | undefined {
-  const root = staticPath(node)?.[0];
+  const imported = Opt.exists(
+    Arr.head(staticPath(node) ?? []),
+    (root) => soleDefinition(resolveVariable(context, node, root))?.type === 'ImportBinding',
+  );
 
-  return root !== undefined && soleDefinition(resolveVariable(context, node, root))?.type === 'ImportBinding'
-    ? canonicalPath(node, state)
-    : undefined;
+  return imported ? canonicalPath(node, state) : undefined;
 }
 
 /**
@@ -113,14 +116,14 @@ export function domainSection(
     // Skip `as const`, `satisfies Definition` and parentheses around the definition.
     let call = definition.parent;
 
-    while (call !== null && wrapperExpressionTypes.has(call.type)) {
+    while (P.isNotNull(call) && wrapperExpressionTypes.has(call.type)) {
       call = call.parent;
     }
 
     const argument = call?.type === 'CallExpression' ? argumentAt(call, 1) : undefined;
 
     if (
-      argument === undefined ||
+      P.isUndefined(argument) ||
       definition.type !== 'ObjectExpression' ||
       call?.type !== 'CallExpression' ||
       unwrapExpression(argument) !== definition
@@ -130,13 +133,13 @@ export function domainSection(
 
     const block = domainBlock(call, state, context);
 
-    if (block === undefined) {
+    if (P.isUndefined(block)) {
       continue;
     }
 
     const section = propertyName(parent as ESTree.ObjectProperty);
 
-    return section === undefined ? undefined : { block, section };
+    return P.isUndefined(section) ? undefined : { block, section };
   }
 
   return undefined;

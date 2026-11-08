@@ -1,9 +1,11 @@
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 import * as SchemaGetter from 'effect/SchemaGetter';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
 
 import { ApiId, LocalDate, Line, Lines } from './text.js';
 
@@ -35,24 +37,26 @@ export const CardFields = {
   ),
 };
 
-export class Card extends Schema.Class<Card, { readonly brand: unique symbol }>('Card')({
-  ...CardFields,
-  heading: Schema.String.annotate({
-    description:
-      'Card name and board name as ListTodos shows them, "<card> | <board>". Both can contain " | ", so only the caller that knows the board name can split them.',
+export class Card extends Schema.Class<Card, { readonly brand: unique symbol }>('Card')(
+  Struct.assign(CardFields, {
+    heading: Schema.String.annotate({
+      description:
+        'Card name and board name as ListTodos shows them, "<card> | <board>". Both can contain " | ", so only the caller that knows the board name can split them.',
+    }),
   }),
-}) {}
+) {}
 
-export class CardDetail extends Schema.Class<CardDetail, { readonly brand: unique symbol }>('CardDetail')({
-  ...CardFields,
-  name: Schema.String,
-  description: Schema.String.pipe(Schema.optionalKey),
-  checklist: Schema.String.annotate({ description: 'Checklist progress and counts as Orbit shows them' }).pipe(
-    Schema.optionalKey,
-  ),
-  labels: Schema.Array(Schema.Struct({ id: ApiId, name: Schema.String })),
-  linked: Schema.Array(Schema.Struct({ type: Schema.String, id: ApiId, summary: Schema.String })),
-}) {}
+export class CardDetail extends Schema.Class<CardDetail, { readonly brand: unique symbol }>('CardDetail')(
+  Struct.assign(CardFields, {
+    name: Schema.String,
+    description: Schema.String.pipe(Schema.optionalKey),
+    checklist: Schema.String.annotate({ description: 'Checklist progress and counts as Orbit shows them' }).pipe(
+      Schema.optionalKey,
+    ),
+    labels: Schema.Array(Schema.Struct({ id: ApiId, name: Schema.String })),
+    linked: Schema.Array(Schema.Struct({ type: Schema.String, id: ApiId, summary: Schema.String })),
+  }),
+) {}
 
 const Count = Schema.FiniteFromString.check(Schema.isInt());
 
@@ -162,8 +166,8 @@ export const GetTodoDetail = {
         ...header,
         ...board,
         ...owner,
-        ...(description === undefined ? {} : { description: description.text }),
-        ...(checklist === undefined ? {} : { checklist: checklist.text }),
+        ...(P.isUndefined(description) ? {} : { description: description.text }),
+        ...(P.isUndefined(checklist) ? {} : { checklist: checklist.text }),
         labels,
         linked,
       })),

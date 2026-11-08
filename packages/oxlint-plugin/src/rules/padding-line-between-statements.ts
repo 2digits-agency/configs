@@ -19,6 +19,7 @@ import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Ref from 'effect/Ref';
 import * as Str from 'effect/String';
+import * as Tuple from 'effect/Tuple';
 
 type Token = SyntaxToken | Comment;
 
@@ -195,9 +196,9 @@ function isCJSRequire(node: ESTree.Node): boolean {
     return false;
   }
 
-  let call = node.declarations[0]?.init;
+  let call = Opt.getOrUndefined(Arr.head(node.declarations))?.init;
 
-  if (call == null) {
+  if (P.isNullish(call)) {
     return false;
   }
 
@@ -216,7 +217,7 @@ function isBlockLikeStatement(node: ESTree.Node, sourceCode: SourceCode): boolea
   const last = sourceCode.getLastToken(node, (token) => !isSemicolonToken(token));
 
   const belongingNode =
-    last?.type === 'Punctuator' && last.value === '}' ? sourceCode.getNodeByRangeIndex(last.range[0]) : null;
+    last?.type === 'Punctuator' && last.value === '}' ? sourceCode.getNodeByRangeIndex(Tuple.get(last.range, 0)) : null;
 
   return belongingNode?.type === 'BlockStatement' || belongingNode?.type === 'SwitchStatement';
 }
@@ -269,11 +270,10 @@ function isCJSExport(node: ESTree.Node): boolean {
 }
 
 function getActualLastToken(node: ESTree.Node, sourceCode: SourceCode): Token {
-  const last = sourceCode.getLastToken(node);
-
-  if (last === null) {
-    throw new Error('Padding rule invariant: statement has no token');
-  }
+  const last = Opt.getOrThrowWith(
+    Opt.fromNullOr(sourceCode.getLastToken(node)),
+    () => new Error('Padding rule invariant: statement has no token'),
+  );
 
   const prev = sourceCode.getTokenBefore(last);
 
@@ -282,7 +282,7 @@ function getActualLastToken(node: ESTree.Node, sourceCode: SourceCode): Token {
   // Ignore the leading semicolon belonging to the next statement in semicolon-free code.
   return prev &&
     next &&
-    prev.range[0] >= node.range[0] &&
+    Tuple.get(prev.range, 0) >= Tuple.get(node.range, 0) &&
     isSemicolonToken(last) &&
     !isTokenOnSameLine(prev, last) &&
     isTokenOnSameLine(last, next)
@@ -297,11 +297,10 @@ function getReportLoc(node: ESTree.Node, sourceCode: SourceCode): Location {
 
   const line = node.loc.start.line;
 
-  const sourceLine = sourceCode.lines[line - 1];
-
-  if (sourceLine === undefined) {
-    throw new Error('Padding rule invariant: statement source line is missing');
-  }
+  const sourceLine = Opt.getOrThrowWith(
+    Arr.get(sourceCode.lines, line - 1),
+    () => new Error('Padding rule invariant: statement source line is missing'),
+  );
 
   return { start: node.loc.start, end: { line, column: sourceLine.length } };
 }
@@ -354,8 +353,10 @@ const baseStatementTypes: Record<BasicStatementType, NodeTest> = {
     cjsExport.test(sourceCode.getText(node.expression.left)),
   'cjs-import': (node, sourceCode) =>
     node.type === 'VariableDeclaration' &&
-    node.declarations[0]?.init != null &&
-    Str.startsWith('require(')(sourceCode.getText(node.declarations[0].init)),
+    Opt.exists(
+      Arr.head(node.declarations),
+      ({ init }) => P.isNotNullish(init) && Str.startsWith('require(')(sourceCode.getText(init)),
+    ),
   enum: keywordTester('TSEnumDeclaration', 'enum'),
   interface: keywordTester('TSInterfaceDeclaration', 'interface'),
   'function-overload': nodeTypeTester('TSDeclareFunction'),
@@ -465,18 +466,17 @@ function getPaddingLineSequences(
 
   if (nextNode.loc.start.line - prevToken.loc.end.line >= 2) {
     do {
-      const token = sourceCode.getTokenAfter(prevToken, { includeComments: true });
-
-      if (token === null) {
-        throw new Error('Padding rule invariant: next statement token is missing');
-      }
+      const token = Opt.getOrThrowWith(
+        Opt.fromNullOr(sourceCode.getTokenAfter(prevToken, { includeComments: true })),
+        () => new Error('Padding rule invariant: next statement token is missing'),
+      );
 
       if (token.loc.start.line - prevToken.loc.end.line >= 2) {
         pairs.push([prevToken, token]);
       }
 
       prevToken = token;
-    } while (prevToken.range[0] < nextNode.range[0]);
+    } while (Tuple.get(prevToken.range, 0) < Tuple.get(nextNode.range, 0));
   }
 
   return pairs;
@@ -515,9 +515,9 @@ function verifyPair(
 
           const pair = Arr.headNonEmpty(pairs);
 
-          const start = pair[0].range[1];
+          const start = Tuple.get(pair[0].range, 1);
 
-          const end = pair[1].range[0];
+          const end = Tuple.get(pair[1].range, 0);
 
           return fixer.replaceTextRange(
             [start, end],

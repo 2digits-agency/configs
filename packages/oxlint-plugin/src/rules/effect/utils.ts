@@ -3,6 +3,7 @@ import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 
 import {
   callbackCall,
@@ -42,7 +43,7 @@ export function functionProperty(node: FunctionNode, name: string): ESTree.CallE
 export function callbackApi(node: FunctionNode, state: FileState): ReadonlyArray<string> | undefined {
   const call = callbackCall(node);
 
-  return call === undefined ? undefined : canonicalPath(call.callee, state);
+  return P.isUndefined(call) ? undefined : canonicalPath(call.callee, state);
 }
 
 function callHost(node: FunctionNode): ESTree.CallExpression | ESTree.NewExpression | undefined {
@@ -69,7 +70,7 @@ function callHost(node: FunctionNode): ESTree.CallExpression | ESTree.NewExpress
 export function isForeignCallback(node: FunctionNode, state: FileState): boolean {
   const call = callHost(node);
 
-  if (call === undefined) {
+  if (P.isUndefined(call)) {
     return false;
   }
 
@@ -79,7 +80,7 @@ export function isForeignCallback(node: FunctionNode, state: FileState): boolean
     callee = callee.callee;
   }
 
-  return canonicalPath(callee, state) === undefined;
+  return P.isUndefined(canonicalPath(callee, state));
 }
 
 const promiseChainMethods: ReadonlySet<string> = new Set(['catch', 'finally', 'then']);
@@ -87,14 +88,14 @@ const promiseChainMethods: ReadonlySet<string> = new Set(['catch', 'finally', 't
 function isPromiseConstruction(node: ESTree.NewExpression): boolean {
   const path = staticPath(node.callee);
 
-  return path !== undefined && Arr.join(path, '.') === 'Promise';
+  return P.isNotUndefined(path) && Arr.join(path, '.') === 'Promise';
 }
 
 function isPromiseCall(node: ESTree.CallExpression): boolean {
   const path = staticPath(node.callee);
 
   return (
-    (path !== undefined && Arr.join(path, '.') === 'fetch') ||
+    (P.isNotUndefined(path) && Arr.join(path, '.') === 'fetch') ||
     (path?.[0] === 'Promise' && path[1] !== 'withResolvers') ||
     promiseChainMethods.has(path?.at(-1) ?? '') ||
     (isFunctionNode(node.callee) && node.callee.async)
@@ -122,11 +123,15 @@ export function functionResult(node: FunctionNode): ESTree.Expression | undefine
     return unwrapExpression(node.body);
   }
 
-  if (node.body.body.length !== 1 || node.body.body[0]?.type !== 'ReturnStatement' || !node.body.body[0].argument) {
-    return undefined;
-  }
+  const statement = node.body.body.length === 1 ? Arr.head(node.body.body) : Opt.none();
 
-  return unwrapExpression(node.body.body[0].argument);
+  return statement.pipe(
+    Opt.flatMapNullishOr((onlyStatement) =>
+      onlyStatement.type === 'ReturnStatement' ? onlyStatement.argument : undefined,
+    ),
+    Opt.map(unwrapExpression),
+    Opt.getOrUndefined,
+  );
 }
 
 /**

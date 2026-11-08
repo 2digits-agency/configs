@@ -1,5 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 import type * as HttpMiddleware from 'effect/http/HttpMiddleware';
 import type * as HttpRouter from 'effect/http/HttpRouter';
 
@@ -15,8 +16,8 @@ function wildcardOrigins(node: ESTree.Expression): boolean {
 
   return (
     origins.type === 'ArrayExpression' &&
-    (origins.elements.length === 0 ||
-      Arr.some(origins.elements, (element) => element !== null && isLiteral(element, '*')))
+    (Arr.isReadonlyArrayEmpty(origins.elements) ||
+      Arr.some(origins.elements, (element) => P.isNotNull(element) && isLiteral(element, '*')))
   );
 }
 
@@ -45,13 +46,13 @@ export const corsCredentialsWithWildcard: Rule = defineEffectRule(
 
       const options = objectArgument(node);
 
-      if (options === undefined || !isLiteral(objectProperty(options, 'credentials')?.value ?? options, true)) {
+      if (P.isUndefined(options) || !isLiteral(objectProperty(options, 'credentials')?.value ?? options, true)) {
         return;
       }
 
       const origins = objectProperty(options, 'allowedOrigins');
 
-      if (origins === undefined || wildcardOrigins(origins.value)) {
+      if (P.isUndefined(origins) || wildcardOrigins(origins.value)) {
         context.report({ node, messageId: 'wildcard' });
       }
     },

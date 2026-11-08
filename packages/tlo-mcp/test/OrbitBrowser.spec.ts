@@ -4,11 +4,14 @@ import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
 import * as Fiber from 'effect/Fiber';
 import * as Layer from 'effect/Layer';
+import * as P from 'effect/Predicate';
 import * as Redacted from 'effect/Redacted';
 import * as Sink from 'effect/Sink';
 import * as Stream from 'effect/Stream';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
+import * as Url from 'effect/http/Url';
 import * as ChildProcess from 'effect/process/ChildProcess';
 import * as ChildProcessSpawner from 'effect/process/ChildProcessSpawner';
 import * as TestClock from 'effect/testing/TestClock';
@@ -119,8 +122,7 @@ describe('orbit browser and operation cleanup', () => {
 
         const spawner = yield* ChildProcessSpawner.ChildProcessSpawner;
 
-        const browser = {
-          ...spawner,
+        const browser = Struct.assign(spawner, {
           spawn: Effect.fn('Test.browser')(function* (command: ChildProcess.Command) {
             commands.push(command);
 
@@ -147,7 +149,7 @@ describe('orbit browser and operation cleanup', () => {
               unref: Effect.succeed(Effect.void),
             });
           }),
-        };
+        });
 
         const store = Layer.succeed(
           SessionStore,
@@ -200,11 +202,11 @@ describe('orbit browser and operation cleanup', () => {
             access: outcome === 'interrupted' ? undefined : 'access',
           });
 
-          const command = commands[0];
+          const command = yield* Effect.fromOption(Arr.head(commands));
 
-          expect(command?._tag).toBe('StandardCommand');
+          expect(command._tag).toBe('StandardCommand');
 
-          if (command?._tag !== 'StandardCommand') {
+          if (!P.isTagged(command, 'StandardCommand')) {
             return;
           }
 
@@ -212,7 +214,11 @@ describe('orbit browser and operation cleanup', () => {
 
           const argument = command.args.at(-1) ?? '';
 
-          const url = new URL(Redacted.isRedacted(argument) ? Redacted.value(argument) : argument);
+          const url = yield* Effect.fromResult(
+            Url.fromString(Redacted.isRedacted(argument) ? Redacted.value(argument) : argument),
+          );
+
+          const [state] = yield* Effect.fromOption(Arr.last(vi.mocked(listenForLogin).mock.calls));
 
           expect({
             redacted: Redacted.isRedacted(argument),
@@ -221,7 +227,7 @@ describe('orbit browser and operation cleanup', () => {
             challenge: Boolean(url.searchParams.get('code_challenge')),
           }).toStrictEqual({
             redacted: true,
-            state: vi.mocked(listenForLogin).mock.calls.at(-1)?.[0],
+            state,
             method: 'S256',
             challenge: true,
           });

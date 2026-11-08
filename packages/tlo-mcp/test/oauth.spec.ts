@@ -1,4 +1,5 @@
 import { assert, describe, expect, it } from '@effect/vitest';
+import { assertFailure, assertSuccess } from '@effect/vitest/utils';
 import * as Arr from 'effect/Array';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
@@ -6,18 +7,22 @@ import * as Exit from 'effect/Exit';
 import * as Fiber from 'effect/Fiber';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
+import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
 import * as Ref from 'effect/Ref';
+import * as Result from 'effect/Result';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as HttpClient from 'effect/http/HttpClient';
+import * as Url from 'effect/http/Url';
 import * as TestClock from 'effect/testing/TestClock';
 
 import { OrbitAuth, OrbitAuthLayer } from '../src/oauth/OrbitAuth.js';
 import { listenForLogin, validateCallback } from '../src/oauth/callback.js';
-import { ORBIT_ORIGIN, Session } from '../src/oauth/session.js';
+import { ORBIT_ORIGIN, OrbitAuthError, Session } from '../src/oauth/session.js';
 import { makeSessionStoreLayer, SessionStore } from '../src/oauth/store.js';
 import { PlatformLive } from '../src/platform.js';
 
@@ -31,6 +36,10 @@ const fixture = Session.make({
 const NEW_ACCESS = 'new-access';
 
 const decodeSession = Schema.decodeEffect(Session);
+
+function parseUrl(href: string): URL {
+  return Result.getOrThrow(Url.fromString(href));
+}
 
 describe('orbit OAuth', () => {
   it('preserves unrotated refresh tokens and replaces expiry', () => {
@@ -79,16 +88,22 @@ describe('orbit OAuth', () => {
       'state=secret&code=',
       'state=secret&code=x&code=y',
     ]) {
-      expect(validateCallback(new URL(`http://127.0.0.1/callback?${query}`), 'secret')).toBeUndefined();
+      assertSuccess(validateCallback(parseUrl(`http://127.0.0.1/callback?${query}`), 'secret'), Opt.none());
     }
 
-    expect(validateCallback(new URL('http://127.0.0.1/wrong?state=secret&code=x'), 'secret')).toBeUndefined();
+    assertSuccess(validateCallback(parseUrl('http://127.0.0.1/wrong?state=secret&code=x'), 'secret'), Opt.none());
 
-    expect(validateCallback(new URL('http://127.0.0.1/callback?state=secret&code=x'), 'secret')).toBe('x');
+    assertSuccess(validateCallback(parseUrl('http://127.0.0.1/callback?state=secret&code=x'), 'secret'), Opt.some('x'));
 
-    expect(() =>
-      validateCallback(new URL('http://127.0.0.1/callback?state=secret&error=access_denied'), 'secret'),
-    ).toThrow('denied');
+    assertFailure(
+      validateCallback(parseUrl('http://127.0.0.1/callback?state=secret&error=access_denied'), 'secret'),
+      OrbitAuthError.make({ message: 'Orbit authorization was denied.' }),
+    );
+
+    assertSuccess(
+      validateCallback(parseUrl('http://127.0.0.1/callback?state=wrong&error=access_denied'), 'secret'),
+      Opt.none(),
+    );
   });
 
   it.effect('accepts one loopback callback after rejecting unsolicited requests', () =>
@@ -243,12 +258,11 @@ describe('orbit OAuth', () => {
         if (isToken) {
           refreshes++;
 
-          const bodyText =
-            init?.body instanceof Uint8Array
-              ? new TextDecoder().decode(init.body)
-              : typeof init?.body === 'string'
-                ? init.body
-                : '';
+          const bodyText = P.isUint8Array(init?.body)
+            ? new TextDecoder().decode(init.body)
+            : P.isString(init?.body)
+              ? init.body
+              : '';
 
           const parameters = new URLSearchParams(bodyText);
 

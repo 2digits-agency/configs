@@ -4,6 +4,7 @@ import { assertTrue, strictEqual } from '@effect/vitest/utils';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import * as Str from 'effect/String';
 
 import { CurrentWorkingDirService } from '../../../src/services/CurrentWorkingDirService.js';
 
@@ -39,7 +40,7 @@ describe(CurrentWorkingDirService, () => {
 
         const cwd = yield* service.cwd;
 
-        assertTrue(cwd.length > 0);
+        assertTrue(Str.isNonEmpty(cwd));
       }));
 
     it('is consistent across multiple calls', () =>

@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import { argumentAt, defineEffectRule, isAnyApi, isApi, ruleMeta, staticPath, unwrapExpression } from '../../utils';
 
@@ -43,7 +44,7 @@ export const noOptionOfService: Rule = defineEffectRule(
       const operator = argumentAt(node, 0);
 
       if (
-        operator !== undefined &&
+        P.isNotUndefined(operator) &&
         source.type === 'CallExpression' &&
         isApi(source.callee, state, 'Effect', 'service' satisfies keyof typeof Effect) &&
         isAnyApi(operator, state, 'Effect', wrapperMethods)

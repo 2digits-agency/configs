@@ -3,6 +3,7 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import type * as Scope from 'effect/Scope';
 import * as Stream from 'effect/Stream';
@@ -74,7 +75,7 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
       const security = Effect.fn('SessionStore.security')(function* (args: ReadonlyArray<string>, input?: string) {
         const handle = yield* spawner.spawn(
           ChildProcess.make('/usr/bin/security', args, {
-            stdin: input === undefined ? 'ignore' : Stream.succeed(new TextEncoder().encode(input)),
+            stdin: P.isUndefined(input) ? 'ignore' : Stream.succeed(new TextEncoder().encode(input)),
             stderr: 'ignore',
           }),
         );
@@ -108,7 +109,7 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
             .readFileString(file)
             .pipe(Effect.catchReason('PlatformError', 'NotFound', () => Effect.undefined));
 
-          return content === undefined ? undefined : yield* decodeSessionJson(content);
+          return P.isUndefined(content) ? undefined : yield* decodeSessionJson(content);
         },
         Effect.mapError(() => OrbitAuthError.make({ message: 'Could not read credentials. Run tlo-mcp login again.' })),
       );

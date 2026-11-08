@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import { argumentAt, defineEffectRule, functionUsesFirstParameter, isApi, isFunctionNode, ruleMeta } from '../../utils';
 
@@ -21,7 +22,7 @@ export const preferWithSpan: Rule = defineEffectRule(
 
       const callback = argumentAt(node, node.arguments.length - 1);
 
-      if (callback !== undefined && isFunctionNode(callback) && !functionUsesFirstParameter(callback)) {
+      if (P.isNotUndefined(callback) && isFunctionNode(callback) && !functionUsesFirstParameter(callback)) {
         context.report({ node, messageId: 'unusedSpan' });
       }
     },

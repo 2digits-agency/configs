@@ -1,12 +1,13 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 
 import { argumentAt, defineEffectRule, isGlobalIdentifier, isStringLiteral, ruleMeta, staticPath } from '../../utils';
 
 const encodings: ReadonlySet<string> = new Set(['base64', 'base64url', 'hex']);
 
 function isEncodingArgument(node: ESTree.Expression | undefined): boolean {
-  return node !== undefined && isStringLiteral(node) && encodings.has(node.value);
+  return P.isNotUndefined(node) && isStringLiteral(node) && encodings.has(node.value);
 }
 
 export const preferEffectEncoding: Rule = defineEffectRule(
@@ -26,7 +27,7 @@ export const preferEffectEncoding: Rule = defineEffectRule(
 
       if (
         (isGlobalIdentifier(node.callee, context, 'atob') || isGlobalIdentifier(node.callee, context, 'btoa')) &&
-        node.arguments.length > 0
+        Arr.isReadonlyArrayNonEmpty(node.arguments)
       ) {
         context.report({ node, messageId: 'effectEncoding' });
 
@@ -36,7 +37,7 @@ export const preferEffectEncoding: Rule = defineEffectRule(
       const path = staticPath(node.callee);
 
       const bufferFrom =
-        path !== undefined && Arr.join(path, '.') === 'Buffer.from' && isEncodingArgument(argumentAt(node, 1));
+        P.isNotUndefined(path) && Arr.join(path, '.') === 'Buffer.from' && isEncodingArgument(argumentAt(node, 1));
 
       const bufferToString = path?.at(-1) === 'toString' && isEncodingArgument(argumentAt(node, 0));
 

@@ -1,8 +1,10 @@
 import type { Context, ESTree, Fix, Fixer, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Result from 'effect/Result';
 import * as Str from 'effect/String';
+import * as Tuple from 'effect/Tuple';
 
 import { moduleExportName } from '../../utils';
 import {
@@ -24,8 +26,8 @@ export function fixBarrel(context: Context, node: ESTree.ImportDeclaration, fixe
   const specifiers: ReadonlyArray<ESTree.ImportDeclarationSpecifier> = node.specifiers;
 
   if (
-    context.sourceCode.getCommentsInside(node).length > 0 ||
-    node.attributes.length > 0 ||
+    Arr.isReadonlyArrayNonEmpty(context.sourceCode.getCommentsInside(node)) ||
+    Arr.isReadonlyArrayNonEmpty(node.attributes) ||
     !Arr.every(specifiers, (specifier): specifier is ESTree.ImportSpecifier => specifier.type === 'ImportSpecifier')
   ) {
     return undefined;
@@ -39,7 +41,7 @@ export function fixBarrel(context: Context, node: ESTree.ImportDeclaration, fixe
         ? barrelModuleSource(node.source.value, name)
         : undefined;
 
-    return source === undefined
+    return P.isUndefined(source)
       ? Result.fail(context.sourceCode.getText(specifier))
       : Result.succeed(`import * as ${specifier.local.name} from '${source}';`);
   });
@@ -61,7 +63,11 @@ export function fixBarrel(context: Context, node: ESTree.ImportDeclaration, fixe
 export function fixNamespace(context: Context, node: ESTree.ImportDeclaration, fixer: Fixer): Array<Fix> | undefined {
   const moduleName = submoduleName(node.source.value);
 
-  if (moduleName === undefined || node.attributes.length > 0 || context.sourceCode.getCommentsInside(node).length > 0) {
+  if (
+    P.isUndefined(moduleName) ||
+    Arr.isReadonlyArrayNonEmpty(node.attributes) ||
+    Arr.isReadonlyArrayNonEmpty(context.sourceCode.getCommentsInside(node))
+  ) {
     return undefined;
   }
 
@@ -103,7 +109,7 @@ export function fixNamespace(context: Context, node: ESTree.ImportDeclaration, f
 
     const references = fixValueImport(specifier, variables, alias, fixer);
 
-    if (references === undefined) {
+    if (P.isUndefined(references)) {
       return undefined;
     }
 
@@ -112,7 +118,7 @@ export function fixNamespace(context: Context, node: ESTree.ImportDeclaration, f
 
   const source = context.sourceCode.getText(node.source);
 
-  const typeImport = types.length === 0 ? '' : `\nimport { ${Arr.join(types, ', ')} } from ${source};`;
+  const typeImport = Arr.isReadonlyArrayEmpty(types) ? '' : `\nimport { ${Arr.join(types, ', ')} } from ${source};`;
 
   const text = `import * as ${alias} from ${source};${typeImport}`;
 
@@ -127,7 +133,7 @@ function fixValueImport(
 ): Array<Fix> | undefined {
   const variable = Opt.getOrUndefined(Arr.findFirst(variables, (entry) => entry.name === specifier.local.name));
 
-  if (variable === undefined) {
+  if (P.isUndefined(variable)) {
     return undefined;
   }
 
@@ -150,11 +156,13 @@ function fixReferences(variable: Variable, replacement: string, member: boolean,
   for (const reference of variable.references) {
     const identifier = reference.identifier;
 
-    if (seen.has(identifier.range[0])) {
+    const start = Tuple.get(identifier.range, 0);
+
+    if (seen.has(start)) {
       continue;
     }
 
-    seen.add(identifier.range[0]);
+    seen.add(start);
 
     const parent = identifier.parent;
 

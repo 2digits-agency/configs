@@ -1,5 +1,6 @@
 import * as NodeServices from '@effect/platform-node/NodeServices';
 import { describe, expect, it } from '@effect/vitest';
+import { assertSome } from '@effect/vitest/utils';
 import * as Arr from 'effect/Array';
 import type * as Context from 'effect/Context';
 import * as DateTime from 'effect/DateTime';
@@ -12,6 +13,7 @@ import * as R from 'effect/Record';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
 import * as McpClientError from 'effect/ai/McpClientError';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as McpServer from 'effect/ai/McpServer';
@@ -63,7 +65,7 @@ interface Call {
  * @param reply
  */
 function answer(reply: Reply): Effect.Effect<McpSchema.CallToolResult, McpClientError.McpClientError> {
-  if (typeof reply === 'string') {
+  if (P.isString(reply)) {
     return Effect.succeed(McpSchema.CallToolResult.make({ content: [{ type: 'text', text: reply }] }));
   }
 
@@ -105,9 +107,9 @@ const setup = Effect.fn('CompositeTools.test.setup')(function* (
 
     const entry = replies[tool.name];
 
-    const reply = typeof entry === 'function' ? entry(args) : entry;
+    const reply = P.isFunction(entry) ? entry(args) : entry;
 
-    if (reply === undefined) {
+    if (P.isUndefined(reply)) {
       return Effect.die(`Unexpected Orbit call ${tool.name}`);
     }
 
@@ -125,7 +127,7 @@ const setup = Effect.fn('CompositeTools.test.setup')(function* (
   const call = Effect.fn('CompositeTools.test.call')(function* (name: string, input: unknown) {
     const registration = registrations.get(name);
 
-    if (registration === undefined) {
+    if (P.isUndefined(registration)) {
       return yield* Effect.die(`Missing ${name}`);
     }
 
@@ -178,14 +180,15 @@ const workdayReplies = {
  * The open week, with two Monday entries stretched: one now overlaps the next by 15 minutes, one runs past 17:30.
  */
 const openWeek = Effect.fn('CompositeTools.test.openWeek')(function* () {
-  const { call, calls } = yield* setup({
-    ...workdayReplies,
-    GetTimesheetWeek: Fn.pipe(
-      fixture('GetTimesheetWeek-open'),
-      Str.replace('- Mon 09:15 0h45', '- Mon 09:15 1h'),
-      Str.replace('- Mon 17:00 0h30', '- Mon 17:00 1h'),
-    ),
-  });
+  const { call, calls } = yield* setup(
+    Struct.assign(workdayReplies, {
+      GetTimesheetWeek: Fn.pipe(
+        fixture('GetTimesheetWeek-open'),
+        Str.replace('- Mon 09:15 0h45', '- Mon 09:15 1h'),
+        Str.replace('- Mon 17:00 0h30', '- Mon 17:00 1h'),
+      ),
+    }),
+  );
 
   const result = yield* call('GetMyWorkday', { date: OPEN_WEDNESDAY, scope: 'week' });
 
@@ -212,7 +215,7 @@ const holidayWeeks = Effect.fn('CompositeTools.test.holidayWeeks')(function* () 
     ...workdayReplies,
     ListPlannedEntries: fixture('ListPlannedEntries'),
     GetTimesheetWeek: ({ date }) =>
-      typeof date === 'string' && date !== HOLIDAY_MONDAY ? mixedWeekOf(date) : fixture('GetTimesheetWeek-planned'),
+      date !== HOLIDAY_MONDAY && P.isString(date) ? mixedWeekOf(date) : fixture('GetTimesheetWeek-planned'),
   });
 });
 
@@ -324,30 +327,36 @@ describe('getMyWorkday', () => {
         { date: '2026-11-01', dayOff: true, gaps: [], overlaps: [], outside: [] },
       ]);
 
-      expect(workday.days[0]?.entries[0]?.start).toBe('2026-10-26T09:00:00.000+01:00[Europe/Amsterdam]');
+      assertSome(
+        Opt.flatMap(Arr.head(workday.days), (day) => Arr.head(day.entries)).pipe(Opt.map(Struct.get('start'))),
+        '2026-10-26T09:00:00.000+01:00[Europe/Amsterdam]',
+      );
     }).pipe(Effect.provide(requestContext), Effect.scoped),
   );
 
   it.effect('counts partial absences in overlaps and outside working hours', () =>
     Effect.gen(function* () {
-      const { call } = yield* setup({
-        ...workdayReplies,
-        GetTimesheetWeek: Str.replace(
-          '- Mon 14:00 2h',
-          '- Mon 07:30 1h ABSENCE Dentist  (api_id: ABEARLY00000001)\r\n- Mon 13:30 1h ABSENCE Doctor  (api_id: ABDOCTOR0000001)\r\n- Mon 14:00 2h',
-        )(fixture('GetTimesheetWeek-mixed')),
-      });
+      const { call } = yield* setup(
+        Struct.assign(workdayReplies, {
+          GetTimesheetWeek: Str.replace(
+            '- Mon 14:00 2h',
+            '- Mon 07:30 1h ABSENCE Dentist  (api_id: ABEARLY00000001)\r\n- Mon 13:30 1h ABSENCE Doctor  (api_id: ABDOCTOR0000001)\r\n- Mon 14:00 2h',
+          )(fixture('GetTimesheetWeek-mixed')),
+        }),
+      );
 
       const workdayResult = yield* call('GetMyWorkday', { date: '2026-11-30', scope: 'day' });
 
       const workday = yield* structured(Workday, workdayResult);
 
-      expect(workday.days[0]?.overlaps).toStrictEqual([
+      const day = yield* Effect.fromOption(Arr.head(workday.days));
+
+      expect(day.overlaps).toStrictEqual([
         { first: 'ACY8KZJDWPT94W3', second: 'ABDOCTOR0000001', minutes: 30 },
         { first: 'ABDOCTOR0000001', second: 'ACEJUTYMTXFBGQ3', minutes: 30 },
       ]);
 
-      expect(workday.days[0]?.outsideWorkingHours).toStrictEqual(['ABEARLY00000001']);
+      expect(day.outsideWorkingHours).toStrictEqual(['ABEARLY00000001']);
     }).pipe(Effect.provide(requestContext), Effect.scoped),
   );
 
@@ -399,7 +408,7 @@ describe('getMyWorkday', () => {
         expect.objectContaining({ id: 'ACGC6QVZ73MDPVT', taskId: 'PT42D4KQVJPHKGJ', planningKind: 'fixed-time' }),
       ]);
 
-      expect([monday?.dayOff, Arr.map(monday?.entries ?? [], (entry) => entry.kind)]).toStrictEqual([
+      expect([monday?.dayOff, Arr.map(monday?.entries ?? [], Struct.get('kind'))]).toStrictEqual([
         true,
         ['planned', 'planned'],
       ]);
@@ -414,7 +423,10 @@ describe('getMyWorkday', () => {
 
       const filtered = yield* structured(Workday, workdayResult);
 
-      expect(Arr.map(filtered.days[0]?.entries ?? [], (entry) => entry.id)).toStrictEqual(['ACGC6QVZ73MDPVT']);
+      assertSome(
+        Opt.map(Arr.head(filtered.days), (day) => Arr.map(day.entries, Struct.get('id'))),
+        ['ACGC6QVZ73MDPVT'],
+      );
 
       const tooLong = yield* call('GetMyWorkday', { date: '2026-10-01', to: '2027-01-01' });
 
@@ -646,7 +658,7 @@ describe('getTicketContext', () => {
 
       expect(context.commentCount).toBe(3);
 
-      expect(Arr.map(context.timeEntries, (entry) => entry.id)).toStrictEqual([
+      expect(Arr.map(context.timeEntries, Struct.get('id'))).toStrictEqual([
         'AC6UHATHDJJ13PP',
         'ACFERA67KXAJDCC',
         'AC95BKNX6H2MNG2',
@@ -698,11 +710,12 @@ describe('composite errors', () => {
 describe('orbit replies', () => {
   it.effect('fail visibly when Orbit answers without exactly one text block', () =>
     Effect.gen(function* () {
-      const { call } = yield* setup({
-        ...workdayReplies,
-        GetTimesheetWeek: fixture('GetTimesheetWeek-open'),
-        ListAbsences: McpSchema.CallToolResult.make({ content: [] }),
-      });
+      const { call } = yield* setup(
+        Struct.assign(workdayReplies, {
+          GetTimesheetWeek: fixture('GetTimesheetWeek-open'),
+          ListAbsences: McpSchema.CallToolResult.make({ content: [] }),
+        }),
+      );
 
       const result = yield* call('GetMyWorkday', { date: OPEN_WEDNESDAY, scope: 'week' });
 
@@ -712,7 +725,9 @@ describe('orbit replies', () => {
 
   it.effect('fail when a week does not cover the range, or the ticket search hit its cap', () =>
     Effect.gen(function* () {
-      const { call } = yield* setup({ ...workdayReplies, GetTimesheetWeek: fixture('GetTimesheetWeek-mixed') });
+      const { call } = yield* setup(
+        Struct.assign(workdayReplies, { GetTimesheetWeek: fixture('GetTimesheetWeek-mixed') }),
+      );
 
       const shifted = yield* call('GetMyWorkday', { date: OPEN_WEDNESDAY, scope: 'week' });
 
@@ -785,9 +800,11 @@ describe('getBoardContext', () => {
 
       const detailed = yield* structured(BoardContext, boardContextResult);
 
-      const card = detailed.columns[2]?.cards[0];
+      const card = yield* Effect.fromOption(
+        Opt.flatMap(Arr.get(detailed.columns, 2), (column) => Arr.head(column.cards)),
+      );
 
-      expect([card?.id, card?.checklist, card?.linked?.length]).toStrictEqual([
+      expect([card.id, card.checklist, card.linked?.length]).toStrictEqual([
         'TDFPXAJVJE7RMQ5',
         '0/0 done | comments 1 | files 0 | followers 0',
         2,
@@ -799,10 +816,11 @@ describe('getBoardContext', () => {
 
       const [, other = ''] = Str.split(fixture('ListBoards'), '\r\n');
 
-      const { call: callMany } = yield* setup({
-        ...boardReplies,
-        ListBoards: `100 board(s):\r\n${Arr.join(Arr.replicate(other, 100), '\r\n')}\r\n`,
-      });
+      const { call: callMany } = yield* setup(
+        Struct.assign(boardReplies, {
+          ListBoards: `100 board(s):\r\n${Arr.join(Arr.replicate(other, 100), '\r\n')}\r\n`,
+        }),
+      );
 
       const capped = yield* callMany('GetBoardContext', { board: 'BO1GWM3SZPBP5NP' });
 
@@ -815,14 +833,15 @@ describe('getBoardContext', () => {
 
   it.effect('splits card names that contain " | " off the known board name, and keeps the priority', () =>
     Effect.gen(function* () {
-      const { call } = yield* setup({
-        ...boardReplies,
-        ListTodos: Fn.pipe(
-          todos,
-          Str.replace('| BL-01 vragen naar klant sturen |', '| FE | vragen naar klant sturen |'),
-          Str.replace('| due 2026-10-22 | owner', '| due 2026-10-22 | prio high | owner'),
-        ),
-      });
+      const { call } = yield* setup(
+        Struct.assign(boardReplies, {
+          ListTodos: Fn.pipe(
+            todos,
+            Str.replace('| BL-01 vragen naar klant sturen |', '| FE | vragen naar klant sturen |'),
+            Str.replace('| due 2026-10-22 | owner', '| due 2026-10-22 | prio high | owner'),
+          ),
+        }),
+      );
 
       const boardContextResult = yield* call('GetBoardContext', {
         board: 'BO1GWM3SZPBP5NP',
@@ -832,7 +851,9 @@ describe('getBoardContext', () => {
 
       const board = yield* structured(BoardContext, boardContextResult);
 
-      expect([board.columns[1]?.cards[0], board.cardsTruncated]).toMatchObject([
+      const card = yield* Effect.fromOption(Opt.flatMap(Arr.get(board.columns, 1), (column) => Arr.head(column.cards)));
+
+      expect([card, board.cardsTruncated]).toMatchObject([
         { id: 'TD8H65VYHYWE65T', name: 'FE | vragen naar klant sturen', priority: 'high' },
         false,
       ]);
@@ -843,13 +864,14 @@ describe('getBoardContext', () => {
     Effect.gen(function* () {
       const lists = fixture('ListBoardLists');
 
-      const { call } = yield* setup({
-        ...boardReplies,
-        ListBoardLists: Arr.join(
-          Arr.filter(Str.split(lists, '\r\n'), (line) => !Str.includes('KCNK9U9T62DZA49')(line)),
-          '\r\n',
-        ),
-      });
+      const { call } = yield* setup(
+        Struct.assign(boardReplies, {
+          ListBoardLists: Arr.join(
+            Arr.filter(Str.split(lists, '\r\n'), (line) => !Str.includes('KCNK9U9T62DZA49')(line)),
+            '\r\n',
+          ),
+        }),
+      );
 
       const changed = yield* call('GetBoardContext', { board: 'BO1GWM3SZPBP5NP', includeDone: true, details: false });
 
@@ -860,10 +882,9 @@ describe('getBoardContext', () => {
 
       const [, card = ''] = Str.split(todos, '\r\n');
 
-      const { call: callFull } = yield* setup({
-        ...boardReplies,
-        ListTodos: `100 card(s):\r\n${Arr.join(Arr.replicate(card, 100), '\r\n')}\r\n`,
-      });
+      const { call: callFull } = yield* setup(
+        Struct.assign(boardReplies, { ListTodos: `100 card(s):\r\n${Arr.join(Arr.replicate(card, 100), '\r\n')}\r\n` }),
+      );
 
       const boardContextResult = yield* callFull('GetBoardContext', { board: 'BO1GWM3SZPBP5NP', details: false });
 
@@ -894,7 +915,7 @@ const overHttp = Effect.fn('CompositeTools.test.overHttp')(function* (replies: R
   function callTool(tool: McpSchema.Tool) {
     const reply = replies[tool.name];
 
-    if (reply === undefined) {
+    if (P.isUndefined(reply)) {
       return Effect.die(`Unexpected Orbit call ${tool.name}`);
     }
 
@@ -921,7 +942,7 @@ const overHttp = Effect.fn('CompositeTools.test.overHttp')(function* (replies: R
   let session: string | undefined;
 
   return Effect.fn('CompositeTools.test.send')(function* (method: string, params: unknown, id?: number) {
-    const body = yield* encodeJson({ jsonrpc: '2.0', method, params, ...(id === undefined ? {} : { id }) });
+    const body = yield* encodeJson({ jsonrpc: '2.0', method, params, ...(P.isUndefined(id) ? {} : { id }) });
 
     const response = yield* Effect.tryPromise({
       try: (signal) =>
@@ -934,7 +955,7 @@ const overHttp = Effect.fn('CompositeTools.test.overHttp')(function* (replies: R
               'content-type': 'application/json',
               accept: 'application/json, text/event-stream',
               'mcp-protocol-version': '2025-06-18',
-              ...(session === undefined ? {} : { 'mcp-session-id': session }),
+              ...(P.isUndefined(session) ? {} : { 'mcp-session-id': session }),
             },
             body,
           }),

@@ -94,7 +94,7 @@ describe(EslintDetectionService, () => {
 
           const configs = yield* service.detectExistingConfigs();
 
-          assertTrue(configs.length > 0);
+          assertTrue(Arr.isReadonlyArrayNonEmpty(configs));
 
           assertTrue(Arr.some(configs, Str.includes('eslint.config.js')));
         }),

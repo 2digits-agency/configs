@@ -1,10 +1,13 @@
 import { describe, expect, it } from '@effect/vitest';
+import { assertSome } from '@effect/vitest/utils';
 import * as Arr from 'effect/Array';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
 
 import { GetRunningTimer } from '../src/orbit/GetRunningTimer.js';
 import { GetTimesheetWeek, type TimeEntry } from '../src/orbit/GetTimesheetWeek.js';
@@ -31,11 +34,11 @@ function decode<TResult extends Schema.Top & { readonly Encoded: string; readonl
 }
 
 function iso(value: DateTime.Zoned | undefined) {
-  return value === undefined ? undefined : DateTime.formatIsoZoned(value);
+  return P.isUndefined(value) ? undefined : DateTime.formatIsoZoned(value);
 }
 
 function summary(entry: TimeEntry | undefined) {
-  return entry === undefined
+  return P.isUndefined(entry)
     ? undefined
     : {
         id: entry.id,
@@ -104,7 +107,9 @@ describe('timesheet week parser', () => {
         ticketId: 'TCZJXWYVDW451V5',
       });
 
-      expect(summary(thursday?.entries[0])).toMatchObject({ kind: 'absence', work: 'Holiday', pendingApproval: false });
+      const absence = yield* Effect.fromOption(Arr.head(thursday?.entries ?? []));
+
+      expect(summary(absence)).toMatchObject({ kind: 'absence', work: 'Holiday', pendingApproval: false });
     }),
   );
 
@@ -114,13 +119,16 @@ describe('timesheet week parser', () => {
 
       const entries = Arr.flatMap(week.days, (day) => day.entries);
 
-      expect(new Set(Arr.map(week.days, (day) => day.state))).toStrictEqual(new Set(['FINAL']));
+      expect(new Set(Arr.map(week.days, Struct.get('state')))).toStrictEqual(new Set(['FINAL']));
 
       expect(
         new Set(Arr.map(entries, (entry) => Arr.join([String(entry.lock), String(entry.editable)], ','))),
       ).toStrictEqual(new Set(['timesheet submitted (FINAL),false']));
 
-      expect(iso(entries[0]?.start)).toBe('2026-10-19T09:00:00.000+02:00[Europe/Amsterdam]');
+      assertSome(
+        Opt.map(Arr.head(entries), (entry) => iso(entry.start)),
+        '2026-10-19T09:00:00.000+02:00[Europe/Amsterdam]',
+      );
 
       expect(Opt.getOrUndefined(Arr.findFirst(entries, (entry) => entry.id === 'ACE543N9G4T9WS2'))?.minutes).toBe(115);
     }),
@@ -142,7 +150,9 @@ describe('timesheet week parser', () => {
 
       expect(week.days[4]).toMatchObject({ date: '2027-01-01', weekday: 'Fri' });
 
-      expect(summary(week.days[4]?.entries[0])).toMatchObject({ work: 'Office Closed', pendingApproval: false });
+      const closed = yield* Effect.fromOption(Arr.head(week.days[4]?.entries ?? []));
+
+      expect(summary(closed)).toMatchObject({ work: 'Office Closed', pendingApproval: false });
     }),
   );
 
@@ -225,7 +235,7 @@ describe('list parsers', () => {
 
       const planned = yield* decode(ListTimeEntries)(fixture('ListTimeEntries-planned'));
 
-      expect(new Set(Arr.map(planned.entries, (entry) => entry.kind))).toStrictEqual(new Set(['planned']));
+      expect(new Set(Arr.map(planned.entries, Struct.get('kind')))).toStrictEqual(new Set(['planned']));
 
       expect(planned.entries).toHaveLength(9);
     }),
@@ -263,20 +273,25 @@ describe('list parsers', () => {
         Str.replaceAll('Support ticket A', 'Support — ticket A')(fixture(OPEN_WEEK)),
       );
 
-      const entry = Opt.getOrUndefined(Arr.findFirst(days[0]?.entries ?? [], ({ id }) => id === 'ACZ3XD8VSWW6MU9'));
+      const entry = Opt.flatMap(Arr.head(days), (monday) =>
+        Arr.findFirst(monday.entries, ({ id }) => id === 'ACZ3XD8VSWW6MU9'),
+      );
 
-      expect([entry?.work, entry?.description]).toStrictEqual([
-        'ticket "Support — ticket A"',
-        '9353 Support — ticket A',
-      ]);
+      assertSome(
+        Opt.map(entry, ({ work, description }) => [work, description]),
+        ['ticket "Support — ticket A"', '9353 Support — ticket A'],
+      );
 
       const { days: quoted } = yield* decode(GetTimesheetWeek)(
         Str.replaceAll('Support ticket A', 'Support "case" — ticket A')(fixture(OPEN_WEEK)),
       );
 
-      expect(
-        Opt.getOrUndefined(Arr.findFirst(quoted[0]?.entries ?? [], ({ id }) => id === 'ACZ3XD8VSWW6MU9'))?.work,
-      ).toBe('ticket "Support "case" — ticket A"');
+      assertSome(
+        Opt.flatMap(Arr.head(quoted), (monday) =>
+          Arr.findFirst(monday.entries, ({ id }) => id === 'ACZ3XD8VSWW6MU9'),
+        ).pipe(Opt.map(Struct.get('work'))),
+        'ticket "Support "case" — ticket A"',
+      );
     }),
   );
 
@@ -420,7 +435,10 @@ describe('ticket parsers', () => {
         [false, 0],
       ]);
 
-      expect(iso(comments.comments[0]?.date)).toBe('2026-10-20T11:38:00.000+02:00[Europe/Amsterdam]');
+      assertSome(
+        Opt.map(Arr.head(comments.comments), (comment) => iso(comment.date)),
+        '2026-10-20T11:38:00.000+02:00[Europe/Amsterdam]',
+      );
     }),
   );
 });

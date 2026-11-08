@@ -7,6 +7,7 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
@@ -77,9 +78,9 @@ describe(EslintSetupService, () => {
           // Check package.json was updated
           const updatedPkg = yield* pm.readPackageJson({ id: tempDir });
 
-          assertTrue(updatedPkg.scripts?.lint !== undefined);
+          assertTrue(P.isNotUndefined(updatedPkg.scripts?.lint));
 
-          assertTrue(updatedPkg.scripts['lint:fix'] !== undefined);
+          assertTrue(P.isNotUndefined(updatedPkg.scripts['lint:fix']));
 
           strictEqual(updatedPkg.scripts.lint, 'eslint .');
 
@@ -374,7 +375,7 @@ describe(EslintSetupService, () => {
 
           const config = yield* decodeTurboConfigJson(content);
 
-          assertTrue(typeof config === 'object');
+          assertTrue(P.isObjectOrArray(config));
         }),
       );
 
@@ -548,9 +549,11 @@ export default twoDigits({
 
           const config = yield* decodeTurboConfigJson(updated);
 
-          assertTrue(config.tasks?.lint !== undefined);
+          assertTrue(P.isNotUndefined(config.tasks));
 
-          assertTrue(config.tasks['lint:fix'] !== undefined);
+          assertTrue(P.isNotUndefined(config.tasks.lint));
+
+          assertTrue(P.isNotUndefined(config.tasks['lint:fix']));
         }),
       );
     }),
@@ -650,7 +653,7 @@ export default twoDigits({
 
           const updated = yield* pm.readPackageJson();
 
-          assertTrue(updated.scripts?.lint !== undefined);
+          assertTrue(P.isNotUndefined(updated.scripts?.lint));
         }),
       );
 
@@ -681,7 +684,7 @@ export default twoDigits({
 
           strictEqual(updated.scripts?.test, 'vitest');
 
-          assertTrue(updated.scripts?.lint !== undefined);
+          assertTrue(P.isNotUndefined(updated.scripts?.lint));
         }),
       );
 

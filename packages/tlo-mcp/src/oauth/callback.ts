@@ -2,14 +2,19 @@
 import { createServer } from 'node:http';
 
 import * as NodeHttpServer from '@effect/platform-node/NodeHttpServer';
+import * as Arr from 'effect/Array';
 import * as Deferred from 'effect/Deferred';
 import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
+import * as Result from 'effect/Result';
+import * as Str from 'effect/String';
 import * as Mac from 'effect/crypto/Mac';
 import * as HttpRouter from 'effect/http/HttpRouter';
 import * as HttpServer from 'effect/http/HttpServer';
 import * as HttpServerRequest from 'effect/http/HttpServerRequest';
 import * as HttpServerResponse from 'effect/http/HttpServerResponse';
+import * as Url from 'effect/http/Url';
 
 import { OrbitAuthError } from './session.js';
 
@@ -28,10 +33,11 @@ const accepted = HttpServerResponse.text('Authorization received. Return to your
 
 const denied = HttpServerResponse.text('Authorization denied. Return to your terminal.', { status: 400, headers });
 
-function soleParameter(url: URL, name: string): string | undefined {
-  const values = url.searchParams.getAll(name);
-
-  return values.length === 1 ? values[0] : undefined;
+function soleParameter(url: URL, name: string): Opt.Option<string> {
+  return Arr.matchLeft(url.searchParams.getAll(name), {
+    onEmpty: Opt.none,
+    onNonEmpty: (value, rest) => (Arr.isArrayEmpty(rest) ? Opt.some(value) : Opt.none()),
+  });
 }
 
 /**
@@ -40,26 +46,24 @@ function soleParameter(url: URL, name: string): string | undefined {
  * @param url
  * @param state
  */
-export function validateCallback(url: URL, state: string): string | undefined {
-  const received = soleParameter(url, 'state');
-
-  if (received === undefined || url.pathname !== '/callback') {
-    return undefined;
-  }
-
+export function validateCallback(url: URL, state: string): Result.Result<Opt.Option<string>, OrbitAuthError> {
   const encoder = new TextEncoder();
 
-  if (!Mac.timingSafeEqual(encoder.encode(state), encoder.encode(received))) {
-    return undefined;
+  const solicited =
+    url.pathname === '/callback' &&
+    Opt.exists(soleParameter(url, 'state'), (received) =>
+      Mac.timingSafeEqual(encoder.encode(state), encoder.encode(received)),
+    );
+
+  if (!solicited) {
+    return Result.succeed(Opt.none());
   }
 
   if (url.searchParams.has('error')) {
-    throw new Error('Orbit authorization was denied.');
+    return Result.fail(OrbitAuthError.make({ message: 'Orbit authorization was denied.' }));
   }
 
-  const code = soleParameter(url, 'code');
-
-  return code === '' ? undefined : code;
+  return Result.succeed(Opt.filter(soleParameter(url, 'code'), Str.isNonEmpty));
 }
 
 export const listenForLogin = Effect.fn('OrbitAuth.listenForLogin')(function* (state: string) {
@@ -86,18 +90,18 @@ export const listenForLogin = Effect.fn('OrbitAuth.listenForLogin')(function* (s
       return invalid;
     }
 
-    return yield* Effect.try({
-      try: () => validateCallback(new URL(request.url, redirectUri), state),
-      catch: () => OrbitAuthError.make({ message: 'Orbit authorization was denied.' }),
-    }).pipe(
-      Effect.matchEffect({
-        onFailure: (error) => Deferred.fail(result, error).pipe(Effect.map((first) => (first ? denied : invalid))),
-        onSuccess: (code) =>
-          code === undefined
-            ? Effect.succeed(invalid)
-            : Deferred.succeed(result, code).pipe(Effect.map((first) => (first ? accepted : invalid))),
+    const callback = Result.match(Url.fromString(request.url, redirectUri), {
+      onFailure: () => Result.succeed(Opt.none<string>()),
+      onSuccess: (url) => validateCallback(url, state),
+    });
+
+    return yield* Result.match(callback, {
+      onFailure: (error) => Deferred.fail(result, error).pipe(Effect.map((first) => (first ? denied : invalid))),
+      onSuccess: Opt.match({
+        onNone: () => Effect.succeed(invalid),
+        onSome: (code) => Deferred.succeed(result, code).pipe(Effect.map((first) => (first ? accepted : invalid))),
       }),
-    );
+    });
   });
 
   // Route every request through validation so invalid paths/methods retain safe 400 responses.

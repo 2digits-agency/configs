@@ -1,5 +1,7 @@
 import type { Context, ESTree, Rule, Variable } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import type * as Schema from 'effect/Schema';
 
 import {
@@ -64,15 +66,15 @@ function compilerMethod(node: ESTree.Node, state: FileState, context: Context): 
 
   const method = path?.length === 2 && path[0] === 'Schema' ? path[1] : undefined;
 
-  const root = staticPath(node)?.[0];
-
-  if (method === undefined || root === undefined || !compilerMethods.has(method)) {
+  if (P.isUndefined(method) || !compilerMethods.has(method)) {
     return undefined;
   }
 
-  const variable = resolveVariable(context, node, root);
+  const variable = Opt.flatMapNullishOr(Arr.head(staticPath(node) ?? []), (root) =>
+    resolveVariable(context, node, root),
+  );
 
-  return variable !== undefined && Arr.every(variable.defs, (definition) => definition.type === 'ImportBinding')
+  return Opt.exists(variable, ({ defs }) => Arr.every(defs, (definition) => definition.type === 'ImportBinding'))
     ? method
     : undefined;
 }
@@ -96,7 +98,7 @@ function isImmediatelyInvoked(node: ESTree.CallExpression): boolean {
 
   let parent = node.parent;
 
-  while (transparentParentTypes.has(parent.type) && parent.parent !== null) {
+  while (transparentParentTypes.has(parent.type) && P.isNotNull(parent.parent)) {
     current = parent;
 
     parent = parent.parent;
@@ -136,7 +138,7 @@ function isStableVariable(variable: Variable): boolean {
 function isMovableIdentifier(node: ESTree.Node, name: string, root: ESTree.Node, context: Context): boolean {
   const variable = resolveVariable(context, node, name);
 
-  if (variable === undefined || containsRange(root, variable.scope.block)) {
+  if (P.isUndefined(variable) || containsRange(root, variable.scope.block)) {
     return true;
   }
 
@@ -159,7 +161,7 @@ function isInsideCallback(node: ESTree.Node, root: ESTree.Node): boolean {
 
   let parent = node.parent as ESTree.Node | null;
 
-  while (parent !== null && parent !== root) {
+  while (parent !== root && P.isNotNull(parent)) {
     if (functionTypes.has(parent.type)) {
       return true;
     }
@@ -177,7 +179,7 @@ function isDynamic(node: ESTree.Node, root: ESTree.Node, state: FileState): bool
   }
 
   if (node.type === 'CallExpression' || node.type === 'NewExpression') {
-    return canonicalPath(node.callee, state) === undefined;
+    return P.isUndefined(canonicalPath(node.callee, state));
   }
 
   return dynamicTypes.has(node.type);
@@ -223,8 +225,8 @@ export const noInlineSchemaCompile: Rule = defineEffectRule(
       const [argument] = node.arguments;
 
       if (
-        method === undefined ||
-        argument === undefined ||
+        P.isUndefined(method) ||
+        P.isUndefined(argument) ||
         argument.type === 'SpreadElement' ||
         Arr.some(node.arguments, (child) => child.type === 'SpreadElement') ||
         !isImmediatelyInvoked(node) ||

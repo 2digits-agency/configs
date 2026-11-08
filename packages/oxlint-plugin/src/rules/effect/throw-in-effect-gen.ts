@@ -1,6 +1,7 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import {
   argumentAt,
@@ -50,14 +51,14 @@ export const throwInEffectGen: Rule = defineEffectRule(
 
       const callback = enclosingFunction(node);
 
-      if (callback === undefined || capturedByEffectTry(callback, state)) {
+      if (P.isUndefined(callback) || capturedByEffectTry(callback, state)) {
         return;
       }
 
       const call = callbackCall(callback);
 
       const direct =
-        call !== undefined && Arr.some(generatorMethods, (method) => isApi(call.callee, state, 'Effect', method));
+        P.isNotUndefined(call) && Arr.some(generatorMethods, (method) => isApi(call.callee, state, 'Effect', method));
 
       const outerCallee = call?.callee;
 
