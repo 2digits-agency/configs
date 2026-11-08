@@ -41,6 +41,7 @@ tester.run('no-constant-thunk', noConstantThunk, {
     `${imports} export function run() { const inner = () => Schema.String; return inner }`,
     `${imports} function ruleImpl(context) { return {} }\nexport function rule() { return ruleImpl }`,
     `${imports} export const handler = () => (event) => Effect.log(event)`,
+    `${imports} function pattern() { return /a/gu }`,
     `${imports} const state = { count: 0 }\nfunction current() { return state.count }`,
     `${imports} function readClock() { return Date.now() }\nfunction now() { return pipe(0, readClock) }`,
     `${imports} function jitter() { return Opt.map(Opt.some(1), (n) => n + Math.random()) }`,

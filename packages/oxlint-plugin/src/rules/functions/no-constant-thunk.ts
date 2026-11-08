@@ -141,7 +141,8 @@ function isConstantProperty(property: ESTree.ObjectPropertyKind, env: Constness)
 function isConstant(node: ESTree.Node, env: Constness): boolean {
   return Match.value(node).pipe(
     Match.discriminators('type')({
-      Literal: Fn.constTrue,
+      // A regex literal is a fresh `RegExp` per call; a shared one keeps `lastIndex` between `/g` matches.
+      Literal: (literal) => !('regex' in literal),
       ArrowFunctionExpression: Fn.constTrue,
       FunctionExpression: Fn.constTrue,
       Identifier: (identifier) => isConstantIdentifier(identifier, env),
