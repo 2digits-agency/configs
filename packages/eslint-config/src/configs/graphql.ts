@@ -20,7 +20,7 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<Array<Typ
 
   const { rules: flatRecommended } = flatOperationsRecommended;
 
-  let rules = {} as typeof flatRecommended;
+  let rules: Partial<typeof flatRecommended> = {};
 
   if (gqlSchema) {
     rules = flatRecommended;
@@ -54,6 +54,8 @@ export async function graphql(options: OptionsWithFiles = {}): Promise<Array<Typ
       rules: {
         ...recommended,
 
+        // The generated option type has a string index signature that rejects `allowLeadingUnderscore`.
+        // eslint-disable-next-line ts/consistent-type-assertions
         'gql/naming-convention': ['error', { allowLeadingUnderscore: true } as never],
 
         ...overrides,

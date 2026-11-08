@@ -6,6 +6,8 @@ import { version } from '../package.json';
 import { recommended } from './configs/recommended';
 import { rules } from './rules';
 
+const pluginPlaceholder: FlatConfig.Plugin = {};
+
 const plugin = {
   meta: {
     name: '@2digits',
@@ -14,7 +16,7 @@ const plugin = {
   rules,
   configs: {
     recommended: {
-      plugins: { '@2digits': {} as FlatConfig.Plugin },
+      plugins: { '@2digits': pluginPlaceholder },
       rules: recommended.rules,
     },
   },

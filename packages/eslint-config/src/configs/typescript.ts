@@ -43,6 +43,10 @@ export async function typescript(options: OptionsTypeScriptWithTypes = {}): Prom
         'ts/array-type': ['error', { default: 'generic', readonly: 'generic' }],
         'ts/restrict-template-expressions': ['error', { allowNumber: true }],
         'ts/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
+        'ts/consistent-type-assertions': [
+          'error',
+          { assertionStyle: 'as', objectLiteralTypeAssertions: 'never', arrayLiteralTypeAssertions: 'never' },
+        ],
         'ts/consistent-type-exports': ['error'],
         'ts/consistent-type-imports': [
           'error',

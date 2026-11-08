@@ -20,11 +20,14 @@ function createCtx(gitEmail: string) {
 
   const shell = vi.fn<() => { text: () => Promise<string> }>().mockReturnValue({ text });
 
-  return {
+  const ctx = {
     directory: '/tmp/project',
     worktree: '/tmp/project',
     $: shell,
-  } as never;
+  };
+
+  // Partial fake: buildConfig only reads these fields.
+  return ctx as never;
 }
 
 describe(buildConfig, () => {

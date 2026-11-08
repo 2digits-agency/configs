@@ -48,11 +48,7 @@ function enabled<T extends SharedOptions>(options: T | boolean | undefined, defa
 }
 
 function extractConfig<T>(options: SharedOptions<T> | undefined | boolean): T {
-  if (typeof options === 'boolean' || options === undefined) {
-    return {} as T;
-  }
-
-  const { enable: _, ...rest } = options;
+  const { enable: _, ...rest } = typeof options === 'object' ? options : { enable: false };
 
   return rest as T;
 }

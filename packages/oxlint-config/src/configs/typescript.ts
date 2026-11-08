@@ -26,7 +26,10 @@ export function typescript(options: OptionsOverrides = {}): Array<FlatConfigItem
         'typescript/consistent-generic-constructors': ['error', 'constructor'],
         'typescript/consistent-indexed-object-style': ['error', 'record'],
         'typescript/consistent-return': 'off',
-        'typescript/consistent-type-assertions': ['error', { assertionStyle: 'as' }],
+        'typescript/consistent-type-assertions': [
+          'error',
+          { assertionStyle: 'as', objectLiteralTypeAssertions: 'never', arrayLiteralTypeAssertions: 'never' },
+        ],
         'typescript/consistent-type-definitions': ['error', 'interface'],
         'typescript/consistent-type-exports': ['error'],
         'typescript/consistent-type-imports': [
