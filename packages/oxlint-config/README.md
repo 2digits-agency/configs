@@ -20,6 +20,42 @@ export default twoDigits(
 );
 ```
 
+## React web checks
+
+Enable the web profile explicitly with `twoDigits({ react: { web: true } })`. These additional web checks stay off by
+default for React Native projects; installing `react-dom` does not enable the web profile automatically.
+
+The profile enables 15 native `jsx-a11y` rules covering ARIA validity, required role properties, keyboard interaction,
+focus, image alt text, associated labels, document language and iframe titles. It also enables
+`react/no-unknown-property`, with only `cmdk-input-wrapper` allowed for the cmdk wrapper convention.
+All new checks are errors; the existing `denyWarnings: true` policy is unchanged. No React Doctor dependency is added.
+
+Web checks inherit `react.files` (TypeScript and TSX by default). Use `react.web.files` to select only web files in a
+mixed web/native repository, and `react.web.overrides` to tune web rules:
+
+```ts
+export default twoDigits(
+  {
+    react: {
+      web: {
+        files: ['apps/web/**/*.{ts,tsx}', 'packages/web-ui/**/*.{ts,tsx}'],
+        overrides: { 'jsx-a11y/label-has-associated-control': ['error', { controlComponents: ['Input'] }] },
+      },
+    },
+  },
+  { settings: { 'jsx-a11y': { components: { Label: 'label', Input: 'input' } } } },
+);
+```
+
+Map only components whose props actually follow the corresponding HTML contract. Consumer flat configs still apply
+last. `react.overrides` controls the general React rules; use `react.web.overrides` for the web profile's rules.
+
+The general React preset also rejects nested component definitions with `react/no-unstable-nested-components`.
+`allowAsProps: true` preserves translation callbacks and render props; inline component props are deliberately not
+rejected by this rule. The existing React Compiler checks, including `react/static-components`, remain enabled.
+
+## Shared defaults
+
 The default preset enables `2digits/padding-line-between-statements`: statements require a blank line between them,
 including variable declarations, control flow, and returns. Consecutive imports may stay grouped; existing import
 group spacing is preserved. Run Oxlint with `--fix` to insert missing blank lines.
