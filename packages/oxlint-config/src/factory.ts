@@ -20,8 +20,8 @@ import type {
   ConfigInput,
   FlatConfigItem,
   OptionsOverrides,
-  OptionsWithFiles,
   OptionsWithIgnores,
+  OptionsWithReact,
   OptionsWithVitest,
   OxlintConfig,
 } from './types';
@@ -34,7 +34,7 @@ interface Oxlint2DigitsOptions {
   ignores?: OptionsWithIgnores;
   js?: OptionsOverrides;
   ts?: SharedOptions<OptionsOverrides> | boolean;
-  react?: SharedOptions<OptionsWithFiles> | boolean;
+  react?: SharedOptions<OptionsWithReact> | boolean;
   vitest?: SharedOptions<OptionsWithVitest> | boolean;
   zod?: SharedOptions<OptionsOverrides> | boolean;
 }
