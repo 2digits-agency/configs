@@ -16,6 +16,8 @@ export function unicorn(): Array<TypedFlatConfigItem> {
 
         'unicorn/consistent-boolean-name': 'off',
         'unicorn/consistent-conditional-object-spread': 'off',
+        // Hoisting closures creates the one-off top-level helpers that `2digits/no-single-use-private-function` reports.
+        'unicorn/consistent-function-scoping': 'off',
         'unicorn/filename-case': 'off',
         'unicorn/max-nested-calls': 'off',
         'unicorn/name-replacements': 'off',

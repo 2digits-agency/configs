@@ -105,10 +105,6 @@ function isImmediatelyInvoked(node: ESTree.CallExpression): boolean {
   return parent.type === 'CallExpression' && parent.callee === current;
 }
 
-function isSchemaCall(node: ESTree.Expression, state: FileState): boolean {
-  return node.type === 'CallExpression' && canonicalPath(node.callee, state)?.[0] === 'Schema';
-}
-
 function isMutationTarget(node: ESTree.Node): boolean {
   let current = node;
 
@@ -239,7 +235,7 @@ export const noInlineSchemaCompile: Rule = defineEffectRule(
 
       const schema = unwrapExpression(argument);
 
-      const inlineSchema = isSchemaCall(schema, state);
+      const inlineSchema = schema.type === 'CallExpression' && canonicalPath(schema.callee, state)?.[0] === 'Schema';
 
       if (
         (!inlineSchema && schema.type !== 'Identifier' && schema.type !== 'MemberExpression') ||

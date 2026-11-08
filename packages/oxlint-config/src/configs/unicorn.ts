@@ -10,7 +10,8 @@ export function unicorn(): Array<FlatConfigItem> {
         'unicorn/consistent-date-clone': 'error',
         'unicorn/consistent-empty-array-spread': 'error',
         'unicorn/consistent-existence-index-check': 'error',
-        'unicorn/consistent-function-scoping': 'error',
+        // Hoisting closures creates the one-off top-level helpers that `2digits/no-single-use-private-function` reports.
+        'unicorn/consistent-function-scoping': 'off',
         'unicorn/consistent-template-literal-escape': 'error',
         'unicorn/custom-error-definition': undefined,
         'unicorn/empty-brace-spaces': 'error',

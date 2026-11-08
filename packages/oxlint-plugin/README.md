@@ -234,6 +234,29 @@ the literal `Effect`/`Match` identifiers, not aliases or shadowing. Constructor 
 (including aliases), not return type; package/absolute imports are excluded. The switch rules can overlap with the
 existing `prefer-effect-match` diagnostic.
 
+## Wrapper and helper rules
+
+These rules report functions that only add an indirection, so the underlying call or value is used directly:
+
+- `no-trivial-wrapper`: a named function whose body returns one call that receives every parameter unchanged and in
+  order, such as `function isUser(input) { return Schema.is(User)(input) }` or
+  `const logStep = (message) => Effect.logDebug(message)`. With fixed extra arguments, such as
+  `function render(value) { return Match.valueTags(value, cases) }`, it only reports Effect APIs, which have a constant
+  to hoist (`Match.typeTags`, `Schema.is(User)`). Method calls that need their `this`, such as `set.has(value)`, are
+  exempt. Type predicates are exempt unless they wrap an Effect guard on an untyped or `unknown` parameter.
+- `no-forwarding-lambda`: a callback of an Effect API that only forwards its parameters, such as
+  `Effect.map((user) => toDto(user))`. APIs whose callbacks receive more than one argument, such as the index of `Array`, `Record`,
+  `Effect.forEach` and `Stream.map` or the `Exit` of `Effect.acquireRelease`, are exempt, and so are factory calls other than Effect APIs.
+- `no-single-use-private-function`: a non-exported top-level function, or `Effect.fn` constant, that is referenced
+  exactly once and is at most `maxLines` lines long (default `3`). Inline it at its call site. Components, hooks,
+  type predicates and recursive functions are exempt.
+- `no-constant-thunk`: a top-level function without parameters that always returns the same value, such as
+  `function userSchema() { return Schema.Struct({…}) }`. Make it a constant or a static on its class. Fresh object
+  and array literals, returned functions, mutable object properties, calls outside pure Effect modules, and eager
+  calls such as `pipe` or `Option.map` with a local callback are exempt.
+
+`@2digits/oxlint-config` and `@2digits/eslint-config` turn off `unicorn/consistent-function-scoping`, which asks for these helpers to be hoisted.
+
 ## Automatic fixes
 
 ### Statement spacing (opt-in)

@@ -56,7 +56,7 @@ function noUnnecessaryUseCallbackImpl(context: RuleContext, { ast, is }: RuleToo
         return;
       }
 
-      if (!isEmptyDependencyArray(deps)) {
+      if (deps.type !== AST_NODE_TYPES.ArrayExpression || deps.elements.length > 0) {
         reportIfPresent(context, effectReport);
 
         return;
@@ -144,10 +144,6 @@ function getScopes(scope: Scope): Array<Scope> {
   }
 
   return scopes;
-}
-
-function isEmptyDependencyArray(node: TSESTree.CallExpressionArgument): boolean {
-  return node.type === AST_NODE_TYPES.ArrayExpression && node.elements.length === 0;
 }
 
 function isFunction(

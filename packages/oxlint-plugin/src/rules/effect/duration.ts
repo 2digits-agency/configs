@@ -82,10 +82,6 @@ export function durationArgument(
 
 type Arithmetic = (left: number, right: number) => number;
 
-function power(base: number, exponent: number): number {
-  return base ** exponent;
-}
-
 const arithmetic = Match.type<ESTree.BinaryExpression['operator']>().pipe(
   Match.withReturnType<Arithmetic | undefined>(),
   Match.when('*', () => Num.multiply),
@@ -93,7 +89,7 @@ const arithmetic = Match.type<ESTree.BinaryExpression['operator']>().pipe(
   Match.when('-', () => Num.subtract),
   Match.when('/', () => Num.divideUnsafe),
   Match.when('%', () => Num.remainder),
-  Match.when('**', () => power),
+  Match.when('**', () => (base: number, exponent: number) => base ** exponent),
   Match.orElse(Fn.constUndefined),
 );
 
