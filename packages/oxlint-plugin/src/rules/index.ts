@@ -66,6 +66,8 @@ import { throwInEffectGen } from './effect/throw-in-effect-gen';
 import { noUtcIsoSlicing } from './no-utc-iso-slicing';
 import { paddingLineBetweenStatements } from './padding-line-between-statements';
 import { noBrowserApiInRender } from './react/no-browser-api-in-render';
+import { noExportAllInClient } from './react/no-export-all-in-client';
+import { validDirective } from './react/valid-directive';
 
 export const rules = {
   'alchemy-domain-block-file-name': alchemyDomainBlockFileName,
@@ -96,6 +98,7 @@ export const rules = {
   'no-effect-as-on-log': noEffectAsOnLog,
   'no-empty-effect-callback': noEmptyEffectCallback,
   'no-empty-schema-struct': noEmptySchemaStruct,
+  'no-export-all-in-client': noExportAllInClient,
   'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,
   'no-function-config-default': noFunctionConfigDefault,
   'no-hash-as-identity': noHashAsIdentity,
@@ -136,4 +139,5 @@ export const rules = {
   'require-schema-class-brand': requireSchemaClassBrand,
   'require-try-promise-abort-signal': requireTryPromiseAbortSignal,
   'throw-in-effect-gen': throwInEffectGen,
+  'valid-directive': validDirective,
 } as const;
