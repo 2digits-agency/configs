@@ -6,6 +6,7 @@ import * as P from 'effect/Predicate';
 import {
   argumentAt,
   defineSyntaxRule,
+  plainProperty,
   propertyName,
   resolveVariable,
   ruleMeta,
@@ -72,8 +73,10 @@ function directProperties(node: ESTree.Expression | undefined): Array<ESTree.Obj
 
   const properties: Array<ESTree.ObjectProperty> = [];
 
-  for (const property of node.properties) {
-    if (property.type !== 'Property' || property.computed || property.method || property.kind !== 'init') {
+  for (const member of node.properties) {
+    const property = plainProperty(member);
+
+    if (property === undefined) {
       return undefined;
     }
 

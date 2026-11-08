@@ -6,6 +6,7 @@ import * as Struct from 'effect/Struct';
 
 import {
   defineEffectRule,
+  isConstDeclaration,
   resolveVariable,
   ruleMeta,
   soleDefinition,
@@ -168,8 +169,7 @@ function durationAnnotation(annotation: ESTree.Node, context: Context, state: Fi
 
 function numericDeclarator(node: ESTree.VariableDeclarator): node is NumericDeclarator {
   return (
-    node.parent.type === 'VariableDeclaration' &&
-    node.parent.kind === 'const' &&
+    isConstDeclaration(node.parent) &&
     node.id.type === 'Identifier' &&
     node.init !== null &&
     numericValue(node.init) !== undefined

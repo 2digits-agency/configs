@@ -306,6 +306,11 @@ function getReportLoc(node: ESTree.Node, sourceCode: SourceCode): Location {
   return { start: node.loc.start, end: { line, column: sourceLine.length } };
 }
 
+const isUsingDeclaration = Match.type<ESTree.Node>().pipe(
+  Match.when({ type: 'VariableDeclaration', kind: Match.is('using', 'await using') }, Fn.constTrue),
+  Match.orElse(Fn.constFalse),
+);
+
 const multilineStatementTypes: Record<MultilineStatementType, NodeTest> = {
   'block-like': isBlockLikeStatement,
   expression: (node, sourceCode) => node.type === 'ExpressionStatement' && !isDirectivePrologue(node, sourceCode),
@@ -314,7 +319,7 @@ const multilineStatementTypes: Record<MultilineStatementType, NodeTest> = {
   var: keywordTester('VariableDeclaration', 'var'),
   let: keywordTester('VariableDeclaration', 'let'),
   const: keywordTester('VariableDeclaration', 'const'),
-  using: (node) => node.type === 'VariableDeclaration' && (node.kind === 'using' || node.kind === 'await using'),
+  using: isUsingDeclaration,
   type: keywordTester('TSTypeAliasDeclaration', 'type'),
 };
 

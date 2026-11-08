@@ -7,6 +7,7 @@ import {
   argumentAt,
   defineEffectRule,
   isApi,
+  isConstDeclaration,
   isFunctionNode,
   resolveVariable,
   ruleMeta,
@@ -32,8 +33,7 @@ function resolveConst(node: ESTree.Expression, context: Context): ESTree.Express
       seen.has(variable) ||
       declaration?.type !== 'VariableDeclarator' ||
       declaration.id.type !== 'Identifier' ||
-      definition?.parent?.type !== 'VariableDeclaration' ||
-      definition.parent.kind !== 'const' ||
+      !isConstDeclaration(definition?.parent) ||
       !declaration.init ||
       Arr.some(variable.references, (reference) => reference.isWrite() && !reference.init)
     ) {

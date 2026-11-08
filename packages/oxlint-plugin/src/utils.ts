@@ -273,6 +273,24 @@ export function isFunctionNode(node: ESTree.Node | undefined): node is FunctionN
   return functionNodeMatcher(node);
 }
 
+export const isConstDeclaration = Match.type<ESTree.Node | null | undefined>().pipe(
+  Match.when({ type: 'VariableDeclaration', kind: 'const' }, Fn.constTrue),
+  Match.orElse(Fn.constFalse),
+);
+
+/**
+ * A `key: value` or shorthand property, or `undefined` for spreads, methods, accessors and computed keys.
+ *
+ * @param property Object literal member.
+ */
+export const plainProperty = Match.type<ESTree.ObjectExpression['properties'][number]>().pipe(
+  Match.when(
+    { type: 'Property', computed: false, method: false, kind: 'init' },
+    (property): ESTree.ObjectProperty => property,
+  ),
+  Match.orElse(Fn.constUndefined),
+);
+
 export function argumentAt(
   node: ESTree.CallExpression | ESTree.NewExpression,
   index: number,
