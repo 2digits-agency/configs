@@ -5,6 +5,8 @@ import { rules } from './rules';
 
 export { rules } from './rules';
 
+export type { NoManualTagComparisonOptions } from './rules/effect/no-manual-tag-comparison';
+
 export type { PaddingLineOption } from './rules/padding-line-between-statements';
 
 export type RuleName = keyof typeof rules;

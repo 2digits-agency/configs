@@ -221,12 +221,15 @@ or unwrapping a thunk could change side effects or an intentional function value
 Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/main/src/effect/rules):
 
 - `no-manual-effect-error-tag`: prefer tagged handlers for `_tag` comparisons/switches in broad Effect catches.
-- `no-manual-tag-comparison`: prefer Match/Predicate for literal `_tag` comparisons and switches outside those catches.
+- `no-manual-tag-comparison`: prefer Match/Predicate for literal `_tag` comparisons and switches outside those catches,
+  plus `kind`, `status` or the discriminants configured with the `discriminants` option. See
+  [Effect Match](#effect-match).
 - `no-manual-tagged-construction`: prefer existing constructors over literal string `_tag` objects; direct
   `Match.when`/`Match.not` pattern objects are exempt.
 - `no-service-constructor-imports`: reject relative named `make[A-Z]` imports outside `.test`/`.spec` files.
 - `prefer-effect-match`: also reports chained literal ternaries comparing the same source expression, while retaining
-  the existing Effect-file switch diagnostic.
+  the existing Effect-file switch diagnostic. In Effect files it also reports `else if` chains; see
+  [Effect Match](#effect-match).
 
 All are included in `recommendedRules`, without autofixes. Like upstream, these are syntactic policies: they do not
 require Effect imports, infer tagged types, or prove that constructors exist. Catch and pattern exemptions recognize
@@ -256,6 +259,43 @@ These rules report functions that only add an indirection, so the underlying cal
   calls such as `pipe` or `Option.map` with a local callback are exempt.
 
 `@2digits/oxlint-config` and `@2digits/eslint-config` turn off `unicorn/consistent-function-scoping`, which asks for these helpers to be hoisted.
+
+## Effect Match
+
+These rules push branching on discriminants and Effect data types into `Match` and the data types' own `match`. None
+have autofixes.
+
+- `prefer-effect-match` reports, in files that import Effect, an `if`/`else if` chain of two or more tests that each
+  compare the same expression against a literal, such as `order.disposition === 'ship'` followed by
+  `else if (order.disposition === 'hold')`. Any other test in the chain, or a nested `if` inside a plain `else` block,
+  ends the match.
+- `no-manual-tag-comparison` always checks `_tag`, plus the `kind` and `status` discriminants by default. Configured
+  discriminants replace that default list, so a project can add its own names or drop `kind`/`status` where they are
+  plain fields, such as ESTree's `VariableDeclaration.kind`. Comparisons and switches on them are reported everywhere,
+  including broad Effect catch handlers, because `Effect.catchTag` only covers `_tag`. The exported
+  `NoManualTagComparisonOptions` type describes the option:
+
+  ```ts
+  export default {
+    rules: {
+      '2digits/no-manual-tag-comparison': [
+        'error',
+        { discriminants: ['kind', 'status', 'disposition', 'productKind'] },
+      ],
+    },
+  };
+  ```
+
+- `prefer-hoisted-match` reports a function with one parameter whose whole body builds a value matcher for that
+  parameter: `Match.value(x).pipe(…)`, `pipe(Match.value(x), …)`, `Match.valueTags(x, cases)` or
+  `Match.valueTags(cases)(x)`. Hoist a `Match.type<…>().pipe(…)` or `Match.typeTags<…>()({…})` constant instead; case
+  handlers already receive the narrowed value. For `Match.valueTags`, a named function whose cases do not reference the
+  parameter is left to `no-trivial-wrapper`, so only callbacks, anonymous functions and cases that read the parameter are
+  reported here. Functions with more parameters, type parameters, `this`, `async` or generator bodies are skipped.
+- `prefer-data-match` reports a ternary on `Exit.isSuccess`/`isFailure`, `Result.isSuccess`/`isFailure` or
+  `Option.isSome`/`isNone` (also negated), and an `if` on them whose branch and `else` (or the `return` right after it)
+  both return a value. Use `Exit.match`, `Result.match` or `Option.match`. Branches that `yield` or `await` are skipped,
+  because a match handler cannot hold them.
 
 ## Automatic fixes
 

@@ -8,7 +8,6 @@ import {
   type RuleMeta,
   type Scope,
   type Variable,
-  type Visitor,
   type VisitorWithHooks,
 } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
@@ -101,7 +100,7 @@ function collectState(program: ESTree.Program): FileState {
   return FileState.make({ bindings, hasEffectImport });
 }
 
-export function defineSyntaxRule(meta: RuleMeta, create: (context: Context) => Visitor): Rule {
+export function defineSyntaxRule(meta: RuleMeta, create: (context: Context) => VisitorWithHooks): Rule {
   return defineRule({
     meta,
     createOnce: create,

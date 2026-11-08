@@ -1,7 +1,12 @@
 import type { Rule } from '@oxlint/plugins';
 
 import { defineSyntaxRule, ruleMeta } from '../../utils';
-import { isInsideBroadEffectHandler, isReasonTagMember, isTagMember, tagMemberFromComparison } from './tagged-values';
+import {
+  discriminantFromComparison,
+  isDiscriminantMember,
+  isInsideBroadEffectHandler,
+  isReasonTagMember,
+} from './tagged-values';
 
 /**
  * Prefer tagged handlers to literal tag branching in broad Effect catch callbacks.
@@ -19,7 +24,7 @@ export const noManualEffectErrorTag: Rule = defineSyntaxRule(
   ),
   (context) => ({
     BinaryExpression(node) {
-      const tag = tagMemberFromComparison(node);
+      const tag = discriminantFromComparison(node);
 
       if (tag === undefined || !isInsideBroadEffectHandler(node)) {
         return;
@@ -28,7 +33,7 @@ export const noManualEffectErrorTag: Rule = defineSyntaxRule(
       context.report({ node, messageId: isReasonTagMember(tag) ? 'reason' : 'tag' });
     },
     SwitchStatement(node) {
-      if (!isTagMember(node.discriminant) || !isInsideBroadEffectHandler(node)) {
+      if (!isDiscriminantMember(node.discriminant) || !isInsideBroadEffectHandler(node)) {
         return;
       }
 

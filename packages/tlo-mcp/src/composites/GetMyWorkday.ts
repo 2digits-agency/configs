@@ -1,6 +1,7 @@
 import * as Arr from 'effect/Array';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
+import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as Order from 'effect/Order';
 import * as Schema from 'effect/Schema';
@@ -206,23 +207,24 @@ function workdayDay(
         (filter.taskId === undefined || entry.taskId === filter.taskId) &&
         (filter.kind === undefined || entry.kind === filter.kind),
     ),
-    unconfirmedPlanned: Arr.flatMap(day.entries, (entry) => {
-      if (entry.kind !== 'planned') {
-        return [];
-      }
-
-      const planning = Arr.findFirst(planned, ({ id }) => id === entry.id);
-
-      return [
-        UnconfirmedPlanned.make({
-          ...Struct.pick(entry, ['id', 'start', 'minutes', 'work', 'taskId']),
-          ...Opt.match(planning, {
-            onNone: () => ({}),
-            onSome: (plan) => ({ planningKind: plan.kind, ...Struct.pick(plan, ['seriesId']) }),
+    unconfirmedPlanned: Arr.flatMap(
+      day.entries,
+      Match.type<TimeEntry>().pipe(
+        Match.when({ kind: 'planned' }, (entry) => [
+          UnconfirmedPlanned.make({
+            ...Struct.pick(entry, ['id', 'start', 'minutes', 'work', 'taskId']),
+            ...Opt.match(
+              Arr.findFirst(planned, ({ id }) => id === entry.id),
+              {
+                onNone: () => ({}),
+                onSome: (plan) => ({ planningKind: plan.kind, ...Struct.pick(plan, ['seriesId']) }),
+              },
+            ),
           }),
-        }),
-      ];
-    }),
+        ]),
+        Match.orElse(() => []),
+      ),
+    ),
     // Partial absences still cover their time slot.
     gaps: dayOff ? [] : gapsOf(spans),
     overlaps: overlapsOf(spans),

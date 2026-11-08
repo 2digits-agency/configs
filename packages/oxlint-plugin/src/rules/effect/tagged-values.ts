@@ -38,35 +38,46 @@ const isMatchPatternCallee = Match.type<ESTree.Expression>().pipe(
   Match.orElse(Fn.constFalse),
 );
 
-/**
- * Recognize static `_tag` access, including bracket notation.
- *
- * @param node - Candidate syntax node.
- */
-export const isTagMember = Match.type<ESTree.Node>().pipe(
-  Match.when(
-    { type: 'MemberExpression', computed: false, property: { type: 'Identifier', name: '_tag' } },
-    Fn.constTrue,
-  ),
-  Match.when({ type: 'MemberExpression', computed: true, property: { type: 'Literal', value: '_tag' } }, Fn.constTrue),
-  Match.orElse(Fn.constFalse),
-) as (node: ESTree.Node) => node is ESTree.MemberExpression;
+const tagDiscriminant: ReadonlySet<string> = new Set(['_tag']);
 
 /**
- * Return the tag member in a literal equality or inequality comparison.
+ * Recognize static access to a discriminant such as `_tag`, including bracket notation.
+ *
+ * @param node - Candidate syntax node.
+ * @param discriminants - Accepted property names.
+ */
+export function isDiscriminantMember(
+  node: ESTree.Node,
+  discriminants: ReadonlySet<string> = tagDiscriminant,
+): node is ESTree.MemberExpression {
+  if (node.type !== 'MemberExpression') {
+    return false;
+  }
+
+  const name = staticPropertyName(node);
+
+  return name !== undefined && discriminants.has(name);
+}
+
+/**
+ * Return the discriminant member in a literal equality or inequality comparison.
  *
  * @param node - Comparison to inspect.
+ * @param discriminants - Accepted property names.
  */
-export function tagMemberFromComparison(node: ESTree.BinaryExpression): ESTree.MemberExpression | undefined {
+export function discriminantFromComparison(
+  node: ESTree.BinaryExpression,
+  discriminants: ReadonlySet<string> = tagDiscriminant,
+): ESTree.MemberExpression | undefined {
   if (!isEqualityOperator(node.operator)) {
     return undefined;
   }
 
-  if (isTagMember(node.left) && isStringLiteral(node.right)) {
+  if (isDiscriminantMember(node.left, discriminants) && isStringLiteral(node.right)) {
     return node.left;
   }
 
-  if (isTagMember(node.right) && isStringLiteral(node.left)) {
+  if (isDiscriminantMember(node.right, discriminants) && isStringLiteral(node.left)) {
     return node.right;
   }
 

@@ -15,4 +15,9 @@ export default twoDigits(
       reportUnusedDisableDirectives: 'allow',
     },
   },
+  {
+    // ESTree's `kind` is a plain node field (`const`, `init`), not a union to Match on.
+    files: ['packages/oxlint-plugin/src/**'],
+    rules: { '2digits/no-manual-tag-comparison': ['error', { discriminants: ['status'] }] },
+  },
 );
