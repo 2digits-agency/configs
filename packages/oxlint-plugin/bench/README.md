@@ -105,12 +105,46 @@ comparisons exceed 50%, with the three added rules using the same runtime bridge
 | Total plugin runtime, repeat   | 4,597.644 ms | 2,232.335 ms |    51.45% |
 | Instrumented wall time, repeat | 5,604.983 ms | 3,178.925 ms |    43.28% |
 
-`result.json` retains every rule's medians and callback counts, all seven raw samples per build from the repeat,
-bundle hashes, the first comparison and unchanged-build control summaries, and the preceding 88-rule totals.
+The report below supersedes this 91-rule result; `result.json` retains these totals alongside the preceding
+88-rule totals.
 Both expanded comparisons have identical complete diagnostics before and after fixing and identical fixed-file
 contents. All 91 metadata objects also match. The fixed tree SHA-256 is
 `2cbaff96d48add32e13f04c502a78fbe194d518d4c18cfd6a0f7b8d9ef56cf38`.
 The new main autofixes are part of this baseline rather than being compared against the obsolete fixed output.
+
+## Verified 96-rule result including HTTP rules
+
+Main `d55de32d3a7a155473a78669a024a9a156464b15` includes #2964's five HTTP rules. Freeze that unoptimised revision
+independently in `.cache/benchmark-http`, retaining the earlier freezes. This corpus includes 463 repository files
+and 1,180 spec examples: 1,643 files, all 96 rules, and 1,023 diagnostics. Its SHA-256 is
+`f577ddc0556c3665e8ac36644c4fdf6435578c7b6f20b55802df81ba7be0e2da`.
+
+```sh
+OXLINT_BENCH_DIR=.cache/benchmark-http vpr bench freeze
+# After applying the candidate and rebuilding:
+OXLINT_BENCH_DIR=.cache/benchmark-http vpr bench
+```
+
+The unchanged-build control measured 4,817.915 ms versus 4,766.953 ms (1.1% variation). Merely migrating the five
+new rules to the shared runtime reached 48.99%, below the target. Cookie member filtering and Domain name checks
+reduced unnecessary scope lookups, but the Domain checkpoint's repeat still reached only 48.29%. Skipping scope
+resolution for non-Schema compilers and comparing object property fields directly reached 49.86% in the lint-clean
+checkpoint. Resolving Array/Set scopes only for possible deduplication expressions then produced the final result:
+
+| Measurement                    |     Baseline |    Candidate | Reduction |
+| ------------------------------ | -----------: | -----------: | --------: |
+| Total plugin runtime           | 4,940.674 ms | 2,321.861 ms |    53.01% |
+| Total plugin runtime, repeat   | 5,013.171 ms | 2,441.039 ms |    51.31% |
+| Instrumented wall time, repeat | 6,115.523 ms | 3,448.160 ms |    43.62% |
+
+`result.json` records all 96 per-rule medians and callback counts, seven raw samples per build from the repeat,
+bundle hashes, both final comparisons, all intermediate checkpoint summaries (including those below 50%), and the
+unchanged-build control. It preserves the preceding 91- and 88-rule totals. Both final comparisons have identical
+complete diagnostics before and after fixing and identical fixed-file contents. All 96 metadata objects, rule names,
+recommended rules and recommended/all configuration rule maps also match the new baseline. Twenty-seven additional
+public-CLI probes cover computed cookie reads, writes, configured globals, parser passthrough, local shadowing,
+Domain aliases, Array/Set arity boundaries and accessor callbacks.
+The fixed tree SHA-256 is `487bf557b104ac45f5ffc175391d7e4bcaaf0e4288529f95cb383892cf1a6518`.
 
 These are measured medians on this corpus, not a guarantee of a 50% reduction on every application, rule, or run.
 The existing test assertions remain unchanged. Shared optimisations preserve Effect-based rule authoring while reusing each
@@ -118,7 +152,7 @@ file's service context and import analysis. Rule-specific changes avoid impossib
 traversal, logging ancestor walks for non-loggers, inline-schema analysis for non-compilers, and shared Domain-block
 collection outside host files.
 
-The three-process padding CLI integration test has a 15-second deadline instead of the default five seconds. The
-original baseline checkpoint already exceeded five seconds in CI, and a one-core contention reproduction also timed
-out at five seconds but completed with every assertion intact under the new deadline. This is a bounded allowance
-for cold process startup, not the performance measurement; the benchmark and production bundle are unchanged.
+The three-process padding CLI integration test now inherits main's 30-second deadline from #2964, superseding this
+branch's earlier 15-second deadline. The original baseline checkpoint already exceeded the default five seconds in
+CI, and a one-core contention reproduction timed out at five seconds but passed every assertion with 15 seconds.
+The test is now identical to main; this startup allowance is separate from the performance measurement.
