@@ -1,4 +1,4 @@
-import { RuleContext, type ESTree } from 'effect-oxlint';
+import { RuleContext, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
@@ -8,6 +8,7 @@ import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
 
 import { moduleExportName, staticPath } from './ast';
+import { isImportedApiIn } from './scope';
 
 const ModulePath = Schema.Array(Schema.String);
 
@@ -134,6 +135,41 @@ function collectImportBindings(program: ESTree.Program): ImportBindings {
     ),
     hasEffectImport: Arr.some(declarations, (declaration) => isEffectSource(declaration.source.value)),
   });
+}
+
+/**
+ * The export of a non-Effect module, such as `node:os`, that a call's callee names: `homedir` for `homedir()` after
+ * `import { homedir } from 'node:os'`, or for `os.homedir()` after a default or namespace import. Shadowed names are
+ * none.
+ *
+ * @param sourceCode Source of the file.
+ * @param callee Callee to resolve.
+ * @param sources Module specifiers, such as `['os', 'node:os']`.
+ */
+export function moduleImportMember(
+  sourceCode: OxlintSourceCode,
+  callee: ESTree.Node,
+  sources: ReadonlyArray<string>,
+): Opt.Option<string> {
+  const specifiers = Arr.flatMap(sourceCode.ast.body, (statement) =>
+    statement.type === 'ImportDeclaration' && Arr.contains(sources, statement.source.value) ? statement.specifiers : [],
+  );
+
+  const member = Opt.flatMap(staticPath(callee), ([root, ...rest]) =>
+    Opt.flatMap(
+      Arr.findFirst(specifiers, ({ local }) => local.name === root),
+      (specifier): Opt.Option<string> =>
+        specifier.type === 'ImportSpecifier'
+          ? Arr.isReadonlyArrayEmpty(rest)
+            ? Opt.some(moduleExportName(specifier.imported))
+            : Opt.none()
+          : rest.length === 1
+            ? Arr.head(rest)
+            : Opt.none(),
+    ),
+  );
+
+  return Opt.filter(member, () => isImportedApiIn(sourceCode, callee));
 }
 
 /**
