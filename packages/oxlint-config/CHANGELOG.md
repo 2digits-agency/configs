@@ -1,3 +1,22 @@
+## @2digits/oxlint-config@3.3.0
+
+### Report more manual branching that Effect Match handles
+
+- `prefer-effect-match` now also reports `if`/`else if` chains in Effect files that compare the same expression against literals in two or more tests.
+- `no-manual-tag-comparison` now also reports literal comparisons and switches on `kind` and `status`. Set the `discriminants` option, such as `{ discriminants: ['kind', 'status', 'disposition'] }`, to replace that list; `_tag` is always checked. `@2digits/oxlint-config` types the option as `NoManualTagComparisonOptions`.
+- New `prefer-hoisted-match` reports functions whose whole body is `Match.value(param).pipe(…)` or `Match.valueTags(param, …)` on their own parameter. Hoist a `Match.type` or `Match.typeTags` matcher instead.
+- New `prefer-data-match` reports ternaries and `if` statements on `Exit`, `Result` or `Option` guards that produce a value in both branches. Use `Exit.match`, `Result.match` or `Option.match` instead.
+
+### Report trivial wrappers and one-off helpers
+
+- Added `no-trivial-wrapper`, `no-forwarding-lambda`, `no-single-use-private-function` and `no-constant-thunk` to `recommendedRules`. They report functions that only forward their parameters to another call, Effect callbacks such as `Effect.map((x) => f(x))`, short private helpers used once, and parameterless functions that always return the same value.
+- `@2digits/oxlint-config` and `@2digits/eslint-config` no longer enable `unicorn/consistent-function-scoping`, which asked for the helpers these rules report.
+
+### Report unused JSX expressions
+
+- `no-unused-expressions` (`ts/no-unused-expressions` in ESLint) now sets `enforceForJSX: true`, so JSX that is built
+  but never returned or used, such as a component body without `return`, is reported.
+
 ## @2digits/oxlint-config@3.2.0
 
 ### Add native React web accessibility checks
