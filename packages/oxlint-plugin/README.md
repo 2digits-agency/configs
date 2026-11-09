@@ -32,8 +32,10 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Syntax-safe Effect diagnostics proposed in open `Effect-TS/tsgo` issues: the remaining `cors-*`, `dual-*`,
   `no-*`, `prefer-*`, `preserve-*`, and `require-*` Effect rules.
 - Effect v4 API guidance for Array, DateTime, Duration, Encoding, FileSystem, Filter, Headers, Match, Path, and Url,
-  plus interruptible `Effect.tryPromise` thunks. HttpMethod, HttpStatus, UrlParams and status range checks are covered
+  plus interruptible `Effect.tryPromise` thunks. Cookies, HttpMethod, HttpStatus, UrlParams and status range checks are covered
   in [Effect HTTP modules](#effect-http-modules).
+- Effect encoding streams and archives: `prefer-effect-sse`, `no-manual-sse`, and `prefer-effect-archive`. See
+  [Server-Sent Events and archives](#server-sent-events-and-archives).
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
   and no root-barrel module imports. `@effect/vitest` and lowercase unstable barrels are intentionally exempt.
 - Alchemy v2 practices: every other `alchemy-*` rule.
@@ -280,7 +282,6 @@ have no autofixes.
   `HttpServerResponse` constructors, which take `HttpStatus.fromLiteral('Unauthorized')`. Plain objects, comparisons and
   test fakes are not checked. It is recommended at `warn` rather than `error`, because it only names numbers every
   reader knows.
-
 - `prefer-effect-cookies` reports cookie logic written by hand: reading or writing `document.cookie`; splitting or
   matching raw cookie text (`request.headers.cookie.split('; ')`, `headers.get('cookie')?.split(';')`,
   `/token=([^;]*)/.exec(cookieHeader)`); building a cookie with interpolated attributes
@@ -291,6 +292,30 @@ have no autofixes.
   a `get('cookie')` or `get('set-cookie')` header read or a binding or member whose name contains `cookie`. Plain
   Set-Cookie strings are fixtures or expected wire values and are allowed, as are header names in lists and sets and
   Set-Cookie values forwarded unchanged, which `Cookies` would normalize.
+
+## Server-Sent Events and archives
+
+These rules only run in files that import Effect and report without autofixes. They point at the `Sse`, `Tar` and `Zip`
+modules of `effect/encoding`.
+
+- `prefer-effect-sse` reports runtime imports of Server-Sent Events libraries (`eventsource-parser`, `eventsource`,
+  `eventsource-client`, `@microsoft/fetch-event-source`, `fetch-event-stream`, `better-sse`, `sse.js` and similar) and
+  `new EventSource(…)` on the global. Read event streams with `HttpClient` and `Sse.decode`, `Sse.decodeSchema` or
+  `Sse.makeParser`, and write them with `Sse.encode` or `HttpApiSchema.StreamSse`. `Sse.decode` reports `retry:` as a
+  `Retry` failure, so reconnecting is up to the caller, as with `Stream.retry`.
+- `no-manual-sse` reports string literals, template literals and `+` concatenations that build an event frame: a
+  `data:`, `event:`, `id:` or `retry:` field line in text that ends with the blank line that dispatches it. A
+  hand-written frame splits on a line break inside `data`, and an `id` or `event` that contains one injects fields;
+  `Sse.encoder.write` handles both. It also reports `startsWith('data: ')` (and `event: `, `id: `, `retry: `, as a
+  method or `Str.startsWith`), the usual hand-written parser. Comment frames such as `': ping\n\n'` are allowed
+  because `Sse.encoder` cannot write them, and `startsWith('data:')` without a space is allowed because it also matches
+  data URLs.
+- `prefer-effect-archive` reports runtime imports of tar and zip codecs: `tar-stream`, `nanotar`, `modern-tar`,
+  `tar-js` and `js-untar` (use `Tar`); `jszip`, `adm-zip`, `yauzl`, `yazl`, `unzipper`, `node-stream-zip`,
+  `client-zip`, `zip-stream` and `@zip.js/zip.js` (use `Zip`); `archiver` (either); and the zip exports of `fflate`,
+  whose gzip, zlib and deflate exports have no `Zip` counterpart. `tar`, `tar-fs` and `extract-zip` are left alone:
+  they extract to disk with path-traversal and symlink guards that `Tar` and `Zip` leave to the caller. `Zip` reads and
+  writes only stored and deflated entries, without encryption, and is marked experimental.
 
 ## anti-slop Effect rules
 
