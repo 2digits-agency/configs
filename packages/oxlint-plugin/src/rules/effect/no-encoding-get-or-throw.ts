@@ -77,10 +77,19 @@ function thrownDecode(
         ? Opt.map(Arr.head(node.arguments), (source) => ({ source, steps: Arr.drop(node.arguments, 1) }))
         : Opt.none();
 
+  // Only `Result.map` may run before `getOrThrow`; other steps can recover the EncodingError first.
   return Opt.flatMap(piped, ({ source, steps }) =>
     Opt.zipWith(
       encodingDecoder(source, imports),
-      Arr.head(Arr.flatMap(steps, (step) => Opt.toArray(getOrThrowStep(step, imports)))),
+      Opt.flatMap(
+        Arr.findFirst(
+          steps,
+          (step) =>
+            step.type !== 'CallExpression' ||
+            !imports.isApi(step.callee, 'Result', 'map' satisfies keyof typeof Result),
+        ),
+        (step) => getOrThrowStep(step, imports),
+      ),
       (decoder, method) => ({ decoder, method }),
     ),
   );

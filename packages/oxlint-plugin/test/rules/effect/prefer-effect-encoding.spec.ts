@@ -14,8 +14,7 @@ testRule('prefer-effect-encoding', preferEffectEncoding, {
     import * as Effect from 'effect/Effect'
     const encoded = btoa('hello')
   `,
-  messageId: 'encode',
-  data: { native: 'btoa', replacement: 'Base64.encode' },
+  messageId: 'btoa',
 });
 
 const effectImport = `import * as Effect from 'effect/Effect';`;
@@ -30,11 +29,11 @@ tester.run('prefer-effect-encoding native APIs', preferEffectEncoding, {
   invalid: [
     {
       code: `${effectImport} atob(token);`,
-      errors: [{ messageId: 'decode', data: { native: 'atob', replacement: 'Base64.decodeString' } }],
+      errors: [{ messageId: 'atob' }],
     },
     {
       code: `${effectImport} globalThis.btoa(text);`,
-      errors: [{ messageId: 'encode', data: { native: 'btoa', replacement: 'Base64.encode' } }],
+      errors: [{ messageId: 'btoa' }],
     },
     {
       code: `${effectImport} Buffer.from(token, 'base64url');`,
@@ -47,10 +46,11 @@ tester.run('prefer-effect-encoding native APIs', preferEffectEncoding, {
       errors: [{ messageId: 'encode', data: { native: "toString('hex')", replacement: 'Hex.encode' } }],
     },
     {
-      code: `${effectImport} Uint8Array.fromHex(digest); Uint8Array.fromBase64(token);`,
+      code: `${effectImport} Uint8Array.fromHex(digest); Uint8Array.fromBase64(token); Uint8Array.fromBase64(token, { alphabet: 'base64url' });`,
       errors: [
         { messageId: 'decode', data: { native: 'Uint8Array.fromHex', replacement: 'Hex.decode' } },
         { messageId: 'decode', data: { native: 'Uint8Array.fromBase64', replacement: 'Base64.decode' } },
+        { messageId: 'decode', data: { native: 'Uint8Array.fromBase64', replacement: 'Base64Url.decode' } },
       ],
     },
   ],

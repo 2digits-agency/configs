@@ -26,6 +26,7 @@ tester.run('no-encoding-get-or-throw forms', noEncodingGetOrThrow, {
   valid: [
     `${imports} Result.getOrThrow(Url.fromString(href)); Result.getOrElse(Hex.decode(digest), () => empty);`,
     `${imports} Hex.encode(bytes).pipe(Result.getOrThrow); pipe(Base64Url.decode(token), Result.match(handlers));`,
+    `${imports} pipe(Hex.decode(digest), Result.orElse(() => Result.succeed(empty)), Result.getOrThrow);`,
     `import * as Result from 'effect/Result'; const Hex = { decode }; Result.getOrThrow(Hex.decode(digest));`,
   ],
   invalid: [
@@ -34,7 +35,7 @@ tester.run('no-encoding-get-or-throw forms', noEncodingGetOrThrow, {
       errors: [{ messageId: 'getOrThrow', data: { method: 'getOrThrowWith', decoder: 'Base64Url.decode' } }],
     },
     {
-      code: `${imports} pipe(Hex.decode(digest), Result.getOrThrow);`,
+      code: `${imports} pipe(Hex.decode(digest), Result.map((bytes) => bytes.length), Result.getOrThrow);`,
       errors: [{ messageId: 'getOrThrow', data: { method: 'getOrThrow', decoder: 'Hex.decode' } }],
     },
     {

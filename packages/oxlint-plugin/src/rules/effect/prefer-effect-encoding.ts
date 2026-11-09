@@ -4,7 +4,14 @@ import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 
-import { argumentAt, isStringLiteral, staticPath, staticPropertyName } from '../../internal/ast';
+import {
+  argumentAt,
+  isLiteral,
+  isStringLiteral,
+  objectProperty,
+  staticPath,
+  staticPropertyName,
+} from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIdentifier } from '../../internal/scope';
@@ -21,7 +28,7 @@ const isEncoding = Schema.is(Encoding);
 const moduleName: Record<Encoding, string> = { base64: 'Base64', base64url: 'Base64Url', hex: 'Hex' };
 
 interface NativeEncoding {
-  readonly messageId: 'decode' | 'encode';
+  readonly messageId: 'atob' | 'btoa' | 'decode' | 'encode';
   readonly native: string;
   readonly replacement: string;
 }
@@ -29,6 +36,21 @@ interface NativeEncoding {
 function encodingArgument(node: ESTree.CallExpression, index: number): Opt.Option<Encoding> {
   return Opt.flatMap(argumentAt(node, index), (argument) =>
     isStringLiteral(argument) && isEncoding(argument.value) ? Opt.some(argument.value) : Opt.none(),
+  );
+}
+
+/**
+ * Whether `Uint8Array.fromBase64(x, { alphabet: 'base64url' })` decodes the URL-safe alphabet.
+ *
+ * @param node `Uint8Array.fromBase64` call.
+ */
+function isBase64UrlAlphabet(node: ESTree.CallExpression): boolean {
+  return Opt.exists(
+    Opt.flatMap(
+      Opt.filter(argumentAt(node, 1), (options) => options.type === 'ObjectExpression'),
+      (options) => objectProperty(options, 'alphabet'),
+    ),
+    ({ value }) => isLiteral(value, 'base64url'),
   );
 }
 
@@ -57,11 +79,15 @@ function bufferEncoding(node: ESTree.CallExpression): Opt.Option<NativeEncoding>
       }));
     }
 
-    if (callee === 'Uint8Array.fromBase64' || callee === 'Uint8Array.fromHex') {
+    if (callee === 'Uint8Array.fromHex') {
+      return Opt.some({ messageId: 'decode' as const, native: callee, replacement: 'Hex.decode' });
+    }
+
+    if (callee === 'Uint8Array.fromBase64') {
       return Opt.some({
         messageId: 'decode' as const,
         native: callee,
-        replacement: callee === 'Uint8Array.fromHex' ? 'Hex.decode' : 'Base64.decode',
+        replacement: isBase64UrlAlphabet(node) ? 'Base64Url.decode' : 'Base64.decode',
       });
     }
 
@@ -70,8 +96,8 @@ function bufferEncoding(node: ESTree.CallExpression): Opt.Option<NativeEncoding>
 }
 
 const globalBase64 = {
-  atob: { messageId: 'decode', native: 'atob', replacement: 'Base64.decodeString' },
-  btoa: { messageId: 'encode', native: 'btoa', replacement: 'Base64.encode' },
+  atob: { messageId: 'atob', native: 'atob', replacement: 'Base64.decode' },
+  btoa: { messageId: 'btoa', native: 'btoa', replacement: 'Base64.encode' },
 } as const satisfies Record<string, NativeEncoding>;
 
 const GlobalBase64Name = Schema.Literals(['atob', 'btoa']);
@@ -84,6 +110,8 @@ export const preferEffectEncoding: CreateRule = Rule.define({
     type: 'suggestion',
     description: 'Prefer the Effect v4 Base64, Base64Url, and Hex modules over native binary encoding APIs.',
     messages: {
+      atob: 'Use Base64.decode from effect/encoding instead of atob: it returns the bytes as a Uint8Array in a Result with an EncodingError, where atob returns a binary string and throws on invalid input. Use Base64.decodeString only for UTF-8 text.',
+      btoa: 'Use Base64.encode from effect/encoding instead of btoa, and pass it the bytes rather than a binary string: btoa throws on characters above U+00FF, and Base64.encode encodes strings as UTF-8.',
       decode:
         'Use {{replacement}} from effect/encoding instead of {{native}}: it returns a Result with an EncodingError instead of throwing on invalid input.',
       encode:

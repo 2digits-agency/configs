@@ -258,16 +258,18 @@ UTF-8 text and run the same in Node.js, browsers, and Workers, and their decoder
 - `prefer-effect-encoding` reports, in files that import Effect, `atob` and `btoa` (also through `globalThis`),
   `Buffer.from(x, 'base64' | 'base64url' | 'hex')`, `.toString('base64' | 'base64url' | 'hex')` on any value (such as
   `Buffer.from(bytes).toString('base64')`), and `Uint8Array.fromBase64`/`fromHex`, and names the `Base64`,
-  `Base64Url`, or `Hex` function to use. `Uint8Array#toBase64` and `#toHex` are allowed: they do not throw and Effect's
-  `Base64.encode` uses them itself.
+  `Base64Url`, or `Hex` function to use. `atob` and `btoa` work on binary strings, not UTF-8 text, so they point to
+  `Base64.decode` and `Base64.encode` on bytes; `Uint8Array.fromBase64(x, { alphabet: 'base64url' })` points to
+  `Base64Url.decode`. `Uint8Array#toBase64` and `#toHex` are allowed: they do not throw and Effect's `Base64.encode`
+  uses them itself.
 - `no-manual-encoding` reports, in files that import Effect, hand-written conversions: a `replace`/`replaceAll` chain
   or a `pipe` of `Str.replace`/`Str.replaceAll` steps that swaps both `+`/`-` and `/`/`_` (use `Base64Url.encode` or
   `Base64Url.decode`), and `byte.toString(16)` padded to two digits with `'0'` through `.padStart`, `Str.padStart`,
   or `pipe` (use `Hex.encode`). A single swap, such as `.replace(/\+/g, ' ')`, is allowed.
 - `no-encoding-get-or-throw` reports `Result.getOrThrow` and `Result.getOrThrowWith` on a `Base64`, `Base64Url`, or
-  `Hex` decoder, directly or as a `pipe` step, because it turns the typed `EncodingError` back into an exception. Use
-  `yield* Effect.fromResult(Base64.decode(x))`, `Result.match`, or `Result.getOrElse`. Effect v4 `Result` values
-  cannot be yielded in `Effect.gen` directly.
+  `Hex` decoder, directly or as a `pipe` step with only `Result.map` steps before it, because it turns the typed
+  `EncodingError` back into an exception. Use `yield* Effect.fromResult(Base64.decode(x))`, `Result.match`, or
+  `Result.getOrElse`. Effect v4 `Result` values cannot be yielded in `Effect.gen` directly.
 
 `SchemaBinary` has no native counterpart that is worth a syntax rule, so no rule targets it.
 
