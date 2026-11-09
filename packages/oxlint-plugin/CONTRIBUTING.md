@@ -219,3 +219,24 @@ named Zip exports, preserving its unrelated compression APIs and the documented 
 | `no-manual-sse`         | File + native/API string checks | Report   |
 | `prefer-effect-sse`     | File + package/global checks    | Report   |
 | `prefer-effect-archive` | File + package/export checks    | Report   |
+
+### Follow-up audits: #2962 and #2963
+
+The Jwt, NetAddress and UserDirectories rules, and the binary encoding rules, use the same shared test setup. Their
+metadata, no-options schemas, report-only delivery and error-level recommendation already match the conventions.
+`moduleImportMember` resolves non-Effect APIs such as `node:os` and `node:net` through lexical imports; keep this
+source-specific check alongside the Effect/Alchemy collector rather than treating Node modules as Effect modules.
+
+The existing JWT/IP/directory library checks still inspect exact static import sources, including type-only imports;
+they do not gain dynamic-import or package-subpath matching in this audit. This preserves their import-policy contract
+rather than silently adopting the different runtime-package policy of the SSE/archive rules. Native string/Buffer
+heuristics and the binary rules' literal `pipe` fallback also remain unchanged.
+
+| Rule                             | Scope                           | Delivery |
+| -------------------------------- | ------------------------------- | -------- |
+| `prefer-effect-jwt`              | File + import/string checks     | Report   |
+| `prefer-effect-net-address`      | File + Node API/IP syntax       | Report   |
+| `prefer-effect-user-directories` | File + API/environment checks   | Report   |
+| `prefer-effect-encoding`         | File + native encoding checks   | Report   |
+| `no-manual-encoding`             | File + native/API string checks | Report   |
+| `no-encoding-get-or-throw`       | API                             | Report   |

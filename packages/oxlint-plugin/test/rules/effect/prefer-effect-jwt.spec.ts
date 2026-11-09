@@ -1,18 +1,7 @@
-import { describe, it } from '@effect/vitest';
-import { RuleTester } from 'oxlint/plugins-dev';
-
 import { preferEffectJwt } from '../../../src/rules/effect/prefer-effect-jwt';
+import { createRuleTester } from '../../rule-tester';
 
-RuleTester.describe = describe;
-
-RuleTester.it = it;
-
-const tester = new RuleTester({
-  languageOptions: {
-    parserOptions: { lang: 'ts' },
-    sourceType: 'module',
-  },
-});
+const tester = createRuleTester();
 
 const effect = "import * as Effect from 'effect/Effect'\nimport * as Str from 'effect/String'\n";
 
