@@ -560,6 +560,11 @@ function verifyPair(
 }
 
 function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<PaddingLineOption>) {
+  // Without policies no statement pair can report; avoid traversing the entire file.
+  if (options.length === 0) {
+    return {};
+  }
+
   const sourceCode = context.sourceCode;
 
   const selectors = Arr.fromIterable(
