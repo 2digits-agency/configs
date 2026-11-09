@@ -1,70 +1,86 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
 import type * as Hash from 'effect/Hash';
-import * as P from 'effect/Predicate';
+import * as HashSet from 'effect/HashSet';
+import * as Opt from 'effect/Option';
+import * as Ref from 'effect/Ref';
+import * as Schema from 'effect/Schema';
 
-import {
-  argumentAt,
-  defineEffectRule,
-  isApi,
-  isEqualityOperator,
-  ruleMeta,
-  staticPath,
-  type FileState,
-} from '../../utils';
+import { argumentAt, isEqualityOperator, staticPath } from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-const keyedMethods: ReadonlySet<string> = new Set(['delete', 'get', 'has', 'set']);
+const KeyedMethod = Schema.Literals(['delete', 'get', 'has', 'set']);
 
-function isHashCall(node: ESTree.Node, state: FileState): node is ESTree.CallExpression {
-  return node.type === 'CallExpression' && isApi(node.callee, state, 'Hash', 'hash' satisfies keyof typeof Hash);
+const isKeyedMethod = Schema.is(KeyedMethod);
+
+function isHashCall(node: ESTree.Node, imports: ImportBindings): boolean {
+  return node.type === 'CallExpression' && imports.isApi(node.callee, 'Hash', 'hash' satisfies keyof typeof Hash);
 }
 
-export const noHashAsIdentity: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow using Hash.hash output as collision-free identity.',
-    {
+function isKeyedCall(node: ESTree.CallExpression): boolean {
+  return (
+    node.callee.type === 'MemberExpression' &&
+    Opt.exists(staticPath(node.callee), (path) => isKeyedMethod(Arr.lastNonEmpty(path)))
+  );
+}
+
+export const noHashAsIdentity: CreateRule = Rule.define({
+  name: 'no-hash-as-identity',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow using Hash.hash output as collision-free identity.',
+    messages: {
       hashIdentity:
         'Hash.hash is a bucketing hint, not a unique identity. Use HashMap/Equal.equals or a real identifier instead.',
     },
-    'https://github.com/Effect-TS/tsgo/issues/482',
-  ),
-  (context, getState) => {
-    let hashBindings = new Set<string>();
+    url: 'https://github.com/Effect-TS/tsgo/issues/482',
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
 
-    function isHashValue(node: ESTree.Node): boolean {
-      return isHashCall(node, getState()) || (node.type === 'Identifier' && hashBindings.has(node.name));
+    const imports = yield* importBindings;
+
+    const hashBindings = yield* Ref.make(HashSet.empty<string>());
+
+    function isHashValue(node: ESTree.Node) {
+      return isHashCall(node, imports)
+        ? Effect.succeed(true)
+        : node.type === 'Identifier'
+          ? Effect.map(Ref.get(hashBindings), HashSet.has(node.name))
+          : Effect.succeed(false);
     }
 
-    return {
-      before() {
-        hashBindings = new Set();
-      },
-      VariableDeclarator(node) {
-        if (node.id.type === 'Identifier' && node.init && isHashCall(node.init, getState())) {
-          hashBindings.add(node.id.name);
-        }
-      },
-      CallExpression(node) {
-        if (node.callee.type !== 'MemberExpression' || !keyedMethods.has(staticPath(node.callee)?.at(-1) ?? '')) {
-          return;
-        }
+    function reportWhen(node: ESTree.Node, condition: Effect.Effect<boolean>) {
+      return Effect.when(ctx.report(Diagnostic.fromId({ node, messageId: 'hashIdentity' })), condition);
+    }
 
-        const key = argumentAt(node, 0);
-
-        if (P.isNotUndefined(key) && isHashValue(key)) {
-          context.report({ node: key, messageId: 'hashIdentity' });
-        }
-      },
-      BinaryExpression(node) {
-        if (isEqualityOperator(node.operator) && isHashValue(node.left) && isHashValue(node.right)) {
-          context.report({ node, messageId: 'hashIdentity' });
-        }
-      },
-      MemberExpression(node) {
-        if (node.computed && isHashValue(node.property)) {
-          context.report({ node: node.property, messageId: 'hashIdentity' });
-        }
-      },
-    };
+    return Visitor.merge(
+      Visitor.on('VariableDeclarator', (node) =>
+        node.id.type === 'Identifier' && node.init && isHashCall(node.init, imports)
+          ? Ref.update(hashBindings, HashSet.add(node.id.name))
+          : Effect.void,
+      ),
+      Visitor.on('CallExpression', (node) =>
+        isKeyedCall(node)
+          ? Opt.match(argumentAt(node, 0), {
+              onNone: () => Effect.void,
+              onSome: (key) => reportWhen(key, isHashValue(key)),
+            })
+          : Effect.void,
+      ),
+      Visitor.on('BinaryExpression', (node) =>
+        isEqualityOperator(node.operator)
+          ? reportWhen(
+              node,
+              Effect.map(Effect.all([isHashValue(node.left), isHashValue(node.right)]), Arr.every(Boolean)),
+            )
+          : Effect.void,
+      ),
+      Visitor.on('MemberExpression', (node) =>
+        node.computed ? reportWhen(node.property, isHashValue(node.property)) : Effect.void,
+      ),
+    );
   },
-);
+});

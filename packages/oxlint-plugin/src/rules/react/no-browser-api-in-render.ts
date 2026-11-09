@@ -1,162 +1,206 @@
-import type { ESTree, Reference, Rule, Scope } from '@oxlint/plugins';
+import {
+  Diagnostic,
+  Rule,
+  RuleContext,
+  Scope,
+  Visitor,
+  type CreateRule,
+  type ESTree,
+  type OxlintScope,
+  type Reference,
+} from 'effect-oxlint';
+import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
+import * as R from 'effect/Record';
+import * as Schema from 'effect/Schema';
 
-import { argumentAt, defineSyntaxRule, type FunctionNode, ruleMeta, staticPropertyName, walkNodes } from '../../utils';
+import {
+  argumentAt,
+  isSomeSame,
+  parentOf,
+  parentOfType,
+  staticPropertyName,
+  walkNodes,
+  type FunctionNode,
+} from '../../internal/ast';
+import { ruleMeta } from '../../internal/meta';
 
-const BROWSER_GLOBALS: ReadonlySet<string> = new Set([
-  'document',
-  'localStorage',
-  'navigator',
-  'sessionStorage',
-  'window',
-]);
+const BrowserGlobal = Schema.Literals(['document', 'localStorage', 'navigator', 'sessionStorage', 'window']);
+
+const isBrowserGlobal = Schema.is(BrowserGlobal);
 
 const BROWSER_GLOBALS_PATTERN = /\b(?:document|localStorage|navigator|sessionStorage|window)\b/u;
 
 /**
  * Array methods that call their callback synchronously, so a callback created during render also runs during it.
  */
-const SYNCHRONOUS_ARRAY_METHODS: ReadonlySet<string> = new Set([
-  'every',
-  'filter',
-  'find',
-  'findIndex',
-  'findLast',
-  'findLastIndex',
-  'flatMap',
-  'forEach',
-  'map',
-  'reduce',
-  'reduceRight',
-  'some',
-  'sort',
-  'toSorted',
-]);
+const isSynchronousArrayMethod = Schema.is(
+  Schema.Literals([
+    'every',
+    'filter',
+    'find',
+    'findIndex',
+    'findLast',
+    'findLastIndex',
+    'flatMap',
+    'forEach',
+    'map',
+    'reduce',
+    'reduceRight',
+    'some',
+    'sort',
+    'toSorted',
+  ]),
+);
 
 /**
  * Hooks whose callback argument at this index runs during render.
  */
-const RENDER_TIME_HOOK_CALLBACKS: ReadonlyMap<string, number> = new Map([
-  ['useMemo', 0],
-  ['useReducer', 2],
-  ['useState', 0],
-]);
+const RENDER_TIME_HOOK_CALLBACKS: Readonly<Record<string, number>> = {
+  useMemo: 0,
+  useReducer: 2,
+  useState: 0,
+};
 
-const COMPONENT_WRAPPERS: ReadonlySet<string> = new Set(['forwardRef', 'memo']);
+const isComponentWrapperName = Schema.is(Schema.Literals(['forwardRef', 'memo']));
+
+const HookName = Schema.String.check(Schema.isPattern(/^use[A-Z0-9]/u));
+
+const isHookName = Schema.is(HookName);
+
+const ComponentName = Schema.String.check(Schema.isPattern(/^_?[A-Z]/u));
+
+const isComponentName = Schema.is(ComponentName);
+
+/**
+ * A browser global read: its display name and the node to report.
+ */
+interface BrowserApiRead {
+  readonly name: string;
+  readonly node: ESTree.Node;
+}
 
 /**
  * Report browser-only globals read while a component or hook renders; the server render cannot match them, and a
  * `typeof window` guard is what makes the two renders differ.
  */
-export const noBrowserApiInRender: Rule = defineSyntaxRule(
-  ruleMeta(
-    'problem',
-    'Disallow reading browser-only APIs while a React component or hook renders.',
-    {
+export const noBrowserApiInRender: CreateRule = Rule.define({
+  name: 'no-browser-api-in-render',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow reading browser-only APIs while a React component or hook renders.',
+    messages: {
       browserApiInRender:
         'Reading `{{name}}` during render makes the server and client render differ, even behind a `typeof window` check. Read it in `useEffect` or subscribe with `useSyncExternalStore`.',
     },
-    'https://react.dev/reference/react-dom/client/hydrateRoot#handling-different-client-and-server-content',
-  ),
-  (context) => {
-    function programExit() {
-      if (!BROWSER_GLOBALS_PATTERN.test(context.sourceCode.text)) {
-        return;
-      }
+    url: 'https://react.dev/reference/react-dom/client/hydrateRoot#handling-different-client-and-server-content',
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
 
-      const references = globalReferences(context.sourceCode.scopeManager.globalScope);
-
-      for (const reference of references) {
-        const read = browserApiRead(reference.identifier);
-
-        if (read !== undefined && runsDuringRender(read.node)) {
-          context.report({ node: read.node, messageId: 'browserApiInRender', data: { name: read.name } });
-        }
-      }
+    if (!BROWSER_GLOBALS_PATTERN.test(ctx.sourceCode.text)) {
+      return {};
     }
 
-    return { 'Program:exit': programExit };
+    return Visitor.onExit('Program', () => {
+      const reads = Arr.filter(
+        Arr.getSomes(
+          Arr.map(globalReferences(ctx.sourceCode.scopeManager.globalScope), ({ identifier }) =>
+            browserApiRead(identifier),
+          ),
+        ),
+        ({ node }) => runsDuringRender(node),
+      );
+
+      // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+      return Effect.forEach(
+        reads,
+        ({ name, node }) => ctx.report(Diagnostic.fromId({ node, messageId: 'browserApiInRender', data: { name } })),
+        { discard: true },
+      );
+    });
   },
-);
+});
 
 /**
  * References to globals that no local declaration shadows, whether or not the config declares them.
  *
  * @param globalScope The file's global scope.
  */
-function globalReferences(globalScope: Scope | null): Set<Reference> {
-  const references = new Set<Reference>(globalScope?.through);
-
-  if (globalScope === null) {
-    return references;
-  }
-
-  for (const variable of globalScope.variables) {
-    if (variable.defs.length === 0) {
-      for (const reference of variable.references) {
-        references.add(reference);
-      }
-    }
-  }
-
-  return references;
+function globalReferences(globalScope: OxlintScope | null): ReadonlyArray<Reference> {
+  return Opt.match(Opt.fromNullishOr(globalScope), {
+    onNone: () => [],
+    onSome: (scope) =>
+      Arr.dedupeWith(
+        [
+          ...Scope.throughReferences(scope),
+          ...Arr.flatMap(
+            Arr.filter(Scope.variables(scope), ({ defs }) => Arr.isReadonlyArrayEmpty(defs)),
+            Scope.getReferences,
+          ),
+        ],
+        (left, right) => left === right,
+      ),
+  });
 }
 
-function browserApiRead(identifier: ESTree.Node): { name: string; node: ESTree.Node } | undefined {
+/**
+ * The browser global an identifier reads, as `window` or `globalThis.window`. `typeof window` only checks the
+ * environment; the reads it guards are what this rule reports. In a type (`typeof window`, `typeof window.document`),
+ * it does not run at all.
+ *
+ * @param identifier Reference identifier.
+ */
+function browserApiRead(identifier: ESTree.Node): Opt.Option<BrowserApiRead> {
   if (identifier.type !== 'Identifier') {
-    return undefined;
+    return Opt.none();
   }
 
-  let name = identifier.name;
+  const read: Opt.Option<BrowserApiRead> =
+    identifier.name === 'globalThis'
+      ? Opt.flatMap(parentOfType(identifier, 'MemberExpression'), (parent) =>
+          Opt.map(Opt.filter(staticPropertyName(parent), isBrowserGlobal), (property) => ({
+            name: `globalThis.${property}`,
+            node: parent,
+          })),
+        )
+      : Opt.liftPredicate({ name: identifier.name, node: identifier }, ({ name }) => isBrowserGlobal(name));
 
-  let node: ESTree.Node = identifier;
-
-  if (name === 'globalThis') {
-    const { parent } = identifier;
-
-    const property = parent.type === 'MemberExpression' ? staticPropertyName(parent) : undefined;
-
-    if (property === undefined || !BROWSER_GLOBALS.has(property)) {
-      return undefined;
-    }
-
-    name = `globalThis.${property}`;
-
-    node = parent;
-  } else if (!BROWSER_GLOBALS.has(name)) {
-    return undefined;
-  }
-
-  const { parent } = node;
-
-  // `typeof window` only checks the environment; the reads it guards are what this rule reports.
-  // In a type (`typeof window`, `typeof window.document`), it does not run at all.
-  if (
-    (parent?.type === 'UnaryExpression' && parent.operator === 'typeof') ||
-    parent?.type === 'TSTypeQuery' ||
-    parent?.type === 'TSQualifiedName'
-  ) {
-    return undefined;
-  }
-
-  return { name, node };
+  return Opt.filter(
+    read,
+    ({ node }) =>
+      !Opt.exists(
+        parentOf(node),
+        (parent) =>
+          (parent.type === 'UnaryExpression' && parent.operator === 'typeof') ||
+          parent.type === 'TSTypeQuery' ||
+          parent.type === 'TSQualifiedName',
+      ),
+  );
 }
 
+/**
+ * Whether code at `node` runs while a component or hook renders: its nearest functions up to a component or hook are
+ * all callbacks that run during render.
+ *
+ * @param node Read site.
+ */
 function runsDuringRender(node: ESTree.Node): boolean {
-  for (let current = node.parent; current; current = current.parent) {
-    if (!isFunction(current)) {
-      continue;
-    }
+  return Opt.exists(
+    findFunction(node),
+    (fn) => isComponentOrHook(fn) || (isRenderTimeCallback(fn) && runsDuringRender(fn)),
+  );
+}
 
-    if (isComponentOrHook(current)) {
-      return true;
-    }
-
-    if (!isRenderTimeCallback(current)) {
-      return false;
-    }
-  }
-
-  return false;
+/**
+ * The nearest function around a node.
+ *
+ * @param node Start node, not tested itself.
+ */
+function findFunction(node: ESTree.Node): Opt.Option<FunctionNode> {
+  return Opt.flatMap(parentOf(node), (parent) => (isFunction(parent) ? Opt.some(parent) : findFunction(parent)));
 }
 
 /**
@@ -171,20 +215,28 @@ function isFunction(node: ESTree.Node): node is FunctionNode {
 }
 
 function isComponentOrHook(fn: FunctionNode): boolean {
-  const name = functionName(fn);
+  return Opt.exists(
+    functionName(fn),
+    (name) =>
+      isHookName(name) ||
+      (isComponentName(name) &&
+        P.isNotNull(fn.body) &&
+        walkNodes(fn.body, (child) => child.type === 'JSXElement' || child.type === 'JSXFragment')),
+  );
+}
 
-  if (name === undefined) {
-    return false;
-  }
-
-  if (/^use[A-Z0-9]/u.test(name)) {
-    return true;
-  }
-
-  return (
-    /^_?[A-Z]/u.test(name) &&
-    fn.body !== null &&
-    walkNodes(fn.body, (child) => child.type === 'JSXElement' || child.type === 'JSXFragment')
+/**
+ * The node a function's name is bound through: the function itself, or the outermost `memo(...)` or `forwardRef(...)`
+ * call around it.
+ *
+ * @param node Function or wrapper call.
+ */
+function outermostWrapper(node: ESTree.Node): ESTree.Node {
+  return Opt.match(
+    Opt.filter(parentOfType(node, 'CallExpression'), (parent) =>
+      Opt.exists(calleeName(parent.callee), isComponentWrapperName),
+    ),
+    { onNone: () => node, onSome: outermostWrapper },
   );
 }
 
@@ -193,34 +245,24 @@ function isComponentOrHook(fn: FunctionNode): boolean {
  *
  * @param fn Function node.
  */
-function functionName(fn: FunctionNode): string | undefined {
+function functionName(fn: FunctionNode): Opt.Option<string> {
   if (fn.type !== 'ArrowFunctionExpression' && fn.id) {
-    return fn.id.name;
+    return Opt.some(fn.id.name);
   }
 
-  let node: ESTree.Node = fn;
+  const { parent } = outermostWrapper(fn);
 
-  while (node.parent.type === 'CallExpression' && isComponentWrapper(node.parent.callee)) {
-    node = node.parent;
-  }
-
-  const { parent } = node;
-
-  return parent.type === 'VariableDeclarator' && parent.id.type === 'Identifier' ? parent.id.name : undefined;
+  return parent?.type === 'VariableDeclarator' && parent.id.type === 'Identifier'
+    ? Opt.some(parent.id.name)
+    : Opt.none();
 }
 
-function isComponentWrapper(callee: ESTree.Node): boolean {
-  const name = calleeName(callee);
-
-  return name !== undefined && COMPONENT_WRAPPERS.has(name);
-}
-
-function calleeName(callee: ESTree.Node): string | undefined {
+function calleeName(callee: ESTree.Node): Opt.Option<string> {
   if (callee.type === 'Identifier') {
-    return callee.name;
+    return Opt.some(callee.name);
   }
 
-  return callee.type === 'MemberExpression' ? staticPropertyName(callee) : undefined;
+  return callee.type === 'MemberExpression' ? staticPropertyName(callee) : Opt.none();
 }
 
 function isRenderTimeCallback(fn: FunctionNode): boolean {
@@ -234,17 +276,13 @@ function isRenderTimeCallback(fn: FunctionNode): boolean {
     return true;
   }
 
-  const name = calleeName(call.callee);
-
-  if (name === undefined) {
-    return false;
-  }
-
-  const hookIndex = RENDER_TIME_HOOK_CALLBACKS.get(name);
-
-  if (hookIndex !== undefined) {
-    return argumentAt(call, hookIndex) === fn;
-  }
-
-  return call.callee.type === 'MemberExpression' && SYNCHRONOUS_ARRAY_METHODS.has(name) && argumentAt(call, 0) === fn;
+  return Opt.exists(calleeName(call.callee), (name) =>
+    Opt.match(R.get(RENDER_TIME_HOOK_CALLBACKS, name), {
+      onSome: (hookIndex) => isSomeSame<ESTree.Node>(argumentAt(call, hookIndex), fn),
+      onNone: () =>
+        call.callee.type === 'MemberExpression' &&
+        isSynchronousArrayMethod(name) &&
+        isSomeSame<ESTree.Node>(argumentAt(call, 0), fn),
+    }),
+  );
 }

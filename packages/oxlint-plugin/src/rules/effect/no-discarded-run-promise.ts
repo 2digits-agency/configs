@@ -1,31 +1,38 @@
-import type { Rule } from '@oxlint/plugins';
-import type * as Effect from 'effect/Effect';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
 
-import { defineEffectRule, isApi, isDiscarded, ruleMeta } from '../../utils';
+import { isDiscarded } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-export const noDiscardedRunPromise: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow discarded Effect.runPromise results that can become unhandled rejections.',
-    {
+export const noDiscardedRunPromise: CreateRule = Rule.define({
+  name: 'no-discarded-run-promise',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow discarded Effect.runPromise results that can become unhandled rejections.',
+    messages: {
       discarded:
         'The Promise returned by Effect.runPromise is discarded. Await/return/handle it, or use Effect.runFork for fire-and-forget work.',
     },
-    'https://github.com/Effect-TS/tsgo/issues/643',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const state = getState();
-
-      const direct = isApi(node.callee, state, 'Effect', 'runPromise' satisfies keyof typeof Effect);
-
-      const withRuntime =
-        node.callee.type === 'CallExpression' &&
-        isApi(node.callee.callee, state, 'Effect', 'runPromiseWith' satisfies keyof typeof Effect);
-
-      if ((direct || withRuntime) && isDiscarded(node)) {
-        context.report({ node, messageId: 'discarded' });
-      }
-    },
+    url: 'https://github.com/Effect-TS/tsgo/issues/643',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    function isRunPromise(callee: Parameters<typeof imports.isApi>[0]) {
+      return (
+        imports.isApi(callee, 'Effect', 'runPromise' satisfies keyof typeof Effect) ||
+        (callee.type === 'CallExpression' &&
+          imports.isApi(callee.callee, 'Effect', 'runPromiseWith' satisfies keyof typeof Effect))
+      );
+    }
+
+    return Visitor.on('CallExpression', (node) =>
+      isRunPromise(node.callee) && isDiscarded(node)
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'discarded' }))
+        : Effect.void,
+    );
+  },
+});

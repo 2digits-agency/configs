@@ -1,78 +1,73 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
-import * as Arr from 'effect/Array';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
-import * as P from 'effect/Predicate';
-import type * as Schema from 'effect/Schema';
+import * as Schema from 'effect/Schema';
 
-import {
-  defineEffectRule,
-  isLiteral,
-  objectProperty,
-  ruleMeta,
-  staticPropertyName,
-  unwrapExpression,
-} from '../../utils';
+import { isLiteral, objectArgument, objectProperty, staticPropertyName, unwrapExpression } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-const schemaMapMethods: ReadonlySet<string> = new Set([
-  'mapElements',
-  'mapFields',
-  'mapMembers',
-] satisfies ReadonlyArray<
+const SchemaMapMethod = Schema.Literals(['mapElements', 'mapFields', 'mapMembers'] satisfies ReadonlyArray<
   | keyof Schema.Struct<Schema.Struct.Fields>
   | keyof Schema.Tuple<Schema.Tuple.Elements>
   | keyof Schema.Union<ReadonlyArray<Schema.Constraint>>
 >);
 
-function methodCall(node: ESTree.Expression, method: string): ESTree.CallExpression | undefined {
+const isSchemaMapMethod = Schema.is(SchemaMapMethod);
+
+function isMethodCall(node: ESTree.Expression, method: string): boolean {
   const expression = unwrapExpression(node);
 
-  if (
+  return (
     expression.type === 'CallExpression' &&
     expression.callee.type === 'MemberExpression' &&
-    staticPropertyName(expression.callee) === method
-  ) {
-    return expression;
-  }
-
-  return undefined;
+    Opt.contains(staticPropertyName(expression.callee), method)
+  );
 }
 
-export const noDiscardedSchemaChecks: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow schema mapping that silently drops checks attached to the receiver.',
-    {
+/**
+ * The map method of `schema.check(…).mapFields(…)` and friends, unless the call passes `unsafePreserveChecks: true`.
+ *
+ * @param node Call.
+ */
+function discardingMethod(node: ESTree.CallExpression): Opt.Option<string> {
+  if (node.callee.type !== 'MemberExpression' || !isMethodCall(node.callee.object, 'check')) {
+    return Opt.none();
+  }
+
+  const preservesChecks = Opt.exists(
+    Opt.flatMap(objectArgument(node), (options) => objectProperty(options, 'unsafePreserveChecks')),
+    (preserve) => isLiteral(preserve.value, true),
+  );
+
+  return preservesChecks ? Opt.none() : Opt.filter(staticPropertyName(node.callee), isSchemaMapMethod);
+}
+
+export const noDiscardedSchemaChecks: CreateRule = Rule.define({
+  name: 'no-discarded-schema-checks',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow schema mapping that silently drops checks attached to the receiver.',
+    messages: {
       discarded:
         '{{method}} creates a new schema and drops the preceding check. Re-attach the check after mapping or explicitly preserve it.',
     },
-    'https://github.com/Effect-TS/tsgo/issues/435',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      if (!getState().hasEffectImport || node.callee.type !== 'MemberExpression') {
-        return;
-      }
-
-      const method = staticPropertyName(node.callee);
-
-      if (
-        P.isUndefined(method) ||
-        !schemaMapMethods.has(method) ||
-        P.isUndefined(methodCall(node.callee.object, 'check'))
-      ) {
-        return;
-      }
-
-      const preservesChecks = Arr.findFirst(node.arguments, (argument) => argument.type === 'ObjectExpression').pipe(
-        Opt.flatMapNullishOr((options) => objectProperty(options, 'unsafePreserveChecks')),
-        Opt.exists((preserve) => isLiteral(preserve.value, true)),
-      );
-
-      if (preservesChecks) {
-        return;
-      }
-
-      context.report({ node, messageId: 'discarded', data: { method } });
-    },
+    url: 'https://github.com/Effect-TS/tsgo/issues/435',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    if (!imports.hasEffectImport) {
+      return {};
+    }
+
+    return Visitor.on('CallExpression', (node) =>
+      Opt.match(discardingMethod(node), {
+        onNone: () => Effect.void,
+        onSome: (method) => ctx.report(Diagnostic.fromId({ node, messageId: 'discarded', data: { method } })),
+      }),
+    );
+  },
+});

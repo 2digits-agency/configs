@@ -1,28 +1,41 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import * as Schema from 'effect/Schema';
 
-import { defineEffectRule, ruleMeta, staticPropertyName } from '../../utils';
+import { staticPropertyName } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-const nativeDateFormattingMethods = new Set(['toISOString', 'toLocaleDateString', 'toLocaleTimeString']);
+const NativeDateFormattingMethod = Schema.Literals(['toISOString', 'toLocaleDateString', 'toLocaleTimeString']);
 
-export const preferEffectDateTime: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Prefer Effect DateTime formatting so time-zone behavior is explicit and composable.',
-    {
+const isNativeDateFormattingMethod = Schema.is(NativeDateFormattingMethod);
+
+export const preferEffectDateTime: CreateRule = Rule.define({
+  name: 'prefer-effect-datetime',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Prefer Effect DateTime formatting so time-zone behavior is explicit and composable.',
+    messages: {
       effectDateTime:
         'Convert to DateTime and format it in an explicit zone: DateTime.setZone with DateTime.formatIsoDate, formatIsoOffset or formatIsoZoned, or DateTime.format with timeZone. DateTime.formatIso is UTC, like toISOString: use it only for UTC instants, never slice it for a local date.',
     },
-    'https://www.effect.website/docs/v4/api/effect/DateTime',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      if (
-        getState().hasEffectImport &&
-        node.callee.type === 'MemberExpression' &&
-        nativeDateFormattingMethods.has(staticPropertyName(node.callee) ?? '')
-      ) {
-        context.report({ node, messageId: 'effectDateTime' });
-      }
-    },
+    url: 'https://www.effect.website/docs/v4/api/effect/DateTime',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    if (!imports.hasEffectImport) {
+      return {};
+    }
+
+    return Visitor.on('CallExpression', (node) =>
+      node.callee.type === 'MemberExpression' &&
+      Opt.exists(staticPropertyName(node.callee), isNativeDateFormattingMethod)
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'effectDateTime' }))
+        : Effect.void,
+    );
+  },
+});

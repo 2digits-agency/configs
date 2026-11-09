@@ -1,38 +1,37 @@
-import type { Rule } from '@oxlint/plugins';
-import type * as Effect from 'effect/Effect';
-import * as P from 'effect/Predicate';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 
-import { defineEffectRule, isAnyApi, isLiteral, objectProperty, ruleMeta } from '../../utils';
-import { objectArgument } from './utils';
+import { isLiteral, objectArgument, objectProperty } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-export const noZeroRetryTimes: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow no-op retry and repeat wrappers with times: 0.',
-    {
-      zeroTimes: 'times: 0 performs no retries or repeats. Remove the wrapper or use a positive count.',
-    },
-    'https://github.com/Effect-TS/tsgo/issues/412',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const state = getState();
-
-      if (!isAnyApi(node.callee, state, 'Effect', ['retry', 'repeat'] satisfies ReadonlyArray<keyof typeof Effect>)) {
-        return;
-      }
-
-      const options = objectArgument(node);
-
-      if (P.isUndefined(options)) {
-        return;
-      }
-
-      const times = objectProperty(options, 'times');
-
-      if (P.isNotUndefined(times) && isLiteral(times.value, 0)) {
-        context.report({ node: times, messageId: 'zeroTimes' });
-      }
-    },
+export const noZeroRetryTimes: CreateRule = Rule.define({
+  name: 'no-zero-retry-times',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow no-op retry and repeat wrappers with times: 0.',
+    messages: { zeroTimes: 'times: 0 performs no retries or repeats. Remove the wrapper or use a positive count.' },
+    url: 'https://github.com/Effect-TS/tsgo/issues/412',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      imports.isApi(node.callee, 'Effect', ['retry', 'repeat'] satisfies ReadonlyArray<keyof typeof Effect>)
+        ? Opt.match(
+            Opt.filter(
+              Opt.flatMap(objectArgument(node), (options) => objectProperty(options, 'times')),
+              (times) => isLiteral(times.value, 0),
+            ),
+            {
+              onNone: () => Effect.void,
+              onSome: (times) => ctx.report(Diagnostic.fromId({ node: times, messageId: 'zeroTimes' })),
+            },
+          )
+        : Effect.void,
+    );
+  },
+});

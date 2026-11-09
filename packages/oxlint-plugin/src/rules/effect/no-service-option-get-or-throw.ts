@@ -1,63 +1,72 @@
-import type { Rule } from '@oxlint/plugins';
-import type * as Effect from 'effect/Effect';
-import type * as Opt from 'effect/Option';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 
-import { argumentAt, defineEffectRule, isAnyApi, isApi, ruleMeta, staticPath, unwrapExpression } from '../../utils';
+import { argumentAt, staticPath, unwrapExpression } from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
 const getOrThrowMethods = ['getOrThrow', 'getOrThrowWith'] as const satisfies ReadonlyArray<keyof typeof Opt>;
 
-export const noServiceOptionGetOrThrow: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow turning missing Effect services into untyped Option defects.',
-    {
+function isServiceOptionCall(node: ESTree.Node, imports: ImportBindings): boolean {
+  return (
+    node.type === 'CallExpression' &&
+    imports.isApi(node.callee, 'Effect', 'serviceOption' satisfies keyof typeof Effect)
+  );
+}
+
+/**
+ * `Option.getOrThrow(yield* Effect.serviceOption(Tag))` or
+ * `Effect.serviceOption(Tag).pipe(Effect.map(Option.getOrThrow))`.
+ *
+ * @param node Call.
+ * @param imports Import bindings of the file.
+ */
+function throwsMissingService(node: ESTree.CallExpression, imports: ImportBindings): boolean {
+  if (imports.isApi(node.callee, 'Option', getOrThrowMethods)) {
+    return Opt.exists(argumentAt(node, 0), (option) =>
+      option.type === 'YieldExpression'
+        ? P.isNotNullish(option.argument) && isServiceOptionCall(option.argument, imports)
+        : isServiceOptionCall(option, imports),
+    );
+  }
+
+  return (
+    node.callee.type === 'MemberExpression' &&
+    Opt.exists(staticPath(node.callee), (path) => Arr.lastNonEmpty(path) === 'pipe') &&
+    isServiceOptionCall(unwrapExpression(node.callee.object), imports) &&
+    Opt.exists(
+      argumentAt(node, 0),
+      (map) =>
+        map.type === 'CallExpression' &&
+        imports.isApi(map.callee, 'Effect', 'map' satisfies keyof typeof Effect) &&
+        Opt.exists(argumentAt(map, 0), (mapper) => imports.isApi(mapper, 'Option', getOrThrowMethods)),
+    )
+  );
+}
+
+export const noServiceOptionGetOrThrow: CreateRule = Rule.define({
+  name: 'no-service-option-get-or-throw',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow turning missing Effect services into untyped Option defects.',
+    messages: {
       getOrThrow:
         'Option.getOrThrow after Effect.serviceOption hides a mandatory service until runtime. Use Effect.service so it remains a typed requirement.',
     },
-    'https://github.com/Effect-TS/tsgo/issues/650',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const state = getState();
-
-      if (isAnyApi(node.callee, state, 'Option', getOrThrowMethods)) {
-        const option = argumentAt(node, 0);
-
-        const yielded = option?.type === 'YieldExpression' ? option.argument : option;
-
-        if (
-          yielded?.type === 'CallExpression' &&
-          isApi(yielded.callee, state, 'Effect', 'serviceOption' satisfies keyof typeof Effect)
-        ) {
-          context.report({ node, messageId: 'getOrThrow' });
-        }
-
-        return;
-      }
-
-      if (node.callee.type !== 'MemberExpression' || staticPath(node.callee)?.at(-1) !== 'pipe') {
-        return;
-      }
-
-      const source = unwrapExpression(node.callee.object);
-
-      const map = argumentAt(node, 0);
-
-      if (
-        source.type !== 'CallExpression' ||
-        !isApi(source.callee, state, 'Effect', 'serviceOption' satisfies keyof typeof Effect) ||
-        map?.type !== 'CallExpression' ||
-        !isApi(map.callee, state, 'Effect', 'map' satisfies keyof typeof Effect)
-      ) {
-        return;
-      }
-
-      const mapper = argumentAt(map, 0);
-
-      if (P.isNotUndefined(mapper) && isAnyApi(mapper, state, 'Option', getOrThrowMethods)) {
-        context.report({ node, messageId: 'getOrThrow' });
-      }
-    },
+    url: 'https://github.com/Effect-TS/tsgo/issues/650',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      throwsMissingService(node, imports)
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'getOrThrow' }))
+        : Effect.void,
+    );
+  },
+});

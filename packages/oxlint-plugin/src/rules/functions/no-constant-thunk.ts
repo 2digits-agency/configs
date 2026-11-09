@@ -1,97 +1,111 @@
-import type { Context, ESTree, Rule } from '@oxlint/plugins';
+import {
+  Diagnostic,
+  Rule,
+  RuleContext,
+  Visitor,
+  type CreateRule,
+  type Definition,
+  type ESTree,
+  type OxlintSourceCode,
+} from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
+import * as Schema from 'effect/Schema';
 
-import {
-  canonicalPath,
-  defineEffectRule,
-  isConstDeclaration,
-  isFunctionNode,
-  resolveVariable,
-  ruleMeta,
-  soleDefinition,
-  type FileState,
-  type FunctionNode,
-} from '../../utils';
-import { functionResult } from '../effect/utils';
+import { isConstDeclaration, isFunctionNode, staticPropertyName, type FunctionNode } from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { lookupVariable, soleDefinition } from '../../internal/scope';
+import { functionResult } from '../effect/internal/callbacks';
 
 /**
  * Modules whose functions build immutable values or lazy descriptions, so calling them once at module load is the same
  * as calling them on every use.
  */
-const pureModules: ReadonlySet<string> = new Set([
-  'BigDecimal',
-  'Config',
-  'Data',
-  'DateTime',
-  'Duration',
-  'Effect',
-  'Equivalence',
-  'Exit',
-  'Function',
-  'Layer',
-  'Match',
-  'Option',
-  'Order',
-  'Predicate',
-  'Result',
-  'Schedule',
-  'Schema',
-  'Stream',
-  'String',
-  'Struct',
-  'flow',
-  'pipe',
-]);
+const isPureModule = Schema.is(
+  Schema.Literals([
+    'BigDecimal',
+    'Config',
+    'Data',
+    'DateTime',
+    'Duration',
+    'Effect',
+    'Equivalence',
+    'Exit',
+    'Function',
+    'Layer',
+    'Match',
+    'Option',
+    'Order',
+    'Predicate',
+    'Result',
+    'Schedule',
+    'Schema',
+    'Stream',
+    'String',
+    'Struct',
+    'flow',
+    'pipe',
+  ]),
+);
 
 /*
  * Modules whose functions call their callbacks right away, such as `Option.map(some, f)` or `pipe(value, f)`, so the
  * result is only constant when no function argument can read changing state.
  */
-const eagerModules: ReadonlySet<string> = new Set([
-  'BigDecimal',
-  'Data',
-  'DateTime',
-  'Duration',
-  'Exit',
-  'Option',
-  'Result',
-  'String',
-  'Struct',
-  'pipe',
-]);
+const isEagerModule = Schema.is(
+  Schema.Literals([
+    'BigDecimal',
+    'Data',
+    'DateTime',
+    'Duration',
+    'Exit',
+    'Option',
+    'Result',
+    'String',
+    'Struct',
+    'pipe',
+  ]),
+);
 
-const eagerMembers: ReadonlySet<string> = new Set(['pipe', 'value', 'valueTags']);
+const isEagerMember = Schema.is(Schema.Literals(['pipe', 'value', 'valueTags']));
 
 // `Effect.runSync`, `DateTime.nowUnsafe`, `Ref.makeUnsafe` and similar run effects or read mutable state.
 const impureMember = /^run|unsafe/iu;
 
+/**
+ * What constness depends on: the file's scopes, to tell `const` from `let`, and its import bindings.
+ */
 interface Constness {
-  readonly context: Context;
-  readonly state: FileState;
+  readonly sourceCode: OxlintSourceCode;
+  readonly imports: ImportBindings;
+}
+
+function definitionOf(node: ESTree.Node & { readonly name: string }, env: Constness): Opt.Option<Definition> {
+  return soleDefinition(lookupVariable(env.sourceCode, node, node.name));
 }
 
 function isConstantCall(node: ESTree.CallExpression, env: Constness): boolean {
   const callee = node.callee;
 
-  const path = canonicalPath(callee, env.state) ?? [];
+  const path = Opt.getOrElse(env.imports.path(callee), (): ReadonlyArray<string> => []);
 
-  const pureApi = pureModules.has(path[0] ?? '') && !Arr.some(path, (part) => impureMember.test(part));
+  const pureApi = Opt.exists(Arr.head(path), isPureModule) && !Arr.some(path, (part) => impureMember.test(part));
 
   // `Schema.Struct(…).pipe(…)`, `Match.type<A>().pipe(…)` and curried `Schema.decodeUnknownEffect(User)(…)`.
   const pureBuilder =
     (callee.type === 'MemberExpression' &&
       !callee.computed &&
-      callee.property.type === 'Identifier' &&
-      callee.property.name === 'pipe' &&
+      Opt.contains(staticPropertyName(callee), 'pipe') &&
       callee.object.type === 'CallExpression' &&
       isConstantCall(callee.object, env)) ||
     (callee.type === 'CallExpression' && isConstantCall(callee, env));
 
-  const eager = eagerModules.has(path[0] ?? '') || eagerMembers.has(path[1] ?? '');
+  const eager = Opt.exists(Arr.head(path), isEagerModule) || Opt.exists(Arr.get(path, 1), isEagerMember);
 
   return (
     !node.optional &&
@@ -110,26 +124,26 @@ function isLocalFunction(node: ESTree.Expression, env: Constness): boolean {
     return isFunctionNode(node);
   }
 
-  const definition = soleDefinition(resolveVariable(env.context, node, node.name));
-
-  return (
-    definition?.type === 'FunctionName' ||
-    definition?.type === 'ImportBinding' ||
-    (definition?.type === 'Variable' &&
-      definition.node.type === 'VariableDeclarator' &&
-      P.isNotNull(definition.node.init) &&
-      isFunctionNode(definition.node.init))
+  return Opt.exists(
+    definitionOf(node, env),
+    (definition) =>
+      definition.type === 'FunctionName' ||
+      definition.type === 'ImportBinding' ||
+      (definition.type === 'Variable' &&
+        definition.node.type === 'VariableDeclarator' &&
+        P.isNotNull(definition.node.init) &&
+        isFunctionNode(definition.node.init)),
   );
 }
 
 function isConstantIdentifier(node: ESTree.Node & { readonly name: string }, env: Constness): boolean {
-  const definition = soleDefinition(resolveVariable(env.context, node, node.name));
-
   // A `let` binding can change between calls; the function would see the change and a constant would not.
-  return (
-    definition?.type !== 'Variable' ||
-    definition.parent?.type !== 'VariableDeclaration' ||
-    isConstDeclaration(definition.parent)
+  return !Opt.exists(
+    definitionOf(node, env),
+    (definition) =>
+      definition.type === 'Variable' &&
+      definition.parent?.type === 'VariableDeclaration' &&
+      !isConstDeclaration(definition.parent),
   );
 }
 
@@ -159,7 +173,7 @@ function isConstant(node: ESTree.Node, env: Constness): boolean {
        * be mutated between calls.
        */
       MemberExpression: (member) =>
-        P.isNotUndefined(canonicalPath(member, env.state)) ||
+        Opt.isSome(env.imports.path(member)) ||
         (member.object.type === 'CallExpression' &&
           isConstantCall(member.object, env) &&
           (!member.computed || isConstant(member.property, env))),
@@ -181,49 +195,49 @@ function isConstant(node: ESTree.Node, env: Constness): boolean {
  * A fresh object or array literal can be a deliberate factory: each caller gets its own mutable copy. A returned
  * function is the factory shape some APIs require, such as `@eslint-react/kit` rule factories.
  */
-function isFactoryResult(node: ESTree.Expression, context: Context): boolean {
+function isFactoryResult(node: ESTree.Expression, env: Constness): boolean {
   return (
     node.type === 'ObjectExpression' ||
     node.type === 'ArrayExpression' ||
     isFunctionNode(node) ||
-    (node.type === 'Identifier' && soleDefinition(resolveVariable(context, node, node.name))?.type === 'FunctionName')
+    (node.type === 'Identifier' && Opt.exists(definitionOf(node, env), ({ type }) => type === 'FunctionName'))
   );
 }
 
-// A reference that passes the function as a value, such as a handler argument, needs a function, not a constant.
-function isPassedAsValue(context: Context, declaration: ESTree.Node, name: string): boolean {
-  const variable = Arr.findFirst(context.sourceCode.getDeclaredVariables(declaration), (v) => v.name === name);
-
-  return Opt.exists(variable, ({ references }) =>
-    Arr.some(references, ({ identifier, init }) => {
-      const parent = identifier.parent;
-
-      return !init && (parent.type !== 'CallExpression' || parent.callee !== identifier);
-    }),
+/**
+ * Whether a function takes no parameters and always returns the same value.
+ *
+ * @param node Function.
+ * @param env File being linted.
+ */
+function isConstantThunk(node: FunctionNode, env: Constness): boolean {
+  return (
+    Arr.isReadonlyArrayEmpty(node.params) &&
+    !node.async &&
+    !node.generator &&
+    !node.typeParameters &&
+    Opt.exists(functionResult(node), (expression) => !isFactoryResult(expression, env) && isConstant(expression, env))
   );
 }
 
-function check(
-  context: Context,
-  state: FileState,
-  { declaration, node, name }: { declaration: ESTree.Node; node: FunctionNode; name: ESTree.BindingIdentifier },
-): void {
-  const expression = functionResult(node);
+/**
+ * Whether a reference passes the function as a value, such as a handler argument, which needs a function, not a
+ * constant.
+ *
+ * @param sourceCode Source of the file.
+ * @param declaration Function declaration or declarator.
+ * @param name Function name.
+ */
+function isPassedAsValue(sourceCode: OxlintSourceCode, declaration: ESTree.Node, name: string): boolean {
+  return Opt.exists(
+    Arr.findFirst(sourceCode.getDeclaredVariables(declaration), (variable) => variable.name === name),
+    ({ references }) =>
+      Arr.some(references, ({ identifier, init }) => {
+        const parent = identifier.parent;
 
-  if (
-    P.isUndefined(expression) ||
-    Arr.isReadonlyArrayNonEmpty(node.params) ||
-    node.async ||
-    node.generator ||
-    node.typeParameters ||
-    isFactoryResult(expression, context) ||
-    !isConstant(expression, { context, state }) ||
-    isPassedAsValue(context, declaration, name.name)
-  ) {
-    return;
-  }
-
-  context.report({ node: name, messageId: 'constantThunk', data: { name: name.name } });
+        return !init && (parent.type !== 'CallExpression' || parent.callee !== identifier);
+      }),
+  );
 }
 
 function isTopLevel(node: ESTree.Node): boolean {
@@ -234,21 +248,36 @@ function isTopLevel(node: ESTree.Node): boolean {
  * Report top-level functions without parameters that always return the same value, such as `function userSchema() {
  * return Schema.Struct(…) }`.
  */
-export const noConstantThunk: Rule = defineEffectRule(
-  ruleMeta('suggestion', 'Disallow top-level functions without parameters that always return the same value.', {
-    constantThunk:
-      '`{{name}}` takes no parameters and always returns the same value. Make it a constant, or a static on its class.',
-  }),
-  (context, getState) => ({
-    FunctionDeclaration(node) {
-      if (node.id && node.body && isTopLevel(node)) {
-        check(context, getState(), { declaration: node, node, name: node.id });
-      }
-    },
-    VariableDeclarator(node) {
-      if (node.id.type === 'Identifier' && node.init && isFunctionNode(node.init) && isTopLevel(node.parent)) {
-        check(context, getState(), { declaration: node, node: node.init, name: node.id });
-      }
+export const noConstantThunk: CreateRule = Rule.define({
+  name: 'no-constant-thunk',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Disallow top-level functions without parameters that always return the same value.',
+    messages: {
+      constantThunk:
+        '`{{name}}` takes no parameters and always returns the same value. Make it a constant, or a static on its class.',
     },
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const env: Constness = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
+
+    function check(declaration: ESTree.Node, node: FunctionNode, name: ESTree.BindingIdentifier) {
+      return isConstantThunk(node, env) && !isPassedAsValue(ctx.sourceCode, declaration, name.name)
+        ? ctx.report(Diagnostic.fromId({ node: name, messageId: 'constantThunk', data: { name: name.name } }))
+        : Effect.void;
+    }
+
+    return Visitor.merge(
+      Visitor.on('FunctionDeclaration', (node) =>
+        node.id && node.body && isTopLevel(node) ? check(node, node, node.id) : Effect.void,
+      ),
+      Visitor.on('VariableDeclarator', (node) =>
+        node.id.type === 'Identifier' && node.init && isFunctionNode(node.init) && isTopLevel(node.parent)
+          ? check(node, node.init, node.id)
+          : Effect.void,
+      ),
+    );
+  },
+});

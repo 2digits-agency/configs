@@ -1,47 +1,59 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
-import { defineSyntaxRule, moduleExportName, ruleMeta } from '../../utils';
+import { moduleExportName } from '../../internal/ast';
+import { ruleMeta } from '../../internal/meta';
 
-const serviceConstructorName = /^make[A-Z]/u;
+const isServiceConstructorName = Schema.is(Schema.String.check(Schema.isPattern(/^make[A-Z]/u)));
 
-const testFile = /\.(?:test|spec)\.[cm]?[jt]sx?$/u;
+const isTestFilename = Schema.is(Schema.String.check(Schema.isPattern(/\.(?:test|spec)\.[cm]?[jt]sx?$/u)));
+
+const isRelativeSource = Schema.is(Schema.String.check(Schema.isPattern(/^\.\.?\//u)));
 
 /**
  * Keep relative make<Capability> imports in tests, not runtime composition.
  */
-export const noServiceConstructorImports: Rule = defineSyntaxRule(
-  ruleMeta(
-    'problem',
-    'Disallow project-local make<CapabilityName> imports outside test and spec files.',
-    {
+export const noServiceConstructorImports: CreateRule = Rule.define({
+  name: 'no-service-constructor-imports',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow project-local make<CapabilityName> imports outside test and spec files.',
+    messages: {
       serviceConstructorImport:
         'Do not import Effect service constructor "{{name}}" into runtime code. Import the owning Layer, yield the contextual service, and allow its requirements to propagate to the composition root.',
     },
-    'https://github.com/dmmulroy/anti-slop/blob/main/src/effect/rules/no-service-constructor-imports.ts',
-  ),
-  (context) => ({
-    ImportDeclaration(node) {
-      // CreateOnce is reused across files: inspect the current filename on each visit.
-      if (testFile.test(Str.replaceAll('\\', '/')(context.filename))) {
-        return;
-      }
-
-      if (!Str.startsWith('./')(node.source.value) && !Str.startsWith('../')(node.source.value)) {
-        return;
-      }
-
-      for (const specifier of node.specifiers) {
-        if (specifier.type !== 'ImportSpecifier') {
-          continue;
-        }
-
-        const name = moduleExportName(specifier.imported);
-
-        if (serviceConstructorName.test(name)) {
-          context.report({ node: specifier, messageId: 'serviceConstructorImport', data: { name } });
-        }
-      }
-    },
+    url: 'https://github.com/dmmulroy/anti-slop/blob/main/src/effect/rules/no-service-constructor-imports.ts',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    if (isTestFilename(Str.replaceAll('\\', '/')(ctx.filename))) {
+      return {};
+    }
+
+    return Visitor.on('ImportDeclaration', (node) =>
+      isRelativeSource(node.source.value)
+        ? // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+          Effect.forEach(
+            Arr.filter(
+              node.specifiers,
+              (specifier): specifier is ESTree.ImportSpecifier => specifier.type === 'ImportSpecifier',
+            ),
+            (specifier) => {
+              const name = moduleExportName(specifier.imported);
+
+              return isServiceConstructorName(name)
+                ? ctx.report(
+                    Diagnostic.fromId({ node: specifier, messageId: 'serviceConstructorImport', data: { name } }),
+                  )
+                : Effect.void;
+            },
+            { discard: true },
+          )
+        : Effect.void,
+    );
+  },
+});

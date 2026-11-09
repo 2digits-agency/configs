@@ -1,39 +1,46 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 
-import { canonicalPath, defineEffectRule, ruleMeta } from '../../utils';
-import { containingEffectGen, containingHandler, containingWorker } from './utils';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { containingEffectGen, containingHandler, containingWorker } from './internal/worker';
 
-export const alchemyNoRuntimeConfig: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Require Effect Config values to be resolved during Alchemy Worker initialization.',
-    {
+export const alchemyNoRuntimeConfig: CreateRule = Rule.define({
+  name: 'alchemy-no-runtime-config',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Require Effect Config values to be resolved during Alchemy Worker initialization.',
+    messages: {
       runtime:
         'Config resolved inside the {{handler}} handler is invisible to Alchemy deployment. Resolve it in Worker init and close over the value, or put it in env.',
     },
-    'https://alchemy.run/environments/secrets',
-  ),
-  (context, getState) => ({
-    YieldExpression(node) {
-      const state = getState();
+    url: 'https://alchemy.run/environments/secrets',
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
 
+    const imports = yield* importBindings;
+
+    return Visitor.on('YieldExpression', (node) => {
       const argument = node.argument;
 
-      if (argument?.type !== 'CallExpression' || canonicalPath(argument.callee, state)?.[0] !== 'Config') {
-        return;
+      if (
+        argument?.type !== 'CallExpression' ||
+        !Opt.exists(imports.path(argument.callee), ([module]) => module === 'Config')
+      ) {
+        return Effect.void;
       }
 
-      const program = containingEffectGen(node, state);
+      const handler = Opt.flatMap(containingEffectGen(node, imports), (program) =>
+        Opt.filter(containingHandler(program), () => Opt.isSome(containingWorker(program, imports))),
+      );
 
-      if (program === undefined) {
-        return;
-      }
-
-      const handler = containingHandler(program);
-
-      if (handler !== undefined && containingWorker(program, state) !== undefined) {
-        context.report({ node: argument, messageId: 'runtime', data: { handler } });
-      }
-    },
-  }),
-);
+      return Opt.match(handler, {
+        onNone: () => Effect.void,
+        onSome: (name) =>
+          ctx.report(Diagnostic.fromId({ node: argument, messageId: 'runtime', data: { handler: name } })),
+      });
+    });
+  },
+});

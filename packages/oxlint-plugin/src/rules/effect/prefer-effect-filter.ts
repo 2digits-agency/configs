@@ -1,60 +1,65 @@
-import type { Context, ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import type * as Result from 'effect/Result';
 
-import {
-  argumentAt,
-  defineEffectRule,
-  firstIdentifierParameter,
-  isApi,
-  ruleMeta,
-  type FileState,
-  type FunctionNode,
-} from '../../utils';
-import { functionResult } from './utils';
+import { argumentAt, firstIdentifierParameter, type FunctionNode } from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { functionResult } from './internal/callbacks';
 
-function resultBranch(node: ESTree.Expression, state: FileState, member: string): ESTree.Expression | undefined {
-  return node.type === 'CallExpression' && isApi(node.callee, state, 'Result', member)
-    ? argumentAt(node, 0)
-    : undefined;
+function returnsParameter(
+  node: ESTree.Expression,
+  member: keyof typeof Result,
+  name: string,
+  imports: ImportBindings,
+): boolean {
+  return (
+    node.type === 'CallExpression' &&
+    imports.isApi(node.callee, 'Result', member) &&
+    Opt.exists(argumentAt(node, 0), (value) => value.type === 'Identifier' && value.name === name)
+  );
 }
 
-function checkFilter(context: Context, node: FunctionNode, state: FileState): void {
-  const parameter = firstIdentifierParameter(node);
-
-  const result = functionResult(node);
-
-  if (parameter === undefined || result?.type !== 'ConditionalExpression') {
-    return;
-  }
-
-  const success = resultBranch(result.consequent, state, 'succeed');
-
-  const failure = resultBranch(result.alternate, state, 'fail');
-
-  if (
-    success?.type === 'Identifier' &&
-    success.name === parameter.name &&
-    failure?.type === 'Identifier' &&
-    failure.name === parameter.name
-  ) {
-    context.report({ node, messageId: 'effectFilter' });
-  }
+/**
+ * `(x) => cond ? Result.succeed(x) : Result.fail(x)`, which `Filter.fromPredicate` expresses directly.
+ *
+ * @param node Function.
+ * @param imports Import bindings of the file.
+ */
+function isResultFilter(node: FunctionNode, imports: ImportBindings): boolean {
+  return Opt.exists(firstIdentifierParameter(node), ({ name }) =>
+    Opt.exists(
+      functionResult(node),
+      (result) =>
+        result.type === 'ConditionalExpression' &&
+        returnsParameter(result.consequent, 'succeed', name, imports) &&
+        returnsParameter(result.alternate, 'fail', name, imports),
+    ),
+  );
 }
 
-export const preferEffectFilter: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Prefer Effect Filter constructors for reusable Result-valued predicates.',
-    {
+export const preferEffectFilter: CreateRule = Rule.define({
+  name: 'prefer-effect-filter',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Prefer Effect Filter constructors for reusable Result-valued predicates.',
+    messages: {
       effectFilter: 'Use Filter.fromPredicate for this Result-valued predicate so it composes as a Filter.',
     },
-    'https://www.effect.website/docs/v4/api/effect/Filter',
-  ),
-  (context, getState) => ({
-    ArrowFunctionExpression(node) {
-      checkFilter(context, node, getState());
-    },
-    FunctionExpression(node) {
-      checkFilter(context, node, getState());
-    },
+    url: 'https://www.effect.website/docs/v4/api/effect/Filter',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    function check(node: FunctionNode) {
+      return isResultFilter(node, imports)
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'effectFilter' }))
+        : Effect.void;
+    }
+
+    return Visitor.merge(Visitor.on('ArrowFunctionExpression', check), Visitor.on('FunctionExpression', check));
+  },
+});

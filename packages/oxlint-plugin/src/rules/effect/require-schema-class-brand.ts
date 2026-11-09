@@ -1,26 +1,31 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
 import type * as Schema from 'effect/Schema';
 
-import { defineEffectRule, isApi, ruleMeta } from '../../utils';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-export const requireSchemaClassBrand: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Require Schema.Class declarations to carry a nominal brand.',
-    {
+export const requireSchemaClassBrand: CreateRule = Rule.define({
+  name: 'require-schema-class-brand',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Require Schema.Class declarations to carry a nominal brand.',
+    messages: {
       missingBrand:
         'Schema.Class without a second type parameter is structural. Add a unique brand so plain objects cannot masquerade as instances.',
     },
-    'https://github.com/Effect-TS/tsgo/issues/468',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      if (
-        isApi(node.callee, getState(), 'Schema', 'Class' satisfies keyof typeof Schema) &&
-        (node.typeArguments?.params.length ?? 0) < 2
-      ) {
-        context.report({ node, messageId: 'missingBrand' });
-      }
-    },
+    url: 'https://github.com/Effect-TS/tsgo/issues/468',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      imports.isApi(node.callee, 'Schema', 'Class' satisfies keyof typeof Schema) &&
+      (node.typeArguments?.params.length ?? 0) < 2
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'missingBrand' }))
+        : Effect.void,
+    );
+  },
+});

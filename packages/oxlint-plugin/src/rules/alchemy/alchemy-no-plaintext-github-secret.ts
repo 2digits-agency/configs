@@ -1,59 +1,53 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 
-import {
-  argumentAt,
-  defineEffectRule,
-  isApi,
-  isStringLiteral,
-  objectProperty,
-  ruleMeta,
-  staticPath,
-  unwrapExpression,
-  type FileState,
-} from '../../utils';
+import { argumentAt, isStringLiteral, objectProperty, staticPath, unwrapExpression } from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-function isPlaintextSecret(node: ESTree.Expression, state: FileState): boolean {
+function isPlaintextSecret(node: ESTree.Expression, imports: ImportBindings): boolean {
   const value = unwrapExpression(node);
 
-  if (isStringLiteral(value) || value.type === 'TemplateLiteral') {
-    return true;
-  }
-
-  const path = staticPath(value);
-
-  if (path?.[0] === 'process' && path[1] === 'env') {
-    return true;
-  }
-
-  // Effect v3 name, which the current Effect types no longer export (v4 has `Config.String`).
-  return value.type === 'CallExpression' && isApi(value.callee, state, 'Config', 'string');
+  return (
+    isStringLiteral(value) ||
+    value.type === 'TemplateLiteral' ||
+    Opt.exists(staticPath(value), ([root, member]) => root === 'process' && member === 'env') ||
+    // Effect v3 name, which the current Effect types no longer export (v4 has `Config.String`).
+    (value.type === 'CallExpression' && imports.isApi(value.callee, 'Config', 'string'))
+  );
 }
 
-export const alchemyNoPlaintextGithubSecret: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Require singular GitHub Secret values to use Redacted.',
-    {
+export const alchemyNoPlaintextGithubSecret: CreateRule = Rule.define({
+  name: 'alchemy-no-plaintext-github-secret',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Require singular GitHub Secret values to use Redacted.',
+    messages: {
       plaintext:
         'GitHub.Secret value must be Redacted so it stays out of logs and state. Use Redacted.make(...) or Config.redacted(...).',
     },
-    'https://alchemy.run/providers/github/secret',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const state = getState();
-
-      if (!isApi(node.callee, state, 'GitHub', 'Secret')) {
-        return;
-      }
-
-      const options = argumentAt(node, 1);
-
-      const value = options?.type === 'ObjectExpression' ? objectProperty(options, 'value') : undefined;
-
-      if (value !== undefined && isPlaintextSecret(value.value, state)) {
-        context.report({ node: value.value, messageId: 'plaintext' });
-      }
-    },
+    url: 'https://alchemy.run/providers/github/secret',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      Opt.match(
+        argumentAt(node, 1).pipe(
+          Opt.filter(() => imports.isApi(node.callee, 'GitHub', 'Secret')),
+          Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
+          Opt.flatMap((options) => objectProperty(options, 'value')),
+          Opt.map(({ value }) => value),
+          Opt.filter((value) => isPlaintextSecret(value, imports)),
+        ),
+        {
+          onNone: () => Effect.void,
+          onSome: (value) => ctx.report(Diagnostic.fromId({ node: value, messageId: 'plaintext' })),
+        },
+      ),
+    );
+  },
+});

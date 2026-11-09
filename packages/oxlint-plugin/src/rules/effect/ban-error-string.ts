@@ -1,107 +1,141 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import * as Schema from 'effect/Schema';
 
-import { argumentAt, defineSyntaxRule, isErrorConstructor, ruleMeta, staticPath } from '../../utils';
+import { argumentAt, isErrorConstructor, isSomeSame, parentOfType, staticPath } from '../../internal/ast';
+import { ruleMeta } from '../../internal/meta';
 
-const errorLikeNames = new Set(['error', 'err', 'e', 'cause', 'exception', 'ex']);
+const ErrorLikeName = Schema.Literals(['error', 'err', 'e', 'cause', 'exception', 'ex']);
 
-function errorLikeName(node: ESTree.Node | undefined): string | undefined {
-  return node?.type === 'Identifier' && errorLikeNames.has(node.name) ? node.name : undefined;
+const isErrorLikeName = Schema.is(ErrorLikeName);
+
+function errorLikeName(node: ESTree.Node | null | undefined): Opt.Option<string> {
+  return node?.type === 'Identifier' && isErrorLikeName(node.name) ? Opt.some(node.name) : Opt.none();
 }
 
-function isStringCall(node: ESTree.CallExpression): boolean;
+/**
+ * `String(x)` or `globalThis.String(x)` with exactly one argument.
+ *
+ * @param node Expression.
+ */
+function isStringCall(node: ESTree.CallExpression): boolean {
+  return (
+    node.arguments.length === 1 &&
+    Opt.exists(staticPath(node.callee), (path) => Arr.lastNonEmpty(path) === 'String' && path.length <= 2)
+  );
+}
 
-function isStringCall(node: ESTree.Node): node is ESTree.CallExpression;
+/**
+ * Whether a `String(x)` call is the message of an error construction, which the `NewExpression` visitor reports.
+ *
+ * @param node `String(x)` call.
+ */
+function isErrorMessage(node: ESTree.CallExpression): boolean {
+  return Opt.exists(
+    parentOfType(node, 'NewExpression'),
+    (construction) =>
+      isSomeSame<ESTree.Node>(Arr.head(construction.arguments), node) && isErrorConstructor(construction),
+  );
+}
 
-function isStringCall(node: ESTree.Node): boolean {
-  if (node.type !== 'CallExpression' || node.arguments.length !== 1) {
-    return false;
+/**
+ * The error-like name a call stringifies: `String(error)` outside an error construction, or `error.toString()`.
+ *
+ * @param node Call.
+ */
+function stringifiedName(node: ESTree.CallExpression): Opt.Option<string> {
+  if (isStringCall(node)) {
+    return isErrorMessage(node) ? Opt.none() : Opt.flatMap(Arr.head(node.arguments), errorLikeName);
   }
 
-  const path = staticPath(node.callee);
-
-  return path?.at(-1) === 'String' && path.length <= 2;
+  return node.callee.type === 'MemberExpression' &&
+    Arr.isReadonlyArrayEmpty(node.arguments) &&
+    Opt.exists(staticPath(node.callee), (path) => Arr.lastNonEmpty(path) === 'toString')
+    ? errorLikeName(node.callee.object)
+    : Opt.none();
 }
 
-export const banErrorString: Rule = defineSyntaxRule(
-  {
-    ...ruleMeta('problem', 'Disallow string coercion that discards an error value’s stack, type, and cause chain.', {
+/**
+ * The name a template literal stringifies when it is exactly `` `${error}` ``.
+ *
+ * @param node Template literal.
+ */
+function interpolatedName(node: ESTree.TemplateLiteral): Opt.Option<string> {
+  const [first, last] = node.quasis;
+
+  return node.quasis.length === 2 && first?.value.raw === '' && last?.value.raw === ''
+    ? Opt.flatMap(Arr.head(node.expressions), errorLikeName)
+    : Opt.none();
+}
+
+export const banErrorString: CreateRule = Rule.define({
+  name: 'ban-error-string',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow string coercion that discards an error value’s stack, type, and cause chain.',
+    messages: {
       errorString: 'Do not stringify {{name}}. Preserve the original error as an Error cause instead.',
       useCause: 'Replace {{pattern}} with {{replacement}} to preserve the original error.',
-    }),
+    },
     hasSuggestions: true,
-  },
-  (context) => ({
-    NewExpression(node) {
-      const firstArgument = argumentAt(node, 0);
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
 
-      if (firstArgument === undefined || !isStringCall(firstArgument) || !isErrorConstructor(node)) {
-        return;
-      }
+    function reportName(node: ESTree.Node, name: Opt.Option<string>) {
+      return Opt.match(name, {
+        onNone: () => Effect.void,
+        onSome: (value) => ctx.report(Diagnostic.fromId({ node, messageId: 'errorString', data: { name: value } })),
+      });
+    }
 
-      const causeArgument = argumentAt(firstArgument, 0);
-
-      if (causeArgument === undefined) {
-        return;
-      }
-
-      const cause = context.sourceCode.getText(causeArgument);
+    /**
+     * Report `new Error(String(cause))` with a suggestion to pass the cause instead.
+     *
+     * @param message `String(cause)` call.
+     * @param causeArgument Stringified value.
+     */
+    function reportMessage(message: ESTree.CallExpression, causeArgument: ESTree.Expression) {
+      const cause = ctx.sourceCode.getText(causeArgument);
 
       const replacement = `'Error occurred', { cause: ${cause} }`;
 
-      context.report({
-        node: firstArgument,
-        messageId: 'errorString',
-        data: { name: cause },
-        suggest: [
+      return ctx.report(
+        Diagnostic.withSuggestions(
+          Diagnostic.fromId({ node: message, messageId: 'errorString', data: { name: cause } }),
+          [
+            {
+              messageId: 'useCause',
+              data: { pattern: ctx.sourceCode.getText(message), replacement },
+              fix: Diagnostic.replaceText(message, replacement),
+            },
+          ],
+        ),
+      );
+    }
+
+    return Visitor.merge(
+      Visitor.on('NewExpression', (node) =>
+        Opt.match(
+          Opt.filter(
+            argumentAt(node, 0),
+            (first): first is ESTree.CallExpression =>
+              first.type === 'CallExpression' && isStringCall(first) && isErrorConstructor(node),
+          ),
           {
-            messageId: 'useCause',
-            data: { pattern: context.sourceCode.getText(firstArgument), replacement },
-            fix: (fixer) => fixer.replaceText(firstArgument, replacement),
+            onNone: () => Effect.void,
+            onSome: (message) =>
+              Opt.match(argumentAt(message, 0), {
+                onNone: () => Effect.void,
+                onSome: (cause) => reportMessage(message, cause),
+              }),
           },
-        ],
-      });
-    },
-    CallExpression(node) {
-      if (isStringCall(node)) {
-        if (
-          node.parent.type === 'NewExpression' &&
-          node.parent.arguments[0] === node &&
-          isErrorConstructor(node.parent)
-        ) {
-          return;
-        }
-
-        const name = errorLikeName(node.arguments[0]);
-
-        if (name !== undefined) {
-          context.report({ node, messageId: 'errorString', data: { name } });
-        }
-
-        return;
-      }
-
-      if (
-        node.callee.type !== 'MemberExpression' ||
-        staticPath(node.callee)?.at(-1) !== 'toString' ||
-        node.arguments.length > 0
-      ) {
-        return;
-      }
-
-      const name = errorLikeName(node.callee.object);
-
-      if (name !== undefined) {
-        context.report({ node, messageId: 'errorString', data: { name } });
-      }
-    },
-    TemplateLiteral(node) {
-      const [first, last] = node.quasis;
-
-      const name = errorLikeName(node.expressions[0]);
-
-      if (name !== undefined && node.quasis.length === 2 && first?.value.raw === '' && last?.value.raw === '') {
-        context.report({ node, messageId: 'errorString', data: { name } });
-      }
-    },
-  }),
-);
+        ),
+      ),
+      Visitor.on('CallExpression', (node) => reportName(node, stringifiedName(node))),
+      Visitor.on('TemplateLiteral', (node) => reportName(node, interpolatedName(node))),
+    );
+  },
+});

@@ -1,25 +1,18 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
 import type * as EffectBarrel from 'effect';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as DateTime from 'effect/DateTime';
-import * as Fn from 'effect/Function';
+import * as Effect from 'effect/Effect';
+import type * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
-import * as P from 'effect/Predicate';
+import * as Schema from 'effect/Schema';
 import type * as Str from 'effect/String';
 
-import {
-  argumentAt,
-  defineEffectRule,
-  isAnyApi,
-  isApi,
-  isApiPath,
-  ruleMeta,
-  staticPropertyName,
-  unwrapExpression,
-  type FileState,
-} from '../utils';
+import { argumentAt, staticPropertyName, unwrapExpression } from '../internal/ast';
+import { importBindings, type ImportBindings } from '../internal/imports';
+import { ruleMeta } from '../internal/meta';
 
-const stringMethods: ReadonlySet<string> = new Set(['replace', 'replaceAll', 'slice', 'split', 'substr', 'substring']);
+const isStringMethod = Schema.is(Schema.Literals(['replace', 'replaceAll', 'slice', 'split', 'substr', 'substring']));
 
 const stringSteps = [
   'replace',
@@ -45,16 +38,12 @@ function unwrap(node: ESTree.Expression): ESTree.Expression {
 }
 
 // `DateTime.formatIso`, as a pipe step.
-function isUtcIsoFormatter(node: ESTree.Expression, state: FileState): boolean {
-  return isApi(unwrap(node), state, 'DateTime', formatIso);
+function isUtcIsoFormatter(node: ESTree.Expression, imports: ImportBindings): boolean {
+  return imports.isApi(unwrap(node), 'DateTime', formatIso);
 }
 
 // `x.toISOString()` or `DateTime.formatIso(x)`: a UTC timestamp such as `2026-03-29T23:30:00.000Z`.
-function isUtcIsoString(node: ESTree.Expression | undefined, state: FileState): boolean {
-  if (P.isUndefined(node)) {
-    return false;
-  }
-
+function isUtcIsoString(node: ESTree.Expression, imports: ImportBindings): boolean {
   const expression = unwrap(node);
 
   if (expression.type !== 'CallExpression') {
@@ -65,33 +54,32 @@ function isUtcIsoString(node: ESTree.Expression | undefined, state: FileState): 
 
   return (
     (callee.type === 'MemberExpression' &&
-      staticPropertyName(callee) === 'toISOString' &&
-      !Arr.isReadonlyArrayNonEmpty(expression.arguments)) ||
-    isUtcIsoFormatter(callee, state)
+      Opt.contains(staticPropertyName(callee), 'toISOString') &&
+      Arr.isReadonlyArrayEmpty(expression.arguments)) ||
+    isUtcIsoFormatter(callee, imports)
   );
 }
 
 // A data-last `effect/String` step, such as `Str.slice(0, 10)`.
-function isStringStep(node: ESTree.Expression | undefined, state: FileState): boolean {
-  if (P.isUndefined(node)) {
-    return false;
-  }
-
+function isStringStep(node: ESTree.Expression, imports: ImportBindings): boolean {
   const step = unwrap(node);
 
-  return step.type === 'CallExpression' && isAnyApi(step.callee, state, 'String', stringSteps);
+  return step.type === 'CallExpression' && imports.isApi(step.callee, 'String', stringSteps);
 }
 
-function isPipeFunction(node: ESTree.Expression, state: FileState): boolean {
+function isPipeFunction(node: ESTree.Expression, imports: ImportBindings): boolean {
   return (
-    isAnyApi(node, state, 'Function', pipeFunctions) ||
-    isApiPath(node, state, ['pipe' satisfies keyof typeof EffectBarrel]) ||
-    isApiPath(node, state, ['flow' satisfies keyof typeof EffectBarrel])
+    imports.isApi(node, 'Function', pipeFunctions) ||
+    imports.isApiPath(node, ['pipe' satisfies keyof typeof EffectBarrel]) ||
+    imports.isApiPath(node, ['flow' satisfies keyof typeof EffectBarrel])
   );
 }
 
 // The values and steps of `self.pipe(...)`, `pipe(...)` or `flow(...)`, in order.
-function pipeSequence(node: ESTree.CallExpression, state: FileState): ReadonlyArray<ESTree.Expression> | undefined {
+function pipeSequence(
+  node: ESTree.CallExpression,
+  imports: ImportBindings,
+): Opt.Option<ReadonlyArray<ESTree.Expression>> {
   const callee = unwrap(node.callee);
 
   const steps = Arr.filter(
@@ -100,74 +88,86 @@ function pipeSequence(node: ESTree.CallExpression, state: FileState): ReadonlyAr
   );
 
   if (steps.length !== node.arguments.length) {
-    return undefined;
+    return Opt.none();
   }
 
-  if (callee.type === 'MemberExpression' && callee.object.type !== 'Super' && staticPropertyName(callee) === 'pipe') {
-    return [callee.object, ...steps];
-  }
-
-  return isPipeFunction(callee, state) ? steps : undefined;
-}
-
-// The node to report when `node` slices or rewrites a UTC ISO string.
-function slicedUtcIso(node: ESTree.CallExpression, state: FileState): ESTree.Node | undefined {
-  const callee = unwrap(node.callee);
-
-  // `x.toISOString().slice(0, 10)`
   if (
     callee.type === 'MemberExpression' &&
-    stringMethods.has(staticPropertyName(callee) ?? '') &&
-    isUtcIsoString(callee.object, state)
+    callee.object.type !== 'Super' &&
+    Opt.contains(staticPropertyName(callee), 'pipe')
   ) {
-    return node;
+    return Opt.some([callee.object, ...steps]);
   }
 
-  // `Str.split(DateTime.formatIso(x), 'T')` and `Str.slice(0, 10)(DateTime.formatIso(x))`
-  if (
-    (node.arguments.length === 2 &&
-      isAnyApi(callee, state, 'String', dataFirstStringSteps) &&
-      isUtcIsoString(argumentAt(node, 0), state)) ||
-    (node.arguments.length === 1 && isStringStep(callee, state) && isUtcIsoString(argumentAt(node, 0), state))
-  ) {
-    return node;
-  }
+  return isPipeFunction(callee, imports) ? Opt.some(steps) : Opt.none();
+}
 
-  // `pipe(DateTime.formatIso(x), Str.slice(0, 10))`, `x.pipe(DateTime.formatIso, Str.slice(0, 10))` and similar
-  const sequence = pipeSequence(node, state);
+/**
+ * Whether a call slices or rewrites a UTC ISO string directly: `x.toISOString().slice(0, 10)`,
+ * `Str.split(DateTime.formatIso(x), 'T')` or `Str.slice(0, 10)(DateTime.formatIso(x))`.
+ *
+ * @param node Call to inspect.
+ * @param imports Import bindings of the file.
+ */
+function slicesDirectly(node: ESTree.CallExpression, imports: ImportBindings): boolean {
+  const callee = unwrap(node.callee);
 
-  if (P.isUndefined(sequence)) {
-    return undefined;
-  }
+  const firstIsUtcIso = Opt.exists(argumentAt(node, 0), (argument) => isUtcIsoString(argument, imports));
 
-  return Fn.pipe(
-    Arr.zip(sequence, Arr.drop(sequence, 1)),
-    Arr.findFirst(
-      ([previous, step]) =>
-        isStringStep(step, state) && (isUtcIsoString(previous, state) || isUtcIsoFormatter(previous, state)),
-    ),
-    Opt.map(([, step]) => step),
-    Opt.getOrUndefined,
+  return (
+    (callee.type === 'MemberExpression' &&
+      Opt.exists(staticPropertyName(callee), isStringMethod) &&
+      isUtcIsoString(callee.object, imports)) ||
+    (node.arguments.length === 2 && imports.isApi(callee, 'String', dataFirstStringSteps) && firstIsUtcIso) ||
+    (node.arguments.length === 1 && isStringStep(callee, imports) && firstIsUtcIso)
   );
 }
 
-export const noUtcIsoSlicing: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow slicing or rewriting a UTC ISO string to get a local date or time.',
-    {
+/**
+ * The node to report when `node` slices or rewrites a UTC ISO string. In a pipe, such as `pipe(DateTime.formatIso(x),
+ * Str.slice(0, 10))` or `x.pipe(DateTime.formatIso, Str.slice(0, 10))`, that is the string step.
+ *
+ * @param node Call to inspect.
+ * @param imports Import bindings of the file.
+ */
+function slicedUtcIso(node: ESTree.CallExpression, imports: ImportBindings): Opt.Option<ESTree.Node> {
+  if (slicesDirectly(node, imports)) {
+    return Opt.some(node);
+  }
+
+  return pipeSequence(node, imports).pipe(
+    Opt.flatMap((sequence) =>
+      Arr.findFirst(
+        Arr.zip(sequence, Arr.drop(sequence, 1)),
+        ([previous, step]) =>
+          isStringStep(step, imports) && (isUtcIsoString(previous, imports) || isUtcIsoFormatter(previous, imports)),
+      ),
+    ),
+    Opt.map(([, step]) => step),
+  );
+}
+
+export const noUtcIsoSlicing: CreateRule = Rule.define({
+  name: 'no-utc-iso-slicing',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow slicing or rewriting a UTC ISO string to get a local date or time.',
+    messages: {
       utcIsoSlicing:
         'toISOString() and DateTime.formatIso give UTC, so slicing or rewriting them gives the UTC date and time: in Europe/Amsterdam the previous day between 00:00 and 02:00, and +00:00 instead of +01:00/+02:00. Format in an explicit zone instead: DateTime.setZone with DateTime.formatIsoDate, formatIsoOffset or formatIsoZoned, or Intl.DateTimeFormat with timeZone.',
     },
-    'https://www.effect.website/docs/v4/api/effect/DateTime',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const reported = slicedUtcIso(node, getState());
-
-      if (P.isNotUndefined(reported)) {
-        context.report({ node: reported, messageId: 'utcIsoSlicing' });
-      }
-    },
+    url: 'https://www.effect.website/docs/v4/api/effect/DateTime',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      Opt.match(slicedUtcIso(node, imports), {
+        onNone: () => Effect.void,
+        onSome: (reported) => ctx.report(Diagnostic.fromId({ node: reported, messageId: 'utcIsoSlicing' })),
+      }),
+    );
+  },
+});

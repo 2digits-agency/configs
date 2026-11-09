@@ -1,61 +1,58 @@
-import type { Context, ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
-import type * as Schema from 'effect/Schema';
+import * as Schema from 'effect/Schema';
+import * as Str from 'effect/String';
 
 import {
-  canonicalPath,
+  argumentAt,
   containsRange,
-  defineEffectRule,
   enclosingFunction,
   findAncestor,
   propertyName,
-  ruleMeta,
   staticPropertyName,
   unwrapExpression,
-  type FileState,
   type FunctionNode,
-  argumentAt,
-} from '../../utils';
-import { millisName } from './duration';
-import { isForeignCallback } from './utils';
+} from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { isForeignCallback } from './internal/callbacks';
+import { millisName } from './internal/duration';
 
 type SchemaApi = keyof typeof Schema;
 
-const numberSchemas: ReadonlySet<string> = new Set<SchemaApi>([
-  'Finite',
-  'FiniteFromString',
-  'Int',
-  'Number',
-  'NumberFromString',
-]);
+const isNumberSchemaName = Schema.is(
+  Schema.Literals(['Finite', 'FiniteFromString', 'Int', 'Number', 'NumberFromString'] satisfies Array<SchemaApi>),
+);
 
-const schemaWrappers: ReadonlySet<string> = new Set<SchemaApi>([
-  'NullOr',
-  'NullishOr',
-  'UndefinedOr',
-  'optional',
-  'optionalKey',
-]);
+const isSchemaWrapper = Schema.is(
+  Schema.Literals(['NullOr', 'NullishOr', 'UndefinedOr', 'optional', 'optionalKey'] satisfies Array<SchemaApi>),
+);
 
 // Pipe steps that keep a number a number. Any other step, such as `Schema.decodeTo(Schema.Duration, ...)`, may not.
-const numberPreservingSteps: ReadonlySet<string> = new Set<SchemaApi>([
-  'annotate',
-  'annotateKey',
-  'brand',
-  'check',
-  'withConstructorDefault',
-  'withDecodingDefault',
-  'withDecodingDefaultKey',
-]);
+const isNumberPreservingStepName = Schema.is(
+  Schema.Literals([
+    'annotate',
+    'annotateKey',
+    'brand',
+    'check',
+    'withConstructorDefault',
+    'withDecodingDefault',
+    'withDecodingDefaultKey',
+  ] satisfies Array<SchemaApi>),
+);
 
-function schemaApiName(node: ESTree.Node, state: FileState): string | undefined {
-  const path = canonicalPath(node, state);
+const isNumberMethod = Schema.is(Schema.Literals(['annotate', 'check']));
 
-  return path?.length === 2 && path[0] === 'Schema' ? path[1] : undefined;
+const isNumberUnionMember = Schema.is(Schema.Literals(['TSNullKeyword', 'TSNumberKeyword', 'TSUndefinedKeyword']));
+
+function schemaApiName(node: ESTree.Node, imports: ImportBindings): Opt.Option<string> {
+  return imports.member(node, 'Schema');
 }
 
-function isNumberPreservingStep(node: ESTree.Argument, state: FileState): boolean {
+function isNumberPreservingStep(node: ESTree.Argument, imports: ImportBindings): boolean {
   if (node.type === 'SpreadElement') {
     return false;
   }
@@ -63,8 +60,8 @@ function isNumberPreservingStep(node: ESTree.Argument, state: FileState): boolea
   const step = unwrapExpression(node);
 
   return step.type === 'CallExpression'
-    ? numberPreservingSteps.has(schemaApiName(step.callee, state) ?? '')
-    : schemaWrappers.has(schemaApiName(step, state) ?? '');
+    ? Opt.exists(schemaApiName(step.callee, imports), isNumberPreservingStepName)
+    : Opt.exists(schemaApiName(step, imports), isSchemaWrapper);
 }
 
 /**
@@ -72,34 +69,30 @@ function isNumberPreservingStep(node: ESTree.Argument, state: FileState): boolea
  * and similar, refined with `.check(...)`, or piped only through modifiers, checks, brands, annotations and defaults.
  *
  * @param node Field schema.
- * @param state Effect import bindings for the file.
+ * @param imports Import bindings of the file.
  */
-function isNumberSchema(node: ESTree.Expression, state: FileState): boolean {
+function isNumberSchema(node: ESTree.Expression, imports: ImportBindings): boolean {
   const expression = unwrapExpression(node);
 
   if (expression.type !== 'CallExpression') {
-    return numberSchemas.has(schemaApiName(expression, state) ?? '');
+    return Opt.exists(schemaApiName(expression, imports), isNumberSchemaName);
   }
 
   const callee = expression.callee;
 
-  const first = argumentAt(expression, 0);
-
-  if (schemaWrappers.has(schemaApiName(callee, state) ?? '')) {
-    return P.isNotUndefined(first) && isNumberSchema(first, state);
+  if (Opt.exists(schemaApiName(callee, imports), isSchemaWrapper)) {
+    return Opt.exists(argumentAt(expression, 0), (first) => isNumberSchema(first, imports));
   }
 
-  if (callee.type !== 'MemberExpression' || callee.object.type === 'Super' || !isNumberSchema(callee.object, state)) {
+  if (callee.type !== 'MemberExpression' || callee.object.type === 'Super' || !isNumberSchema(callee.object, imports)) {
     return false;
   }
 
-  const method = staticPropertyName(callee);
-
-  if (method === 'pipe') {
-    return Arr.every(expression.arguments, (step) => isNumberPreservingStep(step, state));
-  }
-
-  return method === 'annotate' || method === 'check';
+  return Opt.exists(staticPropertyName(callee), (method) =>
+    method === 'pipe'
+      ? Arr.every(expression.arguments, (step) => isNumberPreservingStep(step, imports))
+      : isNumberMethod(method),
+  );
 }
 
 /**
@@ -117,63 +110,59 @@ function isNumberType(annotation: ESTree.TSTypeAnnotation | null | undefined): b
   return (
     type?.type === 'TSUnionType' &&
     Arr.some(type.types, (member) => member.type === 'TSNumberKeyword') &&
-    Arr.every(type.types, (member) => ['TSNullKeyword', 'TSNumberKeyword', 'TSUndefinedKeyword'].includes(member.type))
+    Arr.every(type.types, (member) => isNumberUnionMember(member.type))
   );
 }
 
-function isDurationName(name: string | undefined): name is string {
-  return name !== undefined && millisName(name) === 'duration';
+function isDurationName(name: string): boolean {
+  return Opt.contains(millisName(name), 'duration');
 }
 
-function keyName(node: ESTree.PropertyDefinition | ESTree.TSPropertySignature): string | undefined {
+function keyName(node: ESTree.PropertyDefinition | ESTree.TSPropertySignature): Opt.Option<string> {
   if (node.computed) {
-    return node.key.type === 'Literal' && P.isString(node.key.value) ? node.key.value : undefined;
+    return node.key.type === 'Literal' && Str.isString(node.key.value) ? Opt.some(node.key.value) : Opt.none();
   }
 
-  return node.key.type === 'Identifier' ? node.key.name : undefined;
+  return node.key.type === 'Identifier' ? Opt.some(node.key.name) : Opt.none();
+}
+
+const DeclarationFile = Schema.String.check(Schema.isPattern(/\.d\.[cm]?ts$/u));
+
+const isDeclarationFile = Schema.is(DeclarationFile);
+
+function isAmbient(node: ESTree.Node): node is ESTree.Node & { readonly declare: true } {
+  return P.hasProperty(node, 'declare') && node.declare;
 }
 
 /**
- * Whether a declaration describes data that this code does not own: ambient declarations (`.d.ts` files and `declare`
- * modules, globals, classes and variables) and parameter types of callbacks that a non-Effect API calls.
+ * Whether a declaration describes data that this code does not own: ambient declarations (`declare` modules, globals,
+ * classes and variables) and parameter types of callbacks that a non-Effect API calls. Declaration files are skipped
+ * entirely.
  *
  * @param node Declaration to inspect.
- * @param context Rule context.
- * @param state Effect import bindings for the file.
+ * @param imports Import bindings of the file.
  */
-function isForeignDeclaration(node: ESTree.Node, context: Context, state: FileState): boolean {
-  if (/\.d\.[cm]?ts$/u.test(context.filename)) {
-    return true;
-  }
-
+function isForeignDeclaration(node: ESTree.Node, imports: ImportBindings): boolean {
   // `declare module`, `declare global`, `declare class` and `declare const` describe code defined elsewhere.
-  const ambient = findAncestor(
-    node,
-    (ancestor): ancestor is ESTree.Node => P.hasProperty(ancestor, 'declare') && ancestor.declare,
-  );
-
-  if (P.isNotUndefined(ambient)) {
-    return true;
-  }
-
-  const owner = enclosingFunction(node);
-
   return (
-    P.isNotUndefined(owner) &&
-    isForeignCallback(owner, state) &&
-    Arr.some(owner.params, (parameter) => containsRange(parameter, node))
+    Opt.isSome(findAncestor(node, isAmbient)) ||
+    Opt.exists(
+      enclosingFunction(node),
+      (owner) =>
+        isForeignCallback(owner, imports) && Arr.some(owner.params, (parameter) => containsRange(parameter, node)),
+    )
   );
 }
 
-function parameterBinding(parameter: ESTree.ParamPattern): ESTree.BindingIdentifier | undefined {
+function parameterBinding(parameter: ESTree.ParamPattern): Opt.Option<ESTree.BindingIdentifier> {
   const pattern = parameter.type === 'TSParameterProperty' ? parameter.parameter : parameter;
 
   if (pattern.type === 'Identifier') {
-    return isNumberType(pattern.typeAnnotation) ? pattern : undefined;
+    return isNumberType(pattern.typeAnnotation) ? Opt.some(pattern) : Opt.none();
   }
 
   if (pattern.type !== 'AssignmentPattern' || pattern.left.type !== 'Identifier') {
-    return undefined;
+    return Opt.none();
   }
 
   const fallback = unwrapExpression(pattern.right);
@@ -181,78 +170,81 @@ function parameterBinding(parameter: ESTree.ParamPattern): ESTree.BindingIdentif
   // `timeoutMs = 5000` is a number even without an annotation.
   return isNumberType(pattern.left.typeAnnotation) ||
     (!pattern.left.typeAnnotation && fallback.type === 'Literal' && P.isNumber(fallback.value))
-    ? pattern.left
-    : undefined;
+    ? Opt.some(pattern.left)
+    : Opt.none();
 }
 
-export const preferEffectDurationTypes: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Prefer Duration types over plain numbers for millisecond parameters and fields.',
-    {
+export const preferEffectDurationTypes: CreateRule = Rule.define({
+  name: 'prefer-effect-duration-types',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Prefer Duration types over plain numbers for millisecond parameters and fields.',
+    messages: {
       durationType:
         '{{name}} holds a duration as a number of milliseconds. Type it as Duration.Input (or Duration.Duration) and convert with Duration.toMillis only where a non-Effect API needs milliseconds.',
       durationSchema:
         '{{name}} decodes a duration as a plain number. Use Schema.DurationFromMillis to keep milliseconds in the encoded data, or Schema.Duration.',
     },
-    'https://www.effect.website/docs/v4/api/effect/Duration',
-  ),
-  (context, getState) => {
-    function report(node: ESTree.Node, name: string, messageId: 'durationSchema' | 'durationType'): void {
-      context.report({ node, messageId, data: { name } });
+    url: 'https://www.effect.website/docs/v4/api/effect/Duration',
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    if (!imports.hasEffectImport) {
+      return {};
     }
 
-    function checkFunction(node: FunctionNode): void {
-      // Overloads and `declare function` have no body; the implementation is reported instead.
-      if (
-        !getState().hasEffectImport ||
-        !node.body ||
-        isForeignCallback(node, getState()) ||
-        isForeignDeclaration(node, context, getState())
-      ) {
-        return;
-      }
+    // `.d.ts` files describe code defined elsewhere.
+    const declarationFile = isDeclarationFile(ctx.filename);
 
-      for (const parameter of node.params) {
-        const binding = parameterBinding(parameter);
-
-        if (P.isNotUndefined(binding) && isDurationName(binding.name)) {
-          report(binding, binding.name, 'durationType');
-        }
-      }
+    function report(node: ESTree.Node, name: string, messageId: 'durationSchema' | 'durationType') {
+      return ctx.report(Diagnostic.fromId({ node, messageId, data: { name } }));
     }
 
-    function checkField(node: ESTree.PropertyDefinition | ESTree.TSPropertySignature): void {
-      const name = keyName(node);
-
-      if (
-        getState().hasEffectImport &&
-        isDurationName(name) &&
-        isNumberType(node.typeAnnotation) &&
-        !isForeignDeclaration(node, context, getState())
-      ) {
-        report(node.key, name, 'durationType');
-      }
+    function checkFunction(node: FunctionNode) {
+      return declarationFile || !node.body || isForeignCallback(node, imports) || isForeignDeclaration(node, imports)
+        ? Effect.void
+        : // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+          Effect.forEach(
+            Arr.filter(Arr.getSomes(Arr.map(node.params, parameterBinding)), ({ name }) => isDurationName(name)),
+            (binding) => report(binding, binding.name, 'durationType'),
+            { discard: true },
+          );
     }
 
-    return {
-      ArrowFunctionExpression: checkFunction,
-      FunctionDeclaration: checkFunction,
-      FunctionExpression: checkFunction,
-      PropertyDefinition: checkField,
-      TSPropertySignature: checkField,
-      Property(node) {
-        const name = propertyName(node as ESTree.ObjectProperty);
+    function checkField(node: ESTree.PropertyDefinition | ESTree.TSPropertySignature) {
+      return Opt.match(
+        Opt.filter(
+          keyName(node),
+          (name) =>
+            isDurationName(name) &&
+            isNumberType(node.typeAnnotation) &&
+            !declarationFile &&
+            !isForeignDeclaration(node, imports),
+        ),
+        { onNone: () => Effect.void, onSome: (name) => report(node.key, name, 'durationType') },
+      );
+    }
 
-        if (
-          getState().hasEffectImport &&
-          node.parent.type === 'ObjectExpression' &&
-          isDurationName(name) &&
-          isNumberSchema(node.value as ESTree.Expression, getState())
-        ) {
-          report(node.key, name, 'durationSchema');
-        }
-      },
-    };
+    return Visitor.merge(
+      Visitor.on('ArrowFunctionExpression', checkFunction),
+      Visitor.on('FunctionDeclaration', checkFunction),
+      Visitor.on('FunctionExpression', checkFunction),
+      Visitor.on('PropertyDefinition', checkField),
+      Visitor.on('TSPropertySignature', checkField),
+      Visitor.on('Property', (node) =>
+        node.parent.type === 'ObjectExpression'
+          ? Opt.match(
+              Opt.filter(
+                propertyName(node as ESTree.ObjectProperty),
+                (name) => isDurationName(name) && isNumberSchema(node.value as ESTree.Expression, imports),
+              ),
+              { onNone: () => Effect.void, onSome: (name) => report(node.key, name, 'durationSchema') },
+            )
+          : Effect.void,
+      ),
+    );
   },
-);
+});

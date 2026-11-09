@@ -1,20 +1,21 @@
-// oxlint-disable unicorn/no-array-method-this-argument
-import type { Context, ESTree } from '@oxlint/plugins';
+import type { ESTree, RuleContext } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Duration from 'effect/Duration';
-import type * as Effect from 'effect/Effect';
+import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Num from 'effect/Number';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import type * as Schedule from 'effect/Schedule';
+import * as Schema from 'effect/Schema';
 import type * as Stream from 'effect/Stream';
 import * as Str from 'effect/String';
 import type * as TestClock from 'effect/testing/TestClock';
 
-import { importedApi } from '../../fixes';
-import { argumentAt, canonicalPath, objectProperty, unwrapExpression, type FileState } from '../../utils';
+import { argumentAt, objectProperty, unwrapExpression } from '../../../internal/ast';
+import type { ImportBindings } from '../../../internal/imports';
+import { isImportedApi } from '../../../internal/scope';
 
 type DurationPosition = 'first' | 'last' | 'options.duration';
 
@@ -50,134 +51,126 @@ const durationApis: ReadonlyMap<string, DurationPosition> = new Map<DurationApi,
   ['TestClock.adjust', 'last'],
 ]);
 
-const durationExpressions: Record<DurationPosition, (node: ESTree.CallExpression) => ESTree.Expression | undefined> = {
-  first: (node) => argumentAt(node, 0),
-  last: (node) => argumentAt(node, node.arguments.length - 1),
-  'options.duration': (node) => {
-    const options = argumentAt(node, node.arguments.length - 1);
-
-    return options?.type === 'ObjectExpression' ? objectProperty(options, 'duration')?.value : undefined;
-  },
-};
+const durationExpression = Match.type<DurationPosition>().pipe(
+  Match.withReturnType<(node: ESTree.CallExpression) => Opt.Option<ESTree.Expression>>(),
+  Match.when('first', () => (node) => argumentAt(node, 0)),
+  Match.when('last', () => (node) => argumentAt(node, node.arguments.length - 1)),
+  Match.when(
+    'options.duration',
+    () => (node) =>
+      argumentAt(node, node.arguments.length - 1).pipe(
+        Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
+        Opt.flatMap((options) => objectProperty(options, 'duration')),
+        Opt.map(({ value }) => value),
+      ),
+  ),
+  Match.exhaustive,
+);
 
 /**
- * Return the expression a call passes as its `Duration.Input`, if the callee is a known Effect duration API that still
+ * The expression a call passes as its `Duration.Input`, if the callee is a known Effect duration API that still
  * resolves to its runtime import.
  *
  * @param node Call to inspect.
- * @param context Rule context, used to reject shadowed import names.
- * @param state Effect import bindings for the file.
+ * @param imports Import bindings of the file.
  */
 export function durationArgument(
   node: ESTree.CallExpression,
-  context: Context,
-  state: FileState,
-): ESTree.Expression | undefined {
-  const path = canonicalPath(node.callee, state);
-
-  const position = P.isUndefined(path) ? undefined : durationApis.get(Arr.join(path, '.'));
-
-  return P.isNotUndefined(position) && importedApi(context, node.callee)
-    ? durationExpressions[position](node)
-    : undefined;
+  imports: ImportBindings,
+): Effect.Effect<Opt.Option<ESTree.Expression>, never, RuleContext> {
+  return Opt.match(
+    imports.path(node.callee).pipe(Opt.flatMap((path) => Opt.fromNullishOr(durationApis.get(Arr.join(path, '.'))))),
+    {
+      onNone: () => Effect.succeedNone,
+      onSome: (position) =>
+        Effect.map(isImportedApi(node.callee), (imported) =>
+          imported ? durationExpression(position)(node) : Opt.none<ESTree.Expression>(),
+        ),
+    },
+  );
 }
 
 type Arithmetic = (left: number, right: number) => number;
 
 const arithmetic = Match.type<ESTree.BinaryExpression['operator']>().pipe(
-  Match.withReturnType<Arithmetic | undefined>(),
-  Match.when('*', () => Num.multiply),
-  Match.when('+', () => Num.sum),
-  Match.when('-', () => Num.subtract),
-  Match.when('/', () => Num.divideUnsafe),
-  Match.when('%', () => Num.remainder),
-  Match.when('**', () => (base: number, exponent: number) => base ** exponent),
-  Match.orElse(Fn.constUndefined),
+  Match.withReturnType<Opt.Option<Arithmetic>>(),
+  Match.when('*', () => Opt.some(Num.multiply)),
+  Match.when('+', () => Opt.some(Num.sum)),
+  Match.when('-', () => Opt.some(Num.subtract)),
+  Match.when('/', () => Opt.some(Num.divideUnsafe)),
+  Match.when('%', () => Opt.some(Num.remainder)),
+  Match.when('**', () => Opt.some((base: number, exponent: number) => base ** exponent)),
+  Match.orElse(() => Opt.none()),
 );
+
+function numberLiteral(node: ESTree.Expression): Opt.Option<number> {
+  return node.type === 'Literal' && P.isNumber(node.value) ? Opt.some(node.value) : Opt.none();
+}
 
 /**
  * Evaluate number literals and arithmetic on number literals, such as `-1` or `24 * 60 * 60 * 1000`.
  *
  * @param node Expression to evaluate.
  */
-export function numericValue(node: ESTree.Expression): number | undefined {
+export function numericValue(node: ESTree.Expression): Opt.Option<number> {
   const expression = unwrapExpression(node);
 
   if (expression.type === 'Literal') {
-    return P.isNumber(expression.value) ? expression.value : undefined;
+    return numberLiteral(expression);
   }
 
   if (expression.type === 'UnaryExpression' && (expression.operator === '-' || expression.operator === '+')) {
-    const argument = numericValue(expression.argument);
-
-    return P.isUndefined(argument) || expression.operator === '+' ? argument : -argument;
+    return Opt.map(numericValue(expression.argument), (value) => (expression.operator === '+' ? value : -value));
   }
 
   if (expression.type !== 'BinaryExpression' || expression.left.type === 'PrivateIdentifier') {
-    return undefined;
+    return Opt.none();
   }
 
-  const left = numericValue(expression.left);
+  const { left, right, operator } = expression;
 
-  const right = numericValue(expression.right);
-
-  if (P.isUndefined(left) || P.isUndefined(right)) {
-    return undefined;
-  }
-
-  return arithmetic(expression.operator)?.(left, right);
+  return Opt.flatMap(arithmetic(operator), (apply) =>
+    Opt.zipWith(numericValue(left), numericValue(right), (a, b) => apply(a, b)),
+  );
 }
 
-function factors(node: ESTree.Expression): Array<number> | undefined {
+function factors(node: ESTree.Expression): Opt.Option<ReadonlyArray<number>> {
   const expression = unwrapExpression(node);
 
   if (expression.type === 'Literal') {
-    return P.isNumber(expression.value) ? [expression.value] : undefined;
+    return Opt.map(numberLiteral(expression), Arr.of);
   }
 
-  if (expression.type !== 'BinaryExpression' || expression.operator !== '*') {
-    return undefined;
-  }
-
-  const left = factors(expression.left);
-
-  const right = factors(expression.right);
-
-  return P.isUndefined(left) || P.isUndefined(right) ? undefined : Arr.appendAll(left, right);
+  return expression.type === 'BinaryExpression' && expression.operator === '*'
+    ? Opt.zipWith(factors(expression.left), factors(expression.right), (left, right) => [...left, ...right])
+    : Opt.none();
 }
 
 // Minute, hour, and day sizes in milliseconds are unambiguous on their own.
-const millisFactors = new Set([60_000, 3_600_000, 86_400_000]);
+const isMillisFactor = Schema.is(Schema.Literals([60_000, 3_600_000, 86_400_000]));
 
-const sixtyFactors = new Set([60, 3600, 86_400]);
+const isSixtyFactor = Schema.is(Schema.Literals([60, 3600, 86_400]));
 
-const timeFactors = new Set([7, 24, 60, 1000, 3600, 86_400]);
+const isTimeFactor = Schema.is(Schema.Literals([7, 24, 60, 1000, 3600, 86_400]));
 
 /**
- * Detect hand-written time arithmetic such as `5 * 60 * 1000`, `24 * 60 * 60`, or `5 * 60_000`. A lone `60` is not
- * enough: `60 * 1024` and `60 * 2` are not times.
+ * Hand-written time arithmetic such as `5 * 60 * 1000`, `24 * 60 * 60`, or `5 * 60_000`, and whether it counts
+ * milliseconds. A lone `60` is not enough: `60 * 1024` and `60 * 2` are not times.
  *
  * @param node Expression to inspect.
  */
-export function timeArithmetic(node: ESTree.Expression): { readonly millis: boolean } | undefined {
-  const product = factors(node);
-
-  if (P.isUndefined(product) || product.length < 2) {
-    return undefined;
-  }
-
-  const time =
-    Arr.some(product, (factor) => millisFactors.has(factor)) ||
-    (Arr.some(product, (factor) => sixtyFactors.has(factor)) &&
-      Arr.filter(product, (factor) => timeFactors.has(factor)).length >= 2);
-
-  if (!time) {
-    return undefined;
-  }
-
-  return {
-    millis: Arr.contains(product, 1000) || Arr.some(product, (factor) => factor % 60_000 === 0),
-  };
+export function timeArithmetic(node: ESTree.Expression): Opt.Option<{ readonly millis: boolean }> {
+  return factors(node).pipe(
+    Opt.filter(
+      (product) =>
+        product.length >= 2 &&
+        (Arr.some(product, isMillisFactor) ||
+          (Arr.some(product, isSixtyFactor) && Arr.filter(product, isTimeFactor).length >= 2)),
+    ),
+    Opt.map((product) => ({
+      millis: Arr.contains(product, 1000) || Arr.some(product, (factor) => factor % 60_000 === 0),
+    })),
+  );
 }
 
 /**
@@ -193,26 +186,30 @@ export const nameWords: (name: string) => Array<string> = Fn.flow(
 /**
  * What a millisecond number stands for: a point in time (epoch millis) or an amount of time.
  */
-export type MillisKind = 'duration' | 'instant';
+export const MillisKind = Schema.Literals(['duration', 'instant']);
 
-const millisWords = new Set(['millis', 'milliseconds', 'ms']);
+export type MillisKind = typeof MillisKind.Type;
 
-const instantWords = new Set([
-  'at',
-  'created',
-  'deadline',
-  'end',
-  'ended',
-  'epoch',
-  'last',
-  'now',
-  'since',
-  'start',
-  'started',
-  'timestamp',
-  'until',
-  'updated',
-]);
+const isMillisWord = Schema.is(Schema.Literals(['millis', 'milliseconds', 'ms']));
+
+const isInstantWord = Schema.is(
+  Schema.Literals([
+    'at',
+    'created',
+    'deadline',
+    'end',
+    'ended',
+    'epoch',
+    'last',
+    'now',
+    'since',
+    'start',
+    'started',
+    'timestamp',
+    'until',
+    'updated',
+  ]),
+);
 
 /**
  * Classify a binding name that ends in a millisecond unit (`timeoutMs`, `TTL_MILLIS`, `expiresAtMs`). Names that
@@ -221,14 +218,12 @@ const instantWords = new Set([
  *
  * @param name Binding or property name.
  */
-export function millisName(name: string): MillisKind | undefined {
+export function millisName(name: string): Opt.Option<MillisKind> {
   const parts = nameWords(name);
 
-  if (!millisWords.has(parts.at(-1) ?? '')) {
-    return undefined;
-  }
-
-  return Arr.some(parts, (part) => instantWords.has(part)) ? 'instant' : 'duration';
+  return Opt.map(Opt.filter(Arr.last(parts), isMillisWord), (): MillisKind =>
+    Arr.some(parts, isInstantWord) ? 'instant' : 'duration',
+  );
 }
 
 export type DurationUnit = Extract<

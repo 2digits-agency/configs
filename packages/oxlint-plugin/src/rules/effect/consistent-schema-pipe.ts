@@ -1,120 +1,148 @@
-import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import type * as EffectBarrel from 'effect';
+import {
+  Diagnostic,
+  Rule,
+  RuleContext,
+  Visitor,
+  type CreateRule,
+  type ESTree,
+  type OxlintSourceCode,
+} from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
+import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
-import type * as Schema from 'effect/Schema';
+import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
+import * as Tuple from 'effect/Tuple';
 
-import { importedApi } from '../../fixes';
 import {
-  canonicalPath,
+  argumentAt,
   containsRange,
-  defineEffectRule,
-  isApiPath,
-  resolveVariable,
-  ruleMeta,
+  containsSame,
+  isSomeSame,
   staticPath,
   staticPropertyName,
-  type FileState,
-  argumentAt,
-} from '../../utils';
+} from '../../internal/ast';
+import { importBindings, namespaceMember, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { isImportedApiIn, lookupVariable } from '../../internal/scope';
+
+type SchemaApi = keyof typeof Schema;
 
 // Lists follow docs/adr/0001 for the catalog's Effect version; revisit them when Effect adds Schema functions.
-const modifiers: ReadonlySet<string> = new Set([
-  'flip',
-  'fromFormData',
-  'fromJsonString',
-  'fromURLSearchParams',
-  'mutable',
-  'mutableKey',
-  'NullishOr',
-  'NullOr',
-  'optional',
-  'optionalKey',
-  'OptionFromNullishOr',
-  'OptionFromNullOr',
-  'OptionFromOptional',
-  'OptionFromOptionalKey',
-  'OptionFromOptionalNullOr',
-  'OptionFromUndefinedOr',
-  'readonlyKey',
-  'RedactedFromValue',
-  'required',
-  'requiredKey',
-  'toCodecArrayFromSingle',
-  'toCodecGoJson',
-  'toCodecIso',
-  'toCodecJson',
-  'toCodecStringTree',
-  'toEncoded',
-  'toType',
-  'UndefinedOr',
-] satisfies ReadonlyArray<keyof typeof Schema>);
+const isModifier = Schema.is(
+  Schema.Literals([
+    'flip',
+    'fromFormData',
+    'fromJsonString',
+    'fromURLSearchParams',
+    'mutable',
+    'mutableKey',
+    'NullishOr',
+    'NullOr',
+    'optional',
+    'optionalKey',
+    'OptionFromNullishOr',
+    'OptionFromNullOr',
+    'OptionFromOptional',
+    'OptionFromOptionalKey',
+    'OptionFromOptionalNullOr',
+    'OptionFromUndefinedOr',
+    'readonlyKey',
+    'RedactedFromValue',
+    'required',
+    'requiredKey',
+    'toCodecArrayFromSingle',
+    'toCodecGoJson',
+    'toCodecIso',
+    'toCodecJson',
+    'toCodecStringTree',
+    'toEncoded',
+    'toType',
+    'UndefinedOr',
+  ] satisfies ReadonlyArray<SchemaApi>),
+);
 
-const wrappers: ReadonlySet<string> = new Set([
-  'Array',
-  'ArrayEnsure',
-  'Chunk',
-  'HashSet',
-  'NonEmptyArray',
-  'Option',
-  'ReadonlySet',
-  'Redacted',
-  'Tree',
-  'UniqueArray',
-] satisfies ReadonlyArray<keyof typeof Schema>);
+const isWrapper = Schema.is(
+  Schema.Literals([
+    'Array',
+    'ArrayEnsure',
+    'Chunk',
+    'HashSet',
+    'NonEmptyArray',
+    'Option',
+    'ReadonlySet',
+    'Redacted',
+    'Tree',
+    'UniqueArray',
+  ] satisfies ReadonlyArray<SchemaApi>),
+);
 
-const dataLastSteps: ReadonlySet<string> = new Set([
-  'annotate',
-  'annotateEncoded',
-  'annotateKey',
-  'brand',
-  'catchDecoding',
-  'catchDecodingWithContext',
-  'catchEncoding',
-  'catchEncodingWithContext',
-  'check',
-  'decode',
-  'decodeTo',
-  'encode',
-  'encodeKeys',
-  'encodeTo',
-  'extendTo',
-  'fieldsAssign',
-  'fromBrand',
-  'middlewareDecoding',
-  'middlewareEncoding',
-  'overrideToCodecIso',
-  'overrideToEquivalence',
-  'overrideToFormatter',
-  'refine',
-  'toTaggedUnion',
-  'withConstructorDefault',
-  'withDecodingDefault',
-  'withDecodingDefaultKey',
-  'withDecodingDefaultType',
-  'withDecodingDefaultTypeKey',
-] satisfies ReadonlyArray<keyof typeof Schema>);
+const isDataLastStep = Schema.is(
+  Schema.Literals([
+    'annotate',
+    'annotateEncoded',
+    'annotateKey',
+    'brand',
+    'catchDecoding',
+    'catchDecodingWithContext',
+    'catchEncoding',
+    'catchEncodingWithContext',
+    'check',
+    'decode',
+    'decodeTo',
+    'encode',
+    'encodeKeys',
+    'encodeTo',
+    'extendTo',
+    'fieldsAssign',
+    'fromBrand',
+    'middlewareDecoding',
+    'middlewareEncoding',
+    'overrideToCodecIso',
+    'overrideToEquivalence',
+    'overrideToFormatter',
+    'refine',
+    'toTaggedUnion',
+    'withConstructorDefault',
+    'withDecodingDefault',
+    'withDecodingDefaultKey',
+    'withDecodingDefaultType',
+    'withDecodingDefaultTypeKey',
+  ] satisfies ReadonlyArray<SchemaApi>),
+);
 
 // Schema methods that return a schema, so a head built from them still has `.pipe`.
-const schemaMethods: ReadonlySet<string> = new Set([
-  'annotate',
-  'annotateKey',
-  'check',
-  'mapFields',
-] satisfies ReadonlyArray<keyof Schema.Struct<Schema.Struct.Fields>>);
+const isSchemaMethod = Schema.is(
+  Schema.Literals(['annotate', 'annotateKey', 'check', 'mapFields'] satisfies ReadonlyArray<
+    keyof Schema.Struct<Schema.Struct.Fields>
+  >),
+);
 
 // Heads that can take `.pipe(...)` without parentheses.
-const memberSafeHeads = new Set<string>(['CallExpression', 'Identifier', 'MemberExpression', 'ThisExpression']);
+const isMemberSafeHead = Schema.is(
+  Schema.Literals(['CallExpression', 'Identifier', 'MemberExpression', 'ThisExpression']),
+);
+
+const isPureLeaf = Schema.is(
+  Schema.Literals(['ArrowFunctionExpression', 'FunctionExpression', 'Identifier', 'Literal', 'ThisExpression']),
+);
+
+const ConstructorName = Schema.String.check(Schema.isPattern(/^\p{Lu}/u));
+
+const isConstructorName = Schema.is(ConstructorName);
 
 // Stands in for the head while rendering, so the fix only rewrites the text around it.
 const headMarker = '\0';
 
-const constructorName = /^\p{Lu}/u;
-
-type Violation = 'dataLastCall' | 'functionPipe' | 'modifierCall' | 'wrapperPipe';
+interface Violation {
+  readonly kind: 'dataLastCall' | 'functionPipe' | 'modifierCall' | 'wrapperPipe';
+  readonly name?: string;
+}
 
 interface Step {
   readonly text: string;
@@ -124,182 +152,173 @@ interface Step {
 interface Chain {
   readonly head: ESTree.Expression;
   readonly steps: ReadonlyArray<Step>;
-  readonly violation: { readonly kind: Violation; readonly name?: string } | undefined;
+  readonly violation: Opt.Option<Violation>;
   // The fix would evaluate an impure expression at a different time than the original code.
   readonly reordersEffects: boolean;
 }
 
-function schemaMember(node: ESTree.Node, context: Context, state: FileState): string | undefined {
-  const path = canonicalPath(node, state);
-
-  return staticPath(node)?.length === 2 && path?.length === 2 && path[0] === 'Schema' && importedApi(context, node)
-    ? path[1]
-    : undefined;
+/**
+ * What the chain analysis reads from the file: its source and its import bindings.
+ */
+interface Env {
+  readonly sourceCode: OxlintSourceCode;
+  readonly imports: ImportBindings;
 }
 
-function isWrapper(name: string | undefined): name is string {
-  return name !== undefined && wrappers.has(name);
+function isSchemaFunction(name: string): boolean {
+  return isModifier(name) || isWrapper(name);
 }
 
-function isSchemaFunction(name: string | undefined): name is string {
-  return name !== undefined && (modifiers.has(name) || wrappers.has(name));
+/**
+ * The `Schema` member a two-part expression such as `Schema.optional` or `S.Array` names, while its import is still in
+ * scope.
+ *
+ * @param node Expression.
+ * @param env File being linted.
+ */
+function schemaMember(node: ESTree.Node, env: Env): Opt.Option<string> {
+  return Opt.filter(
+    env.imports.member(node, 'Schema'),
+    () => Opt.exists(staticPath(node), (local) => local.length === 2) && isImportedApiIn(env.sourceCode, node),
+  );
 }
 
-const pureLeaves = new Set<string>([
-  'ArrowFunctionExpression',
-  'FunctionExpression',
-  'Identifier',
-  'Literal',
-  'ThisExpression',
-]);
-
-function allPure(nodes: ReadonlyArray<ESTree.Node | null>, context: Context, state: FileState): boolean {
-  return Arr.every(nodes, (node) => P.isNull(node) || isPure(node, context, state));
+function allPure(nodes: ReadonlyArray<ESTree.Node | null>, env: Env): boolean {
+  return Arr.every(nodes, (node) => P.isNull(node) || isPure(node, env));
 }
 
-// Expressions whose evaluation has no observable effect, so a fix may move them. Schema factories count as pure.
-function isPure(node: ESTree.Node, context: Context, state: FileState): boolean {
-  if (pureLeaves.has(node.type)) {
-    return true;
-  }
-
-  if (node.type === 'MemberExpression') {
-    return isPure(node.object, context, state) && (!node.computed || isPure(node.property, context, state));
-  }
-
-  if (node.type === 'TemplateLiteral') {
-    return allPure(node.expressions, context, state);
-  }
-
-  if (node.type === 'ArrayExpression') {
-    return allPure(node.elements, context, state);
-  }
-
-  if (node.type === 'ObjectExpression') {
-    return Arr.every(node.properties, (property) =>
-      property.type === 'SpreadElement'
-        ? isPure(property.argument, context, state)
-        : (!property.computed || isPure(property.key, context, state)) && isPure(property.value, context, state),
-    );
-  }
-
-  if (node.type !== 'CallExpression') {
-    return false;
-  }
-
-  const callee = node.callee.type === 'CallExpression' ? node.callee.callee : node.callee;
-
+/**
+ * Whether evaluating an expression has no observable effect, so a fix may move it. Schema factories count as pure.
+ *
+ * @param node Expression.
+ * @param env File being linted.
+ */
+function isPure(node: ESTree.Node, env: Env): boolean {
   return (
-    P.isNotUndefined(schemaMember(callee, context, state)) &&
-    (node.callee === callee || isPure(node.callee, context, state)) &&
-    allPure(node.arguments, context, state)
+    isPureLeaf(node.type) ||
+    Match.value(node).pipe(
+      Match.discriminators('type')({
+        MemberExpression: ({ object, computed, property }) =>
+          isPure(object, env) && (!computed || isPure(property, env)),
+        TemplateLiteral: ({ expressions }) => allPure(expressions, env),
+        ArrayExpression: ({ elements }) => allPure(elements, env),
+        ObjectExpression: ({ properties }) =>
+          Arr.every(properties, (property) =>
+            property.type === 'SpreadElement'
+              ? isPure(property.argument, env)
+              : (!property.computed || isPure(property.key, env)) && isPure(property.value, env),
+          ),
+        CallExpression: (call) => {
+          const callee = call.callee.type === 'CallExpression' ? call.callee.callee : call.callee;
+
+          return (
+            Opt.isSome(schemaMember(callee, env)) &&
+            (call.callee === callee || isPure(call.callee, env)) &&
+            allPure(call.arguments, env)
+          );
+        },
+      }),
+      Match.orElse(Fn.constFalse),
+    )
   );
 }
 
-function typePath(node: ESTree.TSTypeName, state: FileState): ReadonlyArray<string> | undefined {
+function typePath(node: ESTree.TSTypeName, imports: ImportBindings): Opt.Option<ReadonlyArray<string>> {
   if (node.type === 'Identifier') {
-    return state.bindings.get(node.name);
+    return Opt.fromNullishOr(imports.bindings.get(node.name));
   }
 
-  if (node.type !== 'TSQualifiedName') {
-    return undefined;
-  }
-
-  const left = typePath(node.left, state);
-
-  return P.isUndefined(left) ? undefined : [...left, node.right.name];
+  return node.type === 'TSQualifiedName'
+    ? Opt.map(typePath(node.left, imports), (left) => [...left, node.right.name])
+    : Opt.none();
 }
 
-function typeParameter(name: string, from: ESTree.Node): ESTree.TSTypeParameter | undefined {
-  for (let node: ESTree.Node | null = from.parent; P.isNotNull(node); node = node.parent) {
-    const parameter =
+/**
+ * The type parameter named `name` that is in scope at `from`.
+ *
+ * @param name Type parameter name.
+ * @param from Reference site.
+ */
+function typeParameter(name: string, from: ESTree.Node): Opt.Option<ESTree.TSTypeParameter> {
+  return Opt.flatMap(Opt.fromNullishOr(from.parent as ESTree.Node | null), (node) => {
+    const declared =
       'typeParameters' in node && node.typeParameters?.type === 'TSTypeParameterDeclaration'
-        ? Fn.pipe(
-            node.typeParameters.params,
-            Arr.findFirst((candidate) => candidate.name.name === name),
-            Opt.getOrUndefined,
-          )
-        : undefined;
+        ? Arr.findFirst(node.typeParameters.params, (candidate) => candidate.name.name === name)
+        : Opt.none();
 
-    if (P.isNotUndefined(parameter)) {
-      return parameter;
-    }
-  }
-
-  return undefined;
+    return Opt.orElse(declared, () => typeParameter(name, node));
+  });
 }
 
-// Whether a value of the declared type has `.pipe`, or undefined when that is unknown without type information.
-function hasPipe(declared: ESTree.TSType, from: ESTree.Node, state: FileState): boolean | undefined {
-  const seen = new Set<ESTree.TSTypeParameter>();
+/**
+ * Whether a value of the declared type has `.pipe`, or none when that is unknown without type information. A type
+ * parameter only has `.pipe` when its constraint does, so constraints are followed to a Schema type.
+ *
+ * @param declared Declared type.
+ * @param from Where the type is written, for resolving type parameters.
+ * @param imports Import bindings of the file.
+ * @param seen Type parameters already followed.
+ */
+function hasPipe(
+  declared: ESTree.TSType | null,
+  from: ESTree.Node,
+  imports: ImportBindings,
+  seen: ReadonlyArray<ESTree.TSTypeParameter> = [],
+): Opt.Option<boolean> {
+  const unknownOrFalse = Arr.isReadonlyArrayEmpty(seen) ? Opt.none<boolean>() : Opt.some(false);
 
-  let type: ESTree.TSType | null = declared;
-
-  let scope: ESTree.Node = from;
-
-  // A type parameter only has `.pipe` when its constraint does, so follow constraints to a Schema type.
-  while (type?.type === 'TSTypeReference') {
-    const path = typePath(type.typeName, state);
-
-    const member = path?.length === 2 && path[0] === 'Schema' ? path[1] : undefined;
-
-    if (P.isNotUndefined(member)) {
-      // Schema.Constraint and its subtypes are not Pipeable, unlike Schema.Top and the schemas built on it.
-      return !Str.startsWith('Constraint')(member);
-    }
-
-    const parameter: ESTree.TSTypeParameter | undefined =
-      type.typeName.type === 'Identifier' ? typeParameter(type.typeName.name, scope) : undefined;
-
-    if (P.isUndefined(parameter) || seen.has(parameter)) {
-      return seen.size === 0 ? undefined : false;
-    }
-
-    seen.add(parameter);
-
-    type = parameter.constraint;
-
-    scope = parameter;
+  if (declared?.type !== 'TSTypeReference') {
+    return unknownOrFalse;
   }
 
-  return seen.size === 0 ? undefined : false;
-}
+  const member = Opt.flatMap(typePath(declared.typeName, imports), (path) => namespaceMember(path, 'Schema'));
 
-function declaredType(node: ESTree.IdentifierReference, context: Context): ESTree.TSTypeAnnotation | undefined {
-  return Arr.head(resolveVariable(context, node, node.name)?.defs ?? []).pipe(
-    Opt.flatMapNullishOr(({ name }) => ('typeAnnotation' in name ? name.typeAnnotation : undefined)),
-    Opt.getOrUndefined,
+  if (Opt.isSome(member)) {
+    // Schema.Constraint and its subtypes are not Pipeable, unlike Schema.Top and the schemas built on it.
+    return Opt.some(!Str.startsWith('Constraint')(member.value));
+  }
+
+  const { typeName } = declared;
+
+  const parameter = Opt.filter(
+    typeName.type === 'Identifier' ? typeParameter(typeName.name, from) : Opt.none(),
+    (candidate) => !containsSame(seen, candidate),
   );
+
+  return Opt.match(parameter, {
+    onNone: () => unknownOrFalse,
+    onSome: (next) => hasPipe(next.constraint, next, imports, [...seen, next]),
+  });
+}
+
+function declaredType(node: ESTree.IdentifierReference, env: Env): Opt.Option<ESTree.TSTypeAnnotation> {
+  return lookupVariable(env.sourceCode, node, node.name).pipe(
+    Opt.flatMap(({ defs }) => Arr.head(defs)),
+    Opt.flatMapNullishOr(({ name }) => ('typeAnnotation' in name ? name.typeAnnotation : undefined)),
+  );
+}
+
+function unwrapHead(node: ESTree.Expression): ESTree.Expression {
+  return node.type === 'TSSatisfiesExpression' || node.type === 'TSNonNullExpression'
+    ? unwrapHead(node.expression)
+    : node;
 }
 
 // Without types, only the declared type of a head shows that it cannot take `.pipe(...)`, e.g. a generic schema.
-function headLacksPipe(node: ESTree.Expression, context: Context, state: FileState): boolean {
-  let head = node;
-
-  while (head.type === 'TSSatisfiesExpression' || head.type === 'TSNonNullExpression') {
-    head = head.expression;
-  }
+function headLacksPipe(node: ESTree.Expression, env: Env): boolean {
+  const head = unwrapHead(node);
 
   if (head.type === 'TSAsExpression') {
-    return hasPipe(head.typeAnnotation, head, state) === false;
+    return Opt.contains(hasPipe(head.typeAnnotation, head, env.imports), false);
   }
 
-  const annotation = head.type === 'Identifier' ? declaredType(head, context) : undefined;
-
-  return P.isNotUndefined(annotation) && hasPipe(annotation.typeAnnotation, annotation, state) === false;
+  return Opt.exists(head.type === 'Identifier' ? declaredType(head, env) : Opt.none(), (annotation) =>
+    Opt.contains(hasPipe(annotation.typeAnnotation, annotation, env.imports), false),
+  );
 }
 
 function hasSpread(node: ESTree.CallExpression): boolean {
   return Arr.some(node.arguments, (argument) => argument.type === 'SpreadElement');
-}
-
-// A rewrite would drop explicit type arguments, so such calls are left alone.
-function soleArgument(node: ESTree.CallExpression): ESTree.Expression | undefined {
-  const [argument] = node.arguments;
-
-  return node.arguments.length === 1 && argument?.type !== 'SpreadElement' && !node.typeArguments
-    ? argument
-    : undefined;
 }
 
 function isMethodPipe(
@@ -308,34 +327,30 @@ function isMethodPipe(
   return (
     node.callee.type === 'MemberExpression' &&
     !node.callee.optional &&
-    staticPropertyName(node.callee) === 'pipe' &&
+    Opt.contains(staticPropertyName(node.callee), 'pipe') &&
     !node.typeArguments &&
     !hasSpread(node)
   );
 }
 
-function isFunctionPipe(node: ESTree.CallExpression, context: Context, state: FileState): boolean {
+function isFunctionPipe(node: ESTree.CallExpression, env: Env): boolean {
   return (
-    (isApiPath(node.callee, state, ['pipe' satisfies keyof typeof EffectBarrel]) ||
-      isApiPath(node.callee, state, ['Function', 'pipe' satisfies keyof typeof Fn])) &&
-    importedApi(context, node.callee)
+    (env.imports.isApiPath(node.callee, ['pipe' satisfies keyof typeof EffectBarrel]) ||
+      env.imports.isApiPath(node.callee, ['Function', 'pipe' satisfies keyof typeof Fn])) &&
+    isImportedApiIn(env.sourceCode, node.callee)
   );
 }
 
-function isKnownStep(node: ESTree.Node, context: Context, state: FileState): boolean {
-  if (isSchemaFunction(schemaMember(node, context, state))) {
-    return true;
-  }
-
-  return node.type === 'CallExpression' && dataLastSteps.has(schemaMember(node.callee, context, state) ?? '');
+function isKnownStep(node: ESTree.Node, env: Env): boolean {
+  return (
+    Opt.exists(schemaMember(node, env), isSchemaFunction) ||
+    (node.type === 'CallExpression' && Opt.exists(schemaMember(node.callee, env), isDataLastStep))
+  );
 }
 
 // A Schema constructor or value, a schema chain, or a schema method called on one of those.
-function isSchemaHead(node: ESTree.Expression, context: Context, state: FileState): boolean {
-  if (
-    constructorName.test(schemaMember(node, context, state) ?? '') ||
-    P.isNotUndefined(flatten(node, context, state))
-  ) {
+function isSchemaHead(node: ESTree.Expression, env: Env): boolean {
+  if (Opt.exists(schemaMember(node, env), isConstructorName) || Opt.isSome(flatten(node, env))) {
     return true;
   }
 
@@ -343,25 +358,20 @@ function isSchemaHead(node: ESTree.Expression, context: Context, state: FileStat
     return false;
   }
 
-  const name = schemaMember(node.callee, context, state);
-
-  if (P.isNotUndefined(name)) {
-    return constructorName.test(name) || isSchemaFunction(name);
-  }
-
-  return (
-    node.callee.type === 'MemberExpression' &&
-    schemaMethods.has(staticPropertyName(node.callee) ?? '') &&
-    isSchemaHead(node.callee.object, context, state)
-  );
+  return Opt.match(schemaMember(node.callee, env), {
+    onSome: (name) => isConstructorName(name) || isSchemaFunction(name),
+    onNone: () =>
+      node.callee.type === 'MemberExpression' &&
+      Opt.exists(staticPropertyName(node.callee), isSchemaMethod) &&
+      isSchemaHead(node.callee.object, env),
+  });
 }
 
 // Without types, only rewrite `pipe(x, ...)` when x is known to be a schema, so `x.pipe` exists.
 function functionPipeParts(
   node: ESTree.CallExpression,
-  context: Context,
-  state: FileState,
-): readonly [ESTree.Expression, ReadonlyArray<ESTree.Expression>] | undefined {
+  env: Env,
+): Opt.Option<readonly [ESTree.Expression, ReadonlyArray<ESTree.Expression>]> {
   const [head, first] = node.arguments;
 
   if (
@@ -370,139 +380,138 @@ function functionPipeParts(
     head.type === 'SpreadElement' ||
     node.typeArguments ||
     hasSpread(node) ||
-    (!isSchemaHead(head, context, state) && !isKnownStep(first, context, state))
+    (!isSchemaHead(head, env) && !isKnownStep(first, env))
   ) {
-    return undefined;
+    return Opt.none();
   }
 
-  return [head, node.arguments.slice(1) as ReadonlyArray<ESTree.Expression>];
+  return Opt.some([head, node.arguments.slice(1) as ReadonlyArray<ESTree.Expression>]);
 }
 
-function appendStep(
-  argument: ESTree.Expression,
-  step: Step,
-  violation: Chain['violation'],
-  reordersEffects: boolean,
-  context: Context,
-  state: FileState,
-): Chain {
-  const inner = flattenOrHead(argument, context, state);
-
-  return {
-    head: inner.head,
-    steps: [...inner.steps, step],
-    violation: inner.violation ?? violation,
-    reordersEffects: inner.reordersEffects || reordersEffects,
-  };
-}
-
-function callChain(node: ESTree.CallExpression, context: Context, state: FileState): Chain | undefined {
-  const argument = soleArgument(node);
-
-  if (P.isUndefined(argument)) {
-    return undefined;
-  }
-
-  const name = schemaMember(node.callee, context, state);
-
-  if (isSchemaFunction(name)) {
-    const wrapper = isWrapper(name);
-
-    return appendStep(
-      argument,
-      { text: context.sourceCode.getText(node.callee), wrapper },
-      wrapper ? undefined : { kind: 'modifierCall', name },
-      false,
-      context,
-      state,
-    );
-  }
-
-  const stepName = node.callee.type === 'CallExpression' ? schemaMember(node.callee.callee, context, state) : undefined;
-
-  if (P.isUndefined(stepName) || !dataLastSteps.has(stepName)) {
-    return undefined;
-  }
-
-  return appendStep(
-    argument,
-    { text: context.sourceCode.getText(node.callee), wrapper: false },
-    { kind: 'dataLastCall', name: stepName },
-    // The configured step was evaluated before the schema; in a pipe the schema comes first.
-    !isPure(node.callee, context, state) && !isPure(argument, context, state),
-    context,
-    state,
-  );
-}
-
-function pipeChain(node: ESTree.CallExpression, context: Context, state: FileState): Chain | undefined {
-  const functionPipe = isFunctionPipe(node, context, state);
-
-  const parts = functionPipe
-    ? functionPipeParts(node, context, state)
-    : isMethodPipe(node)
-      ? ([node.callee.object, node.arguments as ReadonlyArray<ESTree.Expression>] as const)
-      : undefined;
-
-  if (P.isUndefined(parts)) {
-    return undefined;
-  }
-
-  const [receiver, args] = parts;
-
-  const names = Arr.map(args, (arg) => schemaMember(arg, context, state));
-
-  const firstWrapper = Fn.pipe(names, Arr.findFirst(isWrapper), Opt.getOrUndefined);
-
-  // Steps after an extracted wrapper move into a later pipe, so they would be built after earlier steps ran.
-  const reordersEffects =
-    P.isNotUndefined(firstWrapper) &&
-    Arr.some(args.slice(names.indexOf(firstWrapper) + 1), (arg) => !isPure(arg, context, state));
-
-  return appendSteps(
-    receiver,
-    Arr.map(args, (arg, index) => ({ text: context.sourceCode.getText(arg), wrapper: isWrapper(names[index]) })),
-    functionPipe
-      ? { kind: 'functionPipe' }
-      : P.isUndefined(firstWrapper)
-        ? undefined
-        : { kind: 'wrapperPipe', name: firstWrapper },
-    reordersEffects,
-    context,
-    state,
-  );
-}
-
+/**
+ * Extend the chain of `receiver` with more steps. The innermost violation wins, so the report names the first one.
+ *
+ * @param receiver Expression the steps apply to.
+ * @param steps Steps in application order.
+ * @param violation Violation of these steps.
+ * @param reordersEffects Whether fixing these steps would reorder effects.
+ * @param env File being linted.
+ */
 function appendSteps(
   receiver: ESTree.Expression,
   steps: ReadonlyArray<Step>,
-  violation: Chain['violation'],
+  violation: Opt.Option<Violation>,
   reordersEffects: boolean,
-  context: Context,
-  state: FileState,
+  env: Env,
 ): Chain {
-  const inner = flattenOrHead(receiver, context, state);
+  const inner = flattenOrHead(receiver, env);
 
   return {
     head: inner.head,
     steps: [...inner.steps, ...steps],
-    violation: inner.violation ?? violation,
+    violation: Opt.orElse(inner.violation, () => violation),
     reordersEffects: inner.reordersEffects || reordersEffects,
   };
 }
 
-function flatten(node: ESTree.Expression, context: Context, state: FileState): Chain | undefined {
-  return node.type === 'CallExpression'
-    ? (callChain(node, context, state) ?? pipeChain(node, context, state))
-    : undefined;
+function callChain(node: ESTree.CallExpression, env: Env): Opt.Option<Chain> {
+  // A rewrite would drop explicit type arguments, so such calls are left alone.
+  const soleArgument = node.arguments.length === 1 && !node.typeArguments ? argumentAt(node, 0) : Opt.none();
+
+  return Opt.flatMap(soleArgument, (argument) => {
+    const step: Step = { text: env.sourceCode.getText(node.callee), wrapper: false };
+
+    function dataLastStep() {
+      return Opt.map(
+        Opt.filter(
+          node.callee.type === 'CallExpression' ? schemaMember(node.callee.callee, env) : Opt.none(),
+          isDataLastStep,
+        ),
+        (name) =>
+          appendSteps(
+            argument,
+            [step],
+            Opt.some({ kind: 'dataLastCall', name }),
+            // The configured step was evaluated before the schema; in a pipe the schema comes first.
+            !isPure(node.callee, env) && !isPure(argument, env),
+            env,
+          ),
+      );
+    }
+
+    return Opt.match(Opt.filter(schemaMember(node.callee, env), isSchemaFunction), {
+      onNone: dataLastStep,
+      onSome: (name) => {
+        const wrapper = isWrapper(name);
+
+        return Opt.some(
+          appendSteps(
+            argument,
+            [Struct.assign(step, { wrapper })],
+            wrapper ? Opt.none() : Opt.some({ kind: 'modifierCall', name }),
+            false,
+            env,
+          ),
+        );
+      },
+    });
+  });
 }
 
-function flattenOrHead(node: ESTree.Expression, context: Context, state: FileState): Chain {
-  return flatten(node, context, state) ?? { head: node, steps: [], violation: undefined, reordersEffects: false };
+function pipeChain(node: ESTree.CallExpression, env: Env): Opt.Option<Chain> {
+  const functionPipe = isFunctionPipe(node, env);
+
+  const parts = functionPipe
+    ? functionPipeParts(node, env)
+    : isMethodPipe(node)
+      ? Opt.some([node.callee.object, node.arguments as ReadonlyArray<ESTree.Expression>] as const)
+      : Opt.none();
+
+  return Opt.map(parts, ([receiver, args]) => {
+    const names = Arr.map(args, (arg) => schemaMember(arg, env));
+
+    const firstWrapper = Arr.findFirstIndex(names, Opt.exists(isWrapper));
+
+    // Steps after an extracted wrapper move into a later pipe, so they would be built after earlier steps ran.
+    const reordersEffects = Opt.exists(firstWrapper, (index) =>
+      Arr.some(args.slice(index + 1), (arg) => !isPure(arg, env)),
+    );
+
+    const violation: Opt.Option<Violation> = functionPipe
+      ? Opt.some({ kind: 'functionPipe' })
+      : Opt.map(
+          Opt.flatMap(firstWrapper, (index) => Opt.flatten(Arr.get(names, index))),
+          (name) => ({ kind: 'wrapperPipe', name }),
+        );
+
+    return appendSteps(
+      receiver,
+      Arr.map(args, (arg, index) => ({
+        text: env.sourceCode.getText(arg),
+        wrapper: Opt.exists(Opt.flatten(Arr.get(names, index)), isWrapper),
+      })),
+      violation,
+      reordersEffects,
+      env,
+    );
+  });
+}
+
+function flatten(node: ESTree.Expression, env: Env): Opt.Option<Chain> {
+  return node.type === 'CallExpression' ? Opt.orElse(callChain(node, env), () => pipeChain(node, env)) : Opt.none();
+}
+
+function flattenOrHead(node: ESTree.Expression, env: Env): Chain {
+  return Opt.getOrElse(flatten(node, env), () => ({
+    head: node,
+    steps: [],
+    violation: Opt.none(),
+    reordersEffects: false,
+  }));
 }
 
 // The outermost chain reports once and fixes the whole chain.
-function isNestedInChain(node: ESTree.CallExpression, context: Context, state: FileState): boolean {
+function isNestedInChain(node: ESTree.CallExpression, env: Env): boolean {
   const parent = node.parent;
 
   if (parent.type === 'MemberExpression' && parent.object === node && parent.parent.type === 'CallExpression') {
@@ -512,9 +521,9 @@ function isNestedInChain(node: ESTree.CallExpression, context: Context, state: F
   // The first argument of a method pipe is a step, not the head.
   return (
     parent.type === 'CallExpression' &&
-    argumentAt(parent, 0) === node &&
-    (isFunctionPipe(parent, context, state) || !isMethodPipe(parent)) &&
-    P.isNotUndefined(flatten(parent, context, state))
+    isSomeSame(argumentAt(parent, 0), node) &&
+    (isFunctionPipe(parent, env) || !isMethodPipe(parent)) &&
+    Opt.isSome(flatten(parent, env))
   );
 }
 
@@ -523,92 +532,114 @@ function pipeSteps(target: string, steps: ReadonlyArray<string>, head: ESTree.Ex
     return target;
   }
 
-  const receiver = target === headMarker && !memberSafeHeads.has(head.type) ? `(${headMarker})` : target;
+  const receiver = target === headMarker && !isMemberSafeHead(head.type) ? `(${headMarker})` : target;
 
   return `${receiver}.pipe(${Arr.join(steps, ', ')})`;
 }
 
-// Wrappers take everything before them as their argument; the remaining steps stay in a trailing pipe.
+interface Rendering {
+  readonly target: string;
+  readonly pending: ReadonlyArray<string>;
+}
+
+/**
+ * Render a chain in its preferred form. Wrappers take everything before them as their argument; the remaining steps
+ * stay in a trailing pipe.
+ *
+ * @param head Chain head, rendered as the head marker.
+ * @param steps Steps in application order.
+ */
 function render(head: ESTree.Expression, steps: ReadonlyArray<Step>): string {
-  let target = headMarker;
+  const { target, pending } = Arr.reduce(
+    steps,
+    { target: headMarker, pending: [] } as Rendering,
+    ({ target: current, pending: queued }, step): Rendering => {
+      if (!step.wrapper) {
+        return { target: current, pending: [...queued, step.text] };
+      }
 
-  let pending: Array<string> = [];
-
-  for (const step of steps) {
-    if (step.wrapper) {
-      const argument = pipeSteps(target, pending, head);
+      const argument = pipeSteps(current, queued, head);
 
       // A comma expression would otherwise become several arguments.
       const safeArgument = argument === headMarker && head.type === 'SequenceExpression' ? `(${argument})` : argument;
 
-      target = `${step.text}(${safeArgument})`;
-
-      pending = [];
-    } else {
-      pending.push(step.text);
-    }
-  }
+      return { target: `${step.text}(${safeArgument})`, pending: [] };
+    },
+  );
 
   return pipeSteps(target, pending, head);
 }
 
-export const consistentSchemaPipe: Rule = defineEffectRule(
-  {
-    ...ruleMeta(
-      'suggestion',
-      'Apply Schema modifiers with `.pipe(...)` and call Schema wrappers directly.',
-      {
-        modifierCall: 'Apply Schema.{{name}} with `.pipe(...)` instead of calling it.',
-        dataLastCall: 'Apply Schema.{{name}}(...) with `.pipe(...)` instead of calling it on the schema.',
-        functionPipe: 'Call `.pipe(...)` on the schema instead of passing it to `pipe(...)`.',
-        wrapperPipe: 'Call Schema.{{name}}(...) directly instead of piping into it.',
-      },
-      'https://github.com/2digits-agency/configs/blob/main/docs/adr/0001-schema-modifiers-pipe-wrappers-call.md',
-    ),
+export const consistentSchemaPipe: CreateRule = Rule.define({
+  name: 'consistent-schema-pipe',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Apply Schema modifiers with `.pipe(...)` and call Schema wrappers directly.',
+    messages: {
+      modifierCall: 'Apply Schema.{{name}} with `.pipe(...)` instead of calling it.',
+      dataLastCall: 'Apply Schema.{{name}}(...) with `.pipe(...)` instead of calling it on the schema.',
+      functionPipe: 'Call `.pipe(...)` on the schema instead of passing it to `pipe(...)`.',
+      wrapperPipe: 'Call Schema.{{name}}(...) directly instead of piping into it.',
+    },
+    url: 'https://github.com/2digits-agency/configs/blob/main/docs/adr/0001-schema-modifiers-pipe-wrappers-call.md',
     fixable: 'code',
-  },
-  (context, getState) => ({
-    CallExpression(node) {
-      const state = getState();
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
 
-      if (!state.hasEffectImport) {
-        return;
-      }
+    const imports = yield* importBindings;
 
-      const chain = flatten(node, context, state);
+    if (!imports.hasEffectImport) {
+      return {};
+    }
 
-      if (P.isUndefined(chain?.violation) || isNestedInChain(node, context, state)) {
-        return;
-      }
+    const env: Env = { sourceCode: ctx.sourceCode, imports };
 
+    function report(node: ESTree.CallExpression, chain: Chain, violation: Violation) {
       const { head } = chain;
 
-      // Unless a wrapper comes first, the fix calls `.pipe(...)` on the head itself.
-      if (Opt.exists(Arr.head(chain.steps), ({ wrapper }) => !wrapper) && headLacksPipe(head, context, state)) {
-        return;
-      }
-
       // Steps are moved around, so comments between them would be lost.
-      const hasComments = Arr.some(
-        context.sourceCode.getCommentsInside(node),
-        (comment) => !containsRange(head, comment),
-      );
+      const hasComments = Arr.some(ctx.sourceCode.getCommentsInside(node), (comment) => !containsRange(head, comment));
 
       // Chains inside the head keep their own fixes; chains inside steps are fixed on a later pass.
       const [prefix, suffix = ''] = Str.split(render(head, chain.steps), headMarker);
 
-      context.report({
+      const diagnostic = Diagnostic.fromId({
         node,
-        messageId: chain.violation.kind,
-        data: { name: chain.violation.name ?? '' },
-        fix:
-          hasComments || chain.reordersEffects
-            ? undefined
-            : (fixer) => [
-                fixer.replaceTextRange([node.range[0], head.range[0]], prefix),
-                fixer.replaceTextRange([head.range[1], node.range[1]], suffix),
-              ],
+        messageId: violation.kind,
+        data: { name: violation.name ?? '' },
       });
-    },
-  }),
-);
+
+      return ctx.report(
+        hasComments || chain.reordersEffects
+          ? diagnostic
+          : Diagnostic.withFix(
+              diagnostic,
+              Diagnostic.composeFixes(
+                (fixer) => fixer.replaceTextRange([Tuple.get(node.range, 0), Tuple.get(head.range, 0)], prefix),
+                (fixer) => fixer.replaceTextRange([Tuple.get(head.range, 1), Tuple.get(node.range, 1)], suffix),
+              ),
+            ),
+      );
+    }
+
+    return Visitor.on('CallExpression', (node) => {
+      const chain = Opt.filter(
+        flatten(node, env),
+        // Unless a wrapper comes first, the fix calls `.pipe(...)` on the head itself.
+        ({ head, steps }) => !Opt.exists(Arr.head(steps), ({ wrapper }) => !wrapper) || !headLacksPipe(head, env),
+      );
+
+      return Opt.match(
+        Opt.filter(
+          Opt.flatMap(chain, (found) => Opt.map(found.violation, (violation) => [found, violation] as const)),
+          () => !isNestedInChain(node, env),
+        ),
+        {
+          onNone: () => Effect.void,
+          onSome: ([found, violation]) => report(node, found, violation),
+        },
+      );
+    });
+  },
+});

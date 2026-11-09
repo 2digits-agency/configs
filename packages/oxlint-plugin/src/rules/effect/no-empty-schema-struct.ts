@@ -1,29 +1,36 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import type * as Schema from 'effect/Schema';
 
-import { argumentAt, defineEffectRule, isApi, ruleMeta } from '../../utils';
+import { argumentAt } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-export const noEmptySchemaStruct: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow Schema.Struct({}), which accepts every non-null object-like value.',
-    {
+export const noEmptySchemaStruct: CreateRule = Rule.define({
+  name: 'no-empty-schema-struct',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow Schema.Struct({}), which accepts every non-null object-like value.',
+    messages: {
       emptyStruct: 'Schema.Struct({}) does not validate an exact empty object. Define the intended fields explicitly.',
     },
-    'https://github.com/Effect-TS/tsgo/issues/403',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const fields = argumentAt(node, 0);
-
-      if (
-        isApi(node.callee, getState(), 'Schema', 'Struct' satisfies keyof typeof Schema) &&
-        fields?.type === 'ObjectExpression' &&
-        Arr.isReadonlyArrayEmpty(fields.properties)
-      ) {
-        context.report({ node, messageId: 'emptyStruct' });
-      }
-    },
+    url: 'https://github.com/Effect-TS/tsgo/issues/403',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      imports.isApi(node.callee, 'Schema', 'Struct' satisfies keyof typeof Schema) &&
+      Opt.exists(
+        argumentAt(node, 0),
+        (fields) => fields.type === 'ObjectExpression' && Arr.isReadonlyArrayEmpty(fields.properties),
+      )
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'emptyStruct' }))
+        : Effect.void,
+    );
+  },
+});

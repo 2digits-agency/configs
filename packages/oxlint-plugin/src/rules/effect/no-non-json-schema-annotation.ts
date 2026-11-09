@@ -1,131 +1,138 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
-import type * as Schema from 'effect/Schema';
+import * as Schema from 'effect/Schema';
 
 import {
-  canonicalPath,
-  defineEffectRule,
   isFunctionNode,
+  objectArgument,
   objectProperty,
-  ruleMeta,
   staticPath,
   staticPropertyName,
   unwrapExpression,
-} from '../../utils';
-import { objectArgument } from './utils';
+} from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-const nonJsonGlobals: ReadonlySet<string> = new Set(['NaN', 'Infinity', 'undefined']);
+const NonJsonGlobal = Schema.Literals(['NaN', 'Infinity', 'undefined']);
 
-const annotateMethods: ReadonlySet<string> = new Set([
-  'annotate',
-  'annotateEncoded',
-  'annotateKey',
-] satisfies ReadonlyArray<keyof typeof Schema>);
+const isNonJsonGlobal = Schema.is(NonJsonGlobal);
+
+const AnnotateMethod = Schema.Literals(['annotate', 'annotateEncoded', 'annotateKey'] satisfies ReadonlyArray<
+  keyof typeof Schema
+>);
+
+const isAnnotateMethod = Schema.is(AnnotateMethod);
 
 const jsonValueAnnotations = ['default', 'examples'] as const;
 
 function directlyNonJson(expression: ESTree.Expression): boolean {
   return (
     (expression.type === 'Literal' && P.isBigInt(expression.value)) ||
-    (expression.type === 'Identifier' && nonJsonGlobals.has(expression.name)) ||
+    (expression.type === 'Identifier' && isNonJsonGlobal(expression.name)) ||
     isFunctionNode(expression) ||
-    (expression.type === 'CallExpression' && staticPath(expression.callee)?.at(-1) === 'Symbol')
+    (expression.type === 'CallExpression' &&
+      Opt.exists(staticPath(expression.callee), (path) => Arr.lastNonEmpty(path) === 'Symbol'))
   );
 }
 
-function appendJsonChildren(expression: ESTree.Expression, pending: Array<ESTree.Expression>): void {
+function jsonChildren(expression: ESTree.Expression): ReadonlyArray<ESTree.Expression> {
   if (expression.type === 'ArrayExpression') {
-    for (const element of expression.elements) {
-      if (element && element.type !== 'SpreadElement') {
-        pending.push(element);
-      }
-    }
-
-    return;
+    return Arr.filter(
+      expression.elements,
+      (element): element is ESTree.Expression => P.isNotNull(element) && element.type !== 'SpreadElement',
+    );
   }
 
-  if (expression.type === 'ObjectExpression') {
-    for (const property of expression.properties) {
-      if (property.type === 'Property') {
-        pending.push(property.value);
-      }
-    }
-  }
+  return expression.type === 'ObjectExpression'
+    ? Arr.flatMap(expression.properties, (property) => (property.type === 'Property' ? [property.value] : []))
+    : [];
 }
 
-function nonJsonValue(node: ESTree.Expression): ESTree.Node | undefined {
-  const pending: Array<ESTree.Expression> = [node];
+/**
+ * The first value in an annotation that JSON cannot represent, searching the last child first.
+ *
+ * @param node Annotation value.
+ */
+function nonJsonValue(node: ESTree.Expression): Opt.Option<ESTree.Node> {
+  const expression = unwrapExpression(node);
 
-  while (Arr.isReadonlyArrayNonEmpty(pending)) {
-    const candidate = pending.pop();
-
-    if (P.isUndefined(candidate)) {
-      continue;
-    }
-
-    const expression = unwrapExpression(candidate);
-
-    if (directlyNonJson(expression)) {
-      return expression;
-    }
-
-    appendJsonChildren(expression, pending);
-  }
-
-  return undefined;
+  return directlyNonJson(expression)
+    ? Opt.some(expression)
+    : Arr.findFirst(Arr.reverse(jsonChildren(expression)), nonJsonValue);
 }
 
-export const noNonJsonSchemaAnnotation: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow schema examples and defaults that cannot be represented in JSON Schema.',
+/**
+ * The annotate method a call uses: `schema.annotate(…)` or the data-first `Schema.annotate(…)`.
+ *
+ * @param node Call.
+ * @param imports Import bindings of the file.
+ */
+function annotateMethod(node: ESTree.CallExpression, imports: ImportBindings): Opt.Option<string> {
+  const method =
+    node.callee.type === 'MemberExpression'
+      ? staticPropertyName(node.callee)
+      : Opt.flatMap(
+          Opt.filter(imports.path(node.callee), ([namespace]) => namespace === 'Schema'),
+          ([, member]) => Opt.fromNullishOr(member),
+        );
+
+  return Opt.filter(method, isAnnotateMethod);
+}
+
+/**
+ * The non-JSON values in the `default` and `examples` annotations, unless the call sets `jsonSchema` explicitly.
+ *
+ * @param node Annotate call.
+ */
+function nonJsonAnnotations(node: ESTree.CallExpression): ReadonlyArray<ESTree.Node> {
+  return Opt.match(
+    Opt.filter(objectArgument(node), (annotations) => Opt.isNone(objectProperty(annotations, 'jsonSchema'))),
     {
+      onNone: () => [],
+      onSome: (annotations) =>
+        Arr.getSomes(
+          Arr.map(jsonValueAnnotations, (name) =>
+            Opt.flatMap(objectProperty(annotations, name), ({ value }) => nonJsonValue(value)),
+          ),
+        ),
+    },
+  );
+}
+
+export const noNonJsonSchemaAnnotation: CreateRule = Rule.define({
+  name: 'no-non-json-schema-annotation',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow schema examples and defaults that cannot be represented in JSON Schema.',
+    messages: {
       nonJson:
         'This schema annotation value is not JSON-serializable and will be omitted from or corrupt generated JSON Schema.',
     },
-    'https://github.com/Effect-TS/tsgo/issues/440',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const state = getState();
-
-      if (!state.hasEffectImport) {
-        return;
-      }
-
-      const directPath = canonicalPath(node.callee, state);
-
-      const method =
-        node.callee.type === 'MemberExpression'
-          ? staticPropertyName(node.callee)
-          : directPath?.[0] === 'Schema'
-            ? directPath[1]
-            : undefined;
-
-      if (P.isUndefined(method) || !annotateMethods.has(method)) {
-        return;
-      }
-
-      const annotations = objectArgument(node);
-
-      if (P.isUndefined(annotations) || P.isNotUndefined(objectProperty(annotations, 'jsonSchema'))) {
-        return;
-      }
-
-      for (const name of jsonValueAnnotations) {
-        const property = objectProperty(annotations, name);
-
-        if (P.isUndefined(property)) {
-          continue;
-        }
-
-        const invalid = nonJsonValue(property.value);
-
-        if (P.isNotUndefined(invalid)) {
-          context.report({ node: invalid, messageId: 'nonJson' });
-        }
-      }
-    },
+    url: 'https://github.com/Effect-TS/tsgo/issues/440',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    if (!imports.hasEffectImport) {
+      return {};
+    }
+
+    return Visitor.on('CallExpression', (node) =>
+      Opt.match(annotateMethod(node, imports), {
+        onNone: () => Effect.void,
+        onSome: () =>
+          // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+          Effect.forEach(
+            nonJsonAnnotations(node),
+            (invalid) => ctx.report(Diagnostic.fromId({ node: invalid, messageId: 'nonJson' })),
+            { discard: true },
+          ),
+      }),
+    );
+  },
+});

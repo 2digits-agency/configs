@@ -1,18 +1,24 @@
-import type { Context, ESTree, Rule } from '@oxlint/plugins';
+import {
+  Diagnostic,
+  Rule,
+  RuleContext,
+  SourceCode,
+  Visitor,
+  type CreateRule,
+  type ESTree,
+  type OxlintScope,
+} from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
+import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
-import {
-  defineEffectRule,
-  findAncestor,
-  isEqualityOperator,
-  isGlobalIdentifier,
-  isStringLiteral,
-  ruleMeta,
-  unwrapExpression,
-} from '../../utils';
+import { findAncestor, isEqualityOperator, isStringLiteral, unwrapExpression } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { isGlobalIn } from '../../internal/scope';
 
 type FunctionLike = ESTree.ArrowFunctionExpression | ESTree.Function;
 
@@ -59,7 +65,13 @@ const instancePredicates: Readonly<Record<string, string>> = {
 };
 
 // `x instanceof String` only matches `new String(…)`, so P.isString is a different check, not a rewrite.
-const boxedConstructors: ReadonlySet<string> = new Set(['BigInt', 'Boolean', 'Number', 'String', 'Symbol']);
+const BoxedConstructor = Schema.Literals(['BigInt', 'Boolean', 'Number', 'String', 'Symbol']);
+
+const isBoxedConstructor = Schema.is(BoxedConstructor);
+
+const NegatedOperator = Schema.Literals(['!==', '!=']);
+
+const isNegated = Schema.is(NegatedOperator);
 
 function isFunctionLike(node: ESTree.Node): node is FunctionLike {
   return (
@@ -67,91 +79,85 @@ function isFunctionLike(node: ESTree.Node): node is FunctionLike {
   );
 }
 
-function isNegated(operator: string): boolean {
-  return operator === '!==' || operator === '!=';
-}
-
 function nullishPredicate(
   node: ESTree.BinaryExpression,
   value: ESTree.Expression,
-  context: Context,
-): string | undefined {
+  scope: OxlintScope,
+): Opt.Option<string> {
   if (value.type === 'Literal' && P.isNull(value.value)) {
-    return Opt.getOrUndefined(R.get(nullPredicates, node.operator));
+    return R.get(nullPredicates, node.operator);
   }
 
-  if (isGlobalIdentifier(value, context, 'undefined')) {
-    return Opt.getOrUndefined(R.get(undefinedPredicates, node.operator));
-  }
-
-  return undefined;
+  return isGlobalIn(scope, value, 'undefined') ? R.get(undefinedPredicates, node.operator) : Opt.none();
 }
 
 function typeofPredicate(
   node: ESTree.BinaryExpression,
   operand: ESTree.Expression,
   value: ESTree.Expression,
-  context: Context,
-): string | undefined {
+  scope: OxlintScope,
+): Opt.Option<string> {
   if (operand.type !== 'UnaryExpression' || operand.operator !== 'typeof' || !isStringLiteral(value)) {
-    return undefined;
+    return Opt.none();
   }
 
   const argument = unwrapExpression(operand.argument);
 
   // `typeof window` guards against a ReferenceError; a predicate call would throw instead.
-  if (argument.type === 'Identifier' && isGlobalIdentifier(argument, context, argument.name)) {
-    return undefined;
+  if (argument.type === 'Identifier' && isGlobalIn(scope, argument, argument.name)) {
+    return Opt.none();
   }
 
-  const predicate = Opt.getOrUndefined(R.get(typeofPredicates, value.value));
+  return Opt.map(R.get(typeofPredicates, value.value), (predicate) => {
+    if (!isNegated(node.operator)) {
+      return predicate;
+    }
 
-  if (P.isUndefined(predicate)) {
-    return undefined;
-  }
-
-  if (value.value === 'undefined') {
-    return isNegated(node.operator) ? 'P.isNotUndefined' : predicate;
-  }
-
-  return isNegated(node.operator) ? `P.not(${predicate})` : predicate;
+    return value.value === 'undefined' ? 'P.isNotUndefined' : `P.not(${predicate})`;
+  });
 }
 
-function comparisonPredicate(node: ESTree.BinaryExpression, context: Context): string | undefined {
+function comparisonPredicate(node: ESTree.BinaryExpression, scope: OxlintScope): Opt.Option<string> {
   if (!isEqualityOperator(node.operator)) {
-    return undefined;
+    return Opt.none();
   }
 
   const left = unwrapExpression(node.left);
 
   const right = unwrapExpression(node.right);
 
-  return (
-    typeofPredicate(node, left, right, context) ??
-    typeofPredicate(node, right, left, context) ??
-    nullishPredicate(node, right, context) ??
-    nullishPredicate(node, left, context)
+  return typeofPredicate(node, left, right, scope).pipe(
+    Opt.orElse(() => typeofPredicate(node, right, left, scope)),
+    Opt.orElse(() => nullishPredicate(node, right, scope)),
+    Opt.orElse(() => nullishPredicate(node, left, scope)),
   );
 }
 
-function instancePredicate(node: ESTree.BinaryExpression, context: Context): string | undefined {
+function instancePredicate(node: ESTree.BinaryExpression, scope: OxlintScope): Opt.Option<string> {
   const constructor = unwrapExpression(node.right);
 
-  if (constructor.type !== 'Identifier' || !isGlobalIdentifier(constructor, context, constructor.name)) {
-    return undefined;
-  }
+  return constructor.type === 'Identifier' && isGlobalIn(scope, constructor, constructor.name)
+    ? R.get(instancePredicates, constructor.name)
+    : Opt.none();
+}
 
-  return Opt.getOrUndefined(R.get(instancePredicates, constructor.name));
+// A refinement such as `(u: unknown): u is Foo => typeof u === 'string'` is where a primitive check belongs.
+function isInsideRefinement(node: ESTree.Node): boolean {
+  return Opt.exists(
+    findAncestor(node, isFunctionLike),
+    (callback) => callback.returnType?.typeAnnotation.type === 'TSTypePredicate',
+  );
 }
 
 /**
  * Prefer Effect Predicate guards over hand-written runtime type and nullish checks in Effect files.
  */
-export const preferEffectPredicate: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Prefer Effect Predicate guards over typeof, instanceof, and nullish comparisons in Effect files.',
-    {
+export const preferEffectPredicate: CreateRule = Rule.define({
+  name: 'prefer-effect-predicate',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Prefer Effect Predicate guards over typeof, instanceof, and nullish comparisons in Effect files.',
+    messages: {
       predicate:
         'Use {{predicate}} from Effect instead of this check. Decode unknown input with Schema.is or a Schema decoder instead of narrowing it by hand.',
       objectPredicate:
@@ -159,34 +165,39 @@ export const preferEffectPredicate: Rule = defineEffectRule(
       boxedInstance:
         '`instanceof {{constructor}}` only matches boxed objects such as `new {{constructor}}(…)`, never primitive values. To check for the primitive, use {{predicate}}.',
     },
-    'https://www.effect.website/docs/v4/api/effect/Predicate',
-  ),
-  (context, getState) => ({
-    BinaryExpression(node) {
-      if (!getState().hasEffectImport) {
-        return;
-      }
-
-      const predicate =
-        node.operator === 'instanceof' ? instancePredicate(node, context) : comparisonPredicate(node, context);
-
-      // A refinement such as `(u: unknown): u is Foo => typeof u === 'string'` is where a primitive check belongs.
-      if (
-        P.isUndefined(predicate) ||
-        findAncestor(node, isFunctionLike)?.returnType?.typeAnnotation.type === 'TSTypePredicate'
-      ) {
-        return;
-      }
-
-      const constructor = node.operator === 'instanceof' ? context.sourceCode.getText(node.right) : '';
-
-      if (boxedConstructors.has(constructor)) {
-        context.report({ node, messageId: 'boxedInstance', data: { constructor, predicate } });
-      } else if (Str.includes('P.isObjectOrArray')(predicate)) {
-        context.report({ node, messageId: 'objectPredicate', data: { predicate } });
-      } else {
-        context.report({ node, messageId: 'predicate', data: { predicate } });
-      }
-    },
+    url: 'https://www.effect.website/docs/v4/api/effect/Predicate',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    if (!imports.hasEffectImport) {
+      return {};
+    }
+
+    function report(node: ESTree.BinaryExpression, predicate: string) {
+      const constructor = node.operator === 'instanceof' ? ctx.sourceCode.getText(node.right) : '';
+
+      if (isBoxedConstructor(constructor)) {
+        return ctx.report(Diagnostic.fromId({ node, messageId: 'boxedInstance', data: { constructor, predicate } }));
+      }
+
+      const messageId = Str.includes('P.isObjectOrArray')(predicate) ? 'objectPredicate' : 'predicate';
+
+      return ctx.report(Diagnostic.fromId({ node, messageId, data: { predicate } }));
+    }
+
+    return Visitor.on('BinaryExpression', (node) =>
+      Effect.flatMap(SourceCode.getScope(node), (scope) =>
+        Opt.match(
+          Opt.filter(
+            node.operator === 'instanceof' ? instancePredicate(node, scope) : comparisonPredicate(node, scope),
+            () => !isInsideRefinement(node),
+          ),
+          { onNone: () => Effect.void, onSome: (predicate) => report(node, predicate) },
+        ),
+      ),
+    );
+  },
+});
