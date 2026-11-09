@@ -1,13 +1,4 @@
-import {
-  Diagnostic,
-  RuleContext,
-  SourceCode,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintScope,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
@@ -28,29 +19,39 @@ import { isGlobalIn } from '../../internal/scope';
 
 type Emptiness = 'empty' | 'nonEmpty';
 
-function isNewSet(node: ESTree.Node | null | undefined, scope: OxlintScope): boolean {
-  return node?.type === 'NewExpression' && node.arguments.length === 1 && isGlobalIn(scope, node.callee, 'Set');
+function isNewSet(node: ESTree.Node | null | undefined, sourceCode: OxlintSourceCode, site: ESTree.Node): boolean {
+  return (
+    node?.type === 'NewExpression' &&
+    node.arguments.length === 1 &&
+    node.callee.type === 'Identifier' &&
+    node.callee.name === 'Set' &&
+    isGlobalIn(sourceCode.getScope(site), node.callee, 'Set')
+  );
 }
 
 /**
  * `[...new Set(xs)]` or `Array.from(new Set(xs))`.
  *
  * @param node Array literal or call.
- * @param scope Scope of the expression.
+ * @param sourceCode Source of the file; resolve scope only for a possible global Array or Set reference.
  */
-function isSetDedupe(node: ESTree.ArrayExpression | ESTree.CallExpression, scope: OxlintScope): boolean {
+function isSetDedupe(node: ESTree.ArrayExpression | ESTree.CallExpression, sourceCode: OxlintSourceCode): boolean {
   if (node.type === 'ArrayExpression') {
     const [element] = node.elements;
 
-    return node.elements.length === 1 && element?.type === 'SpreadElement' && isNewSet(element.argument, scope);
+    return (
+      node.elements.length === 1 && element?.type === 'SpreadElement' && isNewSet(element.argument, sourceCode, node)
+    );
   }
 
   return (
     node.callee.type === 'MemberExpression' &&
     Opt.contains(staticPropertyName(node.callee), 'from') &&
-    isGlobalIn(scope, node.callee.object, 'Array') &&
+    node.callee.object.type === 'Identifier' &&
+    node.callee.object.name === 'Array' &&
     node.arguments.length === 1 &&
-    Opt.exists(argumentAt(node, 0), (argument) => isNewSet(argument, scope))
+    isGlobalIn(sourceCode.getScope(node), node.callee.object, 'Array') &&
+    Opt.exists(argumentAt(node, 0), (argument) => isNewSet(argument, sourceCode, node))
   );
 }
 
@@ -178,9 +179,9 @@ export const preferEffectArrayOps: CreateRule = defineRule({
     }
 
     function reportDedupe(node: ESTree.ArrayExpression | ESTree.CallExpression) {
-      return Effect.flatMap(SourceCode.getScope(node), (scope) =>
-        isSetDedupe(node, scope) ? ctx.report(Diagnostic.fromId({ node, messageId: 'dedupe' })) : Effect.void,
-      );
+      return isSetDedupe(node, ctx.sourceCode)
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'dedupe' }))
+        : Effect.void;
     }
 
     function reportAccessors(node: ESTree.CallExpression) {
@@ -202,11 +203,9 @@ export const preferEffectArrayOps: CreateRule = defineRule({
     return Visitor.merge(
       Visitor.on('ArrayExpression', reportDedupe),
       Visitor.on('CallExpression', (node) =>
-        Effect.flatMap(SourceCode.getScope(node), (scope) =>
-          isSetDedupe(node, scope)
-            ? ctx.report(Diagnostic.fromId({ node, messageId: 'dedupe' }))
-            : reportAccessors(node),
-        ),
+        isSetDedupe(node, ctx.sourceCode)
+          ? ctx.report(Diagnostic.fromId({ node, messageId: 'dedupe' }))
+          : reportAccessors(node),
       ),
       Visitor.on('MemberExpression', (node) =>
         node.computed && isLiteral(node.property, 0) && !isWriteTarget(node) && !isTupleAccess(node, ctx.sourceCode)
