@@ -26,11 +26,13 @@ import { noEffectAlchemyBarrelImports } from './effect/no-effect-alchemy-barrel-
 import { noEffectAsOnLog } from './effect/no-effect-as-on-log';
 import { noEmptyEffectCallback } from './effect/no-empty-effect-callback';
 import { noEmptySchemaStruct } from './effect/no-empty-schema-struct';
+import { noEncodingGetOrThrow } from './effect/no-encoding-get-or-throw';
 import { noFunctionConfigDefault } from './effect/no-function-config-default';
 import { noHashAsIdentity } from './effect/no-hash-as-identity';
 import { noInlineSchemaCompile } from './effect/no-inline-schema-compile';
 import { noLoggingInCatch } from './effect/no-logging-in-catch';
 import { noManualEffectErrorTag } from './effect/no-manual-effect-error-tag';
+import { noManualEncoding } from './effect/no-manual-encoding';
 import { noManualSse } from './effect/no-manual-sse';
 import { noManualTagComparison } from './effect/no-manual-tag-comparison';
 import { noManualTaggedConstruction } from './effect/no-manual-tagged-construction';
@@ -118,6 +120,7 @@ export const rules = {
   'no-effect-as-on-log': noEffectAsOnLog,
   'no-empty-effect-callback': noEmptyEffectCallback,
   'no-empty-schema-struct': noEmptySchemaStruct,
+  'no-encoding-get-or-throw': noEncodingGetOrThrow,
   'no-export-all-in-client': noExportAllInClient,
   'no-effect-alchemy-barrel-imports': noEffectAlchemyBarrelImports,
   'no-forwarding-lambda': noForwardingLambda,
@@ -126,6 +129,7 @@ export const rules = {
   'no-inline-schema-compile': noInlineSchemaCompile,
   'no-logging-in-catch': noLoggingInCatch,
   'no-manual-effect-error-tag': noManualEffectErrorTag,
+  'no-manual-encoding': noManualEncoding,
   'no-manual-sse': noManualSse,
   'no-manual-tag-comparison': noManualTagComparison,
   'no-manual-tagged-construction': noManualTaggedConstruction,
