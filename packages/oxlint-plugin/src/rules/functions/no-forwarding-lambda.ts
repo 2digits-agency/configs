@@ -1,13 +1,26 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import {
+  Diagnostic,
+  Rule,
+  RuleContext,
+  Visitor,
+  type CreateRule,
+  type Definition,
+  type ESTree,
+  type OxlintSourceCode,
+} from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
+import * as Tuple from 'effect/Tuple';
 
-import { callbackCall, type FunctionNode } from '../../internal/ast';
+import { callbackCall, containsRange, isConstDeclaration, isFunctionNode, type FunctionNode } from '../../internal/ast';
+import { argumentText } from '../../internal/fixes';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { lookupVariable } from '../../internal/scope';
 import { forwardedCall, isDetachableCallee, isEffectGuard, isTypeGuard, type Forwarding } from './internal/forwarding';
 
 // Modules whose callbacks also receive an index or key, so `Arr.map(xs, f)` would pass `f` a second argument.
@@ -191,6 +204,104 @@ function replaceableForwarding(node: FunctionNode, imports: ImportBindings): Opt
 }
 
 /**
+ * Whether a binding the callee reads already holds its final value wherever the callback is created. Passing the callee
+ * reads the binding then, not when the callback runs: a `let` may change after it, and a `const` declared later, or
+ * read from a hoisted function that may run before the declaration, throws.
+ *
+ * @param definition Definition of the binding.
+ * @param callback Callback that would be replaced.
+ */
+function isSettledAt(definition: Definition, callback: FunctionNode): boolean {
+  // A named function expression's own name is gone once the callback is.
+  if (containsRange(callback, definition.name)) {
+    return false;
+  }
+
+  if (definition.type !== 'Variable' && definition.type !== 'ClassName') {
+    return true;
+  }
+
+  if (definition.type === 'Variable' && !isConstDeclaration(definition.parent)) {
+    return false;
+  }
+
+  return Tuple.get(definition.node.range, 1) <= Tuple.get(callback.range, 0) && !hoistedBetween(callback, definition.node);
+}
+
+function hoistedBetween(node: ESTree.Node, declaration: ESTree.Node): boolean {
+  const parent = node.parent as ESTree.Node | null | undefined;
+
+  if (!parent || containsRange(parent, declaration)) {
+    return false;
+  }
+
+  return parent.type === 'FunctionDeclaration' || hoistedBetween(parent, declaration);
+}
+
+/**
+ * Whether every binding a callee reads is settled where the callback is created.
+ *
+ * @param sourceCode Source of the file.
+ * @param callee Forwarded callee.
+ * @param callback Callback that would be replaced.
+ */
+function isSettledCallee(
+  sourceCode: OxlintSourceCode,
+  callee: ESTree.Expression | ESTree.Super,
+  callback: FunctionNode,
+): boolean {
+  return Arr.every(
+    Arr.filter(sourceCode.getScope(callee).references, ({ identifier }) => containsRange(callee, identifier)),
+    ({ resolved }) => Arr.every(resolved?.defs ?? [], (definition) => isSettledAt(definition, callback)),
+  );
+}
+
+/**
+ * Whether a callee is a function of this file with exactly one signature: a function declaration without overloads, or
+ * an unannotated `const` holding a function expression. TypeScript infers a callback type from the last overload, so an
+ * overloaded callee, such as an Effect dual API, can stop type-checking once passed directly.
+ *
+ * @param sourceCode Source of the file.
+ * @param callee Forwarded callee.
+ */
+function isLocalSingleSignature(sourceCode: OxlintSourceCode, callee: ESTree.Expression | ESTree.Super): boolean {
+  if (callee.type !== 'Identifier') {
+    return false;
+  }
+
+  return Opt.exists(lookupVariable(sourceCode, callee, callee.name), ({ defs }) => {
+    const [definition] = defs;
+
+    if (!definition || defs.length !== 1) {
+      return false;
+    }
+
+    if (definition.type === 'FunctionName') {
+      return definition.node.type === 'FunctionDeclaration';
+    }
+
+    const declarator = definition.node;
+
+    return (
+      definition.type === 'Variable' &&
+      declarator.type === 'VariableDeclarator' &&
+      declarator.id.type === 'Identifier' &&
+      !declarator.id.typeAnnotation &&
+      P.isNotNull(declarator.init) &&
+      isFunctionNode(declarator.init)
+    );
+  });
+}
+
+// Annotations on the callback can type it differently from the callee's own signature.
+function isAnnotated(node: FunctionNode): boolean {
+  return (
+    Boolean(node.returnType) ||
+    Arr.some(node.params, (parameter) => parameter.type === 'Identifier' && Boolean(parameter.typeAnnotation))
+  );
+}
+
+/**
  * Report callbacks of Effect APIs that only pass their parameters on, such as `Effect.map((value) => f(value))`.
  */
 export const noForwardingLambda: CreateRule = Rule.define({
@@ -200,27 +311,45 @@ export const noForwardingLambda: CreateRule = Rule.define({
     description: 'Disallow Effect callbacks that only forward their parameters to another function.',
     messages: {
       forwardingLambda: 'This callback only passes its parameters to {{callee}}. Pass {{callee}} directly.',
+      passCallee: 'Pass {{callee}} directly.',
     },
+    fixable: 'code',
+    hasSuggestions: true,
   }),
   *create() {
     const ctx = yield* RuleContext;
 
     const imports = yield* importBindings;
 
+    const { sourceCode } = ctx;
+
+    const report = Effect.fnUntraced(function* (node: FunctionNode, call: ESTree.CallExpression) {
+      const text = sourceCode.getText(call.callee);
+
+      const callee = Str.includes('\n')(text) ? 'the callee' : `\`${text}\``;
+
+      const diagnostic = Diagnostic.fromId({ node, messageId: 'forwardingLambda', data: { callee } });
+
+      if (
+        Arr.isReadonlyArrayNonEmpty(sourceCode.getCommentsInside(node)) ||
+        !isSettledCallee(sourceCode, call.callee, node)
+      ) {
+        return yield* ctx.report(diagnostic);
+      }
+
+      const fix = Diagnostic.replaceText(node, argumentText(sourceCode, call.callee));
+
+      return yield* ctx.report(
+        isLocalSingleSignature(sourceCode, call.callee) && !isAnnotated(node)
+          ? Diagnostic.withFix(diagnostic, fix)
+          : Diagnostic.withSuggestions(diagnostic, [{ messageId: 'passCallee', data: { callee }, fix }]),
+      );
+    });
+
     function check(node: FunctionNode) {
       return Opt.match(replaceableForwarding(node, imports), {
         onNone: () => Effect.void,
-        onSome: ({ call }) => {
-          const callee = ctx.sourceCode.getText(call.callee);
-
-          return ctx.report(
-            Diagnostic.fromId({
-              node,
-              messageId: 'forwardingLambda',
-              data: { callee: Str.includes('\n')(callee) ? 'the callee' : `\`${callee}\`` },
-            }),
-          );
-        },
+        onSome: ({ call }) => report(node, call),
       });
     }
 

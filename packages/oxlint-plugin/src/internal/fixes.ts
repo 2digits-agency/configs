@@ -1,4 +1,4 @@
-import { Diagnostic, RuleContext, type ESTree, type FixFn } from 'effect-oxlint';
+import { Diagnostic, RuleContext, type ESTree, type FixFn, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -89,6 +89,39 @@ export function namespaceImport(
 
     return { name, fix: Opt.some(insertImport(program, `import * as ${name} from '${source}';\n`)) };
   });
+}
+
+/**
+ * Replace `node` with an expression that uses a namespace import of `source`, adding the import when the file lacks
+ * one.
+ *
+ * @param node Node to replace.
+ * @param source Module entrypoint.
+ * @param preferred Preferred local alias.
+ * @param replacement Replacement text for the alias the file ends up with.
+ */
+export function replaceWithNamespace(
+  node: ESTree.Node,
+  source: string,
+  preferred: string,
+  replacement: (namespace: string) => string,
+): Effect.Effect<FixFn, never, RuleContext> {
+  return Effect.map(namespaceImport(node, source, preferred), (imported) =>
+    Diagnostic.composeFixes(...Opt.toArray(imported.fix), Diagnostic.replaceText(node, replacement(imported.name))),
+  );
+}
+
+/**
+ * The source text of an expression as a single call argument: a sequence such as `(a, b)` gets back the parentheses
+ * that the AST leaves out of its range.
+ *
+ * @param sourceCode Source of the file.
+ * @param node Expression.
+ */
+export function argumentText(sourceCode: OxlintSourceCode, node: ESTree.Node): string {
+  const text = sourceCode.getText(node);
+
+  return node.type === 'SequenceExpression' ? `(${text})` : text;
 }
 
 /**

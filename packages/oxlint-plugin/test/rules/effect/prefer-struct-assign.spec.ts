@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix or suggestion is offered. */
 import { preferStructAssign } from '../../../src/rules/effect/prefer-struct-assign';
 import { testRule } from '../../rule-tester';
 
@@ -22,22 +23,41 @@ const valid = `
   const nested = { ...state, status: { kind: 'done', attempts: -1 } }
 `;
 
-for (const [invalid, messageId] of [
-  ['{ ...defaults, ...overrides }', 'merge'],
-  ['{ ...a, ...b, ...c }', 'merge'],
-  ['{ ...user, name }', 'copy'],
-  ['{ ...user, name: Str.trim(name) }', 'copy'],
-  ['{ ...this, version: this.version + 1 }', 'copy'],
-  ["{ ...state, ['key']: value }", 'copy'],
-  ['{ ...registration, handle: (payload: Payload) => run(payload) }', 'copy'],
+const header = `
+      import * as Effect from 'effect/Effect'
+      import * as Struct from 'effect/Struct'
+      const next = `;
+
+for (const [invalid, messageId, suggestion] of [
+  ['{ ...defaults, ...overrides }', 'merge', 'Struct.assign(defaults, overrides)'],
+  ['{ ...user, name }', 'copy', 'Struct.assign(user, { name })'],
+  ['{ ...user, name: Str.trim(name), }', 'copy', 'Struct.assign(user, { name: Str.trim(name) })'],
+  ['{ ...this, version: this.version + 1 }', 'copy', 'Struct.assign(this, { version: this.version + 1 })'],
+  ["{ ...state, ['key']: value }", 'copy', "Struct.assign(state, { ['key']: value })"],
+  [
+    '{ ...registration, handle: (payload: Payload) => run(payload) }',
+    'copy',
+    'Struct.assign(registration, { handle: (payload: Payload) => run(payload) })',
+  ],
+  ['{ ...(0, a), ...b }', 'merge', 'Struct.assign((0, a), b)'],
 ] as const) {
   testRule('prefer-struct-assign', preferStructAssign, {
     valid,
-    invalid: `
-      import * as Effect from 'effect/Effect'
-      const next = ${invalid}
-    `,
+    invalid: `${header}${invalid}`,
     messageId,
+    output: null,
+    suggestions: [{ messageId: 'assign', output: `${header}${suggestion}` }],
+  });
+}
+
+// Merges of three objects would nest calls, and a rewrite would drop the comment.
+for (const invalid of ['{ ...a, ...b, ...c }', '{ ...a, /* wins */ ...b }']) {
+  testRule('prefer-struct-assign', preferStructAssign, {
+    valid,
+    invalid: `${header}${invalid}`,
+    messageId: 'merge',
+    output: null,
+    suggestions: null,
   });
 }
 
@@ -48,4 +68,14 @@ testRule('prefer-struct-assign', preferStructAssign, {
     const evolve = (state, event) => ({ ...state, balance: state.balance + event.amount })
   `,
   messageId: 'copy',
+  suggestions: [
+    {
+      messageId: 'assign',
+      output: `
+    import * as Struct from 'effect/Struct';
+import * as Effect from 'effect/Effect'
+    const evolve = (state, event) => (Struct.assign(state, { balance: state.balance + event.amount }))
+  `,
+    },
+  ],
 });

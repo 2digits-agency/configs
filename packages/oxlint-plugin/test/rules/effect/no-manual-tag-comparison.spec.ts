@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix or suggestion is offered. */
 import { rules } from '../../../src';
 import { testRule } from '../../rule-tester';
 
@@ -5,13 +6,23 @@ const name = 'no-manual-tag-comparison';
 
 const rule = rules[name];
 
-for (const invalid of [
-  'value._tag === "Ready";',
-  '"Ready" !== value["_tag"];',
-  'value._tag == "Ready";',
-  'value._tag != "Ready";',
-  'Effect.catch(error => () => error._tag === "Missing");',
-]) {
+const isTagged = `import * as P from 'effect/Predicate';\n`;
+
+for (const [invalid, suggestion] of [
+  ['value._tag === "Ready";', `${isTagged}P.isTagged(value, "Ready");`],
+  ['"Ready" !== value["_tag"];', `${isTagged}!P.isTagged(value, "Ready");`],
+  ['value._tag == "Ready";', `${isTagged}P.isTagged(value, "Ready");`],
+  ['value._tag != "Ready";', `${isTagged}!P.isTagged(value, "Ready");`],
+  ['(0, value)._tag === "Ready";', `${isTagged}P.isTagged((0, value), "Ready");`],
+  [
+    'import * as Predicate from "effect/Predicate"; next.value._tag === "Ready";',
+    'import * as Predicate from "effect/Predicate"; Predicate.isTagged(next.value, "Ready");',
+  ],
+  [
+    'Effect.catch(error => () => error._tag === "Missing");',
+    `${isTagged}Effect.catch(error => () => P.isTagged(error, "Missing"));`,
+  ],
+] as const) {
   testRule(name, rule, {
     valid: `
       Predicate.isTagged('Ready')(value);
@@ -24,7 +35,17 @@ for (const invalid of [
     `,
     invalid,
     messageId: 'manualComparison',
+    output: null,
+    suggestions: [{ messageId: 'isTagged', output: suggestion }],
   });
+}
+
+// Other discriminants have no Predicate helper, and a rewrite would drop the comment.
+for (const [invalid, messageId] of [
+  ['value._tag /* why */ === "Ready";', 'manualComparison'],
+  ['value.kind === "circle";', 'manualDiscriminantComparison'],
+] as const) {
+  testRule(name, rule, { valid: '', invalid, messageId, output: null, suggestions: null });
 }
 
 testRule(name, rule, {

@@ -1,12 +1,23 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import {
+  Diagnostic,
+  Rule,
+  RuleContext,
+  Visitor,
+  type CreateRule,
+  type ESTree,
+  type OxlintSourceCode,
+} from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
+import * as Str from 'effect/String';
+import * as Tuple from 'effect/Tuple';
 
 import { isFunctionNode, staticPropertyName, unwrapExpression } from '../../internal/ast';
+import { argumentText, replaceWithNamespace } from '../../internal/fixes';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 
@@ -103,6 +114,34 @@ function spreadKind(node: ESTree.ObjectExpression): Opt.Option<'merge' | 'copy'>
 }
 
 /**
+ * The `Struct.assign` arguments for `{ ...a, ...b }` or `{ ...a, x: y }`, or none for merges of more than two objects.
+ *
+ * @param node Object literal that `spreadKind` accepts.
+ * @param sourceCode Source of the file.
+ */
+function assignArguments(node: ESTree.ObjectExpression, sourceCode: OxlintSourceCode): Opt.Option<string> {
+  const [first, ...rest] = node.properties;
+
+  if (!first || !isSpread(first) || !Arr.isReadonlyArrayNonEmpty(rest)) {
+    return Opt.none();
+  }
+
+  const self = argumentText(sourceCode, first.argument);
+
+  const second = Arr.headNonEmpty(rest);
+
+  if (!Arr.every(rest, isSpread)) {
+    const overrides = Str.slice(Tuple.get(second.range, 0), Tuple.get(Arr.lastNonEmpty(rest).range, 1))(sourceCode.text);
+
+    return Opt.some(`${self}, { ${overrides} }`);
+  }
+
+  return rest.length === 1 && isSpread(second)
+    ? Opt.some(`${self}, ${argumentText(sourceCode, second.argument)}`)
+    : Opt.none();
+}
+
+/**
  * Prefer Struct.assign over spreading objects into a merged or updated copy.
  */
 export const preferStructAssign: CreateRule = Rule.define({
@@ -113,8 +152,10 @@ export const preferStructAssign: CreateRule = Rule.define({
     messages: {
       merge: 'Use Struct.assign(a, b) instead of merging objects with spreads.',
       copy: 'Use Struct.assign(value, { … }) instead of copying an object with spread overrides. Spreading a class instance drops its prototype; rebuild Schema and Data class instances with their constructor.',
+      assign: 'Replace with Struct.assign.',
     },
     url: 'https://www.effect.website/docs/v4/api/effect/Struct#assign',
+    hasSuggestions: true,
   }),
   *create() {
     const ctx = yield* RuleContext;
@@ -125,10 +166,35 @@ export const preferStructAssign: CreateRule = Rule.define({
       return {};
     }
 
+    /*
+     * Only a suggestion: the result is the same object, but Struct.assign types it from its generic parameters, so an
+     * override can lose its contextual type and a spread of a possibly undefined value stops type-checking.
+     */
+    const report = Effect.fnUntraced(function* (node: ESTree.ObjectExpression, messageId: 'merge' | 'copy') {
+      const diagnostic = Diagnostic.fromId({ node, messageId });
+
+      const assigned = Opt.filter(assignArguments(node, ctx.sourceCode), () =>
+        Arr.isReadonlyArrayEmpty(ctx.sourceCode.getCommentsInside(node)),
+      );
+
+      if (Opt.isNone(assigned)) {
+        return yield* ctx.report(diagnostic);
+      }
+
+      const fix = yield* replaceWithNamespace(
+        node,
+        'effect/Struct',
+        'Struct',
+        (namespace) => `${namespace}.assign(${assigned.value})`,
+      );
+
+      return yield* ctx.report(Diagnostic.withSuggestions(diagnostic, [{ messageId: 'assign', fix }]));
+    });
+
     return Visitor.on('ObjectExpression', (node) =>
       Opt.match(spreadKind(node), {
         onNone: () => Effect.void,
-        onSome: (messageId) => ctx.report(Diagnostic.fromId({ node, messageId })),
+        onSome: (messageId) => report(node, messageId),
       }),
     );
   },

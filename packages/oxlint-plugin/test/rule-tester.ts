@@ -13,6 +13,7 @@ interface RuleCase {
   readonly valid: string;
   readonly options?: RuleTester.ValidTestCase['options'];
   readonly output?: string | null;
+  readonly suggestions?: Array<RuleTester.ErrorSuggestion> | null;
 }
 
 RuleTester.describe = describe;
@@ -41,7 +42,13 @@ export function testRule(name: RuleName, rule: Rule, ruleCase: RuleCase): void {
         filename: 'invalid.ts',
         ...options,
         ...languageOptions,
-        errors: [{ messageId: ruleCase.messageId, ...(P.isUndefined(ruleCase.data) ? {} : { data: ruleCase.data }) }],
+        errors: [
+          {
+            messageId: ruleCase.messageId,
+            ...(P.isUndefined(ruleCase.data) ? {} : { data: ruleCase.data }),
+            ...(P.isUndefined(ruleCase.suggestions) ? {} : { suggestions: ruleCase.suggestions }),
+          },
+        ],
         ...(P.isUndefined(ruleCase.output) ? {} : { output: ruleCase.output }),
       },
     ],
