@@ -1,0 +1,5868 @@
+{
+  "baseRef": "24b694d93b66475661f7c112f1d613d5e7d155a6",
+  "node": "v26.13.0",
+  "cpu": "Intel(R) Xeon(R) Processor @ 2.60GHz",
+  "cpus": 8,
+  "files": 1503,
+  "snippets": 1058,
+  "corpusHash": "a3671712bea5200d84a50c0c688412c7dbebb7be404ceb71cfceea33e55a7408",
+  "rules": [
+    "alchemy-domain-block-file-name",
+    "alchemy-domain-pure-decide",
+    "alchemy-domain-pure-imports",
+    "alchemy-domain-require-view-version",
+    "alchemy-domain-total-handlers",
+    "alchemy-no-cloudflare-init-finalizer",
+    "alchemy-no-deprecated-docker-constraints",
+    "alchemy-no-deprecated-resource",
+    "alchemy-no-plaintext-github-secret",
+    "alchemy-no-removed-config-api",
+    "alchemy-no-reserved-eventbridge-default-name",
+    "alchemy-no-runtime-config",
+    "alchemy-no-v1-import",
+    "alchemy-no-v1-worker-properties",
+    "avoid-data-tagged-error",
+    "ban-error-string",
+    "consistent-schema-pipe",
+    "cors-credentials-with-wildcard",
+    "dual-numeric-arity-with-optional-parameter",
+    "effect-promise-vs-trypromise",
+    "no-already-started-promise",
+    "no-async-effect-try",
+    "no-browser-api-in-render",
+    "no-constant-thunk",
+    "no-discarded-run-promise",
+    "no-discarded-schema-checks",
+    "no-effect-as-on-log",
+    "no-empty-effect-callback",
+    "no-empty-schema-struct",
+    "no-encoding-get-or-throw",
+    "no-export-all-in-client",
+    "no-effect-alchemy-barrel-imports",
+    "no-forwarding-lambda",
+    "no-function-config-default",
+    "no-hash-as-identity",
+    "no-inline-schema-compile",
+    "no-logging-in-catch",
+    "no-manual-effect-error-tag",
+    "no-manual-encoding",
+    "no-manual-sse",
+    "no-manual-tag-comparison",
+    "no-manual-tagged-construction",
+    "no-millis-arithmetic",
+    "no-multi-shot-effect-callback",
+    "no-non-json-schema-annotation",
+    "no-option-of-service",
+    "no-overwritten-discriminant",
+    "no-service-option-get-or-throw",
+    "no-single-use-private-function",
+    "no-service-constructor-imports",
+    "no-throw-in-effect-callback",
+    "no-trivial-wrapper",
+    "no-uppercase-http-api-header",
+    "no-utc-iso-slicing",
+    "no-zero-retry-times",
+    "padding-line-between-statements",
+    "prefer-data-match",
+    "prefer-effect-alchemy-namespace-imports",
+    "prefer-effect-archive",
+    "prefer-effect-array-ops",
+    "prefer-effect-array-sort",
+    "prefer-effect-datetime",
+    "prefer-effect-duration",
+    "prefer-effect-duration-constants",
+    "prefer-effect-duration-types",
+    "prefer-effect-encoding",
+    "prefer-effect-filesystem",
+    "prefer-effect-filter",
+    "prefer-effect-headers",
+    "prefer-effect-jwt",
+    "prefer-effect-match",
+    "prefer-effect-net-address",
+    "prefer-effect-path",
+    "prefer-effect-predicate",
+    "prefer-effect-sse",
+    "prefer-effect-url",
+    "prefer-effect-user-directories",
+    "prefer-hoisted-match",
+    "prefer-equal",
+    "prefer-struct-assign",
+    "prefer-uninterruptible",
+    "prefer-with-span",
+    "prefer-yield-now",
+    "preserve-caught-error",
+    "require-schema-class-brand",
+    "require-try-promise-abort-signal",
+    "throw-in-effect-gen",
+    "valid-directive"
+  ],
+  "repetitions": 7,
+  "baseline": {
+    "wall": 4837.040276,
+    "runtime": 3933.269,
+    "callbacks": 3606.37,
+    "rules": {
+      "alchemy-domain-block-file-name": {
+        "ms": 247.521,
+        "calls": 10820
+      },
+      "alchemy-domain-pure-decide": {
+        "ms": 350.837,
+        "calls": 103569
+      },
+      "alchemy-domain-pure-imports": {
+        "ms": 8.716,
+        "calls": 1596
+      },
+      "alchemy-domain-require-view-version": {
+        "ms": 30.929,
+        "calls": 13551
+      },
+      "alchemy-domain-total-handlers": {
+        "ms": 207.406,
+        "calls": 91284
+      },
+      "alchemy-no-cloudflare-init-finalizer": {
+        "ms": 26.441,
+        "calls": 13551
+      },
+      "alchemy-no-deprecated-docker-constraints": {
+        "ms": 28.283,
+        "calls": 13551
+      },
+      "alchemy-no-deprecated-resource": {
+        "ms": 31.762,
+        "calls": 13551
+      },
+      "alchemy-no-plaintext-github-secret": {
+        "ms": 29.283,
+        "calls": 13551
+      },
+      "alchemy-no-removed-config-api": {
+        "ms": 29.412,
+        "calls": 13551
+      },
+      "alchemy-no-reserved-eventbridge-default-name": {
+        "ms": 29.651,
+        "calls": 13551
+      },
+      "alchemy-no-runtime-config": {
+        "ms": 13.446,
+        "calls": 3082
+      },
+      "alchemy-no-v1-import": {
+        "ms": 11.415,
+        "calls": 5312
+      },
+      "alchemy-no-v1-worker-properties": {
+        "ms": 29.866,
+        "calls": 13551
+      },
+      "avoid-data-tagged-error": {
+        "ms": 24.353,
+        "calls": 13551
+      },
+      "ban-error-string": {
+        "ms": 27.555,
+        "calls": 15281
+      },
+      "consistent-schema-pipe": {
+        "ms": 60.519,
+        "calls": 11558
+      },
+      "cors-credentials-with-wildcard": {
+        "ms": 33.411,
+        "calls": 13551
+      },
+      "dual-numeric-arity-with-optional-parameter": {
+        "ms": 24.832,
+        "calls": 13551
+      },
+      "effect-promise-vs-trypromise": {
+        "ms": 24.189,
+        "calls": 13551
+      },
+      "no-already-started-promise": {
+        "ms": 68.89,
+        "calls": 17085
+      },
+      "no-async-effect-try": {
+        "ms": 25.859,
+        "calls": 13551
+      },
+      "no-browser-api-in-render": {
+        "ms": 12.207,
+        "calls": 1531
+      },
+      "no-constant-thunk": {
+        "ms": 22.093,
+        "calls": 5927
+      },
+      "no-discarded-run-promise": {
+        "ms": 25.645,
+        "calls": 13551
+      },
+      "no-discarded-schema-checks": {
+        "ms": 25.073,
+        "calls": 11558
+      },
+      "no-effect-as-on-log": {
+        "ms": 45.501,
+        "calls": 13551
+      },
+      "no-empty-effect-callback": {
+        "ms": 32.603,
+        "calls": 13551
+      },
+      "no-empty-schema-struct": {
+        "ms": 24.905,
+        "calls": 13551
+      },
+      "no-encoding-get-or-throw": {
+        "ms": 39.216,
+        "calls": 13551
+      },
+      "no-export-all-in-client": {
+        "ms": 6.195,
+        "calls": 1506
+      },
+      "no-effect-alchemy-barrel-imports": {
+        "ms": 21.17,
+        "calls": 5312
+      },
+      "no-forwarding-lambda": {
+        "ms": 28.998,
+        "calls": 4093
+      },
+      "no-function-config-default": {
+        "ms": 51.266,
+        "calls": 13551
+      },
+      "no-hash-as-identity": {
+        "ms": 63.025,
+        "calls": 31916
+      },
+      "no-inline-schema-compile": {
+        "ms": 60.085,
+        "calls": 11558
+      },
+      "no-logging-in-catch": {
+        "ms": 91.463,
+        "calls": 13551
+      },
+      "no-manual-effect-error-tag": {
+        "ms": 12.396,
+        "calls": 2929
+      },
+      "no-manual-encoding": {
+        "ms": 37.501,
+        "calls": 11558
+      },
+      "no-manual-sse": {
+        "ms": 55.841,
+        "calls": 24367
+      },
+      "no-manual-tag-comparison": {
+        "ms": 18.794,
+        "calls": 2929
+      },
+      "no-manual-tagged-construction": {
+        "ms": 18.396,
+        "calls": 5612
+      },
+      "no-millis-arithmetic": {
+        "ms": 24.683,
+        "calls": 2557
+      },
+      "no-multi-shot-effect-callback": {
+        "ms": 25.47,
+        "calls": 13551
+      },
+      "no-non-json-schema-annotation": {
+        "ms": 31.49,
+        "calls": 11558
+      },
+      "no-option-of-service": {
+        "ms": 30.823,
+        "calls": 13551
+      },
+      "no-overwritten-discriminant": {
+        "ms": 12.912,
+        "calls": 5612
+      },
+      "no-service-option-get-or-throw": {
+        "ms": 27.967,
+        "calls": 13551
+      },
+      "no-single-use-private-function": {
+        "ms": 65.714,
+        "calls": 3003
+      },
+      "no-service-constructor-imports": {
+        "ms": 16.031,
+        "calls": 4670
+      },
+      "no-throw-in-effect-callback": {
+        "ms": 10.618,
+        "calls": 1512
+      },
+      "no-trivial-wrapper": {
+        "ms": 26.893,
+        "calls": 5927
+      },
+      "no-uppercase-http-api-header": {
+        "ms": 36.087,
+        "calls": 13551
+      },
+      "no-utc-iso-slicing": {
+        "ms": 71.577,
+        "calls": 13551
+      },
+      "no-zero-retry-times": {
+        "ms": 24.72,
+        "calls": 13551
+      },
+      "padding-line-between-statements": {
+        "ms": 234.069,
+        "calls": 31051
+      },
+      "prefer-data-match": {
+        "ms": 17.16,
+        "calls": 2565
+      },
+      "prefer-effect-alchemy-namespace-imports": {
+        "ms": 33.391,
+        "calls": 5312
+      },
+      "prefer-effect-archive": {
+        "ms": 18.618,
+        "calls": 4586
+      },
+      "prefer-effect-array-ops": {
+        "ms": 64.286,
+        "calls": 25029
+      },
+      "prefer-effect-array-sort": {
+        "ms": 20.584,
+        "calls": 11558
+      },
+      "prefer-effect-datetime": {
+        "ms": 23.5,
+        "calls": 11558
+      },
+      "prefer-effect-duration": {
+        "ms": 40.28,
+        "calls": 13551
+      },
+      "prefer-effect-duration-constants": {
+        "ms": 66.955,
+        "calls": 18588
+      },
+      "prefer-effect-duration-types": {
+        "ms": 61.603,
+        "calls": 10231
+      },
+      "prefer-effect-encoding": {
+        "ms": 49.289,
+        "calls": 11558
+      },
+      "prefer-effect-filesystem": {
+        "ms": 13.696,
+        "calls": 4578
+      },
+      "prefer-effect-filter": {
+        "ms": 17.456,
+        "calls": 4093
+      },
+      "prefer-effect-headers": {
+        "ms": 10.05,
+        "calls": 1659
+      },
+      "prefer-effect-jwt": {
+        "ms": 35.563,
+        "calls": 14633
+      },
+      "prefer-effect-match": {
+        "ms": 14.887,
+        "calls": 2337
+      },
+      "prefer-effect-net-address": {
+        "ms": 70.17,
+        "calls": 26566
+      },
+      "prefer-effect-path": {
+        "ms": 13.465,
+        "calls": 4578
+      },
+      "prefer-effect-predicate": {
+        "ms": 15.916,
+        "calls": 2557
+      },
+      "prefer-effect-sse": {
+        "ms": 21.297,
+        "calls": 4742
+      },
+      "prefer-effect-url": {
+        "ms": 25.269,
+        "calls": 11714
+      },
+      "prefer-effect-user-directories": {
+        "ms": 60.048,
+        "calls": 25984
+      },
+      "prefer-hoisted-match": {
+        "ms": 35.738,
+        "calls": 4983
+      },
+      "prefer-equal": {
+        "ms": 14.525,
+        "calls": 2374
+      },
+      "prefer-struct-assign": {
+        "ms": 15.38,
+        "calls": 4216
+      },
+      "prefer-uninterruptible": {
+        "ms": 26.121,
+        "calls": 13551
+      },
+      "prefer-with-span": {
+        "ms": 24.699,
+        "calls": 13551
+      },
+      "prefer-yield-now": {
+        "ms": 24.409,
+        "calls": 13551
+      },
+      "preserve-caught-error": {
+        "ms": 31.59,
+        "calls": 4093
+      },
+      "require-schema-class-brand": {
+        "ms": 24.583,
+        "calls": 13551
+      },
+      "require-try-promise-abort-signal": {
+        "ms": 24.665,
+        "calls": 13551
+      },
+      "throw-in-effect-gen": {
+        "ms": 9.818,
+        "calls": 1512
+      },
+      "valid-directive": {
+        "ms": 9.174,
+        "calls": 4114
+      }
+    },
+    "samples": [
+      {
+        "wall": 4752.237019,
+        "runtime": 3875.294,
+        "callbacks": 3554.559,
+        "rules": {
+          "alchemy-domain-pure-decide": {
+            "ms": 350.837,
+            "calls": 103569
+          },
+          "alchemy-domain-block-file-name": {
+            "ms": 243.393,
+            "calls": 10820
+          },
+          "padding-line-between-statements": {
+            "ms": 226.612,
+            "calls": 31051
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 199.826,
+            "calls": 91284
+          },
+          "no-logging-in-catch": {
+            "ms": 91.212,
+            "calls": 13551
+          },
+          "no-utc-iso-slicing": {
+            "ms": 70.289,
+            "calls": 13551
+          },
+          "no-already-started-promise": {
+            "ms": 67.141,
+            "calls": 17085
+          },
+          "prefer-effect-net-address": {
+            "ms": 66.724,
+            "calls": 26566
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 65.169,
+            "calls": 18588
+          },
+          "no-single-use-private-function": {
+            "ms": 64.584,
+            "calls": 3003
+          },
+          "no-inline-schema-compile": {
+            "ms": 64.553,
+            "calls": 11558
+          },
+          "prefer-effect-array-ops": {
+            "ms": 62.958,
+            "calls": 25029
+          },
+          "prefer-effect-duration-types": {
+            "ms": 61.326,
+            "calls": 10231
+          },
+          "no-hash-as-identity": {
+            "ms": 60.113,
+            "calls": 31916
+          },
+          "prefer-effect-user-directories": {
+            "ms": 60.048,
+            "calls": 25984
+          },
+          "consistent-schema-pipe": {
+            "ms": 58.255,
+            "calls": 11558
+          },
+          "no-manual-sse": {
+            "ms": 54.413,
+            "calls": 24367
+          },
+          "no-function-config-default": {
+            "ms": 51.141,
+            "calls": 13551
+          },
+          "prefer-effect-encoding": {
+            "ms": 47.255,
+            "calls": 11558
+          },
+          "no-effect-as-on-log": {
+            "ms": 44.206,
+            "calls": 13551
+          },
+          "prefer-effect-duration": {
+            "ms": 38.915,
+            "calls": 13551
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 38.268,
+            "calls": 13551
+          },
+          "no-manual-encoding": {
+            "ms": 36.257,
+            "calls": 11558
+          },
+          "prefer-hoisted-match": {
+            "ms": 35.64,
+            "calls": 4983
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 35.474,
+            "calls": 13551
+          },
+          "prefer-effect-jwt": {
+            "ms": 33.796,
+            "calls": 14633
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 33.501,
+            "calls": 13551
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 32.013,
+            "calls": 5312
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 31.632,
+            "calls": 11558
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 31.36,
+            "calls": 13551
+          },
+          "preserve-caught-error": {
+            "ms": 30.814,
+            "calls": 4093
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 30.772,
+            "calls": 13551
+          },
+          "no-empty-effect-callback": {
+            "ms": 30.509,
+            "calls": 13551
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 30.249,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 29.609,
+            "calls": 13551
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 29.178,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 28.587,
+            "calls": 13551
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 28.234,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 28.21,
+            "calls": 13551
+          },
+          "no-forwarding-lambda": {
+            "ms": 27.883,
+            "calls": 4093
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 27.599,
+            "calls": 13551
+          },
+          "ban-error-string": {
+            "ms": 26.955,
+            "calls": 15281
+          },
+          "no-async-effect-try": {
+            "ms": 26.312,
+            "calls": 13551
+          },
+          "no-trivial-wrapper": {
+            "ms": 26.11,
+            "calls": 5927
+          },
+          "prefer-uninterruptible": {
+            "ms": 25.931,
+            "calls": 13551
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 25.666,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 25.47,
+            "calls": 13551
+          },
+          "prefer-effect-url": {
+            "ms": 25.253,
+            "calls": 11714
+          },
+          "no-empty-schema-struct": {
+            "ms": 25.137,
+            "calls": 13551
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 24.832,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 24.828,
+            "calls": 11558
+          },
+          "prefer-with-span": {
+            "ms": 24.699,
+            "calls": 13551
+          },
+          "no-discarded-run-promise": {
+            "ms": 24.488,
+            "calls": 13551
+          },
+          "no-millis-arithmetic": {
+            "ms": 24.141,
+            "calls": 2557
+          },
+          "avoid-data-tagged-error": {
+            "ms": 24.105,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 23.877,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 23.643,
+            "calls": 13551
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 23.622,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 23.225,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 23.089,
+            "calls": 13551
+          },
+          "prefer-effect-datetime": {
+            "ms": 22.819,
+            "calls": 11558
+          },
+          "no-constant-thunk": {
+            "ms": 21.395,
+            "calls": 5927
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 20.839,
+            "calls": 5312
+          },
+          "prefer-effect-sse": {
+            "ms": 20.143,
+            "calls": 4742
+          },
+          "prefer-effect-array-sort": {
+            "ms": 19.467,
+            "calls": 11558
+          },
+          "no-manual-tagged-construction": {
+            "ms": 18.276,
+            "calls": 5612
+          },
+          "prefer-effect-archive": {
+            "ms": 18.27,
+            "calls": 4586
+          },
+          "no-manual-tag-comparison": {
+            "ms": 17.916,
+            "calls": 2929
+          },
+          "prefer-effect-filter": {
+            "ms": 16.754,
+            "calls": 4093
+          },
+          "prefer-data-match": {
+            "ms": 16.64,
+            "calls": 2565
+          },
+          "prefer-effect-predicate": {
+            "ms": 15.459,
+            "calls": 2557
+          },
+          "no-service-constructor-imports": {
+            "ms": 15.024,
+            "calls": 4670
+          },
+          "prefer-struct-assign": {
+            "ms": 14.805,
+            "calls": 4216
+          },
+          "prefer-equal": {
+            "ms": 13.747,
+            "calls": 2374
+          },
+          "prefer-effect-match": {
+            "ms": 13.712,
+            "calls": 2337
+          },
+          "no-overwritten-discriminant": {
+            "ms": 13.076,
+            "calls": 5612
+          },
+          "prefer-effect-filesystem": {
+            "ms": 12.913,
+            "calls": 4578
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 12.841,
+            "calls": 3082
+          },
+          "prefer-effect-path": {
+            "ms": 12.712,
+            "calls": 4578
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 12.176,
+            "calls": 2929
+          },
+          "no-browser-api-in-render": {
+            "ms": 12.021,
+            "calls": 1531
+          },
+          "alchemy-no-v1-import": {
+            "ms": 11.02,
+            "calls": 5312
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 10.079,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 9.616,
+            "calls": 1659
+          },
+          "throw-in-effect-gen": {
+            "ms": 9.405,
+            "calls": 1512
+          },
+          "valid-directive": {
+            "ms": 9.104,
+            "calls": 4114
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 8.435,
+            "calls": 1596
+          },
+          "no-export-all-in-client": {
+            "ms": 5.959,
+            "calls": 1506
+          }
+        }
+      },
+      {
+        "wall": 4837.040276,
+        "runtime": 3933.269,
+        "callbacks": 3606.37,
+        "rules": {
+          "alchemy-domain-pure-decide": {
+            "ms": 346.563,
+            "calls": 103569
+          },
+          "alchemy-domain-block-file-name": {
+            "ms": 250.902,
+            "calls": 10820
+          },
+          "padding-line-between-statements": {
+            "ms": 237.389,
+            "calls": 31051
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 201.849,
+            "calls": 91284
+          },
+          "no-logging-in-catch": {
+            "ms": 88.299,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 70.17,
+            "calls": 26566
+          },
+          "no-utc-iso-slicing": {
+            "ms": 69.589,
+            "calls": 13551
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 68.42,
+            "calls": 18588
+          },
+          "no-already-started-promise": {
+            "ms": 68.255,
+            "calls": 17085
+          },
+          "no-single-use-private-function": {
+            "ms": 66.415,
+            "calls": 3003
+          },
+          "no-hash-as-identity": {
+            "ms": 61.648,
+            "calls": 31916
+          },
+          "prefer-effect-duration-types": {
+            "ms": 61.318,
+            "calls": 10231
+          },
+          "prefer-effect-array-ops": {
+            "ms": 60.772,
+            "calls": 25029
+          },
+          "consistent-schema-pipe": {
+            "ms": 60.267,
+            "calls": 11558
+          },
+          "prefer-effect-user-directories": {
+            "ms": 57.39,
+            "calls": 25984
+          },
+          "no-inline-schema-compile": {
+            "ms": 56.841,
+            "calls": 11558
+          },
+          "no-manual-sse": {
+            "ms": 55.061,
+            "calls": 24367
+          },
+          "no-function-config-default": {
+            "ms": 50.753,
+            "calls": 13551
+          },
+          "prefer-effect-encoding": {
+            "ms": 49.289,
+            "calls": 11558
+          },
+          "no-effect-as-on-log": {
+            "ms": 43.888,
+            "calls": 13551
+          },
+          "prefer-effect-duration": {
+            "ms": 39.601,
+            "calls": 13551
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 37.975,
+            "calls": 13551
+          },
+          "no-manual-encoding": {
+            "ms": 37.501,
+            "calls": 11558
+          },
+          "prefer-hoisted-match": {
+            "ms": 35.733,
+            "calls": 4983
+          },
+          "prefer-effect-jwt": {
+            "ms": 34.784,
+            "calls": 14633
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 33.859,
+            "calls": 13551
+          },
+          "no-empty-effect-callback": {
+            "ms": 33.617,
+            "calls": 13551
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 32.884,
+            "calls": 13551
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 32.27,
+            "calls": 5312
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 32.013,
+            "calls": 13551
+          },
+          "preserve-caught-error": {
+            "ms": 31.974,
+            "calls": 4093
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 30.932,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 30.823,
+            "calls": 13551
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 30.791,
+            "calls": 11558
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 30.191,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 29.853,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 29.176,
+            "calls": 13551
+          },
+          "no-forwarding-lambda": {
+            "ms": 28.559,
+            "calls": 4093
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 28.128,
+            "calls": 13551
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 27.967,
+            "calls": 13551
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 27.295,
+            "calls": 13551
+          },
+          "ban-error-string": {
+            "ms": 27.262,
+            "calls": 15281
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 27.156,
+            "calls": 13551
+          },
+          "no-trivial-wrapper": {
+            "ms": 26.893,
+            "calls": 5927
+          },
+          "require-schema-class-brand": {
+            "ms": 26.447,
+            "calls": 13551
+          },
+          "prefer-uninterruptible": {
+            "ms": 26.121,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 26.04,
+            "calls": 13551
+          },
+          "prefer-with-span": {
+            "ms": 25.955,
+            "calls": 13551
+          },
+          "no-async-effect-try": {
+            "ms": 25.859,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 25.182,
+            "calls": 13551
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 24.723,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 24.648,
+            "calls": 11558
+          },
+          "no-millis-arithmetic": {
+            "ms": 24.562,
+            "calls": 2557
+          },
+          "prefer-effect-url": {
+            "ms": 24.551,
+            "calls": 11714
+          },
+          "no-discarded-run-promise": {
+            "ms": 24.503,
+            "calls": 13551
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 24.38,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 24.26,
+            "calls": 13551
+          },
+          "avoid-data-tagged-error": {
+            "ms": 24.209,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 24.116,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 23.652,
+            "calls": 13551
+          },
+          "no-constant-thunk": {
+            "ms": 23.291,
+            "calls": 5927
+          },
+          "prefer-effect-datetime": {
+            "ms": 22.724,
+            "calls": 11558
+          },
+          "prefer-effect-sse": {
+            "ms": 21.343,
+            "calls": 4742
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 21.171,
+            "calls": 5312
+          },
+          "prefer-effect-array-sort": {
+            "ms": 20.097,
+            "calls": 11558
+          },
+          "no-manual-tag-comparison": {
+            "ms": 19.618,
+            "calls": 2929
+          },
+          "prefer-effect-archive": {
+            "ms": 19.065,
+            "calls": 4586
+          },
+          "no-manual-tagged-construction": {
+            "ms": 18.062,
+            "calls": 5612
+          },
+          "prefer-data-match": {
+            "ms": 17.683,
+            "calls": 2565
+          },
+          "prefer-effect-filter": {
+            "ms": 17.604,
+            "calls": 4093
+          },
+          "no-service-constructor-imports": {
+            "ms": 16.328,
+            "calls": 4670
+          },
+          "prefer-effect-predicate": {
+            "ms": 16.044,
+            "calls": 2557
+          },
+          "prefer-effect-match": {
+            "ms": 15.591,
+            "calls": 2337
+          },
+          "prefer-struct-assign": {
+            "ms": 15.447,
+            "calls": 4216
+          },
+          "prefer-equal": {
+            "ms": 14.526,
+            "calls": 2374
+          },
+          "prefer-effect-filesystem": {
+            "ms": 13.826,
+            "calls": 4578
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 13.682,
+            "calls": 3082
+          },
+          "prefer-effect-path": {
+            "ms": 13.505,
+            "calls": 4578
+          },
+          "no-browser-api-in-render": {
+            "ms": 12.705,
+            "calls": 1531
+          },
+          "no-overwritten-discriminant": {
+            "ms": 12.516,
+            "calls": 5612
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 12.5,
+            "calls": 2929
+          },
+          "alchemy-no-v1-import": {
+            "ms": 11.841,
+            "calls": 5312
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 11.082,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 10.005,
+            "calls": 1659
+          },
+          "throw-in-effect-gen": {
+            "ms": 9.994,
+            "calls": 1512
+          },
+          "valid-directive": {
+            "ms": 9.174,
+            "calls": 4114
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 8.968,
+            "calls": 1596
+          },
+          "no-export-all-in-client": {
+            "ms": 6.457,
+            "calls": 1506
+          }
+        }
+      },
+      {
+        "wall": 4982.895643,
+        "runtime": 4079.655,
+        "callbacks": 3751.637,
+        "rules": {
+          "alchemy-domain-pure-decide": {
+            "ms": 366.031,
+            "calls": 103569
+          },
+          "alchemy-domain-block-file-name": {
+            "ms": 251.744,
+            "calls": 10820
+          },
+          "padding-line-between-statements": {
+            "ms": 235.899,
+            "calls": 31051
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 212.628,
+            "calls": 91284
+          },
+          "no-logging-in-catch": {
+            "ms": 95.547,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 76.383,
+            "calls": 26566
+          },
+          "no-utc-iso-slicing": {
+            "ms": 72.889,
+            "calls": 13551
+          },
+          "no-already-started-promise": {
+            "ms": 70.148,
+            "calls": 17085
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 69.205,
+            "calls": 18588
+          },
+          "no-single-use-private-function": {
+            "ms": 66.763,
+            "calls": 3003
+          },
+          "prefer-effect-array-ops": {
+            "ms": 64.988,
+            "calls": 25029
+          },
+          "consistent-schema-pipe": {
+            "ms": 63.849,
+            "calls": 11558
+          },
+          "prefer-effect-duration-types": {
+            "ms": 63.26,
+            "calls": 10231
+          },
+          "no-hash-as-identity": {
+            "ms": 63.063,
+            "calls": 31916
+          },
+          "prefer-effect-user-directories": {
+            "ms": 62.778,
+            "calls": 25984
+          },
+          "no-inline-schema-compile": {
+            "ms": 62.186,
+            "calls": 11558
+          },
+          "no-manual-sse": {
+            "ms": 59.285,
+            "calls": 24367
+          },
+          "no-function-config-default": {
+            "ms": 52.182,
+            "calls": 13551
+          },
+          "prefer-effect-encoding": {
+            "ms": 51.948,
+            "calls": 11558
+          },
+          "no-effect-as-on-log": {
+            "ms": 47.866,
+            "calls": 13551
+          },
+          "prefer-effect-duration": {
+            "ms": 42.297,
+            "calls": 13551
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 40.475,
+            "calls": 13551
+          },
+          "no-manual-encoding": {
+            "ms": 39.148,
+            "calls": 11558
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 36.707,
+            "calls": 13551
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 36.009,
+            "calls": 13551
+          },
+          "prefer-effect-jwt": {
+            "ms": 35.818,
+            "calls": 14633
+          },
+          "prefer-hoisted-match": {
+            "ms": 35.738,
+            "calls": 4983
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 35.646,
+            "calls": 11558
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 33.674,
+            "calls": 5312
+          },
+          "no-empty-effect-callback": {
+            "ms": 33.439,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 33.131,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 32.921,
+            "calls": 13551
+          },
+          "preserve-caught-error": {
+            "ms": 32.694,
+            "calls": 4093
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 31.912,
+            "calls": 13551
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 31.292,
+            "calls": 13551
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 30.929,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 30.822,
+            "calls": 13551
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 30.006,
+            "calls": 13551
+          },
+          "no-forwarding-lambda": {
+            "ms": 29.81,
+            "calls": 4093
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 29.705,
+            "calls": 13551
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 29.295,
+            "calls": 13551
+          },
+          "ban-error-string": {
+            "ms": 28.796,
+            "calls": 15281
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 28.283,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 28.102,
+            "calls": 11558
+          },
+          "no-trivial-wrapper": {
+            "ms": 28.067,
+            "calls": 5927
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 27.402,
+            "calls": 13551
+          },
+          "no-discarded-run-promise": {
+            "ms": 27.347,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 27.299,
+            "calls": 13551
+          },
+          "prefer-uninterruptible": {
+            "ms": 26.732,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 26.643,
+            "calls": 13551
+          },
+          "no-async-effect-try": {
+            "ms": 26.265,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 26.087,
+            "calls": 13551
+          },
+          "prefer-with-span": {
+            "ms": 25.917,
+            "calls": 13551
+          },
+          "no-millis-arithmetic": {
+            "ms": 25.875,
+            "calls": 2557
+          },
+          "prefer-yield-now": {
+            "ms": 25.353,
+            "calls": 13551
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 25.308,
+            "calls": 13551
+          },
+          "prefer-effect-url": {
+            "ms": 25.269,
+            "calls": 11714
+          },
+          "avoid-data-tagged-error": {
+            "ms": 25.091,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 24.971,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 24.924,
+            "calls": 13551
+          },
+          "prefer-effect-datetime": {
+            "ms": 23.5,
+            "calls": 11558
+          },
+          "no-constant-thunk": {
+            "ms": 22.443,
+            "calls": 5927
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 21.613,
+            "calls": 5312
+          },
+          "prefer-effect-sse": {
+            "ms": 21.485,
+            "calls": 4742
+          },
+          "prefer-effect-array-sort": {
+            "ms": 20.977,
+            "calls": 11558
+          },
+          "no-manual-tag-comparison": {
+            "ms": 18.954,
+            "calls": 2929
+          },
+          "prefer-data-match": {
+            "ms": 18.749,
+            "calls": 2565
+          },
+          "no-manual-tagged-construction": {
+            "ms": 18.629,
+            "calls": 5612
+          },
+          "prefer-effect-archive": {
+            "ms": 18.618,
+            "calls": 4586
+          },
+          "prefer-effect-filter": {
+            "ms": 17.827,
+            "calls": 4093
+          },
+          "prefer-effect-predicate": {
+            "ms": 16.49,
+            "calls": 2557
+          },
+          "prefer-struct-assign": {
+            "ms": 15.813,
+            "calls": 4216
+          },
+          "no-service-constructor-imports": {
+            "ms": 15.62,
+            "calls": 4670
+          },
+          "prefer-effect-match": {
+            "ms": 15.037,
+            "calls": 2337
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 14.883,
+            "calls": 3082
+          },
+          "prefer-equal": {
+            "ms": 14.264,
+            "calls": 2374
+          },
+          "prefer-effect-filesystem": {
+            "ms": 13.878,
+            "calls": 4578
+          },
+          "prefer-effect-path": {
+            "ms": 13.54,
+            "calls": 4578
+          },
+          "no-browser-api-in-render": {
+            "ms": 12.994,
+            "calls": 1531
+          },
+          "no-overwritten-discriminant": {
+            "ms": 12.912,
+            "calls": 5612
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 12.827,
+            "calls": 2929
+          },
+          "alchemy-no-v1-import": {
+            "ms": 11.698,
+            "calls": 5312
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 10.618,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 10.216,
+            "calls": 1659
+          },
+          "throw-in-effect-gen": {
+            "ms": 9.818,
+            "calls": 1512
+          },
+          "valid-directive": {
+            "ms": 9.494,
+            "calls": 4114
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 8.693,
+            "calls": 1596
+          },
+          "no-export-all-in-client": {
+            "ms": 6.21,
+            "calls": 1506
+          }
+        }
+      },
+      {
+        "wall": 4753.502241999999,
+        "runtime": 3873.751,
+        "callbacks": 3555.435,
+        "rules": {
+          "alchemy-domain-pure-decide": {
+            "ms": 336.26,
+            "calls": 103569
+          },
+          "alchemy-domain-block-file-name": {
+            "ms": 244.423,
+            "calls": 10820
+          },
+          "padding-line-between-statements": {
+            "ms": 230.572,
+            "calls": 31051
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 195.776,
+            "calls": 91284
+          },
+          "no-logging-in-catch": {
+            "ms": 87.257,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 69.628,
+            "calls": 26566
+          },
+          "no-utc-iso-slicing": {
+            "ms": 68.857,
+            "calls": 13551
+          },
+          "no-already-started-promise": {
+            "ms": 67.431,
+            "calls": 17085
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 65.621,
+            "calls": 18588
+          },
+          "no-single-use-private-function": {
+            "ms": 65.21,
+            "calls": 3003
+          },
+          "no-hash-as-identity": {
+            "ms": 63.025,
+            "calls": 31916
+          },
+          "prefer-effect-duration-types": {
+            "ms": 62.389,
+            "calls": 10231
+          },
+          "prefer-effect-array-ops": {
+            "ms": 62.208,
+            "calls": 25029
+          },
+          "consistent-schema-pipe": {
+            "ms": 61.592,
+            "calls": 11558
+          },
+          "no-inline-schema-compile": {
+            "ms": 58.476,
+            "calls": 11558
+          },
+          "prefer-effect-user-directories": {
+            "ms": 57.825,
+            "calls": 25984
+          },
+          "no-manual-sse": {
+            "ms": 55.841,
+            "calls": 24367
+          },
+          "no-function-config-default": {
+            "ms": 51.266,
+            "calls": 13551
+          },
+          "prefer-effect-encoding": {
+            "ms": 49.024,
+            "calls": 11558
+          },
+          "no-effect-as-on-log": {
+            "ms": 45.765,
+            "calls": 13551
+          },
+          "prefer-effect-duration": {
+            "ms": 41.294,
+            "calls": 13551
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 39.346,
+            "calls": 13551
+          },
+          "prefer-effect-jwt": {
+            "ms": 36.256,
+            "calls": 14633
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 36.087,
+            "calls": 13551
+          },
+          "no-manual-encoding": {
+            "ms": 35.829,
+            "calls": 11558
+          },
+          "prefer-hoisted-match": {
+            "ms": 35.786,
+            "calls": 4983
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 33.373,
+            "calls": 5312
+          },
+          "no-empty-effect-callback": {
+            "ms": 32.845,
+            "calls": 13551
+          },
+          "preserve-caught-error": {
+            "ms": 31.526,
+            "calls": 4093
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 30.808,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 30.631,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 30.563,
+            "calls": 13551
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 29.889,
+            "calls": 11558
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 29.58,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 29.412,
+            "calls": 13551
+          },
+          "no-forwarding-lambda": {
+            "ms": 29.198,
+            "calls": 4093
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 28.505,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 28.388,
+            "calls": 13551
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 28.229,
+            "calls": 13551
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 27.479,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 27.224,
+            "calls": 13551
+          },
+          "ban-error-string": {
+            "ms": 27.184,
+            "calls": 15281
+          },
+          "no-empty-schema-struct": {
+            "ms": 26.801,
+            "calls": 13551
+          },
+          "no-trivial-wrapper": {
+            "ms": 26.614,
+            "calls": 5927
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 26.441,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 26.084,
+            "calls": 13551
+          },
+          "prefer-effect-url": {
+            "ms": 25.85,
+            "calls": 11714
+          },
+          "no-discarded-run-promise": {
+            "ms": 25.645,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 25.417,
+            "calls": 11558
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 25.065,
+            "calls": 13551
+          },
+          "no-async-effect-try": {
+            "ms": 24.945,
+            "calls": 13551
+          },
+          "prefer-uninterruptible": {
+            "ms": 24.738,
+            "calls": 13551
+          },
+          "no-millis-arithmetic": {
+            "ms": 24.683,
+            "calls": 2557
+          },
+          "avoid-data-tagged-error": {
+            "ms": 23.978,
+            "calls": 13551
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 23.765,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 23.759,
+            "calls": 13551
+          },
+          "prefer-with-span": {
+            "ms": 23.747,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 23.678,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 23.625,
+            "calls": 13551
+          },
+          "prefer-effect-datetime": {
+            "ms": 23.369,
+            "calls": 11558
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 23.21,
+            "calls": 13551
+          },
+          "no-constant-thunk": {
+            "ms": 21.169,
+            "calls": 5927
+          },
+          "prefer-effect-sse": {
+            "ms": 20.993,
+            "calls": 4742
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 20.643,
+            "calls": 5312
+          },
+          "prefer-effect-array-sort": {
+            "ms": 19.887,
+            "calls": 11558
+          },
+          "prefer-effect-archive": {
+            "ms": 18.461,
+            "calls": 4586
+          },
+          "no-manual-tag-comparison": {
+            "ms": 18.266,
+            "calls": 2929
+          },
+          "no-manual-tagged-construction": {
+            "ms": 17.651,
+            "calls": 5612
+          },
+          "prefer-effect-filter": {
+            "ms": 16.706,
+            "calls": 4093
+          },
+          "prefer-data-match": {
+            "ms": 16.566,
+            "calls": 2565
+          },
+          "no-service-constructor-imports": {
+            "ms": 15.634,
+            "calls": 4670
+          },
+          "prefer-effect-predicate": {
+            "ms": 15.225,
+            "calls": 2557
+          },
+          "prefer-struct-assign": {
+            "ms": 15.056,
+            "calls": 4216
+          },
+          "prefer-effect-match": {
+            "ms": 14.363,
+            "calls": 2337
+          },
+          "prefer-equal": {
+            "ms": 14.344,
+            "calls": 2374
+          },
+          "prefer-effect-filesystem": {
+            "ms": 13.363,
+            "calls": 4578
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 12.968,
+            "calls": 3082
+          },
+          "prefer-effect-path": {
+            "ms": 12.913,
+            "calls": 4578
+          },
+          "no-overwritten-discriminant": {
+            "ms": 12.675,
+            "calls": 5612
+          },
+          "no-browser-api-in-render": {
+            "ms": 11.809,
+            "calls": 1531
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 11.793,
+            "calls": 2929
+          },
+          "alchemy-no-v1-import": {
+            "ms": 11.415,
+            "calls": 5312
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 10.354,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 10.099,
+            "calls": 1659
+          },
+          "throw-in-effect-gen": {
+            "ms": 9.898,
+            "calls": 1512
+          },
+          "valid-directive": {
+            "ms": 9.072,
+            "calls": 4114
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 8.771,
+            "calls": 1596
+          },
+          "no-export-all-in-client": {
+            "ms": 6.05,
+            "calls": 1506
+          }
+        }
+      },
+      {
+        "wall": 4892.769854999999,
+        "runtime": 3987.439,
+        "callbacks": 3660.326,
+        "rules": {
+          "alchemy-domain-pure-decide": {
+            "ms": 352.147,
+            "calls": 103569
+          },
+          "alchemy-domain-block-file-name": {
+            "ms": 247.521,
+            "calls": 10820
+          },
+          "padding-line-between-statements": {
+            "ms": 234.069,
+            "calls": 31051
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 207.406,
+            "calls": 91284
+          },
+          "no-logging-in-catch": {
+            "ms": 92.143,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 73.699,
+            "calls": 26566
+          },
+          "no-utc-iso-slicing": {
+            "ms": 72.399,
+            "calls": 13551
+          },
+          "no-already-started-promise": {
+            "ms": 71.091,
+            "calls": 17085
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 66.955,
+            "calls": 18588
+          },
+          "prefer-effect-user-directories": {
+            "ms": 66.714,
+            "calls": 25984
+          },
+          "no-single-use-private-function": {
+            "ms": 65.714,
+            "calls": 3003
+          },
+          "prefer-effect-array-ops": {
+            "ms": 64.286,
+            "calls": 25029
+          },
+          "no-hash-as-identity": {
+            "ms": 63.308,
+            "calls": 31916
+          },
+          "prefer-effect-duration-types": {
+            "ms": 60.811,
+            "calls": 10231
+          },
+          "consistent-schema-pipe": {
+            "ms": 60.519,
+            "calls": 11558
+          },
+          "no-inline-schema-compile": {
+            "ms": 60.085,
+            "calls": 11558
+          },
+          "no-manual-sse": {
+            "ms": 57.616,
+            "calls": 24367
+          },
+          "prefer-effect-encoding": {
+            "ms": 52.617,
+            "calls": 11558
+          },
+          "no-function-config-default": {
+            "ms": 51.849,
+            "calls": 13551
+          },
+          "no-effect-as-on-log": {
+            "ms": 45.501,
+            "calls": 13551
+          },
+          "prefer-effect-duration": {
+            "ms": 40.28,
+            "calls": 13551
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 39.216,
+            "calls": 13551
+          },
+          "no-manual-encoding": {
+            "ms": 37.654,
+            "calls": 11558
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 37.014,
+            "calls": 13551
+          },
+          "prefer-hoisted-match": {
+            "ms": 36.951,
+            "calls": 4983
+          },
+          "prefer-effect-jwt": {
+            "ms": 36.136,
+            "calls": 14633
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 34.349,
+            "calls": 13551
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 33.391,
+            "calls": 5312
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 32.578,
+            "calls": 13551
+          },
+          "no-empty-effect-callback": {
+            "ms": 31.985,
+            "calls": 13551
+          },
+          "preserve-caught-error": {
+            "ms": 31.59,
+            "calls": 4093
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 31.49,
+            "calls": 11558
+          },
+          "no-option-of-service": {
+            "ms": 31.378,
+            "calls": 13551
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 31.008,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 30.909,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 29.866,
+            "calls": 13551
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 29.41,
+            "calls": 13551
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 29.283,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 29.074,
+            "calls": 13551
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 28.856,
+            "calls": 13551
+          },
+          "no-forwarding-lambda": {
+            "ms": 28.489,
+            "calls": 4093
+          },
+          "ban-error-string": {
+            "ms": 27.555,
+            "calls": 15281
+          },
+          "no-trivial-wrapper": {
+            "ms": 27.202,
+            "calls": 5927
+          },
+          "prefer-uninterruptible": {
+            "ms": 26.976,
+            "calls": 13551
+          },
+          "no-discarded-run-promise": {
+            "ms": 26.709,
+            "calls": 13551
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 26.379,
+            "calls": 13551
+          },
+          "prefer-effect-url": {
+            "ms": 26.003,
+            "calls": 11714
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 25.327,
+            "calls": 13551
+          },
+          "no-async-effect-try": {
+            "ms": 25.235,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 25.026,
+            "calls": 11558
+          },
+          "no-empty-schema-struct": {
+            "ms": 24.905,
+            "calls": 13551
+          },
+          "no-millis-arithmetic": {
+            "ms": 24.824,
+            "calls": 2557
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 24.791,
+            "calls": 13551
+          },
+          "avoid-data-tagged-error": {
+            "ms": 24.786,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 24.72,
+            "calls": 13551
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 24.665,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 24.583,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 24.409,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 24.189,
+            "calls": 13551
+          },
+          "prefer-with-span": {
+            "ms": 24.128,
+            "calls": 13551
+          },
+          "prefer-effect-datetime": {
+            "ms": 24.011,
+            "calls": 11558
+          },
+          "no-constant-thunk": {
+            "ms": 21.937,
+            "calls": 5927
+          },
+          "prefer-effect-sse": {
+            "ms": 21.297,
+            "calls": 4742
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 21.101,
+            "calls": 5312
+          },
+          "prefer-effect-array-sort": {
+            "ms": 20.605,
+            "calls": 11558
+          },
+          "no-manual-tagged-construction": {
+            "ms": 18.58,
+            "calls": 5612
+          },
+          "prefer-effect-archive": {
+            "ms": 18.492,
+            "calls": 4586
+          },
+          "no-manual-tag-comparison": {
+            "ms": 18.348,
+            "calls": 2929
+          },
+          "prefer-effect-filter": {
+            "ms": 17.456,
+            "calls": 4093
+          },
+          "prefer-data-match": {
+            "ms": 17.16,
+            "calls": 2565
+          },
+          "no-service-constructor-imports": {
+            "ms": 16.031,
+            "calls": 4670
+          },
+          "prefer-effect-predicate": {
+            "ms": 15.916,
+            "calls": 2557
+          },
+          "prefer-struct-assign": {
+            "ms": 15.38,
+            "calls": 4216
+          },
+          "prefer-effect-match": {
+            "ms": 15.045,
+            "calls": 2337
+          },
+          "prefer-equal": {
+            "ms": 14.631,
+            "calls": 2374
+          },
+          "prefer-effect-filesystem": {
+            "ms": 13.696,
+            "calls": 4578
+          },
+          "prefer-effect-path": {
+            "ms": 13.501,
+            "calls": 4578
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 13.446,
+            "calls": 3082
+          },
+          "no-overwritten-discriminant": {
+            "ms": 12.525,
+            "calls": 5612
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 12.396,
+            "calls": 2929
+          },
+          "no-browser-api-in-render": {
+            "ms": 12.115,
+            "calls": 1531
+          },
+          "alchemy-no-v1-import": {
+            "ms": 11.343,
+            "calls": 5312
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 11.014,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 10.05,
+            "calls": 1659
+          },
+          "throw-in-effect-gen": {
+            "ms": 9.717,
+            "calls": 1512
+          },
+          "valid-directive": {
+            "ms": 9.701,
+            "calls": 4114
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 8.823,
+            "calls": 1596
+          },
+          "no-export-all-in-client": {
+            "ms": 6.242,
+            "calls": 1506
+          }
+        }
+      },
+      {
+        "wall": 4787.503317999999,
+        "runtime": 3885.889,
+        "callbacks": 3573.17,
+        "rules": {
+          "alchemy-domain-pure-decide": {
+            "ms": 345.391,
+            "calls": 103569
+          },
+          "alchemy-domain-block-file-name": {
+            "ms": 247.146,
+            "calls": 10820
+          },
+          "padding-line-between-statements": {
+            "ms": 233.124,
+            "calls": 31051
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 210.988,
+            "calls": 91284
+          },
+          "no-logging-in-catch": {
+            "ms": 91.463,
+            "calls": 13551
+          },
+          "no-utc-iso-slicing": {
+            "ms": 71.577,
+            "calls": 13551
+          },
+          "prefer-effect-array-ops": {
+            "ms": 69.082,
+            "calls": 25029
+          },
+          "no-already-started-promise": {
+            "ms": 68.89,
+            "calls": 17085
+          },
+          "prefer-effect-net-address": {
+            "ms": 67.552,
+            "calls": 26566
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 66.784,
+            "calls": 18588
+          },
+          "no-single-use-private-function": {
+            "ms": 65.286,
+            "calls": 3003
+          },
+          "prefer-effect-duration-types": {
+            "ms": 61.603,
+            "calls": 10231
+          },
+          "no-hash-as-identity": {
+            "ms": 61.462,
+            "calls": 31916
+          },
+          "consistent-schema-pipe": {
+            "ms": 59.693,
+            "calls": 11558
+          },
+          "prefer-effect-user-directories": {
+            "ms": 59.671,
+            "calls": 25984
+          },
+          "no-inline-schema-compile": {
+            "ms": 56.973,
+            "calls": 11558
+          },
+          "no-manual-sse": {
+            "ms": 55.151,
+            "calls": 24367
+          },
+          "prefer-effect-encoding": {
+            "ms": 48.3,
+            "calls": 11558
+          },
+          "no-function-config-default": {
+            "ms": 47.547,
+            "calls": 13551
+          },
+          "no-effect-as-on-log": {
+            "ms": 43.258,
+            "calls": 13551
+          },
+          "prefer-effect-duration": {
+            "ms": 38.996,
+            "calls": 13551
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 38.038,
+            "calls": 13551
+          },
+          "no-manual-encoding": {
+            "ms": 35.762,
+            "calls": 11558
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 35.478,
+            "calls": 13551
+          },
+          "prefer-hoisted-match": {
+            "ms": 34.219,
+            "calls": 4983
+          },
+          "prefer-effect-jwt": {
+            "ms": 33.687,
+            "calls": 14633
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 33.434,
+            "calls": 5312
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 32.293,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 31.762,
+            "calls": 13551
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 30.703,
+            "calls": 11558
+          },
+          "no-empty-effect-callback": {
+            "ms": 30.08,
+            "calls": 13551
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 30.028,
+            "calls": 13551
+          },
+          "preserve-caught-error": {
+            "ms": 29.73,
+            "calls": 4093
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 29.651,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 29.074,
+            "calls": 13551
+          },
+          "no-forwarding-lambda": {
+            "ms": 28.998,
+            "calls": 4093
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 28.919,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 28.637,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 28.363,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 28.346,
+            "calls": 13551
+          },
+          "ban-error-string": {
+            "ms": 27.711,
+            "calls": 15281
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 27.688,
+            "calls": 13551
+          },
+          "no-trivial-wrapper": {
+            "ms": 25.778,
+            "calls": 5927
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 25.307,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 25.073,
+            "calls": 11558
+          },
+          "prefer-yield-now": {
+            "ms": 24.829,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 24.778,
+            "calls": 13551
+          },
+          "no-async-effect-try": {
+            "ms": 24.526,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 24.482,
+            "calls": 13551
+          },
+          "prefer-uninterruptible": {
+            "ms": 24.448,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 24.377,
+            "calls": 13551
+          },
+          "avoid-data-tagged-error": {
+            "ms": 24.353,
+            "calls": 13551
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 24.154,
+            "calls": 13551
+          },
+          "no-millis-arithmetic": {
+            "ms": 24.134,
+            "calls": 2557
+          },
+          "no-discarded-run-promise": {
+            "ms": 24.039,
+            "calls": 13551
+          },
+          "prefer-effect-url": {
+            "ms": 23.738,
+            "calls": 11714
+          },
+          "prefer-with-span": {
+            "ms": 23.652,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 23.635,
+            "calls": 13551
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 23.624,
+            "calls": 13551
+          },
+          "prefer-effect-datetime": {
+            "ms": 23.523,
+            "calls": 11558
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 22.544,
+            "calls": 13551
+          },
+          "no-constant-thunk": {
+            "ms": 22.093,
+            "calls": 5927
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 21.17,
+            "calls": 5312
+          },
+          "prefer-effect-sse": {
+            "ms": 20.623,
+            "calls": 4742
+          },
+          "prefer-effect-array-sort": {
+            "ms": 20.584,
+            "calls": 11558
+          },
+          "no-manual-tag-comparison": {
+            "ms": 18.862,
+            "calls": 2929
+          },
+          "prefer-effect-archive": {
+            "ms": 18.68,
+            "calls": 4586
+          },
+          "no-manual-tagged-construction": {
+            "ms": 18.396,
+            "calls": 5612
+          },
+          "prefer-effect-filter": {
+            "ms": 16.923,
+            "calls": 4093
+          },
+          "prefer-data-match": {
+            "ms": 16.571,
+            "calls": 2565
+          },
+          "no-service-constructor-imports": {
+            "ms": 16.239,
+            "calls": 4670
+          },
+          "prefer-effect-predicate": {
+            "ms": 15.059,
+            "calls": 2557
+          },
+          "prefer-struct-assign": {
+            "ms": 14.745,
+            "calls": 4216
+          },
+          "prefer-equal": {
+            "ms": 14.565,
+            "calls": 2374
+          },
+          "prefer-effect-match": {
+            "ms": 13.974,
+            "calls": 2337
+          },
+          "prefer-effect-filesystem": {
+            "ms": 13.602,
+            "calls": 4578
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 13.119,
+            "calls": 3082
+          },
+          "no-overwritten-discriminant": {
+            "ms": 12.993,
+            "calls": 5612
+          },
+          "prefer-effect-path": {
+            "ms": 12.902,
+            "calls": 4578
+          },
+          "no-browser-api-in-render": {
+            "ms": 12.207,
+            "calls": 1531
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 11.865,
+            "calls": 2929
+          },
+          "alchemy-no-v1-import": {
+            "ms": 11.33,
+            "calls": 5312
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 10.266,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 9.747,
+            "calls": 1659
+          },
+          "throw-in-effect-gen": {
+            "ms": 9.584,
+            "calls": 1512
+          },
+          "valid-directive": {
+            "ms": 8.901,
+            "calls": 4114
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 8.703,
+            "calls": 1596
+          },
+          "no-export-all-in-client": {
+            "ms": 5.938,
+            "calls": 1506
+          }
+        }
+      },
+      {
+        "wall": 4953.1926870000025,
+        "runtime": 4074.834,
+        "callbacks": 3748.422,
+        "rules": {
+          "alchemy-domain-pure-decide": {
+            "ms": 367.528,
+            "calls": 103569
+          },
+          "alchemy-domain-block-file-name": {
+            "ms": 251.803,
+            "calls": 10820
+          },
+          "padding-line-between-statements": {
+            "ms": 234.982,
+            "calls": 31051
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 210.472,
+            "calls": 91284
+          },
+          "no-logging-in-catch": {
+            "ms": 92.705,
+            "calls": 13551
+          },
+          "no-utc-iso-slicing": {
+            "ms": 73.997,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 73.29,
+            "calls": 26566
+          },
+          "no-already-started-promise": {
+            "ms": 71.718,
+            "calls": 17085
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 69.153,
+            "calls": 18588
+          },
+          "no-single-use-private-function": {
+            "ms": 67.414,
+            "calls": 3003
+          },
+          "prefer-effect-array-ops": {
+            "ms": 66.01,
+            "calls": 25029
+          },
+          "prefer-effect-duration-types": {
+            "ms": 65.203,
+            "calls": 10231
+          },
+          "no-hash-as-identity": {
+            "ms": 64.013,
+            "calls": 31916
+          },
+          "prefer-effect-user-directories": {
+            "ms": 62.817,
+            "calls": 25984
+          },
+          "no-inline-schema-compile": {
+            "ms": 62.088,
+            "calls": 11558
+          },
+          "consistent-schema-pipe": {
+            "ms": 60.852,
+            "calls": 11558
+          },
+          "no-manual-sse": {
+            "ms": 58.108,
+            "calls": 24367
+          },
+          "no-function-config-default": {
+            "ms": 52.072,
+            "calls": 13551
+          },
+          "prefer-effect-encoding": {
+            "ms": 50.5,
+            "calls": 11558
+          },
+          "no-effect-as-on-log": {
+            "ms": 47.698,
+            "calls": 13551
+          },
+          "prefer-effect-duration": {
+            "ms": 42.365,
+            "calls": 13551
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 39.976,
+            "calls": 13551
+          },
+          "no-manual-encoding": {
+            "ms": 39.784,
+            "calls": 11558
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 37.894,
+            "calls": 13551
+          },
+          "prefer-hoisted-match": {
+            "ms": 37.271,
+            "calls": 4983
+          },
+          "prefer-effect-jwt": {
+            "ms": 35.563,
+            "calls": 14633
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 33.686,
+            "calls": 5312
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 33.411,
+            "calls": 13551
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 33.411,
+            "calls": 13551
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 33.169,
+            "calls": 11558
+          },
+          "preserve-caught-error": {
+            "ms": 33.052,
+            "calls": 4093
+          },
+          "no-empty-effect-callback": {
+            "ms": 32.603,
+            "calls": 13551
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 31.804,
+            "calls": 13551
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 31.559,
+            "calls": 13551
+          },
+          "ban-error-string": {
+            "ms": 31.449,
+            "calls": 15281
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 31.091,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 30.893,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 30.841,
+            "calls": 13551
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 30.683,
+            "calls": 13551
+          },
+          "no-forwarding-lambda": {
+            "ms": 30.538,
+            "calls": 4093
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 30.359,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 28.815,
+            "calls": 13551
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 28.462,
+            "calls": 13551
+          },
+          "no-trivial-wrapper": {
+            "ms": 28.028,
+            "calls": 5927
+          },
+          "avoid-data-tagged-error": {
+            "ms": 28.018,
+            "calls": 13551
+          },
+          "prefer-with-span": {
+            "ms": 27.231,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 27.017,
+            "calls": 13551
+          },
+          "no-async-effect-try": {
+            "ms": 27.008,
+            "calls": 13551
+          },
+          "no-discarded-run-promise": {
+            "ms": 26.787,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 26.297,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 26.282,
+            "calls": 13551
+          },
+          "prefer-uninterruptible": {
+            "ms": 26.182,
+            "calls": 13551
+          },
+          "no-millis-arithmetic": {
+            "ms": 26.15,
+            "calls": 2557
+          },
+          "no-discarded-schema-checks": {
+            "ms": 25.935,
+            "calls": 11558
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 25.531,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 25.467,
+            "calls": 13551
+          },
+          "prefer-effect-url": {
+            "ms": 25.324,
+            "calls": 11714
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 25.043,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 24.779,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 24.471,
+            "calls": 13551
+          },
+          "prefer-effect-datetime": {
+            "ms": 23.792,
+            "calls": 11558
+          },
+          "no-constant-thunk": {
+            "ms": 22.898,
+            "calls": 5927
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 22.467,
+            "calls": 5312
+          },
+          "prefer-effect-sse": {
+            "ms": 21.659,
+            "calls": 4742
+          },
+          "prefer-effect-array-sort": {
+            "ms": 20.994,
+            "calls": 11558
+          },
+          "prefer-effect-archive": {
+            "ms": 19.125,
+            "calls": 4586
+          },
+          "no-manual-tag-comparison": {
+            "ms": 18.794,
+            "calls": 2929
+          },
+          "no-manual-tagged-construction": {
+            "ms": 18.673,
+            "calls": 5612
+          },
+          "prefer-data-match": {
+            "ms": 17.921,
+            "calls": 2565
+          },
+          "prefer-effect-filter": {
+            "ms": 17.602,
+            "calls": 4093
+          },
+          "prefer-struct-assign": {
+            "ms": 17.045,
+            "calls": 4216
+          },
+          "no-service-constructor-imports": {
+            "ms": 16.536,
+            "calls": 4670
+          },
+          "prefer-effect-predicate": {
+            "ms": 16.398,
+            "calls": 2557
+          },
+          "prefer-effect-match": {
+            "ms": 14.887,
+            "calls": 2337
+          },
+          "prefer-equal": {
+            "ms": 14.525,
+            "calls": 2374
+          },
+          "prefer-effect-filesystem": {
+            "ms": 14.316,
+            "calls": 4578
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 13.671,
+            "calls": 3082
+          },
+          "prefer-effect-path": {
+            "ms": 13.465,
+            "calls": 4578
+          },
+          "no-overwritten-discriminant": {
+            "ms": 13.172,
+            "calls": 5612
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 12.68,
+            "calls": 2929
+          },
+          "no-browser-api-in-render": {
+            "ms": 12.621,
+            "calls": 1531
+          },
+          "alchemy-no-v1-import": {
+            "ms": 11.935,
+            "calls": 5312
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 10.897,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 10.565,
+            "calls": 1659
+          },
+          "throw-in-effect-gen": {
+            "ms": 10.46,
+            "calls": 1512
+          },
+          "valid-directive": {
+            "ms": 9.764,
+            "calls": 4114
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 8.716,
+            "calls": 1596
+          },
+          "no-export-all-in-client": {
+            "ms": 6.195,
+            "calls": 1506
+          }
+        }
+      }
+    ]
+  },
+  "candidate": {
+    "wall": 2789.1356689999957,
+    "runtime": 1934.777,
+    "callbacks": 1700.007,
+    "rules": {
+      "alchemy-domain-block-file-name": {
+        "ms": 163.057,
+        "calls": 1969
+      },
+      "alchemy-domain-pure-decide": {
+        "ms": 14.825,
+        "calls": 5636
+      },
+      "alchemy-domain-pure-imports": {
+        "ms": 7.996,
+        "calls": 1596
+      },
+      "alchemy-domain-require-view-version": {
+        "ms": 6.236,
+        "calls": 1966
+      },
+      "alchemy-domain-total-handlers": {
+        "ms": 16.017,
+        "calls": 5145
+      },
+      "alchemy-no-cloudflare-init-finalizer": {
+        "ms": 12.936,
+        "calls": 13551
+      },
+      "alchemy-no-deprecated-docker-constraints": {
+        "ms": 12.525,
+        "calls": 13551
+      },
+      "alchemy-no-deprecated-resource": {
+        "ms": 13.465,
+        "calls": 13551
+      },
+      "alchemy-no-plaintext-github-secret": {
+        "ms": 13.638,
+        "calls": 13551
+      },
+      "alchemy-no-removed-config-api": {
+        "ms": 11.496,
+        "calls": 13551
+      },
+      "alchemy-no-reserved-eventbridge-default-name": {
+        "ms": 12.392,
+        "calls": 13551
+      },
+      "alchemy-no-runtime-config": {
+        "ms": 6.936,
+        "calls": 3082
+      },
+      "alchemy-no-v1-import": {
+        "ms": 7.613,
+        "calls": 5312
+      },
+      "alchemy-no-v1-worker-properties": {
+        "ms": 12.427,
+        "calls": 13551
+      },
+      "avoid-data-tagged-error": {
+        "ms": 6.788,
+        "calls": 13551
+      },
+      "ban-error-string": {
+        "ms": 17.178,
+        "calls": 15281
+      },
+      "consistent-schema-pipe": {
+        "ms": 50.468,
+        "calls": 11558
+      },
+      "cors-credentials-with-wildcard": {
+        "ms": 8.981,
+        "calls": 13551
+      },
+      "dual-numeric-arity-with-optional-parameter": {
+        "ms": 6.957,
+        "calls": 13551
+      },
+      "effect-promise-vs-trypromise": {
+        "ms": 6.628,
+        "calls": 13551
+      },
+      "no-already-started-promise": {
+        "ms": 53.039,
+        "calls": 17085
+      },
+      "no-async-effect-try": {
+        "ms": 6.994,
+        "calls": 13551
+      },
+      "no-browser-api-in-render": {
+        "ms": 44.353,
+        "calls": 1531
+      },
+      "no-constant-thunk": {
+        "ms": 15.663,
+        "calls": 5927
+      },
+      "no-discarded-run-promise": {
+        "ms": 7.813,
+        "calls": 13551
+      },
+      "no-discarded-schema-checks": {
+        "ms": 10.976,
+        "calls": 11558
+      },
+      "no-effect-as-on-log": {
+        "ms": 18.551,
+        "calls": 13551
+      },
+      "no-empty-effect-callback": {
+        "ms": 10.191,
+        "calls": 13551
+      },
+      "no-empty-schema-struct": {
+        "ms": 7.143,
+        "calls": 13551
+      },
+      "no-encoding-get-or-throw": {
+        "ms": 14.588,
+        "calls": 13551
+      },
+      "no-export-all-in-client": {
+        "ms": 5.152,
+        "calls": 1506
+      },
+      "no-effect-alchemy-barrel-imports": {
+        "ms": 19.041,
+        "calls": 5312
+      },
+      "no-forwarding-lambda": {
+        "ms": 18.918,
+        "calls": 4093
+      },
+      "no-function-config-default": {
+        "ms": 39.916,
+        "calls": 13551
+      },
+      "no-hash-as-identity": {
+        "ms": 33.062,
+        "calls": 31916
+      },
+      "no-inline-schema-compile": {
+        "ms": 61.703,
+        "calls": 11558
+      },
+      "no-logging-in-catch": {
+        "ms": 12.962,
+        "calls": 13551
+      },
+      "no-manual-effect-error-tag": {
+        "ms": 9.584,
+        "calls": 2929
+      },
+      "no-manual-encoding": {
+        "ms": 15.378,
+        "calls": 11558
+      },
+      "no-manual-sse": {
+        "ms": 29.965,
+        "calls": 24367
+      },
+      "no-manual-tag-comparison": {
+        "ms": 24.497,
+        "calls": 2929
+      },
+      "no-manual-tagged-construction": {
+        "ms": 15.011,
+        "calls": 5612
+      },
+      "no-millis-arithmetic": {
+        "ms": 19.04,
+        "calls": 2557
+      },
+      "no-multi-shot-effect-callback": {
+        "ms": 7.538,
+        "calls": 13551
+      },
+      "no-non-json-schema-annotation": {
+        "ms": 14.124,
+        "calls": 11558
+      },
+      "no-option-of-service": {
+        "ms": 11.288,
+        "calls": 13551
+      },
+      "no-overwritten-discriminant": {
+        "ms": 8.961,
+        "calls": 5612
+      },
+      "no-service-option-get-or-throw": {
+        "ms": 10.601,
+        "calls": 13551
+      },
+      "no-single-use-private-function": {
+        "ms": 59.641,
+        "calls": 3003
+      },
+      "no-service-constructor-imports": {
+        "ms": 14.411,
+        "calls": 4670
+      },
+      "no-throw-in-effect-callback": {
+        "ms": 5.513,
+        "calls": 1512
+      },
+      "no-trivial-wrapper": {
+        "ms": 17.182,
+        "calls": 5927
+      },
+      "no-uppercase-http-api-header": {
+        "ms": 33.262,
+        "calls": 13551
+      },
+      "no-utc-iso-slicing": {
+        "ms": 39.832,
+        "calls": 13551
+      },
+      "no-zero-retry-times": {
+        "ms": 6.974,
+        "calls": 13551
+      },
+      "padding-line-between-statements": {
+        "ms": 24.124,
+        "calls": 1889
+      },
+      "prefer-data-match": {
+        "ms": 10.372,
+        "calls": 2565
+      },
+      "prefer-effect-alchemy-namespace-imports": {
+        "ms": 30.91,
+        "calls": 5312
+      },
+      "prefer-effect-archive": {
+        "ms": 10.419,
+        "calls": 4586
+      },
+      "prefer-effect-array-ops": {
+        "ms": 58.388,
+        "calls": 25029
+      },
+      "prefer-effect-array-sort": {
+        "ms": 6.265,
+        "calls": 11558
+      },
+      "prefer-effect-datetime": {
+        "ms": 8.591,
+        "calls": 11558
+      },
+      "prefer-effect-duration": {
+        "ms": 27.699,
+        "calls": 13551
+      },
+      "prefer-effect-duration-constants": {
+        "ms": 52.554,
+        "calls": 18588
+      },
+      "prefer-effect-duration-types": {
+        "ms": 45.021,
+        "calls": 10231
+      },
+      "prefer-effect-encoding": {
+        "ms": 33.445,
+        "calls": 11558
+      },
+      "prefer-effect-filesystem": {
+        "ms": 6.457,
+        "calls": 4578
+      },
+      "prefer-effect-filter": {
+        "ms": 9.568,
+        "calls": 4093
+      },
+      "prefer-effect-headers": {
+        "ms": 5.234,
+        "calls": 1659
+      },
+      "prefer-effect-jwt": {
+        "ms": 15.8,
+        "calls": 14633
+      },
+      "prefer-effect-match": {
+        "ms": 8.652,
+        "calls": 2337
+      },
+      "prefer-effect-net-address": {
+        "ms": 35.339,
+        "calls": 26566
+      },
+      "prefer-effect-path": {
+        "ms": 5.937,
+        "calls": 4578
+      },
+      "prefer-effect-predicate": {
+        "ms": 13.712,
+        "calls": 2557
+      },
+      "prefer-effect-sse": {
+        "ms": 13.372,
+        "calls": 4742
+      },
+      "prefer-effect-url": {
+        "ms": 10.385,
+        "calls": 11714
+      },
+      "prefer-effect-user-directories": {
+        "ms": 27.489,
+        "calls": 25984
+      },
+      "prefer-hoisted-match": {
+        "ms": 26.692,
+        "calls": 4983
+      },
+      "prefer-equal": {
+        "ms": 8.318,
+        "calls": 2374
+      },
+      "prefer-struct-assign": {
+        "ms": 8.089,
+        "calls": 4216
+      },
+      "prefer-uninterruptible": {
+        "ms": 8.514,
+        "calls": 13551
+      },
+      "prefer-with-span": {
+        "ms": 7.024,
+        "calls": 13551
+      },
+      "prefer-yield-now": {
+        "ms": 6.941,
+        "calls": 13551
+      },
+      "preserve-caught-error": {
+        "ms": 21.955,
+        "calls": 4093
+      },
+      "require-schema-class-brand": {
+        "ms": 7.053,
+        "calls": 13551
+      },
+      "require-try-promise-abort-signal": {
+        "ms": 7.309,
+        "calls": 13551
+      },
+      "throw-in-effect-gen": {
+        "ms": 4.928,
+        "calls": 1512
+      },
+      "valid-directive": {
+        "ms": 6.317,
+        "calls": 4114
+      }
+    },
+    "samples": [
+      {
+        "wall": 2848.175228,
+        "runtime": 1998.814,
+        "callbacks": 1760.29,
+        "rules": {
+          "alchemy-domain-block-file-name": {
+            "ms": 175.08,
+            "calls": 1969
+          },
+          "no-inline-schema-compile": {
+            "ms": 64.743,
+            "calls": 11558
+          },
+          "prefer-effect-array-ops": {
+            "ms": 62.304,
+            "calls": 25029
+          },
+          "no-single-use-private-function": {
+            "ms": 60.387,
+            "calls": 3003
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 54.361,
+            "calls": 18588
+          },
+          "no-already-started-promise": {
+            "ms": 53.455,
+            "calls": 17085
+          },
+          "consistent-schema-pipe": {
+            "ms": 52.56,
+            "calls": 11558
+          },
+          "no-browser-api-in-render": {
+            "ms": 45.598,
+            "calls": 1531
+          },
+          "prefer-effect-duration-types": {
+            "ms": 45.367,
+            "calls": 10231
+          },
+          "no-function-config-default": {
+            "ms": 41.341,
+            "calls": 13551
+          },
+          "no-utc-iso-slicing": {
+            "ms": 40.9,
+            "calls": 13551
+          },
+          "prefer-effect-encoding": {
+            "ms": 36.231,
+            "calls": 11558
+          },
+          "prefer-effect-net-address": {
+            "ms": 35.352,
+            "calls": 26566
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 33.704,
+            "calls": 13551
+          },
+          "no-hash-as-identity": {
+            "ms": 32.969,
+            "calls": 31916
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 31.846,
+            "calls": 5312
+          },
+          "no-manual-sse": {
+            "ms": 31.006,
+            "calls": 24367
+          },
+          "prefer-effect-user-directories": {
+            "ms": 29.155,
+            "calls": 25984
+          },
+          "prefer-effect-duration": {
+            "ms": 28.108,
+            "calls": 13551
+          },
+          "prefer-hoisted-match": {
+            "ms": 27.646,
+            "calls": 4983
+          },
+          "no-manual-tag-comparison": {
+            "ms": 25.41,
+            "calls": 2929
+          },
+          "padding-line-between-statements": {
+            "ms": 24.625,
+            "calls": 1889
+          },
+          "preserve-caught-error": {
+            "ms": 22.892,
+            "calls": 4093
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 20.561,
+            "calls": 5312
+          },
+          "no-millis-arithmetic": {
+            "ms": 19.04,
+            "calls": 2557
+          },
+          "no-forwarding-lambda": {
+            "ms": 18.847,
+            "calls": 4093
+          },
+          "no-effect-as-on-log": {
+            "ms": 18.551,
+            "calls": 13551
+          },
+          "no-trivial-wrapper": {
+            "ms": 17.681,
+            "calls": 5927
+          },
+          "ban-error-string": {
+            "ms": 17.247,
+            "calls": 15281
+          },
+          "no-manual-encoding": {
+            "ms": 15.965,
+            "calls": 11558
+          },
+          "prefer-effect-jwt": {
+            "ms": 15.955,
+            "calls": 14633
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 15.926,
+            "calls": 5145
+          },
+          "no-constant-thunk": {
+            "ms": 15.663,
+            "calls": 5927
+          },
+          "no-manual-tagged-construction": {
+            "ms": 15.347,
+            "calls": 5612
+          },
+          "no-service-constructor-imports": {
+            "ms": 14.831,
+            "calls": 4670
+          },
+          "alchemy-domain-pure-decide": {
+            "ms": 14.68,
+            "calls": 5636
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 14.634,
+            "calls": 11558
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 14.588,
+            "calls": 13551
+          },
+          "prefer-effect-predicate": {
+            "ms": 14.194,
+            "calls": 2557
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 13.982,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 13.583,
+            "calls": 13551
+          },
+          "prefer-effect-sse": {
+            "ms": 13.372,
+            "calls": 4742
+          },
+          "no-logging-in-catch": {
+            "ms": 13.185,
+            "calls": 13551
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 13,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 12.966,
+            "calls": 13551
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 12.936,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 12.828,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 12.672,
+            "calls": 11558
+          },
+          "no-option-of-service": {
+            "ms": 12.185,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 11.69,
+            "calls": 13551
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 11.459,
+            "calls": 13551
+          },
+          "prefer-effect-url": {
+            "ms": 11.008,
+            "calls": 11714
+          },
+          "prefer-effect-archive": {
+            "ms": 10.7,
+            "calls": 4586
+          },
+          "prefer-data-match": {
+            "ms": 10.623,
+            "calls": 2565
+          },
+          "no-empty-effect-callback": {
+            "ms": 10.367,
+            "calls": 13551
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 9.666,
+            "calls": 2929
+          },
+          "prefer-effect-filter": {
+            "ms": 9.58,
+            "calls": 4093
+          },
+          "no-overwritten-discriminant": {
+            "ms": 9.269,
+            "calls": 5612
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 9.206,
+            "calls": 13551
+          },
+          "prefer-effect-datetime": {
+            "ms": 9.062,
+            "calls": 11558
+          },
+          "prefer-effect-match": {
+            "ms": 8.826,
+            "calls": 2337
+          },
+          "prefer-struct-assign": {
+            "ms": 8.324,
+            "calls": 4216
+          },
+          "prefer-equal": {
+            "ms": 8.318,
+            "calls": 2374
+          },
+          "no-discarded-run-promise": {
+            "ms": 8.14,
+            "calls": 13551
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 8.098,
+            "calls": 1596
+          },
+          "prefer-uninterruptible": {
+            "ms": 7.95,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 7.734,
+            "calls": 13551
+          },
+          "alchemy-no-v1-import": {
+            "ms": 7.722,
+            "calls": 5312
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 7.512,
+            "calls": 13551
+          },
+          "no-async-effect-try": {
+            "ms": 7.398,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 7.386,
+            "calls": 13551
+          },
+          "prefer-with-span": {
+            "ms": 7.338,
+            "calls": 13551
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 7.22,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 7.155,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 7.053,
+            "calls": 13551
+          },
+          "avoid-data-tagged-error": {
+            "ms": 7.017,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 7.004,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 6.815,
+            "calls": 13551
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 6.78,
+            "calls": 1966
+          },
+          "prefer-effect-array-sort": {
+            "ms": 6.764,
+            "calls": 11558
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 6.756,
+            "calls": 3082
+          },
+          "prefer-effect-filesystem": {
+            "ms": 6.755,
+            "calls": 4578
+          },
+          "valid-directive": {
+            "ms": 6.7,
+            "calls": 4114
+          },
+          "prefer-effect-path": {
+            "ms": 6.047,
+            "calls": 4578
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 5.842,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 5.378,
+            "calls": 1659
+          },
+          "no-export-all-in-client": {
+            "ms": 5.199,
+            "calls": 1506
+          },
+          "throw-in-effect-gen": {
+            "ms": 4.973,
+            "calls": 1512
+          }
+        }
+      },
+      {
+        "wall": 2848.0942399999985,
+        "runtime": 1991.29,
+        "callbacks": 1752.398,
+        "rules": {
+          "alchemy-domain-block-file-name": {
+            "ms": 163.057,
+            "calls": 1969
+          },
+          "no-inline-schema-compile": {
+            "ms": 62.072,
+            "calls": 11558
+          },
+          "no-single-use-private-function": {
+            "ms": 61.389,
+            "calls": 3003
+          },
+          "prefer-effect-array-ops": {
+            "ms": 60.287,
+            "calls": 25029
+          },
+          "no-already-started-promise": {
+            "ms": 55.64,
+            "calls": 17085
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 53.543,
+            "calls": 18588
+          },
+          "consistent-schema-pipe": {
+            "ms": 51.06,
+            "calls": 11558
+          },
+          "prefer-effect-duration-types": {
+            "ms": 45.399,
+            "calls": 10231
+          },
+          "no-browser-api-in-render": {
+            "ms": 44.353,
+            "calls": 1531
+          },
+          "no-function-config-default": {
+            "ms": 41.551,
+            "calls": 13551
+          },
+          "no-utc-iso-slicing": {
+            "ms": 40.858,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 35.734,
+            "calls": 26566
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 35.353,
+            "calls": 13551
+          },
+          "prefer-effect-encoding": {
+            "ms": 33.445,
+            "calls": 11558
+          },
+          "no-hash-as-identity": {
+            "ms": 33.362,
+            "calls": 31916
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 32.123,
+            "calls": 5312
+          },
+          "no-manual-sse": {
+            "ms": 30.565,
+            "calls": 24367
+          },
+          "prefer-hoisted-match": {
+            "ms": 30.51,
+            "calls": 4983
+          },
+          "prefer-effect-duration": {
+            "ms": 28.646,
+            "calls": 13551
+          },
+          "prefer-effect-user-directories": {
+            "ms": 28.569,
+            "calls": 25984
+          },
+          "padding-line-between-statements": {
+            "ms": 25.419,
+            "calls": 1889
+          },
+          "no-manual-tag-comparison": {
+            "ms": 25.133,
+            "calls": 2929
+          },
+          "preserve-caught-error": {
+            "ms": 22.95,
+            "calls": 4093
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 21.737,
+            "calls": 5312
+          },
+          "no-millis-arithmetic": {
+            "ms": 19.678,
+            "calls": 2557
+          },
+          "no-forwarding-lambda": {
+            "ms": 19.294,
+            "calls": 4093
+          },
+          "no-effect-as-on-log": {
+            "ms": 18.743,
+            "calls": 13551
+          },
+          "no-trivial-wrapper": {
+            "ms": 17.583,
+            "calls": 5927
+          },
+          "ban-error-string": {
+            "ms": 17.436,
+            "calls": 15281
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 16.899,
+            "calls": 5145
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 16.458,
+            "calls": 13551
+          },
+          "no-constant-thunk": {
+            "ms": 16.189,
+            "calls": 5927
+          },
+          "no-manual-tagged-construction": {
+            "ms": 16.064,
+            "calls": 5612
+          },
+          "prefer-effect-jwt": {
+            "ms": 15.949,
+            "calls": 14633
+          },
+          "no-service-constructor-imports": {
+            "ms": 15.933,
+            "calls": 4670
+          },
+          "no-manual-encoding": {
+            "ms": 15.773,
+            "calls": 11558
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 15.336,
+            "calls": 11558
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 15.007,
+            "calls": 13551
+          },
+          "alchemy-domain-pure-decide": {
+            "ms": 14.825,
+            "calls": 5636
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 14.44,
+            "calls": 13551
+          },
+          "prefer-effect-predicate": {
+            "ms": 14.357,
+            "calls": 2557
+          },
+          "prefer-effect-sse": {
+            "ms": 13.773,
+            "calls": 4742
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 13.018,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 12.798,
+            "calls": 13551
+          },
+          "no-logging-in-catch": {
+            "ms": 12.783,
+            "calls": 13551
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 12.641,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 12.625,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 11.758,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 11.545,
+            "calls": 11558
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 11.235,
+            "calls": 13551
+          },
+          "prefer-effect-archive": {
+            "ms": 10.946,
+            "calls": 4586
+          },
+          "prefer-effect-url": {
+            "ms": 10.375,
+            "calls": 11714
+          },
+          "no-empty-effect-callback": {
+            "ms": 10.278,
+            "calls": 13551
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 10.26,
+            "calls": 13551
+          },
+          "prefer-data-match": {
+            "ms": 10.22,
+            "calls": 2565
+          },
+          "prefer-effect-filter": {
+            "ms": 9.716,
+            "calls": 4093
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 9.715,
+            "calls": 2929
+          },
+          "no-overwritten-discriminant": {
+            "ms": 9.399,
+            "calls": 5612
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 8.956,
+            "calls": 13551
+          },
+          "prefer-effect-datetime": {
+            "ms": 8.858,
+            "calls": 11558
+          },
+          "prefer-uninterruptible": {
+            "ms": 8.814,
+            "calls": 13551
+          },
+          "prefer-effect-match": {
+            "ms": 8.748,
+            "calls": 2337
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 8.547,
+            "calls": 1596
+          },
+          "prefer-equal": {
+            "ms": 8.481,
+            "calls": 2374
+          },
+          "prefer-struct-assign": {
+            "ms": 8.292,
+            "calls": 4216
+          },
+          "no-async-effect-try": {
+            "ms": 8.262,
+            "calls": 13551
+          },
+          "no-discarded-run-promise": {
+            "ms": 7.988,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 7.64,
+            "calls": 13551
+          },
+          "alchemy-no-v1-import": {
+            "ms": 7.63,
+            "calls": 5312
+          },
+          "prefer-with-span": {
+            "ms": 7.48,
+            "calls": 13551
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 7.342,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 7.259,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 7.227,
+            "calls": 13551
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 7.181,
+            "calls": 3082
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 7.109,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 7.083,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 6.979,
+            "calls": 13551
+          },
+          "avoid-data-tagged-error": {
+            "ms": 6.946,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 6.628,
+            "calls": 13551
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 6.625,
+            "calls": 1966
+          },
+          "prefer-effect-filesystem": {
+            "ms": 6.6,
+            "calls": 4578
+          },
+          "prefer-effect-array-sort": {
+            "ms": 6.38,
+            "calls": 11558
+          },
+          "valid-directive": {
+            "ms": 6.323,
+            "calls": 4114
+          },
+          "prefer-effect-path": {
+            "ms": 6.075,
+            "calls": 4578
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 5.649,
+            "calls": 1512
+          },
+          "no-export-all-in-client": {
+            "ms": 5.331,
+            "calls": 1506
+          },
+          "prefer-effect-headers": {
+            "ms": 5.234,
+            "calls": 1659
+          },
+          "throw-in-effect-gen": {
+            "ms": 4.928,
+            "calls": 1512
+          }
+        }
+      },
+      {
+        "wall": 2720.4294169999994,
+        "runtime": 1910.661,
+        "callbacks": 1679.942,
+        "rules": {
+          "alchemy-domain-block-file-name": {
+            "ms": 153.964,
+            "calls": 1969
+          },
+          "no-inline-schema-compile": {
+            "ms": 61.539,
+            "calls": 11558
+          },
+          "prefer-effect-array-ops": {
+            "ms": 58.261,
+            "calls": 25029
+          },
+          "no-single-use-private-function": {
+            "ms": 57.518,
+            "calls": 3003
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 53.09,
+            "calls": 18588
+          },
+          "no-already-started-promise": {
+            "ms": 51.103,
+            "calls": 17085
+          },
+          "consistent-schema-pipe": {
+            "ms": 50.928,
+            "calls": 11558
+          },
+          "prefer-effect-duration-types": {
+            "ms": 43.923,
+            "calls": 10231
+          },
+          "no-browser-api-in-render": {
+            "ms": 41.582,
+            "calls": 1531
+          },
+          "no-utc-iso-slicing": {
+            "ms": 39.832,
+            "calls": 13551
+          },
+          "no-function-config-default": {
+            "ms": 38.861,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 36.413,
+            "calls": 26566
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 34.431,
+            "calls": 13551
+          },
+          "prefer-effect-encoding": {
+            "ms": 34.125,
+            "calls": 11558
+          },
+          "no-hash-as-identity": {
+            "ms": 33.274,
+            "calls": 31916
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 29.847,
+            "calls": 5312
+          },
+          "no-manual-sse": {
+            "ms": 28.969,
+            "calls": 24367
+          },
+          "prefer-effect-duration": {
+            "ms": 27.699,
+            "calls": 13551
+          },
+          "prefer-effect-user-directories": {
+            "ms": 27.219,
+            "calls": 25984
+          },
+          "prefer-hoisted-match": {
+            "ms": 26.62,
+            "calls": 4983
+          },
+          "no-manual-tag-comparison": {
+            "ms": 24.497,
+            "calls": 2929
+          },
+          "padding-line-between-statements": {
+            "ms": 22.663,
+            "calls": 1889
+          },
+          "preserve-caught-error": {
+            "ms": 21.955,
+            "calls": 4093
+          },
+          "no-forwarding-lambda": {
+            "ms": 19.131,
+            "calls": 4093
+          },
+          "no-millis-arithmetic": {
+            "ms": 19.023,
+            "calls": 2557
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 18.931,
+            "calls": 5312
+          },
+          "no-effect-as-on-log": {
+            "ms": 18.203,
+            "calls": 13551
+          },
+          "no-trivial-wrapper": {
+            "ms": 17.182,
+            "calls": 5927
+          },
+          "ban-error-string": {
+            "ms": 17.122,
+            "calls": 15281
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 15.735,
+            "calls": 5145
+          },
+          "prefer-effect-jwt": {
+            "ms": 15.572,
+            "calls": 14633
+          },
+          "no-constant-thunk": {
+            "ms": 15.46,
+            "calls": 5927
+          },
+          "no-manual-encoding": {
+            "ms": 15.2,
+            "calls": 11558
+          },
+          "no-manual-tagged-construction": {
+            "ms": 14.616,
+            "calls": 5612
+          },
+          "alchemy-domain-pure-decide": {
+            "ms": 14.453,
+            "calls": 5636
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 14.344,
+            "calls": 13551
+          },
+          "no-service-constructor-imports": {
+            "ms": 14.281,
+            "calls": 4670
+          },
+          "prefer-effect-predicate": {
+            "ms": 14.043,
+            "calls": 2557
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 13.799,
+            "calls": 11558
+          },
+          "no-logging-in-catch": {
+            "ms": 13.736,
+            "calls": 13551
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 13.541,
+            "calls": 13551
+          },
+          "prefer-effect-sse": {
+            "ms": 12.98,
+            "calls": 4742
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 12.696,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 12.402,
+            "calls": 13551
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 12.375,
+            "calls": 13551
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 12.196,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 12.127,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 11.905,
+            "calls": 13551
+          },
+          "prefer-effect-url": {
+            "ms": 11.047,
+            "calls": 11714
+          },
+          "no-option-of-service": {
+            "ms": 11.001,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 10.508,
+            "calls": 11558
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 10.479,
+            "calls": 13551
+          },
+          "prefer-data-match": {
+            "ms": 10.249,
+            "calls": 2565
+          },
+          "prefer-effect-archive": {
+            "ms": 10.012,
+            "calls": 4586
+          },
+          "no-empty-effect-callback": {
+            "ms": 9.781,
+            "calls": 13551
+          },
+          "prefer-effect-filter": {
+            "ms": 9.568,
+            "calls": 4093
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 9.46,
+            "calls": 2929
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 8.981,
+            "calls": 13551
+          },
+          "no-overwritten-discriminant": {
+            "ms": 8.861,
+            "calls": 5612
+          },
+          "prefer-effect-match": {
+            "ms": 8.652,
+            "calls": 2337
+          },
+          "prefer-effect-datetime": {
+            "ms": 8.591,
+            "calls": 11558
+          },
+          "prefer-equal": {
+            "ms": 8.417,
+            "calls": 2374
+          },
+          "prefer-uninterruptible": {
+            "ms": 8.416,
+            "calls": 13551
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 7.968,
+            "calls": 13551
+          },
+          "prefer-struct-assign": {
+            "ms": 7.87,
+            "calls": 4216
+          },
+          "no-discarded-run-promise": {
+            "ms": 7.813,
+            "calls": 13551
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 7.622,
+            "calls": 1596
+          },
+          "alchemy-no-v1-import": {
+            "ms": 7.353,
+            "calls": 5312
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 7.309,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 7.22,
+            "calls": 13551
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 7.191,
+            "calls": 3082
+          },
+          "no-async-effect-try": {
+            "ms": 6.994,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 6.983,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 6.974,
+            "calls": 13551
+          },
+          "prefer-with-span": {
+            "ms": 6.967,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 6.953,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 6.776,
+            "calls": 13551
+          },
+          "prefer-effect-filesystem": {
+            "ms": 6.712,
+            "calls": 4578
+          },
+          "avoid-data-tagged-error": {
+            "ms": 6.587,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 6.486,
+            "calls": 13551
+          },
+          "valid-directive": {
+            "ms": 6.383,
+            "calls": 4114
+          },
+          "prefer-effect-array-sort": {
+            "ms": 6.345,
+            "calls": 11558
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 6.087,
+            "calls": 1966
+          },
+          "prefer-effect-path": {
+            "ms": 5.503,
+            "calls": 4578
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 5.491,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 5.253,
+            "calls": 1659
+          },
+          "no-export-all-in-client": {
+            "ms": 4.981,
+            "calls": 1506
+          },
+          "throw-in-effect-gen": {
+            "ms": 4.731,
+            "calls": 1512
+          }
+        }
+      },
+      {
+        "wall": 2800.3908669999946,
+        "runtime": 1954.929,
+        "callbacks": 1717.168,
+        "rules": {
+          "alchemy-domain-block-file-name": {
+            "ms": 164.111,
+            "calls": 1969
+          },
+          "no-inline-schema-compile": {
+            "ms": 63.295,
+            "calls": 11558
+          },
+          "prefer-effect-array-ops": {
+            "ms": 59.873,
+            "calls": 25029
+          },
+          "no-single-use-private-function": {
+            "ms": 59.726,
+            "calls": 3003
+          },
+          "no-already-started-promise": {
+            "ms": 54.535,
+            "calls": 17085
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 52.368,
+            "calls": 18588
+          },
+          "consistent-schema-pipe": {
+            "ms": 50.09,
+            "calls": 11558
+          },
+          "no-browser-api-in-render": {
+            "ms": 46.972,
+            "calls": 1531
+          },
+          "prefer-effect-duration-types": {
+            "ms": 45.021,
+            "calls": 10231
+          },
+          "no-function-config-default": {
+            "ms": 39.916,
+            "calls": 13551
+          },
+          "no-utc-iso-slicing": {
+            "ms": 39.551,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 35.339,
+            "calls": 26566
+          },
+          "prefer-effect-encoding": {
+            "ms": 34.219,
+            "calls": 11558
+          },
+          "no-hash-as-identity": {
+            "ms": 33.687,
+            "calls": 31916
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 32.905,
+            "calls": 13551
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 30.91,
+            "calls": 5312
+          },
+          "no-manual-sse": {
+            "ms": 30.75,
+            "calls": 24367
+          },
+          "prefer-effect-user-directories": {
+            "ms": 27.489,
+            "calls": 25984
+          },
+          "prefer-effect-duration": {
+            "ms": 27.359,
+            "calls": 13551
+          },
+          "prefer-hoisted-match": {
+            "ms": 25.489,
+            "calls": 4983
+          },
+          "no-manual-tag-comparison": {
+            "ms": 24.273,
+            "calls": 2929
+          },
+          "padding-line-between-statements": {
+            "ms": 24.149,
+            "calls": 1889
+          },
+          "preserve-caught-error": {
+            "ms": 22.606,
+            "calls": 4093
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 19.642,
+            "calls": 5312
+          },
+          "no-millis-arithmetic": {
+            "ms": 19.006,
+            "calls": 2557
+          },
+          "no-forwarding-lambda": {
+            "ms": 18.918,
+            "calls": 4093
+          },
+          "no-effect-as-on-log": {
+            "ms": 18.229,
+            "calls": 13551
+          },
+          "no-trivial-wrapper": {
+            "ms": 17.407,
+            "calls": 5927
+          },
+          "ban-error-string": {
+            "ms": 16.545,
+            "calls": 15281
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 16.052,
+            "calls": 5145
+          },
+          "no-constant-thunk": {
+            "ms": 15.824,
+            "calls": 5927
+          },
+          "prefer-effect-jwt": {
+            "ms": 15.645,
+            "calls": 14633
+          },
+          "no-manual-encoding": {
+            "ms": 15.638,
+            "calls": 11558
+          },
+          "no-manual-tagged-construction": {
+            "ms": 15.344,
+            "calls": 5612
+          },
+          "alchemy-domain-pure-decide": {
+            "ms": 14.837,
+            "calls": 5636
+          },
+          "no-service-constructor-imports": {
+            "ms": 14.707,
+            "calls": 4670
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 14.43,
+            "calls": 11558
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 14.258,
+            "calls": 13551
+          },
+          "prefer-effect-predicate": {
+            "ms": 13.712,
+            "calls": 2557
+          },
+          "no-logging-in-catch": {
+            "ms": 13.658,
+            "calls": 13551
+          },
+          "prefer-effect-sse": {
+            "ms": 13.601,
+            "calls": 4742
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 13.545,
+            "calls": 13551
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 13.399,
+            "calls": 13551
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 13.02,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 12.525,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 12.357,
+            "calls": 13551
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 12.314,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 11.36,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 11.329,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 11.128,
+            "calls": 11558
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 10.777,
+            "calls": 13551
+          },
+          "prefer-effect-archive": {
+            "ms": 10.686,
+            "calls": 4586
+          },
+          "prefer-data-match": {
+            "ms": 10.598,
+            "calls": 2565
+          },
+          "prefer-effect-url": {
+            "ms": 10.385,
+            "calls": 11714
+          },
+          "no-empty-effect-callback": {
+            "ms": 10.191,
+            "calls": 13551
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 9.603,
+            "calls": 13551
+          },
+          "prefer-effect-filter": {
+            "ms": 9.596,
+            "calls": 4093
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 9.584,
+            "calls": 2929
+          },
+          "no-overwritten-discriminant": {
+            "ms": 9.213,
+            "calls": 5612
+          },
+          "prefer-effect-match": {
+            "ms": 8.883,
+            "calls": 2337
+          },
+          "prefer-uninterruptible": {
+            "ms": 8.755,
+            "calls": 13551
+          },
+          "prefer-effect-datetime": {
+            "ms": 8.557,
+            "calls": 11558
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 8.485,
+            "calls": 13551
+          },
+          "prefer-equal": {
+            "ms": 8.26,
+            "calls": 2374
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 7.996,
+            "calls": 1596
+          },
+          "no-discarded-run-promise": {
+            "ms": 7.949,
+            "calls": 13551
+          },
+          "prefer-struct-assign": {
+            "ms": 7.911,
+            "calls": 4216
+          },
+          "alchemy-no-v1-import": {
+            "ms": 7.729,
+            "calls": 5312
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 7.221,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 7.19,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 7.159,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 7.123,
+            "calls": 13551
+          },
+          "prefer-with-span": {
+            "ms": 7.024,
+            "calls": 13551
+          },
+          "avoid-data-tagged-error": {
+            "ms": 6.964,
+            "calls": 13551
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 6.957,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 6.941,
+            "calls": 13551
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 6.936,
+            "calls": 3082
+          },
+          "no-async-effect-try": {
+            "ms": 6.927,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 6.798,
+            "calls": 13551
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 6.32,
+            "calls": 1966
+          },
+          "valid-directive": {
+            "ms": 6.288,
+            "calls": 4114
+          },
+          "prefer-effect-array-sort": {
+            "ms": 6.265,
+            "calls": 11558
+          },
+          "prefer-effect-filesystem": {
+            "ms": 6.265,
+            "calls": 4578
+          },
+          "prefer-effect-path": {
+            "ms": 5.937,
+            "calls": 4578
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 5.513,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 5.256,
+            "calls": 1659
+          },
+          "no-export-all-in-client": {
+            "ms": 5.152,
+            "calls": 1506
+          },
+          "throw-in-effect-gen": {
+            "ms": 4.713,
+            "calls": 1512
+          }
+        }
+      },
+      {
+        "wall": 2789.1356689999957,
+        "runtime": 1932.956,
+        "callbacks": 1699.19,
+        "rules": {
+          "alchemy-domain-block-file-name": {
+            "ms": 159.419,
+            "calls": 1969
+          },
+          "no-inline-schema-compile": {
+            "ms": 61.359,
+            "calls": 11558
+          },
+          "no-single-use-private-function": {
+            "ms": 59.414,
+            "calls": 3003
+          },
+          "prefer-effect-array-ops": {
+            "ms": 58.388,
+            "calls": 25029
+          },
+          "no-already-started-promise": {
+            "ms": 53.039,
+            "calls": 17085
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 52.554,
+            "calls": 18588
+          },
+          "consistent-schema-pipe": {
+            "ms": 50.468,
+            "calls": 11558
+          },
+          "prefer-effect-duration-types": {
+            "ms": 47.15,
+            "calls": 10231
+          },
+          "no-utc-iso-slicing": {
+            "ms": 42.808,
+            "calls": 13551
+          },
+          "no-browser-api-in-render": {
+            "ms": 42.119,
+            "calls": 1531
+          },
+          "no-function-config-default": {
+            "ms": 38.397,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 33.45,
+            "calls": 26566
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 33.262,
+            "calls": 13551
+          },
+          "no-hash-as-identity": {
+            "ms": 33.062,
+            "calls": 31916
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 31.733,
+            "calls": 5312
+          },
+          "prefer-effect-encoding": {
+            "ms": 31.01,
+            "calls": 11558
+          },
+          "no-manual-sse": {
+            "ms": 29.965,
+            "calls": 24367
+          },
+          "prefer-effect-duration": {
+            "ms": 28.581,
+            "calls": 13551
+          },
+          "prefer-effect-user-directories": {
+            "ms": 27.745,
+            "calls": 25984
+          },
+          "prefer-hoisted-match": {
+            "ms": 26.879,
+            "calls": 4983
+          },
+          "no-manual-tag-comparison": {
+            "ms": 24.213,
+            "calls": 2929
+          },
+          "padding-line-between-statements": {
+            "ms": 23.986,
+            "calls": 1889
+          },
+          "preserve-caught-error": {
+            "ms": 21.297,
+            "calls": 4093
+          },
+          "no-millis-arithmetic": {
+            "ms": 19.211,
+            "calls": 2557
+          },
+          "no-effect-as-on-log": {
+            "ms": 19.211,
+            "calls": 13551
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 19.041,
+            "calls": 5312
+          },
+          "no-forwarding-lambda": {
+            "ms": 18.451,
+            "calls": 4093
+          },
+          "ban-error-string": {
+            "ms": 17.178,
+            "calls": 15281
+          },
+          "no-trivial-wrapper": {
+            "ms": 17.056,
+            "calls": 5927
+          },
+          "prefer-effect-jwt": {
+            "ms": 16.816,
+            "calls": 14633
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 16.106,
+            "calls": 5145
+          },
+          "alchemy-domain-pure-decide": {
+            "ms": 16.058,
+            "calls": 5636
+          },
+          "no-constant-thunk": {
+            "ms": 15.872,
+            "calls": 5927
+          },
+          "no-manual-encoding": {
+            "ms": 15.378,
+            "calls": 11558
+          },
+          "no-manual-tagged-construction": {
+            "ms": 15.011,
+            "calls": 5612
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 14.544,
+            "calls": 13551
+          },
+          "no-service-constructor-imports": {
+            "ms": 14.411,
+            "calls": 4670
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 14.124,
+            "calls": 11558
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 13.638,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 13.465,
+            "calls": 13551
+          },
+          "prefer-effect-predicate": {
+            "ms": 13.4,
+            "calls": 2557
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 12.814,
+            "calls": 13551
+          },
+          "prefer-effect-sse": {
+            "ms": 12.814,
+            "calls": 4742
+          },
+          "no-logging-in-catch": {
+            "ms": 12.55,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 12.427,
+            "calls": 13551
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 12.392,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 12.088,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 11.496,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 11.288,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 10.976,
+            "calls": 11558
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 10.668,
+            "calls": 13551
+          },
+          "prefer-data-match": {
+            "ms": 10.372,
+            "calls": 2565
+          },
+          "prefer-effect-archive": {
+            "ms": 10.277,
+            "calls": 4586
+          },
+          "no-empty-effect-callback": {
+            "ms": 9.991,
+            "calls": 13551
+          },
+          "prefer-effect-url": {
+            "ms": 9.942,
+            "calls": 11714
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 9.906,
+            "calls": 13551
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 9.724,
+            "calls": 2929
+          },
+          "prefer-effect-filter": {
+            "ms": 9.554,
+            "calls": 4093
+          },
+          "prefer-uninterruptible": {
+            "ms": 9.003,
+            "calls": 13551
+          },
+          "no-overwritten-discriminant": {
+            "ms": 8.82,
+            "calls": 5612
+          },
+          "prefer-effect-datetime": {
+            "ms": 8.521,
+            "calls": 11558
+          },
+          "prefer-equal": {
+            "ms": 8.423,
+            "calls": 2374
+          },
+          "prefer-effect-match": {
+            "ms": 8.41,
+            "calls": 2337
+          },
+          "prefer-struct-assign": {
+            "ms": 8.304,
+            "calls": 4216
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 7.962,
+            "calls": 1596
+          },
+          "no-discarded-run-promise": {
+            "ms": 7.716,
+            "calls": 13551
+          },
+          "alchemy-no-v1-import": {
+            "ms": 7.613,
+            "calls": 5312
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 7.452,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 7.272,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 7.153,
+            "calls": 13551
+          },
+          "prefer-with-span": {
+            "ms": 7.137,
+            "calls": 13551
+          },
+          "no-async-effect-try": {
+            "ms": 7.113,
+            "calls": 13551
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 7.063,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 7.054,
+            "calls": 13551
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 6.849,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 6.794,
+            "calls": 13551
+          },
+          "avoid-data-tagged-error": {
+            "ms": 6.781,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 6.708,
+            "calls": 13551
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 6.663,
+            "calls": 3082
+          },
+          "prefer-effect-filesystem": {
+            "ms": 6.457,
+            "calls": 4578
+          },
+          "valid-directive": {
+            "ms": 6.228,
+            "calls": 4114
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 6.112,
+            "calls": 1966
+          },
+          "prefer-effect-path": {
+            "ms": 6.063,
+            "calls": 4578
+          },
+          "prefer-effect-array-sort": {
+            "ms": 5.966,
+            "calls": 11558
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 5.802,
+            "calls": 1512
+          },
+          "prefer-effect-headers": {
+            "ms": 5.146,
+            "calls": 1659
+          },
+          "no-export-all-in-client": {
+            "ms": 5.071,
+            "calls": 1506
+          },
+          "throw-in-effect-gen": {
+            "ms": 4.986,
+            "calls": 1512
+          }
+        }
+      },
+      {
+        "wall": 2759.800228,
+        "runtime": 1934.777,
+        "callbacks": 1700.007,
+        "rules": {
+          "alchemy-domain-block-file-name": {
+            "ms": 164.103,
+            "calls": 1969
+          },
+          "no-inline-schema-compile": {
+            "ms": 61.703,
+            "calls": 11558
+          },
+          "no-single-use-private-function": {
+            "ms": 59.641,
+            "calls": 3003
+          },
+          "prefer-effect-array-ops": {
+            "ms": 58.114,
+            "calls": 25029
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 52.224,
+            "calls": 18588
+          },
+          "no-already-started-promise": {
+            "ms": 52.095,
+            "calls": 17085
+          },
+          "consistent-schema-pipe": {
+            "ms": 50.198,
+            "calls": 11558
+          },
+          "no-browser-api-in-render": {
+            "ms": 46.87,
+            "calls": 1531
+          },
+          "prefer-effect-duration-types": {
+            "ms": 44.192,
+            "calls": 10231
+          },
+          "no-function-config-default": {
+            "ms": 40.078,
+            "calls": 13551
+          },
+          "no-utc-iso-slicing": {
+            "ms": 38.672,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 35.016,
+            "calls": 26566
+          },
+          "no-hash-as-identity": {
+            "ms": 32.792,
+            "calls": 31916
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 32.434,
+            "calls": 13551
+          },
+          "prefer-effect-encoding": {
+            "ms": 31.365,
+            "calls": 11558
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 30.687,
+            "calls": 5312
+          },
+          "no-manual-sse": {
+            "ms": 28.564,
+            "calls": 24367
+          },
+          "prefer-effect-user-directories": {
+            "ms": 27.302,
+            "calls": 25984
+          },
+          "prefer-effect-duration": {
+            "ms": 27.067,
+            "calls": 13551
+          },
+          "prefer-hoisted-match": {
+            "ms": 26.692,
+            "calls": 4983
+          },
+          "no-manual-tag-comparison": {
+            "ms": 24.733,
+            "calls": 2929
+          },
+          "padding-line-between-statements": {
+            "ms": 24.124,
+            "calls": 1889
+          },
+          "preserve-caught-error": {
+            "ms": 21.787,
+            "calls": 4093
+          },
+          "no-effect-as-on-log": {
+            "ms": 20.319,
+            "calls": 13551
+          },
+          "no-millis-arithmetic": {
+            "ms": 19.165,
+            "calls": 2557
+          },
+          "no-forwarding-lambda": {
+            "ms": 18.986,
+            "calls": 4093
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 18.844,
+            "calls": 5312
+          },
+          "no-trivial-wrapper": {
+            "ms": 16.948,
+            "calls": 5927
+          },
+          "ban-error-string": {
+            "ms": 16.683,
+            "calls": 15281
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 16.017,
+            "calls": 5145
+          },
+          "prefer-effect-jwt": {
+            "ms": 15.8,
+            "calls": 14633
+          },
+          "no-constant-thunk": {
+            "ms": 15.317,
+            "calls": 5927
+          },
+          "no-manual-tagged-construction": {
+            "ms": 14.882,
+            "calls": 5612
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 14.821,
+            "calls": 13551
+          },
+          "alchemy-domain-pure-decide": {
+            "ms": 14.808,
+            "calls": 5636
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 14.769,
+            "calls": 13551
+          },
+          "no-manual-encoding": {
+            "ms": 14.663,
+            "calls": 11558
+          },
+          "no-service-constructor-imports": {
+            "ms": 14.306,
+            "calls": 4670
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 14.106,
+            "calls": 11558
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 13.696,
+            "calls": 13551
+          },
+          "prefer-effect-sse": {
+            "ms": 13.574,
+            "calls": 4742
+          },
+          "prefer-effect-predicate": {
+            "ms": 13.52,
+            "calls": 2557
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 13.288,
+            "calls": 13551
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 13.053,
+            "calls": 13551
+          },
+          "no-logging-in-catch": {
+            "ms": 12.962,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 12.599,
+            "calls": 13551
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 12.437,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 12.402,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 11.251,
+            "calls": 13551
+          },
+          "no-empty-effect-callback": {
+            "ms": 11.062,
+            "calls": 13551
+          },
+          "no-discarded-schema-checks": {
+            "ms": 10.666,
+            "calls": 11558
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 10.601,
+            "calls": 13551
+          },
+          "prefer-data-match": {
+            "ms": 10.531,
+            "calls": 2565
+          },
+          "prefer-effect-archive": {
+            "ms": 10.419,
+            "calls": 4586
+          },
+          "prefer-effect-url": {
+            "ms": 10.249,
+            "calls": 11714
+          },
+          "prefer-effect-filter": {
+            "ms": 9.496,
+            "calls": 4093
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 9.287,
+            "calls": 2929
+          },
+          "no-overwritten-discriminant": {
+            "ms": 8.961,
+            "calls": 5612
+          },
+          "prefer-effect-datetime": {
+            "ms": 8.773,
+            "calls": 11558
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 8.613,
+            "calls": 13551
+          },
+          "prefer-uninterruptible": {
+            "ms": 8.514,
+            "calls": 13551
+          },
+          "prefer-effect-match": {
+            "ms": 8.417,
+            "calls": 2337
+          },
+          "prefer-equal": {
+            "ms": 8.172,
+            "calls": 2374
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 8.084,
+            "calls": 1596
+          },
+          "prefer-struct-assign": {
+            "ms": 8.078,
+            "calls": 4216
+          },
+          "no-discarded-run-promise": {
+            "ms": 7.566,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 7.538,
+            "calls": 13551
+          },
+          "alchemy-no-v1-import": {
+            "ms": 7.443,
+            "calls": 5312
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 7.314,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 7.143,
+            "calls": 13551
+          },
+          "prefer-with-span": {
+            "ms": 6.983,
+            "calls": 13551
+          },
+          "no-async-effect-try": {
+            "ms": 6.965,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 6.905,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 6.905,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 6.863,
+            "calls": 13551
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 6.84,
+            "calls": 13551
+          },
+          "avoid-data-tagged-error": {
+            "ms": 6.788,
+            "calls": 13551
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 6.714,
+            "calls": 3082
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 6.588,
+            "calls": 13551
+          },
+          "valid-directive": {
+            "ms": 6.317,
+            "calls": 4114
+          },
+          "prefer-effect-array-sort": {
+            "ms": 6.247,
+            "calls": 11558
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 6.236,
+            "calls": 1966
+          },
+          "prefer-effect-filesystem": {
+            "ms": 6.17,
+            "calls": 4578
+          },
+          "prefer-effect-path": {
+            "ms": 5.818,
+            "calls": 4578
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 5.466,
+            "calls": 1512
+          },
+          "no-export-all-in-client": {
+            "ms": 5.221,
+            "calls": 1506
+          },
+          "prefer-effect-headers": {
+            "ms": 5.21,
+            "calls": 1659
+          },
+          "throw-in-effect-gen": {
+            "ms": 5.179,
+            "calls": 1512
+          }
+        }
+      },
+      {
+        "wall": 2643.291290000001,
+        "runtime": 1822.763,
+        "callbacks": 1601.549,
+        "rules": {
+          "alchemy-domain-block-file-name": {
+            "ms": 152.455,
+            "calls": 1969
+          },
+          "no-inline-schema-compile": {
+            "ms": 57.714,
+            "calls": 11558
+          },
+          "no-single-use-private-function": {
+            "ms": 56.405,
+            "calls": 3003
+          },
+          "prefer-effect-array-ops": {
+            "ms": 55.651,
+            "calls": 25029
+          },
+          "prefer-effect-duration-constants": {
+            "ms": 50.429,
+            "calls": 18588
+          },
+          "no-already-started-promise": {
+            "ms": 49.254,
+            "calls": 17085
+          },
+          "consistent-schema-pipe": {
+            "ms": 47.891,
+            "calls": 11558
+          },
+          "prefer-effect-duration-types": {
+            "ms": 42.048,
+            "calls": 10231
+          },
+          "no-browser-api-in-render": {
+            "ms": 40.018,
+            "calls": 1531
+          },
+          "no-utc-iso-slicing": {
+            "ms": 38.312,
+            "calls": 13551
+          },
+          "no-function-config-default": {
+            "ms": 36.316,
+            "calls": 13551
+          },
+          "prefer-effect-net-address": {
+            "ms": 31.086,
+            "calls": 26566
+          },
+          "no-hash-as-identity": {
+            "ms": 30.295,
+            "calls": 31916
+          },
+          "no-uppercase-http-api-header": {
+            "ms": 30.049,
+            "calls": 13551
+          },
+          "prefer-effect-alchemy-namespace-imports": {
+            "ms": 29.968,
+            "calls": 5312
+          },
+          "prefer-effect-encoding": {
+            "ms": 28.572,
+            "calls": 11558
+          },
+          "no-manual-sse": {
+            "ms": 27.453,
+            "calls": 24367
+          },
+          "prefer-effect-user-directories": {
+            "ms": 26.567,
+            "calls": 25984
+          },
+          "prefer-effect-duration": {
+            "ms": 25.545,
+            "calls": 13551
+          },
+          "prefer-hoisted-match": {
+            "ms": 24.279,
+            "calls": 4983
+          },
+          "no-manual-tag-comparison": {
+            "ms": 23.238,
+            "calls": 2929
+          },
+          "padding-line-between-statements": {
+            "ms": 22.245,
+            "calls": 1889
+          },
+          "preserve-caught-error": {
+            "ms": 20.862,
+            "calls": 4093
+          },
+          "no-forwarding-lambda": {
+            "ms": 18.508,
+            "calls": 4093
+          },
+          "no-millis-arithmetic": {
+            "ms": 18.338,
+            "calls": 2557
+          },
+          "no-effect-alchemy-barrel-imports": {
+            "ms": 18.219,
+            "calls": 5312
+          },
+          "ban-error-string": {
+            "ms": 17.575,
+            "calls": 15281
+          },
+          "no-effect-as-on-log": {
+            "ms": 17.187,
+            "calls": 13551
+          },
+          "no-trivial-wrapper": {
+            "ms": 16.104,
+            "calls": 5927
+          },
+          "alchemy-domain-total-handlers": {
+            "ms": 15.283,
+            "calls": 5145
+          },
+          "no-manual-encoding": {
+            "ms": 15.23,
+            "calls": 11558
+          },
+          "alchemy-domain-pure-decide": {
+            "ms": 15.099,
+            "calls": 5636
+          },
+          "prefer-effect-jwt": {
+            "ms": 14.999,
+            "calls": 14633
+          },
+          "no-encoding-get-or-throw": {
+            "ms": 14.645,
+            "calls": 13551
+          },
+          "no-constant-thunk": {
+            "ms": 14.643,
+            "calls": 5927
+          },
+          "no-service-constructor-imports": {
+            "ms": 13.877,
+            "calls": 4670
+          },
+          "no-non-json-schema-annotation": {
+            "ms": 13.824,
+            "calls": 11558
+          },
+          "no-manual-tagged-construction": {
+            "ms": 13.736,
+            "calls": 5612
+          },
+          "alchemy-no-deprecated-resource": {
+            "ms": 13.258,
+            "calls": 13551
+          },
+          "prefer-effect-predicate": {
+            "ms": 12.81,
+            "calls": 2557
+          },
+          "prefer-effect-sse": {
+            "ms": 12.626,
+            "calls": 4742
+          },
+          "alchemy-no-plaintext-github-secret": {
+            "ms": 12.38,
+            "calls": 13551
+          },
+          "alchemy-no-cloudflare-init-finalizer": {
+            "ms": 12.085,
+            "calls": 13551
+          },
+          "alchemy-no-v1-worker-properties": {
+            "ms": 11.811,
+            "calls": 13551
+          },
+          "alchemy-no-reserved-eventbridge-default-name": {
+            "ms": 11.784,
+            "calls": 13551
+          },
+          "no-logging-in-catch": {
+            "ms": 11.745,
+            "calls": 13551
+          },
+          "alchemy-no-deprecated-docker-constraints": {
+            "ms": 11.713,
+            "calls": 13551
+          },
+          "alchemy-no-removed-config-api": {
+            "ms": 10.982,
+            "calls": 13551
+          },
+          "no-option-of-service": {
+            "ms": 10.502,
+            "calls": 13551
+          },
+          "prefer-effect-url": {
+            "ms": 10.426,
+            "calls": 11714
+          },
+          "no-discarded-schema-checks": {
+            "ms": 10.312,
+            "calls": 11558
+          },
+          "prefer-data-match": {
+            "ms": 10,
+            "calls": 2565
+          },
+          "prefer-effect-archive": {
+            "ms": 9.828,
+            "calls": 4586
+          },
+          "no-service-option-get-or-throw": {
+            "ms": 9.819,
+            "calls": 13551
+          },
+          "no-empty-effect-callback": {
+            "ms": 9.429,
+            "calls": 13551
+          },
+          "prefer-effect-filter": {
+            "ms": 9.13,
+            "calls": 4093
+          },
+          "no-manual-effect-error-tag": {
+            "ms": 8.973,
+            "calls": 2929
+          },
+          "no-overwritten-discriminant": {
+            "ms": 8.557,
+            "calls": 5612
+          },
+          "prefer-effect-match": {
+            "ms": 8.163,
+            "calls": 2337
+          },
+          "prefer-struct-assign": {
+            "ms": 8.089,
+            "calls": 4216
+          },
+          "prefer-equal": {
+            "ms": 7.967,
+            "calls": 2374
+          },
+          "prefer-effect-datetime": {
+            "ms": 7.92,
+            "calls": 11558
+          },
+          "cors-credentials-with-wildcard": {
+            "ms": 7.883,
+            "calls": 13551
+          },
+          "prefer-uninterruptible": {
+            "ms": 7.878,
+            "calls": 13551
+          },
+          "alchemy-domain-pure-imports": {
+            "ms": 7.6,
+            "calls": 1596
+          },
+          "no-discarded-run-promise": {
+            "ms": 7.364,
+            "calls": 13551
+          },
+          "require-try-promise-abort-signal": {
+            "ms": 7.225,
+            "calls": 13551
+          },
+          "no-multi-shot-effect-callback": {
+            "ms": 7.074,
+            "calls": 13551
+          },
+          "alchemy-no-runtime-config": {
+            "ms": 7.024,
+            "calls": 3082
+          },
+          "prefer-with-span": {
+            "ms": 7.023,
+            "calls": 13551
+          },
+          "alchemy-no-v1-import": {
+            "ms": 7.004,
+            "calls": 5312
+          },
+          "dual-numeric-arity-with-optional-parameter": {
+            "ms": 6.787,
+            "calls": 13551
+          },
+          "no-async-effect-try": {
+            "ms": 6.727,
+            "calls": 13551
+          },
+          "prefer-yield-now": {
+            "ms": 6.697,
+            "calls": 13551
+          },
+          "no-empty-schema-struct": {
+            "ms": 6.561,
+            "calls": 13551
+          },
+          "no-zero-retry-times": {
+            "ms": 6.541,
+            "calls": 13551
+          },
+          "require-schema-class-brand": {
+            "ms": 6.315,
+            "calls": 13551
+          },
+          "effect-promise-vs-trypromise": {
+            "ms": 6.19,
+            "calls": 13551
+          },
+          "avoid-data-tagged-error": {
+            "ms": 6.14,
+            "calls": 13551
+          },
+          "prefer-effect-filesystem": {
+            "ms": 6.008,
+            "calls": 4578
+          },
+          "alchemy-domain-require-view-version": {
+            "ms": 5.966,
+            "calls": 1966
+          },
+          "prefer-effect-array-sort": {
+            "ms": 5.961,
+            "calls": 11558
+          },
+          "valid-directive": {
+            "ms": 5.909,
+            "calls": 4114
+          },
+          "prefer-effect-path": {
+            "ms": 5.732,
+            "calls": 4578
+          },
+          "no-throw-in-effect-callback": {
+            "ms": 5.411,
+            "calls": 1512
+          },
+          "no-export-all-in-client": {
+            "ms": 4.911,
+            "calls": 1506
+          },
+          "prefer-effect-headers": {
+            "ms": 4.807,
+            "calls": 1659
+          },
+          "throw-in-effect-gen": {
+            "ms": 4.59,
+            "calls": 1512
+          }
+        }
+      }
+    ]
+  },
+  "reduction": 0.5080994968816015,
+  "diagnostics": 910,
+  "fixedHash": "46bff92896d67cc67d7f82fd15d97d984cf2c25c90cccf3bfdbd44cf79e65a61",
+  "candidateRef": "5406626c00677bf5849d68ab2692115ae7e4e248",
+  "baselineBundleHash": "609249b1b93942a020844e03d49c700cdf1a77b5332933157ed7b0c295816abe",
+  "candidateBundleHash": "6868bdeada82b2c1d708ba30d513672e4e7dae4483251068d870d6e64ab77925",
+  "differential": "identical",
+  "oxlint": "1.92.0",
+  "effectOxlint": "0.5.0",
+  "warmups": 1,
+  "threads": 1,
+  "priorComparison": {
+    "baseline": 4029.684,
+    "candidate": 1940.014,
+    "reduction": 0.5185691979817773,
+    "wallBefore": 4985.2385079999995,
+    "wallAfter": 2758.5826469999956,
+    "diagnostics": 910,
+    "fixedHash": "46bff92896d67cc67d7f82fd15d97d984cf2c25c90cccf3bfdbd44cf79e65a61"
+  }
+}
