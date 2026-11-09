@@ -67,7 +67,7 @@ In the nested baseline worktree, declaration generation hit TS2883 path portabil
 publint and attw were disabled there; the runtime bundle still uses the same minified build script and unmodified rule
 sources. The candidate's ordinary build, publint, attw, types and tests run without those overrides.
 
-## Verified result
+## Verified 88-rule result
 
 Two complete seven-sample comparisons of the final runtime changes both exceeded the 50% target:
 
@@ -77,10 +77,40 @@ Two complete seven-sample comparisons of the final runtime changes both exceeded
 | Total plugin runtime, repeat   | 3,933.269 ms | 1,934.777 ms |    50.81% |
 | Instrumented wall time, repeat | 4,837.040 ms | 2,789.136 ms |    42.34% |
 
-`result.json` retains all 88 per-rule medians, callback counts, raw samples from the repeat, source/bundle hashes,
-and the first comparison's summary. Both comparisons produced the same 910 full diagnostic objects before fixing,
+The previous report retained all 88 per-rule medians and raw samples; `result.json` now records the expanded benchmark
+below and preserves these historical totals. Both comparisons produced the same 910 full diagnostic objects before fixing,
 the same post-fix diagnostics, and identical fixed-file content. The fixed tree SHA-256 is
 `46bff92896d67cc67d7f82fd15d97d984cf2c25c90cccf3bfdbd44cf79e65a61`.
+
+## Verified 91-rule result after text-format rules and autofixes
+
+Main `93dd0554baf18d04604d603ec98fe3252592c209` includes #2965's Csv, Ndjson and format-parser rules and #2966's
+four-rule autofixes. Freeze that unoptimised revision in a new state directory, `.cache/benchmark-text-formats`, with
+the same harness and test hook. Keep both preceding freezes intact. This corpus has 452 repository files and 1,142
+spec examples: 1,594 files, all 91 rules enabled, and 990 diagnostics. Its SHA-256 is
+`359695ca9d1ef4c8fd43e07327e56068563056eb978c4165d2a12d1dbada1898`.
+
+```sh
+OXLINT_BENCH_DIR=.cache/benchmark-text-formats vpr bench freeze
+# After applying the candidate and rebuilding:
+OXLINT_BENCH_DIR=.cache/benchmark-text-formats vpr bench
+```
+
+The unchanged-build control measured 4,758.899 ms versus 4,842.576 ms (1.8% variation). Both full seven-sample
+comparisons exceed 50%, with the three added rules using the same runtime bridge as the preceding rules:
+
+| Measurement                    |     Baseline |    Candidate | Reduction |
+| ------------------------------ | -----------: | -----------: | --------: |
+| Total plugin runtime           | 4,851.109 ms | 2,288.969 ms |    52.82% |
+| Total plugin runtime, repeat   | 4,597.644 ms | 2,232.335 ms |    51.45% |
+| Instrumented wall time, repeat | 5,604.983 ms | 3,178.925 ms |    43.28% |
+
+`result.json` retains every rule's medians and callback counts, all seven raw samples per build from the repeat,
+bundle hashes, the first comparison and unchanged-build control summaries, and the preceding 88-rule totals.
+Both expanded comparisons have identical complete diagnostics before and after fixing and identical fixed-file
+contents. All 91 metadata objects also match. The fixed tree SHA-256 is
+`2cbaff96d48add32e13f04c502a78fbe194d518d4c18cfd6a0f7b8d9ef56cf38`.
+The new main autofixes are part of this baseline rather than being compared against the obsolete fixed output.
 
 These are measured medians on this corpus, not a guarantee of a 50% reduction on every application, rule, or run.
 The existing test assertions remain unchanged. Shared optimisations preserve Effect-based rule authoring while reusing each
