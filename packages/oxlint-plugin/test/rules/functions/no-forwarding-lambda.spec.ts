@@ -17,6 +17,7 @@ const tester = new RuleTester({
 const imports = `
   import * as Arr from 'effect/Array'
   import * as Effect from 'effect/Effect'
+  import * as Match from 'effect/Match'
   import * as Opt from 'effect/Option'
   import * as Schema from 'effect/Schema'
   import * as Stream from 'effect/Stream'
@@ -40,6 +41,7 @@ tester.run('no-forwarding-lambda', noForwardingLambda, {
     `${imports} Effect.acquireRelease(open, (connection) => close(connection))`,
     `${imports} Stream.scan(0, (total) => reset(total))`,
     `${imports} Effect.map((id) => makeLoader(config)(id))`,
+    `${imports} Match.tag('Known', (traffic) => Opt.some(traffic))`,
     `${imports} Schema.declare((input): input is Report => isReport(input))`,
   ],
   invalid: [
