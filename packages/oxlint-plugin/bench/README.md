@@ -83,7 +83,12 @@ the same post-fix diagnostics, and identical fixed-file content. The fixed tree 
 `46bff92896d67cc67d7f82fd15d97d984cf2c25c90cccf3bfdbd44cf79e65a61`.
 
 These are measured medians on this corpus, not a guarantee of a 50% reduction on every application, rule, or run.
-The existing tests remain unchanged. Shared optimisations preserve Effect-based rule authoring while reusing each
+The existing test assertions remain unchanged. Shared optimisations preserve Effect-based rule authoring while reusing each
 file's service context and import analysis. Rule-specific changes avoid impossible Domain checks, no-policy padding
 traversal, logging ancestor walks for non-loggers, inline-schema analysis for non-compilers, and shared Domain-block
 collection outside host files.
+
+The three-process padding CLI integration test has a 15-second deadline instead of the default five seconds. The
+original baseline checkpoint already exceeded five seconds in CI, and a one-core contention reproduction also timed
+out at five seconds but completed with every assertion intact under the new deadline. This is a bounded allowance
+for cold process startup, not the performance measurement; the benchmark and production bundle are unchanged.
