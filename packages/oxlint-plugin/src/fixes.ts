@@ -109,7 +109,7 @@ export function plainOptions(node: ESTree.ObjectExpression, destination: string)
   return Arr.every(node.properties, (member) => {
     const property = plainProperty(member);
 
-    if (property === undefined || (property.key.type !== 'Identifier' && property.key.type !== 'Literal')) {
+    if (P.isUndefined(property) || (property.key.type !== 'Identifier' && property.key.type !== 'Literal')) {
       return false;
     }
 

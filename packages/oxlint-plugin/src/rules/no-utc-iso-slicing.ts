@@ -4,6 +4,7 @@ import * as Arr from 'effect/Array';
 import type * as DateTime from 'effect/DateTime';
 import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import type * as Str from 'effect/String';
 
 import {
@@ -50,7 +51,7 @@ function isUtcIsoFormatter(node: ESTree.Expression, state: FileState): boolean {
 
 // `x.toISOString()` or `DateTime.formatIso(x)`: a UTC timestamp such as `2026-03-29T23:30:00.000Z`.
 function isUtcIsoString(node: ESTree.Expression | undefined, state: FileState): boolean {
-  if (node === undefined) {
+  if (P.isUndefined(node)) {
     return false;
   }
 
@@ -65,14 +66,14 @@ function isUtcIsoString(node: ESTree.Expression | undefined, state: FileState): 
   return (
     (callee.type === 'MemberExpression' &&
       staticPropertyName(callee) === 'toISOString' &&
-      expression.arguments.length === 0) ||
+      !Arr.isReadonlyArrayNonEmpty(expression.arguments)) ||
     isUtcIsoFormatter(callee, state)
   );
 }
 
 // A data-last `effect/String` step, such as `Str.slice(0, 10)`.
 function isStringStep(node: ESTree.Expression | undefined, state: FileState): boolean {
-  if (node === undefined) {
+  if (P.isUndefined(node)) {
     return false;
   }
 
@@ -135,7 +136,7 @@ function slicedUtcIso(node: ESTree.CallExpression, state: FileState): ESTree.Nod
   // `pipe(DateTime.formatIso(x), Str.slice(0, 10))`, `x.pipe(DateTime.formatIso, Str.slice(0, 10))` and similar
   const sequence = pipeSequence(node, state);
 
-  if (sequence === undefined) {
+  if (P.isUndefined(sequence)) {
     return undefined;
   }
 
@@ -164,7 +165,7 @@ export const noUtcIsoSlicing: Rule = defineEffectRule(
     CallExpression(node) {
       const reported = slicedUtcIso(node, getState());
 
-      if (reported !== undefined) {
+      if (P.isNotUndefined(reported)) {
         context.report({ node: reported, messageId: 'utcIsoSlicing' });
       }
     },

@@ -67,11 +67,6 @@ function isFunctionLike(node: ESTree.Node): node is FunctionLike {
   );
 }
 
-// A refinement such as `(u: unknown): u is Foo => typeof u === 'string'` is where a primitive check belongs.
-function isInsideTypeGuard(node: ESTree.Node): boolean {
-  return findAncestor(node, isFunctionLike)?.returnType?.typeAnnotation.type === 'TSTypePredicate';
-}
-
 function isNegated(operator: string): boolean {
   return operator === '!==' || operator === '!=';
 }
@@ -175,7 +170,11 @@ export const preferEffectPredicate: Rule = defineEffectRule(
       const predicate =
         node.operator === 'instanceof' ? instancePredicate(node, context) : comparisonPredicate(node, context);
 
-      if (P.isUndefined(predicate) || isInsideTypeGuard(node)) {
+      // A refinement such as `(u: unknown): u is Foo => typeof u === 'string'` is where a primitive check belongs.
+      if (
+        P.isUndefined(predicate) ||
+        findAncestor(node, isFunctionLike)?.returnType?.typeAnnotation.type === 'TSTypePredicate'
+      ) {
         return;
       }
 

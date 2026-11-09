@@ -1,5 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 
 import { canonicalPath, defineEffectRule, ruleMeta, unwrapExpression, walkNodes, type FileState } from '../../utils';
 
@@ -48,7 +49,7 @@ function returnsValue(node: ESTree.Statement | null | undefined): boolean {
 
   const last = node.type === 'BlockStatement' ? node.body.at(-1) : node;
 
-  return last?.type === 'ReturnStatement' && last.argument !== null && !suspends(node);
+  return last?.type === 'ReturnStatement' && P.isNotNull(last.argument) && !suspends(node);
 }
 
 /**
@@ -92,7 +93,7 @@ export const preferDataMatch: Rule = defineEffectRule(
       ConditionalExpression(node) {
         const path = guardPath(node.test, getState());
 
-        if (path !== undefined && !suspends(node.consequent) && !suspends(node.alternate)) {
+        if (P.isNotUndefined(path) && !suspends(node.consequent) && !suspends(node.alternate)) {
           report(node, path);
         }
       },
@@ -100,7 +101,7 @@ export const preferDataMatch: Rule = defineEffectRule(
         const path = guardPath(node.test, getState());
 
         if (
-          path !== undefined &&
+          P.isNotUndefined(path) &&
           returnsValue(node.consequent) &&
           returnsValue(node.alternate ?? nextStatement(node))
         ) {

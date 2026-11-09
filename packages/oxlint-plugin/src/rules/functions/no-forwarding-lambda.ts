@@ -1,5 +1,6 @@
 import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 import * as Str from 'effect/String';
 
 import { canonicalPath, defineEffectRule, ruleMeta, type FileState, type FunctionNode } from '../../utils';
@@ -147,12 +148,11 @@ const multiArgumentApis: ReadonlySet<string> = new Set([
 function receivesOneArgument(call: ESTree.CallExpression, state: FileState): boolean {
   const path = canonicalPath(call.callee, state);
 
-  const module = path?.[0];
-
   return (
-    module !== undefined &&
-    path?.length === 2 &&
-    !indexedModules.has(module) &&
+    P.isNotUndefined(path) &&
+    Arr.isReadonlyArrayNonEmpty(path) &&
+    path.length === 2 &&
+    !indexedModules.has(Arr.headNonEmpty(path)) &&
     !multiArgumentApis.has(Arr.join(path, '.'))
   );
 }
@@ -171,7 +171,7 @@ function check(context: Context, state: FileState, node: FunctionNode): void {
   const forwarding = forwardedCall(node);
 
   if (
-    forwarding === undefined ||
+    P.isUndefined(forwarding) ||
     !forwarding.exact ||
     !isDetachableCallee(forwarding.call.callee, state) ||
     // A type predicate, as `Schema.declare` needs, is lost when passing a callee that only returns `boolean`.

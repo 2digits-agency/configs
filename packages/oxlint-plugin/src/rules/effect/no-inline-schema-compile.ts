@@ -237,7 +237,8 @@ export const noInlineSchemaCompile: Rule = defineEffectRule(
 
       const schema = unwrapExpression(argument);
 
-      const inlineSchema = schema.type === 'CallExpression' && canonicalPath(schema.callee, state)?.[0] === 'Schema';
+      const inlineSchema =
+        schema.type === 'CallExpression' && Opt.contains(Arr.head(canonicalPath(schema.callee, state) ?? []), 'Schema');
 
       if (
         (!inlineSchema && schema.type !== 'Identifier' && schema.type !== 'MemberExpression') ||

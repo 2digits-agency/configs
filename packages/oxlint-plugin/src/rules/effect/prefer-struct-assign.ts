@@ -68,15 +68,14 @@ function needsContextualType(value: ESTree.Expression): boolean {
 }
 
 // An override Struct.assign can take over without changing its type.
-function isAssignableOverride(node: ObjectMember): boolean {
-  if (node.type !== 'Property' || node.kind !== 'init' || node.method) {
-    return false;
-  }
+const isAssignableOverride = Match.type<ObjectMember>().pipe(
+  Match.when({ type: 'Property', kind: 'init', method: false }, (property) => {
+    const value = unwrapExpression(property.value);
 
-  const value = unwrapExpression(node.value);
-
-  return !needsContextualType(value) && !hasLiteralValue(value);
-}
+    return !needsContextualType(value) && !hasLiteralValue(value);
+  }),
+  Match.orElse(Fn.constFalse),
+);
 
 /**
  * Prefer Struct.assign over spreading objects into a merged or updated copy.

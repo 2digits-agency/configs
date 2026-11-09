@@ -76,7 +76,7 @@ function directProperties(node: ESTree.Expression | undefined): Array<ESTree.Obj
   for (const member of node.properties) {
     const property = plainProperty(member);
 
-    if (property === undefined) {
+    if (P.isUndefined(property)) {
       return undefined;
     }
 
