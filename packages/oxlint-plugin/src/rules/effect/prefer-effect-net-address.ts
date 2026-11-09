@@ -45,14 +45,14 @@ const specialIpPrefix =
   /^(?:(?:0|10|127|169\.254|192\.168|172\.(?:1[6-9]|2\d|3[01])|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7]))\.|fe80:|::ffff:)$/iu;
 
 /**
- * Regular expression sources that match IP text: a dotted quad such as `\d{1,3}\.` three times, `(\d+\.){3}` or
- * `25[0-5]`; an anchored special-purpose IPv4 prefix such as `^10\.` or `^(?:127|169\.254)\.`; or an IPv6 link-local,
- * unique-local or IPv4-mapped prefix.
+ * Regular expression sources that match IP text: a dotted quad such as `\d{1,3}\.` three times, `(\d+\.){3}`, or an
+ * octet range `25[0-5]` in a pattern that also matches a dot; an anchored special-purpose IPv4 prefix such as `^10\.`
+ * or `^(?:127|169\.254)\.`; or an IPv6 link-local, unique-local or IPv4-mapped prefix.
  */
 const ipPatterns: ReadonlyArray<RegExp> = [
   /(?:(?:\\d|\[0-9\])(?:\+|\{1,3\})\\\.){3}/u,
   /\((?:\?:)?(?:\\d|\[0-9\])(?:\+|\{1,3\})\\\.\)\{3\}/u,
-  /25\[0-5\]/u,
+  /^(?=[\s\S]*25\[0-5\])(?=[\s\S]*\\\.)/u,
   /^\^(?:\(\?:)?(?:0|10|100|127|169\\\.254|172|192\\\.168)(?:\|(?:0|10|100|127|169\\\.254|172|192\\\.168))*\)?\\\./u,
   /^\^\(?(?:\?:)?(?:fe80|fe\[89ab\]|f\[cd\]|fc\|fd|fd\|fc)/iu,
   /::ffff:/iu,

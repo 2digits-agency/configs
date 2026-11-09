@@ -26,6 +26,8 @@ tester.run('prefer-effect-user-directories', preferEffectUserDirectories, {
     `${effect}const url = process.env.API_URL`,
     `${effect}process.env.HOME = '/tmp/home'`,
     `${effect}const host = Config.String('HOST')`,
+    `${effect}const mode = Config.succeed('HOME').pipe(Config.withDefault('HOME'))\nconst kind = Config.Literal('HOME', 'MODE')`,
+    `${effect}function read(Config) { return Config.String('HOME') }`,
     `${effect}const env = { HOME: '/Users/ada', XDG_CONFIG_HOME: '/tmp/xdg' }`,
     `${effect}const process = { env: { HOME: '/tmp' } }\nconst home = process.env.HOME`,
   ],

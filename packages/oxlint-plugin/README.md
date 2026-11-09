@@ -287,7 +287,7 @@ These rules only run in files that import Effect and report without autofixes.
   dotted strings, such as `version.split('.')`, are not reported.
 - `prefer-effect-net-address` reports IP addresses parsed or classified by hand: `isIP`, `isIPv4` and `isIPv6` from
   `node:net`; imports of `ipaddr.js`, `ip`, `ip-address`, `is-ip` and similar packages; regular expressions that match a
-  dotted quad (`(\d{1,3}\.){3}`, `25[0-5]`), an anchored special-purpose IPv4 prefix (`^10\.`, `^192\.168\.`), or an
+  dotted quad (`(\d{1,3}\.){3}`, or `25[0-5]` with a `\.`), an anchored special-purpose IPv4 prefix (`^10\.`, `^192\.168\.`), or an
   IPv6 link-local, unique-local or IPv4-mapped prefix; comparisons with `'127.0.0.1'`, `'0.0.0.0'`, `'::1'` or `'::'`;
   and `startsWith` with such a prefix. Parse with `NetAddress.ipFromString` and classify with `NetAddress.isLoopback`,
   `isPrivate`, `isLinkLocal`, `isUniqueLocal`, `isUnspecified`, `isIpv4Mapped` or `IpNetwork.contains`. Patterns
@@ -295,7 +295,8 @@ These rules only run in files that import Effect and report without autofixes.
   such as `'localhost'`, config defaults such as `Config.withDefault('127.0.0.1')` and other `:` splits are not
   reported.
 - `prefer-effect-user-directories` reports `homedir()` from `node:os`, reads of `HOME`, `USERPROFILE`, `APPDATA`,
-  `LOCALAPPDATA` and `XDG_{CONFIG,DATA,CACHE,STATE}_HOME` through `process.env` or `Config`, and imports of
+  `LOCALAPPDATA` and `XDG_{CONFIG,DATA,CACHE,STATE}_HOME` through `process.env` or `Config.String`,
+  `Config.NonEmptyString` and `Config.Redacted`, and imports of
   `env-paths`, `xdg-basedir` and similar packages. Use the `UserDirectories` service from `effect/persistence`:
   `dirs.config`, `dirs.data`, `dirs.cache` and `dirs.state` follow the XDG, macOS and Windows conventions, and
   `dirs.home` returns the home directory. `tmpdir()`, other `node:os` functions and environment records passed to a

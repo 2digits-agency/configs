@@ -21,6 +21,7 @@ tester.run('prefer-effect-net-address', preferEffectNetAddress, {
     "import { isIP } from 'node:net'\nconst local = isIP(host) === 4 && host.startsWith('127.')",
     `${effect}const semver = /^\\d+\\.\\d+\\.\\d+$/u`,
     `${effect}const id = /^(?:0|[1-9]\\d*)$/u\nconst money = /^(?:0|[1-9]\\d*)(?:\\.\\d+)?$/u`,
+    `${effect}const byte = /^(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)$/u\nconst rgb = /^rgb\\((?:25[0-5]|2[0-4]\\d|1?\\d?\\d),/u`,
     `${effect}const local = hostname === 'localhost' || Str.endsWith('.local')(hostname)`,
     `${effect}const host = Config.String('HOST').pipe(Config.withDefault('127.0.0.1'))`,
     `${effect}const [lineItemId] = Str.split(':')(marker)`,
@@ -51,6 +52,10 @@ tester.run('prefer-effect-net-address', preferEffectNetAddress, {
     },
     {
       code: `${effect}const reserved = /^(?:0|10|127)\\./u`,
+      errors: [{ messageId: 'ipText' }],
+    },
+    {
+      code: `${effect}const strict = /^(?:(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)$/u`,
       errors: [{ messageId: 'ipText' }],
     },
     // One hand-written classifier is one finding per top-level statement, however many patterns it holds.

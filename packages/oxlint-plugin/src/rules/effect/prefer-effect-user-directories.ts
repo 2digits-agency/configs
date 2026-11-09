@@ -1,5 +1,6 @@
 import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import type * as Config from 'effect/Config';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
@@ -7,7 +8,7 @@ import * as Schema from 'effect/Schema';
 import { argumentAt, isStringLiteral, staticPath, staticPropertyName } from '../../internal/ast';
 import { importBindings, moduleImportMember } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-import { isGlobalIdentifier } from '../../internal/scope';
+import { isGlobalIdentifier, isImportedApiIn } from '../../internal/scope';
 
 const DirectoryLibrary = Schema.Literals([
   'appdirsjs',
@@ -92,12 +93,17 @@ export const preferEffectUserDirectories: CreateRule = Rule.define({
           return ctx.report(Diagnostic.fromId({ node, messageId: 'homedir' }));
         }
 
-        const configVariable = Opt.flatMap(imports.member(node.callee, 'Config'), () =>
-          Opt.filter(
-            Opt.map(Opt.filter(argumentAt(node, 0), isStringLiteral), ({ value }) => value),
-            isDirectoryVariable,
-          ),
-        );
+        const isConfigRead =
+          imports.isApi(node.callee, 'Config', ['String', 'NonEmptyString', 'Redacted'] satisfies ReadonlyArray<
+            keyof typeof Config
+          >) && isImportedApiIn(ctx.sourceCode, node.callee);
+
+        const configVariable = isConfigRead
+          ? Opt.filter(
+              Opt.map(Opt.filter(argumentAt(node, 0), isStringLiteral), ({ value }) => value),
+              isDirectoryVariable,
+            )
+          : Opt.none();
 
         return Opt.match(configVariable, { onNone: () => Effect.void, onSome: (name) => reportVariable(node, name) });
       }),
