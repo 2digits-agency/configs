@@ -51,6 +51,7 @@ import { preferEffectAlchemyNamespaceImports } from './effect/prefer-effect-alch
 import { preferEffectArchive } from './effect/prefer-effect-archive';
 import { preferEffectArrayOps } from './effect/prefer-effect-array-ops';
 import { preferEffectArraySort } from './effect/prefer-effect-array-sort';
+import { preferEffectCookies } from './effect/prefer-effect-cookies';
 import { preferEffectCsv } from './effect/prefer-effect-csv';
 import { preferEffectDateTime } from './effect/prefer-effect-datetime';
 import { preferEffectDuration } from './effect/prefer-effect-duration';
@@ -61,14 +62,18 @@ import { preferEffectFileSystem } from './effect/prefer-effect-filesystem';
 import { preferEffectFilter } from './effect/prefer-effect-filter';
 import { preferEffectFormatParser } from './effect/prefer-effect-format-parser';
 import { preferEffectHeaders } from './effect/prefer-effect-headers';
+import { preferEffectHttpMethod } from './effect/prefer-effect-http-method';
+import { preferEffectHttpStatus } from './effect/prefer-effect-http-status';
 import { preferEffectJwt } from './effect/prefer-effect-jwt';
 import { preferEffectMatch } from './effect/prefer-effect-match';
+import { preferEffectMatchStatus } from './effect/prefer-effect-match-status';
 import { preferEffectNdjson } from './effect/prefer-effect-ndjson';
 import { preferEffectNetAddress } from './effect/prefer-effect-net-address';
 import { preferEffectPath } from './effect/prefer-effect-path';
 import { preferEffectPredicate } from './effect/prefer-effect-predicate';
 import { preferEffectSse } from './effect/prefer-effect-sse';
 import { preferEffectUrl } from './effect/prefer-effect-url';
+import { preferEffectUrlParams } from './effect/prefer-effect-url-params';
 import { preferEffectUserDirectories } from './effect/prefer-effect-user-directories';
 import { preferEqual } from './effect/prefer-equal';
 import { preferHoistedMatch } from './effect/prefer-hoisted-match';
@@ -152,6 +157,7 @@ export const rules = {
   'prefer-effect-archive': preferEffectArchive,
   'prefer-effect-array-ops': preferEffectArrayOps,
   'prefer-effect-array-sort': preferEffectArraySort,
+  'prefer-effect-cookies': preferEffectCookies,
   'prefer-effect-csv': preferEffectCsv,
   'prefer-effect-datetime': preferEffectDateTime,
   'prefer-effect-duration': preferEffectDuration,
@@ -162,14 +168,18 @@ export const rules = {
   'prefer-effect-filter': preferEffectFilter,
   'prefer-effect-format-parser': preferEffectFormatParser,
   'prefer-effect-headers': preferEffectHeaders,
+  'prefer-effect-http-method': preferEffectHttpMethod,
+  'prefer-effect-http-status': preferEffectHttpStatus,
   'prefer-effect-jwt': preferEffectJwt,
   'prefer-effect-match': preferEffectMatch,
+  'prefer-effect-match-status': preferEffectMatchStatus,
   'prefer-effect-ndjson': preferEffectNdjson,
   'prefer-effect-net-address': preferEffectNetAddress,
   'prefer-effect-path': preferEffectPath,
   'prefer-effect-predicate': preferEffectPredicate,
   'prefer-effect-sse': preferEffectSse,
   'prefer-effect-url': preferEffectUrl,
+  'prefer-effect-url-params': preferEffectUrlParams,
   'prefer-effect-user-directories': preferEffectUserDirectories,
   'prefer-hoisted-match': preferHoistedMatch,
   'prefer-equal': preferEqual,

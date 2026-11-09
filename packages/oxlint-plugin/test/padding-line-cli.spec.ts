@@ -47,42 +47,44 @@ const runOxlint = Effect.fn('PaddingLineCli.runOxlint')(function* (directory: st
 });
 
 describe('statement spacing CLI', () => {
-  it.effect('loads the published plugin, isolates files and fixes spacing idempotently', () =>
-    Effect.gen(function* () {
-      const fs = yield* FileSystem.FileSystem;
+  it.effect(
+    'loads the published plugin, isolates files and fixes spacing idempotently',
+    () =>
+      Effect.gen(function* () {
+        const fs = yield* FileSystem.FileSystem;
 
-      const path = yield* Path.Path;
+        const path = yield* Path.Path;
 
-      const directory = yield* fs.makeTempDirectoryScoped({ prefix: '2digits-padding-' });
+        const directory = yield* fs.makeTempDirectoryScoped({ prefix: '2digits-padding-' });
 
-      const sources = {
-        'a.ts': {
-          source: ts`
+        const sources = {
+          'a.ts': {
+            source: ts`
             foo();
             bar();
           `,
-          fixed: ts`
+            fixed: ts`
             foo();
 
             bar();
           `,
-        },
-        'b.ts': {
-          source: ts`
+          },
+          'b.ts': {
+            source: ts`
             const b = 1;
             foo(b);
           `,
-          fixed: ts`
+            fixed: ts`
             const b = 1;
 
             foo(b);
           `,
-        },
-      };
+          },
+        };
 
-      yield* fs.writeFileString(
-        path.join(directory, 'oxlint.config.mjs'),
-        ts`
+        yield* fs.writeFileString(
+          path.join(directory, 'oxlint.config.mjs'),
+          ts`
           export default {
             categories: { correctness: 'off' },
             jsPlugins: [{ name: '2digits', specifier: '${pluginUrl}' }],
@@ -94,34 +96,36 @@ describe('statement spacing CLI', () => {
             },
           };
         `,
-      );
+        );
 
-      for (const [filename, { source }] of R.toEntries(sources)) {
-        yield* fs.writeFileString(path.join(directory, filename), source);
-      }
-
-      function run(flags: Array<string>) {
-        return runOxlint(directory, ['--config=oxlint.config.mjs', ...flags, ...R.keys(sources)]);
-      }
-
-      const reported = yield* run([]);
-
-      expect(reported.status, `${reported.stdout}${reported.stderr}`).toBe(1);
-
-      expect(reported.stdout).toContain('padding-line-between-statements');
-
-      for (const _pass of [1, 2]) {
-        const fixed = yield* run(['--fix']);
-
-        expect(fixed.status, `${fixed.stdout}${fixed.stderr}`).toBe(0);
-
-        for (const [filename, { fixed: expected }] of R.toEntries(sources)) {
-          const content = yield* fs.readFileString(path.join(directory, filename));
-
-          expect(content).toBe(expected);
+        for (const [filename, { source }] of R.toEntries(sources)) {
+          yield* fs.writeFileString(path.join(directory, filename), source);
         }
-      }
-    }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+
+        function run(flags: Array<string>) {
+          return runOxlint(directory, ['--config=oxlint.config.mjs', ...flags, ...R.keys(sources)]);
+        }
+
+        const reported = yield* run([]);
+
+        expect(reported.status, `${reported.stdout}${reported.stderr}`).toBe(1);
+
+        expect(reported.stdout).toContain('padding-line-between-statements');
+
+        for (const _pass of [1, 2]) {
+          const fixed = yield* run(['--fix']);
+
+          expect(fixed.status, `${fixed.stdout}${fixed.stderr}`).toBe(0);
+
+          for (const [filename, { fixed: expected }] of R.toEntries(sources)) {
+            const content = yield* fs.readFileString(path.join(directory, filename));
+
+            expect(content).toBe(expected);
+          }
+        }
+      }).pipe(Effect.provide(NodeServices.layer), Effect.scoped),
+    // Each run loads the whole built plugin in a fresh oxlint process, which takes several seconds on CI runners.
+    30_000,
   );
 
   const malformedOptions = [

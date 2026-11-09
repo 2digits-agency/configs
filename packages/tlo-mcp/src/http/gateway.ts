@@ -16,6 +16,7 @@ import * as HttpIncomingMessage from 'effect/http/HttpIncomingMessage';
 import * as HttpRouter from 'effect/http/HttpRouter';
 import * as HttpServerRequest from 'effect/http/HttpServerRequest';
 import * as HttpServerResponse from 'effect/http/HttpServerResponse';
+import * as HttpStatus from 'effect/http/HttpStatus';
 
 import { OrbitClient } from '../mcp/OrbitClient.js';
 import { OrbitToolsLive } from '../mcp/proxy.js';
@@ -32,11 +33,14 @@ export const gatewayKeyFile = Effect.gen(function* () {
 const MAX_BODY_SIZE = ByteSize.mebibytes(1);
 
 const unauthorized = HttpServerResponse.empty({
-  status: 401,
+  status: HttpStatus.fromLiteral('Unauthorized'),
   headers: { 'www-authenticate': 'Bearer', 'cache-control': 'no-store' },
 });
 
-const forbidden = HttpServerResponse.empty({ status: 403, headers: { 'cache-control': 'no-store' } });
+const forbidden = HttpServerResponse.empty({
+  status: HttpStatus.fromLiteral('Forbidden'),
+  headers: { 'cache-control': 'no-store' },
+});
 
 const encoder = new TextEncoder();
 

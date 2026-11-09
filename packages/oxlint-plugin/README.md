@@ -5,7 +5,9 @@ Custom [Oxlint JavaScript plugin](https://oxc.rs/docs/guide/usage/linter/writing
 
 The recommended set is enabled by default by `@2digits/oxlint-config`. The opt-in `prefer-effect-filesystem` and
 `prefer-effect-path` rules are excluded because the configured `@effect/tsgo/nodeBuiltinImport` diagnostic already
-enforces those imports more broadly. To register the plugin directly:
+enforces those imports more broadly. `prefer-effect-http-status` is recommended at `warn`, because it only names
+well-known numbers (see [Effect HTTP modules](#effect-http-modules)); every other recommended rule is an error. To
+register the plugin directly:
 
 ```ts
 import { defineConfig } from 'oxlint';
@@ -20,7 +22,7 @@ export default defineConfig({
 
 ## Rules
 
-The package exports all rules as `rules`, their names as `RuleName`, and the default error-level configuration as
+The package exports all rules as `rules`, their names as `RuleName`, and the default configuration as
 `recommendedRules`.
 
 - Copied and adapted Effect practices: `avoid-data-tagged-error`, `ban-error-string`,
@@ -30,7 +32,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Syntax-safe Effect diagnostics proposed in open `Effect-TS/tsgo` issues: the remaining `cors-*`, `dual-*`,
   `no-*`, `prefer-*`, `preserve-*`, and `require-*` Effect rules.
 - Effect v4 API guidance for Array, DateTime, Duration, binary encodings, FileSystem, Filter, Headers, Match, Path, and Url,
-  plus interruptible `Effect.tryPromise` thunks.
+  plus interruptible `Effect.tryPromise` thunks. Cookies, HttpMethod, HttpStatus, UrlParams and status range checks are covered
+  in [Effect HTTP modules](#effect-http-modules).
 - Structured text formats: `prefer-effect-ndjson`, `prefer-effect-csv`, and `prefer-effect-format-parser`. See
   [Effect encoding formats](#effect-encoding-formats).
 - Effect encoding streams and archives: `prefer-effect-sse`, `no-manual-sse`, and `prefer-effect-archive`. See
@@ -280,6 +283,46 @@ offers a suggestion; the others report only.
   lose their contextual type. `Struct.assign` also drops a class instance's prototype, so rebuild Schema and Data class
   instances with their constructor. Two-object merges and copies get a `Struct.assign` suggestion rather than an
   autofix, because `Struct.assign` types its result from its generic parameters.
+
+## Effect HTTP modules
+
+These rules point hand-written HTTP logic at the `effect/http` modules. They only run in files that import Effect and
+have no autofixes.
+
+- `prefer-effect-match-status` reports a hand-written 2xx range check on a response, such as
+  `response.status < 200 || response.status >= 300` or `res.status >= 200 && res.status <= 299` (also on
+  `statusCode`). Use `HttpClientResponse.filterStatusOk`, or `HttpClientResponse.matchStatus` with a `'2xx'` case; on a
+  native fetch `Response`, read `response.ok`. A bare `status` variable is skipped, because it is usually a fixture or
+  protocol field, and other ranges such as retryable `>= 500` checks are left alone: `HttpStatus` has no range
+  predicates.
+- `prefer-effect-url-params` reports query strings built by hand, where a value is interpolated or concatenated
+  straight after `?key=` or `&key=` (`` `${base}/tags?search=${encodeURIComponent(q)}` ``, `'/users?page=' + page`), and
+  `new URLSearchParams()` built from nothing or from an object or array literal. Use `HttpClientRequest.setUrlParam(s)`,
+  the `urlParams` request option, or `UrlParams.fromInput` with `UrlParams.toString`. `new URLSearchParams(text)` parses
+  a string, which `UrlParams` cannot, so it is allowed, as are tagged templates such as `` sql`…` ``. `.test` and `.spec`
+  files are skipped, because tests write raw wire URLs and form bodies on purpose.
+- `prefer-effect-http-method` reports an array literal or union type of six or more different HTTP method strings,
+  such as `Schema.Literals(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'])`. Use the
+  `HttpMethod.HttpMethod` type, `HttpMethod.all` or `HttpMethod.isHttpMethod`, which also include `TRACE` and `QUERY`.
+  Shorter lists are usually deliberate subsets, such as the safe methods or the methods of one route, and method
+  comparisons are left alone: `HttpMethod` has no constants to compare with, and `HttpMethod.hasBody` treats
+  `OPTIONS` and `TRACE` as bodyless, so it is not a drop-in for `method === 'GET' || method === 'HEAD'`.
+- `prefer-effect-http-status` (warning) reports known status code numbers passed to Effect HTTP APIs:
+  `HttpApiSchema.status(404)`, which accepts `'NotFound'` directly, plus `HttpApiSchema.Empty(204)`,
+  `{ httpApiStatus: 401 }` annotations, `HttpServerResponse.setStatus(429)` and the `status` option of
+  `HttpServerResponse` constructors, which take `HttpStatus.fromLiteral('Unauthorized')`. Plain objects, comparisons and
+  test fakes are not checked. It is recommended at `warn` rather than `error`, because it only names numbers every
+  reader knows.
+- `prefer-effect-cookies` reports cookie logic written by hand: reading or writing `document.cookie`; splitting or
+  matching raw cookie text (`request.headers.cookie.split('; ')`, `headers.get('cookie')?.split(';')`,
+  `/token=([^;]*)/.exec(cookieHeader)`); building a cookie with interpolated attributes
+  (`` `${name}=${value}; Path=/; HttpOnly` `` or `token + '; Max-Age=3600'`); and searching a Set-Cookie string for an
+  attribute (`cookie.includes('; Secure')`, `Str.includes('HttpOnly')`). Use `HttpServerRequest` cookies or
+  `schemaCookies`, `Cookies.parseHeader`, `Cookies.fromSetCookie` with `Cookies.get(…).options`, `Cookies.makeCookie`
+  with `Cookies.serializeCookie`, or `HttpServerResponse.setCookie`. Raw text counts as cookie text when it comes from
+  a `get('cookie')` or `get('set-cookie')` header read or a binding or member whose name contains `cookie`. Plain
+  Set-Cookie strings are fixtures or expected wire values and are allowed, as are header names in lists and sets and
+  Set-Cookie values forwarded unchanged, which `Cookies` would normalize.
 
 ## Effect binary encodings
 

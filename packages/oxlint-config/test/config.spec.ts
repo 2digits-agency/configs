@@ -457,6 +457,10 @@ describe('oxlint config', () => {
     ]).toStrictEqual(['error', 'error']);
   });
 
+  it('warns about status code numbers instead of erroring', () => {
+    expect(twoDigitsPluginRules['2digits/prefer-effect-http-status']).toBe('warn');
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(JSON.stringify(twoDigits({ react: true, ts: true, vitest: true, zod: true }))).not.toContain('effecttsgo');
   });
