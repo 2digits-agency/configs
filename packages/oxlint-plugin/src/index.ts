@@ -12,7 +12,11 @@ export type { PaddingLineOption } from './rules/padding-line-between-statements'
 
 export type RuleName = keyof typeof rules;
 
-const optInRules: ReadonlyArray<RuleName> = ['prefer-effect-filesystem', 'prefer-effect-path'];
+const optInRules: ReadonlyArray<RuleName> = [
+  'prefer-effect-filesystem',
+  'prefer-effect-http-status',
+  'prefer-effect-path',
+];
 
 const recommendedRuleNames = Arr.filter(R.keys(rules), (name) => !Arr.contains(optInRules, name));
 

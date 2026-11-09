@@ -55,10 +55,14 @@ import { preferEffectEncoding } from './effect/prefer-effect-encoding';
 import { preferEffectFileSystem } from './effect/prefer-effect-filesystem';
 import { preferEffectFilter } from './effect/prefer-effect-filter';
 import { preferEffectHeaders } from './effect/prefer-effect-headers';
+import { preferEffectHttpMethod } from './effect/prefer-effect-http-method';
+import { preferEffectHttpStatus } from './effect/prefer-effect-http-status';
 import { preferEffectMatch } from './effect/prefer-effect-match';
+import { preferEffectMatchStatus } from './effect/prefer-effect-match-status';
 import { preferEffectPath } from './effect/prefer-effect-path';
 import { preferEffectPredicate } from './effect/prefer-effect-predicate';
 import { preferEffectUrl } from './effect/prefer-effect-url';
+import { preferEffectUrlParams } from './effect/prefer-effect-url-params';
 import { preferEqual } from './effect/prefer-equal';
 import { preferHoistedMatch } from './effect/prefer-hoisted-match';
 import { preferStructAssign } from './effect/prefer-struct-assign';
@@ -145,10 +149,14 @@ export const rules = {
   'prefer-effect-filesystem': preferEffectFileSystem,
   'prefer-effect-filter': preferEffectFilter,
   'prefer-effect-headers': preferEffectHeaders,
+  'prefer-effect-http-method': preferEffectHttpMethod,
+  'prefer-effect-http-status': preferEffectHttpStatus,
   'prefer-effect-match': preferEffectMatch,
+  'prefer-effect-match-status': preferEffectMatchStatus,
   'prefer-effect-path': preferEffectPath,
   'prefer-effect-predicate': preferEffectPredicate,
   'prefer-effect-url': preferEffectUrl,
+  'prefer-effect-url-params': preferEffectUrlParams,
   'prefer-hoisted-match': preferHoistedMatch,
   'prefer-equal': preferEqual,
   'prefer-struct-assign': preferStructAssign,

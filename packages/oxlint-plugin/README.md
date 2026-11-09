@@ -5,7 +5,8 @@ Custom [Oxlint JavaScript plugin](https://oxc.rs/docs/guide/usage/linter/writing
 
 The recommended set is enabled by default by `@2digits/oxlint-config`. The opt-in `prefer-effect-filesystem` and
 `prefer-effect-path` rules are excluded because the configured `@effect/tsgo/nodeBuiltinImport` diagnostic already
-enforces those imports more broadly. To register the plugin directly:
+enforces those imports more broadly, and `prefer-effect-http-status` because it only renames well-known numbers (see
+[Effect HTTP modules](#effect-http-modules)). To register the plugin directly:
 
 ```ts
 import { defineConfig } from 'oxlint';
@@ -30,7 +31,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Syntax-safe Effect diagnostics proposed in open `Effect-TS/tsgo` issues: the remaining `cors-*`, `dual-*`,
   `no-*`, `prefer-*`, `preserve-*`, and `require-*` Effect rules.
 - Effect v4 API guidance for Array, DateTime, Duration, Encoding, FileSystem, Filter, Headers, Match, Path, and Url,
-  plus interruptible `Effect.tryPromise` thunks.
+  plus interruptible `Effect.tryPromise` thunks. HttpMethod, HttpStatus, UrlParams and status range checks are covered
+  in [Effect HTTP modules](#effect-http-modules).
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
   and no root-barrel module imports. `@effect/vitest` and lowercase unstable barrels are intentionally exempt.
 - Alchemy v2 practices: every other `alchemy-*` rule.
@@ -247,6 +249,39 @@ These rules only run in files that import Effect, report without autofixes, and 
   are callbacks with untyped parameters (`{ ...server, addTool: Effect.fn(function* (registration) {}) }`), which
   lose their contextual type. `Struct.assign` also drops a class instance's prototype, so rebuild Schema and Data class
   instances with their constructor.
+
+## Effect HTTP modules
+
+These rules point hand-written HTTP logic at the `effect/http` modules. They only run in files that import Effect and
+have no autofixes.
+
+- `prefer-effect-match-status` reports a hand-written 2xx range check on a response, such as
+  `response.status < 200 || response.status >= 300` or `res.status >= 200 && res.status <= 299` (also on
+  `statusCode`). Use `HttpClientResponse.filterStatusOk`, or `HttpClientResponse.matchStatus` with a `'2xx'` case; on a
+  native fetch `Response`, read `response.ok`. A bare `status` variable is skipped, because it is usually a fixture or
+  protocol field, and other ranges such as retryable `>= 500` checks are left alone: `HttpStatus` has no range
+  predicates.
+- `prefer-effect-url-params` reports query strings built by hand, where a value is interpolated or concatenated
+  straight after `?key=` or `&key=` (`` `${base}/tags?search=${encodeURIComponent(q)}` ``, `'/users?page=' + page`), and
+  `new URLSearchParams()` built from nothing or from an object or array literal. Use `HttpClientRequest.setUrlParam(s)`,
+  the `urlParams` request option, or `UrlParams.fromInput` with `UrlParams.toString`. `new URLSearchParams(text)` parses
+  a string, which `UrlParams` cannot, so it is allowed, as are tagged templates such as `` sql`…` ``. `.test` and `.spec`
+  files are skipped, because tests write raw wire URLs and form bodies on purpose.
+- `prefer-effect-http-method` reports an array literal or union type of six or more different HTTP method strings,
+  such as `Schema.Literals(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'])`. Use the
+  `HttpMethod.HttpMethod` type, `HttpMethod.all` or `HttpMethod.isHttpMethod`, which also include `TRACE` and `QUERY`.
+  Shorter lists are usually deliberate subsets, such as the safe methods or the methods of one route, and method
+  comparisons are left alone: `HttpMethod` has no constants to compare with, and `HttpMethod.hasBody` treats
+  `OPTIONS` and `TRACE` as bodyless, so it is not a drop-in for `method === 'GET' || method === 'HEAD'`.
+- `prefer-effect-http-status` (opt-in) reports known status code numbers passed to Effect HTTP APIs:
+  `HttpApiSchema.status(404)`, which accepts `'NotFound'` directly, plus `HttpApiSchema.Empty(204)`,
+  `{ httpApiStatus: 401 }` annotations, `HttpServerResponse.setStatus(429)` and the `status` option of
+  `HttpServerResponse` constructors, which take `HttpStatus.fromLiteral('Unauthorized')`. Plain objects, comparisons and
+  test fakes are not checked. It is excluded from `recommendedRules` because it only renames numbers every reader
+  knows: enable it where named statuses are the house style.
+
+Cookie handling has no rule. Across the agency's Effect projects, hand-written cookie code was almost entirely
+byte-faithful passthroughs and Set-Cookie fixtures, which `Cookies` would normalize.
 
 ## anti-slop Effect rules
 

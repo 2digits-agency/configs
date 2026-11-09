@@ -5,11 +5,10 @@ import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
 import { moduleExportName } from '../../internal/ast';
+import { isTestFilename } from '../../internal/files';
 import { ruleMeta } from '../../internal/meta';
 
 const isServiceConstructorName = Schema.is(Schema.String.check(Schema.isPattern(/^make[A-Z]/u)));
-
-const isTestFilename = Schema.is(Schema.String.check(Schema.isPattern(/\.(?:test|spec)\.[cm]?[jt]sx?$/u)));
 
 const isRelativeSource = Schema.is(Schema.String.check(Schema.isPattern(/^\.\.?\//u)));
 

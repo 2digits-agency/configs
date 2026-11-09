@@ -11,6 +11,10 @@ interface RuleCase {
   readonly data?: Readonly<Record<string, string>>;
   readonly globals?: Readonly<Record<string, 'readonly' | 'writable'>>;
   readonly valid: string;
+  /**
+   * File name of the valid case, such as a `.spec.ts` file that the rule skips.
+   */
+  readonly validFilename?: string;
   readonly options?: RuleTester.ValidTestCase['options'];
   readonly output?: string | null;
 }
@@ -34,7 +38,7 @@ export function testRule(name: RuleName, rule: Rule, ruleCase: RuleCase): void {
   const languageOptions = P.isUndefined(ruleCase.globals) ? {} : { languageOptions: { globals: ruleCase.globals } };
 
   tester.run(name, rule, {
-    valid: [{ code: ruleCase.valid, filename: 'valid.ts', ...options, ...languageOptions }],
+    valid: [{ code: ruleCase.valid, filename: ruleCase.validFilename ?? 'valid.ts', ...options, ...languageOptions }],
     invalid: [
       {
         code: ruleCase.invalid,
