@@ -55,9 +55,8 @@ function isImportBinding(sourceCode: OxlintSourceCode, node: ESTree.Node, name: 
  * @param file File being linted.
  */
 export function importedPath(node: ESTree.Node, file: DomainFile): Opt.Option<ReadonlyArray<string>> {
-  return Opt.flatMap(
-    Opt.filter(staticPath(node), (path) => isImportBinding(file.sourceCode, node, Arr.headNonEmpty(path))),
-    () => file.imports.path(node),
+  return Opt.filter(file.imports.path(node), () =>
+    Opt.exists(staticPath(node), (path) => isImportBinding(file.sourceCode, node, Arr.headNonEmpty(path))),
   );
 }
 

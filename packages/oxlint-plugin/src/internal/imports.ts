@@ -35,6 +35,21 @@ export class ImportBindings extends Schema.Class<ImportBindings, { readonly bran
   private readonly paths = new WeakMap<ESTree.Node, Opt.Option<ReadonlyArray<string>>>();
 
   /**
+   * Whether any local binding can name an API in this namespace.
+   *
+   * @param namespace Module namespace, such as `Domain`.
+   */
+  hasNamespace(namespace: string): boolean {
+    for (const path of this.bindings.values()) {
+      if (path[0] === namespace) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * The module path an expression names through an import, such as `['Schema', 'Struct']` for `S.Struct`.
    *
    * @param node Callee or reference.

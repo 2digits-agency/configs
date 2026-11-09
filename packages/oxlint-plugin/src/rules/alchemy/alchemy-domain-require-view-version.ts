@@ -38,6 +38,10 @@ export const alchemyDomainRequireViewVersion: CreateRule = Rule.define({
 
     const file: DomainFile = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
 
+    if (!file.imports.hasNamespace('Domain')) {
+      return {};
+    }
+
     function check(node: ESTree.CallExpression, definition: ESTree.ObjectExpression) {
       return Opt.match(objectProperty(definition, 'version'), {
         onNone: () => ctx.report(Diagnostic.fromId({ node: node.callee, messageId: 'missing' })),

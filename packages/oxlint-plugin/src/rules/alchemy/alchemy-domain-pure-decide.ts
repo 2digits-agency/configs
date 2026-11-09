@@ -94,6 +94,10 @@ export const alchemyDomainPureDecide: CreateRule = Rule.define({
 
     const file: DomainFile = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
 
+    if (!file.imports.hasNamespace('Domain')) {
+      return {};
+    }
+
     function isGlobal(node: ESTree.Node, name: string) {
       return isGlobalIn(ctx.sourceCode.getScope(node), node, name);
     }
@@ -165,7 +169,11 @@ export const alchemyDomainPureDecide: CreateRule = Rule.define({
 
         return report(node, R.get(globalImpurities, name), called ? `${name}()` : name);
       }),
-      Visitor.on('Identifier', (node) => (isImportReference(node, ctx.sourceCode) ? checkModule(node) : Effect.void)),
+      Visitor.on('Identifier', (node) =>
+        file.imports.bindings.has(node.name) && isImportReference(node, ctx.sourceCode)
+          ? checkModule(node)
+          : Effect.void,
+      ),
       Visitor.on('NewExpression', (node) =>
         Arr.isReadonlyArrayEmpty(node.arguments) && Opt.contains(globalCallee(node.callee), 'Date')
           ? report(node, Opt.some('time'), 'new Date()')

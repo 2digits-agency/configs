@@ -74,6 +74,10 @@ export const alchemyDomainBlockFileName: CreateRule = Rule.define({
 
     const file: DomainFile = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
 
+    if (!file.imports.hasNamespace('Domain')) {
+      return {};
+    }
+
     const name = Arr.lastNonEmpty(Str.split(ctx.filename, /[/\\]/u));
 
     if (isTestFile(name)) {

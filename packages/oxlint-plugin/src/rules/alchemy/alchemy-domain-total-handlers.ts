@@ -40,6 +40,10 @@ export const alchemyDomainTotalHandlers: CreateRule = Rule.define({
 
     const file: DomainFile = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
 
+    if (!file.imports.hasNamespace('Domain')) {
+      return {};
+    }
+
     function report(node: ESTree.Node, api: string) {
       return Opt.match(domainSection(node, file), {
         onNone: () => Effect.void,
@@ -72,7 +76,11 @@ export const alchemyDomainTotalHandlers: CreateRule = Rule.define({
       Visitor.on('ThrowStatement', (node) => report(node, '`throw`')),
       // References, not only calls, so point-free `pipe(s.running, Option.getOrThrow)` counts too.
       Visitor.on('MemberExpression', checkGetter),
-      Visitor.on('Identifier', (node) => (isImportReference(node, ctx.sourceCode) ? checkGetter(node) : Effect.void)),
+      Visitor.on('Identifier', (node) =>
+        file.imports.bindings.has(node.name) && isImportReference(node, ctx.sourceCode)
+          ? checkGetter(node)
+          : Effect.void,
+      ),
     );
   },
 });
