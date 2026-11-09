@@ -60,13 +60,16 @@ import { preferEffectFilter } from './effect/prefer-effect-filter';
 import { preferEffectHeaders } from './effect/prefer-effect-headers';
 import { preferEffectHttpMethod } from './effect/prefer-effect-http-method';
 import { preferEffectHttpStatus } from './effect/prefer-effect-http-status';
+import { preferEffectJwt } from './effect/prefer-effect-jwt';
 import { preferEffectMatch } from './effect/prefer-effect-match';
 import { preferEffectMatchStatus } from './effect/prefer-effect-match-status';
+import { preferEffectNetAddress } from './effect/prefer-effect-net-address';
 import { preferEffectPath } from './effect/prefer-effect-path';
 import { preferEffectPredicate } from './effect/prefer-effect-predicate';
 import { preferEffectSse } from './effect/prefer-effect-sse';
 import { preferEffectUrl } from './effect/prefer-effect-url';
 import { preferEffectUrlParams } from './effect/prefer-effect-url-params';
+import { preferEffectUserDirectories } from './effect/prefer-effect-user-directories';
 import { preferEqual } from './effect/prefer-equal';
 import { preferHoistedMatch } from './effect/prefer-hoisted-match';
 import { preferStructAssign } from './effect/prefer-struct-assign';
@@ -158,13 +161,16 @@ export const rules = {
   'prefer-effect-headers': preferEffectHeaders,
   'prefer-effect-http-method': preferEffectHttpMethod,
   'prefer-effect-http-status': preferEffectHttpStatus,
+  'prefer-effect-jwt': preferEffectJwt,
   'prefer-effect-match': preferEffectMatch,
   'prefer-effect-match-status': preferEffectMatchStatus,
+  'prefer-effect-net-address': preferEffectNetAddress,
   'prefer-effect-path': preferEffectPath,
   'prefer-effect-predicate': preferEffectPredicate,
   'prefer-effect-sse': preferEffectSse,
   'prefer-effect-url': preferEffectUrl,
   'prefer-effect-url-params': preferEffectUrlParams,
+  'prefer-effect-user-directories': preferEffectUserDirectories,
   'prefer-hoisted-match': preferHoistedMatch,
   'prefer-equal': preferEqual,
   'prefer-struct-assign': preferStructAssign,
