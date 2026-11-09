@@ -113,16 +113,18 @@ export const alchemyDomainBlockFileName: CreateRule = defineRule({
       return ctx.report(Diagnostic.fromId({ node, messageId, data: { block, kind } }));
     }
 
-    // Events and rejections in a host file, reported at the end unless that file declares its host.
-    const sharedDeclarations = yield* Visitor.accumulate(
-      'CallExpression',
-      (node) => Opt.filter(declaration(node), isShared),
-      (shared) =>
-        Effect.flatMap(Ref.get(hosted), (isHosted) =>
-          // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
-          isHosted ? Effect.void : Effect.forEach(shared, (found) => report('fileName', found), { discard: true }),
-        ),
-    );
+    // Only host files can accumulate shared declarations; other files need no second call visitor or exit pass.
+    const sharedDeclarations = yield* (inHostFile
+      ? Visitor.accumulate(
+          'CallExpression',
+          (node) => Opt.filter(declaration(node), isShared),
+          (shared) =>
+            Effect.flatMap(Ref.get(hosted), (isHosted) =>
+              // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+              isHosted ? Effect.void : Effect.forEach(shared, (found) => report('fileName', found), { discard: true }),
+            ),
+        )
+      : Effect.succeed({}));
 
     const check = Effect.fnUntraced(function* (found: Declaration) {
       const matchesFile = Opt.contains(fileKind, found.kind);
