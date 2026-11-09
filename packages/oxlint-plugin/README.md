@@ -34,6 +34,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Effect v4 API guidance for Array, DateTime, Duration, binary encodings, FileSystem, Filter, Headers, Match, Path, and Url,
   plus interruptible `Effect.tryPromise` thunks. Cookies, HttpMethod, HttpStatus, UrlParams and status range checks are covered
   in [Effect HTTP modules](#effect-http-modules).
+- Structured text formats: `prefer-effect-ndjson`, `prefer-effect-csv`, and `prefer-effect-format-parser`. See
+  [Effect encoding formats](#effect-encoding-formats).
 - Effect encoding streams and archives: `prefer-effect-sse`, `no-manual-sse`, and `prefer-effect-archive`. See
   [Server-Sent Events and archives](#server-sent-events-and-archives).
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
@@ -223,16 +225,44 @@ Imported, mutable, or otherwise composed configs remain unknown and retain the d
 general inference of `Config<A>`. Parameterized function defaults remain excluded. There is no autofix: eagerly evaluating
 or unwrapping a thunk could change side effects or an intentional function value.
 
+## Effect encoding formats
+
+These rules only run in files that import Effect and report without autofixes. They point at the `effect/encoding`
+modules for structured text. Plain `JSON.parse` and `JSON.stringify` are left to the `globalJson` and
+`globalJsonInEffect` diagnostics from `@effect/tsgo`, which suggest Schema.
+
+- `prefer-effect-ndjson` reports `JSON.parse` on each line of text split on line breaks (`text.split('\n').map(JSON.parse)`,
+  a per-line callback, or `for (const line of lines)`), and `JSON.stringify` results joined with line breaks. Use
+  `Ndjson.decodeString`/`decodeSchemaString` and `Ndjson.encodeString`/`encodeSchemaString`.
+- `prefer-effect-csv` reports each line of split text split again on `,`, `;` or a tab, and rows whose cells are joined
+  with one of those and then joined with line breaks. Use `Csv.decodeString`/`decodeSchemaString` and
+  `Csv.encodeString`/`encodeSchemaString`, which quote cells that contain the delimiter, quotes, or line breaks. A single
+  comma list (`scopes.split(',')`), a multi-character separator such as `', '` or `'||'`, and line splits without a
+  second split are not CSV and are allowed.
+- `prefer-effect-format-parser` reports parsers from third-party packages: `yaml` and `js-yaml` (use `Yaml`),
+  `smol-toml`, `@iarna/toml` and `toml` (`Toml`), `ini` (`Ini`), `json5` (`Json5`), `jsonc-parser`, `comment-json` and
+  `strip-json-comments` (`Jsonc`), `papaparse`, `csv-parse`, `csv-stringify`, `csv-parser` and `fast-csv` (`Csv`),
+  `fast-xml-parser`'s `XMLParser`, `xml2js`, `sax` and `@xmldom/xmldom`'s `DOMParser` (`Xml`), `ndjson` (`Ndjson`), and
+  `stream-json` and `@streamparser/json` (`JsonArray`). Effect's Yaml, Toml, Ini, Json5, and Jsonc only parse, so
+  serializers such as `YAML.stringify`, `js-yaml`'s `dump` and `smol-toml`'s `stringify` stay allowed.
+
 ## Effect modules over native logic
 
-These rules only run in files that import Effect, report without autofixes, and complement the `preferEffectArray`,
-`preferEffectRecord`, and `preferEffectString` diagnostics from `@effect/tsgo`.
+These rules only run in files that import Effect and complement the `preferEffectArray`, `preferEffectRecord`, and
+`preferEffectString` diagnostics from `@effect/tsgo`. `prefer-effect-predicate` autofixes and `prefer-struct-assign`
+offers a suggestion; the others report only.
 
 - `prefer-effect-predicate` reports `typeof x === '…'`, comparisons with `undefined` or `null`, and `instanceof` on
-  built-ins such as `String`, `Date`, or `Array`, and names the guard to use: `P.isString`, `P.not(P.isNumber)`,
-  `P.isNotUndefined`, `P.isNotNullish`, `P.isDate`, or `Arr.isArray`. Two suggestions are not one-to-one rewrites, and
-  their messages say so: `instanceof String` (and `Number`, `Boolean`, `BigInt`, `Symbol`) only matches boxed objects
-  while `P.isString` matches primitives, and `P.isObjectOrArray` rejects `null`, which `typeof x === 'object'` accepts.
+  built-ins such as `String`, `Date`, or `Array`, and names the guard to use: `P.isString`, `!P.isNumber`,
+  `P.isNotUndefined`, `P.isNotNullish`, `P.isDate`, or `Arr.isArray`. Negated `typeof` checks become `!P.isNumber(x)`,
+  because `P.not(P.isNumber)` does not narrow. Checks that Effect implements the same way are autofixed, adding the
+  `effect/Predicate` import when the file lacks one: `typeof` (except `'object'`), `null`/`undefined` comparisons, and
+  `instanceof` `Date`, `Error`, `RegExp` and `Uint8Array`. Checks with a different result or type get a suggestion
+  instead: `P.isObjectOrArray` rejects `null`, which `typeof x === 'object'` accepts; `Arr.isArray`, `P.isMap` and
+  `P.isSet` narrow to `unknown[]`, `Map<unknown, unknown>` and `Set<unknown>` where `instanceof` gives `any`;
+  `P.isFunction` and `P.isPromise` check `typeof` and the shape, not the class.
+  `instanceof String` (and `Number`, `Boolean`, `BigInt`, `Symbol`) only matches boxed objects while `P.isString`
+  matches primitives, so it is reported without a fix. Checks with comments inside are reported without a fix.
   Checks inside type guards (`(u): u is Foo =>`) and `typeof` on undeclared globals such as `typeof window` are allowed.
   `Array.isArray` is left to `preferEffectArray`.
 - `prefer-effect-array-ops` reports `[...new Set(xs)]` and `Array.from(new Set(xs))` (use `Arr.dedupe`), `xs[0]` (use
@@ -251,7 +281,8 @@ These rules only run in files that import Effect, report without autofixes, and 
   overrides with literal values (`{ ...meta, fixable: 'code' }` would widen `'code'` to `string`) and overrides that
   are callbacks with untyped parameters (`{ ...server, addTool: Effect.fn(function* (registration) {}) }`), which
   lose their contextual type. `Struct.assign` also drops a class instance's prototype, so rebuild Schema and Data class
-  instances with their constructor.
+  instances with their constructor. Two-object merges and copies get a `Struct.assign` suggestion rather than an
+  autofix, because `Struct.assign` types its result from its generic parameters.
 
 ## Effect HTTP modules
 
@@ -377,7 +408,9 @@ Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/m
 - `no-manual-effect-error-tag`: prefer tagged handlers for `_tag` comparisons/switches in broad Effect catches.
 - `no-manual-tag-comparison`: prefer Match/Predicate for literal `_tag` comparisons and switches outside those catches,
   plus `kind`, `status` or the discriminants configured with the `discriminants` option. See
-  [Effect Match](#effect-match).
+  [Effect Match](#effect-match). A `_tag` comparison gets a `P.isTagged(x, 'A')` suggestion, which narrows like the
+  comparison; it is not an autofix, because it returns `false` instead of throwing for `null` and would rewrite the
+  `else if` chains `prefer-effect-match` reports.
 - `no-manual-tagged-construction`: prefer existing constructors over literal string `_tag` objects; direct
   `Match.when`/`Match.not` pattern objects are exempt.
 - `no-service-constructor-imports`: reject relative named `make[A-Z]` imports outside `.test`/`.spec` files.
@@ -404,6 +437,11 @@ These rules report functions that only add an indirection, so the underlying cal
 - `no-forwarding-lambda`: a callback of an Effect API that only forwards its parameters, such as
   `Effect.map((user) => toDto(user))`. APIs whose callbacks receive more than one argument, such as the index of `Array`, `Record`,
   `Effect.forEach` and `Stream.map` or the `Exit` of `Effect.acquireRelease`, are exempt, and so are factory calls other than Effect APIs.
+  Passing the callee reads it when the callback is created rather than when it runs, so the rule only offers a rewrite
+  when every binding the callee reads is a `const`, function, parameter or import that is already initialized there
+  and never reassigned.
+  A local function with one signature is autofixed; other callees, such as Effect APIs, get a suggestion, because
+  TypeScript infers a passed function from its last overload and Effect's dual APIs then stop type-checking.
 - `no-single-use-private-function`: a non-exported top-level function, or `Effect.fn` constant, that is referenced
   exactly once and is at most `maxLines` lines long (default `3`). Inline it at its call site. Components, hooks,
   type predicates and recursive functions are exempt.
@@ -481,9 +519,12 @@ The exported `PaddingLineOption` type describes each configuration entry. No opt
 ### Other fixes
 
 Run `vpr lint:oxlint:fix` from the repository root to apply fixes from `consistent-schema-pipe`, `prefer-effect-duration`, `no-empty-effect-callback`,
-`no-effect-alchemy-barrel-imports`, `prefer-effect-alchemy-namespace-imports`,
-`alchemy-no-v1-worker-properties`, and `alchemy-no-deprecated-docker-constraints`.
-Fixes skip ambiguous bindings, conflicting properties, and unsupported import references.
+`no-effect-alchemy-barrel-imports`, `prefer-effect-alchemy-namespace-imports`, `prefer-effect-predicate`,
+`no-forwarding-lambda`, `alchemy-no-v1-worker-properties`, and `alchemy-no-deprecated-docker-constraints`.
+Fixes skip ambiguous bindings, conflicting properties, and unsupported import references. Oxlint applies one
+import-adding fix per file per run, so run it again until nothing changes. `oxlint --fix-suggestions` also applies the
+suggestions from `prefer-effect-predicate`, `no-forwarding-lambda`, `no-manual-tag-comparison` and
+`prefer-struct-assign`; review those changes.
 
 ## Adding a rule
 
