@@ -30,6 +30,7 @@ tester.run(ruleName, preferEffectSse, {
     'const events = new EventSource(url);',
     // Type-only imports pull in no runtime code.
     `${effect} import type { EventSourceMessage } from 'eventsource-parser';`,
+    `${effect} import { type EventSourceMessage, type ParseError } from 'eventsource-parser';`,
     // Packages whose name only starts with an SSE package name.
     `${effect} import { emit } from 'eventsource-parser-extra';`,
     // A local EventSource is not the browser global.
@@ -45,6 +46,9 @@ tester.run(ruleName, preferEffectSse, {
           '@microsoft/fetch-event-source',
         ],
         [`${effect} import { EventSource } from 'eventsource';`, 'eventsource'],
+        // A side-effect import loads the polyfill.
+        [`${effect} import 'eventsource';`, 'eventsource'],
+        [`${effect} import { type ParseError, createParser } from 'eventsource-parser';`, 'eventsource-parser'],
         [`${effect} const { createSession } = await import('better-sse');`, 'better-sse'],
       ] as const,
       ([code, source]) => ({ code, errors: [{ messageId: 'library', data: { source } }] }),

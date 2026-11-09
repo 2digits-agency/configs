@@ -30,7 +30,7 @@ tester.run(ruleName, preferEffectArchive, {
     // Type-only imports pull in no runtime code.
     `${effect} import type JSZip from 'jszip';`,
     `${effect} import { type Zippable, gzipSync } from 'fflate';`,
-    // fflate's gzip, zlib and deflate codecs have no Zip counterpart.
+    // The gzip, zlib and deflate codecs of fflate have no Zip counterpart.
     `${effect} import { gzipSync, inflate } from 'fflate';`,
     `${effect} import * as fflate from 'fflate';`,
     // Disk extraction keeps its path-traversal guards.

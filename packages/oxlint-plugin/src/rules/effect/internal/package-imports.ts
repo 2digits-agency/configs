@@ -1,6 +1,8 @@
 import { Visitor, type ESTree, type RuleContext } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Str from 'effect/String';
 
 import { isStringLiteral } from '../../../internal/ast';
@@ -13,7 +15,24 @@ import { isStringLiteral } from '../../../internal/ast';
 export function packageName(source: string): string {
   const [first, second] = Str.split(source, '/');
 
-  return second !== undefined && Str.startsWith('@')(first) ? `${first}/${second}` : first;
+  return P.isNotUndefined(second) && Str.startsWith('@')(first) ? `${first}/${second}` : first;
+}
+
+/**
+ * Whether an import declaration only imports types: `import type …`, or `import { type A, type B } …`. A side-effect
+ * import such as `import 'polyfill'` loads the module, so it is not type-only.
+ *
+ * @param declaration Import declaration.
+ */
+function isTypeOnly(declaration: ESTree.ImportDeclaration): boolean {
+  return (
+    declaration.importKind === 'type' ||
+    (Arr.isReadonlyArrayNonEmpty(declaration.specifiers) &&
+      Arr.every(
+        declaration.specifiers,
+        (specifier) => specifier.type === 'ImportSpecifier' && specifier.importKind === 'type',
+      ))
+  );
 }
 
 /**
@@ -29,9 +48,7 @@ export function onRuntimeImport(
   ) => Effect.Effect<void, never, RuleContext>,
 ): Visitor.EffectVisitor {
   return Visitor.merge(
-    Visitor.on('ImportDeclaration', (node) =>
-      node.importKind === 'type' ? Effect.void : check(node.source, Opt.some(node)),
-    ),
+    Visitor.on('ImportDeclaration', (node) => (isTypeOnly(node) ? Effect.void : check(node.source, Opt.some(node)))),
     Visitor.on('ImportExpression', ({ source }) => (isStringLiteral(source) ? check(source, Opt.none()) : Effect.void)),
   );
 }

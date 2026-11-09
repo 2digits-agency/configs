@@ -61,15 +61,6 @@ function isConcatenation(node: ESTree.Node): boolean {
   return node.type === 'BinaryExpression' && node.operator === '+';
 }
 
-/**
- * Whether a string expression is the outermost part of its text, so a concatenation is checked once as a whole.
- *
- * @param node String expression.
- */
-function isTextRoot(node: ESTree.Node): boolean {
-  return !Opt.exists(parentOf(node), isConcatenation);
-}
-
 export const noManualSse: CreateRule = Rule.define({
   name: 'no-manual-sse',
   meta: ruleMeta({
@@ -99,8 +90,9 @@ export const noManualSse: CreateRule = Rule.define({
       );
     }
 
+    // Only the outermost part of a concatenation is checked, so the frame is checked once as a whole.
     function checkText(node: ESTree.Expression) {
-      return isTextRoot(node) && isSseFrame(staticText(node))
+      return !Opt.exists(parentOf(node), isConcatenation) && isSseFrame(staticText(node))
         ? ctx.report(Diagnostic.fromId({ node, messageId: 'frame' }))
         : Effect.void;
     }

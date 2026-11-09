@@ -95,14 +95,17 @@ export const preferEffectArchive: CreateRule = Rule.define({
     return onRuntimeImport((source, declaration) => {
       const name = packageName(source.value);
 
-      return name === 'fflate'
-        ? Effect.forEach(fflateZipImports(declaration), (specifier) => report(specifier, 'fflate', 'Zip'), {
-            discard: true,
-          })
-        : Opt.match(R.get(archivePackages, name), {
-            onNone: () => Effect.void,
-            onSome: (module) => report(source, source.value, module),
-          });
+      if (name !== 'fflate') {
+        return Opt.match(R.get(archivePackages, name), {
+          onNone: () => Effect.void,
+          onSome: (module) => report(source, source.value, module),
+        });
+      }
+
+      // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+      return Effect.forEach(fflateZipImports(declaration), (specifier) => report(specifier, 'fflate', 'Zip'), {
+        discard: true,
+      });
     });
   },
 });
