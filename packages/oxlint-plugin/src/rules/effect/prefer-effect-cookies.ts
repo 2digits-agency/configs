@@ -7,7 +7,14 @@ import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
-import { argumentAt, isStringLiteral, staticPropertyName, unwrapExpression } from '../../internal/ast';
+import {
+  argumentAt,
+  containsSame,
+  isStringLiteral,
+  parentOfType,
+  staticPropertyName,
+  unwrapExpression,
+} from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIdentifier } from '../../internal/scope';
@@ -193,8 +200,19 @@ export const preferEffectCookies: CreateRule = Rule.define({
       return ctx.report(Diagnostic.fromId({ node, messageId }));
     }
 
+    /**
+     * Whether a member reads or writes `document.cookie`, unless it is handed straight to a `Cookies` parser such as
+     * `Cookies.parseHeader(document.cookie)`.
+     *
+     * @param node Member expression.
+     */
     function isDocumentCookie(node: ESTree.MemberExpression) {
-      return Opt.contains(staticPropertyName(node), 'cookie')
+      const parsed = Opt.exists(
+        parentOfType(node, 'CallExpression'),
+        (call) => containsSame<ESTree.Node>(call.arguments, node) && Opt.isSome(imports.member(call.callee, 'Cookies')),
+      );
+
+      return !parsed && Opt.contains(staticPropertyName(node), 'cookie')
         ? isGlobalIdentifier(node.object, 'document')
         : Effect.succeed(false);
     }

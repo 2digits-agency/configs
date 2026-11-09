@@ -11,6 +11,7 @@ const valid = `
   const denied = hopByHop.has('set-cookie')
   const session = request.cookies['session'] !== undefined
   const parsed = Cookies.parseHeader(request.headers.cookie ?? '')
+  const theme = Cookies.parseHeader(document.cookie)
   const mediaType = contentType.split(';')
   const secure = Str.includes('Secure')(description)
   const message = \`Cookie \${name} expired; please sign in again\`
