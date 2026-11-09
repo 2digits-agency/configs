@@ -1,11 +1,12 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import type * as Data from 'effect/Data';
 import * as Effect from 'effect/Effect';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
-export const avoidDataTaggedError: CreateRule = Rule.define({
+export const avoidDataTaggedError: CreateRule = defineRule({
   name: 'avoid-data-tagged-error',
   meta: ruleMeta({
     type: 'suggestion',

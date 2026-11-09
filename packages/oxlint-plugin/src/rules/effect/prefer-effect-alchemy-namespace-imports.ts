@@ -1,14 +1,15 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
 import { withOptionalFix } from '../../internal/fixes';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { namespaceFix } from './internal/import-fixes';
 import { isTypeOnlyImport, namespaceAlias, submoduleName } from './internal/import-style';
 
-export const preferEffectAlchemyNamespaceImports: CreateRule = Rule.define({
+export const preferEffectAlchemyNamespaceImports: CreateRule = defineRule({
   name: 'prefer-effect-alchemy-namespace-imports',
   meta: ruleMeta({
     type: 'suggestion',

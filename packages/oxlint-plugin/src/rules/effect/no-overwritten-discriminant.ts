@@ -1,10 +1,11 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
 import { propertyName } from '../../internal/ast';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 /**
  * The `_tag` property of an object literal when a spread follows it.
@@ -25,7 +26,7 @@ function overwrittenTag(node: ESTree.ObjectExpression): Opt.Option<ESTree.Object
   );
 }
 
-export const noOverwrittenDiscriminant: CreateRule = Rule.define({
+export const noOverwrittenDiscriminant: CreateRule = defineRule({
   name: 'no-overwritten-discriminant',
   meta: ruleMeta({
     type: 'problem',

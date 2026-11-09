@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
@@ -6,6 +6,7 @@ import * as Schema from 'effect/Schema';
 import { isLiteral, objectArgument, objectProperty, staticPropertyName, unwrapExpression } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const SchemaMapMethod = Schema.Literals(['mapElements', 'mapFields', 'mapMembers'] satisfies ReadonlyArray<
   | keyof Schema.Struct<Schema.Struct.Fields>
@@ -43,7 +44,7 @@ function discardingMethod(node: ESTree.CallExpression): Opt.Option<string> {
   return preservesChecks ? Opt.none() : Opt.filter(staticPropertyName(node.callee), isSchemaMapMethod);
 }
 
-export const noDiscardedSchemaChecks: CreateRule = Rule.define({
+export const noDiscardedSchemaChecks: CreateRule = defineRule({
   name: 'no-discarded-schema-checks',
   meta: ruleMeta({
     type: 'problem',

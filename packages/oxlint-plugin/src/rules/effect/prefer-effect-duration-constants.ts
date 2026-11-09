@@ -1,12 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as HashMap from 'effect/HashMap';
@@ -20,6 +12,7 @@ import * as Tuple from 'effect/Tuple';
 import { isConstDeclaration, unwrapExpression, walkNodes } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { lookupVariable, resolveVariable, soleDefinition } from '../../internal/scope';
 import {
   durationArgument,
@@ -200,7 +193,7 @@ type Candidate = readonly [NumericDeclarator, boolean];
 
 const bySourcePosition = Order.mapInput(Order.Number, ([offset]: readonly [number, Candidate]) => offset);
 
-export const preferEffectDurationConstants: CreateRule = Rule.define({
+export const preferEffectDurationConstants: CreateRule = defineRule({
   name: 'prefer-effect-duration-constants',
   meta: ruleMeta({
     type: 'suggestion',

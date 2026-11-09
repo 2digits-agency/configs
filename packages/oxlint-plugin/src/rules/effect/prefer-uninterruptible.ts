@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as R from 'effect/Record';
@@ -6,6 +6,7 @@ import * as R from 'effect/Record';
 import { argumentAt, functionUsesFirstParameter, isFunctionNode } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 // Effect mask APIs, keyed by member, with the equivalent API to use when `restore` is unused.
 const maskReplacements: Readonly<Record<string, keyof typeof Effect>> = {
@@ -13,7 +14,7 @@ const maskReplacements: Readonly<Record<string, keyof typeof Effect>> = {
   uninterruptibleMask: 'uninterruptible',
 } satisfies Partial<Record<keyof typeof Effect, keyof typeof Effect>>;
 
-export const preferUninterruptible: CreateRule = Rule.define({
+export const preferUninterruptible: CreateRule = defineRule({
   name: 'prefer-uninterruptible',
   meta: ruleMeta({
     type: 'suggestion',

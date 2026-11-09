@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -6,6 +6,7 @@ import * as Opt from 'effect/Option';
 import { argumentAt, objectProperty, unwrapExpression } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { domainBlock, type DomainFile } from './internal/domain';
 
 /**
@@ -21,7 +22,7 @@ function isOverridden(definition: ESTree.ObjectExpression, version: ESTree.Objec
   );
 }
 
-export const alchemyDomainRequireViewVersion: CreateRule = Rule.define({
+export const alchemyDomainRequireViewVersion: CreateRule = defineRule({
   name: 'alchemy-domain-require-view-version',
   meta: ruleMeta({
     type: 'suggestion',

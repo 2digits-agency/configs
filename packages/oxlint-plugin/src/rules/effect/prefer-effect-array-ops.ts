@@ -1,6 +1,5 @@
 import {
   Diagnostic,
-  Rule,
   RuleContext,
   SourceCode,
   Visitor,
@@ -24,6 +23,7 @@ import {
 } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isGlobalIn } from '../../internal/scope';
 
 type Emptiness = 'empty' | 'nonEmpty';
@@ -153,7 +153,7 @@ function accessorKey(node: ESTree.Node): Opt.Option<string> {
 /**
  * Prefer Effect Array and Struct helpers for array idioms the Effect language service does not report.
  */
-export const preferEffectArrayOps: CreateRule = Rule.define({
+export const preferEffectArrayOps: CreateRule = defineRule({
   name: 'prefer-effect-array-ops',
   meta: ruleMeta({
     type: 'suggestion',

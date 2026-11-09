@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -9,6 +9,7 @@ import * as Str from 'effect/String';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { domainBlock, type DomainBlock, type DomainFile } from './internal/domain';
 
 const fileKinds: Readonly<Record<string, string>> = {
@@ -58,7 +59,7 @@ function fileKindOf(name: string): Opt.Option<string> {
   return parts.length >= 3 && Str.isNonEmpty(Arr.headNonEmpty(parts)) ? Arr.get(parts, parts.length - 2) : Opt.none();
 }
 
-export const alchemyDomainBlockFileName: CreateRule = Rule.define({
+export const alchemyDomainBlockFileName: CreateRule = defineRule({
   name: 'alchemy-domain-block-file-name',
   meta: ruleMeta({
     type: 'suggestion',

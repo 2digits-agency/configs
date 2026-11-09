@@ -1,12 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -14,6 +6,7 @@ import * as Opt from 'effect/Option';
 import { enclosingFunction, staticPropertyName, unwrapExpression } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { callbackApi } from './internal/callbacks';
 
 const comparisonOperators: Readonly<Record<ESTree.LogicalExpression['operator'], ReadonlyArray<string>>> = {
@@ -102,7 +95,7 @@ function isEquivalenceDefinition(node: ESTree.Node, imports: ImportBindings): bo
 /**
  * Prefer Equal or an Equivalence over comparing two values field by field.
  */
-export const preferEqual: CreateRule = Rule.define({
+export const preferEqual: CreateRule = defineRule({
   name: 'prefer-equal',
   meta: ruleMeta({
     type: 'suggestion',

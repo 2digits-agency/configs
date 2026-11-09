@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -7,6 +7,7 @@ import * as Schema from 'effect/Schema';
 import { isStringLiteral, staticPropertyName } from '../../internal/ast';
 import { argumentText, replaceWithNamespace } from '../../internal/fixes';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { discriminantFromComparison, isDiscriminantMember, isInsideBroadEffectHandler } from './internal/tagged-values';
 
 const Options = Schema.Struct({
@@ -22,7 +23,7 @@ export type NoManualTagComparisonOptions = typeof Options.Type;
 /**
  * Prefer Match/Predicate helpers; broad catch handlers belong to the error-tag rule, which only knows `_tag`.
  */
-export const noManualTagComparison: CreateRule = Rule.define({
+export const noManualTagComparison: CreateRule = defineRule({
   name: 'no-manual-tag-comparison',
   meta: ruleMeta({
     type: 'problem',

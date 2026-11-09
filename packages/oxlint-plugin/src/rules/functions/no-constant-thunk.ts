@@ -1,6 +1,5 @@
 import {
   Diagnostic,
-  Rule,
   RuleContext,
   Visitor,
   type CreateRule,
@@ -19,6 +18,7 @@ import * as Schema from 'effect/Schema';
 import { isConstDeclaration, isFunctionNode, staticPropertyName, type FunctionNode } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { lookupVariable, soleDefinition } from '../../internal/scope';
 import { functionResult } from '../effect/internal/callbacks';
 
@@ -248,7 +248,7 @@ function isTopLevel(node: ESTree.Node): boolean {
  * Report top-level functions without parameters that always return the same value, such as `function userSchema() {
  * return Schema.Struct(…) }`.
  */
-export const noConstantThunk: CreateRule = Rule.define({
+export const noConstantThunk: CreateRule = defineRule({
   name: 'no-constant-thunk',
   meta: ruleMeta({
     type: 'suggestion',

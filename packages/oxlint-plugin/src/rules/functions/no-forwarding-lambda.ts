@@ -1,6 +1,5 @@
 import {
   Diagnostic,
-  Rule,
   RuleContext,
   Visitor,
   type CreateRule,
@@ -20,6 +19,7 @@ import { callbackCall, containsRange, isConstDeclaration, isFunctionNode, type F
 import { argumentText } from '../../internal/fixes';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { lookupVariable } from '../../internal/scope';
 import { forwardedCall, isDetachableCallee, isEffectGuard, isTypeGuard, type Forwarding } from './internal/forwarding';
 
@@ -310,7 +310,7 @@ function isAnnotated(node: FunctionNode): boolean {
 /**
  * Report callbacks of Effect APIs that only pass their parameters on, such as `Effect.map((value) => f(value))`.
  */
-export const noForwardingLambda: CreateRule = Rule.define({
+export const noForwardingLambda: CreateRule = defineRule({
   name: 'no-forwarding-lambda',
   meta: ruleMeta({
     type: 'suggestion',

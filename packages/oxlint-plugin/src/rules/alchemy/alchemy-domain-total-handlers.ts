@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -8,6 +8,7 @@ import * as Schema from 'effect/Schema';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { domainSection, importedPath, isImportReference, type DomainFile } from './internal/domain';
 
 const totalSections: Readonly<Record<string, ReadonlyArray<string>>> = {
@@ -21,7 +22,7 @@ const isThrowingGetter = Schema.is(
   Schema.Literals(['getOrThrow', 'getOrThrowWith'] satisfies ReadonlyArray<keyof typeof Opt & keyof typeof Result>),
 );
 
-export const alchemyDomainTotalHandlers: CreateRule = Rule.define({
+export const alchemyDomainTotalHandlers: CreateRule = defineRule({
   name: 'alchemy-domain-total-handlers',
   meta: ruleMeta({
     type: 'problem',

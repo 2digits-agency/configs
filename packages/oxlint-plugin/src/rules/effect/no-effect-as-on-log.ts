@@ -1,5 +1,5 @@
 import type * as EffectBarrel from 'effect';
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as Console from 'effect/Console';
 import * as Effect from 'effect/Effect';
@@ -9,6 +9,7 @@ import * as Opt from 'effect/Option';
 import { argumentAt, staticPropertyName, unwrapExpression } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const effectLogMethods = [
   'log',
@@ -141,7 +142,7 @@ function matchCall(node: ESTree.CallExpression, imports: ImportBindings): Opt.Op
   );
 }
 
-export const noEffectAsOnLog: CreateRule = Rule.define({
+export const noEffectAsOnLog: CreateRule = defineRule({
   name: 'no-effect-as-on-log',
   meta: ruleMeta({
     type: 'suggestion',

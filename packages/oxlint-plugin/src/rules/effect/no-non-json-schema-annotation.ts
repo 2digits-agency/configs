@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -15,6 +15,7 @@ import {
 } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const NonJsonGlobal = Schema.Literals(['NaN', 'Infinity', 'undefined']);
 
@@ -102,7 +103,7 @@ function nonJsonAnnotations(node: ESTree.CallExpression): ReadonlyArray<ESTree.N
   );
 }
 
-export const noNonJsonSchemaAnnotation: CreateRule = Rule.define({
+export const noNonJsonSchemaAnnotation: CreateRule = defineRule({
   name: 'no-non-json-schema-annotation',
   meta: ruleMeta({
     type: 'problem',

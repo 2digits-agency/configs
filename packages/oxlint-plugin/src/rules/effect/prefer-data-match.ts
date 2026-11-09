@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -8,6 +8,7 @@ import * as R from 'effect/Record';
 import { parentOf, unwrapExpression, walkNodes } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const guards: Readonly<Record<string, ReadonlyArray<string>>> = {
   Exit: ['isSuccess', 'isFailure'],
@@ -85,7 +86,7 @@ function nextReturn(node: ESTree.IfStatement): Opt.Option<ESTree.Statement> {
 /**
  * Prefer the data type's own `match` over branching on its guards when both branches produce a value.
  */
-export const preferDataMatch: CreateRule = Rule.define({
+export const preferDataMatch: CreateRule = defineRule({
   name: 'prefer-data-match',
   meta: ruleMeta({
     type: 'suggestion',

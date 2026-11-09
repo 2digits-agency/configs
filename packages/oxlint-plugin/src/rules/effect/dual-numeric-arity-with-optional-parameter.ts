@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import type * as Fn from 'effect/Function';
@@ -8,6 +8,7 @@ import * as P from 'effect/Predicate';
 import { argumentAt, isFunctionNode } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 function unsafeDualParameter(node: ESTree.ParamPattern): boolean {
   return (
@@ -35,7 +36,7 @@ function unsafeArity(node: ESTree.CallExpression): Opt.Option<ESTree.Expression>
   );
 }
 
-export const dualNumericArityWithOptionalParameter: CreateRule = Rule.define({
+export const dualNumericArityWithOptionalParameter: CreateRule = defineRule({
   name: 'dual-numeric-arity-with-optional-parameter',
   meta: ruleMeta({
     type: 'problem',

@@ -1,9 +1,10 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Schema from 'effect/Schema';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isGlobalIdentifier } from '../../internal/scope';
 import { onRuntimeImport, packageName } from './internal/package-imports';
 
@@ -26,7 +27,7 @@ const SsePackage = Schema.Literals([
 
 const isSsePackage = Schema.is(SsePackage);
 
-export const preferEffectSse: CreateRule = Rule.define({
+export const preferEffectSse: CreateRule = defineRule({
   name: 'prefer-effect-sse',
   meta: ruleMeta({
     type: 'suggestion',

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import type * as Duration from 'effect/Duration';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -6,9 +6,10 @@ import * as Opt from 'effect/Option';
 import { namespaceImport } from '../../internal/fixes';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { durationArgument, numericValue } from './internal/duration';
 
-export const preferEffectDuration: CreateRule = Rule.define({
+export const preferEffectDuration: CreateRule = defineRule({
   name: 'prefer-effect-duration',
   meta: ruleMeta({
     type: 'suggestion',

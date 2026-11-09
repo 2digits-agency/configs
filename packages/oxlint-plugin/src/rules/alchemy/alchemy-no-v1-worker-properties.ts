@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -7,6 +7,7 @@ import { argumentAt, objectProperty } from '../../internal/ast';
 import { plainOptions, withOptionalFix } from '../../internal/fixes';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isImportedApi } from '../../internal/scope';
 import { isCloudflareWorker } from './internal/worker';
 
@@ -15,7 +16,7 @@ const renamedProperties = [
   ['bindings', 'env'],
 ] as const;
 
-export const alchemyNoV1WorkerProperties: CreateRule = Rule.define({
+export const alchemyNoV1WorkerProperties: CreateRule = defineRule({
   name: 'alchemy-no-v1-worker-properties',
   meta: ruleMeta({
     type: 'problem',

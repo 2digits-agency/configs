@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
@@ -13,6 +13,7 @@ import {
 } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { callbackApi, functionProperty } from './internal/callbacks';
 
 const ErrorHandlerMethod = Schema.Literals([
@@ -57,7 +58,7 @@ function wrapperDropsCause(node: FunctionNode, imports: ImportBindings): boolean
   );
 }
 
-export const preserveCaughtError: CreateRule = Rule.define({
+export const preserveCaughtError: CreateRule = defineRule({
   name: 'preserve-caught-error',
   meta: ruleMeta({
     type: 'suggestion',

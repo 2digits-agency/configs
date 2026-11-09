@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree, type Variable } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree, type Variable } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as Config from 'effect/Config';
 import * as Effect from 'effect/Effect';
@@ -16,6 +16,7 @@ import {
 } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isImportedApi, resolveVariable, soleDefinition } from '../../internal/scope';
 
 /**
@@ -83,7 +84,7 @@ function receivingConfig(node: ESTree.CallExpression): Opt.Option<ESTree.Express
     : Opt.none();
 }
 
-export const noFunctionConfigDefault: CreateRule = Rule.define({
+export const noFunctionConfigDefault: CreateRule = defineRule({
   name: 'no-function-config-default',
   meta: ruleMeta({
     type: 'problem',

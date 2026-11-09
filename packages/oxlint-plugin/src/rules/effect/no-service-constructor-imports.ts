@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Schema from 'effect/Schema';
@@ -7,6 +7,7 @@ import * as Str from 'effect/String';
 import { moduleExportName } from '../../internal/ast';
 import { isTestFilename } from '../../internal/files';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const isServiceConstructorName = Schema.is(Schema.String.check(Schema.isPattern(/^make[A-Z]/u)));
 
@@ -15,7 +16,7 @@ const isRelativeSource = Schema.is(Schema.String.check(Schema.isPattern(/^\.\.?\
 /**
  * Keep relative make<Capability> imports in tests, not runtime composition.
  */
-export const noServiceConstructorImports: CreateRule = Rule.define({
+export const noServiceConstructorImports: CreateRule = defineRule({
   name: 'no-service-constructor-imports',
   meta: ruleMeta({
     type: 'problem',

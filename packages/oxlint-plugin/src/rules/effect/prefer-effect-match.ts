@@ -1,12 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -14,6 +6,7 @@ import * as Opt from 'effect/Option';
 import { isEqualityOperator } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 type Branch = ESTree.ConditionalExpression | ESTree.IfStatement;
 
@@ -76,7 +69,7 @@ function isLiteralComparisonChain(node: Branch, sourceCode: OxlintSourceCode): b
 /**
  * Prefer Match for switches and `else if` chains in Effect files, and for repeated literal ternary comparisons.
  */
-export const preferEffectMatch: CreateRule = Rule.define({
+export const preferEffectMatch: CreateRule = defineRule({
   name: 'prefer-effect-match',
   meta: ruleMeta({
     type: 'suggestion',

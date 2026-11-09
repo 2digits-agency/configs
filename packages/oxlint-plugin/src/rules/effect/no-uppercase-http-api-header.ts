@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type Definition, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type Definition, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -7,6 +7,7 @@ import * as Schema from 'effect/Schema';
 
 import { argumentAt, plainProperty, propertyName, staticPath } from '../../internal/ast';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { resolveVariable, soleDefinition } from '../../internal/scope';
 import { isTypeOnlyImport } from './internal/import-style';
 
@@ -99,7 +100,7 @@ function headerProperties(node: ESTree.CallExpression): Opt.Option<ReadonlyArray
   );
 }
 
-export const noUppercaseHttpApiHeader: CreateRule = Rule.define({
+export const noUppercaseHttpApiHeader: CreateRule = defineRule({
   name: 'no-uppercase-http-api-header',
   meta: ruleMeta({
     type: 'problem',

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type Definition, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type Definition, type ESTree } from 'effect-oxlint';
 import type * as DateTime from 'effect/DateTime';
 import type * as Duration from 'effect/Duration';
 import * as Effect from 'effect/Effect';
@@ -18,6 +18,7 @@ import {
 } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isImportedApi, resolveVariable, soleDefinition } from '../../internal/scope';
 import { isForeignCallback } from './internal/callbacks';
 import { millisName, type MillisKind } from './internal/duration';
@@ -171,7 +172,7 @@ function enclosingBinary(node: ESTree.Node): Opt.Option<ESTree.BinaryExpression>
   );
 }
 
-export const noMillisArithmetic: CreateRule = Rule.define({
+export const noMillisArithmetic: CreateRule = defineRule({
   name: 'no-millis-arithmetic',
   meta: ruleMeta({
     type: 'suggestion',

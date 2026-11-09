@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
@@ -9,6 +9,7 @@ import * as Schema from 'effect/Schema';
 import { staticPath } from '../../internal/ast';
 import { importBindings, namespaceMember } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isGlobalIn } from '../../internal/scope';
 import { domainSection, importedPath, isImportReference, type DomainFile } from './internal/domain';
 
@@ -76,7 +77,7 @@ function memberRoot(node: ESTree.Node): ESTree.Node {
   return root;
 }
 
-export const alchemyDomainPureDecide: CreateRule = Rule.define({
+export const alchemyDomainPureDecide: CreateRule = defineRule({
   name: 'alchemy-domain-pure-decide',
   meta: ruleMeta({
     type: 'problem',

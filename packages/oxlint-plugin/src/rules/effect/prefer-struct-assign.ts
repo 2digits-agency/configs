@@ -1,12 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
@@ -20,6 +12,7 @@ import { isFunctionNode, staticPropertyName, unwrapExpression } from '../../inte
 import { argumentText, replaceWithNamespace } from '../../internal/fixes';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 type ObjectMember = ESTree.ObjectExpression['properties'][number];
 
@@ -147,7 +140,7 @@ function assignArguments(node: ESTree.ObjectExpression, sourceCode: OxlintSource
 /**
  * Prefer Struct.assign over spreading objects into a merged or updated copy.
  */
-export const preferStructAssign: CreateRule = Rule.define({
+export const preferStructAssign: CreateRule = defineRule({
   name: 'prefer-struct-assign',
   meta: ruleMeta({
     type: 'suggestion',

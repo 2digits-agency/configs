@@ -1,10 +1,11 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 // Anything that reads like `use client`, `use server` or `use cache`, in any case or spacing.
 const isDirectiveLike = Schema.is(Schema.String.check(Schema.isPattern(/^\s*use[\s_-]*(?:client|server|cache)\b/iu)));
@@ -13,7 +14,7 @@ const isExactDirective = Schema.is(
   Schema.String.check(Schema.isPattern(/^use (?:client|server|cache(?:: [\w-]+)?)$/u)),
 );
 
-export const validDirective: CreateRule = Rule.define({
+export const validDirective: CreateRule = defineRule({
   name: 'valid-directive',
   meta: ruleMeta({
     type: 'problem',
