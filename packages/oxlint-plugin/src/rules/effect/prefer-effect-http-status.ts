@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -12,6 +12,7 @@ import * as HttpStatus from 'effect/http/HttpStatus';
 import { argumentAt, objectProperty, plainProperty, propertyName, unwrapExpression } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 /**
  * Every `HttpStatus.Literal` except `Ok`, the alias of `OK`. Effect does not export its code table, so the type keeps
@@ -142,7 +143,7 @@ function statusArguments(
   return Arr.map(Opt.toArray(status), ({ value }) => Tuple.make(value as ESTree.Expression, 'httpStatus'));
 }
 
-export const preferEffectHttpStatus: CreateRule = Rule.define({
+export const preferEffectHttpStatus: CreateRule = defineRule({
   name: 'prefer-effect-http-status',
   meta: ruleMeta({
     type: 'suggestion',

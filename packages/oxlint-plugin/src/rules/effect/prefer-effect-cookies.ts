@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
@@ -17,6 +17,7 @@ import {
 } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isGlobalIdentifier } from '../../internal/scope';
 
 const CookieHeader = Schema.Literals(['cookie', 'set-cookie']);
@@ -167,7 +168,7 @@ function isCookieConcat(node: ESTree.BinaryExpression): boolean {
   );
 }
 
-export const preferEffectCookies: CreateRule = Rule.define({
+export const preferEffectCookies: CreateRule = defineRule({
   name: 'prefer-effect-cookies',
   meta: ruleMeta({
     type: 'suggestion',
