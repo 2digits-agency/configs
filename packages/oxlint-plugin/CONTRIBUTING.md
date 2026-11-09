@@ -205,3 +205,17 @@ noted above. No options unless named in the options section. **Report** means no
 | `require-try-promise-abort-signal`             | API callback                      | Report            |
 | `throw-in-effect-gen`                          | API generator                     | Report            |
 | `valid-directive`                              | React directive                   | Report            |
+
+### Follow-up audit: #2961
+
+The three rules merged after the baseline also follow these conventions. Their tests use the shared RuleTester setup;
+all three use `ruleMeta`, have no options, report without fixes or suggestions, and are recommended at error severity.
+Their behavior is unchanged. `onRuntimeImport` deliberately checks package sources, not imported API references: it
+skips type-only third-party imports but includes side-effect and literal dynamic imports. `fflate` is checked only for
+named Zip exports, preserving its unrelated compression APIs and the documented disk-extraction exclusions.
+
+| Rule                    | Scope                           | Delivery |
+| ----------------------- | ------------------------------- | -------- |
+| `no-manual-sse`         | File + native/API string checks | Report   |
+| `prefer-effect-sse`     | File + package/global checks    | Report   |
+| `prefer-effect-archive` | File + package/export checks    | Report   |
