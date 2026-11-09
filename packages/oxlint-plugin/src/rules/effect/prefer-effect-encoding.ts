@@ -105,7 +105,7 @@ const GlobalBase64Name = Schema.Literals(['atob', 'btoa']);
 
 const isGlobalBase64Name = Schema.is(GlobalBase64Name);
 
-export const preferEffectEncoding: CreateRule = Rule.define({
+export const preferEffectEncoding: CreateRule = defineRule({
   name: 'prefer-effect-encoding',
   meta: ruleMeta({
     type: 'suggestion',

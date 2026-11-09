@@ -7,7 +7,7 @@ import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
 
-import { moduleExportName, staticPropertyName } from './ast';
+import { moduleExportName, staticPath, staticPropertyName } from './ast';
 import { isImportedApiIn } from './scope';
 
 const sameModulePath = Arr.makeEquivalence(Str.Equivalence);

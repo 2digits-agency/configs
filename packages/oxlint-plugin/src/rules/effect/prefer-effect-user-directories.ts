@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as Config from 'effect/Config';
 import * as Effect from 'effect/Effect';
@@ -8,6 +8,7 @@ import * as Schema from 'effect/Schema';
 import { argumentAt, isStringLiteral, staticPath, staticPropertyName } from '../../internal/ast';
 import { importBindings, moduleImportMember } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isGlobalIdentifier, isImportedApiIn } from '../../internal/scope';
 
 const DirectoryLibrary = Schema.Literals([
@@ -54,7 +55,7 @@ function processEnvVariable(node: ESTree.MemberExpression): Opt.Option<string> {
     : Opt.filter(staticPropertyName(node), isDirectoryVariable);
 }
 
-export const preferEffectUserDirectories: CreateRule = Rule.define({
+export const preferEffectUserDirectories: CreateRule = defineRule({
   name: 'prefer-effect-user-directories',
   meta: ruleMeta({
     type: 'suggestion',

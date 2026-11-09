@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -7,6 +7,7 @@ import type * as Result from 'effect/Result';
 import { argumentAt, staticPropertyName, unwrapExpression } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const encodingModules = ['Base64', 'Base64Url', 'Hex'] as const;
 
@@ -95,7 +96,7 @@ function thrownDecode(
   );
 }
 
-export const noEncodingGetOrThrow: CreateRule = Rule.define({
+export const noEncodingGetOrThrow: CreateRule = defineRule({
   name: 'no-encoding-get-or-throw',
   meta: ruleMeta({
     type: 'problem',
