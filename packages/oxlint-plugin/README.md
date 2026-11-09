@@ -5,9 +5,9 @@ Custom [Oxlint JavaScript plugin](https://oxc.rs/docs/guide/usage/linter/writing
 
 The recommended set is enabled by default by `@2digits/oxlint-config`. The opt-in `prefer-effect-filesystem` and
 `prefer-effect-path` rules are excluded because the configured `@effect/tsgo/nodeBuiltinImport` diagnostic already
-enforces those imports more broadly. `prefer-effect-http-status` is recommended at `warn`, because it only names
-well-known numbers (see [Effect HTTP modules](#effect-http-modules)); every other recommended rule is an error. To
-register the plugin directly:
+enforces those imports more broadly. `padding-line-between-statements` is also opt-in because it needs an explicit
+spacing policy. `prefer-effect-http-status` is recommended at `warn`, because it only names well-known numbers (see
+[Effect HTTP modules](#effect-http-modules)); every other recommended rule is an error. To register the plugin directly:
 
 ```ts
 import { defineConfig } from 'oxlint';
@@ -535,11 +535,15 @@ Oxfmt formats imports but does not enforce package-specific import architecture.
 `namespaceImportPackages` and `importAliases` settings guide generated auto-imports only, so the plugin enforces the same
 policy for handwritten imports.
 
-1. Add one rule file under `src/rules/alchemy` or `src/rules/effect` with `defineRule` through `defineSyntaxRule` or
-   `defineEffectRule`.
-2. Register it in `src/rules/index.ts`. `src/index.ts` automatically includes it in `recommendedRules`.
-3. Add a matching test file under `test/rules` with valid and invalid `RuleTester` cases.
-4. Run `vpr test` and `vpr build` in this package, then `vpr check` from the repository root.
+Follow [Rule conventions](./CONTRIBUTING.md) for naming, messages, reporting/fixes, options, import detection, tests and
+recommended membership. It also records the audit of the 80 existing rules and compatibility names proposed for later.
 
-`defineEffectRule` resolves namespace and named imports from `effect`, `@effect/*`, and `alchemy/*` entrypoints, so rules
-should match canonical API paths instead of hard-coding local import names.
+1. Add a rule under the matching `src/rules` group using `Rule.define` and the shared `ruleMeta` helper.
+2. Register it in `src/rules/index.ts`. Both recommended exports derive membership from `meta.docs.recommended`;
+   `ruleMeta` defaults it to `true`, so explicitly set it to `false` for an opt-in rule.
+3. Add a matching test under `test/rules` using `testRule` or `createRuleTester` from `test/rule-tester.ts`.
+4. Document the rule's scope and fix safety, add a Tegami entry, then run `vpr test`, `vpr types` and `vpr build` here
+   and `vpr check` at the repository root.
+
+Use `importBindings` for canonical Effect/Alchemy API paths rather than hard-coding local names. Runtime API matching
+ignores shadowed and type-only bindings; the separate `hasEffectImport` file gate intentionally includes type-only imports.

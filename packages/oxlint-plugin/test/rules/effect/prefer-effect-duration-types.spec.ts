@@ -1,8 +1,7 @@
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { preferEffectDurationTypes } from '../../../src/rules/effect/prefer-effect-duration-types';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
 const ruleName = 'prefer-effect-duration-types';
 
@@ -10,7 +9,7 @@ const effect = `import * as Effect from 'effect/Effect';`;
 
 const schema = `import * as Schema from 'effect/Schema';`;
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 testRule(ruleName, preferEffectDurationTypes, {
   valid: `

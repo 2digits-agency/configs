@@ -1,29 +1,11 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
-import { argumentAt, isFunctionNode, objectProperty, type FunctionNode } from '../../internal/ast';
+import { argumentAt } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-import { functionResult, promiseInitializer } from './internal/callbacks';
-
-/**
- * The thunk of an `Effect.try` call, passed directly or as the `try` option.
- *
- * @param node `Effect.try` call.
- */
-function tryThunk(node: ESTree.CallExpression): Opt.Option<FunctionNode> {
-  return Opt.flatMap(argumentAt(node, 0), (first) =>
-    isFunctionNode(first)
-      ? Opt.some(first)
-      : first.type === 'ObjectExpression'
-        ? Opt.filter(
-            Opt.map(objectProperty(first, 'try'), ({ value }) => value),
-            isFunctionNode,
-          )
-        : Opt.none(),
-  );
-}
+import { functionResult, promiseInitializer, promiseThunkArgument } from './internal/callbacks';
 
 export const noAsyncEffectTry: CreateRule = Rule.define({
   name: 'no-async-effect-try',
@@ -44,7 +26,10 @@ export const noAsyncEffectTry: CreateRule = Rule.define({
     return Visitor.on('CallExpression', (node) =>
       imports.isApi(node.callee, 'Effect', 'try' satisfies keyof typeof Effect)
         ? Opt.match(
-            Opt.filter(tryThunk(node), (thunk) => thunk.async || Opt.exists(functionResult(thunk), promiseInitializer)),
+            Opt.filter(
+              promiseThunkArgument(argumentAt(node, 0)),
+              (thunk) => thunk.async || Opt.exists(functionResult(thunk), promiseInitializer),
+            ),
             {
               onNone: () => Effect.void,
               onSome: (thunk) => ctx.report(Diagnostic.fromId({ node: thunk, messageId: 'asyncTry' })),

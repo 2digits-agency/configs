@@ -132,7 +132,7 @@ export function functionResult(node: FunctionNode): Opt.Option<ESTree.Expression
 }
 
 /**
- * The thunk passed to `Effect.promise` or `Effect.tryPromise`, either directly or as the `try` option.
+ * The thunk passed to `Effect.try`, `Effect.promise` or `Effect.tryPromise`, directly or as the `try` option.
  *
  * @param node First call argument.
  */

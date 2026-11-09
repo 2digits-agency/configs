@@ -1,13 +1,7 @@
-import { describe, it } from '@effect/vitest';
-import { RuleTester } from 'oxlint/plugins-dev';
-
 import { noExportAllInClient } from '../../../src/rules/react/no-export-all-in-client';
+import { createRuleTester } from '../../rule-tester';
 
-RuleTester.describe = describe;
-
-RuleTester.it = it;
-
-new RuleTester({ languageOptions: { parserOptions: { lang: 'tsx' }, sourceType: 'module' } }).run(
+createRuleTester({ languageOptions: { parserOptions: { lang: 'tsx' }, sourceType: 'module' } }).run(
   'no-export-all-in-client',
   noExportAllInClient,
   {

@@ -1,14 +1,13 @@
 /* oxlint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 /* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { noUppercaseHttpApiHeader } from '../../../src/rules/effect/no-uppercase-http-api-header';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
 const ruleName = 'no-uppercase-http-api-header';
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 testRule(ruleName, noUppercaseHttpApiHeader, {
   valid: `

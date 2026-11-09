@@ -14,6 +14,7 @@ export const preferEffectPath: CreateRule = Rule.define({
   meta: ruleMeta({
     type: 'suggestion',
     description: 'Prefer the Effect Path service over direct Node.js path imports in Effect projects.',
+    docs: { recommended: false },
     messages: { effectPath: 'Use the Path service from effect/Path instead of {{source}}.' },
     url: 'https://www.effect.website/docs/v4/api/effect/Path',
   }),

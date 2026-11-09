@@ -1,14 +1,9 @@
-import { describe, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { validDirective } from '../../../src/rules/react/valid-directive';
+import { createRuleTester } from '../../rule-tester';
 
-RuleTester.describe = describe;
-
-RuleTester.it = it;
-
-new RuleTester({ languageOptions: { parserOptions: { lang: 'tsx' }, sourceType: 'module' } }).run(
+createRuleTester({ languageOptions: { parserOptions: { lang: 'tsx' }, sourceType: 'module' } }).run(
   'valid-directive',
   validDirective,
   {

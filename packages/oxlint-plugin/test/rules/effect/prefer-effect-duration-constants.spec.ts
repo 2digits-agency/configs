@@ -1,10 +1,9 @@
 /* oxlint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 /* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix is offered. */
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { preferEffectDurationConstants } from '../../../src/rules/effect/prefer-effect-duration-constants';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
 const ruleName = 'prefer-effect-duration-constants';
 
@@ -14,7 +13,7 @@ const generic = 'a Duration constructor such as Duration.seconds';
 
 const fiveSeconds = 'Duration.seconds(5)';
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 testRule(ruleName, preferEffectDurationConstants, {
   valid: `

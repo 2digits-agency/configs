@@ -4,11 +4,10 @@ import { describe, expect, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 import * as Str from 'effect/String';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { recommendedRules, rules } from '../../../src';
 import { noFunctionConfigDefault } from '../../../src/rules/effect/no-function-config-default';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
 const name = 'no-function-config-default';
 
@@ -76,7 +75,7 @@ testRule(name, noFunctionConfigDefault, {
   messageId: 'functionDefault',
 });
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 const configImport = `import * as Config from 'effect/Config';`;
 

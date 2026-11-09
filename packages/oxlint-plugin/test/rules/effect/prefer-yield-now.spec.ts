@@ -1,9 +1,7 @@
-import { RuleTester } from 'oxlint/plugins-dev';
-
 import { preferYieldNow } from '../../../src/rules/effect/prefer-yield-now';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 testRule('prefer-yield-now', preferYieldNow, {
   valid: `

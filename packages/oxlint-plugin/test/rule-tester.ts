@@ -26,12 +26,22 @@ RuleTester.it = it;
 
 RuleTester.itOnly = it.only;
 
-const tester = new RuleTester({
-  languageOptions: {
-    parserOptions: { lang: 'ts' },
-    sourceType: 'module',
-  },
-});
+/**
+ * Shared test hooks and TypeScript module defaults; JSX tests override languageOptions.
+ *
+ * @param config Overrides for this test matrix.
+ */
+export function createRuleTester(config: RuleTester.Config = {}): RuleTester {
+  return new RuleTester({
+    languageOptions: {
+      parserOptions: { lang: 'ts' },
+      sourceType: 'module',
+    },
+    ...config,
+  });
+}
+
+const tester = createRuleTester();
 
 export function testRule(name: RuleName, rule: Rule, ruleCase: RuleCase): void {
   const options = P.isUndefined(ruleCase.options) ? {} : { options: ruleCase.options };

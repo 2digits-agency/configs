@@ -1,12 +1,7 @@
-import { describe, it } from '@effect/vitest';
 import ts from 'dedent';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { noBrowserApiInRender } from '../../../src/rules/react/no-browser-api-in-render';
-
-RuleTester.describe = describe;
-
-RuleTester.it = it;
+import { createRuleTester } from '../../rule-tester';
 
 function reads(name: string) {
   return { messageId: 'browserApiInRender', data: { name } };
@@ -195,6 +190,6 @@ const invalid = [
   },
 ];
 
-new RuleTester({
+createRuleTester({
   languageOptions: { parserOptions: { lang: 'tsx' }, sourceType: 'module' },
 }).run('no-browser-api-in-render', noBrowserApiInRender, { valid, invalid });

@@ -7,7 +7,7 @@ import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
 
-import { moduleExportName, staticPath } from './ast';
+import { moduleExportName, staticPath, staticPropertyName } from './ast';
 import { isImportedApiIn } from './scope';
 
 const ModulePath = Schema.Array(Schema.String);
@@ -27,18 +27,28 @@ export function namespaceMember(path: ReadonlyArray<string>, namespace: string):
  * `import { map } from 'effect/Effect'`, and whether the file imports Effect at all.
  */
 export class ImportBindings extends Schema.Class<ImportBindings, { readonly brand: unique symbol }>('ImportBindings')({
+  // Includes type-only bindings for annotation checks, which resolve their own type scopes.
   bindings: Schema.ReadonlyMap(Schema.String, ModulePath),
+  // Reference offsets resolve lexical shadowing without retaining the host's mutable SourceCode service.
+  runtimeReferences: Schema.ReadonlyMap(Schema.Finite, ModulePath),
   hasEffectImport: Schema.Boolean,
 }) {
   /**
-   * The module path an expression names through an import, such as `['Schema', 'Struct']` for `S.Struct`.
+   * The module path an expression names through a runtime import, such as `['Schema', 'Struct']` for `S.Struct`.
+   * Shadowed and type-only imports never name a runtime API.
    *
    * @param node Callee or reference.
    */
   path(node: ESTree.Node): Opt.Option<ReadonlyArray<string>> {
-    return Opt.flatMap(staticPath(node), ([first, ...rest]) =>
-      Opt.map(Opt.fromNullishOr(this.bindings.get(first)), (imported) => [...imported, ...rest]),
-    );
+    const target = node.type === 'ChainExpression' ? node.expression : node;
+
+    if (target.type === 'Identifier') {
+      return Opt.fromNullishOr(this.runtimeReferences.get(Tuple.get(target.range, 0)));
+    }
+
+    return target.type === 'MemberExpression'
+      ? Opt.zipWith(this.path(target.object), staticPropertyName(target), (path, member) => Arr.append(path, member))
+      : Opt.none();
   }
 
   /**
@@ -116,21 +126,43 @@ function specifierBindings(
 /**
  * Collect the import bindings of a program from its top-level import declarations.
  *
- * @param program Program.
+ * @param sourceCode Source of the file, including lexical references.
  */
-function collectImportBindings(program: ESTree.Program): ImportBindings {
+function collectImportBindings(sourceCode: OxlintSourceCode): ImportBindings {
   const declarations = Arr.filter(
-    program.body,
+    sourceCode.ast.body,
     (statement): statement is ESTree.ImportDeclaration => statement.type === 'ImportDeclaration',
   );
 
+  const bindings = new Map(
+    Arr.flatMap(declarations, (declaration) =>
+      Opt.match(modulePath(declaration.source.value), {
+        onNone: () => [],
+        onSome: (path) => specifierBindings(declaration, path),
+      }),
+    ),
+  );
+
   return ImportBindings.make({
-    bindings: new Map(
-      Arr.flatMap(declarations, (declaration) =>
-        Opt.match(modulePath(declaration.source.value), {
-          onNone: () => [],
-          onSome: (path) => specifierBindings(declaration, path),
-        }),
+    bindings,
+    runtimeReferences: new Map(
+      Arr.flatMap(
+        Arr.filter(declarations, (declaration) => declaration.importKind !== 'type'),
+        (declaration: ESTree.ImportDeclaration) =>
+          Arr.flatMap(
+            Arr.filter(
+              declaration.specifiers,
+              (specifier) => specifier.type !== 'ImportSpecifier' || specifier.importKind !== 'type',
+            ),
+            (specifier: ESTree.ImportDeclarationSpecifier) =>
+              Opt.match(Opt.fromNullishOr(bindings.get(specifier.local.name)), {
+                onNone: () => [],
+                onSome: (path) =>
+                  Arr.flatMap(sourceCode.getDeclaredVariables(specifier), (variable) =>
+                    Arr.map(variable.references, ({ identifier }) => Tuple.make(Tuple.get(identifier.range, 0), path)),
+                  ),
+              }),
+          ),
       ),
     ),
     hasEffectImport: Arr.some(declarations, (declaration) => isEffectSource(declaration.source.value)),
@@ -177,5 +209,5 @@ export function moduleImportMember(
  */
 export const importBindings: Effect.Effect<ImportBindings, never, RuleContext> = Effect.map(
   Effect.service(RuleContext),
-  (context) => collectImportBindings(context.sourceCode.ast),
+  (context) => collectImportBindings(context.sourceCode),
 );

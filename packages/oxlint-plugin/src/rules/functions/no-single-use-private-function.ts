@@ -27,7 +27,7 @@ const fnPath = ['Effect', 'fn' satisfies keyof typeof Effect];
 const isComponentOrHook = Schema.is(Schema.String.check(Schema.isPattern(/^\p{Lu}|^use\p{Lu}/u)));
 
 const Options = Schema.Struct({
-  maxLines: Schema.Int.pipe(Schema.optionalKey),
+  maxLines: Schema.Int.check(Schema.isGreaterThanOrEqualTo(1)).pipe(Schema.optionalKey),
 });
 
 /**
@@ -120,6 +120,7 @@ export const noSingleUsePrivateFunction: CreateRule = Rule.define({
         additionalProperties: false,
       },
     ],
+    defaultOptions: [{ maxLines: defaultMaxLines }],
   }),
   options: Options.pipe(Schema.UndefinedOr),
   *create(options) {
