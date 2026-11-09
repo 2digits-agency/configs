@@ -67,29 +67,30 @@ function insertImport(program: ESTree.Program, text: string): FixFn {
  * @param source Module entrypoint.
  * @param preferred Preferred local alias.
  */
-export function namespaceImport(
+export const namespaceImport = Effect.fn('namespaceImport')(function* (
   node: ESTree.Node,
   source: string,
   preferred: string,
-): Effect.Effect<NamespaceImport, never, RuleContext> {
-  return Effect.gen(function* () {
-    const { sourceCode } = yield* RuleContext;
+) {
+  const { sourceCode } = yield* RuleContext;
 
-    const program = sourceCode.ast;
+  const program = sourceCode.ast;
 
-    const visible = yield* visibleNamespace(node, program, source);
+  const visible = yield* visibleNamespace(node, program, source);
 
-    if (Opt.isSome(visible)) {
-      return { name: visible.value, fix: Opt.none() };
-    }
+  if (Opt.isSome(visible)) {
+    return { name: visible.value, fix: Opt.none() } satisfies NamespaceImport;
+  }
 
-    const names = yield* usedNames;
+  const names = yield* usedNames;
 
-    const name = freeName(preferred, names);
+  const name = freeName(preferred, names);
 
-    return { name, fix: Opt.some(insertImport(program, `import * as ${name} from '${source}';\n`)) };
-  });
-}
+  return {
+    name,
+    fix: Opt.some(insertImport(program, `import * as ${name} from '${source}';\n`)),
+  } satisfies NamespaceImport;
+});
 
 /**
  * Replace `node` with an expression that uses a namespace import of `source`, adding the import when the file lacks
@@ -100,16 +101,19 @@ export function namespaceImport(
  * @param preferred Preferred local alias.
  * @param replacement Replacement text for the alias the file ends up with.
  */
-export function replaceWithNamespace(
+export const replaceWithNamespace = Effect.fn('replaceWithNamespace')(function* (
   node: ESTree.Node,
   source: string,
   preferred: string,
   replacement: (namespace: string) => string,
-): Effect.Effect<FixFn, never, RuleContext> {
-  return Effect.map(namespaceImport(node, source, preferred), (imported) =>
-    Diagnostic.composeFixes(...Opt.toArray(imported.fix), Diagnostic.replaceText(node, replacement(imported.name))),
+) {
+  const imported = yield* namespaceImport(node, source, preferred);
+
+  return Diagnostic.composeFixes(
+    ...Opt.toArray(imported.fix),
+    Diagnostic.replaceText(node, replacement(imported.name)),
   );
-}
+});
 
 /**
  * The source text of an expression as a single call argument: a sequence such as `(a, b)` gets back the parentheses
