@@ -12,7 +12,6 @@ import {
   parentOf,
   staticPropertyName,
   unwrapExpression,
-  walkNodes,
   type FunctionNode,
 } from '../../../internal/ast';
 import type { ImportBindings } from '../../../internal/imports';
@@ -167,24 +166,6 @@ export function isGlobalJson(node: ESTree.Node, method: string, sourceCode: Oxli
   );
 }
 
-function isInsideFunctionBelow(node: ESTree.Node, root: ESTree.Node): boolean {
-  return Opt.exists(
-    parentOf(node),
-    (parent) => parent !== root && (isFunctionNode(parent) || isInsideFunctionBelow(parent, root)),
-  );
-}
-
-/**
- * Whether `root`, outside nested functions, has a node that passes `visit`. Functions inside `root` run per element, so
- * a split inside a callback splits each element, not the collection.
- *
- * @param root Expression.
- * @param visit Node test.
- */
-function someOutsideFunctions(root: ESTree.Node, visit: (node: ESTree.Node) => boolean): boolean {
-  return walkNodes(root, (node) => visit(node) && (node === root || !isInsideFunctionBelow(node, root)));
-}
-
 function isReference(node: ESTree.Node): node is ESTree.IdentifierReference {
   return (
     node.type === 'Identifier' &&
@@ -221,21 +202,160 @@ function initializerOf(node: ESTree.IdentifierReference, context: LineContext): 
 }
 
 /**
- * Whether an expression is built from a split on line breaks, through method chains, pipelines and local bindings.
+ * How a collection is produced: `matches` accepts the step that gives its elements their format, such as a split on
+ * line breaks or a map to `JSON.stringify`, and `preserves` accepts a step that keeps that format, such as a filter.
+ */
+interface CollectionSource {
+  readonly matches: (node: ESTree.Node) => boolean;
+  readonly preserves: (node: ESTree.CallExpression) => boolean;
+}
+
+// Steps that keep, drop, reorder or add elements without changing the format of the ones they keep.
+const preservingSteps: ReadonlySet<string> = new Set([
+  'append',
+  'appendAll',
+  'concat',
+  'dedupe',
+  'drop',
+  'dropRight',
+  'filter',
+  'prepend',
+  'prependAll',
+  'reverse',
+  'slice',
+  'sort',
+  'sortWith',
+  'take',
+  'takeRight',
+  'toReversed',
+  'toSorted',
+]);
+
+function stepName(node: ESTree.Node, imports: ImportBindings): Opt.Option<string> {
+  const callee = node.type === 'CallExpression' ? node.callee : node;
+
+  return Opt.orElse(imports.member(callee, 'Array'), () =>
+    callee.type === 'MemberExpression' && Opt.isNone(imports.path(callee)) ? staticPropertyName(callee) : Opt.none(),
+  );
+}
+
+function isPreservingStep(node: ESTree.Node, imports: ImportBindings): boolean {
+  return Opt.exists(stepName(node, imports), (name) => preservingSteps.has(name));
+}
+
+/**
+ * The collection a step is applied to: the receiver of `xs.filter(f)`, or the first argument of `Arr.filter(xs, f)`.
  *
- * @param node Expression.
+ * @param node Step call.
+ * @param imports Import bindings of the file.
+ */
+function stepSource(node: ESTree.CallExpression, imports: ImportBindings): Opt.Option<ESTree.Node> {
+  const callee = node.callee;
+
+  return Opt.match(imports.path(callee), {
+    onSome: () =>
+      node.arguments.length > 1 ||
+      Opt.exists(stepName(node, imports), (name) => name === 'dedupe' || name === 'reverse')
+        ? argumentAt(node, 0)
+        : Opt.none(),
+    onNone: () => (callee.type === 'MemberExpression' ? Opt.some<ESTree.Node>(callee.object) : Opt.none()),
+  });
+}
+
+/**
+ * Whether the last of a pipeline's value and steps produces the collection, walking back through steps that keep the
+ * format of its elements.
+ *
+ * @param steps Pipeline value followed by its steps, in order.
+ * @param source How the collection is produced.
  * @param context File context.
  * @param depth Remaining bindings to follow.
  */
-function derivesFromLineSplit(node: ESTree.Node, context: LineContext, depth = 3): boolean {
-  return someOutsideFunctions(
-    node,
-    (child) =>
-      Opt.isSome(splitCall(child, isNewlineSeparator, context.imports)) ||
-      (depth > 0 &&
-        isReference(child) &&
-        Opt.exists(initializerOf(child, context), (init) => derivesFromLineSplit(init, context, depth - 1))),
+function pipelineProduces(
+  steps: ReadonlyArray<ESTree.Node>,
+  source: CollectionSource,
+  context: LineContext,
+  depth: number,
+): boolean {
+  return Opt.exists(Arr.last(steps), (last) => {
+    const rest = Arr.dropRight(steps, 1);
+
+    if (Arr.isReadonlyArrayNonEmpty(rest) && !source.matches(last)) {
+      const isDataLastStep =
+        (last.type === 'CallExpression' && Opt.isNone(stepSource(last, context.imports))) ||
+        last.type === 'MemberExpression';
+
+      return (
+        isDataLastStep &&
+        (isPreservingStep(last, context.imports) || (last.type === 'CallExpression' && source.preserves(last))) &&
+        pipelineProduces(rest, source, context, depth)
+      );
+    }
+
+    return producesCollection(last, source, context, depth);
+  });
+}
+
+/**
+ * Whether an expression is a collection that `source` produced: the producing step itself, or that step followed by
+ * steps that keep the format of its elements, through method chains, pipelines, spreads and local bindings.
+ *
+ * @param node Expression.
+ * @param source How the collection is produced.
+ * @param context File context.
+ * @param depth Remaining bindings to follow.
+ */
+function producesCollection(node: ESTree.Node, source: CollectionSource, context: LineContext, depth = 3): boolean {
+  const expression = node.type === 'SpreadElement' ? node.argument : unwrapExpression(node as ESTree.Expression);
+
+  if (source.matches(expression)) {
+    return true;
+  }
+
+  if (isReference(expression)) {
+    return (
+      depth > 0 &&
+      Opt.exists(initializerOf(expression, context), (init) => producesCollection(init, source, context, depth - 1))
+    );
+  }
+
+  if (expression.type === 'ArrayExpression') {
+    return Arr.some(
+      expression.elements,
+      (element) => element?.type === 'SpreadElement' && producesCollection(element, source, context, depth),
+    );
+  }
+
+  if (expression.type !== 'CallExpression') {
+    return false;
+  }
+
+  if (isPipeCall(expression, context.imports)) {
+    return pipelineProduces(
+      [...(expression.callee.type === 'MemberExpression' ? [expression.callee.object] : []), ...expression.arguments],
+      source,
+      context,
+      depth,
+    );
+  }
+
+  return (
+    (isPreservingStep(expression, context.imports) || source.preserves(expression)) &&
+    Opt.exists(stepSource(expression, context.imports), (collection) =>
+      producesCollection(collection, source, context, depth),
+    )
   );
+}
+
+function lineSource(context: LineContext): CollectionSource {
+  return {
+    matches: (node) => Opt.isSome(splitCall(node, isNewlineSeparator, context.imports)),
+    preserves: (node) =>
+      isMappingCall(node, {
+        mapper: (mapper) => context.imports.isApi(mapper, 'String', trimMethods),
+        element: (element) => trimmedSubject(element, context.imports) !== element,
+      }),
+  };
 }
 
 function isPipeCall(node: ESTree.CallExpression, imports: ImportBindings): boolean {
@@ -300,7 +420,7 @@ export function isPerLineCallback(node: ESTree.Node, context: LineContext): bool
       (parent): parent is ESTree.CallExpression =>
         parent.type === 'CallExpression' && containsSame<ESTree.Node>(parent.arguments, node),
     ),
-    (call) => Arr.some(iteratedValues(call, node, context.imports), (value) => derivesFromLineSplit(value, context)),
+    (call) => pipelineProduces(iteratedValues(call, node, context.imports), lineSource(context), context, 3),
   );
 }
 
@@ -358,7 +478,7 @@ export function isLineValue(node: ESTree.Expression, context: LineContext): bool
       definition.type === 'Variable' &&
       loop?.type === 'ForOfStatement' &&
       loop.left === definition.parent &&
-      derivesFromLineSplit(loop.right, context)
+      producesCollection(loop.right, lineSource(context), context)
     );
   });
 }
@@ -402,29 +522,20 @@ function isMappingCall(node: ESTree.Node, mapping: ElementMapping): boolean {
 }
 
 /**
- * Whether one of the expressions a join runs over maps each element with `mapping`, through method chains, pipelines
- * and local bindings.
+ * Whether the collection a join runs over is produced by mapping each element with `mapping`, possibly followed by
+ * steps that keep the mapped elements, such as a filter. A later map, such as one that prefixes each JSON string with
+ * `data: `, produces another format and does not count.
  *
- * @param values Expressions the join runs over.
+ * @param values Pipeline value and steps the join runs over.
  * @param mapping Element mapping to look for.
  * @param context File context.
- * @param depth Remaining bindings to follow.
  */
-export function mapsEachTo(
-  values: ReadonlyArray<ESTree.Node>,
-  mapping: ElementMapping,
-  context: LineContext,
-  depth = 3,
-): boolean {
-  return Arr.some(values, (value) =>
-    someOutsideFunctions(
-      value,
-      (child) =>
-        isMappingCall(child, mapping) ||
-        (depth > 0 &&
-          isReference(child) &&
-          Opt.exists(initializerOf(child, context), (init) => mapsEachTo([init], mapping, context, depth - 1))),
-    ),
+export function mapsEachTo(values: ReadonlyArray<ESTree.Node>, mapping: ElementMapping, context: LineContext): boolean {
+  return pipelineProduces(
+    values,
+    { matches: (node) => isMappingCall(node, mapping), preserves: () => false },
+    context,
+    3,
   );
 }
 

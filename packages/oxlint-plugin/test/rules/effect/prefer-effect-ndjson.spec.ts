@@ -39,6 +39,9 @@ tester.run('prefer-effect-ndjson', preferEffectNdjson, {
       const csv = rows.map((row) => JSON.stringify(row)).join(',')
       const counts = files.map((file) => file.split('\\n').length).map((count) => JSON.parse(count))
       const groups = batches.map((batch) => batch.map(JSON.stringify).join(',')).join('\\n')
+      const sse = values.map(JSON.stringify).map((json) => \`data: \${json}\`).join('\\n')
+      const events = Arr.join(Arr.map(Arr.map(values, JSON.stringify), (json) => \`data: \${json}\\n\`), '\\n')
+      const data = text.split('\\n').map((line) => line.slice(6)).map((payload) => JSON.parse(payload))
       const total = Str.split(text, '\\n').reduce((count, line) => count + JSON.parse(line), 0)
     `,
     `${imports}
@@ -52,6 +55,11 @@ tester.run('prefer-effect-ndjson', preferEffectNdjson, {
     `,
   ],
   invalid: [
+    invalid(
+      String.raw`const values = text.split('\n').map((line) => line.trim()).filter(Boolean).map((line) => JSON.parse(line))`,
+      'decode',
+    ),
+    invalid(String.raw`const body = values.map(JSON.stringify).filter(Boolean).join('\n')`, 'encode'),
     invalid(String.raw`const values = text.split('\n').map((line) => JSON.parse(line))`, 'decode'),
     invalid(String.raw`const values = text.split(/\r?\n/).filter(Boolean).map(JSON.parse)`, 'decode'),
     invalid(String.raw`const values = Arr.map(Str.split(text, '\n'), (line) => JSON.parse(line.trim()))`, 'decode'),

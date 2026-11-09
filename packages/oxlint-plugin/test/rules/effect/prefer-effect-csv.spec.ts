@@ -40,6 +40,8 @@ tester.run('prefer-effect-csv', preferEffectCsv, {
       const words = Str.split(text, '\\n').map((line) => line.split(' '))
       const translations = Arr.map(Str.split(raw, '\\n'), (line) => Str.split(line, '||'))
       const sizes = files.map((file) => file.split('\\n').length).map((size) => size.split(','))
+      const fields = text.split('\\n').map((line) => line.replace(prefix, '')).map((line) => line.split(','))
+      const quoted = rows.map((row) => row.join(',')).map((line) => \`"\${line}"\`).join('\\n')
       const firstNames = members.map((member) => member.name.split(','))
     `,
     `${imports}
@@ -49,6 +51,11 @@ tester.run('prefer-effect-csv', preferEffectCsv, {
     `,
   ],
   invalid: [
+    invalid(
+      String.raw`const rows = Fn.pipe(text, Str.split('\n'), Arr.map(Str.trim), Arr.take(10), Arr.map(Str.split(',')))`,
+      'decode',
+    ),
+    invalid(String.raw`const body = [header, ...rows.map((row) => row.join(',')).toReversed()].join('\n')`, 'encode'),
     invalid(String.raw`const rows = text.split('\n').map((line) => line.split(','))`, 'decode'),
     invalid(String.raw`const rows = text.trim().split(/\r?\n/).map((line) => line.trim().split(';'))`, 'decode'),
     invalid(String.raw`const rows = Arr.map(Str.split(text, '\n'), (line) => Str.split(line, '\t'))`, 'decode'),
