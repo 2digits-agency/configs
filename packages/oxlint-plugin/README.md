@@ -31,6 +31,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
   `no-*`, `prefer-*`, `preserve-*`, and `require-*` Effect rules.
 - Effect v4 API guidance for Array, DateTime, Duration, Encoding, FileSystem, Filter, Headers, Match, Path, and Url,
   plus interruptible `Effect.tryPromise` thunks.
+- Structured text formats: `prefer-effect-ndjson`, `prefer-effect-csv`, and `prefer-effect-format-parser`. See
+  [Effect encoding formats](#effect-encoding-formats).
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
   and no root-barrel module imports. `@effect/vitest` and lowercase unstable barrels are intentionally exempt.
 - Alchemy v2 practices: every other `alchemy-*` rule.
@@ -217,6 +219,27 @@ a nonfunction object containing a function does not qualify. In `.pipe(...)`, on
 Imported, mutable, or otherwise composed configs remain unknown and retain the diagnostic. This is syntax proof, not
 general inference of `Config<A>`. Parameterized function defaults remain excluded. There is no autofix: eagerly evaluating
 or unwrapping a thunk could change side effects or an intentional function value.
+
+## Effect encoding formats
+
+These rules only run in files that import Effect and report without autofixes. They point at the `effect/encoding`
+modules for structured text. Plain `JSON.parse` and `JSON.stringify` are left to the `globalJson` and
+`globalJsonInEffect` diagnostics from `@effect/tsgo`, which suggest Schema.
+
+- `prefer-effect-ndjson` reports `JSON.parse` on each line of text split on line breaks (`text.split('\n').map(JSON.parse)`,
+  a per-line callback, or `for (const line of lines)`), and `JSON.stringify` results joined with line breaks. Use
+  `Ndjson.decodeString`/`decodeSchemaString` and `Ndjson.encodeString`/`encodeSchemaString`.
+- `prefer-effect-csv` reports each line of split text split again on `,`, `;` or a tab, and rows whose cells are joined
+  with one of those and then joined with line breaks. Use `Csv.decodeString`/`decodeSchemaString` and
+  `Csv.encodeString`/`encodeSchemaString`, which quote cells that contain the delimiter, quotes, or line breaks. A single
+  comma list (`scopes.split(',')`), a multi-character separator such as `', '` or `'||'`, and line splits without a
+  second split are not CSV and are allowed.
+- `prefer-effect-format-parser` reports parsers from third-party packages: `yaml` and `js-yaml` (use `Yaml`),
+  `smol-toml`, `@iarna/toml` and `toml` (`Toml`), `ini` (`Ini`), `json5` (`Json5`), `jsonc-parser`, `comment-json` and
+  `strip-json-comments` (`Jsonc`), `papaparse`, `csv-parse`, `csv-stringify`, `csv-parser` and `fast-csv` (`Csv`),
+  `fast-xml-parser`'s `XMLParser`, `xml2js`, `sax` and `@xmldom/xmldom`'s `DOMParser` (`Xml`), `ndjson` (`Ndjson`), and
+  `stream-json` and `@streamparser/json` (`JsonArray`). Effect's Yaml, Toml, Ini, Json5, and Jsonc only parse, so
+  serializers such as `YAML.stringify`, `js-yaml`'s `dump` and `smol-toml`'s `stringify` stay allowed.
 
 ## Effect modules over native logic
 
