@@ -225,7 +225,9 @@ function isSettledAt(definition: Definition, callback: FunctionNode): boolean {
     return false;
   }
 
-  return Tuple.get(definition.node.range, 1) <= Tuple.get(callback.range, 0) && !hoistedBetween(callback, definition.node);
+  return (
+    Tuple.get(definition.node.range, 1) <= Tuple.get(callback.range, 0) && !hoistedBetween(callback, definition.node)
+  );
 }
 
 function hoistedBetween(node: ESTree.Node, declaration: ESTree.Node): boolean {

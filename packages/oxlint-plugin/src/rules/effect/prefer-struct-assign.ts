@@ -131,7 +131,10 @@ function assignArguments(node: ESTree.ObjectExpression, sourceCode: OxlintSource
   const second = Arr.headNonEmpty(rest);
 
   if (!Arr.every(rest, isSpread)) {
-    const overrides = Str.slice(Tuple.get(second.range, 0), Tuple.get(Arr.lastNonEmpty(rest).range, 1))(sourceCode.text);
+    const overrides = Str.slice(
+      Tuple.get(second.range, 0),
+      Tuple.get(Arr.lastNonEmpty(rest).range, 1),
+    )(sourceCode.text);
 
     return Opt.some(`${self}, { ${overrides} }`);
   }
