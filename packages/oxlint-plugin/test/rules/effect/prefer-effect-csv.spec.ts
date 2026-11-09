@@ -1,18 +1,7 @@
-import { describe, it } from '@effect/vitest';
-import { RuleTester } from 'oxlint/plugins-dev';
-
 import { preferEffectCsv } from '../../../src/rules/effect/prefer-effect-csv';
+import { createRuleTester } from '../../rule-tester';
 
-RuleTester.describe = describe;
-
-RuleTester.it = it;
-
-const tester = new RuleTester({
-  languageOptions: {
-    parserOptions: { lang: 'ts' },
-    sourceType: 'module',
-  },
-});
+const tester = createRuleTester();
 
 const imports = `
   import * as Arr from 'effect/Array'

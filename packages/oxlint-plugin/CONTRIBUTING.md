@@ -33,7 +33,8 @@ evaluation order, bindings and contextual typing. A diagnostic can remain useful
 
 Use `hasSuggestions: true` only for explicit editor actions that need review; never add a suggestion solely to match a
 different rule's presentation. `ban-error-string` deliberately offers the `useCause` suggestion. The seven existing code
-fixers, the spacing fixer and the plain-report rules keep their existing delivery modes.
+fixers and the spacing fixer retain their delivery modes. The #2966 follow-up adds the two guarded code fixers and
+four suggestion-capable rules described below; do not turn their review-only rewrites into automatic fixes.
 
 ## Import recognition and file gates
 
@@ -121,7 +122,8 @@ No rule is renamed by this consistency pass. Possible names for a future alias-b
 All 80 rules present after #2959 were reviewed. This is the baseline inventory, not an additional registry to maintain
 for future rules. **API** means shared runtime-import matching; **File** means Effect-file syntax guidance (some checks
 also match imported APIs); **Syntax** needs no Effect import. All are recommended at error except the three opt-ins
-noted above. No options unless named in the options section. **Report** means no automatic or editor fix.
+noted above. No options unless named in the options section. **Report** means no automatic or editor fix. Delivery
+includes the #2966 follow-up modes, whose safety boundaries are described below.
 
 | Rule                                           | Scope                             | Delivery          |
 | ---------------------------------------------- | --------------------------------- | ----------------- |
@@ -156,13 +158,13 @@ noted above. No options unless named in the options section. **Report** means no
 | `no-empty-effect-callback`                     | API                               | Code fix          |
 | `no-empty-schema-struct`                       | API                               | Report            |
 | `no-export-all-in-client`                      | React directive                   | Report            |
-| `no-forwarding-lambda`                         | API callback                      | Report            |
+| `no-forwarding-lambda`                         | API callback                      | Fix / suggestion  |
 | `no-function-config-default`                   | API                               | Report            |
 | `no-hash-as-identity`                          | API                               | Report            |
 | `no-inline-schema-compile`                     | File + API                        | Report            |
 | `no-logging-in-catch`                          | API                               | Report            |
 | `no-manual-effect-error-tag`                   | Syntax                            | Report            |
-| `no-manual-tag-comparison`                     | Syntax                            | Report            |
+| `no-manual-tag-comparison`                     | Syntax                            | Editor suggestion |
 | `no-manual-tagged-construction`                | Syntax                            | Report            |
 | `no-millis-arithmetic`                         | File                              | Report            |
 | `no-multi-shot-effect-callback`                | API                               | Report            |
@@ -192,11 +194,11 @@ noted above. No options unless named in the options section. **Report** means no
 | `prefer-effect-headers`                        | File                              | Report            |
 | `prefer-effect-match`                          | Syntax + File                     | Report            |
 | `prefer-effect-path`                           | File, opt-in                      | Report            |
-| `prefer-effect-predicate`                      | File                              | Report            |
+| `prefer-effect-predicate`                      | File                              | Fix / suggestion  |
 | `prefer-effect-url`                            | File                              | Report            |
 | `prefer-equal`                                 | File                              | Report            |
 | `prefer-hoisted-match`                         | API                               | Report            |
-| `prefer-struct-assign`                         | File                              | Report            |
+| `prefer-struct-assign`                         | File                              | Editor suggestion |
 | `prefer-uninterruptible`                       | API                               | Report            |
 | `prefer-with-span`                             | API                               | Report            |
 | `prefer-yield-now`                             | API                               | Report            |
@@ -240,3 +242,40 @@ heuristics and the binary rules' literal `pipe` fallback also remain unchanged.
 | `prefer-effect-encoding`         | File + native encoding checks   | Report   |
 | `no-manual-encoding`             | File + native/API string checks | Report   |
 | `no-encoding-get-or-throw`       | API                             | Report   |
+
+### Follow-up audit: #2965
+
+The three structured-text rules use the shared RuleTester setup. Their `prefer-*` names, semantic messageIds,
+`ruleMeta` defaults, no-options schemas, report-only delivery and error-level recommendation already match the
+conventions. All three require an Effect file. `internal/lines` shares the CSV/NDJSON collection tracing; keep this
+domain-specific analysis local rather than broadening the general AST helpers.
+
+The native split/join and literal `.pipe` heuristics remain unchanged. Effect String/Array/Function APIs use the shared
+lexical import collector, and JSON methods use the global binding check. The format-parser rule deliberately checks
+exact static runtime package imports, with member-use checks for default/namespace imports whose serializers remain
+allowed. It skips type-only imports and does not gain side-effect or dynamic-import reports in this audit.
+
+| Rule                          | Scope                               | Delivery |
+| ----------------------------- | ----------------------------------- | -------- |
+| `prefer-effect-csv`           | File + native/API collection checks | Report   |
+| `prefer-effect-ndjson`        | File + native/API collection checks | Report   |
+| `prefer-effect-format-parser` | File + package/export checks        | Report   |
+
+### Follow-up audit: #2966
+
+The four newly expanded rules already follow the fix/suggestion conventions. Keep their new messageIds and delivery
+modes from main, along with the exact-output and no-fix/no-suggestion tests. The shared test helper retains its
+suggestion assertions; the forwarding-lambda matrix uses the shared hooks while keeping its no-fix lint exemption.
+All four remain recommended at error severity, with no new options.
+
+- `prefer-effect-predicate` fixes equivalent checks, but suggests checks with different runtime or narrowing behavior.
+  Boxed primitive checks and rewrites that would drop comments remain report-only.
+- `no-forwarding-lambda` fixes settled local callees with one signature and suggests other settled callees. It keeps
+  the evaluation-time, reassignment, overload, annotation and comment guards.
+- `no-manual-tag-comparison` suggests `Predicate.isTagged` only for string `_tag` comparisons without comments;
+  nullable values can behave differently, so this must not become an automatic fix.
+- `prefer-struct-assign` suggests two-object merges/copies without comments. Contextual typing, literal widening and
+  multi-spread boundaries remain unchanged.
+
+The namespace-import, argument-parenthesizing and replacement helpers in `internal/fixes` are shared by these rules.
+Do not duplicate them or reduce a suggestion to a fix merely because the generated text looks simpler.
