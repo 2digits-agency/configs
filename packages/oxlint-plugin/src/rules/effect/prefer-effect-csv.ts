@@ -1,9 +1,10 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import {
   isCellDelimiter,
   isLineValue,
@@ -17,7 +18,7 @@ import {
   type LineContext,
 } from './internal/lines';
 
-export const preferEffectCsv: CreateRule = Rule.define({
+export const preferEffectCsv: CreateRule = defineRule({
   name: 'prefer-effect-csv',
   meta: ruleMeta({
     type: 'suggestion',
