@@ -268,10 +268,8 @@ export const noInlineSchemaCompile: CreateRule = defineRule({
 
     return Visitor.on('CallExpression', (node) =>
       Opt.match(
-        Opt.zipWith(
-          compilerMethod(node.callee, imports, ctx.sourceCode),
-          inlineKind(node, imports, ctx.sourceCode),
-          (method, messageId) => ({ method, messageId }),
+        Opt.flatMap(compilerMethod(node.callee, imports, ctx.sourceCode), (method) =>
+          Opt.map(inlineKind(node, imports, ctx.sourceCode), (messageId) => ({ method, messageId })),
         ),
         {
           onNone: () => Effect.void,
