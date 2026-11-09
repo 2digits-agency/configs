@@ -31,6 +31,7 @@ import { noHashAsIdentity } from './effect/no-hash-as-identity';
 import { noInlineSchemaCompile } from './effect/no-inline-schema-compile';
 import { noLoggingInCatch } from './effect/no-logging-in-catch';
 import { noManualEffectErrorTag } from './effect/no-manual-effect-error-tag';
+import { noManualSse } from './effect/no-manual-sse';
 import { noManualTagComparison } from './effect/no-manual-tag-comparison';
 import { noManualTaggedConstruction } from './effect/no-manual-tagged-construction';
 import { noMillisArithmetic } from './effect/no-millis-arithmetic';
@@ -45,6 +46,7 @@ import { noUppercaseHttpApiHeader } from './effect/no-uppercase-http-api-header'
 import { noZeroRetryTimes } from './effect/no-zero-retry-times';
 import { preferDataMatch } from './effect/prefer-data-match';
 import { preferEffectAlchemyNamespaceImports } from './effect/prefer-effect-alchemy-namespace-imports';
+import { preferEffectArchive } from './effect/prefer-effect-archive';
 import { preferEffectArrayOps } from './effect/prefer-effect-array-ops';
 import { preferEffectArraySort } from './effect/prefer-effect-array-sort';
 import { preferEffectDateTime } from './effect/prefer-effect-datetime';
@@ -58,6 +60,7 @@ import { preferEffectHeaders } from './effect/prefer-effect-headers';
 import { preferEffectMatch } from './effect/prefer-effect-match';
 import { preferEffectPath } from './effect/prefer-effect-path';
 import { preferEffectPredicate } from './effect/prefer-effect-predicate';
+import { preferEffectSse } from './effect/prefer-effect-sse';
 import { preferEffectUrl } from './effect/prefer-effect-url';
 import { preferEqual } from './effect/prefer-equal';
 import { preferHoistedMatch } from './effect/prefer-hoisted-match';
@@ -117,6 +120,7 @@ export const rules = {
   'no-inline-schema-compile': noInlineSchemaCompile,
   'no-logging-in-catch': noLoggingInCatch,
   'no-manual-effect-error-tag': noManualEffectErrorTag,
+  'no-manual-sse': noManualSse,
   'no-manual-tag-comparison': noManualTagComparison,
   'no-manual-tagged-construction': noManualTaggedConstruction,
   'no-millis-arithmetic': noMillisArithmetic,
@@ -135,6 +139,7 @@ export const rules = {
   'padding-line-between-statements': paddingLineBetweenStatements,
   'prefer-data-match': preferDataMatch,
   'prefer-effect-alchemy-namespace-imports': preferEffectAlchemyNamespaceImports,
+  'prefer-effect-archive': preferEffectArchive,
   'prefer-effect-array-ops': preferEffectArrayOps,
   'prefer-effect-array-sort': preferEffectArraySort,
   'prefer-effect-datetime': preferEffectDateTime,
@@ -148,6 +153,7 @@ export const rules = {
   'prefer-effect-match': preferEffectMatch,
   'prefer-effect-path': preferEffectPath,
   'prefer-effect-predicate': preferEffectPredicate,
+  'prefer-effect-sse': preferEffectSse,
   'prefer-effect-url': preferEffectUrl,
   'prefer-hoisted-match': preferHoistedMatch,
   'prefer-equal': preferEqual,
