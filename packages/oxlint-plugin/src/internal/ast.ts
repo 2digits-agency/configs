@@ -85,21 +85,31 @@ export function staticPath(node: ESTree.Node): Opt.Option<Arr.NonEmptyReadonlyAr
  *
  * @param property Object literal property.
  */
-export const propertyName = Match.type<ESTree.ObjectProperty>().pipe(
-  Match.when({ computed: false, key: { type: 'Identifier' } }, ({ key }) => Opt.some(key.name)),
-  Match.when({ key: { type: 'Literal', value: Str.isString } }, ({ key }) => Opt.some(key.value)),
-  Match.orElse(() => Opt.none<string>()),
-);
+export function propertyName(property: ESTree.ObjectProperty): Opt.Option<string> {
+  const { key } = property;
+
+  if (!property.computed && key.type === 'Identifier') {
+    return Opt.some(key.name);
+  }
+
+  return key.type === 'Literal' && Str.isString(key.value) ? Opt.some(key.value) : Opt.none();
+}
 
 /**
  * A `key: value` or shorthand property; spreads, methods, accessors and computed keys are none.
  *
  * @param property Object literal member.
  */
-export const plainProperty = Match.type<ESTree.ObjectExpression['properties'][number]>().pipe(
-  Match.when({ type: 'Property', computed: false, method: false, kind: 'init' }, Opt.some<ESTree.ObjectProperty>),
-  Match.orElse(() => Opt.none<ESTree.ObjectProperty>()),
-);
+export function plainProperty(
+  property: ESTree.ObjectExpression['properties'][number],
+): Opt.Option<ESTree.ObjectProperty> {
+  return property.type === 'Property' &&
+    !property.computed &&
+    !property.method &&
+    Str.Equivalence(property.kind, 'init')
+    ? Opt.some(property)
+    : Opt.none();
+}
 
 export function objectProperty(node: ESTree.ObjectExpression, name: string): Opt.Option<ESTree.ObjectProperty> {
   return Arr.findFirst(
