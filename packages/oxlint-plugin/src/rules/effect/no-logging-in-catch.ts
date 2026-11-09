@@ -84,7 +84,7 @@ export const noLoggingInCatch: CreateRule = defineRule({
       const path = imports.path(node.callee);
 
       return Opt.match(
-        Opt.zipWith(effectMember(path, isLogMethod), catchMethod(node, imports), (_, method) => method),
+        Opt.flatMap(effectMember(path, isLogMethod), () => catchMethod(node, imports)),
         {
           onNone: () => Effect.void,
           onSome: (method) =>
