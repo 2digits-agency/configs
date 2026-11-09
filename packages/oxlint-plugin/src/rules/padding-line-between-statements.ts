@@ -561,7 +561,7 @@ function verifyPair(
 
 function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<PaddingLineOption>) {
   // Without policies no statement pair can report; avoid traversing the entire file.
-  if (options.length === 0) {
+  if (Arr.isReadonlyArrayEmpty(options)) {
     return {};
   }
 

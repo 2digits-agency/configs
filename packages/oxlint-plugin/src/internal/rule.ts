@@ -1,7 +1,10 @@
 // Runtime bridge adapted from effect-oxlint 0.5.0 (MIT); see NOTICE.
 import { Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 
 /**
@@ -26,15 +29,17 @@ export function defineRule<TOptions = undefined>(config: Rule.RuleConfig<TOption
         languageOptions: context.languageOptions,
         settings: context.settings,
       });
+
       const run = Effect.runSyncWith(Context.make(RuleContext, service));
-      const options =
-        config.options === undefined
-          ? // Without a decoder the default option type is undefined, as in Rule.define.
-            Effect.succeed(undefined as TOptions)
-          : Schema.decodeEffect(config.options)(context.options[0]).pipe(
-              Effect.mapError((error) => Rule.RuleOptionsError.make({ rule: config.name, issue: error.message })),
-              Effect.orDie,
-            );
+
+      const options = P.isUndefined(config.options)
+        ? // Without a decoder the default option type is undefined, as in Rule.define.
+          Effect.succeed(undefined as TOptions)
+        : Schema.decodeEffect(config.options)(Arr.head(context.options).pipe(Opt.getOrUndefined)).pipe(
+            Effect.mapError((error) => Rule.RuleOptionsError.make({ rule: config.name, issue: error.message })),
+            Effect.orDie,
+          );
+
       const visitor = run(Effect.flatMap(options, (decoded) => Effect.gen(config.create.bind(config, decoded))));
 
       // Oxlint dispatches each key only to its corresponding node type, as in Rule.define.

@@ -41,12 +41,17 @@ interface Sample {
 }
 
 const root = fileURLToPath(new URL('../../../', import.meta.url));
+
 const pkg = path.join(root, 'packages/oxlint-plugin');
-const state = path.join(pkg, '.cache/benchmark');
+
+const state = path.resolve(pkg, process.env.OXLINT_BENCH_DIR ?? '.cache/benchmark');
+
 const cli = path.join(pkg, 'node_modules/oxlint/bin/oxlint');
+
 const env = { ...process.env };
 
 delete env.VP_VERSION;
+
 delete env.NAPI_RS_NATIVE_LIBRARY_PATH;
 
 function execute(
@@ -60,6 +65,7 @@ function execute(
   if (result.error) {
     throw result.error;
   }
+
   if (result.status !== 0) {
     let output = result.stdout;
 
@@ -70,6 +76,7 @@ function execute(
     } catch {
       /* Non-JSON build or test failure. */
     }
+
     assert.fail(`${command} exited ${result.status}\n${output.slice(-5000)}\n${result.stderr}`);
   }
 
@@ -91,6 +98,7 @@ function digest(directory: string): string {
 
   for (const file of files(directory)) {
     hash.update(path.relative(directory, file));
+
     hash.update(readFileSync(file));
   }
 
@@ -102,47 +110,63 @@ async function freeze() {
     !existsSync(path.join(state, 'manifest.json')),
     'Baseline already exists; use a fresh checkout to reset it.',
   );
+
   mkdirSync(state, { recursive: true });
+
   execute('vpr', ['build'], pkg);
+
   cpSync(path.join(pkg, 'dist/index.mjs'), path.join(state, 'baseline.mjs'));
+
   const capture = path.join(state, 'cases.jsonl');
 
   writeFileSync(capture, '');
+
   execute('vpr', ['test'], pkg, { env: { ...env, OXLINT_BENCH_CORPUS: capture } });
+
   const cases = [...new Set(readFileSync(capture, 'utf8').trim().split('\n'))]
     .toSorted()
     .map((line) => JSON.parse(line) as CapturedCase);
+
   const source = path.join(state, 'corpus');
 
   mkdirSync(source);
+
   for (const repository of [root, ...process.argv.slice(3).map((directory) => path.resolve(directory))]) {
     const label = path.basename(repository);
+
     const tracked = execute('git', ['ls-files', '-z'], repository).split('\0').filter(Boolean);
 
     for (const filename of tracked) {
       if (!/\.[cm]?[jt]sx?$/.test(filename)) {
         continue;
       }
+
       const destination = path.join(source, label, filename);
 
       mkdirSync(path.dirname(destination), { recursive: true });
+
       cpSync(path.join(repository, filename), destination);
     }
   }
+
   const overrides: Manifest['overrides'] = [];
 
   for (const [index, testCase] of cases.entries()) {
     const filename = path.join('snippets', String(index), testCase.filename ?? 'snippet.tsx');
+
     const destination = path.join(source, filename);
 
     mkdirSync(path.dirname(destination), { recursive: true });
+
     writeFileSync(destination, `${testCase.code}\nexport {};\n`);
+
     overrides.push({
       files: [`**/${filename.replaceAll('\\', '/')}`],
       ...(testCase.languageOptions?.globals ? { globals: testCase.languageOptions.globals } : {}),
       rules: { [`2digits/${testCase.rule}`]: ['warn', ...(testCase.options ?? [])] },
     });
   }
+
   const { default: plugin } = (await import(
     pathToFileURL(path.join(state, 'baseline.mjs')).href
   )) as typeof import('../src');
@@ -220,19 +244,22 @@ function median(values: Array<number>): number {
 
 function measure(plugin: string) {
   const configuration = config(plugin);
+
   const source = path.join(state, 'corpus');
 
   lint(source, configuration, ['--format=json']);
+
   const samples: Array<Sample> = [];
 
   for (let pass = 0; pass < repetitions; pass++) {
     const start = performance.now();
+
     const output = lint(source, configuration, ['--format=default', '--debug=timings']);
 
     samples.push({
       wall: performance.now() - start,
-      runtime: Number(output.match(/Total:\s+([\d.]+)ms/)?.[1]),
-      callbacks: Number(output.match(/Rule callbacks:\s+([\d.]+)ms/)?.[1]),
+      runtime: Number(/Total:\s+([\d.]+)ms/.exec(output)?.[1]),
+      callbacks: Number(/Rule callbacks:\s+([\d.]+)ms/.exec(output)?.[1]),
       rules: Object.fromEntries(
         output.matchAll(/^2digits\/(\S+)\s+([\d.]+)\s+[\d.]+%\s+(\d+)\s+js-plugin$/gm).map(([, name, ms, calls]) => {
           assert.ok(name);
@@ -268,8 +295,11 @@ function differential(plugin: string, label: string) {
   const target = path.join(state, label);
 
   cpSync(path.join(state, 'corpus'), target, { recursive: true });
+
   const configuration = config(plugin);
+
   const before = diagnostics(target, configuration);
+
   const after = diagnostics(target, configuration, true);
 
   return { before, after, fixedHash: digest(target) };
@@ -278,18 +308,27 @@ function differential(plugin: string, label: string) {
 if (process.argv[2] === 'freeze') {
   await freeze();
 }
+
 const manifest = JSON.parse(readFileSync(path.join(state, 'manifest.json'), 'utf8')) as Manifest;
 
 assert.equal(digest(path.join(state, 'corpus')), manifest.corpusHash, 'Frozen corpus changed');
+
 const baseline = path.join(state, 'baseline.mjs');
+
 const candidate = path.join(pkg, 'dist/index.mjs');
+
 const repetitions = Number(process.env.OXLINT_BENCH_RUNS ?? 7);
+
 const oldResult = measure(baseline);
+
 const newResult = measure(candidate);
+
 const oldDiagnostics = differential(baseline, 'baseline-fixed');
+
 const newDiagnostics = differential(candidate, 'candidate-fixed');
 
 assert.deepEqual(newDiagnostics, oldDiagnostics, 'Diagnostics or fixed output changed');
+
 const report = {
   ...manifest,
   overrides: undefined,
@@ -302,6 +341,7 @@ const report = {
 };
 
 writeFileSync(path.join(state, 'latest.json'), JSON.stringify(report, undefined, 2));
+
 console.log(
   JSON.stringify(
     {

@@ -4,6 +4,7 @@ import { appendFileSync } from 'node:fs';
 
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import { RuleTester } from 'oxlint/plugins-dev';
 
@@ -26,7 +27,7 @@ function captureCases(this: RuleTester, ...args: Parameters<RuleTester['run']>):
   }
 
   for (const testCase of [...cases.valid, ...cases.invalid]) {
-    const entry = typeof testCase === 'string' ? { code: testCase } : testCase;
+    const entry = P.isString(testCase) ? { code: testCase } : testCase;
 
     appendFileSync(destination, `${JSON.stringify({ rule: canonical, ...entry })}\n`);
   }

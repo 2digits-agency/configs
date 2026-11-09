@@ -3,6 +3,7 @@ import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
@@ -34,7 +35,20 @@ export class ImportBindings {
 
   constructor(bindings: ReadonlyMap<string, ReadonlyArray<string>>, hasEffectImport: boolean) {
     this.bindings = bindings;
+
     this.hasEffectImport = hasEffectImport;
+  }
+
+  private resolvePath(node: ESTree.Node): Opt.Option<ReadonlyArray<string>> {
+    if (node.type === 'Identifier') {
+      return Opt.fromNullishOr(this.bindings.get(node.name));
+    }
+
+    return node.type === 'MemberExpression'
+      ? Opt.flatMap(this.path(node.object), (parent) =>
+          Opt.map(staticPropertyName(node), (member) => [...parent, member]),
+        )
+      : Opt.none();
   }
 
   /**
@@ -44,7 +58,8 @@ export class ImportBindings {
    */
   hasNamespace(namespace: string): boolean {
     for (const path of this.bindings.values()) {
-      if (path[0] === namespace) {
+      // A barrel namespace may supply any nested module; do not bail out on it.
+      if (Arr.isReadonlyArrayEmpty(path) || Opt.contains(Arr.head(path), namespace)) {
         return true;
       }
     }
@@ -60,20 +75,11 @@ export class ImportBindings {
   path(node: ESTree.Node): Opt.Option<ReadonlyArray<string>> {
     const cached = this.paths.get(node);
 
-    if (cached !== undefined) {
+    if (P.isNotUndefined(cached)) {
       return cached;
     }
 
-    const target = node.type === 'ChainExpression' ? node.expression : node;
-
-    const path =
-      target.type === 'Identifier'
-        ? Opt.fromNullishOr(this.bindings.get(target.name))
-        : target.type === 'MemberExpression'
-          ? Opt.flatMap(this.path(target.object), (parent) =>
-              Opt.map(staticPropertyName(target), (member) => [...parent, member]),
-            )
-          : Opt.none();
+    const path = this.resolvePath(node.type === 'ChainExpression' ? node.expression : node);
 
     this.paths.set(node, path);
 
@@ -163,7 +169,7 @@ const programImports = new WeakMap<ESTree.Program, ImportBindings>();
 function collectImportBindings(program: ESTree.Program): ImportBindings {
   const cached = programImports.get(program);
 
-  if (cached !== undefined) {
+  if (P.isNotUndefined(cached)) {
     return cached;
   }
 

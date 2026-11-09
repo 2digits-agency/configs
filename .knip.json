@@ -28,6 +28,9 @@
     "packages/oxlint-config": {
       "ignore": ["test/fixtures/**"]
     },
+    "packages/oxlint-plugin": {
+      "entry": ["bench/capture.ts"]
+    },
     "packages/tsconfig": {
       "ignoreDependencies": ["@effect/tsgo"]
     }
