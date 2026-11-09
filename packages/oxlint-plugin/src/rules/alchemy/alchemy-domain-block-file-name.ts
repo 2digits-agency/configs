@@ -114,7 +114,7 @@ export const alchemyDomainBlockFileName: CreateRule = defineRule({
     }
 
     // Only host files can accumulate shared declarations; other files need no second call visitor or exit pass.
-    const sharedDeclarations = yield* (inHostFile
+    const sharedDeclarations = yield* inHostFile
       ? Visitor.accumulate(
           'CallExpression',
           (node) => Opt.filter(declaration(node), isShared),
@@ -124,7 +124,7 @@ export const alchemyDomainBlockFileName: CreateRule = defineRule({
               isHosted ? Effect.void : Effect.forEach(shared, (found) => report('fileName', found), { discard: true }),
             ),
         )
-      : Effect.succeed({}));
+      : Effect.succeed({});
 
     const check = Effect.fnUntraced(function* (found: Declaration) {
       const matchesFile = Opt.contains(fileKind, found.kind);
