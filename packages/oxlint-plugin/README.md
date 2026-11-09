@@ -281,8 +281,16 @@ have no autofixes.
   test fakes are not checked. It is recommended at `warn` rather than `error`, because it only names numbers every
   reader knows.
 
-Cookie handling has no rule. Across the agency's Effect projects, hand-written cookie code was almost entirely
-byte-faithful passthroughs and Set-Cookie fixtures, which `Cookies` would normalize.
+- `prefer-effect-cookies` reports cookie logic written by hand: reading or writing `document.cookie`; splitting or
+  matching raw cookie text (`request.headers.cookie.split('; ')`, `headers.get('cookie')?.split(';')`,
+  `/token=([^;]*)/.exec(cookieHeader)`); building a cookie with interpolated attributes
+  (`` `${name}=${value}; Path=/; HttpOnly` `` or `token + '; Max-Age=3600'`); and searching a Set-Cookie string for an
+  attribute (`cookie.includes('; Secure')`, `Str.includes('HttpOnly')`). Use `HttpServerRequest` cookies or
+  `schemaCookies`, `Cookies.parseHeader`, `Cookies.fromSetCookie` with `Cookies.get(…).options`, `Cookies.makeCookie`
+  with `Cookies.serializeCookie`, or `HttpServerResponse.setCookie`. Raw text counts as cookie text when it comes from
+  a `get('cookie')` or `get('set-cookie')` header read or a binding or member whose name contains `cookie`. Plain
+  Set-Cookie strings are fixtures or expected wire values and are allowed, as are header names in lists and sets and
+  Set-Cookie values forwarded unchanged, which `Cookies` would normalize.
 
 ## anti-slop Effect rules
 

@@ -47,6 +47,7 @@ import { preferDataMatch } from './effect/prefer-data-match';
 import { preferEffectAlchemyNamespaceImports } from './effect/prefer-effect-alchemy-namespace-imports';
 import { preferEffectArrayOps } from './effect/prefer-effect-array-ops';
 import { preferEffectArraySort } from './effect/prefer-effect-array-sort';
+import { preferEffectCookies } from './effect/prefer-effect-cookies';
 import { preferEffectDateTime } from './effect/prefer-effect-datetime';
 import { preferEffectDuration } from './effect/prefer-effect-duration';
 import { preferEffectDurationConstants } from './effect/prefer-effect-duration-constants';
@@ -141,6 +142,7 @@ export const rules = {
   'prefer-effect-alchemy-namespace-imports': preferEffectAlchemyNamespaceImports,
   'prefer-effect-array-ops': preferEffectArrayOps,
   'prefer-effect-array-sort': preferEffectArraySort,
+  'prefer-effect-cookies': preferEffectCookies,
   'prefer-effect-datetime': preferEffectDateTime,
   'prefer-effect-duration': preferEffectDuration,
   'prefer-effect-duration-constants': preferEffectDurationConstants,
