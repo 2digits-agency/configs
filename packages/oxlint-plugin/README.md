@@ -274,6 +274,33 @@ modules of `effect/encoding`.
   they extract to disk with path-traversal and symlink guards that `Tar` and `Zip` leave to the caller. `Zip` reads and
   writes only stored and deflated entries, without encryption, and is marked experimental.
 
+## Auth, network and system modules
+
+These rules only run in files that import Effect and report without autofixes.
+
+- `prefer-effect-jwt` reports imports of `jose`, `jsonwebtoken`, `jwt-decode`, `jwt-simple`, `fast-jwt`, `hono/jwt` and
+  `@tsndr/cloudflare-worker-jwt`, and a token split on `'.'` by hand: `token.split('.')` or `Str.split(token, '.')`
+  where the string's name contains `token` or `jwt`, or whose result is destructured into `header`, `payload` or
+  `signature`. Use `Jwt.verify` or `Jwt.verifyWithKeySet` from `effect/jose`, which check the signature, `exp` and
+  `nbf` before decoding the claims with a Schema, and `Jwt.decodeUnverified` only to choose a key. Encrypted tokens
+  in `effect/jose` are `dir`/`A256GCM` only, so keep `jose` for other JWE algorithms with a disable comment. Other
+  dotted strings, such as `version.split('.')`, are not reported.
+- `prefer-effect-net-address` reports IP addresses parsed or classified by hand: `isIP`, `isIPv4` and `isIPv6` from
+  `node:net`; imports of `ipaddr.js`, `ip`, `ip-address`, `is-ip` and similar packages; regular expressions that match a
+  dotted quad (`(\d{1,3}\.){3}`, `25[0-5]`), an anchored special-purpose IPv4 prefix (`^10\.`, `^192\.168\.`), or an
+  IPv6 link-local, unique-local or IPv4-mapped prefix; comparisons with `'127.0.0.1'`, `'0.0.0.0'`, `'::1'` or `'::'`;
+  and `startsWith` with such a prefix. Parse with `NetAddress.ipFromString` and classify with `NetAddress.isLoopback`,
+  `isPrivate`, `isLinkLocal`, `isUniqueLocal`, `isUnspecified`, `isIpv4Mapped` or `IpNetwork.contains`. Patterns
+  and comparisons are reported once per top-level statement, so a table of blocked ranges is one finding. Host names
+  such as `'localhost'`, config defaults such as `Config.withDefault('127.0.0.1')` and other `:` splits are not
+  reported.
+- `prefer-effect-user-directories` reports `homedir()` from `node:os`, reads of `HOME`, `USERPROFILE`, `APPDATA`,
+  `LOCALAPPDATA` and `XDG_{CONFIG,DATA,CACHE,STATE}_HOME` through `process.env` or `Config`, and imports of
+  `env-paths`, `xdg-basedir` and similar packages. Use the `UserDirectories` service from `effect/persistence`:
+  `dirs.config`, `dirs.data`, `dirs.cache` and `dirs.state` follow the XDG, macOS and Windows conventions, and
+  `dirs.home` returns the home directory. `tmpdir()`, other `node:os` functions and environment records passed to a
+  `ConfigProvider` are not reported.
+
 ## anti-slop Effect rules
 
 Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/main/src/effect/rules):
