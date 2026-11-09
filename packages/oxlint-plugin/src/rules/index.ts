@@ -51,6 +51,7 @@ import { preferEffectAlchemyNamespaceImports } from './effect/prefer-effect-alch
 import { preferEffectArchive } from './effect/prefer-effect-archive';
 import { preferEffectArrayOps } from './effect/prefer-effect-array-ops';
 import { preferEffectArraySort } from './effect/prefer-effect-array-sort';
+import { preferEffectCsv } from './effect/prefer-effect-csv';
 import { preferEffectDateTime } from './effect/prefer-effect-datetime';
 import { preferEffectDuration } from './effect/prefer-effect-duration';
 import { preferEffectDurationConstants } from './effect/prefer-effect-duration-constants';
@@ -58,9 +59,11 @@ import { preferEffectDurationTypes } from './effect/prefer-effect-duration-types
 import { preferEffectEncoding } from './effect/prefer-effect-encoding';
 import { preferEffectFileSystem } from './effect/prefer-effect-filesystem';
 import { preferEffectFilter } from './effect/prefer-effect-filter';
+import { preferEffectFormatParser } from './effect/prefer-effect-format-parser';
 import { preferEffectHeaders } from './effect/prefer-effect-headers';
 import { preferEffectJwt } from './effect/prefer-effect-jwt';
 import { preferEffectMatch } from './effect/prefer-effect-match';
+import { preferEffectNdjson } from './effect/prefer-effect-ndjson';
 import { preferEffectNetAddress } from './effect/prefer-effect-net-address';
 import { preferEffectPath } from './effect/prefer-effect-path';
 import { preferEffectPredicate } from './effect/prefer-effect-predicate';
@@ -149,6 +152,7 @@ export const rules = {
   'prefer-effect-archive': preferEffectArchive,
   'prefer-effect-array-ops': preferEffectArrayOps,
   'prefer-effect-array-sort': preferEffectArraySort,
+  'prefer-effect-csv': preferEffectCsv,
   'prefer-effect-datetime': preferEffectDateTime,
   'prefer-effect-duration': preferEffectDuration,
   'prefer-effect-duration-constants': preferEffectDurationConstants,
@@ -156,9 +160,11 @@ export const rules = {
   'prefer-effect-encoding': preferEffectEncoding,
   'prefer-effect-filesystem': preferEffectFileSystem,
   'prefer-effect-filter': preferEffectFilter,
+  'prefer-effect-format-parser': preferEffectFormatParser,
   'prefer-effect-headers': preferEffectHeaders,
   'prefer-effect-jwt': preferEffectJwt,
   'prefer-effect-match': preferEffectMatch,
+  'prefer-effect-ndjson': preferEffectNdjson,
   'prefer-effect-net-address': preferEffectNetAddress,
   'prefer-effect-path': preferEffectPath,
   'prefer-effect-predicate': preferEffectPredicate,
