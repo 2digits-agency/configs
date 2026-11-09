@@ -59,12 +59,15 @@ import { preferEffectFileSystem } from './effect/prefer-effect-filesystem';
 import { preferEffectFilter } from './effect/prefer-effect-filter';
 import { preferEffectFormatParser } from './effect/prefer-effect-format-parser';
 import { preferEffectHeaders } from './effect/prefer-effect-headers';
+import { preferEffectJwt } from './effect/prefer-effect-jwt';
 import { preferEffectMatch } from './effect/prefer-effect-match';
 import { preferEffectNdjson } from './effect/prefer-effect-ndjson';
+import { preferEffectNetAddress } from './effect/prefer-effect-net-address';
 import { preferEffectPath } from './effect/prefer-effect-path';
 import { preferEffectPredicate } from './effect/prefer-effect-predicate';
 import { preferEffectSse } from './effect/prefer-effect-sse';
 import { preferEffectUrl } from './effect/prefer-effect-url';
+import { preferEffectUserDirectories } from './effect/prefer-effect-user-directories';
 import { preferEqual } from './effect/prefer-equal';
 import { preferHoistedMatch } from './effect/prefer-hoisted-match';
 import { preferStructAssign } from './effect/prefer-struct-assign';
@@ -155,12 +158,15 @@ export const rules = {
   'prefer-effect-filter': preferEffectFilter,
   'prefer-effect-format-parser': preferEffectFormatParser,
   'prefer-effect-headers': preferEffectHeaders,
+  'prefer-effect-jwt': preferEffectJwt,
   'prefer-effect-match': preferEffectMatch,
   'prefer-effect-ndjson': preferEffectNdjson,
+  'prefer-effect-net-address': preferEffectNetAddress,
   'prefer-effect-path': preferEffectPath,
   'prefer-effect-predicate': preferEffectPredicate,
   'prefer-effect-sse': preferEffectSse,
   'prefer-effect-url': preferEffectUrl,
+  'prefer-effect-user-directories': preferEffectUserDirectories,
   'prefer-hoisted-match': preferHoistedMatch,
   'prefer-equal': preferEqual,
   'prefer-struct-assign': preferStructAssign,
