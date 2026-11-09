@@ -29,7 +29,7 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
   `prefer-equal`, and `prefer-struct-assign`. See [Effect modules over native logic](#effect-modules-over-native-logic).
 - Syntax-safe Effect diagnostics proposed in open `Effect-TS/tsgo` issues: the remaining `cors-*`, `dual-*`,
   `no-*`, `prefer-*`, `preserve-*`, and `require-*` Effect rules.
-- Effect v4 API guidance for Array, DateTime, Duration, Encoding, FileSystem, Filter, Headers, Match, Path, and Url,
+- Effect v4 API guidance for Array, DateTime, Duration, binary encodings, FileSystem, Filter, Headers, Match, Path, and Url,
   plus interruptible `Effect.tryPromise` thunks.
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
   and no root-barrel module imports. `@effect/vitest` and lowercase unstable barrels are intentionally exempt.
@@ -247,6 +247,29 @@ These rules only run in files that import Effect, report without autofixes, and 
   are callbacks with untyped parameters (`{ ...server, addTool: Effect.fn(function* (registration) {}) }`), which
   lose their contextual type. `Struct.assign` also drops a class instance's prototype, so rebuild Schema and Data class
   instances with their constructor.
+
+## Effect binary encodings
+
+These rules push Base64, Base64Url, and hexadecimal conversions to the Effect v4
+[`effect/encoding`](https://effect.website/docs/v4/api/effect/encoding/Base64) modules. Their encoders accept bytes or
+UTF-8 text and run the same in Node.js, browsers, and Workers, and their decoders return a `Result` with an
+`EncodingError` instead of throwing.
+
+- `prefer-effect-encoding` reports, in files that import Effect, `atob` and `btoa` (also through `globalThis`),
+  `Buffer.from(x, 'base64' | 'base64url' | 'hex')`, `.toString('base64' | 'base64url' | 'hex')` on any value (such as
+  `Buffer.from(bytes).toString('base64')`), and `Uint8Array.fromBase64`/`fromHex`, and names the `Base64`,
+  `Base64Url`, or `Hex` function to use. `Uint8Array#toBase64` and `#toHex` are allowed: they do not throw and Effect's
+  `Base64.encode` uses them itself.
+- `no-manual-encoding` reports, in files that import Effect, hand-written conversions: a `replace`/`replaceAll` chain
+  or a `pipe` of `Str.replace`/`Str.replaceAll` steps that swaps both `+`/`-` and `/`/`_` (use `Base64Url.encode` or
+  `Base64Url.decode`), and `byte.toString(16)` padded to two digits with `'0'` through `.padStart`, `Str.padStart`,
+  or `pipe` (use `Hex.encode`). A single swap, such as `.replace(/\+/g, ' ')`, is allowed.
+- `no-encoding-get-or-throw` reports `Result.getOrThrow` and `Result.getOrThrowWith` on a `Base64`, `Base64Url`, or
+  `Hex` decoder, directly or as a `pipe` step, because it turns the typed `EncodingError` back into an exception. Use
+  `yield* Effect.fromResult(Base64.decode(x))`, `Result.match`, or `Result.getOrElse`. Effect v4 `Result` values
+  cannot be yielded in `Effect.gen` directly.
+
+`SchemaBinary` has no native counterpart that is worth a syntax rule, so no rule targets it.
 
 ## anti-slop Effect rules
 
