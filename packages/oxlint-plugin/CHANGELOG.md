@@ -1,3 +1,10 @@
+## @2digits/oxlint-plugin@0.7.1
+
+### Fewer false positives in wrapper rules
+
+- `no-forwarding-lambda` no longer reports `Match` handlers such as `Match.tag('Known', (x) => Opt.some(x))`, where passing a generic function directly loses the inferred type.
+- `no-constant-thunk` no longer reports functions that are passed as a value, such as a handler argument that must be a function.
+
 ## @2digits/oxlint-plugin@0.7.0
 
 ### Report more manual branching that Effect Match handles
