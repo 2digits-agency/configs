@@ -5,8 +5,9 @@ Custom [Oxlint JavaScript plugin](https://oxc.rs/docs/guide/usage/linter/writing
 
 The recommended set is enabled by default by `@2digits/oxlint-config`. The opt-in `prefer-effect-filesystem` and
 `prefer-effect-path` rules are excluded because the configured `@effect/tsgo/nodeBuiltinImport` diagnostic already
-enforces those imports more broadly, and `prefer-effect-http-status` because it only renames well-known numbers (see
-[Effect HTTP modules](#effect-http-modules)). To register the plugin directly:
+enforces those imports more broadly. `prefer-effect-http-status` is recommended at `warn`, because it only names
+well-known numbers (see [Effect HTTP modules](#effect-http-modules)); every other recommended rule is an error. To
+register the plugin directly:
 
 ```ts
 import { defineConfig } from 'oxlint';
@@ -21,7 +22,7 @@ export default defineConfig({
 
 ## Rules
 
-The package exports all rules as `rules`, their names as `RuleName`, and the default error-level configuration as
+The package exports all rules as `rules`, their names as `RuleName`, and the default configuration as
 `recommendedRules`.
 
 - Copied and adapted Effect practices: `avoid-data-tagged-error`, `ban-error-string`,
@@ -273,12 +274,12 @@ have no autofixes.
   Shorter lists are usually deliberate subsets, such as the safe methods or the methods of one route, and method
   comparisons are left alone: `HttpMethod` has no constants to compare with, and `HttpMethod.hasBody` treats
   `OPTIONS` and `TRACE` as bodyless, so it is not a drop-in for `method === 'GET' || method === 'HEAD'`.
-- `prefer-effect-http-status` (opt-in) reports known status code numbers passed to Effect HTTP APIs:
+- `prefer-effect-http-status` (warning) reports known status code numbers passed to Effect HTTP APIs:
   `HttpApiSchema.status(404)`, which accepts `'NotFound'` directly, plus `HttpApiSchema.Empty(204)`,
   `{ httpApiStatus: 401 }` annotations, `HttpServerResponse.setStatus(429)` and the `status` option of
   `HttpServerResponse` constructors, which take `HttpStatus.fromLiteral('Unauthorized')`. Plain objects, comparisons and
-  test fakes are not checked. It is excluded from `recommendedRules` because it only renames numbers every reader
-  knows: enable it where named statuses are the house style.
+  test fakes are not checked. It is recommended at `warn` rather than `error`, because it only names numbers every
+  reader knows.
 
 Cookie handling has no rule. Across the agency's Effect projects, hand-written cookie code was almost entirely
 byte-faithful passthroughs and Set-Cookie fixtures, which `Cookies` would normalize.

@@ -16,6 +16,7 @@ import * as HttpRouter from 'effect/http/HttpRouter';
 import * as HttpServer from 'effect/http/HttpServer';
 import * as HttpServerRequest from 'effect/http/HttpServerRequest';
 import * as HttpServerResponse from 'effect/http/HttpServerResponse';
+import * as HttpStatus from 'effect/http/HttpStatus';
 import * as Url from 'effect/http/Url';
 
 import { OrbitAuthError } from './session.js';
@@ -27,13 +28,16 @@ const headers = {
   'content-security-policy': "default-src 'none'",
 };
 
-const invalid = HttpServerResponse.text('Invalid callback.', { status: 400, headers });
+const invalid = HttpServerResponse.text('Invalid callback.', { status: HttpStatus.fromLiteral('BadRequest'), headers });
 
 const accepted = HttpServerResponse.text('Authorization received. Return to your terminal to complete login.', {
   headers,
 });
 
-const denied = HttpServerResponse.text('Authorization denied. Return to your terminal.', { status: 400, headers });
+const denied = HttpServerResponse.text('Authorization denied. Return to your terminal.', {
+  status: HttpStatus.fromLiteral('BadRequest'),
+  headers,
+});
 
 function soleParameter(url: URL, name: string): Opt.Option<string> {
   return Arr.matchLeft(url.searchParams.getAll(name), {
