@@ -1,69 +1,78 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
-import type * as Option from 'effect/Option';
-import * as P from 'effect/Predicate';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import * as R from 'effect/Record';
 import type * as Result from 'effect/Result';
+import * as Schema from 'effect/Schema';
 
-import { defineEffectRule, ruleMeta } from '../../utils';
-import { domainSection, importedPath, isImportReference } from './domain';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { domainSection, importedPath, isImportReference, type DomainFile } from './internal/domain';
 
-const totalSections: ReadonlyMap<string, ReadonlySet<string>> = new Map([
-  ['Aggregate', new Set(['evolve', 'reply'])],
-  ['View', new Set(['evolve'])],
-]);
+const totalSections: Readonly<Record<string, ReadonlyArray<string>>> = {
+  Aggregate: ['evolve', 'reply'],
+  View: ['evolve'],
+};
 
-const throwingModules: ReadonlySet<string> = new Set(['Option', 'Result']);
+const isThrowingModule = Schema.is(Schema.Literals(['Option', 'Result']));
 
-const throwingGetters: ReadonlySet<string> = new Set(['getOrThrow', 'getOrThrowWith'] satisfies ReadonlyArray<
-  keyof typeof Option & keyof typeof Result
->);
+const isThrowingGetter = Schema.is(
+  Schema.Literals(['getOrThrow', 'getOrThrowWith'] satisfies ReadonlyArray<keyof typeof Opt & keyof typeof Result>),
+);
 
-export const alchemyDomainTotalHandlers: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Require Alchemy Domain evolve and reply handlers to be total, and decide handlers to reject instead of throwing.',
-    {
+export const alchemyDomainTotalHandlers: CreateRule = Rule.define({
+  name: 'alchemy-domain-total-handlers',
+  meta: ruleMeta({
+    type: 'problem',
+    description:
+      'Require Alchemy Domain evolve and reply handlers to be total, and decide handlers to reject instead of throwing.',
+    messages: {
       partial:
         '`{{section}}` must be total and never fail: {{api}} throws when the state is not what it expects. Keep any state the event cannot follow, such as `s._tag === "Open" ? { ...s, ... } : s`.',
       reject:
         '`decide` never throws: {{api}} becomes a defect the caller cannot handle. Return a rejection the command lists in `rejects` instead, or `return yield* rejection` in an `Effect.fn`.',
     },
-    'https://alchemy.run/domain/aggregate',
-  ),
-  (context, getState) => {
-    function report(node: ESTree.Node, api: string): void {
-      const found = domainSection(node, getState(), context);
+    url: 'https://alchemy.run/domain/aggregate',
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
 
-      if (P.isUndefined(found)) {
-        return;
-      }
+    const file: DomainFile = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
 
-      if (found.block === 'Aggregate' && found.section === 'decide') {
-        context.report({ node, messageId: 'reject', data: { api } });
-      } else if (totalSections.get(found.block)?.has(found.section) === true) {
-        context.report({ node, messageId: 'partial', data: { section: found.section, api } });
-      }
+    function report(node: ESTree.Node, api: string) {
+      return Opt.match(domainSection(node, file), {
+        onNone: () => Effect.void,
+        onSome: ({ block, section }) => {
+          if (block === 'Aggregate' && section === 'decide') {
+            return ctx.report(Diagnostic.fromId({ node, messageId: 'reject', data: { api } }));
+          }
+
+          return Opt.exists(R.get(totalSections, block), Arr.contains(section))
+            ? ctx.report(Diagnostic.fromId({ node, messageId: 'partial', data: { section, api } }))
+            : Effect.void;
+        },
+      });
     }
 
-    function checkGetter(node: ESTree.Node): void {
-      const path = importedPath(node, getState(), context);
-
-      if (path?.length === 2 && throwingModules.has(path[0] ?? '') && throwingGetters.has(path[1] ?? '')) {
-        report(node, `\`${Arr.join(path, '.')}\``);
-      }
+    function checkGetter(node: ESTree.Node) {
+      return Opt.match(
+        Opt.filter(
+          importedPath(node, file),
+          (path) =>
+            path.length === 2 &&
+            Opt.exists(Arr.head(path), isThrowingModule) &&
+            Opt.exists(Arr.get(path, 1), isThrowingGetter),
+        ),
+        { onNone: () => Effect.void, onSome: (path) => report(node, `\`${Arr.join(path, '.')}\``) },
+      );
     }
 
-    return {
-      ThrowStatement(node) {
-        report(node, '`throw`');
-      },
+    return Visitor.merge(
+      Visitor.on('ThrowStatement', (node) => report(node, '`throw`')),
       // References, not only calls, so point-free `pipe(s.running, Option.getOrThrow)` counts too.
-      MemberExpression: checkGetter,
-      Identifier(node) {
-        if (isImportReference(node, context)) {
-          checkGetter(node);
-        }
-      },
-    };
+      Visitor.on('MemberExpression', checkGetter),
+      Visitor.on('Identifier', (node) => (isImportReference(node, ctx.sourceCode) ? checkGetter(node) : Effect.void)),
+    );
   },
-);
+});

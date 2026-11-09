@@ -1,31 +1,43 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
+import * as R from 'effect/Record';
 
-import { canonicalPath, defineEffectRule, ruleMeta, unwrapExpression, walkNodes, type FileState } from '../../utils';
+import { parentOf, unwrapExpression, walkNodes } from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-const guards: ReadonlyMap<string, ReadonlyArray<string>> = new Map([
-  ['Exit', ['isSuccess', 'isFailure']],
-  ['Result', ['isSuccess', 'isFailure']],
-  ['Option', ['isSome', 'isNone']],
-]);
+const guards: Readonly<Record<string, ReadonlyArray<string>>> = {
+  Exit: ['isSuccess', 'isFailure'],
+  Result: ['isSuccess', 'isFailure'],
+  Option: ['isSome', 'isNone'],
+};
 
 /**
  * The `Exit`, `Result` or `Option` guard path tested by `test`, also when negated.
  *
  * @param test Condition of an if statement or ternary.
- * @param state Import bindings of the file.
+ * @param imports Import bindings of the file.
  */
-function guardPath(test: ESTree.Expression, state: FileState): ReadonlyArray<string> | undefined {
+function guardPath(test: ESTree.Expression, imports: ImportBindings): Opt.Option<readonly [string, string]> {
   const expression = unwrapExpression(test.type === 'UnaryExpression' && test.operator === '!' ? test.argument : test);
 
   if (expression.type !== 'CallExpression' || expression.arguments.length !== 1) {
-    return undefined;
+    return Opt.none();
   }
 
-  const path = canonicalPath(expression.callee, state);
+  return Opt.flatMap(imports.path(expression.callee), (path) => {
+    const [module, guard] = path;
 
-  return path?.length === 2 && Arr.contains(guards.get(path[0] ?? '') ?? [], path[1]) ? path : undefined;
+    return path.length === 2 &&
+      P.isNotUndefined(module) &&
+      P.isNotUndefined(guard) &&
+      Opt.exists(R.get(guards, module), Arr.contains(guard))
+      ? Opt.some([module, guard] as const)
+      : Opt.none();
+  });
 }
 
 /**
@@ -42,72 +54,75 @@ function suspends(node: ESTree.Node): boolean {
  *
  * @param node Branch statement.
  */
-function returnsValue(node: ESTree.Statement | null | undefined): boolean {
-  if (!node) {
-    return false;
-  }
-
-  const last = node.type === 'BlockStatement' ? node.body.at(-1) : node;
-
-  return last?.type === 'ReturnStatement' && P.isNotNull(last.argument) && !suspends(node);
+function returnsValue(node: Opt.Option<ESTree.Statement>): boolean {
+  return Opt.exists(node, (statement) =>
+    Opt.exists(
+      statement.type === 'BlockStatement' ? Arr.last(statement.body) : Opt.some(statement),
+      (last) => last.type === 'ReturnStatement' && P.isNotNull(last.argument) && !suspends(statement),
+    ),
+  );
 }
 
 /**
- * The statement after `node` in its block, which runs when an `if` without `else` falls through.
+ * The `return` after `node` in its block, which runs when an `if` without `else` falls through.
  *
  * @param node Statement to look past.
  */
-function nextStatement(node: ESTree.IfStatement): ESTree.Statement | undefined {
-  const parent = node.parent;
+function nextReturn(node: ESTree.IfStatement): Opt.Option<ESTree.Statement> {
+  return Opt.flatMap(
+    Opt.filter(parentOf(node), (parent) => parent.type === 'BlockStatement' || parent.type === 'Program'),
+    (parent) => {
+      const body = (parent as ESTree.BlockStatement | ESTree.Program).body as ReadonlyArray<ESTree.Node>;
 
-  if (parent.type !== 'BlockStatement' && parent.type !== 'Program') {
-    return undefined;
-  }
-
-  const body: ReadonlyArray<ESTree.Node> = parent.body;
-
-  const next = body[body.indexOf(node) + 1];
-
-  return next?.type === 'ReturnStatement' ? next : undefined;
+      return Opt.filter(
+        Arr.get(body, body.indexOf(node) + 1),
+        (next): next is ESTree.ReturnStatement => next.type === 'ReturnStatement',
+      );
+    },
+  );
 }
 
 /**
  * Prefer the data type's own `match` over branching on its guards when both branches produce a value.
  */
-export const preferDataMatch: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Use Exit.match, Result.match or Option.match instead of branching on their guards to produce a value.',
-    {
+export const preferDataMatch: CreateRule = Rule.define({
+  name: 'prefer-data-match',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description:
+      'Use Exit.match, Result.match or Option.match instead of branching on their guards to produce a value.',
+    messages: {
       preferMatch:
         'Use `{{module}}.match` instead of branching on `{{module}}.{{guard}}` and producing a value in both branches.',
     },
-    'https://www.effect.website/docs/v4/api/effect/Option',
-  ),
-  (context, getState) => {
-    function report(node: ESTree.Node, path: ReadonlyArray<string>): void {
-      context.report({ node, messageId: 'preferMatch', data: { module: path[0] ?? '', guard: path[1] ?? '' } });
+    url: 'https://www.effect.website/docs/v4/api/effect/Option',
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    function reportWhen(node: ESTree.Node, test: ESTree.Expression, producesValues: () => boolean) {
+      return Opt.match(Opt.filter(guardPath(test, imports), producesValues), {
+        onNone: () => Effect.void,
+        onSome: ([module, guard]) =>
+          ctx.report(Diagnostic.fromId({ node, messageId: 'preferMatch', data: { module, guard } })),
+      });
     }
 
-    return {
-      ConditionalExpression(node) {
-        const path = guardPath(node.test, getState());
-
-        if (P.isNotUndefined(path) && !suspends(node.consequent) && !suspends(node.alternate)) {
-          report(node, path);
-        }
-      },
-      IfStatement(node) {
-        const path = guardPath(node.test, getState());
-
-        if (
-          P.isNotUndefined(path) &&
-          returnsValue(node.consequent) &&
-          returnsValue(node.alternate ?? nextStatement(node))
-        ) {
-          report(node, path);
-        }
-      },
-    };
+    return Visitor.merge(
+      Visitor.on('ConditionalExpression', (node) =>
+        reportWhen(node, node.test, () => !suspends(node.consequent) && !suspends(node.alternate)),
+      ),
+      Visitor.on('IfStatement', (node) =>
+        reportWhen(
+          node,
+          node.test,
+          () =>
+            returnsValue(Opt.some(node.consequent)) &&
+            returnsValue(Opt.orElse(Opt.fromNullishOr(node.alternate), () => nextReturn(node))),
+        ),
+      ),
+    );
   },
-);
+});

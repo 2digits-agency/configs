@@ -1,24 +1,42 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import * as Schema from 'effect/Schema';
 
-import { canonicalPath, defineEffectRule, ruleMeta } from '../../utils';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-export const alchemyNoRemovedConfigApi: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow removed Alchemy Secret and Variable APIs.',
-    {
+const isRemovedApi = Schema.is(Schema.Literals(['Secret', 'Variable']));
+
+export const alchemyNoRemovedConfigApi: CreateRule = Rule.define({
+  name: 'alchemy-no-removed-config-api',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow removed Alchemy Secret and Variable APIs.',
+    messages: {
       removed:
         'Alchemy.{{api}} was removed. Use effect/Config (Config.redacted for secrets, Config.string for variables).',
     },
-    'https://alchemy.run/blog/2026-05-29-beta-45',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const path = canonicalPath(node.callee, getState());
-
-      if (path?.[0] === 'Alchemy' && (path[1] === 'Secret' || path[1] === 'Variable')) {
-        context.report({ node: node.callee, messageId: 'removed', data: { api: path[1] } });
-      }
-    },
+    url: 'https://alchemy.run/blog/2026-05-29-beta-45',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      Opt.match(
+        imports.path(node.callee).pipe(
+          Opt.filter((path) => Opt.contains(Arr.head(path), 'Alchemy')),
+          Opt.flatMap((path) => Arr.get(path, 1)),
+          Opt.filter(isRemovedApi),
+        ),
+        {
+          onNone: () => Effect.void,
+          onSome: (api) => ctx.report(Diagnostic.fromId({ node: node.callee, messageId: 'removed', data: { api } })),
+        },
+      ),
+    );
+  },
+});

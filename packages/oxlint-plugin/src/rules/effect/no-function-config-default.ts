@@ -1,112 +1,143 @@
-import type { Context, ESTree, Rule, Variable } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree, type Variable } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as Config from 'effect/Config';
-import * as P from 'effect/Predicate';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 
-import { importedApi } from '../../fixes';
 import {
   argumentAt,
-  defineEffectRule,
-  isApi,
+  containsSame,
   isConstDeclaration,
   isFunctionNode,
-  resolveVariable,
-  ruleMeta,
-  soleDefinition,
+  isSomeSame,
+  parentOfType,
   staticPropertyName,
   unwrapExpression,
-} from '../../utils';
+} from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { isImportedApi, resolveVariable, soleDefinition } from '../../internal/scope';
 
-function resolveConst(node: ESTree.Expression, context: Context): ESTree.Expression | undefined {
-  let expression = unwrapExpression(node);
+/**
+ * The initializer of a `const` the identifier names, followed through `const` aliases; none for anything reassigned.
+ *
+ * @param node Expression.
+ * @param seen Variables already followed.
+ */
+function resolveConst(
+  node: ESTree.Expression,
+  seen: ReadonlyArray<Variable> = [],
+): Effect.Effect<Opt.Option<ESTree.Expression>, never, RuleContext> {
+  const expression = unwrapExpression(node);
 
-  const seen = new Set<Variable>();
-
-  while (expression.type === 'Identifier') {
-    const variable = resolveVariable(context, expression, expression.name);
-
-    const definition = soleDefinition(variable);
-
-    const declaration = definition?.node;
-
-    if (
-      P.isUndefined(variable) ||
-      seen.has(variable) ||
-      declaration?.type !== 'VariableDeclarator' ||
-      declaration.id.type !== 'Identifier' ||
-      !isConstDeclaration(definition?.parent) ||
-      !declaration.init ||
-      Arr.some(variable.references, (reference) => reference.isWrite() && !reference.init)
-    ) {
-      return undefined;
-    }
-
-    seen.add(variable);
-
-    expression = unwrapExpression(declaration.init);
+  if (expression.type !== 'Identifier') {
+    return Effect.succeedSome(expression);
   }
 
-  return expression;
+  return Effect.flatMap(resolveVariable(expression, expression.name), (resolved) => {
+    const initializer = Opt.flatMap(resolved, (variable) =>
+      Opt.flatMap(soleDefinition(resolved), (definition) => {
+        const declaration = definition.node;
+
+        return containsSame(seen, variable) ||
+          declaration.type !== 'VariableDeclarator' ||
+          declaration.id.type !== 'Identifier' ||
+          !isConstDeclaration(definition.parent) ||
+          !declaration.init ||
+          Arr.some(variable.references, (reference) => reference.isWrite() && !reference.init)
+          ? Opt.none()
+          : Opt.some([variable, declaration.init] as const);
+      }),
+    );
+
+    return Opt.match(initializer, {
+      onNone: () => Effect.succeedNone,
+      onSome: ([variable, init]) => resolveConst(init, [...seen, variable]),
+    });
+  });
 }
 
-function receivingConfig(node: ESTree.CallExpression): ESTree.Expression | undefined {
+/**
+ * The config `Config.withDefault` applies to: its data-first argument, or the receiver of
+ * `.pipe(Config.withDefault(…))`. Earlier pipe operations may change the success value, so only the first operation is
+ * proven.
+ *
+ * @param node `Config.withDefault` call.
+ */
+function receivingConfig(node: ESTree.CallExpression): Opt.Option<ESTree.Expression> {
   if (node.arguments.length === 2) {
     return argumentAt(node, 0);
   }
 
-  const parent = node.parent;
-
-  // Earlier pipe operations may change the success value, so only prove the first operation.
-  if (
-    node.arguments.length === 1 &&
-    parent.type === 'CallExpression' &&
-    argumentAt(parent, 0) === node &&
-    parent.callee.type === 'MemberExpression' &&
-    staticPropertyName(parent.callee) === 'pipe'
-  ) {
-    return parent.callee.object;
-  }
-
-  return undefined;
+  return node.arguments.length === 1
+    ? Opt.flatMap(
+        Opt.filter(
+          parentOfType(node, 'CallExpression'),
+          (parent) =>
+            isSomeSame<ESTree.Node>(argumentAt(parent, 0), node) &&
+            parent.callee.type === 'MemberExpression' &&
+            Opt.contains(staticPropertyName(parent.callee), 'pipe'),
+        ),
+        (parent) => (parent.callee.type === 'MemberExpression' ? Opt.some(parent.callee.object) : Opt.none()),
+      )
+    : Opt.none();
 }
 
-export const noFunctionConfigDefault: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow obsolete lazy callbacks passed to the now-eager Config.withDefault API.',
-    {
+export const noFunctionConfigDefault: CreateRule = Rule.define({
+  name: 'no-function-config-default',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow obsolete lazy callbacks passed to the now-eager Config.withDefault API.',
+    messages: {
       functionDefault:
         'Config.withDefault takes an eager value. This callback becomes the configured value; pass the returned value directly.',
     },
-    'https://github.com/Effect-TS/tsgo/issues/408',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      if (
-        !isApi(node.callee, getState(), 'Config', 'withDefault' satisfies keyof typeof Config) ||
-        !importedApi(context, node.callee)
-      ) {
-        return;
-      }
+    url: 'https://github.com/Effect-TS/tsgo/issues/408',
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
 
-      const fallback = argumentAt(node, node.arguments.length - 1);
+    const imports = yield* importBindings;
 
+    /**
+     * Whether the config is `Config.succeed(() => …)`, whose value really is a function.
+     *
+     * @param node `Config.withDefault` call.
+     */
+    const isFunctionConfig = Effect.fnUntraced(function* (node: ESTree.CallExpression) {
       const config = receivingConfig(node);
 
-      const receiver = P.isUndefined(config) ? undefined : resolveConst(config, context);
+      const receiver = Opt.isSome(config) ? yield* resolveConst(config.value) : Opt.none();
 
       if (
-        receiver?.type === 'CallExpression' &&
-        isApi(receiver.callee, getState(), 'Config', 'succeed' satisfies keyof typeof Config) &&
-        importedApi(context, receiver.callee) &&
-        isFunctionNode(argumentAt(receiver, 0))
+        Opt.isNone(receiver) ||
+        receiver.value.type !== 'CallExpression' ||
+        !imports.isApi(receiver.value.callee, 'Config', 'succeed' satisfies keyof typeof Config)
       ) {
-        return;
+        return false;
       }
 
-      if (isFunctionNode(fallback) && Arr.isReadonlyArrayEmpty(fallback.params)) {
-        context.report({ node: fallback, messageId: 'functionDefault' });
-      }
-    },
-  }),
-);
+      const call = receiver.value;
+
+      return (yield* isImportedApi(call.callee)) && Opt.exists(argumentAt(call, 0), isFunctionNode);
+    });
+
+    return Visitor.on('CallExpression', (node) =>
+      Effect.gen(function* () {
+        if (
+          !imports.isApi(node.callee, 'Config', 'withDefault' satisfies keyof typeof Config) ||
+          !(yield* isImportedApi(node.callee)) ||
+          (yield* isFunctionConfig(node))
+        ) {
+          return;
+        }
+
+        const fallback = argumentAt(node, node.arguments.length - 1);
+
+        if (Opt.isSome(fallback) && isFunctionNode(fallback.value) && Arr.isReadonlyArrayEmpty(fallback.value.params)) {
+          yield* ctx.report(Diagnostic.fromId({ node: fallback.value, messageId: 'functionDefault' }));
+        }
+      }),
+    );
+  },
+});

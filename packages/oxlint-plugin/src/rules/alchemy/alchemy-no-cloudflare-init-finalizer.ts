@@ -1,33 +1,35 @@
-import type { Rule } from '@oxlint/plugins';
-import type * as Effect from 'effect/Effect';
-import * as P from 'effect/Predicate';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 
-import { defineEffectRule, isApi, ruleMeta } from '../../utils';
-import { containingEffectGen, containingWorker } from './utils';
+import { containsSame } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { containingEffectGen, containingWorker } from './internal/worker';
 
-export const alchemyNoCloudflareInitFinalizer: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow finalizers in Cloudflare Worker initialization, where workerd never runs them.',
-    {
+export const alchemyNoCloudflareInitFinalizer: CreateRule = Rule.define({
+  name: 'alchemy-no-cloudflare-init-finalizer',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow finalizers in Cloudflare Worker initialization, where workerd never runs them.',
+    messages: {
       finalizer:
         'A Cloudflare Worker init finalizer never runs because workerd has no isolate teardown hook. Acquire disposable resources inside an event handler.',
     },
-    'https://alchemy.run/cloudflare/compute/workers',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const state = getState();
-
-      if (!isApi(node.callee, state, 'Effect', 'addFinalizer' satisfies keyof typeof Effect)) {
-        return;
-      }
-
-      const program = containingEffectGen(node, state);
-
-      if (P.isNotUndefined(program) && containingWorker(program, state)?.arguments.includes(program)) {
-        context.report({ node, messageId: 'finalizer' });
-      }
-    },
+    url: 'https://alchemy.run/cloudflare/compute/workers',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      imports.isApi(node.callee, 'Effect', 'addFinalizer' satisfies keyof typeof Effect) &&
+      Opt.exists(containingEffectGen(node, imports), (program) =>
+        Opt.exists(containingWorker(program, imports), (worker) => containsSame(worker.arguments, program)),
+      )
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'finalizer' }))
+        : Effect.void,
+    );
+  },
+});

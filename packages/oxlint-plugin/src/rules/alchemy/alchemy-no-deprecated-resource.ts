@@ -1,42 +1,48 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
-import * as P from 'effect/Predicate';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import * as R from 'effect/Record';
 
-import { canonicalPath, defineEffectRule, ruleMeta } from '../../utils';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-const deprecatedResources = new Map<string, string>([
-  ['Cloudflare.Access.Bookmark', 'Cloudflare.Access.Application with type: "bookmark"'],
-  ['AWS.RDSData.ExecuteSql', 'AWS.RDSData.ExecuteStatement'],
-  ['AWS.EKS.Deployment', 'Kubernetes.Deployment from alchemy/Kubernetes'],
-  ['AWS.EKS.HelmChart', 'Kubernetes.HelmChart from alchemy/Kubernetes'],
-  ['AWS.EKS.Job', 'Kubernetes.Job from alchemy/Kubernetes'],
-  ['AWS.EKS.Manifest', 'Kubernetes.Manifest from alchemy/Kubernetes'],
-]);
+const deprecatedResources: Readonly<Record<string, string>> = {
+  'Cloudflare.Access.Bookmark': 'Cloudflare.Access.Application with type: "bookmark"',
+  'AWS.RDSData.ExecuteSql': 'AWS.RDSData.ExecuteStatement',
+  'AWS.EKS.Deployment': 'Kubernetes.Deployment from alchemy/Kubernetes',
+  'AWS.EKS.HelmChart': 'Kubernetes.HelmChart from alchemy/Kubernetes',
+  'AWS.EKS.Job': 'Kubernetes.Job from alchemy/Kubernetes',
+  'AWS.EKS.Manifest': 'Kubernetes.Manifest from alchemy/Kubernetes',
+};
 
-export const alchemyNoDeprecatedResource: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow deprecated Alchemy resource APIs that have supported replacements.',
-    {
+export const alchemyNoDeprecatedResource: CreateRule = Rule.define({
+  name: 'alchemy-no-deprecated-resource',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow deprecated Alchemy resource APIs that have supported replacements.',
+    messages: {
       deprecated: '{{api}} is deprecated. Use {{replacement}}.',
     },
-    'https://alchemy.run/llms-full.txt',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const path = canonicalPath(node.callee, getState());
-
-      if (P.isUndefined(path)) {
-        return;
-      }
-
-      const api = Arr.join(path, '.');
-
-      const replacement = deprecatedResources.get(api);
-
-      if (P.isNotUndefined(replacement)) {
-        context.report({ node: node.callee, messageId: 'deprecated', data: { api, replacement } });
-      }
-    },
+    url: 'https://alchemy.run/llms-full.txt',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      Opt.match(
+        Opt.flatMap(imports.path(node.callee), (path) => {
+          const api = Arr.join(path, '.');
+
+          return Opt.map(R.get(deprecatedResources, api), (replacement) => ({ api, replacement }));
+        }),
+        {
+          onNone: () => Effect.void,
+          onSome: (data) => ctx.report(Diagnostic.fromId({ node: node.callee, messageId: 'deprecated', data })),
+        },
+      ),
+    );
+  },
+});

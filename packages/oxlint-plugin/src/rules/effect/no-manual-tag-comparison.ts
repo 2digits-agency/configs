@@ -1,42 +1,43 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
-import * as P from 'effect/Predicate';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 
-import { defineSyntaxRule, ruleMeta, staticPropertyName } from '../../utils';
-import { discriminantFromComparison, isDiscriminantMember, isInsideBroadEffectHandler } from './tagged-values';
+import { staticPropertyName } from '../../internal/ast';
+import { ruleMeta } from '../../internal/meta';
+import { discriminantFromComparison, isDiscriminantMember, isInsideBroadEffectHandler } from './internal/tagged-values';
 
-export interface NoManualTagComparisonOptions {
-  /**
-   * Discriminant properties checked in addition to `_tag`. Replaces the default `['kind', 'status']`.
-   */
-  readonly discriminants?: ReadonlyArray<string>;
-}
+const Options = Schema.Struct({
+  discriminants: Schema.Array(Schema.String)
+    .annotate({
+      description: "Discriminant properties checked in addition to `_tag`. Replaces the default `['kind', 'status']`.",
+    })
+    .pipe(Schema.optionalKey),
+});
 
-// Oxlint validates options against `meta.schema`; the guard only narrows the JSON value.
-const isOptions: (value: unknown) => value is NoManualTagComparisonOptions = Schema.is(
-  Schema.Struct({ discriminants: Schema.Array(Schema.String).pipe(Schema.optionalKey) }),
-);
+export type NoManualTagComparisonOptions = typeof Options.Type;
 
 /**
  * Prefer Match/Predicate helpers; broad catch handlers belong to the error-tag rule, which only knows `_tag`.
  */
-export const noManualTagComparison: Rule = defineSyntaxRule(
-  {
-    ...ruleMeta(
-      'problem',
+export const noManualTagComparison: CreateRule = Rule.define({
+  name: 'no-manual-tag-comparison',
+  meta: ruleMeta({
+    type: 'problem',
+    description:
       'Use Effect Match or Predicate helpers instead of manually branching on `_tag` or another configured discriminant.',
-      {
-        manualComparison:
-          'Use Match.tag/Match.tags for tagged-value branching, or Predicate.isTagged for a simple reusable predicate.',
-        manualSwitch:
-          'Use Match.value(value).pipe(Match.tag/Match.tags/Match.tagsExhaustive) or the tagged enum `$match` helper instead of switching on `_tag`.',
-        manualDiscriminantComparison:
-          "Use Match.discriminator('{{discriminant}}')/Match.discriminators('{{discriminant}}') or a Match.when pattern instead of comparing `{{discriminant}}` manually.",
-        manualDiscriminantSwitch:
-          "Use Match.type or Match.value with Match.discriminatorsExhaustive('{{discriminant}}') instead of switching on `{{discriminant}}`.",
-      },
-      'https://github.com/dmmulroy/anti-slop/blob/main/src/effect/rules/no-manual-tag-comparison.ts',
-    ),
+    messages: {
+      manualComparison:
+        'Use Match.tag/Match.tags for tagged-value branching, or Predicate.isTagged for a simple reusable predicate.',
+      manualSwitch:
+        'Use Match.value(value).pipe(Match.tag/Match.tags/Match.tagsExhaustive) or the tagged enum `$match` helper instead of switching on `_tag`.',
+      manualDiscriminantComparison:
+        "Use Match.discriminator('{{discriminant}}')/Match.discriminators('{{discriminant}}') or a Match.when pattern instead of comparing `{{discriminant}}` manually.",
+      manualDiscriminantSwitch:
+        "Use Match.type or Match.value with Match.discriminatorsExhaustive('{{discriminant}}') instead of switching on `{{discriminant}}`.",
+    },
+    url: 'https://github.com/dmmulroy/anti-slop/blob/main/src/effect/rules/no-manual-tag-comparison.ts',
+    // Oxlint validates the options against this JSON Schema; the Effect Schema decodes them.
     schema: [
       {
         type: 'object',
@@ -52,43 +53,40 @@ export const noManualTagComparison: Rule = defineSyntaxRule(
       },
     ],
     defaultOptions: [{ discriminants: ['kind', 'status'] } satisfies NoManualTagComparisonOptions],
-  },
-  (context) => {
-    let discriminants: ReadonlySet<string> = new Set();
+  }),
+  options: Options.pipe(Schema.UndefinedOr),
+  *create(options) {
+    const ctx = yield* RuleContext;
 
-    function report(node: ESTree.Node, member: ESTree.MemberExpression, kind: 'Comparison' | 'Switch'): void {
+    const discriminants: ReadonlySet<string> = new Set(['_tag', ...(options?.discriminants ?? [])]);
+
+    function report(node: ESTree.Node, member: ESTree.MemberExpression, kind: 'Comparison' | 'Switch') {
       const isTag = isDiscriminantMember(member);
 
       // A broad Effect catch handler belongs to `no-manual-effect-error-tag`, but only for `_tag`.
-      if (isTag && isInsideBroadEffectHandler(node)) {
-        return;
-      }
-
-      context.report({
-        node,
-        messageId: isTag ? `manual${kind}` : `manualDiscriminant${kind}`,
-        data: { discriminant: staticPropertyName(member) ?? '' },
-      });
+      return isTag && isInsideBroadEffectHandler(node)
+        ? Effect.void
+        : ctx.report(
+            Diagnostic.fromId({
+              node,
+              messageId: isTag ? `manual${kind}` : `manualDiscriminant${kind}`,
+              data: { discriminant: Opt.getOrElse(staticPropertyName(member), () => '') },
+            }),
+          );
     }
 
-    return {
-      before() {
-        const [options] = context.options;
-
-        discriminants = new Set(['_tag', ...(isOptions(options) ? (options.discriminants ?? []) : [])]);
-      },
-      BinaryExpression(node) {
-        const member = discriminantFromComparison(node, discriminants);
-
-        if (P.isNotUndefined(member)) {
-          report(node, member, 'Comparison');
-        }
-      },
-      SwitchStatement(node) {
-        if (isDiscriminantMember(node.discriminant, discriminants)) {
-          report(node, node.discriminant, 'Switch');
-        }
-      },
-    };
+    return Visitor.merge(
+      Visitor.on('BinaryExpression', (node) =>
+        Opt.match(discriminantFromComparison(node, discriminants), {
+          onNone: () => Effect.void,
+          onSome: (member) => report(node, member, 'Comparison'),
+        }),
+      ),
+      Visitor.on('SwitchStatement', (node) =>
+        isDiscriminantMember(node.discriminant, discriminants)
+          ? report(node, node.discriminant, 'Switch')
+          : Effect.void,
+      ),
+    );
   },
-);
+});

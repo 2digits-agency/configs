@@ -1,21 +1,32 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
 
-import { defineEffectRule, isGlobalIdentifier, ruleMeta } from '../../utils';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { isGlobalIdentifier } from '../../internal/scope';
 
-export const preferEffectHeaders: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Prefer immutable Effect Headers values in Effect projects.',
-    {
-      effectHeaders: 'Use Headers.fromInput to construct normalized, immutable Effect headers.',
-    },
-    'https://www.effect.website/docs/v4/api/effect/unstable/http/Headers',
-  ),
-  (context, getState) => ({
-    NewExpression(node) {
-      if (getState().hasEffectImport && isGlobalIdentifier(node.callee, context, 'Headers')) {
-        context.report({ node, messageId: 'effectHeaders' });
-      }
-    },
+export const preferEffectHeaders: CreateRule = Rule.define({
+  name: 'prefer-effect-headers',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Prefer immutable Effect Headers values in Effect projects.',
+    messages: { effectHeaders: 'Use Headers.fromInput to construct normalized, immutable Effect headers.' },
+    url: 'https://www.effect.website/docs/v4/api/effect/unstable/http/Headers',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    if (!imports.hasEffectImport) {
+      return {};
+    }
+
+    return Visitor.on('NewExpression', (node) =>
+      Effect.when(
+        ctx.report(Diagnostic.fromId({ node, messageId: 'effectHeaders' })),
+        isGlobalIdentifier(node.callee, 'Headers'),
+      ),
+    );
+  },
+});

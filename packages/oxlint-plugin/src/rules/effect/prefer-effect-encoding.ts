@@ -1,49 +1,62 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
-import * as P from 'effect/Predicate';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import * as Schema from 'effect/Schema';
 
-import { argumentAt, defineEffectRule, isGlobalIdentifier, isStringLiteral, ruleMeta, staticPath } from '../../utils';
+import { argumentAt, isStringLiteral, staticPath } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { isGlobalIdentifier } from '../../internal/scope';
 
-const encodings: ReadonlySet<string> = new Set(['base64', 'base64url', 'hex']);
+const Encoding = Schema.Literals(['base64', 'base64url', 'hex']);
 
-function isEncodingArgument(node: ESTree.Expression | undefined): boolean {
-  return P.isNotUndefined(node) && isStringLiteral(node) && encodings.has(node.value);
+const isEncoding = Schema.is(Encoding);
+
+function isEncodingArgument(node: Opt.Option<ESTree.Expression>): boolean {
+  return Opt.exists(node, (argument) => isStringLiteral(argument) && isEncoding(argument.value));
 }
 
-export const preferEffectEncoding: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Prefer Effect Encoding for portable Base64, Base64Url, and hexadecimal encoding.',
-    {
-      effectEncoding: 'Use Encoding encode/decode helpers; decoders return Result instead of throwing.',
-    },
-    'https://www.effect.website/docs/v4/api/effect/Encoding',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      if (!getState().hasEffectImport) {
-        return;
-      }
+function isBufferEncoding(node: ESTree.CallExpression): boolean {
+  return Opt.exists(
+    staticPath(node.callee),
+    (path) =>
+      (Arr.join(path, '.') === 'Buffer.from' && isEncodingArgument(argumentAt(node, 1))) ||
+      (Arr.lastNonEmpty(path) === 'toString' && isEncodingArgument(argumentAt(node, 0))),
+  );
+}
 
-      if (
-        (isGlobalIdentifier(node.callee, context, 'atob') || isGlobalIdentifier(node.callee, context, 'btoa')) &&
-        Arr.isReadonlyArrayNonEmpty(node.arguments)
-      ) {
-        context.report({ node, messageId: 'effectEncoding' });
-
-        return;
-      }
-
-      const path = staticPath(node.callee);
-
-      const bufferFrom =
-        P.isNotUndefined(path) && Arr.join(path, '.') === 'Buffer.from' && isEncodingArgument(argumentAt(node, 1));
-
-      const bufferToString = path?.at(-1) === 'toString' && isEncodingArgument(argumentAt(node, 0));
-
-      if (bufferFrom || bufferToString) {
-        context.report({ node, messageId: 'effectEncoding' });
-      }
-    },
+export const preferEffectEncoding: CreateRule = Rule.define({
+  name: 'prefer-effect-encoding',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Prefer Effect Encoding for portable Base64, Base64Url, and hexadecimal encoding.',
+    messages: { effectEncoding: 'Use Encoding encode/decode helpers; decoders return Result instead of throwing.' },
+    url: 'https://www.effect.website/docs/v4/api/effect/Encoding',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    if (!imports.hasEffectImport) {
+      return {};
+    }
+
+    function isGlobalBase64Call(node: ESTree.CallExpression) {
+      return Arr.isReadonlyArrayNonEmpty(node.arguments)
+        ? Effect.map(
+            Effect.all([isGlobalIdentifier(node.callee, 'atob'), isGlobalIdentifier(node.callee, 'btoa')]),
+            Arr.some(Boolean),
+          )
+        : Effect.succeed(false);
+    }
+
+    return Visitor.on('CallExpression', (node) =>
+      Effect.when(
+        ctx.report(Diagnostic.fromId({ node, messageId: 'effectEncoding' })),
+        Effect.map(isGlobalBase64Call(node), (base64) => base64 || isBufferEncoding(node)),
+      ),
+    );
+  },
+});

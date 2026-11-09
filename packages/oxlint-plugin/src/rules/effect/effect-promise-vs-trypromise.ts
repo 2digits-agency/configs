@@ -1,17 +1,25 @@
-import type { Rule } from '@oxlint/plugins';
-import type * as Effect from 'effect/Effect';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import * as Effect from 'effect/Effect';
 
-import { defineEffectRule, isApi, ruleMeta } from '../../utils';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-export const effectPromiseVsTryPromise: Rule = defineEffectRule(
-  ruleMeta('problem', 'Require Effect.tryPromise so Promise rejections enter the typed error channel.', {
-    tryPromise: 'Use Effect.tryPromise instead of Effect.promise so rejections are typed failures.',
+export const effectPromiseVsTryPromise: CreateRule = Rule.define({
+  name: 'effect-promise-vs-trypromise',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Require Effect.tryPromise so Promise rejections enter the typed error channel.',
+    messages: { tryPromise: 'Use Effect.tryPromise instead of Effect.promise so rejections are typed failures.' },
   }),
-  (context, getState) => ({
-    CallExpression(node) {
-      if (isApi(node.callee, getState(), 'Effect', 'promise' satisfies keyof typeof Effect)) {
-        context.report({ node: node.callee, messageId: 'tryPromise' });
-      }
-    },
-  }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      imports.isApi(node.callee, 'Effect', 'promise' satisfies keyof typeof Effect)
+        ? ctx.report(Diagnostic.fromId({ node: node.callee, messageId: 'tryPromise' }))
+        : Effect.void,
+    );
+  },
+});

@@ -1,165 +1,194 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
-import type * as Effect from 'effect/Effect';
+import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
-import * as P from 'effect/Predicate';
+import * as R from 'effect/Record';
+import * as Schema from 'effect/Schema';
 
-import { defineEffectRule, isGlobalIdentifier, ruleMeta, staticPath } from '../../utils';
-import { domainSection, importedPath, isImportReference } from './domain';
+import { staticPath } from '../../internal/ast';
+import { importBindings, namespaceMember } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { isGlobalIn } from '../../internal/scope';
+import { domainSection, importedPath, isImportReference, type DomainFile } from './internal/domain';
 
 type Impurity = 'io' | 'random' | 'time';
 
-const globalImpurities: ReadonlyMap<string, Impurity> = new Map([
-  ['Date.now', 'time'],
-  ['performance.now', 'time'],
-  ['performance.timeOrigin', 'time'],
-  ['Math.random', 'random'],
-  ['crypto.randomUUID', 'random'],
-  ['crypto.getRandomValues', 'random'],
-]);
+const globalImpurities: Readonly<Record<string, Impurity>> = {
+  'Date.now': 'time',
+  'performance.now': 'time',
+  'performance.timeOrigin': 'time',
+  'Math.random': 'random',
+  'crypto.randomUUID': 'random',
+  'crypto.getRandomValues': 'random',
+};
 
 // Every member of these modules reads time or randomness.
-const moduleImpurities: ReadonlyMap<string, Impurity> = new Map([
-  ['Clock', 'time'],
-  ['Random', 'random'],
-  ['SecureRandom', 'random'],
-]);
+const moduleImpurities: Readonly<Record<string, Impurity>> = {
+  Clock: 'time',
+  Random: 'random',
+  SecureRandom: 'random',
+};
 
 /*
  * Single members of modules that are otherwise deterministic, such as `Jws.sign` next to `Jws.verify`. Crypto services
  * count through their tag, since their methods are called on the yielded service. Digest, Mac, Kdf and KeyFormat stay
  * allowed.
  */
-const memberImpurities: ReadonlyMap<string, Impurity> = new Map([
-  ['DateTime.now', 'time'],
-  ['DateTime.nowAsDate', 'time'],
-  ['DateTime.nowInCurrentZone', 'time'],
-  ['DateTime.nowUnsafe', 'time'],
-  ['DateTime.isFuture', 'time'],
-  ['DateTime.isFutureUnsafe', 'time'],
-  ['DateTime.isPast', 'time'],
-  ['DateTime.isPastUnsafe', 'time'],
-  ['Aead.Aead', 'random'],
-  ['Cipher.Cipher', 'random'],
-  ['Signature.Signature', 'random'],
-  ['KeyAgreement.KeyAgreement', 'random'],
-  ['KeyWrap.KeyWrap', 'random'],
-  ['Jwk.generateKeyPair', 'random'],
-  ['Jwk.generateSecret', 'random'],
-  ['Jwe.encrypt', 'random'],
-  ['Jws.sign', 'random'],
-  ['Jws.verifyWithKeySet', 'io'],
-  ['Jwt.sign', 'random'],
-  ['Jwt.encrypt', 'random'],
-  ['Jwt.verify', 'time'],
-  ['Jwt.verifyWithKeySet', 'time'],
-  ['Jwt.decrypt', 'time'],
-  ['Jwks.Jwks', 'io'],
-  ['Jwks.makeRemote', 'io'],
-  ['Jwks.layerRemote', 'io'],
-]);
+const memberImpurities: Readonly<Record<string, Impurity>> = {
+  'DateTime.now': 'time',
+  'DateTime.nowAsDate': 'time',
+  'DateTime.nowInCurrentZone': 'time',
+  'DateTime.nowUnsafe': 'time',
+  'DateTime.isFuture': 'time',
+  'DateTime.isFutureUnsafe': 'time',
+  'DateTime.isPast': 'time',
+  'DateTime.isPastUnsafe': 'time',
+  'Aead.Aead': 'random',
+  'Cipher.Cipher': 'random',
+  'Signature.Signature': 'random',
+  'KeyAgreement.KeyAgreement': 'random',
+  'KeyWrap.KeyWrap': 'random',
+  'Jwk.generateKeyPair': 'random',
+  'Jwk.generateSecret': 'random',
+  'Jwe.encrypt': 'random',
+  'Jws.sign': 'random',
+  'Jws.verifyWithKeySet': 'io',
+  'Jwt.sign': 'random',
+  'Jwt.encrypt': 'random',
+  'Jwt.verify': 'time',
+  'Jwt.verifyWithKeySet': 'time',
+  'Jwt.decrypt': 'time',
+  'Jwks.Jwks': 'io',
+  'Jwks.makeRemote': 'io',
+  'Jwks.layerRemote': 'io',
+};
 
-const effectIo: ReadonlyArray<string> = ['promise', 'tryPromise'] satisfies ReadonlyArray<keyof typeof Effect>;
+const isEffectIo = Schema.is(Schema.Literals(['promise', 'tryPromise'] satisfies ReadonlyArray<keyof typeof Effect>));
 
-export const alchemyDomainPureDecide: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Require Alchemy Domain aggregate decide handlers to be pure.',
-    {
+function memberRoot(node: ESTree.Node): ESTree.Node {
+  let root = node;
+
+  while (root.type === 'MemberExpression' || root.type === 'ChainExpression') {
+    root = root.type === 'ChainExpression' ? root.expression : root.object;
+  }
+
+  return root;
+}
+
+export const alchemyDomainPureDecide: CreateRule = Rule.define({
+  name: 'alchemy-domain-pure-decide',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Require Alchemy Domain aggregate decide handlers to be pure.',
+    messages: {
       time: '`decide` reads time from its `now` argument, not {{api}}. Replays must decide the same way.',
       random:
         '`decide` must be deterministic, so it cannot use {{api}}. Take the value from the command input instead.',
       io: '`decide` never performs I/O such as {{api}}. Call external systems from a policy or saga and send the result as a command.',
     },
-    'https://alchemy.run/domain/aggregate',
-  ),
-  (context, getState) => {
-    function report(node: ESTree.Node, impurity: Impurity | undefined, api: string): void {
-      if (P.isNotUndefined(impurity) && domainSection(node, getState(), context)?.section === 'decide') {
-        context.report({ node, messageId: impurity, data: { api } });
-      }
+    url: 'https://alchemy.run/domain/aggregate',
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const file: DomainFile = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
+
+    function isGlobal(node: ESTree.Node, name: string) {
+      return isGlobalIn(ctx.sourceCode.getScope(node), node, name);
+    }
+
+    function report(node: ESTree.Node, impurity: Opt.Option<Impurity>, api: string) {
+      return Opt.match(
+        Opt.filter(impurity, () => Opt.exists(domainSection(node, file), ({ section }) => section === 'decide')),
+        {
+          onNone: () => Effect.void,
+          onSome: (messageId) => ctx.report(Diagnostic.fromId({ node, messageId, data: { api } })),
+        },
+      );
     }
 
     // `Clock.currentTimeMillis`, or `currentTimeMillis` imported from `effect/Clock`.
-    function checkModule(node: ESTree.Node): void {
-      const canonical = importedPath(node, getState(), context) ?? [];
+    function checkModule(node: ESTree.Node) {
+      return Opt.match(
+        Opt.filter(importedPath(node, file), (path) => path.length === 2),
+        {
+          onNone: () => Effect.void,
+          onSome: (path) => {
+            const name = Arr.join(path, '.');
 
-      if (!Arr.isReadonlyArrayNonEmpty(canonical) || canonical.length !== 2) {
-        return;
-      }
-
-      const name = Arr.join(canonical, '.');
-
-      report(node, memberImpurities.get(name) ?? moduleImpurities.get(Arr.headNonEmpty(canonical)), name);
+            return report(
+              node,
+              Opt.orElse(R.get(memberImpurities, name), () =>
+                Opt.flatMap(Arr.head(path), (module) => R.get(moduleImpurities, module)),
+              ),
+              name,
+            );
+          },
+        },
+      );
     }
 
     // `Date` or `globalThis.Date`, when not shadowed.
-    function globalCallee(callee: ESTree.Node): string | undefined {
+    function globalCallee(callee: ESTree.Node): Opt.Option<string> {
       if (callee.type === 'Identifier') {
-        return isGlobalIdentifier(callee, context, callee.name) ? callee.name : undefined;
+        return isGlobal(callee, callee.name) ? Opt.some(callee.name) : Opt.none();
       }
 
-      const path = staticPath(callee);
-
-      return callee.type === 'MemberExpression' &&
-        path?.length === 2 &&
-        isGlobalIdentifier(callee.object, context, 'globalThis')
-        ? path[1]
-        : undefined;
+      return callee.type === 'MemberExpression' && isGlobal(callee.object, 'globalThis')
+        ? Opt.flatMap(
+            Opt.filter(staticPath(callee), (path) => path.length === 2),
+            (path) => Arr.get(path, 1),
+          )
+        : Opt.none();
     }
 
-    return {
+    return Visitor.merge(
       // Inner members such as `DateTime.now` in `DateTime.now.pipe(...)` are checked too; longer paths are skipped.
-      MemberExpression(node) {
-        const path = staticPath(node) ?? [];
+      Visitor.on('MemberExpression', (node) => {
+        const path = Opt.getOrElse(staticPath(node), (): ReadonlyArray<string> => []);
 
         const first = Arr.head(path);
-
-        let root: ESTree.Node = node;
-
-        while (root.type === 'MemberExpression' || root.type === 'ChainExpression') {
-          root = root.type === 'ChainExpression' ? root.expression : root.object;
-        }
 
         // `globalThis.Date.now` is the same as `Date.now`.
         const global = Opt.contains(first, 'globalThis') ? path.slice(1) : path;
 
-        if (global.length === 2 && Opt.exists(first, (name) => isGlobalIdentifier(root, context, name))) {
-          const name = Arr.join(global, '.');
+        const root = memberRoot(node);
 
-          const called = node.parent.type === 'CallExpression' && node.parent.callee === node;
-
-          report(node, globalImpurities.get(name), called ? `${name}()` : name);
-
-          return;
+        if (global.length !== 2 || !Opt.exists(first, (name) => isGlobal(root, name))) {
+          return checkModule(node);
         }
 
-        checkModule(node);
-      },
-      Identifier(node) {
-        if (isImportReference(node, context)) {
-          checkModule(node);
-        }
-      },
-      NewExpression(node) {
-        if (Arr.isReadonlyArrayEmpty(node.arguments) && globalCallee(node.callee) === 'Date') {
-          report(node, 'time', 'new Date()');
-        }
-      },
-      CallExpression(node) {
-        Match.value(globalCallee(node.callee)).pipe(
-          Match.when('Date', () => report(node, 'time', 'Date()')),
-          Match.when('fetch', () => report(node, 'io', 'fetch()')),
-          Match.orElse(() => {
-            const path = importedPath(node.callee, getState(), context);
+        const name = Arr.join(global, '.');
 
-            if (path?.length === 2 && path[0] === 'Effect' && effectIo.includes(path[1] ?? '')) {
-              report(node, 'io', Arr.join(path, '.'));
-            }
-          }),
-        );
-      },
-    };
+        const called = node.parent.type === 'CallExpression' && node.parent.callee === node;
+
+        return report(node, R.get(globalImpurities, name), called ? `${name}()` : name);
+      }),
+      Visitor.on('Identifier', (node) => (isImportReference(node, ctx.sourceCode) ? checkModule(node) : Effect.void)),
+      Visitor.on('NewExpression', (node) =>
+        Arr.isReadonlyArrayEmpty(node.arguments) && Opt.contains(globalCallee(node.callee), 'Date')
+          ? report(node, Opt.some('time'), 'new Date()')
+          : Effect.void,
+      ),
+      Visitor.on('CallExpression', (node) =>
+        Match.value(Opt.getOrElse(globalCallee(node.callee), () => '')).pipe(
+          Match.when('Date', () => report(node, Opt.some('time'), 'Date()')),
+          Match.when('fetch', () => report(node, Opt.some('io'), 'fetch()')),
+          Match.orElse(() =>
+            Opt.match(
+              Opt.filter(
+                Opt.flatMap(importedPath(node.callee, file), (path) => namespaceMember(path, 'Effect')),
+                isEffectIo,
+              ),
+              {
+                onNone: () => Effect.void,
+                onSome: (member) => report(node, Opt.some('io'), `Effect.${member}`),
+              },
+            ),
+          ),
+        ),
+      ),
+    );
   },
-);
+});

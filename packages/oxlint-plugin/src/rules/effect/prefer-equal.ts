@@ -1,14 +1,20 @@
-import type { Context, ESTree, Rule } from '@oxlint/plugins';
-
 import {
-  defineEffectRule,
-  enclosingFunction,
-  ruleMeta,
-  staticPropertyName,
-  unwrapExpression,
-  type FileState,
-} from '../../utils';
-import { callbackApi } from './utils';
+  Diagnostic,
+  Rule,
+  RuleContext,
+  Visitor,
+  type CreateRule,
+  type ESTree,
+  type OxlintSourceCode,
+} from 'effect-oxlint';
+import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+
+import { enclosingFunction, staticPropertyName, unwrapExpression } from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { callbackApi } from './internal/callbacks';
 
 const comparisonOperators: Readonly<Record<ESTree.LogicalExpression['operator'], ReadonlyArray<string>>> = {
   '&&': ['===', '=='],
@@ -19,21 +25,29 @@ const comparisonOperators: Readonly<Record<ESTree.LogicalExpression['operator'],
 function chainOperands(node: ESTree.Expression, operator: string): ReadonlyArray<ESTree.Expression> {
   const expression = unwrapExpression(node);
 
-  if (expression.type !== 'LogicalExpression' || expression.operator !== operator) {
-    return [expression];
-  }
-
-  return [...chainOperands(expression.left, operator), ...chainOperands(expression.right, operator)];
+  return expression.type === 'LogicalExpression' && expression.operator === operator
+    ? [...chainOperands(expression.left, operator), ...chainOperands(expression.right, operator)]
+    : [expression];
 }
 
-// `a.x === b.x` yields the compared objects, ordered so `b.y === a.y` matches the same pair.
-function comparedPair(node: ESTree.Expression, operators: ReadonlyArray<string>, context: Context): string | undefined {
+/**
+ * The objects `a.x === b.x` compares, ordered so `b.y === a.y` names the same pair.
+ *
+ * @param node Chain operand.
+ * @param operators Accepted comparison operators.
+ * @param sourceCode Source of the file.
+ */
+function comparedPair(
+  node: ESTree.Expression,
+  operators: ReadonlyArray<string>,
+  sourceCode: OxlintSourceCode,
+): Opt.Option<string> {
   if (
     node.type !== 'BinaryExpression' ||
-    !operators.includes(node.operator) ||
+    !Arr.contains(operators, node.operator) ||
     node.left.type === 'PrivateIdentifier'
   ) {
-    return undefined;
+    return Opt.none();
   }
 
   const left = unwrapExpression(node.left);
@@ -41,79 +55,92 @@ function comparedPair(node: ESTree.Expression, operators: ReadonlyArray<string>,
   const right = unwrapExpression(node.right);
 
   if (left.type !== 'MemberExpression' || right.type !== 'MemberExpression') {
-    return undefined;
+    return Opt.none();
   }
 
-  const field = staticPropertyName(left);
+  const leftObject = sourceCode.getText(left.object);
 
-  const leftObject = context.sourceCode.getText(left.object);
+  const rightObject = sourceCode.getText(right.object);
 
-  const rightObject = context.sourceCode.getText(right.object);
+  return Opt.flatMap(staticPropertyName(left), (field) =>
+    leftObject === rightObject || !Opt.contains(staticPropertyName(right), field)
+      ? Opt.none()
+      : Opt.some(leftObject < rightObject ? `${leftObject} and ${rightObject}` : `${rightObject} and ${leftObject}`),
+  );
+}
 
-  if (field === undefined || leftObject === rightObject || field !== staticPropertyName(right)) {
-    return undefined;
-  }
+/**
+ * The first object pair a chain compares field by field at least twice.
+ *
+ * @param node Outermost logical expression.
+ * @param operators Accepted comparison operators.
+ * @param sourceCode Source of the file.
+ */
+function repeatedPair(
+  node: ESTree.LogicalExpression,
+  operators: ReadonlyArray<string>,
+  sourceCode: OxlintSourceCode,
+): Opt.Option<string> {
+  const pairs = Arr.getSomes(
+    Arr.map(chainOperands(node, node.operator), (operand) => comparedPair(operand, operators, sourceCode)),
+  );
 
-  return leftObject < rightObject ? `${leftObject} and ${rightObject}` : `${rightObject} and ${leftObject}`;
+  return Opt.map(
+    Arr.findFirst(pairs, (pair, index) => Arr.contains(Arr.take(pairs, index), pair)),
+    (pair) => pair,
+  );
 }
 
 // `Equivalence.make((a, b) => a.x === b.x && a.y === b.y)` already is the Effect way to compare fields.
-function isEquivalenceDefinition(node: ESTree.Node, state: FileState): boolean {
-  const callback = enclosingFunction(node);
-
-  const api = callback === undefined ? undefined : callbackApi(callback, state);
-
-  return api?.length === 2 && api[0] === 'Equivalence' && api[1] === 'make';
+function isEquivalenceDefinition(node: ESTree.Node, imports: ImportBindings): boolean {
+  return Opt.exists(
+    Opt.flatMap(enclosingFunction(node), (callback) => callbackApi(callback, imports)),
+    (api) => api.length === 2 && api[0] === 'Equivalence' && api[1] === 'make',
+  );
 }
 
 /**
  * Prefer Equal or an Equivalence over comparing two values field by field.
  */
-export const preferEqual: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Prefer Equal.equals or an Equivalence over field-by-field comparisons in Effect files.',
-    {
+export const preferEqual: CreateRule = Rule.define({
+  name: 'prefer-equal',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Prefer Equal.equals or an Equivalence over field-by-field comparisons in Effect files.',
+    messages: {
       preferEqual:
         'Compare {{pair}} with Equal.equals (Data and Schema classes implement Equal) or an Equivalence such as Equivalence.Struct instead of field by field.',
     },
-    'https://www.effect.website/docs/v4/api/effect/Equal',
-  ),
-  (context, getState) => ({
-    LogicalExpression(node) {
-      const state = getState();
+    url: 'https://www.effect.website/docs/v4/api/effect/Equal',
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
 
+    const imports = yield* importBindings;
+
+    if (!imports.hasEffectImport) {
+      return {};
+    }
+
+    return Visitor.on('LogicalExpression', (node) => {
       const operators = comparisonOperators[node.operator];
-
-      if (!state.hasEffectImport || operators.length === 0) {
-        return;
-      }
 
       const parent = node.parent;
 
-      if (parent.type === 'LogicalExpression' && parent.operator === node.operator) {
-        return;
+      if (
+        Arr.isReadonlyArrayEmpty(operators) ||
+        (parent.type === 'LogicalExpression' && parent.operator === node.operator)
+      ) {
+        return Effect.void;
       }
 
-      const counts = new Map<string, number>();
-
-      for (const operand of chainOperands(node, node.operator)) {
-        const pair = comparedPair(operand, operators, context);
-
-        if (pair === undefined) {
-          continue;
-        }
-
-        const count = (counts.get(pair) ?? 0) + 1;
-
-        counts.set(pair, count);
-
-        if (count === 2 && !isEquivalenceDefinition(node, state)) {
-          context.report({ node, messageId: 'preferEqual', data: { pair } });
-
-          return;
-        }
-      }
-    },
-  }),
-);
+      return Opt.match(
+        Opt.filter(repeatedPair(node, operators, ctx.sourceCode), () => !isEquivalenceDefinition(node, imports)),
+        {
+          onNone: () => Effect.void,
+          onSome: (pair) => ctx.report(Diagnostic.fromId({ node, messageId: 'preferEqual', data: { pair } })),
+        },
+      );
+    });
+  },
+});

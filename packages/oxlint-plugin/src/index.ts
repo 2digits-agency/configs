@@ -1,4 +1,5 @@
-import { eslintCompatPlugin, type Plugin } from '@oxlint/plugins';
+import { Plugin } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
 import * as R from 'effect/Record';
 
 import { rules } from './rules';
@@ -11,16 +12,21 @@ export type { PaddingLineOption } from './rules/padding-line-between-statements'
 
 export type RuleName = keyof typeof rules;
 
-const optInRules = new Set<RuleName>(['prefer-effect-filesystem', 'prefer-effect-path']);
+const optInRules: ReadonlyArray<RuleName> = ['prefer-effect-filesystem', 'prefer-effect-path'];
 
-export const recommendedRules = R.mapEntries(
-  R.filter(rules, (_, key) => !optInRules.has(key as RuleName)),
-  (_, key) => [`2digits/${key}`, 'error'] as const,
-) satisfies Partial<Record<`2digits/${RuleName}`, 'error'>>;
+const recommendedRuleNames = Arr.filter(R.keys(rules), (name) => !Arr.contains(optInRules, name));
 
-const plugin: Plugin = eslintCompatPlugin({
-  meta: { name: '@2digits/oxlint-plugin' },
+export const recommendedRules: Record<`2digits/${string}`, 'error'> = R.fromEntries(
+  Arr.map(recommendedRuleNames, (name) => [`2digits/${name}` as const, 'error' as const]),
+);
+
+/**
+ * The plugin, with `configs.recommended` and `configs.all` for loading it by its package name.
+ */
+const plugin: Plugin.DefinedPlugin<typeof rules> = Plugin.define({
+  name: '@2digits/oxlint-plugin',
   rules,
+  recommended: { rules: recommendedRuleNames },
 });
 
 export default plugin;

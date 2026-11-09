@@ -1,33 +1,37 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
 
-import { defineSyntaxRule, ruleMeta } from '../../utils';
+import { ruleMeta } from '../../internal/meta';
 
-export const noExportAllInClient: Rule = defineSyntaxRule(
-  ruleMeta(
-    'problem',
-    "Disallow `export *` in 'use client' modules, which Next.js does not support.",
-    {
+function isClientModule(program: ESTree.Program): boolean {
+  return Arr.some(
+    program.body,
+    (statement) => statement.type === 'ExpressionStatement' && statement.directive === 'use client',
+  );
+}
+
+export const noExportAllInClient: CreateRule = Rule.define({
+  name: 'no-export-all-in-client',
+  meta: ruleMeta({
+    type: 'problem',
+    description: "Disallow `export *` in 'use client' modules, which Next.js does not support.",
+    messages: {
       exportAll: "Next.js does not support `export *` in a 'use client' module. Re-export each name instead.",
     },
-    'https://nextjs.org/docs/app/api-reference/directives/use-client',
-  ),
-  (context) => ({
-    Program(program) {
-      const isClient = Arr.some(
-        program.body,
-        (statement) => statement.type === 'ExpressionStatement' && statement.directive === 'use client',
-      );
-
-      if (!isClient) {
-        return;
-      }
-
-      for (const statement of program.body) {
-        if (statement.type === 'ExportAllDeclaration' && statement.exportKind !== 'type') {
-          context.report({ node: statement, messageId: 'exportAll' });
-        }
-      }
-    },
+    url: 'https://nextjs.org/docs/app/api-reference/directives/use-client',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    if (!isClientModule(ctx.sourceCode.ast)) {
+      return {};
+    }
+
+    return Visitor.on('ExportAllDeclaration', (node) =>
+      node.exportKind !== 'type' && node.parent.type === 'Program'
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'exportAll' }))
+        : Effect.void,
+    );
+  },
+});

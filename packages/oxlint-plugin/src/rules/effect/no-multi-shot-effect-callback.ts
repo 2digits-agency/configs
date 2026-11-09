@@ -1,87 +1,89 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
-import type * as Effect from 'effect/Effect';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
+import * as R from 'effect/Record';
 
 import {
   argumentAt,
   containsIdentifier,
-  defineEffectRule,
   firstIdentifierParameter,
-  isApi,
   isFunctionNode,
   isLiteral,
   objectProperty,
-  ruleMeta,
   staticPath,
   walkNodes,
-} from '../../utils';
+} from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
 // Repeating event sources, keyed by method, with the index of their handler argument.
-const multiShotHandlerIndex: ReadonlyMap<string, number> = new Map([
-  ['addEventListener', 1],
-  ['on', 1],
-  ['setInterval', 0],
-]);
+const multiShotHandlerIndex: Readonly<Record<string, number>> = {
+  addEventListener: 1,
+  on: 1,
+  setInterval: 0,
+};
 
-function isMultiShotRegistration(node: ESTree.CallExpression, resume: string): boolean {
-  const method = staticPath(node.callee)?.at(-1);
-
-  const handlerIndex = P.isUndefined(method) ? undefined : multiShotHandlerIndex.get(method);
-
-  if (P.isUndefined(handlerIndex)) {
-    return false;
-  }
-
-  if (method === 'addEventListener') {
-    const options = argumentAt(node, 2);
-
-    if (options?.type === 'ObjectExpression') {
-      const once = objectProperty(options, 'once');
-
-      if (P.isNotUndefined(once) && isLiteral(once.value, true)) {
-        return false;
-      }
-    }
-  }
-
-  const handler = argumentAt(node, handlerIndex);
-
-  return P.isNotUndefined(handler) && containsIdentifier(handler, resume);
+function isOnceListener(node: ESTree.CallExpression): boolean {
+  return Opt.exists(
+    argumentAt(node, 2),
+    (options) =>
+      options.type === 'ObjectExpression' &&
+      Opt.exists(objectProperty(options, 'once'), (once) => isLiteral(once.value, true)),
+  );
 }
 
-export const noMultiShotEffectCallback: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow attaching Effect.callback resume to repeating event sources.',
-    {
+function isMultiShotRegistration(node: ESTree.CallExpression, resume: string): boolean {
+  return Opt.exists(Opt.map(staticPath(node.callee), Arr.lastNonEmpty), (method) =>
+    Opt.exists(
+      R.get(multiShotHandlerIndex, method),
+      (handlerIndex) =>
+        (method !== 'addEventListener' || !isOnceListener(node)) &&
+        Opt.exists(argumentAt(node, handlerIndex), (handler) => containsIdentifier(handler, resume)),
+    ),
+  );
+}
+
+/**
+ * Whether an `Effect.callback` registration passes its `resume` to a repeating event source.
+ *
+ * @param node `Effect.callback` call.
+ */
+function registersMultiShot(node: ESTree.CallExpression): boolean {
+  return Opt.exists(argumentAt(node, 0), (register) => {
+    if (!isFunctionNode(register) || P.isNullish(register.body)) {
+      return false;
+    }
+
+    const body = register.body;
+
+    return Opt.exists(firstIdentifierParameter(register), ({ name }) =>
+      walkNodes(body, (child) => child.type === 'CallExpression' && isMultiShotRegistration(child, name)),
+    );
+  });
+}
+
+export const noMultiShotEffectCallback: CreateRule = Rule.define({
+  name: 'no-multi-shot-effect-callback',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow attaching Effect.callback resume to repeating event sources.',
+    messages: {
       multiShot:
         'Effect.callback is single-shot, but this source emits repeatedly. Use a once-style subscription or Stream.callback.',
     },
-    'https://github.com/Effect-TS/tsgo/issues/484',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      if (!isApi(node.callee, getState(), 'Effect', 'callback' satisfies keyof typeof Effect)) {
-        return;
-      }
-
-      const register = argumentAt(node, 0);
-
-      if (P.isUndefined(register) || !isFunctionNode(register)) {
-        return;
-      }
-
-      const resume = firstIdentifierParameter(register)?.name;
-
-      const body = register.body;
-
-      if (
-        body &&
-        P.isNotUndefined(resume) &&
-        walkNodes(body, (child) => child.type === 'CallExpression' && isMultiShotRegistration(child, resume))
-      ) {
-        context.report({ node, messageId: 'multiShot' });
-      }
-    },
+    url: 'https://github.com/Effect-TS/tsgo/issues/484',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      imports.isApi(node.callee, 'Effect', 'callback' satisfies keyof typeof Effect) && registersMultiShot(node)
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'multiShot' }))
+        : Effect.void,
+    );
+  },
+});

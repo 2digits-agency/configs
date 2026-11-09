@@ -1,33 +1,32 @@
-import type { Definition, ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type Definition, type ESTree } from 'effect-oxlint';
 import type * as DateTime from 'effect/DateTime';
 import type * as Duration from 'effect/Duration';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
+import * as Schema from 'effect/Schema';
 
-import { importedApi } from '../../fixes';
 import {
-  canonicalPath,
-  defineEffectRule,
   enclosingFunction,
-  isApiPath,
   isConstDeclaration,
   isLiteral,
-  resolveVariable,
-  ruleMeta,
-  soleDefinition,
+  isWrapperExpressionType,
+  parentOf,
   staticPropertyName,
   unwrapExpression,
-  wrapperExpressionTypes,
-  type FileState,
-} from '../../utils';
-import { millisName, type MillisKind } from './duration';
-import { isForeignCallback } from './utils';
+} from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { isImportedApi, resolveVariable, soleDefinition } from '../../internal/scope';
+import { isForeignCallback } from './internal/callbacks';
+import { millisName, type MillisKind } from './internal/duration';
 
 type DateTimeApi = `DateTime.${keyof typeof DateTime}`;
 
 type DurationApi = `Duration.${keyof typeof Duration}`;
 
-const arithmeticOperators: ReadonlySet<string> = new Set(['*', '+', '-', '/']);
+const isArithmeticOperator = Schema.is(Schema.Literals(['*', '+', '-', '/']));
 
 const durationSuggestions: Readonly<Record<string, DurationApi>> = {
   '!==': 'Duration.equals',
@@ -65,14 +64,12 @@ const zeroSuggestions: Readonly<Record<string, string>> = {
   '>=': signChecks,
 };
 
-const reportedOperators: ReadonlySet<string> = new Set(R.keys(durationSuggestions));
-
 // Tracing stops after a few `const` hops; longer chains are not worth the lookups.
 const maxTraceDepth = 4;
 
 interface Operands {
-  readonly left: MillisKind | undefined;
-  readonly right: MillisKind | undefined;
+  readonly left: Opt.Option<MillisKind>;
+  readonly right: Opt.Option<MillisKind>;
 }
 
 function isStringy(node: ESTree.Expression): boolean {
@@ -104,9 +101,9 @@ function isNonNumericLiteral(node: ESTree.Expression): boolean {
  * durationMs } = response`) or a parameter of a callback that a non-Effect API calls.
  *
  * @param definition Binding definition.
- * @param state Effect import bindings for the file.
+ * @param imports Import bindings of the file.
  */
-function isForeignBinding(definition: Definition, state: FileState): boolean {
+function isForeignBinding(definition: Definition, imports: ImportBindings): boolean {
   const parent = definition.name.parent;
 
   const binding = parent.type === 'AssignmentPattern' ? parent.parent : parent;
@@ -115,13 +112,14 @@ function isForeignBinding(definition: Definition, state: FileState): boolean {
     return true;
   }
 
-  if (definition.type !== 'Parameter') {
-    return false;
-  }
+  return (
+    definition.type === 'Parameter' &&
+    Opt.exists(enclosingFunction(definition.name), (owner) => isForeignCallback(owner, imports))
+  );
+}
 
-  const owner = enclosingFunction(definition.name);
-
-  return P.isNotUndefined(owner) && isForeignCallback(owner, state);
+function isInstant(kind: Opt.Option<MillisKind>): boolean {
+  return Opt.contains(kind, 'instant');
 }
 
 /**
@@ -132,22 +130,20 @@ function isForeignBinding(definition: Definition, state: FileState): boolean {
  * @param operands Kinds of both operands.
  */
 function resultKind(operator: string, operands: Operands): MillisKind {
-  const left = operands.left === 'instant';
-
-  const right = operands.right === 'instant';
+  const { left, right } = operands;
 
   if (operator === '+') {
-    return left === right ? 'duration' : 'instant';
+    return isInstant(left) === isInstant(right) ? 'duration' : 'instant';
   }
 
-  return left && !right && operator === '-' ? 'instant' : 'duration';
+  return operator === '-' && isInstant(left) && !isInstant(right) ? 'instant' : 'duration';
 }
 
 function suggestion(node: ESTree.BinaryExpression, operands: Operands): string {
-  const instant = operands.left === 'instant' || operands.right === 'instant';
+  const instant = isInstant(operands.left) || isInstant(operands.right);
 
   // `nowMs - startMs` and `Date.now() - startMs`: only an instant can have an instant subtracted from it.
-  if (operands.right === 'instant' && node.operator === '-') {
+  if (isInstant(operands.right) && node.operator === '-') {
     return 'DateTime.distance' satisfies DateTimeApi;
   }
 
@@ -157,81 +153,92 @@ function suggestion(node: ESTree.BinaryExpression, operands: Operands): string {
 
   const zero = !instant && (isLiteral(node.left, 0) || isLiteral(node.right, 0));
 
-  return (
-    (zero ? zeroSuggestions[node.operator] : undefined) ??
-    (instant ? instantSuggestions[node.operator] : undefined) ??
-    durationSuggestions[node.operator] ??
-    'Duration'
+  return R.get(zeroSuggestions, node.operator).pipe(
+    Opt.filter(() => zero),
+    Opt.orElse(() => Opt.filter(R.get(instantSuggestions, node.operator), () => instant)),
+    Opt.orElse(() => R.get(durationSuggestions, node.operator)),
+    Opt.getOrElse(() => 'Duration'),
   );
 }
 
-function isBinary(node: ESTree.Node | null | undefined): node is ESTree.BinaryExpression {
-  return node?.type === 'BinaryExpression' && node.left.type !== 'PrivateIdentifier';
+function isBinary(node: ESTree.Node): node is ESTree.BinaryExpression {
+  return node.type === 'BinaryExpression' && node.left.type !== 'PrivateIdentifier';
 }
 
-function enclosingBinary(node: ESTree.Node): ESTree.BinaryExpression | undefined {
-  let parent = node.parent;
-
-  while (parent && wrapperExpressionTypes.has(parent.type)) {
-    parent = parent.parent;
-  }
-
-  return isBinary(parent) ? parent : undefined;
+function enclosingBinary(node: ESTree.Node): Opt.Option<ESTree.BinaryExpression> {
+  return Opt.flatMap(parentOf(node), (parent) =>
+    isWrapperExpressionType(parent.type) ? enclosingBinary(parent) : Opt.filter(Opt.some(parent), isBinary),
+  );
 }
 
-export const noMillisArithmetic: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Disallow arithmetic and comparisons on millisecond numbers where Effect Duration or DateTime can do the math.',
-    {
+export const noMillisArithmetic: CreateRule = Rule.define({
+  name: 'no-millis-arithmetic',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description:
+      'Disallow arithmetic and comparisons on millisecond numbers where Effect Duration or DateTime can do the math.',
+    messages: {
       millisArithmetic:
         '{{operand}} is {{what}} in milliseconds. Keep it as a {{module}} and use {{suggestion}}; convert to milliseconds only where a non-Effect API needs them.',
     },
-    'https://www.effect.website/docs/v4/api/effect/Duration',
-  ),
-  (context, getState) => {
-    function apiKind(node: ESTree.Node): MillisKind | undefined {
-      const path = canonicalPath(node, getState());
+    url: 'https://www.effect.website/docs/v4/api/effect/Duration',
+  }),
+  *create() {
+    const ctx = yield* RuleContext;
 
-      if (path?.length !== 2 || !importedApi(context, node)) {
-        return undefined;
-      }
+    const imports = yield* importBindings;
 
-      const api = `${path[0]}.${path[1]}`;
-
-      if (api === ('Duration.toMillis' satisfies DurationApi)) {
-        return 'duration';
-      }
-
-      return api === ('DateTime.toEpochMillis' satisfies DateTimeApi) ? 'instant' : undefined;
+    if (!imports.hasEffectImport) {
+      return {};
     }
 
-    function identifierKind(node: ESTree.IdentifierReference, depth: number): MillisKind | undefined {
-      const definition = soleDefinition(resolveVariable(context, node, node.name));
+    function importedKind(node: ESTree.Node, kind: MillisKind) {
+      return Effect.map(isImportedApi(node), (imported) => (imported ? Opt.some(kind) : Opt.none<MillisKind>()));
+    }
 
-      if (P.isNotUndefined(definition) && isForeignBinding(definition, getState())) {
-        return undefined;
+    function apiKind(node: ESTree.Node): Effect.Effect<Opt.Option<MillisKind>, never, RuleContext> {
+      if (imports.isApiPath(node, ['Duration', 'toMillis' satisfies keyof typeof Duration])) {
+        return importedKind(node, 'duration');
+      }
+
+      return imports.isApiPath(node, ['DateTime', 'toEpochMillis' satisfies keyof typeof DateTime])
+        ? importedKind(node, 'instant')
+        : Effect.succeedNone;
+    }
+
+    const identifierKind = Effect.fnUntraced(function* (node: ESTree.IdentifierReference, depth: number) {
+      const variable = yield* resolveVariable(node, node.name);
+
+      const definition = soleDefinition(variable);
+
+      if (Opt.exists(definition, (binding) => isForeignBinding(binding, imports))) {
+        return Opt.none<MillisKind>();
       }
 
       const named = millisName(node.name);
 
-      if (P.isNotUndefined(named)) {
+      if (Opt.isSome(named)) {
         return named;
       }
 
-      const declarator = definition?.node;
-
-      return declarator?.type === 'VariableDeclarator' &&
+      const traced = Opt.flatMap(definition, ({ node: declarator, name }) =>
+        declarator.type === 'VariableDeclarator' &&
         isConstDeclaration(declarator.parent) &&
-        declarator.id === definition?.name &&
+        declarator.id === name &&
         P.isNotNull(declarator.init)
-        ? millisKind(declarator.init, depth + 1)
-        : undefined;
-    }
+          ? Opt.some(declarator.init)
+          : Opt.none(),
+      );
 
-    function millisKind(node: ESTree.Expression, depth = 0): MillisKind | undefined {
+      return Opt.isSome(traced) ? yield* millisKind(traced.value, depth + 1) : Opt.none<MillisKind>();
+    });
+
+    function millisKind(
+      node: ESTree.Expression,
+      depth: number,
+    ): Effect.Effect<Opt.Option<MillisKind>, never, RuleContext> {
       if (depth > maxTraceDepth) {
-        return undefined;
+        return Effect.succeedNone;
       }
 
       const expression = unwrapExpression(node);
@@ -242,9 +249,11 @@ export const noMillisArithmetic: Rule = defineEffectRule(
 
       // A class's own fields are internal; other objects' `*Ms` fields may belong to an external API.
       if (expression.type === 'MemberExpression') {
-        const name = expression.object.type === 'ThisExpression' ? staticPropertyName(expression) : undefined;
-
-        return P.isUndefined(name) ? undefined : millisName(name);
+        return Effect.succeed(
+          expression.object.type === 'ThisExpression'
+            ? Opt.flatMap(staticPropertyName(expression), millisName)
+            : Opt.none(),
+        );
       }
 
       if (expression.type === 'CallExpression') {
@@ -257,73 +266,85 @@ export const noMillisArithmetic: Rule = defineEffectRule(
 
         return P.isNotNull(argument) &&
           expression.delegate &&
-          isApiPath(argument, getState(), ['Clock', 'currentTimeMillis']) &&
-          importedApi(context, argument)
-          ? 'instant'
-          : undefined;
+          imports.isApiPath(argument, ['Clock', 'currentTimeMillis'])
+          ? importedKind(argument, 'instant')
+          : Effect.succeedNone;
       }
 
-      if (!isBinary(expression) || !arithmeticOperators.has(expression.operator)) {
-        return undefined;
+      if (!isBinary(expression) || !isArithmeticOperator(expression.operator)) {
+        return Effect.succeedNone;
       }
 
-      const operands = operandsOf(expression, depth);
-
-      return P.isUndefined(operands) ? undefined : resultKind(expression.operator, operands);
+      return Effect.map(
+        operandsOf(expression, depth),
+        Opt.map((operands) => resultKind(expression.operator, operands)),
+      );
     }
 
-    function operandsOf(node: ESTree.BinaryExpression, depth: number): Operands | undefined {
-      if (!reportedOperators.has(node.operator)) {
-        return undefined;
-      }
-
-      // String concatenation such as `'took ' + elapsedMs + 'ms'` only formats the number.
-      if (node.operator === '+' && (isStringy(node.left) || isStringy(node.right))) {
-        return undefined;
-      }
-
+    function operandsOf(
+      node: ESTree.BinaryExpression,
+      depth: number,
+    ): Effect.Effect<Opt.Option<Operands>, never, RuleContext> {
       if (
-        (node.operator === '===' || node.operator === '!==') &&
-        (isNonNumericLiteral(node.left) || isNonNumericLiteral(node.right))
+        !R.has(durationSuggestions, node.operator) ||
+        // String concatenation such as `'took ' + elapsedMs + 'ms'` only formats the number.
+        (node.operator === '+' && (isStringy(node.left) || isStringy(node.right))) ||
+        ((node.operator === '===' || node.operator === '!==') &&
+          (isNonNumericLiteral(node.left) || isNonNumericLiteral(node.right)))
       ) {
-        return undefined;
+        return Effect.succeedNone;
       }
 
-      const left = millisKind(node.left, depth);
-
-      const right = millisKind(node.right, depth);
-
-      return P.isUndefined(left) && P.isUndefined(right) ? undefined : { left, right };
+      return Effect.map(
+        Effect.all({ left: millisKind(node.left, depth), right: millisKind(node.right, depth) }),
+        (operands): Opt.Option<Operands> =>
+          Opt.isNone(operands.left) && Opt.isNone(operands.right) ? Opt.none() : Opt.some(operands),
+      );
     }
 
-    return {
-      BinaryExpression(node) {
-        if (!getState().hasEffectImport) {
-          return;
-        }
+    function report(node: ESTree.BinaryExpression, operands: Operands) {
+      const instant = isInstant(operands.left) || isInstant(operands.right);
 
-        const operands = operandsOf(node, 0);
-
-        const outer = enclosingBinary(node);
-
-        // Report a chain such as `toMillis(a) + toMillis(b) > limitMs` once, at its outermost operator.
-        if (P.isUndefined(operands) || (P.isNotUndefined(outer) && P.isNotUndefined(operandsOf(outer, 0)))) {
-          return;
-        }
-
-        const instant = operands.left === 'instant' || operands.right === 'instant';
-
-        context.report({
+      return ctx.report(
+        Diagnostic.fromId({
           node,
           messageId: 'millisArithmetic',
           data: {
-            operand: context.sourceCode.getText(P.isUndefined(operands.left) ? node.right : node.left),
+            operand: ctx.sourceCode.getText(
+              Opt.match(operands.left, { onNone: () => node.right, onSome: () => node.left }),
+            ),
             what: instant ? 'a timestamp' : 'a duration',
             module: instant ? 'DateTime' : 'Duration',
             suggestion: suggestion(node, operands),
           },
-        });
-      },
-    };
+        }),
+      );
+    }
+
+    return Visitor.on(
+      'BinaryExpression',
+      Effect.fnUntraced(function* (node) {
+        if (!isBinary(node)) {
+          return;
+        }
+
+        const operands = yield* operandsOf(node, 0);
+
+        if (Opt.isNone(operands)) {
+          return;
+        }
+
+        // Report a chain such as `toMillis(a) + toMillis(b) > limitMs` once, at its outermost operator.
+        const outer = enclosingBinary(node);
+
+        const outerOperands = Opt.isSome(outer) ? yield* operandsOf(outer.value, 0) : Opt.none();
+
+        if (Opt.isSome(outerOperands)) {
+          return;
+        }
+
+        yield* report(node, operands.value);
+      }),
+    );
   },
-);
+});

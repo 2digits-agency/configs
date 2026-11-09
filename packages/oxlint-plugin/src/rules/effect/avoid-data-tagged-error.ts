@@ -1,17 +1,26 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import type * as Data from 'effect/Data';
+import * as Effect from 'effect/Effect';
 
-import { defineEffectRule, isApi, ruleMeta } from '../../utils';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
-export const avoidDataTaggedError: Rule = defineEffectRule(
-  ruleMeta('suggestion', 'Prefer schema-based tagged errors so errors have a serializable contract.', {
-    taggedError: 'Prefer Schema.TaggedError over Data.TaggedError.',
+export const avoidDataTaggedError: CreateRule = Rule.define({
+  name: 'avoid-data-tagged-error',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Prefer schema-based tagged errors so errors have a serializable contract.',
+    messages: { taggedError: 'Prefer Schema.TaggedError over Data.TaggedError.' },
   }),
-  (context, getState) => ({
-    CallExpression(node) {
-      if (isApi(node.callee, getState(), 'Data', 'TaggedError' satisfies keyof typeof Data)) {
-        context.report({ node: node.callee, messageId: 'taggedError' });
-      }
-    },
-  }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      imports.isApi(node.callee, 'Data', 'TaggedError' satisfies keyof typeof Data)
+        ? ctx.report(Diagnostic.fromId({ node: node.callee, messageId: 'taggedError' }))
+        : Effect.void,
+    );
+  },
+});

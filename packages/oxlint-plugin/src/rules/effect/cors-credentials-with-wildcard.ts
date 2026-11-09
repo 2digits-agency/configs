@@ -1,60 +1,75 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import type * as HttpMiddleware from 'effect/http/HttpMiddleware';
 import type * as HttpRouter from 'effect/http/HttpRouter';
 
-import { defineEffectRule, isApi, isLiteral, objectProperty, ruleMeta, unwrapExpression } from '../../utils';
-import { objectArgument } from './utils';
+import { isLiteral, objectArgument, objectProperty, unwrapExpression } from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
 function wildcardOrigins(node: ESTree.Expression): boolean {
   const origins = unwrapExpression(node);
 
-  if (isLiteral(origins, '*')) {
-    return true;
-  }
-
   return (
-    origins.type === 'ArrayExpression' &&
-    (Arr.isReadonlyArrayEmpty(origins.elements) ||
-      Arr.some(origins.elements, (element) => P.isNotNull(element) && isLiteral(element, '*')))
+    isLiteral(origins, '*') ||
+    (origins.type === 'ArrayExpression' &&
+      (Arr.isReadonlyArrayEmpty(origins.elements) ||
+        Arr.some(origins.elements, (element) => P.isNotNull(element) && isLiteral(element, '*'))))
   );
 }
 
-export const corsCredentialsWithWildcard: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow credentialed CORS with wildcard origins because browsers reject that combination.',
-    {
+function isCorsApi(node: ESTree.Node, imports: ImportBindings): boolean {
+  return (
+    imports.isApi(node, 'HttpMiddleware', 'cors' satisfies keyof typeof HttpMiddleware) ||
+    imports.isApi(node, 'HttpRouter', 'cors' satisfies keyof typeof HttpRouter) ||
+    // Effect v3 name, which the current Effect types no longer export.
+    imports.isApi(node, 'HttpApiBuilder', 'middlewareCors')
+  );
+}
+
+/**
+ * Credentialed CORS options whose `allowedOrigins` is missing, `'*'`, empty or contains `'*'`.
+ *
+ * @param options CORS options.
+ */
+function credentialedWildcard(options: ESTree.ObjectExpression): boolean {
+  const credentials = Opt.getOrElse(
+    Opt.map(objectProperty(options, 'credentials'), ({ value }): ESTree.Node => value),
+    (): ESTree.Node => options,
+  );
+
+  return (
+    isLiteral(credentials, true) &&
+    Opt.match(objectProperty(options, 'allowedOrigins'), {
+      onNone: () => true,
+      onSome: ({ value }) => wildcardOrigins(value),
+    })
+  );
+}
+
+export const corsCredentialsWithWildcard: CreateRule = Rule.define({
+  name: 'cors-credentials-with-wildcard',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow credentialed CORS with wildcard origins because browsers reject that combination.',
+    messages: {
       wildcard:
         'Credentialed CORS cannot use a wildcard origin. Set allowedOrigins to explicit trusted origins or disable credentials.',
     },
-    'https://github.com/Effect-TS/tsgo/issues/400',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const state = getState();
-
-      if (
-        !isApi(node.callee, state, 'HttpMiddleware', 'cors' satisfies keyof typeof HttpMiddleware) &&
-        !isApi(node.callee, state, 'HttpRouter', 'cors' satisfies keyof typeof HttpRouter) &&
-        // Effect v3 name, which the current Effect types no longer export.
-        !isApi(node.callee, state, 'HttpApiBuilder', 'middlewareCors')
-      ) {
-        return;
-      }
-
-      const options = objectArgument(node);
-
-      if (P.isUndefined(options) || !isLiteral(objectProperty(options, 'credentials')?.value ?? options, true)) {
-        return;
-      }
-
-      const origins = objectProperty(options, 'allowedOrigins');
-
-      if (P.isUndefined(origins) || wildcardOrigins(origins.value)) {
-        context.report({ node, messageId: 'wildcard' });
-      }
-    },
+    url: 'https://github.com/Effect-TS/tsgo/issues/400',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      isCorsApi(node.callee, imports) && Opt.exists(objectArgument(node), credentialedWildcard)
+        ? ctx.report(Diagnostic.fromId({ node, messageId: 'wildcard' }))
+        : Effect.void,
+    );
+  },
+});

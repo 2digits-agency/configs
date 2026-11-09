@@ -1,10 +1,14 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 
-import { defineEffectRule, isFunctionNode, ruleMeta, staticPropertyName, unwrapExpression } from '../../utils';
+import { isFunctionNode, staticPropertyName, unwrapExpression } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
 type ObjectMember = ESTree.ObjectExpression['properties'][number];
 
@@ -13,14 +17,18 @@ function isSpread(node: ObjectMember): node is ESTree.SpreadElement {
 }
 
 // Conditional spreads, inline literals and Schema `.fields` composition are object building, not a merge or copy.
-function isMergeableSpread(node: ESTree.SpreadElement): boolean {
+function isMergeableSpread(node: ObjectMember): boolean {
+  if (!isSpread(node)) {
+    return false;
+  }
+
   const argument = unwrapExpression(node.argument);
 
   return (
     argument.type !== 'ConditionalExpression' &&
     argument.type !== 'LogicalExpression' &&
     argument.type !== 'ObjectExpression' &&
-    (argument.type !== 'MemberExpression' || staticPropertyName(argument) !== 'fields')
+    (argument.type !== 'MemberExpression' || !Opt.contains(staticPropertyName(argument), 'fields'))
   );
 }
 
@@ -41,9 +49,7 @@ function hasLiteralValue(node: ESTree.Expression | ESTree.SpreadElement | null):
     return false;
   }
 
-  const value = unwrapExpression(node);
-
-  return Match.value(value).pipe(
+  return Match.value(unwrapExpression(node)).pipe(
     Match.when(
       { type: 'Literal' },
       ({ value: literal }) => P.isString(literal) || P.isNumber(literal) || P.isBoolean(literal),
@@ -78,42 +84,52 @@ const isAssignableOverride = Match.type<ObjectMember>().pipe(
 );
 
 /**
+ * `merge` for `{ ...a, ...b }`, `copy` for `{ ...a, x: y }`, none for anything else.
+ *
+ * @param node Object literal.
+ */
+function spreadKind(node: ESTree.ObjectExpression): Opt.Option<'merge' | 'copy'> {
+  const [first, ...rest] = node.properties;
+
+  if (P.isUndefined(first) || !isMergeableSpread(first) || Arr.isReadonlyArrayEmpty(rest)) {
+    return Opt.none();
+  }
+
+  if (Arr.every(rest, isMergeableSpread)) {
+    return Opt.some('merge');
+  }
+
+  return Arr.every(rest, isAssignableOverride) ? Opt.some('copy') : Opt.none();
+}
+
+/**
  * Prefer Struct.assign over spreading objects into a merged or updated copy.
  */
-export const preferStructAssign: Rule = defineEffectRule(
-  ruleMeta(
-    'suggestion',
-    'Prefer Struct.assign over object spread merges and copies in Effect files.',
-    {
+export const preferStructAssign: CreateRule = Rule.define({
+  name: 'prefer-struct-assign',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Prefer Struct.assign over object spread merges and copies in Effect files.',
+    messages: {
       merge: 'Use Struct.assign(a, b) instead of merging objects with spreads.',
       copy: 'Use Struct.assign(value, { … }) instead of copying an object with spread overrides. Spreading a class instance drops its prototype; rebuild Schema and Data class instances with their constructor.',
     },
-    'https://www.effect.website/docs/v4/api/effect/Struct#assign',
-  ),
-  (context, getState) => ({
-    ObjectExpression(node) {
-      if (!getState().hasEffectImport) {
-        return;
-      }
-
-      const [first, ...rest] = node.properties;
-
-      if (P.isUndefined(first) || !isSpread(first) || !isMergeableSpread(first)) {
-        return;
-      }
-
-      if (
-        Arr.isReadonlyArrayNonEmpty(rest) &&
-        Arr.every(rest, (property) => isSpread(property) && isMergeableSpread(property))
-      ) {
-        context.report({ node, messageId: 'merge' });
-
-        return;
-      }
-
-      if (Arr.isReadonlyArrayNonEmpty(rest) && Arr.every(rest, isAssignableOverride)) {
-        context.report({ node, messageId: 'copy' });
-      }
-    },
+    url: 'https://www.effect.website/docs/v4/api/effect/Struct#assign',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    if (!imports.hasEffectImport) {
+      return {};
+    }
+
+    return Visitor.on('ObjectExpression', (node) =>
+      Opt.match(spreadKind(node), {
+        onNone: () => Effect.void,
+        onSome: (messageId) => ctx.report(Diagnostic.fromId({ node, messageId })),
+      }),
+    );
+  },
+});

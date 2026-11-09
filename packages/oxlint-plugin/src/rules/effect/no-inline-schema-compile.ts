@@ -1,22 +1,25 @@
-import type { Context, ESTree, Rule, Variable } from '@oxlint/plugins';
+import {
+  Diagnostic,
+  Rule,
+  RuleContext,
+  Visitor,
+  type CreateRule,
+  type ESTree,
+  type OxlintSourceCode,
+  type Variable,
+} from 'effect-oxlint';
 import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
-import type * as Schema from 'effect/Schema';
+import * as Schema from 'effect/Schema';
 
-import {
-  canonicalPath,
-  containsRange,
-  defineEffectRule,
-  resolveVariable,
-  ruleMeta,
-  staticPath,
-  unwrapExpression,
-  walkNodes,
-  type FileState,
-} from '../../utils';
+import { containsRange, findAncestor, parentOf, staticPath, unwrapExpression, walkNodes } from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
+import { lookupVariable } from '../../internal/scope';
 
-const compilerMethods: ReadonlySet<string> = new Set([
+const CompilerMethod = Schema.Literals([
   'asserts',
   'decodeEffect',
   'decodeExit',
@@ -45,84 +48,90 @@ const compilerMethods: ReadonlySet<string> = new Set([
   'is',
 ] satisfies ReadonlyArray<keyof typeof Schema>);
 
-const moduleScopes = new Set<string>(['global', 'module']);
+const isCompilerMethod = Schema.is(CompilerMethod);
 
-const functionTypes = new Set<string>(['ArrowFunctionExpression', 'FunctionDeclaration', 'FunctionExpression']);
+const isModuleScope = Schema.is(Schema.Literals(['global', 'module']));
 
-const dynamicTypes = new Set<string>([
-  'AssignmentExpression',
-  'AwaitExpression',
-  'ImportExpression',
-  'TaggedTemplateExpression',
-  'UpdateExpression',
-  'YieldExpression',
-]);
+const isFunctionType = Schema.is(
+  Schema.Literals(['ArrowFunctionExpression', 'FunctionDeclaration', 'FunctionExpression']),
+);
 
-const transparentParentTypes = new Set<string>(['ParenthesizedExpression', 'TSAsExpression', 'TSNonNullExpression']);
+const isDynamicType = Schema.is(
+  Schema.Literals([
+    'AssignmentExpression',
+    'AwaitExpression',
+    'ImportExpression',
+    'TaggedTemplateExpression',
+    'UpdateExpression',
+    'YieldExpression',
+  ]),
+);
 
-// The callee root must resolve to the import itself, not to a parameter or local that shadows it.
-function compilerMethod(node: ESTree.Node, state: FileState, context: Context): string | undefined {
-  const path = canonicalPath(node, state);
+const isTransparentParentType = Schema.is(
+  Schema.Literals(['ParenthesizedExpression', 'TSAsExpression', 'TSNonNullExpression']),
+);
 
-  const method = path?.length === 2 && path[0] === 'Schema' ? path[1] : undefined;
+/**
+ * The Schema compiler a callee names, when its root resolves to the import itself and not to a shadowing local.
+ *
+ * @param node Callee.
+ * @param imports Import bindings of the file.
+ * @param sourceCode Source of the file.
+ */
+function compilerMethod(node: ESTree.Node, imports: ImportBindings, sourceCode: OxlintSourceCode): Opt.Option<string> {
+  const method = Opt.filter(imports.member(node, 'Schema'), isCompilerMethod);
 
-  if (P.isUndefined(method) || !compilerMethods.has(method)) {
-    return undefined;
-  }
-
-  const variable = Opt.flatMapNullishOr(Arr.head(staticPath(node) ?? []), (root) =>
-    resolveVariable(context, node, root),
+  const isImport = Opt.exists(
+    Opt.flatMap(staticPath(node), ([root]) => lookupVariable(sourceCode, node, root)),
+    ({ defs }) => Arr.every(defs, (definition) => definition.type === 'ImportBinding'),
   );
 
-  return Opt.exists(variable, ({ defs }) => Arr.every(defs, (definition) => definition.type === 'ImportBinding'))
-    ? method
-    : undefined;
+  return isImport ? method : Opt.none();
 }
 
-function isInsideFunction(node: ESTree.Node): boolean {
-  let parent = node.parent;
-
-  while (parent) {
-    if (functionTypes.has(parent.type)) {
-      return true;
-    }
-
-    parent = parent.parent;
-  }
-
-  return false;
+/**
+ * Whether the compiled function is called right away, through parentheses and assertions.
+ *
+ * @param node Compiler call.
+ * @param current Expression whose parent is inspected.
+ */
+function isImmediatelyInvoked(node: ESTree.CallExpression, current: ESTree.Node = node): boolean {
+  return Opt.exists(parentOf(current), (parent) =>
+    isTransparentParentType(parent.type) && P.isNotNullish(parent.parent)
+      ? isImmediatelyInvoked(node, parent)
+      : parent.type === 'CallExpression' && parent.callee === current,
+  );
 }
 
-function isImmediatelyInvoked(node: ESTree.CallExpression): boolean {
-  let current: ESTree.Node = node;
-
-  let parent = node.parent;
-
-  while (transparentParentTypes.has(parent.type) && P.isNotNull(parent.parent)) {
-    current = parent;
-
-    parent = parent.parent;
-  }
-
-  return parent.type === 'CallExpression' && parent.callee === current;
+/**
+ * The outermost member expression whose object chain starts at `node`, such as `a.b.c` for `a`.
+ *
+ * @param node Reference.
+ */
+function memberChainRoot(node: ESTree.Node): ESTree.Node {
+  return Opt.match(
+    Opt.filter(parentOf(node), (parent) => parent.type === 'MemberExpression' && parent.object === node),
+    { onNone: () => node, onSome: memberChainRoot },
+  );
 }
 
+/**
+ * Whether a reference is the object of a member chain that is assigned, updated or deleted.
+ *
+ * @param node Reference.
+ */
 function isMutationTarget(node: ESTree.Node): boolean {
-  let current = node;
-
-  let parent = node.parent as ESTree.Node | null;
-
-  while (parent?.type === 'MemberExpression' && parent.object === current) {
-    current = parent;
-
-    parent = parent.parent as ESTree.Node | null;
-  }
+  const outermost = memberChainRoot(node);
 
   return (
-    current !== node &&
-    ((parent?.type === 'AssignmentExpression' && parent.left === current) ||
-      (parent?.type === 'UpdateExpression' && parent.argument === current) ||
-      (parent?.type === 'UnaryExpression' && parent.operator === 'delete' && parent.argument === current))
+    outermost !== node &&
+    Opt.exists(
+      parentOf(outermost),
+      (parent) =>
+        (parent.type === 'AssignmentExpression' && parent.left === outermost) ||
+        (parent.type === 'UpdateExpression' && parent.argument === outermost) ||
+        (parent.type === 'UnaryExpression' && parent.operator === 'delete' && parent.argument === outermost),
+    )
   );
 }
 
@@ -135,123 +144,141 @@ function isStableVariable(variable: Variable): boolean {
 }
 
 // Movable means declared at module scope with a stable value, or inside the schema itself (callback params).
-function isMovableIdentifier(node: ESTree.Node, name: string, root: ESTree.Node, context: Context): boolean {
-  const variable = resolveVariable(context, node, name);
-
-  if (P.isUndefined(variable) || containsRange(root, variable.scope.block)) {
-    return true;
-  }
-
-  return moduleScopes.has(variable.scope.type) && isStableVariable(variable);
+function isMovableIdentifier(
+  node: ESTree.IdentifierReference | ESTree.Node,
+  name: string,
+  root: ESTree.Node,
+  sourceCode: OxlintSourceCode,
+): boolean {
+  return Opt.match(lookupVariable(sourceCode, node, name), {
+    onNone: () => true,
+    onSome: (variable) =>
+      containsRange(root, variable.scope.block) || (isModuleScope(variable.scope.type) && isStableVariable(variable)),
+  });
 }
 
 function isNonReferenceName(node: ESTree.Node): boolean {
-  const parent = node.parent as ESTree.Node | null;
-
-  return (
-    (parent?.type === 'MemberExpression' && parent.property === node && !parent.computed) ||
-    (parent?.type === 'Property' && parent.key === node && !parent.computed && !parent.shorthand)
+  return Opt.exists(
+    parentOf(node),
+    (parent) =>
+      (parent.type === 'MemberExpression' && parent.property === node && !parent.computed) ||
+      (parent.type === 'Property' && parent.key === node && !parent.computed && !parent.shorthand),
   );
 }
 
 function isInsideCallback(node: ESTree.Node, root: ESTree.Node): boolean {
-  if (node === root) {
-    return false;
-  }
-
-  let parent = node.parent as ESTree.Node | null;
-
-  while (parent !== root && P.isNotNull(parent)) {
-    if (functionTypes.has(parent.type)) {
-      return true;
-    }
-
-    parent = parent.parent as ESTree.Node | null;
-  }
-
-  return false;
+  return (
+    node !== root &&
+    Opt.exists(
+      parentOf(node),
+      (parent) => parent !== root && (isFunctionType(parent.type) || isInsideCallback(parent, root)),
+    )
+  );
 }
 
 // Hoisting evaluates the arguments once, so only Effect API calls may run eagerly; callbacks still run later.
-function isDynamic(node: ESTree.Node, root: ESTree.Node, state: FileState): boolean {
+function isDynamic(node: ESTree.Node, root: ESTree.Node, imports: ImportBindings): boolean {
   if (isInsideCallback(node, root)) {
     return false;
   }
 
   if (node.type === 'CallExpression' || node.type === 'NewExpression') {
-    return P.isUndefined(canonicalPath(node.callee, state));
+    return Opt.isNone(imports.path(node.callee));
   }
 
-  return dynamicTypes.has(node.type);
+  return isDynamicType(node.type);
 }
 
 // Hoisting needs arguments free of `this`, `new.target`, function-local or mutable bindings, and non-Effect calls.
-function isHoistable(node: ESTree.Node, state: FileState, context: Context): boolean {
+function isHoistable(node: ESTree.Node, imports: ImportBindings, sourceCode: OxlintSourceCode): boolean {
   return !walkNodes(
     node,
     (child) =>
       child.type === 'ThisExpression' ||
       child.type === 'Super' ||
       (child.type === 'MetaProperty' && child.meta.name === 'new') ||
-      isDynamic(child, node, state) ||
+      isDynamic(child, node, imports) ||
       (child.type === 'Identifier' &&
         !isNonReferenceName(child) &&
-        !isMovableIdentifier(child, child.name, node, context)),
+        !isMovableIdentifier(child, child.name, node, sourceCode)),
   );
 }
 
-export const noInlineSchemaCompile: Rule = defineEffectRule(
-  ruleMeta(
-    'problem',
-    'Disallow compiling Schema decoders, encoders, and guards inside function bodies.',
-    {
+/**
+ * Which message an inline compile gets: `inlineSchema` when it also builds the schema, `inlineCompile` when it compiles
+ * an existing one; none when it cannot be hoisted.
+ *
+ * @param node Compiler call.
+ * @param imports Import bindings of the file.
+ * @param sourceCode Source of the file.
+ */
+function inlineKind(
+  node: ESTree.CallExpression,
+  imports: ImportBindings,
+  sourceCode: OxlintSourceCode,
+): Opt.Option<'inlineSchema' | 'inlineCompile'> {
+  const [argument] = node.arguments;
+
+  if (
+    P.isUndefined(argument) ||
+    Arr.some(node.arguments, (child) => child.type === 'SpreadElement') ||
+    !isImmediatelyInvoked(node) ||
+    Opt.isNone(findAncestor(node, (ancestor): ancestor is ESTree.Node => isFunctionType(ancestor.type)))
+  ) {
+    return Opt.none();
+  }
+
+  const schema = unwrapExpression(argument as ESTree.Expression);
+
+  const inlineSchema =
+    schema.type === 'CallExpression' &&
+    Opt.exists(imports.path(schema.callee), (path) => Opt.contains(Arr.head(path), 'Schema'));
+
+  if (
+    (!inlineSchema && schema.type !== 'Identifier' && schema.type !== 'MemberExpression') ||
+    !Arr.every(node.arguments, (child) => isHoistable(child, imports, sourceCode))
+  ) {
+    return Opt.none();
+  }
+
+  return Opt.some(inlineSchema ? 'inlineSchema' : 'inlineCompile');
+}
+
+export const noInlineSchemaCompile: CreateRule = Rule.define({
+  name: 'no-inline-schema-compile',
+  meta: ruleMeta({
+    type: 'problem',
+    description: 'Disallow compiling Schema decoders, encoders, and guards inside function bodies.',
+    messages: {
       inlineSchema:
         'Hoist Schema.{{method}}(...) to module scope: both the inline schema and the compiled function are rebuilt on every call. Move the compiled function to a module-level const.',
       inlineCompile:
         'Hoist Schema.{{method}}(...) to module scope: the compiled function is rebuilt on every call. Move it to a module-level const.',
     },
-    'https://github.com/pingdotgg/t3code/blob/main/oxlint-plugin-t3code/rules/no-inline-schema-compile.ts',
-  ),
-  (context, getState) => ({
-    CallExpression(node) {
-      const state = getState();
-
-      if (!state.hasEffectImport) {
-        return;
-      }
-
-      const method = compilerMethod(node.callee, state, context);
-
-      const [argument] = node.arguments;
-
-      if (
-        P.isUndefined(method) ||
-        P.isUndefined(argument) ||
-        argument.type === 'SpreadElement' ||
-        Arr.some(node.arguments, (child) => child.type === 'SpreadElement') ||
-        !isImmediatelyInvoked(node) ||
-        !isInsideFunction(node)
-      ) {
-        return;
-      }
-
-      const schema = unwrapExpression(argument);
-
-      const inlineSchema =
-        schema.type === 'CallExpression' && Opt.contains(Arr.head(canonicalPath(schema.callee, state) ?? []), 'Schema');
-
-      if (
-        (!inlineSchema && schema.type !== 'Identifier' && schema.type !== 'MemberExpression') ||
-        !Arr.every(node.arguments, (child) => isHoistable(child, state, context))
-      ) {
-        return;
-      }
-
-      context.report({
-        node: node.callee,
-        messageId: inlineSchema ? 'inlineSchema' : 'inlineCompile',
-        data: { method },
-      });
-    },
+    url: 'https://github.com/pingdotgg/t3code/blob/main/oxlint-plugin-t3code/rules/no-inline-schema-compile.ts',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    if (!imports.hasEffectImport) {
+      return {};
+    }
+
+    return Visitor.on('CallExpression', (node) =>
+      Opt.match(
+        Opt.zipWith(
+          compilerMethod(node.callee, imports, ctx.sourceCode),
+          inlineKind(node, imports, ctx.sourceCode),
+          (method, messageId) => ({ method, messageId }),
+        ),
+        {
+          onNone: () => Effect.void,
+          onSome: ({ method, messageId }) =>
+            ctx.report(Diagnostic.fromId({ node: node.callee, messageId, data: { method } })),
+        },
+      ),
+    );
+  },
+});

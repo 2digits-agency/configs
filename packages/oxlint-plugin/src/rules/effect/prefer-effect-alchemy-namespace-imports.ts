@@ -1,57 +1,67 @@
-import type { Rule } from '@oxlint/plugins';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import * as Arr from 'effect/Array';
+import * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
 
-import { defineSyntaxRule, ruleMeta } from '../../utils';
-import { fixNamespace } from './import-fixes';
-import { isTypeOnlyImport, namespaceAlias, submoduleName } from './import-style-utils';
+import { withOptionalFix } from '../../internal/fixes';
+import { ruleMeta } from '../../internal/meta';
+import { namespaceFix } from './internal/import-fixes';
+import { isTypeOnlyImport, namespaceAlias, submoduleName } from './internal/import-style';
 
-export const preferEffectAlchemyNamespaceImports: Rule = defineSyntaxRule(
-  {
-    ...ruleMeta(
-      'suggestion',
-      'Use consistently aliased namespace imports for Effect and Alchemy submodule entrypoints.',
-      {
-        alias: 'Import {{source}} as the canonical namespace alias `{{alias}}`.',
-        namespace: 'Use `import * as {{alias}} from "{{source}}"` instead of importing values directly.',
-      },
-      'https://github.com/Effect-TS/language-service/blob/main/packages/language-service/src/core/AutoImport.ts',
-    ),
-    fixable: 'code',
-  },
-  (context) => ({
-    ImportDeclaration(node) {
-      const moduleName = submoduleName(node.source.value);
-
-      if (moduleName === undefined || node.importKind === 'type') {
-        return;
-      }
-
-      const alias = namespaceAlias(moduleName);
-
-      for (const specifier of node.specifiers) {
-        if (specifier.type === 'ImportSpecifier' && isTypeOnlyImport(node, specifier)) {
-          continue;
-        }
-
-        if (specifier.type === 'ImportNamespaceSpecifier') {
-          if (specifier.local.name !== alias) {
-            context.report({
-              node: specifier.local,
-              messageId: 'alias',
-              data: { alias, source: node.source.value },
-              fix: (fixer) => fixNamespace(context, node, fixer),
-            });
-          }
-
-          continue;
-        }
-
-        context.report({
-          node: specifier,
-          messageId: 'namespace',
-          data: { alias, source: node.source.value },
-          fix: (fixer) => fixNamespace(context, node, fixer),
-        });
-      }
+export const preferEffectAlchemyNamespaceImports: CreateRule = Rule.define({
+  name: 'prefer-effect-alchemy-namespace-imports',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Use consistently aliased namespace imports for Effect and Alchemy submodule entrypoints.',
+    messages: {
+      alias: 'Import {{source}} as the canonical namespace alias `{{alias}}`.',
+      namespace: 'Use `import * as {{alias}} from "{{source}}"` instead of importing values directly.',
     },
+    url: 'https://github.com/Effect-TS/language-service/blob/main/packages/language-service/src/core/AutoImport.ts',
+    fixable: 'code',
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    /**
+     * Report a namespace import under another alias, and every named or default value import.
+     *
+     * @param node Import of a submodule entrypoint.
+     * @param alias Canonical namespace alias.
+     */
+    function reportImport(node: ESTree.ImportDeclaration, alias: string) {
+      const data = { alias, source: node.source.value };
+
+      function report(target: ESTree.Node, messageId: 'alias' | 'namespace') {
+        return ctx.report(
+          withOptionalFix(Diagnostic.fromId({ node: target, messageId, data }), namespaceFix(ctx.sourceCode, node)),
+        );
+      }
+
+      // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+      return Effect.forEach(
+        Arr.filter(
+          node.specifiers,
+          (specifier) => specifier.type !== 'ImportSpecifier' || !isTypeOnlyImport(node, specifier),
+        ),
+        (specifier) =>
+          specifier.type === 'ImportNamespaceSpecifier'
+            ? specifier.local.name === alias
+              ? Effect.void
+              : report(specifier.local, 'alias')
+            : report(specifier, 'namespace'),
+        { discard: true },
+      );
+    }
+
+    return Visitor.on('ImportDeclaration', (node) =>
+      Opt.match(
+        Opt.filter(submoduleName(node.source.value), () => node.importKind !== 'type'),
+        {
+          onNone: () => Effect.void,
+          onSome: (moduleName) => reportImport(node, namespaceAlias(moduleName)),
+        },
+      ),
+    );
+  },
+});

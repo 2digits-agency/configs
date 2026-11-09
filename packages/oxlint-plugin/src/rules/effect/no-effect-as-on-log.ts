@@ -1,22 +1,14 @@
-import type { ESTree, Rule } from '@oxlint/plugins';
 import type * as EffectBarrel from 'effect';
+import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as Console from 'effect/Console';
-import type * as Effect from 'effect/Effect';
+import * as Effect from 'effect/Effect';
 import type * as Fn from 'effect/Function';
-import * as P from 'effect/Predicate';
+import * as Opt from 'effect/Option';
 
-import {
-  argumentAt,
-  canonicalPath,
-  defineEffectRule,
-  isAnyApi,
-  isApiPath,
-  ruleMeta,
-  staticPropertyName,
-  unwrapExpression,
-  type FileState,
-} from '../../utils';
+import { argumentAt, staticPropertyName, unwrapExpression } from '../../internal/ast';
+import { importBindings, type ImportBindings } from '../../internal/imports';
+import { ruleMeta } from '../../internal/meta';
 
 const effectLogMethods = [
   'log',
@@ -34,128 +26,149 @@ const consoleLogMethods = ['debug', 'error', 'info', 'log', 'trace', 'warn'] as 
 
 const asMethods = ['as', 'asSome', 'asVoid'] as const satisfies ReadonlyArray<keyof typeof Effect>;
 
-// `Effect.log*(...)`, `Effect.logWithLevel(level)(...)` or `Console.log(...)` and similar, as printed in messages.
-function loggerName(node: ESTree.Expression, state: FileState): string | undefined {
+/**
+ * A log effect whose result an `Effect.as*` step replaces.
+ */
+interface AsOnLog {
+  readonly logger: string;
+  readonly method: string;
+  readonly node: ESTree.Node;
+}
+
+/**
+ * The name of a log effect, as printed in messages: `Effect.log*(…)`, `Effect.logWithLevel(level)(…)` or
+ * `Console.log(…)` and similar.
+ *
+ * @param node Expression.
+ * @param imports Import bindings of the file.
+ */
+function loggerName(node: ESTree.Expression, imports: ImportBindings): Opt.Option<string> {
   const expression = unwrapExpression(node);
 
   if (expression.type !== 'CallExpression') {
-    return undefined;
+    return Opt.none();
   }
 
   const callee = unwrapExpression(expression.callee);
 
   if (
     callee.type === 'CallExpression' &&
-    isApiPath(callee.callee, state, ['Effect', 'logWithLevel' satisfies keyof typeof Effect])
+    imports.isApiPath(callee.callee, ['Effect', 'logWithLevel' satisfies keyof typeof Effect])
   ) {
-    return 'Effect.logWithLevel';
+    return Opt.some('Effect.logWithLevel');
   }
 
-  if (isAnyApi(callee, state, 'Effect', effectLogMethods) || isAnyApi(callee, state, 'Console', consoleLogMethods)) {
-    return Arr.join(canonicalPath(callee, state) ?? [], '.');
-  }
-
-  return undefined;
+  return imports.isApi(callee, 'Effect', effectLogMethods) || imports.isApi(callee, 'Console', consoleLogMethods)
+    ? Opt.some(
+        Arr.join(
+          Opt.getOrElse(imports.path(callee), () => []),
+          '.',
+        ),
+      )
+    : Opt.none();
 }
 
-// The `Effect.as*` method of a data-last pipe step: `Effect.as(value)`, `Effect.asVoid` or `Effect.asSome`.
-function asStep(node: ESTree.Expression | undefined, state: FileState): string | undefined {
-  if (P.isUndefined(node)) {
-    return undefined;
-  }
+function effectMember(node: ESTree.Node, imports: ImportBindings): Opt.Option<string> {
+  return Opt.flatMap(imports.path(node), ([, member]) => Opt.fromNullishOr(member));
+}
 
+/**
+ * The `Effect.as*` method of a data-last pipe step: `Effect.as(value)`, `Effect.asVoid` or `Effect.asSome`.
+ *
+ * @param node Pipe step.
+ * @param imports Import bindings of the file.
+ */
+function asStep(node: ESTree.Expression, imports: ImportBindings): Opt.Option<string> {
   const step = unwrapExpression(node);
 
   if (
     step.type === 'CallExpression' &&
     step.arguments.length === 1 &&
-    isApiPath(step.callee, state, ['Effect', 'as' satisfies keyof typeof Effect])
+    imports.isApiPath(step.callee, ['Effect', 'as' satisfies keyof typeof Effect])
   ) {
-    return 'as';
+    return Opt.some('as');
   }
 
-  return isAnyApi(step, state, 'Effect', ['asSome', 'asVoid'] satisfies ReadonlyArray<keyof typeof Effect>)
-    ? canonicalPath(step, state)?.[1]
-    : undefined;
+  return imports.isApi(step, 'Effect', ['asSome', 'asVoid'] satisfies ReadonlyArray<keyof typeof Effect>)
+    ? effectMember(step, imports)
+    : Opt.none();
 }
 
-function isPipeFunction(node: ESTree.Node, state: FileState): boolean {
+function isPipeFunction(node: ESTree.Node, imports: ImportBindings): boolean {
   return (
-    isApiPath(node, state, ['pipe' satisfies keyof typeof EffectBarrel]) ||
-    isApiPath(node, state, ['Function', 'pipe' satisfies keyof typeof Fn])
+    imports.isApiPath(node, ['pipe' satisfies keyof typeof EffectBarrel]) ||
+    imports.isApiPath(node, ['Function', 'pipe' satisfies keyof typeof Fn])
   );
 }
 
-interface Match {
-  readonly logger: string;
-  readonly method: string;
-  readonly node: ESTree.Node;
+function pipedAsOnLog(
+  self: Opt.Option<ESTree.Expression>,
+  step: Opt.Option<ESTree.Expression>,
+  imports: ImportBindings,
+): Opt.Option<AsOnLog> {
+  return Opt.flatMap(step, (node) =>
+    Opt.zipWith(
+      Opt.flatMap(self, (value) => loggerName(value, imports)),
+      asStep(node, imports),
+      (logger, method): AsOnLog => ({ logger, method, node }),
+    ),
+  );
 }
 
-function matchCall(node: ESTree.CallExpression, state: FileState): Match | undefined {
+function matchCall(node: ESTree.CallExpression, imports: ImportBindings): Opt.Option<AsOnLog> {
   const callee = unwrapExpression(node.callee);
 
   // `Effect.log(...).pipe(Effect.as(value))`
-  if (callee.type === 'MemberExpression' && staticPropertyName(callee) === 'pipe') {
-    const step = argumentAt(node, 0);
-
-    const logger = loggerName(callee.object, state);
-
-    const method = asStep(step, state);
-
-    return P.isUndefined(step) || P.isUndefined(logger) || P.isUndefined(method)
-      ? undefined
-      : { logger, method, node: step };
+  if (callee.type === 'MemberExpression' && Opt.contains(staticPropertyName(callee), 'pipe')) {
+    return pipedAsOnLog(Opt.some(callee.object), argumentAt(node, 0), imports);
   }
 
   // `pipe(Effect.log(...), Effect.as(value))`
-  if (isPipeFunction(callee, state)) {
-    const self = argumentAt(node, 0);
-
-    const logger = P.isUndefined(self) ? undefined : loggerName(self, state);
-
-    const step = argumentAt(node, 1);
-
-    const method = asStep(step, state);
-
-    return P.isUndefined(step) || P.isUndefined(logger) || P.isUndefined(method)
-      ? undefined
-      : { logger, method, node: step };
+  if (isPipeFunction(callee, imports)) {
+    return pipedAsOnLog(argumentAt(node, 0), argumentAt(node, 1), imports);
   }
 
   // `Effect.as(Effect.log(...), value)` and `Effect.asVoid(Effect.log(...))`
-  const method = isAnyApi(callee, state, 'Effect', asMethods) ? canonicalPath(callee, state)?.[1] : undefined;
+  const method = imports.isApi(callee, 'Effect', asMethods) ? effectMember(callee, imports) : Opt.none();
 
-  const self = argumentAt(node, 0);
-
-  if (P.isUndefined(method) || P.isUndefined(self) || (method === 'as' && node.arguments.length !== 2)) {
-    return undefined;
-  }
-
-  const logger = loggerName(self, state);
-
-  return P.isUndefined(logger) ? undefined : { logger, method, node };
+  return Opt.flatMap(
+    Opt.filter(method, (name) => name !== 'as' || node.arguments.length === 2),
+    (name) =>
+      Opt.map(
+        Opt.flatMap(argumentAt(node, 0), (self) => loggerName(self, imports)),
+        (logger): AsOnLog => ({ logger, method: name, node }),
+      ),
+  );
 }
 
-export const noEffectAsOnLog: Rule = defineEffectRule(
-  ruleMeta('suggestion', 'Disallow Effect.as, Effect.asSome and Effect.asVoid on log effects.', {
-    asOnLog:
-      'Do not swap the result of {{logger}} with Effect.{{method}}. Use Effect.gen: `yield*` the log, then return the value.',
-    asVoidOnLog: '{{logger}} already succeeds with void; remove Effect.asVoid.',
-  }),
-  (context, getState) => ({
-    CallExpression(node) {
-      const match = matchCall(node, getState());
-
-      if (P.isUndefined(match)) {
-        return;
-      }
-
-      context.report({
-        node: match.node,
-        messageId: match.method === 'asVoid' ? 'asVoidOnLog' : 'asOnLog',
-        data: { logger: match.logger, method: match.method },
-      });
+export const noEffectAsOnLog: CreateRule = Rule.define({
+  name: 'no-effect-as-on-log',
+  meta: ruleMeta({
+    type: 'suggestion',
+    description: 'Disallow Effect.as, Effect.asSome and Effect.asVoid on log effects.',
+    messages: {
+      asOnLog:
+        'Do not swap the result of {{logger}} with Effect.{{method}}. Use Effect.gen: `yield*` the log, then return the value.',
+      asVoidOnLog: '{{logger}} already succeeds with void; remove Effect.asVoid.',
     },
   }),
-);
+  *create() {
+    const ctx = yield* RuleContext;
+
+    const imports = yield* importBindings;
+
+    return Visitor.on('CallExpression', (node) =>
+      Opt.match(matchCall(node, imports), {
+        onNone: () => Effect.void,
+        onSome: (match) =>
+          ctx.report(
+            Diagnostic.fromId({
+              node: match.node,
+              messageId: match.method === 'asVoid' ? 'asVoidOnLog' : 'asOnLog',
+              data: { logger: match.logger, method: match.method },
+            }),
+          ),
+      }),
+    );
+  },
+});
