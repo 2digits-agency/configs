@@ -12,7 +12,7 @@ import {
   staticPath,
   unwrapExpression,
 } from '../../../internal/ast';
-import { namespaceMember, type ImportBindings } from '../../../internal/imports';
+import type { ImportBindings } from '../../../internal/imports';
 import { lookupVariable, soleDefinition } from '../../../internal/scope';
 
 export const DomainBlock = Schema.Literals([
@@ -67,9 +67,10 @@ export function importedPath(node: ESTree.Node, file: DomainFile): Opt.Option<Re
  * @param file File being linted.
  */
 export function domainBlock(node: ESTree.CallExpression, file: DomainFile): Opt.Option<DomainBlock> {
-  return importedPath(node.callee, file).pipe(
-    Opt.flatMap((path) => namespaceMember(path, 'Domain')),
+  return file.imports.member(node.callee, 'Domain').pipe(
     Opt.filter(isDomainBlock),
+    // Scope analysis is only needed for a possible Domain block, not every imported call in a barrel-import file.
+    Opt.filter(() => Opt.isSome(importedPath(node.callee, file))),
   );
 }
 
