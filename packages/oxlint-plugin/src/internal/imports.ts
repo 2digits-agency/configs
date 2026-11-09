@@ -7,10 +7,8 @@ import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
 
-import { moduleExportName, staticPath } from './ast';
+import { moduleExportName, staticPropertyName } from './ast';
 import { isImportedApiIn } from './scope';
-
-const ModulePath = Schema.Array(Schema.String);
 
 const sameModulePath = Arr.makeEquivalence(Str.Equivalence);
 
@@ -26,13 +24,18 @@ export function namespaceMember(path: ReadonlyArray<string>, namespace: string):
 
 /**
  * The Effect and Alchemy imports of one file: the module path each local binding names, such as `['Effect', 'map']` for
- * `import { map } from 'effect/Effect'`, and whether the file imports Effect at all.
+ * `import { map } from 'effect/Effect'`, and whether the file imports Effect at all. These values come directly from
+ * the typed AST, not external input, so collecting them does not need a Schema decoding pass.
  */
-export class ImportBindings extends Schema.Class<ImportBindings, { readonly brand: unique symbol }>('ImportBindings')({
-  bindings: Schema.ReadonlyMap(Schema.String, ModulePath),
-  hasEffectImport: Schema.Boolean,
-}) {
+export class ImportBindings {
   private readonly paths = new WeakMap<ESTree.Node, Opt.Option<ReadonlyArray<string>>>();
+  readonly bindings: ReadonlyMap<string, ReadonlyArray<string>>;
+  readonly hasEffectImport: boolean;
+
+  constructor(bindings: ReadonlyMap<string, ReadonlyArray<string>>, hasEffectImport: boolean) {
+    this.bindings = bindings;
+    this.hasEffectImport = hasEffectImport;
+  }
 
   /**
    * Whether any local binding can name an API in this namespace.
@@ -61,12 +64,16 @@ export class ImportBindings extends Schema.Class<ImportBindings, { readonly bran
       return cached;
     }
 
+    const target = node.type === 'ChainExpression' ? node.expression : node;
+
     const path =
-      node.type === 'Identifier'
-        ? Opt.fromNullishOr(this.bindings.get(node.name))
-        : Opt.flatMap(staticPath(node), ([first, ...rest]) =>
-            Opt.map(Opt.fromNullishOr(this.bindings.get(first)), (imported) => [...imported, ...rest]),
-          );
+      target.type === 'Identifier'
+        ? Opt.fromNullishOr(this.bindings.get(target.name))
+        : target.type === 'MemberExpression'
+          ? Opt.flatMap(this.path(target.object), (parent) =>
+              Opt.map(staticPropertyName(target), (member) => [...parent, member]),
+            )
+          : Opt.none();
 
     this.paths.set(node, path);
 
@@ -165,8 +172,8 @@ function collectImportBindings(program: ESTree.Program): ImportBindings {
     (statement): statement is ESTree.ImportDeclaration => statement.type === 'ImportDeclaration',
   );
 
-  const imports = ImportBindings.make({
-    bindings: new Map(
+  const imports = new ImportBindings(
+    new Map(
       Arr.flatMap(declarations, (declaration) =>
         Opt.match(modulePath(declaration.source.value), {
           onNone: () => [],
@@ -174,8 +181,8 @@ function collectImportBindings(program: ESTree.Program): ImportBindings {
         }),
       ),
     ),
-    hasEffectImport: Arr.some(declarations, (declaration) => isEffectSource(declaration.source.value)),
-  });
+    Arr.some(declarations, (declaration) => isEffectSource(declaration.source.value)),
+  );
 
   programImports.set(program, imports);
 
