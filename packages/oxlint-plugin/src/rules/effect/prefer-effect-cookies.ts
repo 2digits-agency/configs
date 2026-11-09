@@ -18,7 +18,7 @@ import {
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { defineRule } from '../../internal/rule';
-import { isGlobalIdentifier } from '../../internal/scope';
+import { isGlobalIn } from '../../internal/scope';
 
 const CookieHeader = Schema.Literals(['cookie', 'set-cookie']);
 
@@ -207,19 +207,25 @@ export const preferEffectCookies: CreateRule = defineRule({
      *
      * @param node Member expression.
      */
-    function isDocumentCookie(node: ESTree.MemberExpression) {
+    function isDocumentCookie(node: ESTree.MemberExpression): boolean {
+      if (
+        node.object.type !== 'Identifier' ||
+        node.object.name !== 'document' ||
+        !Opt.contains(staticPropertyName(node), 'cookie')
+      ) {
+        return false;
+      }
+
       const parsed = Opt.exists(
         parentOfType(node, 'CallExpression'),
         (call) => containsSame<ESTree.Node>(call.arguments, node) && Opt.isSome(imports.member(call.callee, 'Cookies')),
       );
 
-      return !parsed && Opt.contains(staticPropertyName(node), 'cookie')
-        ? isGlobalIdentifier(node.object, 'document')
-        : Effect.succeed(false);
+      return !parsed && isGlobalIn(ctx.sourceCode.getScope(node.object), node.object, 'document');
     }
 
     return Visitor.merge(
-      Visitor.on('MemberExpression', (node) => Effect.when(report(node, 'documentCookie'), isDocumentCookie(node))),
+      Visitor.on('MemberExpression', (node) => (isDocumentCookie(node) ? report(node, 'documentCookie') : Effect.void)),
       Visitor.on('CallExpression', (node) =>
         isCookieParse(node)
           ? report(node, 'parseCookies')
