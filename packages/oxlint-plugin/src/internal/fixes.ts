@@ -9,7 +9,7 @@ import { resolveVariable, usedNames } from './scope';
 /**
  * A namespace import a fix can use: its local name, and the edit that adds it when the file lacks one.
  */
-export interface NamespaceImport {
+interface NamespaceImport {
   readonly name: string;
   readonly fix: Opt.Option<FixFn>;
 }
