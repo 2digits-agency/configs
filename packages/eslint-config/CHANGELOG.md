@@ -1,3 +1,48 @@
+## @2digits/eslint-config@5.12.0
+
+### Report trivial wrappers and one-off helpers
+
+- Added `no-trivial-wrapper`, `no-forwarding-lambda`, `no-single-use-private-function` and `no-constant-thunk` to `recommendedRules`. They report functions that only forward their parameters to another call, Effect callbacks such as `Effect.map((x) => f(x))`, short private helpers used once, and parameterless functions that always return the same value.
+- `@2digits/oxlint-config` and `@2digits/eslint-config` no longer enable `unicorn/consistent-function-scoping`, which asked for the helpers these rules report.
+
+### Report unused JSX expressions
+
+- `no-unused-expressions` (`ts/no-unused-expressions` in ESLint) now sets `enforceForJSX: true`, so JSX that is built
+  but never returned or used, such as a component body without `return`, is reported.
+
+### Add `no-utc-iso-slicing`
+
+Reports slicing or rewriting a UTC ISO string to get a local date or time, such as
+`new Date().toISOString().slice(0, 10)`, `date.toISOString().split('T')[0]`,
+`DateTime.formatIso(now).replace(/Z$/, '+00:00')` and `pipe(DateTime.formatIso(now), Str.slice(0, 10))`. Both
+`toISOString()` and `DateTime.formatIso` give UTC, so in Europe/Amsterdam the date is the previous day between 00:00 and
+02:00 and the offset is `+00:00`. Format in an explicit zone instead: `DateTime.setZone` with
+`DateTime.formatIsoDate`/`formatIsoZoned`, or `Intl.DateTimeFormat` with `timeZone`.
+
+The rule is in the recommended set of both plugins, so `@2digits/eslint-config` and `@2digits/oxlint-config` enable it.
+
+### Stop `prefer-effect-datetime` from suggesting `DateTime.formatIso` for local dates
+
+The message now points to formatting in an explicit zone and warns that `DateTime.formatIso` is UTC like
+`toISOString()`.
+
+### Report browser APIs read during render
+
+- Added `react-extra/no-browser-api-in-render` to the React config. It reports reads of `window`, `document`,
+  `navigator`, `localStorage` and `sessionStorage` (also through `globalThis`) in a React component or hook body, or in
+  a `useState`, `useReducer` or `useMemo` callback. The server render cannot see these values, so the first client
+  render differs and hydration fails. A `typeof window` or `IS_SERVER` guard does not help, because the guard is what
+  makes the two renders differ.
+- Read the value in `useEffect`, or subscribe with `useSyncExternalStore` and a server snapshot. Effects, event handlers,
+  other callbacks and `useSyncExternalStore` snapshot functions are not reported.
+
+### Catch React directive and client/server boundary mistakes
+
+- `@2digits/valid-directive` reports misspelled directives such as `'use Client'`, `'use  server'` or `'useClient'`, which silently do nothing, and suggests the correct spelling. Also in `@2digits/oxlint-plugin`.
+- `@2digits/no-client-value-import-in-server` reports value imports from a `'use client'` module in files with `'use server'` or `import 'server-only'`, where the import is a client reference instead of the value. It follows path aliases and re-exports, and also checks plain `.ts` modules such as form schemas that the server file imports. Type-only imports are allowed. The rule needs type information.
+- `no-restricted-syntax` now reports `export *` in a `'use client'` module, which Next.js does not support. Re-export each name instead. `@2digits/oxlint-plugin` adds `no-export-all-in-client` for the same check.
+- `@2digits/eslint-plugin` now declares `typescript` as a peer dependency.
+
 ## @2digits/eslint-config@5.11.0
 
 ### Lint shell scripts

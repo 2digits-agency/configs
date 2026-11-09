@@ -1,3 +1,28 @@
+## @2digits/eslint-plugin@4.1.0
+
+### Add `no-utc-iso-slicing`
+
+Reports slicing or rewriting a UTC ISO string to get a local date or time, such as
+`new Date().toISOString().slice(0, 10)`, `date.toISOString().split('T')[0]`,
+`DateTime.formatIso(now).replace(/Z$/, '+00:00')` and `pipe(DateTime.formatIso(now), Str.slice(0, 10))`. Both
+`toISOString()` and `DateTime.formatIso` give UTC, so in Europe/Amsterdam the date is the previous day between 00:00 and
+02:00 and the offset is `+00:00`. Format in an explicit zone instead: `DateTime.setZone` with
+`DateTime.formatIsoDate`/`formatIsoZoned`, or `Intl.DateTimeFormat` with `timeZone`.
+
+The rule is in the recommended set of both plugins, so `@2digits/eslint-config` and `@2digits/oxlint-config` enable it.
+
+### Stop `prefer-effect-datetime` from suggesting `DateTime.formatIso` for local dates
+
+The message now points to formatting in an explicit zone and warns that `DateTime.formatIso` is UTC like
+`toISOString()`.
+
+### Catch React directive and client/server boundary mistakes
+
+- `@2digits/valid-directive` reports misspelled directives such as `'use Client'`, `'use  server'` or `'useClient'`, which silently do nothing, and suggests the correct spelling. Also in `@2digits/oxlint-plugin`.
+- `@2digits/no-client-value-import-in-server` reports value imports from a `'use client'` module in files with `'use server'` or `import 'server-only'`, where the import is a client reference instead of the value. It follows path aliases and re-exports, and also checks plain `.ts` modules such as form schemas that the server file imports. Type-only imports are allowed. The rule needs type information.
+- `no-restricted-syntax` now reports `export *` in a `'use client'` module, which Next.js does not support. Re-export each name instead. `@2digits/oxlint-plugin` adds `no-export-all-in-client` for the same check.
+- `@2digits/eslint-plugin` now declares `typescript` as a peer dependency.
+
 ## @2digits/eslint-plugin@4.0.37
 
 ### Update eslint to 10.14.0
