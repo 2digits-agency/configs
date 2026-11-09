@@ -145,6 +145,12 @@ const multiArgumentApis: ReadonlySet<string> = new Set([
   'TxHashSet.reduce',
 ]);
 
+/*
+ * Modules whose handlers take their parameter type from the pattern, such as `Match.tag('Known', (known) => …)`. A
+ * generic function passed instead, such as `Opt.some`, has nothing to infer from and gets `unknown`.
+ */
+const contextualModules: ReadonlySet<string> = new Set(['Match']);
+
 function receivesOneArgument(call: ESTree.CallExpression, state: FileState): boolean {
   const path = canonicalPath(call.callee, state);
 
@@ -153,6 +159,7 @@ function receivesOneArgument(call: ESTree.CallExpression, state: FileState): boo
     Arr.isReadonlyArrayNonEmpty(path) &&
     path.length === 2 &&
     !indexedModules.has(Arr.headNonEmpty(path)) &&
+    !contextualModules.has(Arr.headNonEmpty(path)) &&
     !multiArgumentApis.has(Arr.join(path, '.'))
   );
 }

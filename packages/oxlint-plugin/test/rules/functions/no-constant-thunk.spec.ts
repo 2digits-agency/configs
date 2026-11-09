@@ -42,11 +42,16 @@ tester.run('no-constant-thunk', noConstantThunk, {
     `${imports} function ruleImpl(context) { return {} }\nexport function rule() { return ruleImpl }`,
     `${imports} export const handler = () => (event) => Effect.log(event)`,
     `${imports} function pattern() { return /a/gu }`,
+    `${imports} function completeJob() { return Effect.void }\nexport const run = runtime.workOne(completeJob)`,
     `${imports} const state = { count: 0 }\nfunction current() { return state.count }`,
     `${imports} function readClock() { return Date.now() }\nfunction now() { return pipe(0, readClock) }`,
     `${imports} function jitter() { return Opt.map(Opt.some(1), (n) => n + Math.random()) }`,
   ],
   invalid: [
+    {
+      code: `${imports} function completeJob() { return Effect.void }\nexport const run = completeJob()`,
+      errors: [{ messageId: 'constantThunk', data: { name: 'completeJob' } }],
+    },
     {
       code: `${imports} function userSchema() { return Schema.Struct({ id: Schema.String }) }`,
       errors: [{ messageId: 'constantThunk', data: { name: 'userSchema' } }],

@@ -2,6 +2,7 @@ import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 
 import {
@@ -189,7 +190,24 @@ function isFactoryResult(node: ESTree.Expression, context: Context): boolean {
   );
 }
 
-function check(context: Context, state: FileState, node: FunctionNode, name: ESTree.BindingIdentifier): void {
+// A reference that passes the function as a value, such as a handler argument, needs a function, not a constant.
+function isPassedAsValue(context: Context, declaration: ESTree.Node, name: string): boolean {
+  const variable = Arr.findFirst(context.sourceCode.getDeclaredVariables(declaration), (v) => v.name === name);
+
+  return Opt.exists(variable, ({ references }) =>
+    Arr.some(references, ({ identifier, init }) => {
+      const parent = identifier.parent;
+
+      return !init && (parent.type !== 'CallExpression' || parent.callee !== identifier);
+    }),
+  );
+}
+
+function check(
+  context: Context,
+  state: FileState,
+  { declaration, node, name }: { declaration: ESTree.Node; node: FunctionNode; name: ESTree.BindingIdentifier },
+): void {
   const expression = functionResult(node);
 
   if (
@@ -199,7 +217,8 @@ function check(context: Context, state: FileState, node: FunctionNode, name: EST
     node.generator ||
     node.typeParameters ||
     isFactoryResult(expression, context) ||
-    !isConstant(expression, { context, state })
+    !isConstant(expression, { context, state }) ||
+    isPassedAsValue(context, declaration, name.name)
   ) {
     return;
   }
@@ -223,12 +242,12 @@ export const noConstantThunk: Rule = defineEffectRule(
   (context, getState) => ({
     FunctionDeclaration(node) {
       if (node.id && node.body && isTopLevel(node)) {
-        check(context, getState(), node, node.id);
+        check(context, getState(), { declaration: node, node, name: node.id });
       }
     },
     VariableDeclarator(node) {
       if (node.id.type === 'Identifier' && node.init && isFunctionNode(node.init) && isTopLevel(node.parent)) {
-        check(context, getState(), node.init, node.id);
+        check(context, getState(), { declaration: node, node: node.init, name: node.id });
       }
     },
   }),
