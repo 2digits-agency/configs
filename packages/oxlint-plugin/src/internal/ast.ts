@@ -51,13 +51,17 @@ export const moduleExportName = Match.type<ESTree.ModuleExportName>().pipe(
  *
  * @param node Member expression.
  */
-export const staticPropertyName = Match.type<ESTree.MemberExpression>().pipe(
-  Match.when({ computed: false, property: { type: 'Identifier' } }, ({ property }) => Opt.some(property.name)),
-  Match.when({ computed: true, property: { type: 'Literal', value: Str.isString } }, ({ property }) =>
-    Opt.some(property.value),
-  ),
-  Match.orElse(() => Opt.none<string>()),
-);
+export function staticPropertyName(node: ESTree.MemberExpression): Opt.Option<string> {
+  const { computed, property } = node;
+
+  if (!computed && property.type === 'Identifier') {
+    return Opt.some(property.name);
+  }
+
+  return computed && property.type === 'Literal' && Str.isString(property.value)
+    ? Opt.some(property.value)
+    : Opt.none();
+}
 
 /**
  * The identifier path of a static member chain, such as `['Effect', 'map']` for `Effect.map` or `Effect?.['map']`.
