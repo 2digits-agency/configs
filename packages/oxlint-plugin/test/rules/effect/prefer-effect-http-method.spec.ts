@@ -25,3 +25,9 @@ for (const invalid of [
     messageId: 'methodList',
   });
 }
+
+testRule('prefer-effect-http-method', preferEffectHttpMethod, {
+  valid: "type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD'",
+  invalid: `import type { Effect } from 'effect'; type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD'`,
+  messageId: 'methodList',
+});

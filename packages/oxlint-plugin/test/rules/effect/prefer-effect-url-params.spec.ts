@@ -44,3 +44,9 @@ testRule('prefer-effect-url-params', preferEffectUrlParams, {
   `,
   messageId: 'manualQuery',
 });
+
+testRule('prefer-effect-url-params', preferEffectUrlParams, {
+  valid: 'const params = new URLSearchParams({ page: 1 })',
+  invalid: `import 'effect'; const params = new URLSearchParams({ page: 1 })`,
+  messageId: 'urlSearchParams',
+});

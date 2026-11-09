@@ -69,8 +69,11 @@ rules; function-declaration traversal is deliberately not implied by the express
 ## Options and recommended configuration
 
 `ruleMeta` defaults to `schema: []` (no options) and `docs.recommended: true`. Both `recommendedRules` and
-`plugin.configs.recommended` derive their membership from this flag, at **error** severity. A new rule is recommended
-unless explicitly opted out; review that choice before registering it. `configs.all` includes opt-in rules too.
+`plugin.configs.recommended` derive their membership from this flag, at **error** severity by default. The explicit
+`warnRules` exception in `src/index.ts` keeps `prefer-effect-http-status` at **warn** in both recommended exports:
+it names well-known values rather than catching defects. A new rule is recommended unless explicitly opted out;
+review membership and severity separately before registering it. `configs.all` includes every rule at error,
+including opt-in rules and the status warning.
 
 The public `recommendedRules` uses the `2digits/` registration alias; generated `configs` retain the package-name
 namespace and register the package themselves. These are two supported registration styles, not two severity policies.
@@ -279,3 +282,29 @@ All four remain recommended at error severity, with no new options.
 
 The namespace-import, argument-parenthesizing and replacement helpers in `internal/fixes` are shared by these rules.
 Do not duplicate them or reduce a suggestion to a fix merely because the generated text looks simpler.
+
+### Follow-up audit: #2964
+
+All five HTTP rules already use `ruleMeta`, semantic messageIds, no-options schemas and the shared `testRule` setup.
+They stay report-only: replacing HTTP strings, method lists or response checks needs human judgment. Both recommended
+exports preserve the status rule's warning severity and the other four rules' error severity. The configuration test
+checks this exception explicitly; it does not promote the warning just to match the baseline inventory.
+
+All five require an Effect file, including one with only a static type or side-effect import. The status API checks and
+Cookies parser exemptions use shared lexical imports, including aliases and named imports. Native response/cookie/query
+checks are syntax heuristics, not inferred HTTP types. The `httpApiStatus` annotation-key check is also syntactic;
+do not require a particular Schema constructor or broaden it to plain `status` keys. The HTTP method rule counts six
+distinct recognized methods, not six entries, and leaves deliberate shorter subsets alone.
+
+`prefer-effect-url-params` keeps its test-file exemption and permits `URLSearchParams(text)` parsing and tagged
+templates. Reuse `internal/files.isTestFilename`, which is also used by `no-service-constructor-imports`, rather than
+adding another test-file regex. Cookie fixtures, raw header passthroughs and the existing name/attribute heuristics
+remain unchanged. The CLI integration test keeps main's single 30-second timeout, not an additional global timeout.
+
+| Rule                         | Scope                                 | Delivery | Recommended |
+| ---------------------------- | ------------------------------------- | -------- | ----------- |
+| `prefer-effect-match-status` | File + native response checks         | Report   | error       |
+| `prefer-effect-url-params`   | File + query/global checks, not tests | Report   | error       |
+| `prefer-effect-http-method`  | File + literal method lists/unions    | Report   | error       |
+| `prefer-effect-http-status`  | File + API + annotation-key syntax    | Report   | warn        |
+| `prefer-effect-cookies`      | File + native checks/API exemptions   | Report   | error       |

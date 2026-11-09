@@ -14,17 +14,23 @@ describe('recommended configuration', () => {
     expect(optIn).toStrictEqual(['padding-line-between-statements', 'prefer-effect-filesystem', 'prefer-effect-path']);
   });
 
-  it('uses rule metadata for both recommended exports at error severity', () => {
+  it('uses rule metadata for both recommended exports with one warning exception', () => {
     const recommended = Arr.map(
       Arr.filter(R.toEntries(rules), ([, rule]) => rule.meta?.docs?.recommended === true),
       ([name]) => name,
     );
 
-    expect(recommendedRules).toStrictEqual(R.fromEntries(Arr.map(recommended, (name) => [`2digits/${name}`, 'error'])));
+    const errors = Arr.filter(recommended, (name) => name !== 'prefer-effect-http-status');
 
-    expect(plugin.configs.recommended.rules).toStrictEqual(
-      R.fromEntries(Arr.map(recommended, (name) => [`@2digits/oxlint-plugin/${name}`, 'error'])),
-    );
+    expect(recommendedRules).toStrictEqual({
+      ...R.fromEntries(Arr.map(errors, (name) => [`2digits/${name}`, 'error'])),
+      '2digits/prefer-effect-http-status': 'warn',
+    });
+
+    expect(plugin.configs.recommended.rules).toStrictEqual({
+      ...R.fromEntries(Arr.map(errors, (name) => [`@2digits/oxlint-plugin/${name}`, 'error'])),
+      '@2digits/oxlint-plugin/prefer-effect-http-status': 'warn',
+    });
 
     expect(plugin.configs.all.rules).toStrictEqual(
       R.fromEntries(Arr.map(R.keys(rules), (name) => [`@2digits/oxlint-plugin/${name}`, 'error'])),
