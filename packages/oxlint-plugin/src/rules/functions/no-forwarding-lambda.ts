@@ -241,7 +241,8 @@ function hoistedBetween(node: ESTree.Node, declaration: ESTree.Node): boolean {
 }
 
 /**
- * Whether every binding a callee reads is settled where the callback is created.
+ * Whether every binding a callee reads is settled where the callback is created and never reassigned afterwards, as a
+ * function declaration or parameter can be: the callback reads the new value, the passed callee keeps the old one.
  *
  * @param sourceCode Source of the file.
  * @param callee Forwarded callee.
@@ -254,7 +255,10 @@ function isSettledCallee(
 ): boolean {
   return Arr.every(
     Arr.filter(sourceCode.getScope(callee).references, ({ identifier }) => containsRange(callee, identifier)),
-    ({ resolved }) => Arr.every(resolved?.defs ?? [], (definition) => isSettledAt(definition, callback)),
+    ({ resolved }) =>
+      !resolved ||
+      (!Arr.some(resolved.references, (reference) => reference.isWrite() && !reference.init) &&
+        Arr.every(resolved.defs, (definition) => isSettledAt(definition, callback))),
   );
 }
 

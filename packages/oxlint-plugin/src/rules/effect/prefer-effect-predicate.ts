@@ -69,9 +69,11 @@ const undefinedMembers: Readonly<Record<string, string>> = {
 };
 
 /*
- * Effect implements the `exact` guards with the same `instanceof`. `Arr.isArray` also accepts arrays from other realms
- * and narrows to `unknown[]` instead of `any[]`, `P.isFunction` checks `typeof` and `P.isPromise` checks the shape.
- * `x instanceof String` only matches `new String(…)`, so P.isString is a different check, not a rewrite.
+ * Effect implements these guards with the same `instanceof`, but only the non-generic ones narrow the same way:
+ * `P.isMap`, `P.isSet` and `Arr.isArray` narrow `unknown` to `Map<unknown, unknown>`, `Set<unknown>` and `unknown[]`
+ * where `instanceof` gives `any`, which can break code that type-checked. `Arr.isArray` also accepts arrays from other
+ * realms, `P.isFunction` checks `typeof` and `P.isPromise` checks the shape. `x instanceof String` only matches
+ * `new String(…)`, so P.isString is a different check, not a rewrite.
  */
 const instanceChecks: Readonly<Record<string, readonly [PredicateCheck['namespace'], string, Equivalence]>> = {
   Array: ['Arr', 'isArray', 'similar'],
@@ -80,11 +82,11 @@ const instanceChecks: Readonly<Record<string, readonly [PredicateCheck['namespac
   Date: ['P', 'isDate', 'exact'],
   Error: ['P', 'isError', 'exact'],
   Function: ['P', 'isFunction', 'similar'],
-  Map: ['P', 'isMap', 'exact'],
+  Map: ['P', 'isMap', 'similar'],
   Number: ['P', 'isNumber', 'different'],
   Promise: ['P', 'isPromise', 'similar'],
   RegExp: ['P', 'isRegExp', 'exact'],
-  Set: ['P', 'isSet', 'exact'],
+  Set: ['P', 'isSet', 'similar'],
   String: ['P', 'isString', 'different'],
   Symbol: ['P', 'isSymbol', 'different'],
   Uint8Array: ['P', 'isUint8Array', 'exact'],

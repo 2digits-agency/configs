@@ -229,9 +229,10 @@ offers a suggestion; the others report only.
   `P.isNotUndefined`, `P.isNotNullish`, `P.isDate`, or `Arr.isArray`. Negated `typeof` checks become `!P.isNumber(x)`,
   because `P.not(P.isNumber)` does not narrow. Checks that Effect implements the same way are autofixed, adding the
   `effect/Predicate` import when the file lacks one: `typeof` (except `'object'`), `null`/`undefined` comparisons, and
-  `instanceof` `Date`, `Error`, `Map`, `Set`, `RegExp` and `Uint8Array`. Checks with a different result or type get a
-  suggestion instead: `P.isObjectOrArray` rejects `null`, which `typeof x === 'object'` accepts; `Arr.isArray` narrows
-  to `unknown[]` instead of `any[]`; `P.isFunction` and `P.isPromise` check `typeof` and the shape, not the class.
+  `instanceof` `Date`, `Error`, `RegExp` and `Uint8Array`. Checks with a different result or type get a suggestion
+  instead: `P.isObjectOrArray` rejects `null`, which `typeof x === 'object'` accepts; `Arr.isArray`, `P.isMap` and
+  `P.isSet` narrow to `unknown[]`, `Map<unknown, unknown>` and `Set<unknown>` where `instanceof` gives `any`;
+  `P.isFunction` and `P.isPromise` check `typeof` and the shape, not the class.
   `instanceof String` (and `Number`, `Boolean`, `BigInt`, `Symbol`) only matches boxed objects while `P.isString`
   matches primitives, so it is reported without a fix. Checks with comments inside are reported without a fix.
   Checks inside type guards (`(u): u is Foo =>`) and `typeof` on undeclared globals such as `typeof window` are allowed.
@@ -292,7 +293,8 @@ These rules report functions that only add an indirection, so the underlying cal
   `Effect.map((user) => toDto(user))`. APIs whose callbacks receive more than one argument, such as the index of `Array`, `Record`,
   `Effect.forEach` and `Stream.map` or the `Exit` of `Effect.acquireRelease`, are exempt, and so are factory calls other than Effect APIs.
   Passing the callee reads it when the callback is created rather than when it runs, so the rule only offers a rewrite
-  when every binding the callee reads is a `const`, function, parameter or import that is already initialized there.
+  when every binding the callee reads is a `const`, function, parameter or import that is already initialized there
+  and never reassigned.
   A local function with one signature is autofixed; other callees, such as Effect APIs, get a suggestion, because
   TypeScript infers a passed function from its last overload and Effect's dual APIs then stop type-checking.
 - `no-single-use-private-function`: a non-exported top-level function, or `Effect.fn` constant, that is referenced

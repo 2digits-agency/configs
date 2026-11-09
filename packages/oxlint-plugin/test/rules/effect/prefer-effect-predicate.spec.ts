@@ -62,6 +62,8 @@ for (const [invalid, messageId, predicate, suggestion] of [
   ["typeof value !== 'object'", 'objectPredicate', '!P.isObjectOrArray', '!P.isObjectOrArray(value)'],
   ['value instanceof Array', 'predicate', 'Arr.isArray', 'Arr.isArray(value)'],
   ['value instanceof Promise', 'predicate', 'P.isPromise', 'P.isPromise(value)'],
+  ['value instanceof Map', 'predicate', 'P.isMap', 'P.isMap(value)'],
+  ['value instanceof Set', 'predicate', 'P.isSet', 'P.isSet(value)'],
 ] as const) {
   testRule(ruleName, preferEffectPredicate, {
     valid,

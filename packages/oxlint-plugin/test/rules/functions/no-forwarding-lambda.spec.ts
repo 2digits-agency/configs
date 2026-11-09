@@ -111,6 +111,8 @@ tester.run('no-forwarding-lambda', noForwardingLambda, {
         `${imports} Effect.map((raw) => parse(raw)); const parse = (raw: string) => raw`,
         `${imports} const parse = (raw: string) => raw; function run() { return Effect.map((raw) => parse(raw)) }`,
         `${imports} let parse = (raw: string) => raw; Effect.map((raw) => parse(raw))`,
+        `${imports} function parse(raw: string) { return raw } Effect.map((raw) => parse(raw)); parse = (raw) => raw`,
+        `${imports} function run(parse: (raw: string) => string) { const out = Effect.map((raw) => parse(raw)); parse = String; return out }`,
         `${imports} Effect.flatMap((input) => Schema.decodeUnknownEffect(User)(input)); const User = Schema.String`,
         `${imports} Effect.map(function parse(raw) { return parse(raw) })`,
         `${imports} function parse(raw: string) { return raw } Effect.map((raw) => /* why */ parse(raw))`,
