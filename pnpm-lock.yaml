@@ -279,8 +279,8 @@ catalogs:
       specifier: 4.1.2
       version: 4.1.2
     effect-oxlint:
-      specifier: 0.4.0
-      version: 0.4.0
+      specifier: 0.5.0
+      version: 0.5.0
     empathic:
       specifier: 2.1.0
       version: 2.1.0
@@ -402,8 +402,8 @@ catalogs:
       specifier: 2.4.0
       version: 2.4.0
     posthog-node:
-      specifier: 5.63.1
-      version: 5.63.1
+      specifier: 5.63.2
+      version: 5.63.2
     prettier:
       specifier: 3.9.10
       version: 3.9.10
@@ -420,8 +420,8 @@ catalogs:
       specifier: 19.3.1
       version: 19.3.1
     renovate:
-      specifier: 44.222.4
-      version: 44.222.4
+      specifier: 44.222.5
+      version: 44.222.5
     tailwind-csstree:
       specifier: 0.4.2
       version: 0.4.2
@@ -899,7 +899,7 @@ importers:
         version: 1.19.5
       posthog-node:
         specifier: 'catalog:'
-        version: 5.63.1(@opentelemetry/api@1.10.0)
+        version: 5.63.2(@opentelemetry/api@1.10.0)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -1049,7 +1049,7 @@ importers:
         version: 4.1.2
       effect-oxlint:
         specifier: 'catalog:'
-        version: 0.4.0(effect@4.1.2)
+        version: 0.5.0(effect@4.1.2)
     devDependencies:
       '@2digits/tsconfig':
         specifier: workspace:*
@@ -1156,7 +1156,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 44.222.4(supports-color@7.2.0)(typanion@3.14.0)
+        version: 44.222.5(supports-color@7.2.0)(typanion@3.14.0)
       tsrs:
         specifier: 'catalog:'
         version: 0.23.0-ts7.1.0-beta
@@ -1494,8 +1494,8 @@ packages:
     resolution: {integrity: sha512-y7/yvZ2TPAnR9+jnc00klvNNLkJiXFFrQA/hlLCcxA9a2A4zQIOimyFQ9XfwYKiGD1fb5GY8vbKIIgO8d5Tb2A==}
     engines: {node: '>= 20.12.0'}
 
-  '@containerbase/base@14.66.5':
-    resolution: {integrity: sha512-5vbXTmyX+pZzIQWKc9x0E0wkSwwPLuO+tLf0IehPt+PBTdbpmmAQ9DAKW+CypEYYvFz9Pl7w65XyjXjtgqB1Hw==}
+  '@containerbase/base@14.66.11':
+    resolution: {integrity: sha512-HEP/Hwl9fRSUDtySSKVfhApUIqduuPnfpTZU1yNF88ZW5zs0EwIgK3XA5RXSHEdwiwOlMciMC4SBiS9PiUZpOQ==}
     engines: {node: '>=24.10.0'}
     peerDependencies:
       zod: ^4.0.0
@@ -3716,8 +3716,8 @@ packages:
     peerDependencies:
       '@redis/client': ^6.2.1
 
-  '@renovatebot/base-image@13.161.4':
-    resolution: {integrity: sha512-E0rP4ShVWBAAl4CbjhpJB4rZYAQR1FoIP9l0RFTLZ3A/WZehEMpbSN65bC1pgkVJte2xmTbMBgfAtYaCNK9KRg==}
+  '@renovatebot/base-image@13.161.7':
+    resolution: {integrity: sha512-wjbhyuZjOHdCPNYJcPDHwPyRqmLmQOYfzR7pZoqfgdzJQcGj8wEqrkrNL35YQDAa/t1GO2t4yBtQgfLoM9aQvw==}
     engines: {node: '>=24.10.0'}
     peerDependencies:
       zod: ^4.0.0
@@ -3784,6 +3784,9 @@ packages:
   '@smithy/core@3.35.1':
     resolution: {integrity: sha512-i4YPS4B6ts7bjn7UwLnGjiZdprOvHvgGobFZsYK3GIY3E5hIqtj0rReU69BcTpGp+fvtraSNXeG1l+jtJvF55w==}
     engines: {node: '>=18.0.0'}
+    deprecated: |-
+      Deprecated due to a bug in custom logger data redaction. Upgrade to the latest version. If you used a custom logger with this
+        version, review your logs and rotate any credentials or other secrets. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -5118,10 +5121,10 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  effect-oxlint@0.4.0:
-    resolution: {integrity: sha512-IA3ihFKGK0JoZVSPPgPP58988jj4PZ5/asFOhaSYHwDyRRRbkBJn7FX8RiPi++MFpXQvb+3fQpKdPzOvUK9xPQ==}
+  effect-oxlint@0.5.0:
+    resolution: {integrity: sha512-34PQWDqU+r4M5/jxnsgpCRytz7tE+Z1shXGM2bf8uQRPBKMdOSTdElVeuIx0AJ8f2ufAzBUwIRWLkE+TxcEVIw==}
     peerDependencies:
-      effect: ^4.0.0
+      effect: ^4.1.0
 
   effect@4.0.0-beta.83:
     resolution: {integrity: sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w==}
@@ -7125,8 +7128,8 @@ packages:
     resolution: {integrity: sha512-zkd+e9S1AQHhmaBKye9zlFHWjOwVgqXl1q3ECYy8561K7qxR2cREf/STLskulBFd78k6AOFeA+ff1TtEzk9bAA==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-node@5.63.1:
-    resolution: {integrity: sha512-CwJ1JEbFYtXYf8rctJdQy8S61bGNenqf1lBd5xw9z6MGMlfRwtWRrs96D3I3yV5MzKPctyGp0wPtYSTECBcLbQ==}
+  posthog-node@5.63.2:
+    resolution: {integrity: sha512-6BsKi6t1EX7vo8T2KL4MYlTT6pOHeuDD0/7zhLay2cBHOLsow7MEAbCqzhMbMen0PgYR6+X0yRKbvZKEk9NBoQ==}
     engines: {node: ^20.20.0 || >=22.22.0}
     peerDependencies:
       '@opentelemetry/api': ^1.2.0
@@ -7345,8 +7348,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@44.222.4:
-    resolution: {integrity: sha512-VenROygSiAlbQBdarouesA+3cJCQYoL3QFxA32bTTalTj3sA8lZN04ukzCm4DI+TJCQoL8UevzMPMfT79gUYNA==}
+  renovate@44.222.5:
+    resolution: {integrity: sha512-QWzhpqsRA/DRzG/Ft+TCD+SAVY8KF0pwW99EEH3C2XCihTDKC9vAj4BUXhhYgT8vqvUaZrU0EP/Bj0CckjUQww==}
     engines: {node: ^24.11.0 || ^26.13.0, pnpm: ^11.0.0}
     hasBin: true
 
@@ -8586,7 +8589,7 @@ snapshots:
       fast-wrap-ansi: 0.2.2
       sisteransi: 1.0.5
 
-  '@containerbase/base@14.66.5(zod@4.6.7)':
+  '@containerbase/base@14.66.11(zod@4.6.7)':
     dependencies:
       semver: 7.8.5
     optionalDependencies:
@@ -10418,9 +10421,9 @@ snapshots:
     dependencies:
       '@redis/client': 6.2.1(@opentelemetry/api@1.10.0)
 
-  '@renovatebot/base-image@13.161.4(zod@4.6.7)':
+  '@renovatebot/base-image@13.161.7(zod@4.6.7)':
     dependencies:
-      '@containerbase/base': 14.66.9(zod@4.6.7)
+      '@containerbase/base': 14.66.11(zod@4.6.7)
     optionalDependencies:
       zod: 4.6.7
 
@@ -10440,7 +10443,7 @@ snapshots:
 
   '@renovatebot/osv-offline-db@4.5.10(supports-color@7.2.0)(zod@4.6.7)':
     dependencies:
-      '@containerbase/base': 14.66.5(zod@4.6.7)
+      '@containerbase/base': 14.66.9(zod@4.6.7)
       debug: 4.4.3(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
@@ -11722,7 +11725,7 @@ snapshots:
       minimatch: 10.2.6
       semver: 7.8.5
 
-  effect-oxlint@0.4.0(effect@4.1.2):
+  effect-oxlint@0.5.0(effect@4.1.2):
     dependencies:
       '@oxlint/plugins': 1.92.0
       effect: 4.1.2
@@ -14139,7 +14142,7 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.2
 
-  posthog-node@5.63.1(@opentelemetry/api@1.10.0):
+  posthog-node@5.63.2(@opentelemetry/api@1.10.0):
     dependencies:
       '@posthog/core': 1.64.1
     optionalDependencies:
@@ -14343,7 +14346,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@44.222.4(supports-color@7.2.0)(typanion@3.14.0):
+  renovate@44.222.5(supports-color@7.2.0)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1139.0
       '@aws-sdk/client-ec2': 3.1139.0
@@ -14376,7 +14379,7 @@ snapshots:
       '@pnpm/parse-overrides': 1001.0.4
       '@qnighy/marshal': 0.1.3
       '@redis/client': 6.3.1(@opentelemetry/api@1.10.0)
-      '@renovatebot/base-image': 13.161.4(zod@4.6.7)
+      '@renovatebot/base-image': 13.161.7(zod@4.6.7)
       '@renovatebot/detect-tools': 5.0.0
       '@renovatebot/good-enough-parser': 4.0.3
       '@renovatebot/osv-offline': 4.5.10(supports-color@7.2.0)(zod@4.6.7)
