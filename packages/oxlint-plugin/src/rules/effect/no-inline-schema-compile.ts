@@ -81,6 +81,10 @@ const isTransparentParentType = Schema.is(
 function compilerMethod(node: ESTree.Node, imports: ImportBindings, sourceCode: OxlintSourceCode): Opt.Option<string> {
   const method = Opt.filter(imports.member(node, 'Schema'), isCompilerMethod);
 
+  if (Opt.isNone(method)) {
+    return method;
+  }
+
   const isImport = Opt.exists(
     Opt.flatMap(staticPath(node), ([root]) => lookupVariable(sourceCode, node, root)),
     ({ defs }) => Arr.every(defs, (definition) => definition.type === 'ImportBinding'),
