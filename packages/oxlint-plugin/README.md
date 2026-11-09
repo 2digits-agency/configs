@@ -33,6 +33,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
   plus interruptible `Effect.tryPromise` thunks.
 - Structured text formats: `prefer-effect-ndjson`, `prefer-effect-csv`, and `prefer-effect-format-parser`. See
   [Effect encoding formats](#effect-encoding-formats).
+- Effect encoding streams and archives: `prefer-effect-sse`, `no-manual-sse`, and `prefer-effect-archive`. See
+  [Server-Sent Events and archives](#server-sent-events-and-archives).
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
   and no root-barrel module imports. `@effect/vitest` and lowercase unstable barrels are intentionally exempt.
 - Alchemy v2 practices: every other `alchemy-*` rule.
@@ -270,6 +272,30 @@ These rules only run in files that import Effect, report without autofixes, and 
   are callbacks with untyped parameters (`{ ...server, addTool: Effect.fn(function* (registration) {}) }`), which
   lose their contextual type. `Struct.assign` also drops a class instance's prototype, so rebuild Schema and Data class
   instances with their constructor.
+
+## Server-Sent Events and archives
+
+These rules only run in files that import Effect and report without autofixes. They point at the `Sse`, `Tar` and `Zip`
+modules of `effect/encoding`.
+
+- `prefer-effect-sse` reports runtime imports of Server-Sent Events libraries (`eventsource-parser`, `eventsource`,
+  `eventsource-client`, `@microsoft/fetch-event-source`, `fetch-event-stream`, `better-sse`, `sse.js` and similar) and
+  `new EventSource(…)` on the global. Read event streams with `HttpClient` and `Sse.decode`, `Sse.decodeSchema` or
+  `Sse.makeParser`, and write them with `Sse.encode` or `HttpApiSchema.StreamSse`. `Sse.decode` reports `retry:` as a
+  `Retry` failure, so reconnecting is up to the caller, as with `Stream.retry`.
+- `no-manual-sse` reports string literals, template literals and `+` concatenations that build an event frame: a
+  `data:`, `event:`, `id:` or `retry:` field line in text that ends with the blank line that dispatches it. A
+  hand-written frame splits on a line break inside `data`, and an `id` or `event` that contains one injects fields;
+  `Sse.encoder.write` handles both. It also reports `startsWith('data: ')` (and `event: `, `id: `, `retry: `, as a
+  method or `Str.startsWith`), the usual hand-written parser. Comment frames such as `': ping\n\n'` are allowed
+  because `Sse.encoder` cannot write them, and `startsWith('data:')` without a space is allowed because it also matches
+  data URLs.
+- `prefer-effect-archive` reports runtime imports of tar and zip codecs: `tar-stream`, `nanotar`, `modern-tar`,
+  `tar-js` and `js-untar` (use `Tar`); `jszip`, `adm-zip`, `yauzl`, `yazl`, `unzipper`, `node-stream-zip`,
+  `client-zip`, `zip-stream` and `@zip.js/zip.js` (use `Zip`); `archiver` (either); and the zip exports of `fflate`,
+  whose gzip, zlib and deflate exports have no `Zip` counterpart. `tar`, `tar-fs` and `extract-zip` are left alone:
+  they extract to disk with path-traversal and symlink guards that `Tar` and `Zip` leave to the caller. `Zip` reads and
+  writes only stored and deflated entries, without encryption, and is marked experimental.
 
 ## anti-slop Effect rules
 

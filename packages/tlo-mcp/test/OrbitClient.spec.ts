@@ -9,6 +9,7 @@ import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Struct from 'effect/Struct';
 import * as McpClientError from 'effect/ai/McpClientError';
+import * as Sse from 'effect/encoding/Sse';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as Headers from 'effect/http/Headers';
 import * as TestClock from 'effect/testing/TestClock';
@@ -125,7 +126,9 @@ describe('orbit MCP client', () => {
       });
 
       return Effect.succeed(
-        new Response(`event: message\ndata: ${body}\n\n`, { headers: { 'content-type': 'text/event-stream' } }),
+        new Response(Sse.encoder.write(Sse.Event.make({ event: 'message', id: undefined, data: body })), {
+          headers: { 'content-type': 'text/event-stream' },
+        }),
       );
     });
 
