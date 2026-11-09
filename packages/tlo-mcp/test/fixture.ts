@@ -1,7 +1,9 @@
 import * as NodeServices from '@effect/platform-node/NodeServices';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
+import * as Opt from 'effect/Option';
 import * as Path from 'effect/Path';
+import * as Url from 'effect/http/Url';
 
 /**
  * Raw Orbit text results (CRLF preserved) captured from live Orbit; names and free text are redacted. Loaded once up
@@ -12,7 +14,9 @@ const fixtures = await Effect.gen(function* () {
 
   const path = yield* Path.Path;
 
-  const directory = yield* path.fromFileUrl(new URL('fixtures/orbit/', import.meta.url));
+  const directoryUrl = yield* Effect.fromResult(Url.fromString('fixtures/orbit/', import.meta.url));
+
+  const directory = yield* path.fromFileUrl(directoryUrl);
 
   const fixtures = new Map<string, string>();
 
@@ -28,11 +32,5 @@ const fixtures = await Effect.gen(function* () {
 }).pipe(Effect.provide(NodeServices.layer), Effect.runPromise);
 
 export function fixture(name: string) {
-  const text = fixtures.get(name);
-
-  if (text === undefined) {
-    throw new Error(`Missing fixture ${name}`);
-  }
-
-  return text;
+  return Opt.getOrThrowWith(Opt.fromUndefinedOr(fixtures.get(name)), () => new Error(`Missing fixture ${name}`));
 }

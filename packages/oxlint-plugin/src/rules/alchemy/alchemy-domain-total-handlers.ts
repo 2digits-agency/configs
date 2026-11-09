@@ -1,6 +1,7 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import type * as Option from 'effect/Option';
+import * as P from 'effect/Predicate';
 import type * as Result from 'effect/Result';
 
 import { defineEffectRule, ruleMeta } from '../../utils';
@@ -33,7 +34,7 @@ export const alchemyDomainTotalHandlers: Rule = defineEffectRule(
     function report(node: ESTree.Node, api: string): void {
       const found = domainSection(node, getState(), context);
 
-      if (found === undefined) {
+      if (P.isUndefined(found)) {
         return;
       }
 

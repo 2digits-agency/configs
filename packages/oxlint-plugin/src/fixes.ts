@@ -1,6 +1,8 @@
 import type { Context, ESTree, Fix, Fixer } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
+import * as Struct from 'effect/Struct';
 
 import { isStringLiteral, plainProperty, resolveVariable, staticPath } from './utils';
 
@@ -11,20 +13,22 @@ import { isStringLiteral, plainProperty, resolveVariable, staticPath } from './u
  * @param node API expression.
  */
 export function importedApi(context: Context, node: ESTree.Node): boolean {
-  const name = staticPath(node)?.[0];
+  const variable = Opt.flatMapNullishOr(Arr.head(staticPath(node) ?? []), (name) =>
+    resolveVariable(context, node, name),
+  );
 
-  const variable = name === undefined ? undefined : resolveVariable(context, node, name);
+  return Opt.exists(variable, ({ defs }) =>
+    Arr.some(defs, (definition) => {
+      const specifier = definition.node;
 
-  return Arr.some(variable?.defs ?? [], (definition) => {
-    const specifier = definition.node;
-
-    return (
-      definition.type === 'ImportBinding' &&
-      specifier.parent?.type === 'ImportDeclaration' &&
-      specifier.parent.importKind !== 'type' &&
-      (specifier.type !== 'ImportSpecifier' || specifier.importKind !== 'type')
-    );
-  });
+      return (
+        definition.type === 'ImportBinding' &&
+        specifier.parent?.type === 'ImportDeclaration' &&
+        specifier.parent.importKind !== 'type' &&
+        (specifier.type !== 'ImportSpecifier' || specifier.importKind !== 'type')
+      );
+    }),
+  );
 }
 
 /**
@@ -65,7 +69,7 @@ export function namespaceImport(
 
   const names = new Set(
     Arr.flatMap(context.sourceCode.scopeManager.scopes, (scope) => [
-      ...Arr.map(scope.variables, (variable) => variable.name),
+      ...Arr.map(scope.variables, Struct.get('name')),
       ...Arr.map(scope.references, (reference) => reference.identifier.name),
     ]),
   );
@@ -89,7 +93,7 @@ export function namespaceImport(
 
   return {
     name,
-    fixes: [first === undefined ? fixer.insertTextAfter(program, `\n${text}`) : fixer.insertTextBefore(first, text)],
+    fixes: [P.isUndefined(first) ? fixer.insertTextAfter(program, `\n${text}`) : fixer.insertTextBefore(first, text)],
   };
 }
 
@@ -105,7 +109,7 @@ export function plainOptions(node: ESTree.ObjectExpression, destination: string)
   return Arr.every(node.properties, (member) => {
     const property = plainProperty(member);
 
-    if (property === undefined || (property.key.type !== 'Identifier' && property.key.type !== 'Literal')) {
+    if (P.isUndefined(property) || (property.key.type !== 'Identifier' && property.key.type !== 'Literal')) {
       return false;
     }
 

@@ -1,6 +1,9 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
 import type * as Duration from 'effect/Duration';
 import type * as Effect from 'effect/Effect';
+import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 
 import {
   argumentAt,
@@ -34,7 +37,7 @@ function zeroDuration(node: ESTree.Expression, state: FileState): boolean {
 
     const amount = argumentAt(expression, 0);
 
-    return amount !== undefined && path?.[0] === 'Duration' && isLiteral(amount, 0);
+    return P.isNotUndefined(amount) && Opt.contains(Arr.head(path ?? []), 'Duration') && isLiteral(amount, 0);
   }
 
   return false;
@@ -57,7 +60,7 @@ export const preferYieldNow: Rule = defineEffectRule(
       const duration = argumentAt(node, 0);
 
       if (
-        duration !== undefined &&
+        P.isNotUndefined(duration) &&
         isApi(node.callee, state, 'Effect', 'sleep' satisfies keyof typeof Effect) &&
         zeroDuration(duration, state)
       ) {

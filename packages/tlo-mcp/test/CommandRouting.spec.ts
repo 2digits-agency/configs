@@ -3,8 +3,10 @@ import * as Cause from 'effect/Cause';
 import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
 import * as Layer from 'effect/Layer';
+import * as P from 'effect/Predicate';
 import * as Stdio from 'effect/Stdio';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
 import { vi } from 'vite-plus/test';
 
 import { run } from '../src/cli/command.js';
@@ -15,7 +17,7 @@ const routing = vi.hoisted((): { routes: Array<string> } => ({ routes: [] }));
 vi.mock(import('../src/cli/connect.js'), () =>
   import('effect/Effect').then((Effect) => ({
     connect: Effect.fn('test.connect')(function* (_port: number, publicUrl?: URL) {
-      routing.routes.push(publicUrl === undefined ? 'gateway' : `gateway ${publicUrl.href}`);
+      routing.routes.push(P.isUndefined(publicUrl) ? 'gateway' : `gateway ${publicUrl.href}`);
 
       return yield* Effect.die('server stopped');
     }),
@@ -23,9 +25,8 @@ vi.mock(import('../src/cli/connect.js'), () =>
 );
 
 vi.mock(import('../src/oauth/OrbitAuth.js'), (importOriginal) =>
-  Promise.all([importOriginal(), import('effect/Effect'), import('effect/Layer')]).then(
-    ([original, Effect, Layer]) => ({
-      ...original,
+  Promise.all([importOriginal(), import('effect/Effect'), import('effect/Layer')]).then(([original, Effect, Layer]) =>
+    Struct.assign(original, {
       OrbitAuthLive: Layer.succeed(
         original.OrbitAuth,
         original.OrbitAuth.of({

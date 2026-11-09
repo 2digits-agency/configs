@@ -7,13 +7,18 @@ import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Path from 'effect/Path';
 import * as R from 'effect/Record';
+import * as Result from 'effect/Result';
 import * as Schema from 'effect/Schema';
 import * as Stream from 'effect/Stream';
+import * as Url from 'effect/http/Url';
 import * as ChildProcess from 'effect/process/ChildProcess';
 
-const oxlintBinary = fileURLToPath(new URL('../node_modules/oxlint/bin/oxlint', import.meta.url));
+const oxlintBinary = Url.fromString('../node_modules/oxlint/bin/oxlint', import.meta.url).pipe(
+  Result.getOrThrow,
+  fileURLToPath,
+);
 
-const pluginUrl = new URL('../dist/index.mjs', import.meta.url).href;
+const pluginUrl = Result.getOrThrow(Url.fromString('../dist/index.mjs', import.meta.url)).href;
 
 const nativeEnvironment = { ...process.env };
 

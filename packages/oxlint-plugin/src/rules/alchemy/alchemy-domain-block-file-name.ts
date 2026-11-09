@@ -1,5 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 import * as Str from 'effect/String';
 
 import { defineEffectRule, ruleMeta } from '../../utils';
@@ -70,15 +71,15 @@ export const alchemyDomainBlockFileName: Rule = defineEffectRule(
         const parts = Str.split(name, '.');
 
         // `aggregate.ts` and `.aggregate.ts` lack the noun.
-        const fileKind = parts.length >= 3 && parts[0] !== '' ? parts.at(-2) : undefined;
+        const fileKind = parts.length >= 3 && Str.isNonEmpty(Arr.headNonEmpty(parts)) ? parts.at(-2) : undefined;
 
-        const kind = block === undefined ? undefined : (fileKinds[block] ?? sharedKinds[block]);
+        const kind = P.isUndefined(block) ? undefined : (fileKinds[block] ?? sharedKinds[block]);
 
-        if (block === undefined || kind === undefined || testFile.test(name)) {
+        if (P.isUndefined(block) || P.isUndefined(kind) || testFile.test(name)) {
           return;
         }
 
-        if (hostKinds.has(fileKind) && sharedKinds[block] !== undefined) {
+        if (hostKinds.has(fileKind) && P.isNotUndefined(sharedKinds[block])) {
           shared.push({ node: node.callee, block, kind });
 
           return;

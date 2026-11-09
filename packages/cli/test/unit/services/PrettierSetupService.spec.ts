@@ -2,8 +2,10 @@ import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import * as NodePath from '@effect/platform-node/NodePath';
 import { describe, expect, layer } from '@effect/vitest';
 import { assertTrue, strictEqual } from '@effect/vitest/utils';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as P from 'effect/Predicate';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { PrettierSetupService } from '../../../src/services/PrettierSetupService.js';
@@ -50,7 +52,7 @@ describe(PrettierSetupService, () => {
           // Check that addDependencies was called
           const executed = yield* getExecutedCommands;
 
-          assertTrue(executed.length > 0);
+          assertTrue(Arr.isReadonlyArrayNonEmpty(executed));
 
           expect(executed.at(0)?.command).toMatchInlineSnapshot(
             `"pnpm add --workspace-root -D prettier @2digits/prettier-config"`,
@@ -126,7 +128,7 @@ describe(PrettierSetupService, () => {
           strictEqual(updatedPkg.scripts?.test, 'vitest');
 
           // Should still add format:fix if not present
-          assertTrue(updatedPkg.scripts?.['format:fix'] !== undefined);
+          assertTrue(P.isNotUndefined(updatedPkg.scripts?.['format:fix']));
 
           expect(updatedPkg).toMatchSnapshot('preserved scripts package');
         }),

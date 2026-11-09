@@ -5,6 +5,7 @@ import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Logger from 'effect/Logger';
+import * as Opt from 'effect/Option';
 import * as McpClientError from 'effect/ai/McpClientError';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as McpServer from 'effect/ai/McpServer';
@@ -72,13 +73,13 @@ const register = Effect.fn('OrbitProxy.test.register')(function* (callTool: Orbi
     ),
   );
 
-  const registration = registrations[0];
+  const registration = Arr.head(registrations);
 
-  if (registration === undefined) {
+  if (Opt.isNone(registration)) {
     return yield* Effect.die('Missing proxy registration');
   }
 
-  return { registration, registrations };
+  return { registration: registration.value, registrations };
 });
 
 const requestContext = Layer.succeed(McpSchema.McpRequestContext, {

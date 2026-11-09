@@ -2,6 +2,7 @@ import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
+import * as P from 'effect/Predicate';
 
 import {
   canonicalPath,
@@ -115,7 +116,7 @@ function isLocalFunction(node: ESTree.Expression, env: Constness): boolean {
     definition?.type === 'ImportBinding' ||
     (definition?.type === 'Variable' &&
       definition.node.type === 'VariableDeclarator' &&
-      definition.node.init !== null &&
+      P.isNotNull(definition.node.init) &&
       isFunctionNode(definition.node.init))
   );
 }
@@ -157,7 +158,7 @@ function isConstant(node: ESTree.Node, env: Constness): boolean {
        * be mutated between calls.
        */
       MemberExpression: (member) =>
-        canonicalPath(member, env.state) !== undefined ||
+        P.isNotUndefined(canonicalPath(member, env.state)) ||
         (member.object.type === 'CallExpression' &&
           isConstantCall(member.object, env) &&
           (!member.computed || isConstant(member.property, env))),
@@ -166,7 +167,8 @@ function isConstant(node: ESTree.Node, env: Constness): boolean {
       LogicalExpression: ({ left, right }) => isConstant(left, env) && isConstant(right, env),
       ConditionalExpression: ({ alternate, consequent, test }) =>
         isConstant(test, env) && isConstant(consequent, env) && isConstant(alternate, env),
-      ArrayExpression: ({ elements }) => Arr.every(elements, (element) => element === null || isConstant(element, env)),
+      ArrayExpression: ({ elements }) =>
+        Arr.every(elements, (element) => P.isNull(element) || isConstant(element, env)),
       ObjectExpression: ({ properties }) => Arr.every(properties, (property) => isConstantProperty(property, env)),
       CallExpression: (call) => isConstantCall(call, env),
     }),
@@ -191,8 +193,8 @@ function check(context: Context, state: FileState, node: FunctionNode, name: EST
   const expression = functionResult(node);
 
   if (
-    expression === undefined ||
-    node.params.length > 0 ||
+    P.isUndefined(expression) ||
+    Arr.isReadonlyArrayNonEmpty(node.params) ||
     node.async ||
     node.generator ||
     node.typeParameters ||

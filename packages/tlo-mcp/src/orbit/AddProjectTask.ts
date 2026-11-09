@@ -1,3 +1,4 @@
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as SchemaGetter from 'effect/SchemaGetter';
 
@@ -26,8 +27,8 @@ const Confirmation = Schema.String.pipe(
 
       return {
         message,
-        ...(taskId === undefined ? {} : { taskId }),
-        ...(projectId === undefined ? {} : { projectId }),
+        ...(P.isUndefined(taskId) ? {} : { taskId }),
+        ...(P.isUndefined(projectId) ? {} : { projectId }),
       };
     }),
     encode: SchemaGetter.forbiddenEncoding,

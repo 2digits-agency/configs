@@ -1,8 +1,11 @@
 import { describe, expect, it } from '@effect/vitest';
 import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
+import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as HttpApiEndpoint from 'effect/http-api/HttpApiEndpoint';
+import * as Headers from 'effect/http/Headers';
 
 describe('effect v4 endpoint header decoding', () => {
   it.effect('fails a required mixed-case key even when the header arrived', () =>
@@ -13,7 +16,7 @@ describe('effect v4 endpoint header decoding', () => {
 
       expect(headers).toBeDefined();
 
-      if (headers === undefined) {
+      if (P.isUndefined(headers)) {
         return yield* Effect.die('Endpoint headers are missing');
       }
 
@@ -34,7 +37,7 @@ describe('effect v4 endpoint header decoding', () => {
 
       expect(headers).toBeDefined();
 
-      if (headers === undefined) {
+      if (P.isUndefined(headers)) {
         return yield* Effect.die('Endpoint headers are missing');
       }
 
@@ -47,11 +50,11 @@ describe('effect v4 endpoint header decoding', () => {
     }),
   );
 
-  it('keeps native header lookup case-insensitive', () => {
-    const headers = new Headers({ 'X-Api-Key': 'present' });
+  it('keeps header lookup case-insensitive', () => {
+    const headers = Headers.fromInput({ 'X-Api-Key': 'present' });
 
-    expect(headers.get('X-Api-Key')).toBe('present');
+    expect(Headers.get(headers, 'X-Api-Key')).toStrictEqual(Opt.some('present'));
 
-    expect(headers.has('X-Api-Key')).toBeTruthy();
+    expect(Headers.has(headers, 'X-Api-Key')).toBeTruthy();
   });
 });

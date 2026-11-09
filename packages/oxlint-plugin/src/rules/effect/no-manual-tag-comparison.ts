@@ -1,4 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 
 import { defineSyntaxRule, ruleMeta, staticPropertyName } from '../../utils';
@@ -79,7 +80,7 @@ export const noManualTagComparison: Rule = defineSyntaxRule(
       BinaryExpression(node) {
         const member = discriminantFromComparison(node, discriminants);
 
-        if (member !== undefined) {
+        if (P.isNotUndefined(member)) {
           report(node, member, 'Comparison');
         }
       },

@@ -7,6 +7,7 @@ import * as Eq from 'effect/Equal';
 import * as Exit from 'effect/Exit';
 import * as Layer from 'effect/Layer';
 import * as Match from 'effect/Match';
+import * as P from 'effect/Predicate';
 import * as Redacted from 'effect/Redacted';
 import * as Schema from 'effect/Schema';
 import * as Semaphore from 'effect/Semaphore';
@@ -88,7 +89,7 @@ export const OrbitAuthLayer = Layer.effect(
     const accessToken = Effect.fn('OrbitAuth.accessToken')(function* () {
       const session = yield* store.load;
 
-      if (session === undefined) {
+      if (P.isUndefined(session)) {
         return yield* OrbitAuthError.make({ message: 'Not authenticated. Run tlo-mcp login first.' });
       }
 
@@ -98,8 +99,8 @@ export const OrbitAuthLayer = Layer.effect(
         return session.accessToken;
       }
 
-      if (session.refreshToken === undefined) {
-        if (session.expiresAt === undefined) {
+      if (P.isUndefined(session.refreshToken)) {
+        if (P.isUndefined(session.expiresAt)) {
           return session.accessToken;
         }
 
@@ -191,7 +192,7 @@ export const OrbitAuthLayer = Layer.effect(
 
       const identity = {
         clientId: registration.client_id,
-        ...(registration.client_secret === undefined ? {} : { clientSecret: registration.client_secret }),
+        ...(P.isUndefined(registration.client_secret) ? {} : { clientSecret: registration.client_secret }),
       };
 
       const client = yield* OAuth.make({

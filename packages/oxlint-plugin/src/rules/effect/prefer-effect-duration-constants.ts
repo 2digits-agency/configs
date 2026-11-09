@@ -2,6 +2,8 @@ import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
+import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Struct from 'effect/Struct';
 
 import {
@@ -103,13 +105,13 @@ function nameUnit(name: string): NameUnit {
 
   const previous = parts.at(-2);
 
-  if (last === undefined) {
+  if (P.isUndefined(last)) {
     return undefined;
   }
 
   const unit = unitWords.get(last);
 
-  if (unit !== undefined) {
+  if (P.isNotUndefined(unit)) {
     return unit;
   }
 
@@ -136,7 +138,7 @@ const typeNamePath = Match.type<ESTree.TSTypeName>().pipe(
     TSQualifiedName: ({ left, right }): TypeNamePath => {
       const path = typeNamePath(left);
 
-      return path === undefined ? undefined : Arr.append(path, right.name);
+      return P.isUndefined(path) ? undefined : Arr.append(path, right.name);
     },
   }),
   Match.orElse(Fn.constUndefined),
@@ -161,9 +163,9 @@ function durationAnnotation(annotation: ESTree.Node, context: Context, state: Fi
 
     // Local types that shadow the import, such as an inner `type Input = number`, are not Effect's.
     const imported =
-      root === undefined || !resolvesToImport(node, root, context) ? undefined : state.bindings.get(root);
+      P.isUndefined(root) || !resolvesToImport(node, root, context) ? undefined : state.bindings.get(root);
 
-    return imported !== undefined && [...imported, ...rest][0] === 'Duration';
+    return P.isNotUndefined(imported) && Opt.contains(Arr.head(Arr.appendAll(imported, rest)), 'Duration');
   });
 }
 
@@ -230,7 +232,7 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
         return 'millis';
       }
 
-      return arithmetic !== undefined || named === 'unknown' ? undefined : 'none';
+      return named === 'unknown' || P.isNotUndefined(arithmetic) ? undefined : 'none';
     }
 
     return {
@@ -245,9 +247,9 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
       CallExpression(node) {
         const argument = durationArgument(node, context, getState());
 
-        const declarator = argument === undefined ? undefined : declaratorOf(argument, context);
+        const declarator = P.isUndefined(argument) ? undefined : declaratorOf(argument, context);
 
-        if (declarator !== undefined) {
+        if (P.isNotUndefined(declarator)) {
           candidates.set(declarator, true);
         }
       },
@@ -267,7 +269,7 @@ export const preferEffectDurationConstants: Rule = defineEffectRule(
             data: {
               name: node.id.name,
               replacement:
-                unit === undefined || value === undefined
+                P.isUndefined(unit) || P.isUndefined(value)
                   ? 'a Duration constructor such as Duration.seconds'
                   : durationConstructor(value, unit),
             },

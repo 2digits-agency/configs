@@ -1,5 +1,6 @@
 import type { ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 
 import { canonicalPath, isFunctionNode, walkNodes, type FileState, type FunctionNode } from '../../utils';
 import { functionResult } from '../effect/utils';
@@ -70,11 +71,11 @@ export function forwardedCall(node: FunctionNode): Forwarding | undefined {
   const expression = functionResult(node);
 
   if (
-    names === undefined ||
+    P.isUndefined(names) ||
     node.async ||
     node.generator ||
     node.typeParameters ||
-    names.length === 0 ||
+    !Arr.isReadonlyArrayNonEmpty(names) ||
     expression?.type !== 'CallExpression' ||
     expression.optional
   ) {
@@ -92,7 +93,7 @@ export function forwardedCall(node: FunctionNode): Forwarding | undefined {
   for (const argument of expression.arguments) {
     const name = forwardedName(argument, node);
 
-    if (name !== undefined && nameSet.has(name)) {
+    if (P.isNotUndefined(name) && nameSet.has(name)) {
       forwarded.push(name);
     } else if (isFunctionNode(argument) || referencesAny(argument, nameSet)) {
       // A function argument, such as the callback of `Arr.map(values, (value) => …)`, carries the logic itself.
@@ -145,7 +146,7 @@ export function isDetachableCallee(node: ESTree.Expression | ESTree.Super, state
   }
 
   if (node.type === 'MemberExpression') {
-    return canonicalPath(node, state) !== undefined;
+    return P.isNotUndefined(canonicalPath(node, state));
   }
 
   return node.type === 'CallExpression' && node.callee.type !== 'Identifier' && isDetachableCallee(node.callee, state);

@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import { defineEffectRule, isApi, ruleMeta } from '../../utils';
 import { containingEffectGen, containingWorker } from './utils';
@@ -24,7 +25,7 @@ export const alchemyNoCloudflareInitFinalizer: Rule = defineEffectRule(
 
       const program = containingEffectGen(node, state);
 
-      if (program !== undefined && containingWorker(program, state)?.arguments.includes(program)) {
+      if (P.isNotUndefined(program) && containingWorker(program, state)?.arguments.includes(program)) {
         context.report({ node, messageId: 'finalizer' });
       }
     },

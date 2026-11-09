@@ -1,4 +1,5 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
 import * as P from 'effect/Predicate';
 import type * as Schema from 'effect/Schema';
 
@@ -56,10 +57,10 @@ function appendJsonChildren(expression: ESTree.Expression, pending: Array<ESTree
 function nonJsonValue(node: ESTree.Expression): ESTree.Node | undefined {
   const pending: Array<ESTree.Expression> = [node];
 
-  while (pending.length > 0) {
+  while (Arr.isReadonlyArrayNonEmpty(pending)) {
     const candidate = pending.pop();
 
-    if (candidate === undefined) {
+    if (P.isUndefined(candidate)) {
       continue;
     }
 
@@ -102,26 +103,26 @@ export const noNonJsonSchemaAnnotation: Rule = defineEffectRule(
             ? directPath[1]
             : undefined;
 
-      if (method === undefined || !annotateMethods.has(method)) {
+      if (P.isUndefined(method) || !annotateMethods.has(method)) {
         return;
       }
 
       const annotations = objectArgument(node);
 
-      if (annotations === undefined || objectProperty(annotations, 'jsonSchema') !== undefined) {
+      if (P.isUndefined(annotations) || P.isNotUndefined(objectProperty(annotations, 'jsonSchema'))) {
         return;
       }
 
       for (const name of jsonValueAnnotations) {
         const property = objectProperty(annotations, name);
 
-        if (property === undefined) {
+        if (P.isUndefined(property)) {
           continue;
         }
 
         const invalid = nonJsonValue(property.value);
 
-        if (invalid !== undefined) {
+        if (P.isNotUndefined(invalid)) {
           context.report({ node: invalid, messageId: 'nonJson' });
         }
       }

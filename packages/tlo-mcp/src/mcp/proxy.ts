@@ -3,6 +3,7 @@ import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as McpSchema from 'effect/ai/McpSchema';
 import * as McpServer from 'effect/ai/McpServer';
@@ -33,7 +34,7 @@ function rateLimited(retryAfter: string | undefined) {
     ],
     _meta: {
       'tlo-mcp/httpStatus': 429,
-      ...(retryAfter === undefined ? {} : { 'tlo-mcp/retryAfter': retryAfter }),
+      ...(P.isUndefined(retryAfter) ? {} : { 'tlo-mcp/retryAfter': retryAfter }),
     },
   });
 }

@@ -2,6 +2,8 @@ import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import type * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
+import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 
 import { defineEffectRule, isGlobalIdentifier, ruleMeta, staticPath } from '../../utils';
 import { domainSection, importedPath, isImportReference } from './domain';
@@ -74,24 +76,22 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
   ),
   (context, getState) => {
     function report(node: ESTree.Node, impurity: Impurity | undefined, api: string): void {
-      if (impurity !== undefined && domainSection(node, getState(), context)?.section === 'decide') {
+      if (P.isNotUndefined(impurity) && domainSection(node, getState(), context)?.section === 'decide') {
         context.report({ node, messageId: impurity, data: { api } });
       }
     }
 
     // `Clock.currentTimeMillis`, or `currentTimeMillis` imported from `effect/Clock`.
     function checkModule(node: ESTree.Node): void {
-      const canonical = importedPath(node, getState(), context);
+      const canonical = importedPath(node, getState(), context) ?? [];
 
-      const module = canonical?.[0];
-
-      if (module === undefined || canonical?.length !== 2) {
+      if (!Arr.isReadonlyArrayNonEmpty(canonical) || canonical.length !== 2) {
         return;
       }
 
       const name = Arr.join(canonical, '.');
 
-      report(node, memberImpurities.get(name) ?? moduleImpurities.get(module), name);
+      report(node, memberImpurities.get(name) ?? moduleImpurities.get(Arr.headNonEmpty(canonical)), name);
     }
 
     // `Date` or `globalThis.Date`, when not shadowed.
@@ -112,7 +112,9 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
     return {
       // Inner members such as `DateTime.now` in `DateTime.now.pipe(...)` are checked too; longer paths are skipped.
       MemberExpression(node) {
-        const path = staticPath(node);
+        const path = staticPath(node) ?? [];
+
+        const first = Arr.head(path);
 
         let root: ESTree.Node = node;
 
@@ -121,9 +123,9 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
         }
 
         // `globalThis.Date.now` is the same as `Date.now`.
-        const global = path?.[0] === 'globalThis' ? path.slice(1) : path;
+        const global = Opt.contains(first, 'globalThis') ? path.slice(1) : path;
 
-        if (global?.length === 2 && isGlobalIdentifier(root, context, path?.[0] ?? '')) {
+        if (global.length === 2 && Opt.exists(first, (name) => isGlobalIdentifier(root, context, name))) {
           const name = Arr.join(global, '.');
 
           const called = node.parent.type === 'CallExpression' && node.parent.callee === node;
@@ -141,7 +143,7 @@ export const alchemyDomainPureDecide: Rule = defineEffectRule(
         }
       },
       NewExpression(node) {
-        if (node.arguments.length === 0 && globalCallee(node.callee) === 'Date') {
+        if (Arr.isReadonlyArrayEmpty(node.arguments) && globalCallee(node.callee) === 'Date') {
           report(node, 'time', 'new Date()');
         }
       },

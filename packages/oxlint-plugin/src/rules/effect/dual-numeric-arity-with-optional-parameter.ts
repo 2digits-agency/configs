@@ -30,7 +30,7 @@ export const dualNumericArityWithOptionalParameter: Rule = defineEffectRule(
       const implementation = argumentAt(node, 1);
 
       if (
-        implementation === undefined ||
+        P.isUndefined(implementation) ||
         !isApi(node.callee, getState(), 'Function', 'dual' satisfies keyof typeof Fn) ||
         arity?.type !== 'Literal' ||
         !P.isNumber(arity.value) ||

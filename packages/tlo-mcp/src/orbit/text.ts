@@ -90,7 +90,7 @@ export function Line<const TFields extends Schema.Struct.Fields>(pattern: RegExp
       decode: SchemaGetter.transformEffect((line, options) => {
         const match = pattern.exec(line);
 
-        return match === null
+        return P.isNull(match)
           ? Effect.fail(
               new SchemaIssue.InvalidValue({ message: `Unexpected line: ${JSON.stringify(line)}` }, line, options),
             )

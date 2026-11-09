@@ -1,6 +1,7 @@
 import type { Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
 import type * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 
 import { argumentAt, defineEffectRule, isAnyApi, isApi, ruleMeta, staticPath, unwrapExpression } from '../../utils';
 
@@ -54,7 +55,7 @@ export const noServiceOptionGetOrThrow: Rule = defineEffectRule(
 
       const mapper = argumentAt(map, 0);
 
-      if (mapper !== undefined && isAnyApi(mapper, state, 'Option', getOrThrowMethods)) {
+      if (P.isNotUndefined(mapper) && isAnyApi(mapper, state, 'Option', getOrThrowMethods)) {
         context.report({ node, messageId: 'getOrThrow' });
       }
     },

@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 
 import { argumentAt, defineEffectRule, objectProperty, ruleMeta, unwrapExpression } from '../../utils';
 import { domainBlock } from './domain';
@@ -19,7 +20,7 @@ export const alchemyDomainRequireViewVersion: Rule = defineEffectRule(
     CallExpression(node) {
       const argument = argumentAt(node, 1);
 
-      const definition = argument === undefined ? undefined : unwrapExpression(argument);
+      const definition = P.isUndefined(argument) ? undefined : unwrapExpression(argument);
 
       if (domainBlock(node, getState(), context) !== 'View' || definition?.type !== 'ObjectExpression') {
         return;
@@ -27,7 +28,7 @@ export const alchemyDomainRequireViewVersion: Rule = defineEffectRule(
 
       const version = objectProperty(definition, 'version');
 
-      if (version === undefined) {
+      if (P.isUndefined(version)) {
         context.report({ node: node.callee, messageId: 'missing' });
       } else if (
         Arr.some(

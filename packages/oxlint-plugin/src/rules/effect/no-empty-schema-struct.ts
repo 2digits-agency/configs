@@ -1,4 +1,5 @@
 import type { Rule } from '@oxlint/plugins';
+import * as Arr from 'effect/Array';
 import type * as Schema from 'effect/Schema';
 
 import { argumentAt, defineEffectRule, isApi, ruleMeta } from '../../utils';
@@ -19,7 +20,7 @@ export const noEmptySchemaStruct: Rule = defineEffectRule(
       if (
         isApi(node.callee, getState(), 'Schema', 'Struct' satisfies keyof typeof Schema) &&
         fields?.type === 'ObjectExpression' &&
-        fields.properties.length === 0
+        Arr.isReadonlyArrayEmpty(fields.properties)
       ) {
         context.report({ node, messageId: 'emptyStruct' });
       }

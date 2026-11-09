@@ -1,5 +1,6 @@
 import * as Arr from 'effect/Array';
 import * as DateTime from 'effect/DateTime';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as SchemaGetter from 'effect/SchemaGetter';
 import * as Str from 'effect/String';
@@ -77,17 +78,17 @@ export function timeEntry(
     ...Struct.pick(entry, ['id', 'minutes', 'work', 'description', 'taskId', 'ticketId', 'lock']),
     start,
     kind: kindOf(planned, absence),
-    ...(absence === undefined ? {} : { pendingApproval: absence === 'ABSENCE (pending approval)' }),
-    editable: entry.lock === undefined,
+    ...(P.isUndefined(absence) ? {} : { pendingApproval: absence === 'ABSENCE (pending approval)' }),
+    editable: P.isUndefined(entry.lock),
   };
 }
 
 function kindOf(planned: string | undefined, absence: string | undefined) {
-  if (absence !== undefined) {
+  if (P.isNotUndefined(absence)) {
     return 'absence';
   }
 
-  return planned === undefined ? 'logged' : 'planned';
+  return P.isUndefined(planned) ? 'logged' : 'planned';
 }
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
@@ -167,16 +168,18 @@ export const GetTimesheetWeek = {
   result: Schema.String.pipe(
     Schema.decodeTo(WeekText, { decode: SchemaGetter.transform(sections), encode: SchemaGetter.forbiddenEncoding }),
     Schema.decodeTo(TimesheetWeek, {
-      decode: SchemaGetter.transform(({ header, days, entries }) => ({
-        ...header,
-        days: Arr.map(days, (day) => ({
-          ...day,
-          entries: Arr.map(
-            Arr.filter(entries, ({ weekday }) => weekday === day.weekday),
-            ({ time, ...entry }) => timeEntry(`${day.date} ${time}`, entry),
+      decode: SchemaGetter.transform(({ header, days, entries }) =>
+        Struct.assign(header, {
+          days: Arr.map(days, (day) =>
+            Struct.assign(day, {
+              entries: Arr.map(
+                Arr.filter(entries, ({ weekday }) => weekday === day.weekday),
+                ({ time, ...entry }) => timeEntry(`${day.date} ${time}`, entry),
+              ),
+            }),
           ),
-        })),
-      })),
+        }),
+      ),
       encode: SchemaGetter.forbiddenEncoding,
     }),
   ),

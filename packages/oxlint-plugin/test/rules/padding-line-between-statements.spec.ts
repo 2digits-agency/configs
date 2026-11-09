@@ -4,6 +4,7 @@ import { describe, expectTypeOf, it } from '@effect/vitest';
 import ts from 'dedent';
 import * as Arr from 'effect/Array';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
 import { RuleTester } from 'oxlint/plugins-dev';
 
 import { rules, type PaddingLineOption } from '../../src';
@@ -67,7 +68,7 @@ tester.run('padding-line-between-statements', rule, {
 
         bar();
       `,
-      options: [{ ...always, blankLine: 'any' }],
+      options: [Struct.assign(always, { blankLine: 'any' })],
     },
     {
       code: ts`
@@ -106,16 +107,19 @@ tester.run('padding-line-between-statements', rule, {
         const a = 1;
         returnValue();
       `,
-      options: [{ ...always, next: 'return' }],
+      options: [Struct.assign(always, { next: 'return' })],
     },
     {
       code: ts`
         const a = 1;
         foo();
       `,
-      options: [{ ...always, next: { selector: 'ExpressionStatement', lineMode: 'multiline' } }],
+      options: [Struct.assign(always, { next: { selector: 'ExpressionStatement', lineMode: 'multiline' } })],
     },
-    { code: ts`type A = { a: string; b: number };`, options: [{ ...always, prev: 'ts-method', next: 'ts-method' }] },
+    {
+      code: ts`type A = { a: string; b: number };`,
+      options: [Struct.assign(always, { prev: 'ts-method', next: 'ts-method' })],
+    },
   ],
   invalid: [
     ...Arr.map(
@@ -272,7 +276,7 @@ tester.run('padding-line-between-statements', rule, {
       ([prev, code]) => ({
         code,
         output: Str.replace(/\n(\s*foo\(\);)/u, '\n\n$1')(code),
-        options: [{ ...always, prev }],
+        options: [Struct.assign(always, { prev })],
         errors: [{ messageId: 'expectedBlankLine' }],
       }),
     ),
@@ -294,7 +298,7 @@ tester.run('padding-line-between-statements', rule, {
         }
         bar();
       `,
-      options: [{ ...always, prev: 'expression', next: 'expression' }],
+      options: [Struct.assign(always, { prev: 'expression', next: 'expression' })],
       errors: [{ messageId: 'expectedBlankLine' }],
     },
     {
@@ -315,9 +319,9 @@ tester.run('padding-line-between-statements', rule, {
         foo();
       `,
       options: [
-        { ...always, prev: 'expression', next: 'expression' },
-        { ...always, prev: { selector: 'BlockStatement' } },
-        { ...always, prev: { selector: 'IfStatement:has(BlockStatement)' } },
+        Struct.assign(always, { prev: 'expression', next: 'expression' }),
+        Struct.assign(always, { prev: { selector: 'BlockStatement' } }),
+        Struct.assign(always, { prev: { selector: 'IfStatement:has(BlockStatement)' } }),
       ],
       errors: [{ messageId: 'expectedBlankLine' }, { messageId: 'expectedBlankLine' }],
     },
@@ -591,7 +595,7 @@ tester.run('padding-line-between-statements', rule, {
 
         label: returnValue();
       `,
-      options: [{ ...always, prev: 'const', next: 'expression' }],
+      options: [Struct.assign(always, { prev: 'const', next: 'expression' })],
       errors: [{ messageId: 'expectedBlankLine' }],
     },
     {
@@ -605,10 +609,9 @@ tester.run('padding-line-between-statements', rule, {
         foo();
       `,
       options: [
-        {
-          ...always,
+        Struct.assign(always, {
           next: { selector: 'ExpressionStatement[expression.type="CallExpression"]', lineMode: 'singleline' },
-        },
+        }),
       ],
       errors: [{ messageId: 'expectedBlankLine' }],
     },
@@ -622,7 +625,7 @@ tester.run('padding-line-between-statements', rule, {
 
         bar();
       `,
-      options: [{ ...always, prev: { selector: ':statement' }, next: { selector: ':statement' } }],
+      options: [Struct.assign(always, { prev: { selector: ':statement' }, next: { selector: ':statement' } })],
       errors: [{ messageId: 'expectedBlankLine' }],
     },
     {
@@ -635,7 +638,7 @@ tester.run('padding-line-between-statements', rule, {
 
         function f(x: string) {}
       `,
-      options: [{ ...always, prev: { selector: 'TSDeclareFunction' }, next: 'function' }],
+      options: [Struct.assign(always, { prev: { selector: 'TSDeclareFunction' }, next: 'function' })],
       errors: [{ messageId: 'expectedBlankLine' }],
     },
     {
@@ -648,7 +651,7 @@ tester.run('padding-line-between-statements', rule, {
 
         foo();
       `,
-      options: [{ ...always, prev: 'directive', next: 'expression' }],
+      options: [Struct.assign(always, { prev: 'directive', next: 'expression' })],
       errors: [{ messageId: 'expectedBlankLine' }],
     },
     {
@@ -665,7 +668,7 @@ tester.run('padding-line-between-statements', rule, {
 
         foo();
       `,
-      options: [{ ...always, prev: 'multiline-const' }],
+      options: [Struct.assign(always, { prev: 'multiline-const' })],
       errors: [{ messageId: 'expectedBlankLine' }],
     },
     {
@@ -678,7 +681,7 @@ tester.run('padding-line-between-statements', rule, {
 
         exports.value = value;
       `,
-      options: [{ ...always, prev: 'require', next: 'exports' }],
+      options: [Struct.assign(always, { prev: 'require', next: 'exports' })],
       errors: [{ messageId: 'expectedBlankLine' }],
     },
     {
@@ -691,7 +694,7 @@ tester.run('padding-line-between-statements', rule, {
 
         foo();
       `,
-      options: [{ ...always, prev: 'block-like' }],
+      options: [Struct.assign(always, { prev: 'block-like' })],
       errors: [{ messageId: 'expectedBlankLine' }],
     },
   ],

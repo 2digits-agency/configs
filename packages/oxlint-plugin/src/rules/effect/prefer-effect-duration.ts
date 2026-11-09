@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import type * as Duration from 'effect/Duration';
+import * as P from 'effect/Predicate';
 
 import { namespaceImport } from '../../fixes';
 import { defineEffectRule, ruleMeta } from '../../utils';
@@ -21,7 +22,7 @@ export const preferEffectDuration: Rule = defineEffectRule(
     CallExpression(node) {
       const duration = durationArgument(node, context, getState());
 
-      if (duration === undefined || numericValue(duration) === undefined) {
+      if (P.isUndefined(duration) || P.isUndefined(numericValue(duration))) {
         return;
       }
 

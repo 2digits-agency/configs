@@ -4,6 +4,7 @@ import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as Order from 'effect/Order';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 import * as Struct from 'effect/Struct';
@@ -204,23 +205,25 @@ function workdayDay(
     entries: Arr.filter(
       day.entries,
       (entry) =>
-        (filter.taskId === undefined || entry.taskId === filter.taskId) &&
-        (filter.kind === undefined || entry.kind === filter.kind),
+        (P.isUndefined(filter.taskId) || entry.taskId === filter.taskId) &&
+        (P.isUndefined(filter.kind) || entry.kind === filter.kind),
     ),
     unconfirmedPlanned: Arr.flatMap(
       day.entries,
       Match.type<TimeEntry>().pipe(
         Match.when({ kind: 'planned' }, (entry) => [
-          UnconfirmedPlanned.make({
-            ...Struct.pick(entry, ['id', 'start', 'minutes', 'work', 'taskId']),
-            ...Opt.match(
-              Arr.findFirst(planned, ({ id }) => id === entry.id),
-              {
-                onNone: () => ({}),
-                onSome: (plan) => ({ planningKind: plan.kind, ...Struct.pick(plan, ['seriesId']) }),
-              },
+          UnconfirmedPlanned.make(
+            Struct.assign(
+              Struct.pick(entry, ['id', 'start', 'minutes', 'work', 'taskId']),
+              Opt.match(
+                Arr.findFirst(planned, ({ id }) => id === entry.id),
+                {
+                  onNone: () => ({}),
+                  onSome: (plan) => ({ planningKind: plan.kind, ...Struct.pick(plan, ['seriesId']) }),
+                },
+              ),
             ),
-          }),
+          ),
         ]),
         Match.orElse(() => []),
       ),
@@ -236,7 +239,7 @@ export const GetMyWorkdayHandler = Effect.gen(function* () {
   const orbit = yield* Orbit;
 
   return Effect.fn('GetMyWorkday')(function* (params: Tool.Parameters<typeof GetMyWorkday>) {
-    const from = params.to === undefined && params.scope === 'week' ? mondayOf(params.date) : params.date;
+    const from = P.isUndefined(params.to) && params.scope === 'week' ? mondayOf(params.date) : params.date;
 
     const to = params.to ?? (params.scope === 'week' ? addDays(from, 6) : from);
 

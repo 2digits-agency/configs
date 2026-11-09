@@ -1,5 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import type * as Hash from 'effect/Hash';
+import * as P from 'effect/Predicate';
 
 import {
   argumentAt,
@@ -50,7 +51,7 @@ export const noHashAsIdentity: Rule = defineEffectRule(
 
         const key = argumentAt(node, 0);
 
-        if (key !== undefined && isHashValue(key)) {
+        if (P.isNotUndefined(key) && isHashValue(key)) {
           context.report({ node: key, messageId: 'hashIdentity' });
         }
       },

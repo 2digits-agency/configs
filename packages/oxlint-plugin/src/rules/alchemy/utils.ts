@@ -1,6 +1,7 @@
 import type { ESTree } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import {
   callbackCall,
@@ -46,9 +47,9 @@ export function containingWorker(node: ESTree.Node, state: FileState): ESTree.Ca
 export function containingEffectGen(node: ESTree.Node, state: FileState): ESTree.CallExpression | undefined {
   const callback = enclosingFunction(node);
 
-  const call = callback === undefined ? undefined : callbackCall(callback);
+  const call = P.isUndefined(callback) ? undefined : callbackCall(callback);
 
-  return call !== undefined && isApi(call.callee, state, 'Effect', 'gen' satisfies keyof typeof Effect)
+  return P.isNotUndefined(call) && isApi(call.callee, state, 'Effect', 'gen' satisfies keyof typeof Effect)
     ? call
     : undefined;
 }
@@ -64,7 +65,7 @@ export function containingHandler(node: ESTree.Node): string | undefined {
     if (parent.type === 'Property') {
       const name = propertyName(parent as ESTree.ObjectProperty);
 
-      if (name !== undefined && workerHandlers.has(name)) {
+      if (P.isNotUndefined(name) && workerHandlers.has(name)) {
         return name;
       }
     }

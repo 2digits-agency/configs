@@ -1,6 +1,7 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import type * as Schema from 'effect/Schema';
 
 import {
@@ -55,9 +56,9 @@ export const noDiscardedSchemaChecks: Rule = defineEffectRule(
       const method = staticPropertyName(node.callee);
 
       if (
-        method === undefined ||
+        P.isUndefined(method) ||
         !schemaMapMethods.has(method) ||
-        methodCall(node.callee.object, 'check') === undefined
+        P.isUndefined(methodCall(node.callee.object, 'check'))
       ) {
         return;
       }

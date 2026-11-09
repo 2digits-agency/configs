@@ -3,6 +3,7 @@ import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Path from 'effect/Path';
+import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 import * as Stream from 'effect/Stream';
@@ -210,7 +211,7 @@ export class PackageManagerService extends Context.Service<PackageManagerService
           catch: (cause) => PackageManagerError.make({ operation: 'getPackageManager', cause }),
         });
 
-        if (pm === undefined) {
+        if (P.isUndefined(pm)) {
           return yield* PackageManagerError.make({
             operation: 'getPackageManager',
             cause: 'Could not detect package manager',

@@ -1,5 +1,6 @@
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 import * as Struct from 'effect/Struct';
@@ -22,14 +23,15 @@ import { OrbitReadError, toReadError } from './OrbitReadError.js';
 
 const isApiId = Schema.is(ApiId);
 
-export class BoardCard extends Schema.Class<BoardCard, { readonly brand: unique symbol }>('BoardCard')({
-  ...CardFields,
-  name: Schema.String,
-  description: Schema.String.pipe(Schema.optionalKey),
-  checklist: Schema.String.pipe(Schema.optionalKey),
-  labels: CardDetail.fields.labels.pipe(Schema.optionalKey),
-  linked: CardDetail.fields.linked.pipe(Schema.optionalKey),
-}) {}
+export class BoardCard extends Schema.Class<BoardCard, { readonly brand: unique symbol }>('BoardCard')(
+  Struct.assign(CardFields, {
+    name: Schema.String,
+    description: Schema.String.pipe(Schema.optionalKey),
+    checklist: Schema.String.pipe(Schema.optionalKey),
+    labels: CardDetail.fields.labels.pipe(Schema.optionalKey),
+    linked: CardDetail.fields.linked.pipe(Schema.optionalKey),
+  }),
+) {}
 
 export class BoardColumn extends Schema.Class<BoardColumn, { readonly brand: unique symbol }>('BoardColumn')({
   ...BoardList.fields,
@@ -79,7 +81,7 @@ function boardCard(card: Card, name: string, detail: CardDetail | undefined) {
   return BoardCard.make({
     ...Struct.pick(card, ['id', 'boardId', 'listId', 'list', 'done', 'due', 'ownerId', 'priority']),
     name,
-    ...(detail === undefined ? {} : Struct.pick(detail, ['description', 'checklist', 'labels', 'linked'])),
+    ...(P.isUndefined(detail) ? {} : Struct.pick(detail, ['description', 'checklist', 'labels', 'linked'])),
   });
 }
 
@@ -99,22 +101,21 @@ export const GetBoardContextHandler = Effect.gen(function* () {
 
     const exact = Arr.filter(boards, ({ name }) => Str.toLowerCase(name) === Str.toLowerCase(search));
 
-    const matches = isApiId(search) ? byId : exact.length > 0 ? exact : boards;
+    const matches = isApiId(search) ? byId : Arr.isReadonlyArrayNonEmpty(exact) ? exact : boards;
 
     const [board] = matches;
 
-    if (board === undefined || matches.length > 1) {
+    if (P.isUndefined(board) || matches.length > 1) {
       return yield* Effect.fail(
         OrbitReadError.make({
-          message:
-            board === undefined
-              ? boards.length >= BOARD_LIMIT
-                ? `No board matches "${search}" in the first ${BOARD_LIMIT} boards Orbit returned; pass the board name instead.`
-                : `No board matches "${search}".`
-              : `"${search}" matches ${matches.length} boards: ${Arr.join(
-                  Arr.map(matches, ({ id, name }) => `${name} (${id})`),
-                  '; ',
-                )}. Pass the board api_id.`,
+          message: P.isUndefined(board)
+            ? boards.length >= BOARD_LIMIT
+              ? `No board matches "${search}" in the first ${BOARD_LIMIT} boards Orbit returned; pass the board name instead.`
+              : `No board matches "${search}".`
+            : `"${search}" matches ${matches.length} boards: ${Arr.join(
+                Arr.map(matches, ({ id, name }) => `${name} (${id})`),
+                '; ',
+              )}. Pass the board api_id.`,
         }),
       );
     }

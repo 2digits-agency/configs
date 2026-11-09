@@ -1,5 +1,6 @@
 import type { ESTree, Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import {
   argumentAt,
@@ -25,9 +26,9 @@ const multiShotHandlerIndex: ReadonlyMap<string, number> = new Map([
 function isMultiShotRegistration(node: ESTree.CallExpression, resume: string): boolean {
   const method = staticPath(node.callee)?.at(-1);
 
-  const handlerIndex = method === undefined ? undefined : multiShotHandlerIndex.get(method);
+  const handlerIndex = P.isUndefined(method) ? undefined : multiShotHandlerIndex.get(method);
 
-  if (handlerIndex === undefined) {
+  if (P.isUndefined(handlerIndex)) {
     return false;
   }
 
@@ -37,7 +38,7 @@ function isMultiShotRegistration(node: ESTree.CallExpression, resume: string): b
     if (options?.type === 'ObjectExpression') {
       const once = objectProperty(options, 'once');
 
-      if (once !== undefined && isLiteral(once.value, true)) {
+      if (P.isNotUndefined(once) && isLiteral(once.value, true)) {
         return false;
       }
     }
@@ -45,7 +46,7 @@ function isMultiShotRegistration(node: ESTree.CallExpression, resume: string): b
 
   const handler = argumentAt(node, handlerIndex);
 
-  return handler !== undefined && containsIdentifier(handler, resume);
+  return P.isNotUndefined(handler) && containsIdentifier(handler, resume);
 }
 
 export const noMultiShotEffectCallback: Rule = defineEffectRule(
@@ -66,7 +67,7 @@ export const noMultiShotEffectCallback: Rule = defineEffectRule(
 
       const register = argumentAt(node, 0);
 
-      if (register === undefined || !isFunctionNode(register)) {
+      if (P.isUndefined(register) || !isFunctionNode(register)) {
         return;
       }
 
@@ -75,8 +76,8 @@ export const noMultiShotEffectCallback: Rule = defineEffectRule(
       const body = register.body;
 
       if (
-        resume !== undefined &&
         body &&
+        P.isNotUndefined(resume) &&
         walkNodes(body, (child) => child.type === 'CallExpression' && isMultiShotRegistration(child, resume))
       ) {
         context.report({ node, messageId: 'multiShot' });

@@ -76,10 +76,7 @@ function mergeTasks(existingConfig: TurboConfig, detectedTasks: Set<string>): Tu
     }
   }
 
-  return {
-    ...existingConfig,
-    tasks,
-  };
+  return Struct.assign(existingConfig, { tasks });
 }
 
 /**
@@ -220,7 +217,7 @@ export class TurborepoSetupService extends Context.Service<TurborepoSetupService
 
         const rootPackageJson = yield* pm.readPackageJson({ id: root });
 
-        const isMonorepo = rootPackageJson.workspaces !== undefined;
+        const isMonorepo = P.isNotUndefined(rootPackageJson.workspaces);
 
         if (!isMonorepo) {
           yield* Effect.logInfo('⚠️  Not a monorepo project - Turborepo requires monorepo structure');

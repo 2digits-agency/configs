@@ -5,8 +5,10 @@ import * as Effect from 'effect/Effect';
 import * as Fiber from 'effect/Fiber';
 import * as Order from 'effect/Order';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as HttpClient from 'effect/http/HttpClient';
+import * as Url from 'effect/http/Url';
 import * as TestClock from 'effect/testing/TestClock';
 
 import { listenForLogin } from '../src/oauth/callback.js';
@@ -18,9 +20,11 @@ describe('orbit callback router', () => {
 
       const http = yield* HttpClient.HttpClient;
 
-      expect(new URL(callback.redirectUri).hostname).toBe('127.0.0.1');
+      const redirect = yield* Effect.fromResult(Url.fromString(callback.redirectUri));
 
-      expect(Number(new URL(callback.redirectUri).port)).toBeGreaterThan(0);
+      expect(redirect.hostname).toBe('127.0.0.1');
+
+      expect(Number(redirect.port)).toBeGreaterThan(0);
 
       for (const url of [
         Str.replace('/callback', '/wrong?state=secret&code=valid')(callback.redirectUri),
@@ -77,12 +81,7 @@ describe('orbit callback router', () => {
         { concurrency: 'unbounded' },
       );
 
-      expect(
-        Arr.sort(
-          Arr.map(responses, (response) => response.status),
-          Order.Number,
-        ),
-      ).toStrictEqual([200, 400]);
+      expect(Arr.sort(Arr.map(responses, Struct.get('status')), Order.Number)).toStrictEqual([200, 400]);
 
       const callbackCode = yield* callback.code;
 

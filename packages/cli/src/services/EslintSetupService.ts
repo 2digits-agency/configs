@@ -9,6 +9,7 @@ import * as Layer from 'effect/Layer';
 import * as Opt from 'effect/Option';
 import * as Path from 'effect/Path';
 import * as R from 'effect/Record';
+import * as Struct from 'effect/Struct';
 
 import type { TurboConfig } from '../schemas/TurboConfig';
 import { EslintDetectionService } from './EslintDetectionService';
@@ -54,10 +55,7 @@ function mergeLintTasks(config: TurboConfig): TurboConfig {
 
   tasks['//#lint:root:fix'] ??= {};
 
-  return {
-    ...config,
-    tasks,
-  };
+  return Struct.assign(config, { tasks });
 }
 
 /**

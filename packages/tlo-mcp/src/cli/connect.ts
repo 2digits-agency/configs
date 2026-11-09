@@ -6,7 +6,9 @@ import * as NodeHttpServer from '@effect/platform-node/NodeHttpServer';
 import { OpenTunnelClient } from '@opentunnel/client/effect';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as P from 'effect/Predicate';
 import * as HttpRouter from 'effect/http/HttpRouter';
+import * as Url from 'effect/http/Url';
 import * as NetAddress from 'effect/net/NetAddress';
 
 import { GatewayError, gatewayKeyFile, gatewayRoutes, loadGatewayKey } from '../http/gateway.js';
@@ -37,9 +39,11 @@ export const connect = Effect.fn('TloMcp.connect')(
 
     const auth = yield* OrbitAuth;
 
-    if ((yield* store.load) === undefined) {
+    const session = yield* store.load;
+
+    if (P.isUndefined(session)) {
       // A server behind a public URL has no browser for the loopback OAuth callback.
-      if (publicUrl !== undefined) {
+      if (P.isNotUndefined(publicUrl)) {
         return yield* GatewayError.make({
           message: 'No Orbit session. Run tlo-mcp login on a machine with a browser first.',
         });
@@ -53,15 +57,16 @@ export const connect = Effect.fn('TloMcp.connect')(
         Layer.provide(OrbitClientLive),
         Layer.provide(
           NodeHttpServer.layer(() => createServer({ maxHeaderSize: 8192, requestTimeout: 130_000 }), {
-            host: NetAddress.formatIp(publicUrl === undefined ? NetAddress.ipv4Loopback : NetAddress.ipv4Unspecified),
+            host: NetAddress.formatIp(P.isUndefined(publicUrl) ? NetAddress.ipv4Loopback : NetAddress.ipv4Unspecified),
             port,
           }),
         ),
       ),
     );
 
-    if (publicUrl !== undefined) {
-      const endpoint = new URL('/mcp', publicUrl).href;
+    if (P.isNotUndefined(publicUrl)) {
+      // The --public-url flag only accepts a bare origin, so setting the pathname equals resolving `/mcp` against it.
+      const endpoint = Url.setPathname(publicUrl, '/mcp').href;
 
       yield* Effect.sync(() => {
         process.stderr.write(`TLO gateway ready: ${endpoint}\nGateway key: ${keyFile} (private; not printed)\n`);

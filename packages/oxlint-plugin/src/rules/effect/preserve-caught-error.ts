@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import {
   containsIdentifier,
@@ -26,8 +27,8 @@ function wrapperDropsCause(node: FunctionNode, state: FileState): boolean {
   const optionsCall = functionProperty(node, 'catch');
 
   const isHandler =
-    (callPath?.[0] === 'Effect' && callPath[1] !== undefined && errorHandlerMethods.has(callPath[1])) ||
-    (optionsCall !== undefined &&
+    (callPath?.[0] === 'Effect' && P.isNotUndefined(callPath[1]) && errorHandlerMethods.has(callPath[1])) ||
+    (P.isNotUndefined(optionsCall) &&
       isAnyApi(optionsCall.callee, state, 'Effect', ['try', 'tryPromise'] satisfies ReadonlyArray<
         keyof typeof Effect
       >));
@@ -43,7 +44,7 @@ function wrapperDropsCause(node: FunctionNode, state: FileState): boolean {
     (child) =>
       child.type === 'NewExpression' &&
       isErrorConstructor(child) &&
-      (parameter === undefined || !containsIdentifier(child, parameter.name)),
+      (P.isUndefined(parameter) || !containsIdentifier(child, parameter.name)),
   );
 }
 

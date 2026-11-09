@@ -1,6 +1,7 @@
 import type { Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 
 import { defineSyntaxRule, ruleMeta } from '../../utils';
 
@@ -28,7 +29,7 @@ export const alchemyNoV1Import: Rule = defineSyntaxRule(
           Arr.findFirst(node.specifiers, (specifier) => specifier.type === 'ImportDefaultSpecifier'),
         );
 
-        if (defaultImport !== undefined) {
+        if (P.isNotUndefined(defaultImport)) {
           context.report({ node: defaultImport, messageId: 'defaultImport' });
         }
 
@@ -37,7 +38,7 @@ export const alchemyNoV1Import: Rule = defineSyntaxRule(
 
       const replacement = providerEntrypoints.get(source);
 
-      if (replacement === undefined) {
+      if (P.isUndefined(replacement)) {
         return;
       }
 

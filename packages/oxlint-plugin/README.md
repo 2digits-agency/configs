@@ -25,6 +25,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 
 - Copied and adapted Effect practices: `avoid-data-tagged-error`, `ban-error-string`,
   `effect-promise-vs-trypromise`, `no-logging-in-catch`, and `throw-in-effect-gen`.
+- Effect modules over native or hand-written logic: `prefer-effect-predicate`, `prefer-effect-array-ops`,
+  `prefer-equal`, and `prefer-struct-assign`. See [Effect modules over native logic](#effect-modules-over-native-logic).
 - Syntax-safe Effect diagnostics proposed in open `Effect-TS/tsgo` issues: the remaining `cors-*`, `dual-*`,
   `no-*`, `prefer-*`, `preserve-*`, and `require-*` Effect rules.
 - Effect v4 API guidance for Array, DateTime, Duration, Encoding, FileSystem, Filter, Headers, Match, Path, and Url,
@@ -215,6 +217,36 @@ a nonfunction object containing a function does not qualify. In `.pipe(...)`, on
 Imported, mutable, or otherwise composed configs remain unknown and retain the diagnostic. This is syntax proof, not
 general inference of `Config<A>`. Parameterized function defaults remain excluded. There is no autofix: eagerly evaluating
 or unwrapping a thunk could change side effects or an intentional function value.
+
+## Effect modules over native logic
+
+These rules only run in files that import Effect, report without autofixes, and complement the `preferEffectArray`,
+`preferEffectRecord`, and `preferEffectString` diagnostics from `@effect/tsgo`.
+
+- `prefer-effect-predicate` reports `typeof x === '…'`, comparisons with `undefined` or `null`, and `instanceof` on
+  built-ins such as `String`, `Date`, or `Array`, and names the guard to use: `P.isString`, `P.not(P.isNumber)`,
+  `P.isNotUndefined`, `P.isNotNullish`, `P.isDate`, or `Arr.isArray`. Two suggestions are not one-to-one rewrites, and
+  their messages say so: `instanceof String` (and `Number`, `Boolean`, `BigInt`, `Symbol`) only matches boxed objects
+  while `P.isString` matches primitives, and `P.isObjectOrArray` rejects `null`, which `typeof x === 'object'` accepts.
+  Checks inside type guards (`(u): u is Foo =>`) and `typeof` on undeclared globals such as `typeof window` are allowed.
+  `Array.isArray` is left to `preferEffectArray`.
+- `prefer-effect-array-ops` reports `[...new Set(xs)]` and `Array.from(new Set(xs))` (use `Arr.dedupe`), `xs[0]` (use
+  `Arr.head`), `.length` compared with `0` (use `Arr.isReadonlyArrayEmpty` or `Arr.isReadonlyArrayNonEmpty`, or
+  `Str.isEmpty`/`Str.isNonEmpty` for strings), and `(x) => x.field` passed to any `map` (use `Struct.get('field')`).
+  `xs[0]` is skipped when the same function also reads `xs[1]` or another index, because that is tuple access;
+  use `Tuple.get` for other tuple reads.
+  `.find(…)` is left to `preferEffectArray`, which already suggests `Arr.findFirst` for every native `find`.
+- `prefer-equal` reports `&&` chains with two or more same-field comparisons of the same two values (`a.x === b.x &&
+  a.y === b.y`, or the `!==`/`||` form). Use `Equal.equals`, which Data and Schema classes implement, or an
+  `Equivalence`. Comparisons inside `Equivalence.make` are allowed.
+- `prefer-struct-assign` reports object literals that only merge spreads (`{ ...a, ...b }`) or copy one spread with
+  overrides (`{ ...user, name }`). Use `Struct.assign`. Literals that mix spreads and properties in another order are
+  treated as object building and allowed, as are conditional or inline-object spreads, Schema `.fields` composition,
+  and literals with getters or methods. Copies are also allowed when `Struct.assign` would change the result's type:
+  overrides with literal values (`{ ...meta, fixable: 'code' }` would widen `'code'` to `string`) and overrides that
+  are callbacks with untyped parameters (`{ ...server, addTool: Effect.fn(function* (registration) {}) }`), which
+  lose their contextual type. `Struct.assign` also drops a class instance's prototype, so rebuild Schema and Data class
+  instances with their constructor.
 
 ## anti-slop Effect rules
 

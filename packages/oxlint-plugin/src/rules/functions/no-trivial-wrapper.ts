@@ -1,5 +1,6 @@
 import type { Context, ESTree, Rule } from '@oxlint/plugins';
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 import * as Str from 'effect/String';
 
 import { defineEffectRule, isAnyApi, isFunctionNode, ruleMeta, type FileState, type FunctionNode } from '../../utils';
@@ -19,8 +20,8 @@ function report(context: Context, state: FileState, node: FunctionNode, name: ES
   const callee = forwarding?.call.callee;
 
   if (
-    forwarding === undefined ||
-    callee === undefined ||
+    P.isUndefined(forwarding) ||
+    P.isUndefined(callee) ||
     /*
      * A type predicate narrows where the callee can't when it wraps a plain boolean check, such as `Set.has`, or
      * refines a typed parameter, such as `Arr.isArray` on a union, which only narrows to `Array<unknown>`.
@@ -31,8 +32,7 @@ function report(context: Context, state: FileState, node: FunctionNode, name: ES
           node.params,
           (parameter) =>
             parameter.type === 'Identifier' &&
-            parameter.typeAnnotation !== undefined &&
-            parameter.typeAnnotation !== null &&
+            P.isNotNullish(parameter.typeAnnotation) &&
             parameter.typeAnnotation.typeAnnotation.type !== 'TSUnknownKeyword',
         ))) ||
     // `set.has` loses its `this` when passed as a value, so the wrapper is how a module exposes it.

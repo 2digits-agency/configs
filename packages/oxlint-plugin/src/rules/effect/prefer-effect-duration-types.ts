@@ -15,6 +15,7 @@ import {
   unwrapExpression,
   type FileState,
   type FunctionNode,
+  argumentAt,
 } from '../../utils';
 import { millisName } from './duration';
 import { isForeignCallback } from './utils';
@@ -82,10 +83,10 @@ function isNumberSchema(node: ESTree.Expression, state: FileState): boolean {
 
   const callee = expression.callee;
 
-  const first = expression.arguments[0];
+  const first = argumentAt(expression, 0);
 
   if (schemaWrappers.has(schemaApiName(callee, state) ?? '')) {
-    return first !== undefined && first.type !== 'SpreadElement' && isNumberSchema(first, state);
+    return P.isNotUndefined(first) && isNumberSchema(first, state);
   }
 
   if (callee.type !== 'MemberExpression' || callee.object.type === 'Super' || !isNumberSchema(callee.object, state)) {
@@ -126,7 +127,7 @@ function isDurationName(name: string | undefined): name is string {
 
 function keyName(node: ESTree.PropertyDefinition | ESTree.TSPropertySignature): string | undefined {
   if (node.computed) {
-    return node.key.type === 'Literal' && typeof node.key.value === 'string' ? node.key.value : undefined;
+    return node.key.type === 'Literal' && P.isString(node.key.value) ? node.key.value : undefined;
   }
 
   return node.key.type === 'Identifier' ? node.key.name : undefined;
@@ -151,14 +152,14 @@ function isForeignDeclaration(node: ESTree.Node, context: Context, state: FileSt
     (ancestor): ancestor is ESTree.Node => P.hasProperty(ancestor, 'declare') && ancestor.declare,
   );
 
-  if (ambient !== undefined) {
+  if (P.isNotUndefined(ambient)) {
     return true;
   }
 
   const owner = enclosingFunction(node);
 
   return (
-    owner !== undefined &&
+    P.isNotUndefined(owner) &&
     isForeignCallback(owner, state) &&
     Arr.some(owner.params, (parameter) => containsRange(parameter, node))
   );
@@ -179,7 +180,7 @@ function parameterBinding(parameter: ESTree.ParamPattern): ESTree.BindingIdentif
 
   // `timeoutMs = 5000` is a number even without an annotation.
   return isNumberType(pattern.left.typeAnnotation) ||
-    (!pattern.left.typeAnnotation && fallback.type === 'Literal' && typeof fallback.value === 'number')
+    (!pattern.left.typeAnnotation && fallback.type === 'Literal' && P.isNumber(fallback.value))
     ? pattern.left
     : undefined;
 }
@@ -215,7 +216,7 @@ export const preferEffectDurationTypes: Rule = defineEffectRule(
       for (const parameter of node.params) {
         const binding = parameterBinding(parameter);
 
-        if (binding !== undefined && isDurationName(binding.name)) {
+        if (P.isNotUndefined(binding) && isDurationName(binding.name)) {
           report(binding, binding.name, 'durationType');
         }
       }

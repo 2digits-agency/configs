@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import { defineEffectRule, enclosingFunction, isAnyApi, ruleMeta } from '../../utils';
 import { callbackApi, functionProperty } from './utils';
@@ -24,7 +25,7 @@ export const noThrowInEffectCallback: Rule = defineEffectRule(
     ThrowStatement(node) {
       const callback = enclosingFunction(node);
 
-      if (callback === undefined) {
+      if (P.isUndefined(callback)) {
         return;
       }
 
@@ -35,8 +36,8 @@ export const noThrowInEffectCallback: Rule = defineEffectRule(
       const optionsCall = functionProperty(callback, 'catch');
 
       if (
-        (path?.[0] === 'Effect' && path[1] !== undefined && pureCallbackMethods.has(path[1])) ||
-        (optionsCall !== undefined &&
+        (path?.[0] === 'Effect' && P.isNotUndefined(path[1]) && pureCallbackMethods.has(path[1])) ||
+        (P.isNotUndefined(optionsCall) &&
           isAnyApi(optionsCall.callee, state, 'Effect', ['try', 'tryPromise'] satisfies ReadonlyArray<
             keyof typeof Effect
           >))

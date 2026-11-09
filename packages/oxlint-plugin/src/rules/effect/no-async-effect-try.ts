@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import {
   argumentAt,
@@ -30,19 +31,19 @@ export const noAsyncEffectTry: Rule = defineEffectRule(
 
       const first = argumentAt(node, 0);
 
-      let thunk: FunctionNode | undefined = first !== undefined && isFunctionNode(first) ? first : undefined;
+      let thunk: FunctionNode | undefined = P.isNotUndefined(first) && isFunctionNode(first) ? first : undefined;
 
-      if (thunk === undefined && first?.type === 'ObjectExpression') {
+      if (P.isUndefined(thunk) && first?.type === 'ObjectExpression') {
         const tryValue = objectProperty(first, 'try')?.value;
 
-        if (tryValue !== undefined && isFunctionNode(tryValue)) {
+        if (P.isNotUndefined(tryValue) && isFunctionNode(tryValue)) {
           thunk = tryValue;
         }
       }
 
-      const result = thunk === undefined ? undefined : functionResult(thunk);
+      const result = P.isUndefined(thunk) ? undefined : functionResult(thunk);
 
-      if (thunk !== undefined && (thunk.async || (result !== undefined && promiseInitializer(result)))) {
+      if (P.isNotUndefined(thunk) && (thunk.async || (P.isNotUndefined(result) && promiseInitializer(result)))) {
         context.report({ node: thunk, messageId: 'asyncTry' });
       }
     },

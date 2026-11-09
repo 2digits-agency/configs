@@ -1,5 +1,6 @@
 import type { Rule } from '@oxlint/plugins';
 import type * as Effect from 'effect/Effect';
+import * as P from 'effect/Predicate';
 
 import {
   argumentAt,
@@ -35,8 +36,8 @@ export const preferUninterruptible: Rule = defineEffectRule(
       const callback = argumentAt(node, 0);
 
       if (
-        method !== undefined &&
-        callback !== undefined &&
+        P.isNotUndefined(method) &&
+        P.isNotUndefined(callback) &&
         isFunctionNode(callback) &&
         !functionUsesFirstParameter(callback)
       ) {

@@ -8,8 +8,10 @@ import * as FileSystem from 'effect/FileSystem';
 import * as Layer from 'effect/Layer';
 import * as Opt from 'effect/Option';
 /* eslint-disable sonar/no-duplicate-string */
+import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
+import * as Struct from 'effect/Struct';
 
 import { PackageManagerService } from '../../../src/services/PackageManagerService.js';
 import { ProjectDetectionService } from '../../../src/services/ProjectDetectionService.js';
@@ -274,7 +276,7 @@ describe(TurborepoSetupService, () => {
 
           yield* service.ensureTurboInstalled();
 
-          const executed = yield* getExecutedCommands.pipe(Effect.map(Arr.map((e) => e.command)));
+          const executed = yield* getExecutedCommands.pipe(Effect.map(Arr.map(Struct.get('command'))));
 
           expect(executed).toHaveLength(1);
 
@@ -306,7 +308,7 @@ describe(TurborepoSetupService, () => {
 
           yield* service.ensureTurboInstalled();
 
-          const executed = yield* getExecutedCommands.pipe(Effect.map(Arr.map((e) => e.command)));
+          const executed = yield* getExecutedCommands.pipe(Effect.map(Arr.map(Struct.get('command'))));
 
           expect(executed).toHaveLength(0);
         }),
@@ -371,7 +373,7 @@ describe(TurborepoSetupService, () => {
 
           strictEqual(turboExistsAfter, true);
 
-          const executed = yield* getExecutedCommands.pipe(Effect.map(Arr.map((e) => e.command)));
+          const executed = yield* getExecutedCommands.pipe(Effect.map(Arr.map(Struct.get('command'))));
 
           expect(executed).toMatchInlineSnapshot(`
             [
@@ -438,10 +440,7 @@ describe(TurborepoSetupService, () => {
 
           const pkgBefore = yield* pm.readPackageJson();
 
-          const depsBefore = {
-            ...pkgBefore.dependencies,
-            ...pkgBefore.devDependencies,
-          };
+          const depsBefore = Struct.assign(pkgBefore.dependencies ?? {}, pkgBefore.devDependencies ?? {});
 
           expect('turbo' in depsBefore).toBeFalsy();
 
@@ -595,7 +594,7 @@ describe(TurborepoSetupService, () => {
 
           const [firstWorkspace] = workspaces;
 
-          if (firstWorkspace !== undefined && firstWorkspace !== '') {
+          if (firstWorkspace !== '' && P.isNotUndefined(firstWorkspace)) {
             const pkg = yield* pm.readPackageJson({ id: firstWorkspace });
 
             delete pkg.scripts;
@@ -661,7 +660,7 @@ describe(TurborepoSetupService, () => {
 
           const [firstWorkspace] = workspaces;
 
-          if (firstWorkspace !== undefined && firstWorkspace !== '') {
+          if (firstWorkspace !== '' && P.isNotUndefined(firstWorkspace)) {
             const pkg = yield* pm.readPackageJson({ id: firstWorkspace });
 
             pkg.scripts = {
