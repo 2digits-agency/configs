@@ -1,3 +1,59 @@
+## @2digits/oxlint-plugin@0.8.0
+
+### Autofixes and suggestions for new Effect rules
+
+- `prefer-effect-predicate` now autofixes checks that Effect implements the same way, such as `typeof x === 'string'` to `P.isString(x)` and `x == null` to `P.isNullish(x)`, and adds the `effect/Predicate` import when needed. Checks with a different result or type, such as `typeof x === 'object'` or `x instanceof Map`, get a suggestion instead. Negated checks now suggest `!P.isNumber(x)`, which narrows, instead of `P.not(P.isNumber)`.
+- `no-forwarding-lambda` autofixes `(x) => parse(x)` to `parse` when `parse` is a local function with one signature, and suggests the rewrite for other callees such as Effect APIs. It offers neither when the callee reads a `let`, a reassigned binding, or a binding that is not initialized yet where the callback is created.
+- `no-manual-tag-comparison` suggests `P.isTagged(x, 'A')` for `x._tag === 'A'`.
+- `prefer-struct-assign` suggests `Struct.assign(a, b)` for two-object merges and copies.
+
+### Prefer Effect encoding modules for structured text
+
+- Added `prefer-effect-ndjson`: reports `JSON.parse` on each line of text split on line breaks, and `JSON.stringify` results joined with line breaks. Use `Ndjson` from `effect/encoding`.
+- Added `prefer-effect-csv`: reports lines split again on `,`, `;` or a tab, and rows of cells joined with one of those and then with line breaks. Use `Csv` from `effect/encoding`, which quotes cells that contain the delimiter, quotes or line breaks. Single comma lists and multi-character separators such as `', '` are allowed.
+- Added `prefer-effect-format-parser`: reports parsers from third-party YAML, TOML, INI, JSON5, JSONC, CSV, NDJSON, streaming JSON and XML packages such as `yaml`, `js-yaml`, `smol-toml`, `ini`, `json5`, `jsonc-parser`, `papaparse`, `csv-parse` and `fast-xml-parser`, and names the `effect/encoding` module to use instead. Serializers of packages whose Effect module only parses, such as `YAML.stringify`, stay allowed.
+
+All three run only in files that import Effect and are in `recommendedRules`.
+
+### Prefer Effect Sse, Tar and Zip
+
+Three new rules in `recommendedRules` point Effect files at the `Sse`, `Tar` and `Zip` modules of `effect/encoding`:
+
+- `prefer-effect-sse` reports imports of Server-Sent Events libraries such as `eventsource-parser`, `eventsource`, `@microsoft/fetch-event-source` and `better-sse`, and `new EventSource(…)`. Use `HttpClient` with `Sse.decode` or `Sse.decodeSchema` to read event streams, and `Sse.encode` or `HttpApiSchema.StreamSse` to write them.
+- `no-manual-sse` reports event frames built by hand, such as `` `data: ${JSON.stringify(event)}\n\n` ``, and parsers that test lines with `startsWith('data: ')`. Use `Sse.encoder.write` and `Sse.decode`, which handle line breaks inside `data` and field injection through `id` or `event`.
+- `prefer-effect-archive` reports imports of tar and zip codecs such as `tar-stream`, `jszip`, `adm-zip`, `yauzl`, `archiver` and the zip exports of `fflate`. Use `Tar` or `Zip`. `tar`, `tar-fs` and `extract-zip`, which extract to disk with path-traversal guards, are not reported.
+
+### Prefer Effect Jwt, NetAddress and UserDirectories
+
+Three new recommended rules for files that import Effect:
+
+- `prefer-effect-jwt` reports JWT libraries such as `jose` and `jsonwebtoken`, and tokens split on `'.'` by hand. Use `Jwt.verify` or `Jwt.verifyWithKeySet` from `effect/jose`.
+- `prefer-effect-net-address` reports `net.isIP`, IP address packages, regular expressions that match IP text, and comparisons with loopback or unspecified addresses. Use `NetAddress` and `IpNetwork` from `effect/net`.
+- `prefer-effect-user-directories` reports `os.homedir()`, reads of `HOME`, `XDG_*_HOME`, `APPDATA` and similar variables, and packages such as `env-paths`. Use the `UserDirectories` service from `effect/persistence`.
+
+### Add rules for the Effect HTTP modules
+
+Four new recommended rules point hand-written HTTP logic at `effect/http`, in files that import Effect:
+
+- `prefer-effect-cookies` reports `document.cookie`, cookie headers split or matched by hand, cookies built with interpolated attributes such as `` `${name}=${value}; Path=/` ``, and Set-Cookie strings searched for attributes such as `'; Secure'`. Use `HttpServerRequest` cookies, `Cookies.parseHeader`, `Cookies.fromSetCookie`, `Cookies.makeCookie` or `HttpServerResponse.setCookie`.
+- `prefer-effect-match-status` reports hand-written 2xx range checks such as `response.status < 200 || response.status >= 300`. Use `HttpClientResponse.filterStatusOk` or `matchStatus`, or `response.ok` on a native fetch `Response`.
+- `prefer-effect-url-params` reports query strings built by hand (`` `${base}/tags?search=${q}` ``) and `new URLSearchParams({ … })`. Use `HttpClientRequest.setUrlParams`, the `urlParams` request option, or `UrlParams`. Test files are skipped.
+- `prefer-effect-http-method` reports lists and union types of six or more HTTP methods. Use `HttpMethod.HttpMethod`, `HttpMethod.all` or `HttpMethod.isHttpMethod`.
+
+`prefer-effect-http-status` reports status code numbers passed to Effect HTTP APIs, such as `HttpApiSchema.status(404)` or `{ httpApiStatus: 401 }`, and suggests the status name. It is recommended as a warning, so `recommendedRules` and `configs.recommended` now hold `'warn'` for it and `'error'` for every other rule.
+
+### Prefer Effect v4 binary encodings
+
+- `prefer-effect-encoding` now names the Effect v4 `effect/encoding` function to use (`Base64.decodeString`, `Base64Url.decode`, `Hex.encode`, …) instead of the removed v3 `Encoding` module. It also reports `.toString('base64')` on any expression, such as `Buffer.from(bytes).toString('base64')`, which it missed before, and `Uint8Array.fromBase64`, `Uint8Array.fromHex` and `globalThis.atob`/`btoa`. `atob` and `btoa` now point to `Base64.decode` and `Base64.encode` on bytes, since they work on binary strings rather than UTF-8 text. Projects may see new diagnostics.
+- Added `no-manual-encoding`: reports hand-written Base64Url conversions (a `replace` chain or `pipe` of `Str.replace` steps that swaps `+`/`-` and `/`/`_`) and hand-written byte hex (`byte.toString(16)` padded to two digits with `'0'`). Use `Base64Url` or `Hex.encode`.
+- Added `no-encoding-get-or-throw`: reports `Result.getOrThrow` and `Result.getOrThrowWith` on `Base64`, `Base64Url` and `Hex` decoders, which turns their typed `EncodingError` into an exception, unless a step before it can recover the failure. Use `Effect.fromResult`, `Result.match` or `Result.getOrElse`.
+
+Both new rules are in `recommendedRules`.
+
+### Rebuild every rule on effect-oxlint
+
+All custom rules now use effect-oxlint's `Rule.define`, `Visitor`, `Diagnostic` and `RuleContext`, with `Ref` for per-file state and Effect `Schema` for fixed name lists and rule options. Diagnostics and autofixes are unchanged. The default export is now built with `Plugin.define`, so it also offers `configs.recommended` and `configs.all` for loading the plugin by its package name; `rules` and `recommendedRules` stay as they were.
+
 ## @2digits/oxlint-plugin@0.7.1
 
 ### Fewer false positives in wrapper rules
