@@ -3604,6 +3604,11 @@ Backward pagination arguments
    */
   'react-extra/static-components'?: Linter.RuleEntry<[]>
   /**
+   * Verifies the list of dependencies for Hooks like 'useEffect' and similar, with support for custom Hooks and stable Hook results.
+   * @see https://eslint-react.xyz/docs/rules/unstable-exhaustive-deps
+   */
+  'react-extra/unstable-exhaustive-deps'?: Linter.RuleEntry<ReactExtraUnstableExhaustiveDeps>
+  /**
    * Validates against syntax that React Compiler does not support.
    * @see https://eslint-react.xyz/docs/rules/unsupported-syntax
    */
@@ -14233,16 +14238,33 @@ type ReactExtraJsxNoUselessFragment = []|[{
 }]
 // ----- react-extra/no-unstable-default-props -----
 type ReactExtraNoUnstableDefaultProps = []|[{
+  
   safeDefaultProps?: string[]
 }]
 // ----- react-extra/rules-of-hooks -----
 type ReactExtraRulesOfHooks = []|[{
   additionalHooks?: string
 }]
+// ----- react-extra/unstable-exhaustive-deps -----
+type ReactExtraUnstableExhaustiveDeps = []|[{
+  additionalHooks?: string
+  enableDangerousAutofixThisMayCauseInfiniteLoops?: boolean
+  experimental_autoDependenciesHooks?: string[]
+  hooks?: {
+    name: string
+    closureIndex?: number
+    dependenciesIndex?: number
+    stableResult?: (boolean | number | [number, ...(number)[]])
+  }[]
+  requireExplicitEffectDeps?: boolean
+}]
 // ----- react-extra/use-state -----
 type ReactExtraUseState = []|[{
+  
   enforceAssignment?: boolean
+  
   enforceLazyInitialization?: boolean
+  
   enforceSetterName?: boolean
 }]
 // ----- react-extra/x-exhaustive-deps -----
@@ -14254,6 +14276,7 @@ type ReactExtraXExhaustiveDeps = []|[{
 }]
 // ----- react-extra/x-no-unstable-default-props -----
 type ReactExtraXNoUnstableDefaultProps = []|[{
+  
   safeDefaultProps?: string[]
 }]
 // ----- react-extra/x-rules-of-hooks -----
@@ -14262,8 +14285,11 @@ type ReactExtraXRulesOfHooks = []|[{
 }]
 // ----- react-extra/x-use-state -----
 type ReactExtraXUseState = []|[{
+  
   enforceAssignment?: boolean
+  
   enforceLazyInitialization?: boolean
+  
   enforceSetterName?: boolean
 }]
 // ----- regexp/hexadecimal-escape -----

@@ -98,7 +98,7 @@ function getUseEffectOnlyReport(
   findParent: (node: TSESTree.Node, test: (node: TSESTree.Node) => boolean) => TSESTree.Node | undefined,
   node: TSESTree.CallExpression,
   name: string,
-  isUseEffectLikeCall: (node: TSESTree.Node, additionalHooks?: { test: (value: string) => boolean }) => boolean,
+  isUseEffectLikeCall: (node: TSESTree.CallExpression) => boolean,
 ): UseEffectOnlyReport | undefined {
   if (!/use\w*Effect/u.test(sourceCode.text)) {
     return;
@@ -115,7 +115,10 @@ function getUseEffectOnlyReport(
   const effects = new Set<TSESTree.Node>();
 
   for (const usage of usages) {
-    const effect = findParent(usage.identifier, isUseEffectLikeCall);
+    const effect = findParent(
+      usage.identifier,
+      (candidate) => candidate.type === AST_NODE_TYPES.CallExpression && isUseEffectLikeCall(candidate),
+    );
 
     if (!effect || effects.add(effect).size > 1) {
       return;
