@@ -1,6 +1,27 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Fewer false positives in wrapper rules\n\n- `no-forwarding-lambda` no longer reports `Match` handlers such as `Match.tag('Known', (x) => Opt.some(x))`, where passing a generic function directly loses the inferred type.\n- `no-constant-thunk` no longer reports functions that are passed as a value, such as a handler argument that must be a function.\n"
-    filename: 2026-11-09-7c41e2a9.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update @eslint-react to 5.30 and typescript-eslint to 8.72.2\n\n`no-unnecessary-use-callback` and `no-unnecessary-use-memo` no longer crash with `Cannot read properties of undefined (reading 'type')` when a `useCallback` or `useMemo` result is used inside a `useEffect`. @eslint-react 5.30 changed its `useEffect` check to accept only call expressions, and both rules now pass it only those.\n"
+    filename: 2026-11-10-3e9c51b7.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Autofixes and suggestions for new Effect rules\n\n- `prefer-effect-predicate` now autofixes checks that Effect implements the same way, such as `typeof x === 'string'` to `P.isString(x)` and `x == null` to `P.isNullish(x)`, and adds the `effect/Predicate` import when needed. Checks with a different result or type, such as `typeof x === 'object'` or `x instanceof Map`, get a suggestion instead. Negated checks now suggest `!P.isNumber(x)`, which narrows, instead of `P.not(P.isNumber)`.\n- `no-forwarding-lambda` autofixes `(x) => parse(x)` to `parse` when `parse` is a local function with one signature, and suggests the rewrite for other callees such as Effect APIs. It offers neither when the callee reads a `let`, a reassigned binding, or a binding that is not initialized yet where the callback is created.\n- `no-manual-tag-comparison` suggests `P.isTagged(x, 'A')` for `x._tag === 'A'`.\n- `prefer-struct-assign` suggests `Struct.assign(a, b)` for two-object merges and copies.\n"
+    filename: 2026-11-09-5b8d21fa.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect encoding modules for structured text\n\n- Added `prefer-effect-ndjson`: reports `JSON.parse` on each line of text split on line breaks, and `JSON.stringify` results joined with line breaks. Use `Ndjson` from `effect/encoding`.\n- Added `prefer-effect-csv`: reports lines split again on `,`, `;` or a tab, and rows of cells joined with one of those and then with line breaks. Use `Csv` from `effect/encoding`, which quotes cells that contain the delimiter, quotes or line breaks. Single comma lists and multi-character separators such as `', '` are allowed.\n- Added `prefer-effect-format-parser`: reports parsers from third-party YAML, TOML, INI, JSON5, JSONC, CSV, NDJSON, streaming JSON and XML packages such as `yaml`, `js-yaml`, `smol-toml`, `ini`, `json5`, `jsonc-parser`, `papaparse`, `csv-parse` and `fast-xml-parser`, and names the `effect/encoding` module to use instead. Serializers of packages whose Effect module only parses, such as `YAML.stringify`, stay allowed.\n\nAll three run only in files that import Effect and are in `recommendedRules`.\n"
+    filename: 2026-11-09-5c3e9b14.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect Sse, Tar and Zip\n\nThree new rules in `recommendedRules` point Effect files at the `Sse`, `Tar` and `Zip` modules of `effect/encoding`:\n\n- `prefer-effect-sse` reports imports of Server-Sent Events libraries such as `eventsource-parser`, `eventsource`, `@microsoft/fetch-event-source` and `better-sse`, and `new EventSource(…)`. Use `HttpClient` with `Sse.decode` or `Sse.decodeSchema` to read event streams, and `Sse.encode` or `HttpApiSchema.StreamSse` to write them.\n- `no-manual-sse` reports event frames built by hand, such as `` `data: ${JSON.stringify(event)}\\n\\n` ``, and parsers that test lines with `startsWith('data: ')`. Use `Sse.encoder.write` and `Sse.decode`, which handle line breaks inside `data` and field injection through `id` or `event`.\n- `prefer-effect-archive` reports imports of tar and zip codecs such as `tar-stream`, `jszip`, `adm-zip`, `yauzl`, `archiver` and the zip exports of `fflate`. Use `Tar` or `Zip`. `tar`, `tar-fs` and `extract-zip`, which extract to disk with path-traversal guards, are not reported.\n"
+    filename: 2026-11-09-5ce3a8d1.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect Jwt, NetAddress and UserDirectories\n\nThree new recommended rules for files that import Effect:\n\n- `prefer-effect-jwt` reports JWT libraries such as `jose` and `jsonwebtoken`, and tokens split on `'.'` by hand. Use `Jwt.verify` or `Jwt.verifyWithKeySet` from `effect/jose`.\n- `prefer-effect-net-address` reports `net.isIP`, IP address packages, regular expressions that match IP text, and comparisons with loopback or unspecified addresses. Use `NetAddress` and `IpNetwork` from `effect/net`.\n- `prefer-effect-user-directories` reports `os.homedir()`, reads of `HOME`, `XDG_*_HOME`, `APPDATA` and similar variables, and packages such as `env-paths`. Use the `UserDirectories` service from `effect/persistence`.\n"
+    filename: 2026-11-09-7c41d2a9.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Add rules for the Effect HTTP modules\n\nFour new recommended rules point hand-written HTTP logic at `effect/http`, in files that import Effect:\n\n- `prefer-effect-cookies` reports `document.cookie`, cookie headers split or matched by hand, cookies built with interpolated attributes such as `` `${name}=${value}; Path=/` ``, and Set-Cookie strings searched for attributes such as `'; Secure'`. Use `HttpServerRequest` cookies, `Cookies.parseHeader`, `Cookies.fromSetCookie`, `Cookies.makeCookie` or `HttpServerResponse.setCookie`.\n- `prefer-effect-match-status` reports hand-written 2xx range checks such as `response.status < 200 || response.status >= 300`. Use `HttpClientResponse.filterStatusOk` or `matchStatus`, or `response.ok` on a native fetch `Response`.\n- `prefer-effect-url-params` reports query strings built by hand (`` `${base}/tags?search=${q}` ``) and `new URLSearchParams({ … })`. Use `HttpClientRequest.setUrlParams`, the `urlParams` request option, or `UrlParams`. Test files are skipped.\n- `prefer-effect-http-method` reports lists and union types of six or more HTTP methods. Use `HttpMethod.HttpMethod`, `HttpMethod.all` or `HttpMethod.isHttpMethod`.\n\n`prefer-effect-http-status` reports status code numbers passed to Effect HTTP APIs, such as `HttpApiSchema.status(404)` or `{ httpApiStatus: 401 }`, and suggests the status name. It is recommended as a warning, so `recommendedRules` and `configs.recommended` now hold `'warn'` for it and `'error'` for every other rule.\n"
+    filename: 2026-11-09-a7c4e2d1.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect v4 binary encodings\n\n- `prefer-effect-encoding` now names the Effect v4 `effect/encoding` function to use (`Base64.decodeString`, `Base64Url.decode`, `Hex.encode`, …) instead of the removed v3 `Encoding` module. It also reports `.toString('base64')` on any expression, such as `Buffer.from(bytes).toString('base64')`, which it missed before, and `Uint8Array.fromBase64`, `Uint8Array.fromHex` and `globalThis.atob`/`btoa`. `atob` and `btoa` now point to `Base64.decode` and `Base64.encode` on bytes, since they work on binary strings rather than UTF-8 text. Projects may see new diagnostics.\n- Added `no-manual-encoding`: reports hand-written Base64Url conversions (a `replace` chain or `pipe` of `Str.replace` steps that swaps `+`/`-` and `/`/`_`) and hand-written byte hex (`byte.toString(16)` padded to two digits with `'0'`). Use `Base64Url` or `Hex.encode`.\n- Added `no-encoding-get-or-throw`: reports `Result.getOrThrow` and `Result.getOrThrowWith` on `Base64`, `Base64Url` and `Hex` decoders, which turns their typed `EncodingError` into an exception, unless a step before it can recover the failure. Use `Effect.fromResult`, `Result.match` or `Result.getOrElse`.\n\nBoth new rules are in `recommendedRules`.\n"
+    filename: 2026-11-09-b64e7a1d.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Rebuild every rule on effect-oxlint\n\nAll custom rules now use effect-oxlint's `Rule.define`, `Visitor`, `Diagnostic` and `RuleContext`, with `Ref` for per-file state and Effect `Schema` for fixed name lists and rule options. Diagnostics and autofixes are unchanged. The default export is now built with `Plugin.define`, so it also offers `configs.recommended` and `configs.all` for loading the plugin by its package name; `rules` and `recommendedRules` stay as they were.\n"
+    filename: 2026-11-09-e0f1a7c3.md
     v: 0.0.0
 core:packages:
   - id: npm:@2digits/config-monorepo
@@ -9,8 +30,10 @@ core:packages:
     updated: false
   - id: npm:@2digits/constants
     updated: false
-  - id: npm:@2digits/eslint-config
-    updated: false
+  - changelogIds:
+      - 2026-11-10-3e9c51b7.md
+    id: npm:@2digits/eslint-config
+    updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
   - id: npm:@2digits/opencode-plugin
@@ -19,12 +42,18 @@ core:packages:
     updated: false
   - id: npm:@2digits/oxlint-config
     updated: true
-  - changelogIds:
-      - 2026-11-09-7c41e2a9.md
-    id: npm:@2digits/oxlint-plugin
-    updated: true
   - id: npm:@2digits/prettier-config
     updated: false
+  - changelogIds:
+      - 2026-11-09-5b8d21fa.md
+      - 2026-11-09-5c3e9b14.md
+      - 2026-11-09-5ce3a8d1.md
+      - 2026-11-09-7c41d2a9.md
+      - 2026-11-09-a7c4e2d1.md
+      - 2026-11-09-b64e7a1d.md
+      - 2026-11-09-e0f1a7c3.md
+    id: npm:@2digits/oxlint-plugin
+    updated: true
   - id: npm:@2digits/renovate-config
     updated: false
   - id: npm:@2digits/tlo-mcp
@@ -40,8 +69,8 @@ npm:packages:
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
-  - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/prettier-config
+  - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig

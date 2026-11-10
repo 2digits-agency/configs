@@ -1,3 +1,9 @@
+## @2digits/eslint-config@5.12.1
+
+### Update @eslint-react to 5.30 and typescript-eslint to 8.72.2
+
+`no-unnecessary-use-callback` and `no-unnecessary-use-memo` no longer crash with `Cannot read properties of undefined (reading 'type')` when a `useCallback` or `useMemo` result is used inside a `useEffect`. @eslint-react 5.30 changed its `useEffect` check to accept only call expressions, and both rules now pass it only those.
+
 ## @2digits/eslint-config@5.12.0
 
 ### Report trivial wrappers and one-off helpers
