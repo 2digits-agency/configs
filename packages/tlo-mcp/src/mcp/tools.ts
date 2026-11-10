@@ -47,6 +47,8 @@ export const EXPOSED_TOOLS: ReadonlyArray<string> = [
   'ReplyToTicket',
   'CloseTicket',
   'CloseTicketSilently',
+  'SetTicketOwner',
+  'LinkTicketToProject',
 
   // Boards and todos
   'ListBoards',

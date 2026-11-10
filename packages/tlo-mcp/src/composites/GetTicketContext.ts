@@ -73,7 +73,7 @@ export class TicketContext extends Schema.Class<TicketContext, { readonly brand:
 
 export const GetTicketContext = Tool.make('GetTicketContext', {
   description:
-    'Read-only context for one support ticket by its number (e.g. 9087) or api_id, in one call: full detail, the conversation (newest first), and your time entries on it. Finds closed tickets too. Times are Europe/Amsterdam. Use the write tools (ReplyToTicket, AddInternalComment, CloseTicket, CloseTicketSilently) for changes.',
+    'Read-only context for one support ticket by its number (e.g. 9087) or api_id, in one call: full detail, the conversation (newest first), and your time entries on it. Finds closed tickets too. Times are Europe/Amsterdam. Use the write tools (ReplyToTicket, AddInternalComment, SetTicketOwner, LinkTicketToProject, CloseTicket, CloseTicketSilently) for changes.',
   parameters: Schema.Struct({
     ticket: Schema.String.annotate({ description: 'Ticket number such as "9087", or the ticket api_id' }),
   }),
