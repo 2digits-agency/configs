@@ -29,6 +29,8 @@ export const EXPOSED_TOOLS: ReadonlyArray<string> = [
   'GetProjectOpenItems',
   'ListRates',
   'AddProjectTask',
+  'CloseProjectTask',
+  'UpdateProject',
 
   // Planning (read-only)
   'ListPlannedEntries',
