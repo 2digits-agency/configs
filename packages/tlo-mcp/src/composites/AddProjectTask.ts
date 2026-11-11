@@ -1,4 +1,3 @@
-import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
@@ -9,15 +8,15 @@ import { Orbit } from '../orbit/Orbit.js';
 import { ApiId, LocalDate } from '../orbit/text.js';
 import { OrbitReadError, toReadError } from './OrbitReadError.js';
 
-const Text = Schema.String.check(Schema.isTrimmed(), Schema.isNonEmpty());
+export const Text = Schema.String.check(Schema.isTrimmed(), Schema.isNonEmpty());
 
-const Hours = Schema.Finite.check(Schema.isGreaterThanOrEqualTo(0));
+export const Hours = Schema.Finite.check(Schema.isGreaterThanOrEqualTo(0));
 
-const ProjectNumber = Schema.String.check(Schema.isPattern(/^\S+$/u)).annotate({
+export const ProjectNumber = Schema.String.check(Schema.isPattern(/^\S+$/u)).annotate({
   description: 'Project number the user sees, such as "2238"',
 });
 
-const Username = Text.check(Schema.isPattern(/^[^,]+$/u)).annotate({ description: 'Unique user name' });
+export const Username = Text.check(Schema.isPattern(/^[^,]+$/u)).annotate({ description: 'Unique user name' });
 
 /**
  * Orbit's `AddProjectTask` with typed, documented parameters. It is still one Orbit write per call, so Executor
@@ -88,26 +87,15 @@ export const AddProjectTask = Tool.make('AddProjectTask', {
 export const AddProjectTaskHandler = Effect.gen(function* () {
   const orbit = yield* Orbit;
 
-  return Effect.fn('AddProjectTask')(function* ({
-    startDate,
-    endDate,
-    assignees,
-    retainerId,
-    ...params
-  }: Tool.Parameters<typeof AddProjectTask>) {
+  return Effect.fn('AddProjectTask')(function* (params: Tool.Parameters<typeof AddProjectTask>) {
+    const { startDate, endDate } = params;
+
     if (P.isNotUndefined(startDate) && P.isNotUndefined(endDate) && endDate < startDate) {
       return yield* Effect.fail(
         OrbitReadError.make({ message: `endDate ${endDate} is before startDate ${startDate}.` }),
       );
     }
 
-    return yield* orbit.call(OrbitAddProjectTask, {
-      ...params,
-      ...(P.isUndefined(startDate) ? {} : { startDt: startDate }),
-      ...(P.isUndefined(endDate) ? {} : { endDt: endDate }),
-      ...(P.isUndefined(assignees) ? {} : { assignedTo: Arr.join(assignees, ',') }),
-      // Orbit takes NONE for no retainer.
-      ...(P.isUndefined(retainerId) ? {} : { retainerId: retainerId ?? 'NONE' }),
-    });
+    return yield* orbit.call(OrbitAddProjectTask, params);
   }, Effect.mapError(toReadError));
 });

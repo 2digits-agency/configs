@@ -1,6 +1,6 @@
 import * as Schema from 'effect/Schema';
 
-import { ApiId, Minutes, Timestamp } from './text.js';
+import { ApiId, Minutes, ProjectTaskId, Timestamp, UserId } from './text.js';
 
 // ListTickets, GetTicketDetail and ListTicketComments return JSON inside a text block.
 
@@ -85,5 +85,20 @@ export const ListTicketComments = {
 export const CloseTicketSilently = {
   name: 'CloseTicketSilently',
   args: Schema.Struct({ ticketId: ApiId }),
+  result: Schema.String,
+};
+
+export const SetTicketOwner = {
+  name: 'SetTicketOwner',
+  args: Schema.Struct({ ticketId: ApiId, user: UserId }),
+  result: Schema.String,
+};
+
+/**
+ * Orbit unlinks the ticket for an empty `taskId`.
+ */
+export const LinkTicketToProject = {
+  name: 'LinkTicketToProject',
+  args: Schema.Struct({ ticketId: ApiId, taskId: Schema.Union([ProjectTaskId, Schema.Literal('')]) }),
   result: Schema.String,
 };

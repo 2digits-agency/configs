@@ -28,6 +28,17 @@ const loggedMinutes = Match.type<TimeEntry>().pipe(
   Match.orElse(() => 0),
 );
 
+const TicketNumber = Schema.String.check(Schema.isPattern(/^\d+$/u)).annotate({
+  description: 'Ticket number the user sees, such as "9481"',
+});
+
+/**
+ * The ticket parameter of the ticket writes: an api_id or the number the user sees, without a leading `#`.
+ */
+export const TicketRef = Schema.Union([ApiId, TicketNumber]).annotate({
+  description: 'Ticket api_id or ticket number',
+});
+
 /**
  * The api_id of a ticket given by its number or api_id. Searches all states, so closed tickets are found too.
  */

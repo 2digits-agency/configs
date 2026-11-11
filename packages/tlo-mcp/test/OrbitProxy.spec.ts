@@ -16,8 +16,8 @@ import { McpLoggerLayer } from '../src/mcp/logger.js';
 import { OrbitToolsLive } from '../src/mcp/proxy.js';
 
 const tool = McpSchema.Tool.make({
-  name: 'UpdateProject',
-  title: 'Update project',
+  name: 'GetProject',
+  title: 'Get project',
   description: 'Official description',
   inputSchema: {
     type: 'object',
@@ -115,7 +115,12 @@ describe('orbit MCP proxy', () => {
         'GetTicketContext',
         'GetBoardContext',
         'AddProjectTask',
+        'CloseProjectTask',
+        'UpdateProject',
+        'UpdateProjectTask',
         'CloseTicketSilently',
+        'SetTicketOwner',
+        'LinkTicketToProject',
       ]);
 
       expect(registration.tool).toBe(tool);

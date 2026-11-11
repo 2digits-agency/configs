@@ -2,7 +2,7 @@ import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as SchemaGetter from 'effect/SchemaGetter';
 
-import { ApiId } from './text.js';
+import { ApiId, CommaList, NullAs } from './text.js';
 
 export class ProjectTaskAdded extends Schema.Class<ProjectTaskAdded, { readonly brand: unique symbol }>(
   'ProjectTaskAdded',
@@ -36,7 +36,8 @@ const Confirmation = Schema.String.pipe(
 );
 
 /**
- * Orbit's own arguments, as `tools/list` describes them.
+ * Orbit's own arguments, as `tools/list` describes them, decoded to the gateway's names and values: dates as
+ * `startDate`/`endDate`, `assignees` as a list and `null` for no retainer (Orbit's `NONE`).
  */
 export const AddProjectTask = {
   name: 'AddProjectTask',
@@ -45,16 +46,16 @@ export const AddProjectTask = {
     name: Schema.String,
     description: Schema.String.pipe(Schema.optionalKey),
     workloadHours: Schema.Finite.pipe(Schema.optionalKey),
-    startDt: Schema.String.pipe(Schema.optionalKey),
-    endDt: Schema.String.pipe(Schema.optionalKey),
-    assignedTo: Schema.String.pipe(Schema.optionalKey),
+    startDate: Schema.String.pipe(Schema.optionalKey),
+    endDate: Schema.String.pipe(Schema.optionalKey),
+    assignees: CommaList.pipe(Schema.optionalKey),
     chapterId: Schema.String.pipe(Schema.optionalKey),
     rateId: Schema.String.pipe(Schema.optionalKey),
     rate: Schema.Finite.pipe(Schema.optionalKey),
     nonBillable: Schema.Boolean.pipe(Schema.optionalKey),
     recurring: Schema.Boolean.pipe(Schema.optionalKey),
     billingMode: Schema.String.pipe(Schema.optionalKey),
-    retainerId: Schema.String.pipe(Schema.optionalKey),
-  }),
+    retainerId: NullAs('NONE').pipe(Schema.optionalKey),
+  }).pipe(Schema.encodeKeys({ startDate: 'startDt', endDate: 'endDt', assignees: 'assignedTo' })),
   result: Confirmation,
 };

@@ -20,10 +20,15 @@ import * as McpServer from 'effect/ai/McpServer';
 import * as HttpRouter from 'effect/http/HttpRouter';
 import * as TestClock from 'effect/testing/TestClock';
 
+import { ProjectTaskCloseResult } from '../src/composites/CloseProjectTask.js';
 import { TicketClosedSilently } from '../src/composites/CloseTicketSilently.js';
 import { BoardContext } from '../src/composites/GetBoardContext.js';
 import { Workday } from '../src/composites/GetMyWorkday.js';
 import { TicketContext } from '../src/composites/GetTicketContext.js';
+import { TicketLinked } from '../src/composites/LinkTicketToProject.js';
+import { TicketOwnerSet } from '../src/composites/SetTicketOwner.js';
+import { ProjectUpdated } from '../src/composites/UpdateProject.js';
+import { ProjectTaskUpdated } from '../src/composites/UpdateProjectTask.js';
 import { gatewayRoutes } from '../src/http/gateway.js';
 import { OrbitClient } from '../src/mcp/OrbitClient.js';
 import { OrbitToolsLive } from '../src/mcp/proxy.js';
@@ -47,7 +52,12 @@ const UPSTREAM = Arr.map(
     'ListTodos',
     'GetTodoDetail',
     'AddProjectTask',
+    'CloseProjectTask',
+    'UpdateProject',
+    'UpdateProjectTask',
     'CloseTicketSilently',
+    'SetTicketOwner',
+    'LinkTicketToProject',
   ],
   (name) => McpSchema.Tool.make({ name, inputSchema: { type: 'object' } }),
 );
@@ -232,7 +242,18 @@ describe('composite tool registration', () => {
       const { registrations } = yield* setup({});
 
       const composites = Arr.map(
-        ['GetMyWorkday', 'GetTicketContext', 'GetBoardContext', 'AddProjectTask', 'CloseTicketSilently'],
+        [
+          'GetMyWorkday',
+          'GetTicketContext',
+          'GetBoardContext',
+          'AddProjectTask',
+          'CloseProjectTask',
+          'UpdateProject',
+          'UpdateProjectTask',
+          'CloseTicketSilently',
+          'SetTicketOwner',
+          'LinkTicketToProject',
+        ],
         (name) => {
           const tool = registrations.get(name)?.tool;
 
@@ -250,7 +271,12 @@ describe('composite tool registration', () => {
         { name: 'GetTicketContext', readOnly: true, destructive: false, output: 'object' },
         { name: 'GetBoardContext', readOnly: true, destructive: false, output: 'object' },
         { name: 'AddProjectTask', readOnly: false, destructive: false, output: 'object' },
+        { name: 'CloseProjectTask', readOnly: false, destructive: false, output: 'object' },
+        { name: 'UpdateProject', readOnly: false, destructive: false, output: 'object' },
+        { name: 'UpdateProjectTask', readOnly: false, destructive: false, output: 'object' },
         { name: 'CloseTicketSilently', readOnly: false, destructive: false, output: 'object' },
+        { name: 'SetTicketOwner', readOnly: false, destructive: false, output: 'object' },
+        { name: 'LinkTicketToProject', readOnly: false, destructive: false, output: 'object' },
       ]);
 
       expect(registrations.has('GetTimesheetWeek')).toBeTruthy();
@@ -263,6 +289,18 @@ describe('composite tool registration', () => {
           chapterId: { type: 'string', pattern: '^[A-Z0-9]{15}$' },
         },
         required: ['projectId', 'name'],
+      });
+
+      // Orbit's UpdateProject takes a fieldsJson string; the gateway's takes typed fields, at least one.
+      expect(registrations.get('UpdateProject')?.tool.inputSchema).toMatchObject({
+        properties: {
+          changes: {
+            type: 'object',
+            minProperties: 1,
+            properties: { ownerId: { anyOf: [{ pattern: '^US[A-Z0-9]{13}$' }, { type: 'null' }] } },
+          },
+        },
+        required: ['project', 'changes'],
       });
     }).pipe(Effect.provide(requestContext), Effect.scoped),
   );
@@ -609,6 +647,287 @@ describe('closeTicketSilently', () => {
         ['CloseTicketSilently', { ticketId: 'TC8GN5EJB8ACT6E' }],
         ['ListTickets', { query: '9481', state: 'NEW|OPEN|WAIT|CLOSED|DELETED|REQCLOSE', limit: 100 }],
       ]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
+const TASK_ID = 'PTHY2HYJYQJ9N35';
+
+const PROJECT_END = '2026-10-19';
+
+const decodeFieldsJson = Schema.decodeUnknownEffect(Schema.Unknown.pipe(Schema.fromJsonString));
+
+const PROJECT_ID = 'PR9TQKGXE3D3CYU';
+
+const USER_ID = 'UST7V7BUH3KZ2WQ';
+
+describe('ticket owner and project link', () => {
+  it.effect("resolve a ticket number and map the typed parameters to Orbit's", () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup({
+        ListTickets: fixture('ListTickets'),
+        SetTicketOwner: 'Owner set.',
+        LinkTicketToProject: 'Linked.',
+      });
+
+      const owner = yield* call('SetTicketOwner', { ticket: '9087', owner: USER_ID });
+
+      const linked = yield* call('LinkTicketToProject', { ticket: 'TCRFWYDSTH445WJ', taskId: TASK_ID });
+
+      // eslint-disable-next-line unicorn/no-null -- the JSON input that unlinks
+      const unlinked = yield* call('LinkTicketToProject', { ticket: 'TCRFWYDSTH445WJ', taskId: null });
+
+      expect(Arr.map(calls, ({ name, args }) => [name, args])).toStrictEqual([
+        ['ListTickets', { query: '9087', state: 'NEW|OPEN|WAIT|CLOSED|DELETED|REQCLOSE', limit: 100 }],
+        ['SetTicketOwner', { ticketId: 'TCRFWYDSTH445WJ', user: USER_ID }],
+        ['LinkTicketToProject', { ticketId: 'TCRFWYDSTH445WJ', taskId: TASK_ID }],
+        ['LinkTicketToProject', { ticketId: 'TCRFWYDSTH445WJ', taskId: '' }],
+      ]);
+
+      const ownerSet = yield* structured(TicketOwnerSet, owner);
+
+      expect(ownerSet).toStrictEqual({ ticketId: 'TCRFWYDSTH445WJ', ownerId: USER_ID, message: 'Owner set.' });
+
+      const [link, unlink] = yield* Effect.all([structured(TicketLinked, linked), structured(TicketLinked, unlinked)]);
+
+      expect(link).toStrictEqual({ ticketId: 'TCRFWYDSTH445WJ', taskId: TASK_ID, message: 'Linked.' });
+
+      // eslint-disable-next-line unicorn/no-null -- an unlinked ticket has no task
+      expect(unlink).toStrictEqual({ ticketId: 'TCRFWYDSTH445WJ', taskId: null, message: 'Linked.' });
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('reject a project, ticket or user api_id in the wrong place before calling Orbit', () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup({ SetTicketOwner: 'Owner set.', LinkTicketToProject: 'Linked.' });
+
+      // oxlint-disable-next-line unicorn/no-array-for-each
+      const invalid = yield* Effect.forEach(
+        [
+          ['LinkTicketToProject', { ticket: '9087', taskId: PROJECT_ID }],
+          ['LinkTicketToProject', { ticket: '9087', taskId: '' }],
+          ['LinkTicketToProject', { ticket: '#9087', taskId: TASK_ID }],
+          ['SetTicketOwner', { ticket: '9087', owner: TASK_ID }],
+          ['SetTicketOwner', { ticket: '9087', owner: 'Niels Mentink' }],
+        ] as const,
+        ([name, input]) =>
+          Effect.flip(call(name, input)).pipe(
+            Effect.map(({ message }) => Str.startsWith(`Invalid parameters for tool '${name}'`)(message)),
+          ),
+      );
+
+      expect(invalid).toStrictEqual([true, true, true, true, true]);
+
+      expect(calls).toStrictEqual([]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
+describe('closeProjectTask', () => {
+  it.effect('forwards force, returns warnings as the answer and refuses a project api_id', () =>
+    Effect.gen(function* () {
+      const warning = 'Task has 2h remaining workload. Not closed; call again with force=true to close anyway.';
+
+      const { call, calls } = yield* setup({ CloseProjectTask: ({ force }) => (force === true ? 'Closed.' : warning) });
+
+      const warned = yield* call('CloseProjectTask', { taskId: TASK_ID });
+
+      const closed = yield* call('CloseProjectTask', { taskId: TASK_ID, force: true });
+
+      const project = yield* Effect.flip(call('CloseProjectTask', { taskId: PROJECT_ID }));
+
+      expect(Arr.map(calls, ({ args }) => args)).toStrictEqual([{ taskId: TASK_ID }, { taskId: TASK_ID, force: true }]);
+
+      const answers = yield* Effect.all([
+        structured(ProjectTaskCloseResult, warned),
+        structured(ProjectTaskCloseResult, closed),
+      ]);
+
+      expect(answers).toStrictEqual([
+        { taskId: TASK_ID, message: warning },
+        { taskId: TASK_ID, message: 'Closed.' },
+      ]);
+
+      expect(project.message).toMatch(/^Invalid parameters for tool 'CloseProjectTask'/);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
+describe('updateProject', () => {
+  it.effect("sends typed changes as Orbit's fieldsJson, with Orbit's values for clearing", () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup({ UpdateProject: 'Project 2325 updated.' });
+
+      const result = yield* call('UpdateProject', {
+        project: '2325',
+        changes: {
+          name: 'Website onderhoud',
+          purchaseOrder: 'PO-1',
+          startDate: '2026-10-01',
+          endDate: PROJECT_END,
+          fixedPrice: 0,
+          ownerId: USER_ID,
+          // eslint-disable-next-line unicorn/no-null -- the JSON input that unlinks
+          dealId: null,
+        },
+      });
+
+      // eslint-disable-next-line unicorn/no-null -- the JSON input that clears
+      yield* call('UpdateProject', { project: PROJECT_ID, changes: { endDate: null, ownerId: null } });
+
+      // oxlint-disable-next-line unicorn/no-array-for-each
+      const sent = yield* Effect.forEach(calls, ({ name, args: { fieldsJson, ...args } }) =>
+        decodeFieldsJson(fieldsJson).pipe(Effect.map((fields) => [name, args, fields])),
+      );
+
+      expect(sent).toStrictEqual([
+        [
+          'UpdateProject',
+          { projectId: '2325' },
+          {
+            NAME: 'Website onderhoud',
+            PO: 'PO-1',
+            START_DT: '2026-10-01',
+            END_DT: PROJECT_END,
+            BILLING_BUDGET: 0,
+            OWNERID: USER_ID,
+            DEALID: '0',
+          },
+        ],
+        ['UpdateProject', { projectId: PROJECT_ID }, { END_DT: '', OWNERID: '' }],
+      ]);
+
+      const updated = yield* structured(ProjectUpdated, result);
+
+      expect(updated).toStrictEqual({ project: '2325', message: 'Project 2325 updated.' });
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('rejects no changes, reversed or non-existent dates and an owner that is no user', () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup({ UpdateProject: 'Project updated.' });
+
+      const reversed = yield* call('UpdateProject', {
+        project: '2325',
+        changes: { startDate: '2026-10-20', endDate: PROJECT_END },
+      });
+
+      expect([reversed.isError, textOf(reversed)]).toStrictEqual([
+        true,
+        `endDate ${PROJECT_END} is before startDate 2026-10-20.`,
+      ]);
+
+      // oxlint-disable-next-line unicorn/no-array-for-each
+      const invalid = yield* Effect.forEach(
+        [
+          { project: '2325', changes: {} },
+          { project: '2325', changes: { endDate: '2026-02-30' } },
+          { project: '2325', changes: { ownerId: 'Niels Mentink' } },
+          { project: '2325', changes: { name: ' ' } },
+          { project: '2325', changes: { fixedPrice: -1 } },
+          { project: '23 25', changes: { name: 'Website' } },
+        ],
+        (input) => Effect.flip(call('UpdateProject', input)).pipe(Effect.map(({ message }) => message)),
+      );
+
+      expect(invalid).toHaveLength(6);
+
+      expect(Arr.every(invalid, Str.startsWith("Invalid parameters for tool 'UpdateProject'"))).toBeTruthy();
+
+      expect(calls).toStrictEqual([]);
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+});
+
+describe('updateProjectTask', () => {
+  it.effect("sends typed changes as Orbit's fieldsJson, with Orbit's values for flags and clearing", () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup({ UpdateProjectTask: 'Task updated.' });
+
+      const result = yield* call('UpdateProjectTask', {
+        taskId: TASK_ID,
+        changes: {
+          workloadHours: 8,
+          rateId: 'RTB3K18Q2XWAFHK',
+          rate: 95,
+          endDate: PROJECT_END,
+          recurring: true,
+          billingMode: 'HOURS',
+          assignees: [USER_ID, 'Niels Mentink'],
+        },
+      });
+
+      yield* call('UpdateProjectTask', {
+        taskId: TASK_ID,
+        // eslint-disable-next-line unicorn/no-null -- the JSON input that clears
+        changes: { endDate: null, recurring: false, assignees: null, retainerId: null, analyticalCategoryId: null },
+      });
+
+      // oxlint-disable-next-line unicorn/no-array-for-each
+      const sent = yield* Effect.forEach(calls, ({ name, args: { fieldsJson, ...args } }) =>
+        decodeFieldsJson(fieldsJson).pipe(Effect.map((fields) => [name, args, fields])),
+      );
+
+      expect(sent).toStrictEqual([
+        [
+          'UpdateProjectTask',
+          { taskId: TASK_ID },
+          {
+            WORKLOAD: 8,
+            RATEID: 'RTB3K18Q2XWAFHK',
+            RATE: 95,
+            END_DT: PROJECT_END,
+            RECURRING: 1,
+            BILLING_MODE: 'HOURS',
+            ASSIGNEDTO: `${USER_ID},Niels Mentink`,
+          },
+        ],
+        [
+          'UpdateProjectTask',
+          { taskId: TASK_ID },
+          { END_DT: '', RECURRING: 0, ASSIGNEDTO: '', RETAINERID: 'NONE', ACATID: '' },
+        ],
+      ]);
+
+      const updated = yield* structured(ProjectTaskUpdated, result);
+
+      expect(updated).toStrictEqual({ taskId: TASK_ID, message: 'Task updated.' });
+    }).pipe(Effect.provide(requestContext), Effect.scoped),
+  );
+
+  it.effect('rejects a rate without its card, reversed dates, no changes and a project api_id', () =>
+    Effect.gen(function* () {
+      const { call, calls } = yield* setup({ UpdateProjectTask: 'Task updated.' });
+
+      const rateOnly = yield* call('UpdateProjectTask', { taskId: TASK_ID, changes: { rate: 95 } });
+
+      const reversed = yield* call('UpdateProjectTask', {
+        taskId: TASK_ID,
+        changes: { startDate: '2026-10-20', endDate: PROJECT_END },
+      });
+
+      expect(Arr.map([rateOnly, reversed], (result) => [result.isError, textOf(result)])).toStrictEqual([
+        [true, 'rate needs rateId: Orbit only sets a rate with its card.'],
+        [true, `endDate ${PROJECT_END} is before startDate 2026-10-20.`],
+      ]);
+
+      // oxlint-disable-next-line unicorn/no-array-for-each
+      const invalid = yield* Effect.forEach(
+        [
+          { taskId: TASK_ID, changes: {} },
+          { taskId: PROJECT_ID, changes: { workloadHours: 8 } },
+          { taskId: TASK_ID, changes: { billingMode: 'FIXED' } },
+          { taskId: TASK_ID, changes: { assignees: [] } },
+          { taskId: TASK_ID, changes: { retainerId: 'NONE' } },
+        ],
+        (input) => Effect.flip(call('UpdateProjectTask', input)).pipe(Effect.map(({ message }) => message)),
+      );
+
+      expect(invalid).toHaveLength(5);
+
+      expect(Arr.every(invalid, Str.startsWith("Invalid parameters for tool 'UpdateProjectTask'"))).toBeTruthy();
+
+      expect(calls).toStrictEqual([]);
     }).pipe(Effect.provide(requestContext), Effect.scoped),
   );
 });
