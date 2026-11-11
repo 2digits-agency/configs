@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
@@ -6,6 +6,7 @@ import * as Opt from 'effect/Option';
 import { argumentAt, callbackCall, enclosingFunction, isSomeSame, type FunctionNode } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const generatorMethods = ['fn', 'fnUntraced', 'gen'] as const satisfies ReadonlyArray<keyof typeof Effect>;
 
@@ -54,7 +55,7 @@ function isGeneratorBody(node: FunctionNode, imports: ImportBindings): boolean {
   );
 }
 
-export const throwInEffectGen: CreateRule = Rule.define({
+export const throwInEffectGen: CreateRule = defineRule({
   name: 'throw-in-effect-gen',
   meta: ruleMeta({
     type: 'problem',

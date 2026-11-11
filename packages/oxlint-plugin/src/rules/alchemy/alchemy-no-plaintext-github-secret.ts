@@ -1,10 +1,11 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
 import { argumentAt, isStringLiteral, objectProperty, staticPath, unwrapExpression } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 function isPlaintextSecret(node: ESTree.Expression, imports: ImportBindings): boolean {
   const value = unwrapExpression(node);
@@ -18,7 +19,7 @@ function isPlaintextSecret(node: ESTree.Expression, imports: ImportBindings): bo
   );
 }
 
-export const alchemyNoPlaintextGithubSecret: CreateRule = Rule.define({
+export const alchemyNoPlaintextGithubSecret: CreateRule = defineRule({
   name: 'alchemy-no-plaintext-github-secret',
   meta: ruleMeta({
     type: 'problem',

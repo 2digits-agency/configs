@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -8,6 +8,7 @@ import * as Str from 'effect/String';
 
 import { argumentAt, isStringLiteral } from '../../internal/ast';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isGlobalIdentifier } from '../../internal/scope';
 
 const DomainFileName = Schema.String.check(
@@ -37,7 +38,7 @@ function importsDomain(program: ESTree.Program): boolean {
   );
 }
 
-export const alchemyDomainPureImports: CreateRule = Rule.define({
+export const alchemyDomainPureImports: CreateRule = defineRule({
   name: 'alchemy-domain-pure-imports',
   meta: ruleMeta({
     type: 'problem',

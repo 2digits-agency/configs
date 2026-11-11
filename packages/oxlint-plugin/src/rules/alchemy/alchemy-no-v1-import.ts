@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -6,13 +6,14 @@ import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const providerEntrypoints: Readonly<Record<string, string>> = {
   'alchemy/aws': 'alchemy/AWS',
   'alchemy/cloudflare': 'alchemy/Cloudflare',
 };
 
-export const alchemyNoV1Import: CreateRule = Rule.define({
+export const alchemyNoV1Import: CreateRule = defineRule({
   name: 'alchemy-no-v1-import',
   meta: ruleMeta({
     type: 'problem',

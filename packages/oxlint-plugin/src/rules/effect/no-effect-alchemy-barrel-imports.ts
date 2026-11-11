@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -6,10 +6,11 @@ import * as Opt from 'effect/Option';
 import { moduleExportName } from '../../internal/ast';
 import { withOptionalFix } from '../../internal/fixes';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { barrelFix } from './internal/import-fixes';
 import { barrelModuleSource, isModuleName, isTypeOnlyImport, namespaceAlias } from './internal/import-style';
 
-export const noEffectAlchemyBarrelImports: CreateRule = Rule.define({
+export const noEffectAlchemyBarrelImports: CreateRule = defineRule({
   name: 'no-effect-alchemy-barrel-imports',
   meta: ruleMeta({
     type: 'suggestion',

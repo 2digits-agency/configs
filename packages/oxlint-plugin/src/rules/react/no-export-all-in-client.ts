@@ -1,8 +1,9 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 function isClientModule(program: ESTree.Program): boolean {
   return Arr.some(
@@ -11,7 +12,7 @@ function isClientModule(program: ESTree.Program): boolean {
   );
 }
 
-export const noExportAllInClient: CreateRule = Rule.define({
+export const noExportAllInClient: CreateRule = defineRule({
   name: 'no-export-all-in-client',
   meta: ruleMeta({
     type: 'problem',

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -6,6 +6,7 @@ import * as R from 'effect/Record';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const deprecatedResources: Readonly<Record<string, string>> = {
   'Cloudflare.Access.Bookmark': 'Cloudflare.Access.Application with type: "bookmark"',
@@ -16,7 +17,7 @@ const deprecatedResources: Readonly<Record<string, string>> = {
   'AWS.EKS.Manifest': 'Kubernetes.Manifest from alchemy/Kubernetes',
 };
 
-export const alchemyNoDeprecatedResource: CreateRule = Rule.define({
+export const alchemyNoDeprecatedResource: CreateRule = defineRule({
   name: 'alchemy-no-deprecated-resource',
   meta: ruleMeta({
     type: 'problem',

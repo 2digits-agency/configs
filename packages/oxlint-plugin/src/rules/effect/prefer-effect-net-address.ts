@@ -1,5 +1,5 @@
 /* oxlint-disable 2digits/prefer-effect-net-address -- The patterns below describe the IP text this rule reports. */
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as HashSet from 'effect/HashSet';
@@ -10,6 +10,7 @@ import * as Schema from 'effect/Schema';
 import { argumentAt, isEqualityOperator, isStringLiteral, parentOf, staticPropertyName } from '../../internal/ast';
 import { importBindings, moduleImportMember } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const IpLibrary = Schema.Literals([
   'ip',
@@ -77,7 +78,7 @@ function topLevelStatement(node: ESTree.Node): ESTree.Node {
   });
 }
 
-export const preferEffectNetAddress: CreateRule = Rule.define({
+export const preferEffectNetAddress: CreateRule = defineRule({
   name: 'prefer-effect-net-address',
   meta: ruleMeta({
     type: 'suggestion',

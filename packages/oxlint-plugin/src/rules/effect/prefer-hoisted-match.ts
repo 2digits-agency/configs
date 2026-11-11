@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -14,6 +14,7 @@ import {
 } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { functionResult } from './internal/callbacks';
 
 function isParameterReference(node: Opt.Option<ESTree.Expression>, parameter: string): boolean {
@@ -145,7 +146,7 @@ function matcherKind(
 /**
  * Report functions that build a value matcher for their own parameter instead of reusing a hoisted type matcher.
  */
-export const preferHoistedMatch: CreateRule = Rule.define({
+export const preferHoistedMatch: CreateRule = defineRule({
   name: 'prefer-hoisted-match',
   meta: ruleMeta({
     type: 'suggestion',

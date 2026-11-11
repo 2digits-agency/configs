@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
@@ -6,6 +6,7 @@ import * as Schema from 'effect/Schema';
 import { staticPath } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isGlobalIdentifier } from '../../internal/scope';
 
 const UrlParseMethod = Schema.Literals(['canParse', 'parse']);
@@ -19,7 +20,7 @@ function isUrlParseCall(node: ESTree.CallExpression): boolean {
   );
 }
 
-export const preferEffectUrl: CreateRule = Rule.define({
+export const preferEffectUrl: CreateRule = defineRule({
   name: 'prefer-effect-url',
   meta: ruleMeta({
     type: 'suggestion',

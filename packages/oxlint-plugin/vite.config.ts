@@ -14,5 +14,7 @@ export default defineConfig({
   test: {
     include: ['test/**/*.spec.ts'],
     isolate: false,
+    // eslint-disable-next-line turbo/no-undeclared-env-vars -- Benchmarks run directly, outside Turbo's task cache.
+    setupFiles: process.env.OXLINT_BENCH_CORPUS ? ['bench/capture.ts'] : [],
   },
 });

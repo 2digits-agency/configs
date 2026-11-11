@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -17,6 +17,7 @@ import {
 } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 // Repeating event sources, keyed by method, with the index of their handler argument.
 const multiShotHandlerIndex: Readonly<Record<string, number>> = {
@@ -64,7 +65,7 @@ function registersMultiShot(node: ESTree.CallExpression): boolean {
   });
 }
 
-export const noMultiShotEffectCallback: CreateRule = Rule.define({
+export const noMultiShotEffectCallback: CreateRule = defineRule({
   name: 'no-multi-shot-effect-callback',
   meta: ruleMeta({
     type: 'problem',

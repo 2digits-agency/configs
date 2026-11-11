@@ -1,6 +1,5 @@
 import {
   Diagnostic,
-  Rule,
   RuleContext,
   SourceCode,
   Visitor,
@@ -19,6 +18,7 @@ import { findAncestor, isEqualityOperator, isStringLiteral, unwrapExpression } f
 import { argumentText, replaceWithNamespace } from '../../internal/fixes';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isGlobalIn } from '../../internal/scope';
 
 type FunctionLike = ESTree.ArrowFunctionExpression | ESTree.Function;
@@ -195,7 +195,7 @@ function isInsideRefinement(node: ESTree.Node): boolean {
 /**
  * Prefer Effect Predicate guards over hand-written runtime type and nullish checks in Effect files.
  */
-export const preferEffectPredicate: CreateRule = Rule.define({
+export const preferEffectPredicate: CreateRule = defineRule({
   name: 'prefer-effect-predicate',
   meta: ruleMeta({
     type: 'suggestion',

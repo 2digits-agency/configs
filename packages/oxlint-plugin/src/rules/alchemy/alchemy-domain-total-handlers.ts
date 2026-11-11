@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -8,6 +8,7 @@ import * as Schema from 'effect/Schema';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { domainSection, importedPath, isImportReference, type DomainFile } from './internal/domain';
 
 const totalSections: Readonly<Record<string, ReadonlyArray<string>>> = {
@@ -21,7 +22,7 @@ const isThrowingGetter = Schema.is(
   Schema.Literals(['getOrThrow', 'getOrThrowWith'] satisfies ReadonlyArray<keyof typeof Opt & keyof typeof Result>),
 );
 
-export const alchemyDomainTotalHandlers: CreateRule = Rule.define({
+export const alchemyDomainTotalHandlers: CreateRule = defineRule({
   name: 'alchemy-domain-total-handlers',
   meta: ruleMeta({
     type: 'problem',
@@ -39,6 +40,10 @@ export const alchemyDomainTotalHandlers: CreateRule = Rule.define({
     const ctx = yield* RuleContext;
 
     const file: DomainFile = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
+
+    if (!file.imports.hasNamespace('Domain')) {
+      return {};
+    }
 
     function report(node: ESTree.Node, api: string) {
       return Opt.match(domainSection(node, file), {
@@ -72,7 +77,11 @@ export const alchemyDomainTotalHandlers: CreateRule = Rule.define({
       Visitor.on('ThrowStatement', (node) => report(node, '`throw`')),
       // References, not only calls, so point-free `pipe(s.running, Option.getOrThrow)` counts too.
       Visitor.on('MemberExpression', checkGetter),
-      Visitor.on('Identifier', (node) => (isImportReference(node, ctx.sourceCode) ? checkGetter(node) : Effect.void)),
+      Visitor.on('Identifier', (node) =>
+        file.imports.bindings.has(node.name) && isImportReference(node, ctx.sourceCode)
+          ? checkGetter(node)
+          : Effect.void,
+      ),
     );
   },
 });

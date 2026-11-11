@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -9,6 +9,7 @@ import * as Str from 'effect/String';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { domainBlock, type DomainBlock, type DomainFile } from './internal/domain';
 
 const fileKinds: Readonly<Record<string, string>> = {
@@ -58,7 +59,7 @@ function fileKindOf(name: string): Opt.Option<string> {
   return parts.length >= 3 && Str.isNonEmpty(Arr.headNonEmpty(parts)) ? Arr.get(parts, parts.length - 2) : Opt.none();
 }
 
-export const alchemyDomainBlockFileName: CreateRule = Rule.define({
+export const alchemyDomainBlockFileName: CreateRule = defineRule({
   name: 'alchemy-domain-block-file-name',
   meta: ruleMeta({
     type: 'suggestion',
@@ -73,6 +74,10 @@ export const alchemyDomainBlockFileName: CreateRule = Rule.define({
     const ctx = yield* RuleContext;
 
     const file: DomainFile = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
+
+    if (!file.imports.hasNamespace('Domain')) {
+      return {};
+    }
 
     const name = Arr.lastNonEmpty(Str.split(ctx.filename, /[/\\]/u));
 
@@ -108,16 +113,18 @@ export const alchemyDomainBlockFileName: CreateRule = Rule.define({
       return ctx.report(Diagnostic.fromId({ node, messageId, data: { block, kind } }));
     }
 
-    // Events and rejections in a host file, reported at the end unless that file declares its host.
-    const sharedDeclarations = yield* Visitor.accumulate(
-      'CallExpression',
-      (node) => Opt.filter(declaration(node), isShared),
-      (shared) =>
-        Effect.flatMap(Ref.get(hosted), (isHosted) =>
-          // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
-          isHosted ? Effect.void : Effect.forEach(shared, (found) => report('fileName', found), { discard: true }),
-        ),
-    );
+    // Only host files can accumulate shared declarations; other files need no second call visitor or exit pass.
+    const sharedDeclarations = yield* inHostFile
+      ? Visitor.accumulate(
+          'CallExpression',
+          (node) => Opt.filter(declaration(node), isShared),
+          (shared) =>
+            Effect.flatMap(Ref.get(hosted), (isHosted) =>
+              // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+              isHosted ? Effect.void : Effect.forEach(shared, (found) => report('fileName', found), { discard: true }),
+            ),
+        )
+      : Effect.succeed({});
 
     const check = Effect.fnUntraced(function* (found: Declaration) {
       const matchesFile = Opt.contains(fileKind, found.kind);

@@ -3,14 +3,15 @@ import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
 
-import { moduleExportName, staticPath } from './ast';
+import { moduleExportName, staticPath, staticPropertyName } from './ast';
 import { isImportedApiIn } from './scope';
 
-const ModulePath = Schema.Array(Schema.String);
+const sameModulePath = Arr.makeEquivalence(Str.Equivalence);
 
 /**
  * The member a two-part module path names in `namespace`, such as `map` for `['Effect', 'map']`.
@@ -24,21 +25,65 @@ export function namespaceMember(path: ReadonlyArray<string>, namespace: string):
 
 /**
  * The Effect and Alchemy imports of one file: the module path each local binding names, such as `['Effect', 'map']` for
- * `import { map } from 'effect/Effect'`, and whether the file imports Effect at all.
+ * `import { map } from 'effect/Effect'`, and whether the file imports Effect at all. These values come directly from
+ * the typed AST, not external input, so collecting them does not need a Schema decoding pass.
  */
-export class ImportBindings extends Schema.Class<ImportBindings, { readonly brand: unique symbol }>('ImportBindings')({
-  bindings: Schema.ReadonlyMap(Schema.String, ModulePath),
-  hasEffectImport: Schema.Boolean,
-}) {
+export class ImportBindings {
+  private readonly paths = new WeakMap<ESTree.Node, Opt.Option<ReadonlyArray<string>>>();
+  readonly bindings: ReadonlyMap<string, ReadonlyArray<string>>;
+  readonly hasEffectImport: boolean;
+
+  constructor(bindings: ReadonlyMap<string, ReadonlyArray<string>>, hasEffectImport: boolean) {
+    this.bindings = bindings;
+
+    this.hasEffectImport = hasEffectImport;
+  }
+
+  private resolvePath(node: ESTree.Node): Opt.Option<ReadonlyArray<string>> {
+    if (node.type === 'Identifier') {
+      return Opt.fromNullishOr(this.bindings.get(node.name));
+    }
+
+    return node.type === 'MemberExpression'
+      ? Opt.flatMap(this.path(node.object), (parent) =>
+          Opt.map(staticPropertyName(node), (member) => [...parent, member]),
+        )
+      : Opt.none();
+  }
+
+  /**
+   * Whether any local binding can name an API in this namespace.
+   *
+   * @param namespace Module namespace, such as `Domain`.
+   */
+  hasNamespace(namespace: string): boolean {
+    for (const path of this.bindings.values()) {
+      // A barrel namespace may supply any nested module; do not bail out on it.
+      if (Arr.isReadonlyArrayEmpty(path) || Opt.contains(Arr.head(path), namespace)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   /**
    * The module path an expression names through an import, such as `['Schema', 'Struct']` for `S.Struct`.
    *
    * @param node Callee or reference.
    */
   path(node: ESTree.Node): Opt.Option<ReadonlyArray<string>> {
-    return Opt.flatMap(staticPath(node), ([first, ...rest]) =>
-      Opt.map(Opt.fromNullishOr(this.bindings.get(first)), (imported) => [...imported, ...rest]),
-    );
+    const cached = this.paths.get(node);
+
+    if (P.isNotUndefined(cached)) {
+      return cached;
+    }
+
+    const path = this.resolvePath(node.type === 'ChainExpression' ? node.expression : node);
+
+    this.paths.set(node, path);
+
+    return path;
   }
 
   /**
@@ -49,9 +94,9 @@ export class ImportBindings extends Schema.Class<ImportBindings, { readonly bran
    * @param member Accepted member name or names.
    */
   isApi(node: ESTree.Node, namespace: string, member: string | ReadonlyArray<string>): boolean {
-    const members = Str.isString(member) ? [member] : member;
-
-    return Opt.exists(this.member(node, namespace), (name) => Arr.contains(members, name));
+    return Opt.exists(this.member(node, namespace), (name) =>
+      Str.isString(member) ? name === member : Arr.contains(member, name),
+    );
   }
 
   /**
@@ -71,7 +116,7 @@ export class ImportBindings extends Schema.Class<ImportBindings, { readonly bran
    * @param expected Full module path.
    */
   isApiPath(node: ESTree.Node, expected: ReadonlyArray<string>): boolean {
-    return Opt.exists(this.path(node), (path) => Arr.makeEquivalence(Str.Equivalence)(path, expected));
+    return Opt.exists(this.path(node), (path) => sameModulePath(path, expected));
   }
 }
 
@@ -113,19 +158,28 @@ function specifierBindings(
   );
 }
 
+// Oxlint reuses SourceCode across files, but every parse (including autofix passes) has its own Program.
+const programImports = new WeakMap<ESTree.Program, ImportBindings>();
+
 /**
  * Collect the import bindings of a program from its top-level import declarations.
  *
  * @param program Program.
  */
 function collectImportBindings(program: ESTree.Program): ImportBindings {
+  const cached = programImports.get(program);
+
+  if (P.isNotUndefined(cached)) {
+    return cached;
+  }
+
   const declarations = Arr.filter(
     program.body,
     (statement): statement is ESTree.ImportDeclaration => statement.type === 'ImportDeclaration',
   );
 
-  return ImportBindings.make({
-    bindings: new Map(
+  const imports = new ImportBindings(
+    new Map(
       Arr.flatMap(declarations, (declaration) =>
         Opt.match(modulePath(declaration.source.value), {
           onNone: () => [],
@@ -133,8 +187,12 @@ function collectImportBindings(program: ESTree.Program): ImportBindings {
         }),
       ),
     ),
-    hasEffectImport: Arr.some(declarations, (declaration) => isEffectSource(declaration.source.value)),
-  });
+    Arr.some(declarations, (declaration) => isEffectSource(declaration.source.value)),
+  );
+
+  programImports.set(program, imports);
+
+  return imports;
 }
 
 /**

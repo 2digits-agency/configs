@@ -32,6 +32,7 @@
     "access": "public"
   },
   "scripts": {
+    "bench": "node bench/run.mts",
     "build": "vp pack --minify",
     "dev": "vp pack --watch",
     "lint": "eslint .",

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -7,6 +7,7 @@ import * as Schema from 'effect/Schema';
 import { callbackCall, isFunctionNode, isSomeSame, parentOf } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const CatchMethod = Schema.Literals([
   ...(['catch', 'catchIf', 'catchTag', 'orElseSucceed'] satisfies ReadonlyArray<keyof typeof Effect>),
@@ -67,7 +68,7 @@ function catchMethod(node: ESTree.Node, imports: ImportBindings): Opt.Option<str
   });
 }
 
-export const noLoggingInCatch: CreateRule = Rule.define({
+export const noLoggingInCatch: CreateRule = defineRule({
   name: 'no-logging-in-catch',
   meta: ruleMeta({
     type: 'suggestion',
@@ -83,7 +84,7 @@ export const noLoggingInCatch: CreateRule = Rule.define({
       const path = imports.path(node.callee);
 
       return Opt.match(
-        Opt.zipWith(effectMember(path, isLogMethod), catchMethod(node, imports), (_, method) => method),
+        Opt.flatMap(effectMember(path, isLogMethod), () => catchMethod(node, imports)),
         {
           onNone: () => Effect.void,
           onSome: (method) =>

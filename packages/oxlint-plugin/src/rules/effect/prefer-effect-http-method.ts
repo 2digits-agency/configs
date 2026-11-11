@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -8,6 +8,7 @@ import * as HttpMethod from 'effect/http/HttpMethod';
 import { isStringLiteral } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 /**
  * Lists with fewer methods are usually deliberate subsets, such as `['GET', 'HEAD']` for safe methods or the methods
@@ -33,7 +34,7 @@ function unionMemberValue(member: ESTree.TSType): Opt.Option<string> {
     : Opt.none();
 }
 
-export const preferEffectHttpMethod: CreateRule = Rule.define({
+export const preferEffectHttpMethod: CreateRule = defineRule({
   name: 'prefer-effect-http-method',
   meta: ruleMeta({
     type: 'suggestion',

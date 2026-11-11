@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -8,6 +8,7 @@ import * as Str from 'effect/String';
 import { argumentAt, isLiteral, isStringLiteral, staticPropertyName, unwrapExpression } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const ReplaceMethod = Schema.Literals(['replace', 'replaceAll']);
 
@@ -188,7 +189,7 @@ function isHexToString(node: ESTree.CallExpression): boolean {
   );
 }
 
-export const noManualEncoding: CreateRule = Rule.define({
+export const noManualEncoding: CreateRule = defineRule({
   name: 'no-manual-encoding',
   meta: ruleMeta({
     type: 'suggestion',

@@ -1,6 +1,5 @@
 import {
   Diagnostic,
-  Rule,
   RuleContext,
   Scope,
   Visitor,
@@ -26,6 +25,7 @@ import {
   type FunctionNode,
 } from '../../internal/ast';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const BrowserGlobal = Schema.Literals(['document', 'localStorage', 'navigator', 'sessionStorage', 'window']);
 
@@ -86,7 +86,7 @@ interface BrowserApiRead {
  * Report browser-only globals read while a component or hook renders; the server render cannot match them, and a
  * `typeof window` guard is what makes the two renders differ.
  */
-export const noBrowserApiInRender: CreateRule = Rule.define({
+export const noBrowserApiInRender: CreateRule = defineRule({
   name: 'no-browser-api-in-render',
   meta: ruleMeta({
     type: 'problem',

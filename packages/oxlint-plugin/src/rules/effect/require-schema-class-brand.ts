@@ -1,11 +1,12 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import type * as Schema from 'effect/Schema';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
-export const requireSchemaClassBrand: CreateRule = Rule.define({
+export const requireSchemaClassBrand: CreateRule = defineRule({
   name: 'require-schema-class-brand',
   meta: ruleMeta({
     type: 'problem',

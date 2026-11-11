@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -9,6 +9,7 @@ import type * as HttpRouter from 'effect/http/HttpRouter';
 import { isLiteral, objectArgument, objectProperty, unwrapExpression } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 function wildcardOrigins(node: ESTree.Expression): boolean {
   const origins = unwrapExpression(node);
@@ -50,7 +51,7 @@ function credentialedWildcard(options: ESTree.ObjectExpression): boolean {
   );
 }
 
-export const corsCredentialsWithWildcard: CreateRule = Rule.define({
+export const corsCredentialsWithWildcard: CreateRule = defineRule({
   name: 'cors-credentials-with-wildcard',
   meta: ruleMeta({
     type: 'problem',

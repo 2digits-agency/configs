@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
@@ -6,9 +6,10 @@ import { argumentAt, objectProperty } from '../../internal/ast';
 import { plainOptions, withOptionalFix } from '../../internal/fixes';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isImportedApi } from '../../internal/scope';
 
-export const alchemyNoDeprecatedDockerConstraints: CreateRule = Rule.define({
+export const alchemyNoDeprecatedDockerConstraints: CreateRule = defineRule({
   name: 'alchemy-no-deprecated-docker-constraints',
   meta: ruleMeta({
     type: 'problem',

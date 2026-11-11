@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -7,6 +7,7 @@ import * as P from 'effect/Predicate';
 import { argumentAt, staticPath, unwrapExpression } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const getOrThrowMethods = ['getOrThrow', 'getOrThrowWith'] as const satisfies ReadonlyArray<keyof typeof Opt>;
 
@@ -47,7 +48,7 @@ function throwsMissingService(node: ESTree.CallExpression, imports: ImportBindin
   );
 }
 
-export const noServiceOptionGetOrThrow: CreateRule = Rule.define({
+export const noServiceOptionGetOrThrow: CreateRule = defineRule({
   name: 'no-service-option-get-or-throw',
   meta: ruleMeta({
     type: 'problem',

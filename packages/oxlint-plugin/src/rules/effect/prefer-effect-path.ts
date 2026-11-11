@@ -1,15 +1,16 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Schema from 'effect/Schema';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const NodePathSource = Schema.Literals(['node:path', 'path']);
 
 const isNodePathSource = Schema.is(NodePathSource);
 
-export const preferEffectPath: CreateRule = Rule.define({
+export const preferEffectPath: CreateRule = defineRule({
   name: 'prefer-effect-path',
   meta: ruleMeta({
     type: 'suggestion',

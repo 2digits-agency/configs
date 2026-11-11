@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -7,6 +7,7 @@ import * as Schema from 'effect/Schema';
 import { argumentAt, isLiteral, parentOfType, staticPath, staticPropertyName } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const JwtLibrary = Schema.Literals([
   '@tsndr/cloudflare-worker-jwt',
@@ -42,7 +43,7 @@ function isDestructuredIntoSegments(node: ESTree.CallExpression): boolean {
   );
 }
 
-export const preferEffectJwt: CreateRule = Rule.define({
+export const preferEffectJwt: CreateRule = defineRule({
   name: 'prefer-effect-jwt',
   meta: ruleMeta({
     type: 'suggestion',

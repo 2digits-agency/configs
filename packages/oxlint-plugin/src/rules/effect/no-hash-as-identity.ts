@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import type * as Hash from 'effect/Hash';
@@ -10,6 +10,7 @@ import * as Schema from 'effect/Schema';
 import { argumentAt, isEqualityOperator, staticPath } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const KeyedMethod = Schema.Literals(['delete', 'get', 'has', 'set']);
 
@@ -26,7 +27,7 @@ function isKeyedCall(node: ESTree.CallExpression): boolean {
   );
 }
 
-export const noHashAsIdentity: CreateRule = Rule.define({
+export const noHashAsIdentity: CreateRule = defineRule({
   name: 'no-hash-as-identity',
   meta: ruleMeta({
     type: 'problem',

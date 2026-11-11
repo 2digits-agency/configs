@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -18,6 +18,7 @@ import {
 } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isForeignCallback } from './internal/callbacks';
 import { millisName } from './internal/duration';
 
@@ -174,7 +175,7 @@ function parameterBinding(parameter: ESTree.ParamPattern): Opt.Option<ESTree.Bin
     : Opt.none();
 }
 
-export const preferEffectDurationTypes: CreateRule = Rule.define({
+export const preferEffectDurationTypes: CreateRule = defineRule({
   name: 'prefer-effect-duration-types',
   meta: ruleMeta({
     type: 'suggestion',

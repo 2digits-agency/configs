@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -7,6 +7,7 @@ import * as R from 'effect/Record';
 import { moduleExportName, parentOf, staticPropertyName } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isTypeOnlyImport } from './internal/import-style';
 
 interface FormatPackage {
@@ -62,7 +63,7 @@ function replaces(format: FormatPackage, member: string): boolean {
   return format.members === 'all' || Arr.contains(format.members, member);
 }
 
-export const preferEffectFormatParser: CreateRule = Rule.define({
+export const preferEffectFormatParser: CreateRule = defineRule({
   name: 'prefer-effect-format-parser',
   meta: ruleMeta({
     type: 'suggestion',

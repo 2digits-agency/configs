@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import type * as Result from 'effect/Result';
@@ -6,6 +6,7 @@ import type * as Result from 'effect/Result';
 import { argumentAt, firstIdentifierParameter, type FunctionNode } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { functionResult } from './internal/callbacks';
 
 function returnsParameter(
@@ -39,7 +40,7 @@ function isResultFilter(node: FunctionNode, imports: ImportBindings): boolean {
   );
 }
 
-export const preferEffectFilter: CreateRule = Rule.define({
+export const preferEffectFilter: CreateRule = defineRule({
   name: 'prefer-effect-filter',
   meta: ruleMeta({
     type: 'suggestion',

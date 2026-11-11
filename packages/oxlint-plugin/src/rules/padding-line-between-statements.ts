@@ -1,7 +1,6 @@
 // Adapted from anti-slop's ESLint Stylistic vendor. See NOTICE and padding-line-upstream.md.
 /* eslint-disable unicorn/no-null -- Oxlint AST/token APIs and no-fix results use null. */
 import {
-  Rule,
   RuleContext,
   Visitor,
   type OxlintComment as Comment,
@@ -20,6 +19,8 @@ import * as R from 'effect/Record';
 import * as Ref from 'effect/Ref';
 import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
+
+import { defineRule } from '../internal/rule';
 
 type Token = SyntaxToken | Comment;
 
@@ -559,6 +560,11 @@ function verifyPair(
 }
 
 function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<PaddingLineOption>) {
+  // Without policies no statement pair can report; avoid traversing the entire file.
+  if (Arr.isReadonlyArrayEmpty(options)) {
+    return {};
+  }
+
   const sourceCode = context.sourceCode;
 
   const selectors = Arr.fromIterable(
@@ -733,7 +739,7 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
 /**
  * Opt-in, comment-aware statement spacing with TypeScript and AST-selector matchers.
  */
-export const paddingLineBetweenStatements = Rule.define({
+export const paddingLineBetweenStatements = defineRule({
   name: 'padding-line-between-statements',
   meta: {
     type: 'layout',

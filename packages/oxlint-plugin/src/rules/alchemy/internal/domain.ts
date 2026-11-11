@@ -12,7 +12,7 @@ import {
   staticPath,
   unwrapExpression,
 } from '../../../internal/ast';
-import { namespaceMember, type ImportBindings } from '../../../internal/imports';
+import type { ImportBindings } from '../../../internal/imports';
 import { lookupVariable, soleDefinition } from '../../../internal/scope';
 
 export const DomainBlock = Schema.Literals([
@@ -55,9 +55,8 @@ function isImportBinding(sourceCode: OxlintSourceCode, node: ESTree.Node, name: 
  * @param file File being linted.
  */
 export function importedPath(node: ESTree.Node, file: DomainFile): Opt.Option<ReadonlyArray<string>> {
-  return Opt.flatMap(
-    Opt.filter(staticPath(node), (path) => isImportBinding(file.sourceCode, node, Arr.headNonEmpty(path))),
-    () => file.imports.path(node),
+  return Opt.filter(file.imports.path(node), () =>
+    Opt.exists(staticPath(node), (path) => isImportBinding(file.sourceCode, node, Arr.headNonEmpty(path))),
   );
 }
 
@@ -68,9 +67,10 @@ export function importedPath(node: ESTree.Node, file: DomainFile): Opt.Option<Re
  * @param file File being linted.
  */
 export function domainBlock(node: ESTree.CallExpression, file: DomainFile): Opt.Option<DomainBlock> {
-  return importedPath(node.callee, file).pipe(
-    Opt.flatMap((path) => namespaceMember(path, 'Domain')),
+  return file.imports.member(node.callee, 'Domain').pipe(
     Opt.filter(isDomainBlock),
+    // Scope analysis is only needed for a possible Domain block, not every imported call in a barrel-import file.
+    Opt.filter(() => Opt.isSome(importedPath(node.callee, file))),
   );
 }
 

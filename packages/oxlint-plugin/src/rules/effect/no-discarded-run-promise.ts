@@ -1,11 +1,12 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 
 import { isDiscarded } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
-export const noDiscardedRunPromise: CreateRule = Rule.define({
+export const noDiscardedRunPromise: CreateRule = defineRule({
   name: 'no-discarded-run-promise',
   meta: ruleMeta({
     type: 'problem',

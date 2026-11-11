@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
@@ -9,6 +9,7 @@ import * as Schema from 'effect/Schema';
 import { staticPath } from '../../internal/ast';
 import { importBindings, namespaceMember } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isGlobalIn } from '../../internal/scope';
 import { domainSection, importedPath, isImportReference, type DomainFile } from './internal/domain';
 
@@ -76,7 +77,7 @@ function memberRoot(node: ESTree.Node): ESTree.Node {
   return root;
 }
 
-export const alchemyDomainPureDecide: CreateRule = Rule.define({
+export const alchemyDomainPureDecide: CreateRule = defineRule({
   name: 'alchemy-domain-pure-decide',
   meta: ruleMeta({
     type: 'problem',
@@ -93,6 +94,10 @@ export const alchemyDomainPureDecide: CreateRule = Rule.define({
     const ctx = yield* RuleContext;
 
     const file: DomainFile = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
+
+    if (!file.imports.hasNamespace('Domain')) {
+      return {};
+    }
 
     function isGlobal(node: ESTree.Node, name: string) {
       return isGlobalIn(ctx.sourceCode.getScope(node), node, name);
@@ -165,7 +170,11 @@ export const alchemyDomainPureDecide: CreateRule = Rule.define({
 
         return report(node, R.get(globalImpurities, name), called ? `${name}()` : name);
       }),
-      Visitor.on('Identifier', (node) => (isImportReference(node, ctx.sourceCode) ? checkModule(node) : Effect.void)),
+      Visitor.on('Identifier', (node) =>
+        file.imports.bindings.has(node.name) && isImportReference(node, ctx.sourceCode)
+          ? checkModule(node)
+          : Effect.void,
+      ),
       Visitor.on('NewExpression', (node) =>
         Arr.isReadonlyArrayEmpty(node.arguments) && Opt.contains(globalCallee(node.callee), 'Date')
           ? report(node, Opt.some('time'), 'new Date()')

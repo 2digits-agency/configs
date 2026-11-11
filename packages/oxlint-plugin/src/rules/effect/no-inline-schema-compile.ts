@@ -1,6 +1,5 @@
 import {
   Diagnostic,
-  Rule,
   RuleContext,
   Visitor,
   type CreateRule,
@@ -17,6 +16,7 @@ import * as Schema from 'effect/Schema';
 import { containsRange, findAncestor, parentOf, staticPath, unwrapExpression, walkNodes } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { lookupVariable } from '../../internal/scope';
 
 const CompilerMethod = Schema.Literals([
@@ -80,6 +80,10 @@ const isTransparentParentType = Schema.is(
  */
 function compilerMethod(node: ESTree.Node, imports: ImportBindings, sourceCode: OxlintSourceCode): Opt.Option<string> {
   const method = Opt.filter(imports.member(node, 'Schema'), isCompilerMethod);
+
+  if (Opt.isNone(method)) {
+    return method;
+  }
 
   const isImport = Opt.exists(
     Opt.flatMap(staticPath(node), ([root]) => lookupVariable(sourceCode, node, root)),
@@ -244,7 +248,7 @@ function inlineKind(
   return Opt.some(inlineSchema ? 'inlineSchema' : 'inlineCompile');
 }
 
-export const noInlineSchemaCompile: CreateRule = Rule.define({
+export const noInlineSchemaCompile: CreateRule = defineRule({
   name: 'no-inline-schema-compile',
   meta: ruleMeta({
     type: 'problem',
@@ -268,10 +272,8 @@ export const noInlineSchemaCompile: CreateRule = Rule.define({
 
     return Visitor.on('CallExpression', (node) =>
       Opt.match(
-        Opt.zipWith(
-          compilerMethod(node.callee, imports, ctx.sourceCode),
-          inlineKind(node, imports, ctx.sourceCode),
-          (method, messageId) => ({ method, messageId }),
+        Opt.flatMap(compilerMethod(node.callee, imports, ctx.sourceCode), (method) =>
+          Opt.map(inlineKind(node, imports, ctx.sourceCode), (messageId) => ({ method, messageId })),
         ),
         {
           onNone: () => Effect.void,

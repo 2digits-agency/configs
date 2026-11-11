@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -7,6 +7,7 @@ import { argumentAt, isFunctionNode, type FunctionNode } from '../../internal/as
 import { namespaceImport, withOptionalFix } from '../../internal/fixes';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isImportedApi } from '../../internal/scope';
 
 function emptyRegister(node: ESTree.CallExpression): Opt.Option<FunctionNode> {
@@ -19,7 +20,7 @@ function emptyRegister(node: ESTree.CallExpression): Opt.Option<FunctionNode> {
   );
 }
 
-export const noEmptyEffectCallback: CreateRule = Rule.define({
+export const noEmptyEffectCallback: CreateRule = defineRule({
   name: 'no-empty-effect-callback',
   meta: ruleMeta({
     type: 'suggestion',

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -6,6 +6,7 @@ import * as Schema from 'effect/Schema';
 
 import { argumentAt, isErrorConstructor, isSomeSame, parentOfType, staticPath } from '../../internal/ast';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 
 const ErrorLikeName = Schema.Literals(['error', 'err', 'e', 'cause', 'exception', 'ex']);
 
@@ -70,7 +71,7 @@ function interpolatedName(node: ESTree.TemplateLiteral): Opt.Option<string> {
     : Opt.none();
 }
 
-export const banErrorString: CreateRule = Rule.define({
+export const banErrorString: CreateRule = defineRule({
   name: 'ban-error-string',
   meta: ruleMeta({
     type: 'problem',

@@ -1,12 +1,13 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { containingEffectGen, containingHandler, containingWorker } from './internal/worker';
 
-export const alchemyNoRuntimeConfig: CreateRule = Rule.define({
+export const alchemyNoRuntimeConfig: CreateRule = defineRule({
   name: 'alchemy-no-runtime-config',
   meta: ruleMeta({
     type: 'problem',

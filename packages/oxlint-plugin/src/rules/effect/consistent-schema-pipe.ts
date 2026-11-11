@@ -1,13 +1,5 @@
 import type * as EffectBarrel from 'effect';
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, RuleContext, Visitor, type CreateRule, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
@@ -29,6 +21,7 @@ import {
 } from '../../internal/ast';
 import { importBindings, namespaceMember, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { defineRule } from '../../internal/rule';
 import { isImportedApiIn, lookupVariable } from '../../internal/scope';
 
 type SchemaApi = keyof typeof Schema;
@@ -570,7 +563,7 @@ function render(head: ESTree.Expression, steps: ReadonlyArray<Step>): string {
   return pipeSteps(target, pending, head);
 }
 
-export const consistentSchemaPipe: CreateRule = Rule.define({
+export const consistentSchemaPipe: CreateRule = defineRule({
   name: 'consistent-schema-pipe',
   meta: ruleMeta({
     type: 'suggestion',
