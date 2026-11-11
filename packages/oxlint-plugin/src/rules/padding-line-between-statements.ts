@@ -270,9 +270,8 @@ function isCJSExport(node: ESTree.Node): boolean {
 }
 
 function getActualLastToken(node: ESTree.Node, sourceCode: SourceCode): Token {
-  const last = Opt.getOrThrowWith(
-    Opt.fromNullOr(sourceCode.getLastToken(node)),
-    () => new Error('Padding rule invariant: statement has no token'),
+  const last = Opt.fromNullOr(sourceCode.getLastToken(node)).pipe(
+    Opt.getOrThrowWith(() => new Error('Padding rule invariant: statement has no token')),
   );
 
   const prev = sourceCode.getTokenBefore(last);
@@ -466,9 +465,8 @@ function getPaddingLineSequences(
 
   if (nextNode.loc.start.line - prevToken.loc.end.line >= 2) {
     do {
-      const token = Opt.getOrThrowWith(
-        Opt.fromNullOr(sourceCode.getTokenAfter(prevToken, { includeComments: true })),
-        () => new Error('Padding rule invariant: next statement token is missing'),
+      const token = Opt.fromNullOr(sourceCode.getTokenAfter(prevToken, { includeComments: true })).pipe(
+        Opt.getOrThrowWith(() => new Error('Padding rule invariant: next statement token is missing')),
       );
 
       if (token.loc.start.line - prevToken.loc.end.line >= 2) {
@@ -561,14 +559,11 @@ function verifyPair(
 function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<PaddingLineOption>) {
   const sourceCode = context.sourceCode;
 
-  const selectors = Arr.fromIterable(
-    new Set(
-      Fn.pipe(
-        options,
-        Arr.flatMap((option) => [...Arr.ensure(option.prev), ...Arr.ensure(option.next)]),
-        Arr.flatMap((matcher) => (P.isString(matcher) ? [] : [matcher.selector])),
-      ),
-    ),
+  const selectors = Fn.pipe(
+    options,
+    Arr.flatMap((option) => [...Arr.ensure(option.prev), ...Arr.ensure(option.next)]),
+    Arr.flatMap((matcher) => (P.isString(matcher) ? [] : [matcher.selector])),
+    Arr.dedupe,
   );
 
   // Collections are mutated only inside Ref updates, avoiding quadratic copies during traversal.

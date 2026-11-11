@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
@@ -11,7 +11,7 @@ const NativeDateFormattingMethod = Schema.Literals(['toISOString', 'toLocaleDate
 
 const isNativeDateFormattingMethod = Schema.is(NativeDateFormattingMethod);
 
-export const preferEffectDateTime: CreateRule = Rule.define({
+export const preferEffectDateTime = Rule.define({
   name: 'prefer-effect-datetime',
   meta: ruleMeta({
     type: 'suggestion',

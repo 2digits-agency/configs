@@ -3,7 +3,6 @@ import {
   Rule,
   RuleContext,
   Visitor,
-  type CreateRule,
   type Definition,
   type ESTree,
   type OxlintSourceCode,
@@ -18,10 +17,10 @@ import * as Tuple from 'effect/Tuple';
 
 import { callbackCall, containsRange, isConstDeclaration, isFunctionNode, type FunctionNode } from '../../internal/ast';
 import { argumentText } from '../../internal/fixes';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable } from '../../internal/scope';
-import { forwardedCall, isDetachableCallee, isEffectGuard, isTypeGuard, type Forwarding } from './internal/forwarding';
+import { forwardedCall, isDetachableCallee, isEffectGuard, isTypeGuard } from './internal/forwarding';
 
 // Modules whose callbacks also receive an index or key, so `Arr.map(xs, f)` would pass `f` a second argument.
 const isIndexedModule = Schema.is(
@@ -172,37 +171,6 @@ const isMultiArgumentApi = Schema.is(
  */
 const isContextualModule = Schema.is(Schema.Literals(['Match']));
 
-function receivesOneArgument(call: ESTree.CallExpression, imports: ImportBindings): boolean {
-  return Opt.exists(
-    imports.path(call.callee),
-    (path) =>
-      path.length === 2 &&
-      !Opt.exists(Arr.head(path), (module) => isIndexedModule(module) || isContextualModule(module)) &&
-      !isMultiArgumentApi(Arr.join(path, '.')),
-  );
-}
-
-/**
- * The call a callback forwards to, when the Effect API that receives it passes one argument and the callee can replace
- * the callback as is.
- *
- * @param node Callback.
- * @param imports Import bindings of the file.
- */
-function replaceableForwarding(node: FunctionNode, imports: ImportBindings): Opt.Option<Forwarding> {
-  return callbackCall(node).pipe(
-    Opt.filter((parent) => receivesOneArgument(parent, imports)),
-    Opt.flatMap(() => forwardedCall(node)),
-    Opt.filter(
-      ({ exact, call }) =>
-        exact &&
-        isDetachableCallee(call.callee, imports) &&
-        // A type predicate, as `Schema.declare` needs, is lost when passing a callee that only returns `boolean`.
-        (!isTypeGuard(node) || isEffectGuard(call.callee, imports)),
-    ),
-  );
-}
-
 /**
  * Whether a binding the callee reads already holds its final value wherever the callback is created. Passing the callee
  * reads the binding then, not when the callback runs: a `let` may change after it, and a `const` declared later, or
@@ -310,7 +278,7 @@ function isAnnotated(node: FunctionNode): boolean {
 /**
  * Report callbacks of Effect APIs that only pass their parameters on, such as `Effect.map((value) => f(value))`.
  */
-export const noForwardingLambda: CreateRule = Rule.define({
+export const noForwardingLambda = Rule.define({
   name: 'no-forwarding-lambda',
   meta: ruleMeta({
     type: 'suggestion',
@@ -352,11 +320,26 @@ export const noForwardingLambda: CreateRule = Rule.define({
       );
     });
 
+    // Report when the Effect API that receives the callback passes it one argument and the callee can replace it as is.
     function check(node: FunctionNode) {
-      return Opt.match(replaceableForwarding(node, imports), {
-        onNone: () => Effect.void,
-        onSome: ({ call }) => report(node, call),
-      });
+      return callbackCall(node).pipe(
+        Opt.flatMap((parent) => imports.path(parent.callee)),
+        Opt.filter(
+          (path) =>
+            path.length === 2 &&
+            !Opt.exists(Arr.head(path), (module) => isIndexedModule(module) || isContextualModule(module)) &&
+            !isMultiArgumentApi(Arr.join(path, '.')),
+        ),
+        Opt.flatMap(() => forwardedCall(node)),
+        Opt.filter(
+          ({ exact, call }) =>
+            exact &&
+            isDetachableCallee(call.callee, imports) &&
+            // A type predicate, as `Schema.declare` needs, is lost when passing a callee that only returns `boolean`.
+            (!isTypeGuard(node) || isEffectGuard(call.callee, imports)),
+        ),
+        Opt.match({ onNone: () => Effect.void, onSome: ({ call }) => report(node, call) }),
+      );
     }
 
     return Visitor.merge(Visitor.on('ArrowFunctionExpression', check), Visitor.on('FunctionExpression', check));

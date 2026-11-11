@@ -1,12 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
@@ -79,8 +71,7 @@ function hasLiteralValue(node: ESTree.Expression | ESTree.SpreadElement | null):
 // Struct.assign's generic `that` parameter does not pass that type on.
 function needsContextualType(value: ESTree.Expression): boolean {
   return (
-    hasUntypedParameter(value) ||
-    (value.type === 'CallExpression' && Arr.some(value.arguments, (argument) => hasUntypedParameter(argument)))
+    hasUntypedParameter(value) || (value.type === 'CallExpression' && Arr.some(value.arguments, hasUntypedParameter))
   );
 }
 
@@ -147,7 +138,7 @@ function assignArguments(node: ESTree.ObjectExpression, sourceCode: OxlintSource
 /**
  * Prefer Struct.assign over spreading objects into a merged or updated copy.
  */
-export const preferStructAssign: CreateRule = Rule.define({
+export const preferStructAssign = Rule.define({
   name: 'prefer-struct-assign',
   meta: ruleMeta({
     type: 'suggestion',

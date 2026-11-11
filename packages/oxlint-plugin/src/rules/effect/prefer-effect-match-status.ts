@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
@@ -98,7 +98,7 @@ function rangeSide(node: Operand, text: (node: ESTree.Node) => string): Opt.Opti
   });
 }
 
-export const preferEffectMatchStatus: CreateRule = Rule.define({
+export const preferEffectMatchStatus = Rule.define({
   name: 'prefer-effect-match-status',
   meta: ruleMeta({
     type: 'suggestion',

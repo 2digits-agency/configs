@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -15,7 +15,7 @@ const renamedProperties = [
   ['bindings', 'env'],
 ] as const;
 
-export const alchemyNoV1WorkerProperties: CreateRule = Rule.define({
+export const alchemyNoV1WorkerProperties = Rule.define({
   name: 'alchemy-no-v1-worker-properties',
   meta: ruleMeta({
     type: 'problem',
@@ -35,7 +35,10 @@ export const alchemyNoV1WorkerProperties: CreateRule = Rule.define({
       const imported = yield* isImportedApi(node.callee);
 
       const renamed = Arr.flatMap(renamedProperties, ([old, replacement]) =>
-        Opt.toArray(Opt.map(objectProperty(options, old), (property) => ({ old, replacement, property }))),
+        objectProperty(options, old).pipe(
+          Opt.map((property) => ({ old, replacement, property })),
+          Opt.toArray,
+        ),
       );
 
       // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
@@ -56,12 +59,10 @@ export const alchemyNoV1WorkerProperties: CreateRule = Rule.define({
     });
 
     return Visitor.on('CallExpression', (node) =>
-      Opt.match(
-        argumentAt(node, 1).pipe(
-          Opt.filter(() => isCloudflareWorker(node.callee, imports)),
-          Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
-        ),
-        { onNone: () => Effect.void, onSome: (options) => check(node, options) },
+      argumentAt(node, 1).pipe(
+        Opt.filter(() => isCloudflareWorker(node.callee, imports)),
+        Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
+        Opt.match({ onNone: () => Effect.void, onSome: (options) => check(node, options) }),
       ),
     );
   },

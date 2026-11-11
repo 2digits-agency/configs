@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -62,7 +62,7 @@ function replaces(format: FormatPackage, member: string): boolean {
   return format.members === 'all' || Arr.contains(format.members, member);
 }
 
-export const preferEffectFormatParser: CreateRule = Rule.define({
+export const preferEffectFormatParser = Rule.define({
   name: 'prefer-effect-format-parser',
   meta: ruleMeta({
     type: 'suggestion',
@@ -91,17 +91,17 @@ export const preferEffectFormatParser: CreateRule = Rule.define({
       const uses = Arr.flatMap(ctx.sourceCode.getDeclaredVariables(specifier), ({ references }) =>
         Arr.getSomes(
           Arr.map(references, ({ identifier }) =>
-            Opt.flatMap(
+            parentOf(identifier).pipe(
               Opt.filter(
-                parentOf(identifier),
                 (parent): parent is ESTree.MemberExpression =>
                   parent.type === 'MemberExpression' && parent.object === identifier,
               ),
-              (member) =>
-                Opt.map(
-                  Opt.filter(staticPropertyName(member), (name) => replaces(format, name)),
-                  (name) => [member, `${source} ${name}`] as const,
+              Opt.flatMap((member) =>
+                staticPropertyName(member).pipe(
+                  Opt.filter((name) => replaces(format, name)),
+                  Opt.map((name) => [member, `${source} ${name}`] as const),
                 ),
+              ),
             ),
           ),
         ),

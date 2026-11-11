@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -36,9 +36,9 @@ function isCorsApi(node: ESTree.Node, imports: ImportBindings): boolean {
  * @param options CORS options.
  */
 function credentialedWildcard(options: ESTree.ObjectExpression): boolean {
-  const credentials = Opt.getOrElse(
-    Opt.map(objectProperty(options, 'credentials'), ({ value }): ESTree.Node => value),
-    (): ESTree.Node => options,
+  const credentials = objectProperty(options, 'credentials').pipe(
+    Opt.map(({ value }): ESTree.Node => value),
+    Opt.getOrElse((): ESTree.Node => options),
   );
 
   return (
@@ -50,7 +50,7 @@ function credentialedWildcard(options: ESTree.ObjectExpression): boolean {
   );
 }
 
-export const corsCredentialsWithWildcard: CreateRule = Rule.define({
+export const corsCredentialsWithWildcard = Rule.define({
   name: 'cors-credentials-with-wildcard',
   meta: ruleMeta({
     type: 'problem',

@@ -1,13 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  SourceCode,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintScope,
-} from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, SourceCode, Visitor, type ESTree, type OxlintScope } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -113,13 +104,16 @@ function nullishCheck(
       ? Opt.some(nullMembers)
       : Opt.liftPredicate(undefinedMembers, () => isGlobalIn(scope, value, 'undefined'));
 
-  return Opt.map(Opt.flatMap(members, R.get(node.operator)), (member) => ({
-    namespace: 'P',
-    member,
-    subject,
-    negated: false,
-    equivalence: 'exact',
-  }));
+  return members.pipe(
+    Opt.flatMap(R.get(node.operator)),
+    Opt.map((member) => ({
+      namespace: 'P',
+      member,
+      subject,
+      negated: false,
+      equivalence: 'exact',
+    })),
+  );
 }
 
 function typeofCheck(
@@ -195,7 +189,7 @@ function isInsideRefinement(node: ESTree.Node): boolean {
 /**
  * Prefer Effect Predicate guards over hand-written runtime type and nullish checks in Effect files.
  */
-export const preferEffectPredicate: CreateRule = Rule.define({
+export const preferEffectPredicate = Rule.define({
   name: 'prefer-effect-predicate',
   meta: ruleMeta({
     type: 'suggestion',
@@ -256,12 +250,9 @@ export const preferEffectPredicate: CreateRule = Rule.define({
 
     return Visitor.on('BinaryExpression', (node) =>
       Effect.flatMap(SourceCode.getScope(node), (scope) =>
-        Opt.match(
-          Opt.filter(
-            node.operator === 'instanceof' ? instanceCheck(node, scope) : comparisonCheck(node, scope),
-            () => !isInsideRefinement(node),
-          ),
-          { onNone: () => Effect.void, onSome: (check) => report(node, check) },
+        (node.operator === 'instanceof' ? instanceCheck(node, scope) : comparisonCheck(node, scope)).pipe(
+          Opt.filter(() => !isInsideRefinement(node)),
+          Opt.match({ onNone: () => Effect.void, onSome: (check) => report(node, check) }),
         ),
       ),
     );

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Schema from 'effect/Schema';
 
@@ -26,7 +26,7 @@ const SsePackage = Schema.Literals([
 
 const isSsePackage = Schema.is(SsePackage);
 
-export const preferEffectSse: CreateRule = Rule.define({
+export const preferEffectSse = Rule.define({
   name: 'prefer-effect-sse',
   meta: ruleMeta({
     type: 'suggestion',

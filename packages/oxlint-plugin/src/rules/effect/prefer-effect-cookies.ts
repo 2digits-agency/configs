@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
@@ -153,21 +153,7 @@ function isAttributeLiteral(node: ESTree.Node): boolean {
   return isStringLiteral(node) && attributePattern.test(node.value);
 }
 
-/**
- * Whether a concatenation joins a value with cookie attributes, as in `token + '; HttpOnly'`. Two literals are a
- * fixture, not serialization.
- *
- * @param node Binary expression.
- */
-function isCookieConcat(node: ESTree.BinaryExpression): boolean {
-  return (
-    node.operator === '+' &&
-    ((isAttributeLiteral(node.right) && !isStringLiteral(node.left)) ||
-      (isAttributeLiteral(node.left) && !isStringLiteral(node.right)))
-  );
-}
-
-export const preferEffectCookies: CreateRule = Rule.define({
+export const preferEffectCookies = Rule.define({
   name: 'prefer-effect-cookies',
   meta: ruleMeta({
     type: 'suggestion',
@@ -231,7 +217,14 @@ export const preferEffectCookies: CreateRule = Rule.define({
           ? report(node, 'serializeCookie')
           : Effect.void,
       ),
-      Visitor.on('BinaryExpression', (node) => (isCookieConcat(node) ? report(node, 'serializeCookie') : Effect.void)),
+      // `token + '; HttpOnly'`. Two literals are a fixture, not serialization.
+      Visitor.on('BinaryExpression', (node) =>
+        node.operator === '+' &&
+        ((isAttributeLiteral(node.right) && !isStringLiteral(node.left)) ||
+          (isAttributeLiteral(node.left) && !isStringLiteral(node.right)))
+          ? report(node, 'serializeCookie')
+          : Effect.void,
+      ),
     );
   },
 });

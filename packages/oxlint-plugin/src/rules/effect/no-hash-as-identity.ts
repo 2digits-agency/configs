@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import type * as Hash from 'effect/Hash';
@@ -19,14 +19,7 @@ function isHashCall(node: ESTree.Node, imports: ImportBindings): boolean {
   return node.type === 'CallExpression' && imports.isApi(node.callee, 'Hash', 'hash' satisfies keyof typeof Hash);
 }
 
-function isKeyedCall(node: ESTree.CallExpression): boolean {
-  return (
-    node.callee.type === 'MemberExpression' &&
-    Opt.exists(staticPath(node.callee), (path) => isKeyedMethod(Arr.lastNonEmpty(path)))
-  );
-}
-
-export const noHashAsIdentity: CreateRule = Rule.define({
+export const noHashAsIdentity = Rule.define({
   name: 'no-hash-as-identity',
   meta: ruleMeta({
     type: 'problem',
@@ -63,7 +56,8 @@ export const noHashAsIdentity: CreateRule = Rule.define({
           : Effect.void,
       ),
       Visitor.on('CallExpression', (node) =>
-        isKeyedCall(node)
+        node.callee.type === 'MemberExpression' &&
+        Opt.exists(staticPath(node.callee), (path) => isKeyedMethod(Arr.lastNonEmpty(path)))
           ? Opt.match(argumentAt(node, 0), {
               onNone: () => Effect.void,
               onSome: (key) => reportWhen(key, isHashValue(key)),

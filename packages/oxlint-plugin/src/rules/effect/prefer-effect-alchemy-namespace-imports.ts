@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -8,7 +8,7 @@ import { ruleMeta } from '../../internal/meta';
 import { namespaceFix } from './internal/import-fixes';
 import { isTypeOnlyImport, namespaceAlias, submoduleName } from './internal/import-style';
 
-export const preferEffectAlchemyNamespaceImports: CreateRule = Rule.define({
+export const preferEffectAlchemyNamespaceImports = Rule.define({
   name: 'prefer-effect-alchemy-namespace-imports',
   meta: ruleMeta({
     type: 'suggestion',
@@ -55,12 +55,12 @@ export const preferEffectAlchemyNamespaceImports: CreateRule = Rule.define({
     }
 
     return Visitor.on('ImportDeclaration', (node) =>
-      Opt.match(
-        Opt.filter(submoduleName(node.source.value), () => node.importKind !== 'type'),
-        {
+      submoduleName(node.source.value).pipe(
+        Opt.filter(() => node.importKind !== 'type'),
+        Opt.match({
           onNone: () => Effect.void,
           onSome: (moduleName) => reportImport(node, namespaceAlias(moduleName)),
-        },
+        }),
       ),
     );
   },

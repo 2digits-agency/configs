@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as HashSet from 'effect/HashSet';
 import * as Opt from 'effect/Option';
@@ -9,7 +9,7 @@ import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { functionResult, promiseInitializer, promiseThunkArgument } from './internal/callbacks';
 
-export const noAlreadyStartedPromise: CreateRule = Rule.define({
+export const noAlreadyStartedPromise = Rule.define({
   name: 'no-already-started-promise',
   meta: ruleMeta({
     type: 'problem',

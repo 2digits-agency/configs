@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as Config from 'effect/Config';
 import * as Effect from 'effect/Effect';
@@ -41,20 +41,7 @@ const isDirectoryVariable = Schema.is(DirectoryVariable);
 
 const osSources: ReadonlyArray<string> = ['node:os', 'os'];
 
-/**
- * The directory variable a `process.env.NAME` or `process.env['NAME']` read names, unless it is assigned to.
- *
- * @param node Member expression.
- */
-function processEnvVariable(node: ESTree.MemberExpression): Opt.Option<string> {
-  const isAssigned = node.parent.type === 'AssignmentExpression' && node.parent.left === node;
-
-  return isAssigned || !Opt.exists(staticPath(node.object), (path) => Arr.join(path, '.') === 'process.env')
-    ? Opt.none()
-    : Opt.filter(staticPropertyName(node), isDirectoryVariable);
-}
-
-export const preferEffectUserDirectories: CreateRule = Rule.define({
+export const preferEffectUserDirectories = Rule.define({
   name: 'prefer-effect-user-directories',
   meta: ruleMeta({
     type: 'suggestion',
@@ -99,23 +86,32 @@ export const preferEffectUserDirectories: CreateRule = Rule.define({
           >) && isImportedApiIn(ctx.sourceCode, node.callee);
 
         const configVariable = isConfigRead
-          ? Opt.filter(
-              Opt.map(Opt.filter(argumentAt(node, 0), isStringLiteral), ({ value }) => value),
-              isDirectoryVariable,
+          ? argumentAt(node, 0).pipe(
+              Opt.filter(isStringLiteral),
+              Opt.map(({ value }) => value),
+              Opt.filter(isDirectoryVariable),
             )
           : Opt.none();
 
         return Opt.match(configVariable, { onNone: () => Effect.void, onSome: (name) => reportVariable(node, name) });
       }),
-      Visitor.on('MemberExpression', (node) =>
-        Opt.match(processEnvVariable(node), {
+      // `process.env.NAME` or `process.env['NAME']`, unless it is assigned to.
+      Visitor.on('MemberExpression', (node) => {
+        const isAssigned = node.parent.type === 'AssignmentExpression' && node.parent.left === node;
+
+        const envVariable =
+          isAssigned || !Opt.exists(staticPath(node.object), (path) => Arr.join(path, '.') === 'process.env')
+            ? Opt.none()
+            : Opt.filter(staticPropertyName(node), isDirectoryVariable);
+
+        return Opt.match(envVariable, {
           onNone: () => Effect.void,
           onSome: (name) =>
             node.object.type === 'MemberExpression'
               ? Effect.when(reportVariable(node, name), isGlobalIdentifier(node.object.object, 'process'))
               : Effect.void,
-        }),
-      ),
+        });
+      }),
     );
   },
 });

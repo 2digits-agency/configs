@@ -4,13 +4,13 @@ import {
   RuleContext,
   Scope,
   Visitor,
-  type CreateRule,
   type ESTree,
   type OxlintScope,
   type Reference,
 } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Equivalence from 'effect/Equivalence';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
@@ -18,6 +18,7 @@ import * as Schema from 'effect/Schema';
 
 import {
   argumentAt,
+  findAncestor,
   isSomeSame,
   parentOf,
   parentOfType,
@@ -86,7 +87,7 @@ interface BrowserApiRead {
  * Report browser-only globals read while a component or hook renders; the server render cannot match them, and a
  * `typeof window` guard is what makes the two renders differ.
  */
-export const noBrowserApiInRender: CreateRule = Rule.define({
+export const noBrowserApiInRender = Rule.define({
   name: 'no-browser-api-in-render',
   meta: ruleMeta({
     type: 'problem',
@@ -130,20 +131,22 @@ export const noBrowserApiInRender: CreateRule = Rule.define({
  * @param globalScope The file's global scope.
  */
 function globalReferences(globalScope: OxlintScope | null): ReadonlyArray<Reference> {
-  return Opt.match(Opt.fromNullishOr(globalScope), {
-    onNone: () => [],
-    onSome: (scope) =>
-      Arr.dedupeWith(
-        [
-          ...Scope.throughReferences(scope),
-          ...Arr.flatMap(
-            Arr.filter(Scope.variables(scope), ({ defs }) => Arr.isReadonlyArrayEmpty(defs)),
-            Scope.getReferences,
-          ),
-        ],
-        (left, right) => left === right,
-      ),
-  });
+  return Opt.fromNullishOr(globalScope).pipe(
+    Opt.match({
+      onNone: () => [],
+      onSome: (scope) =>
+        Arr.dedupeWith(
+          [
+            ...Scope.throughReferences(scope),
+            ...Arr.flatMap(
+              Arr.filter(Scope.variables(scope), ({ defs }) => Arr.isReadonlyArrayEmpty(defs)),
+              Scope.getReferences,
+            ),
+          ],
+          Equivalence.strictEqual(),
+        ),
+    }),
+  );
 }
 
 /**
@@ -161,10 +164,13 @@ function browserApiRead(identifier: ESTree.Node): Opt.Option<BrowserApiRead> {
   const read: Opt.Option<BrowserApiRead> =
     identifier.name === 'globalThis'
       ? Opt.flatMap(parentOfType(identifier, 'MemberExpression'), (parent) =>
-          Opt.map(Opt.filter(staticPropertyName(parent), isBrowserGlobal), (property) => ({
-            name: `globalThis.${property}`,
-            node: parent,
-          })),
+          staticPropertyName(parent).pipe(
+            Opt.filter(isBrowserGlobal),
+            Opt.map((property) => ({
+              name: `globalThis.${property}`,
+              node: parent,
+            })),
+          ),
         )
       : Opt.liftPredicate({ name: identifier.name, node: identifier }, ({ name }) => isBrowserGlobal(name));
 
@@ -189,18 +195,9 @@ function browserApiRead(identifier: ESTree.Node): Opt.Option<BrowserApiRead> {
  */
 function runsDuringRender(node: ESTree.Node): boolean {
   return Opt.exists(
-    findFunction(node),
+    findAncestor(node, isFunction),
     (fn) => isComponentOrHook(fn) || (isRenderTimeCallback(fn) && runsDuringRender(fn)),
   );
-}
-
-/**
- * The nearest function around a node.
- *
- * @param node Start node, not tested itself.
- */
-function findFunction(node: ESTree.Node): Opt.Option<FunctionNode> {
-  return Opt.flatMap(parentOf(node), (parent) => (isFunction(parent) ? Opt.some(parent) : findFunction(parent)));
 }
 
 /**
@@ -232,11 +229,9 @@ function isComponentOrHook(fn: FunctionNode): boolean {
  * @param node Function or wrapper call.
  */
 function outermostWrapper(node: ESTree.Node): ESTree.Node {
-  return Opt.match(
-    Opt.filter(parentOfType(node, 'CallExpression'), (parent) =>
-      Opt.exists(calleeName(parent.callee), isComponentWrapperName),
-    ),
-    { onNone: () => node, onSome: outermostWrapper },
+  return parentOfType(node, 'CallExpression').pipe(
+    Opt.filter((parent) => Opt.exists(calleeName(parent.callee), isComponentWrapperName)),
+    Opt.match({ onNone: () => node, onSome: outermostWrapper }),
   );
 }
 

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -85,23 +85,11 @@ function candidates(
     : [];
 }
 
-function locallyExportedNames(program: ESTree.Program): ReadonlyArray<string> {
-  return Arr.flatMap(program.body, (statement) => {
-    if (statement.type === 'ExportNamedDeclaration' && !statement.source) {
-      return Arr.map(statement.specifiers, (specifier) => moduleExportName(specifier.local));
-    }
-
-    return statement.type === 'ExportDefaultDeclaration' && statement.declaration.type === 'Identifier'
-      ? [statement.declaration.name]
-      : [];
-  });
-}
-
 /**
  * Report module-private functions that are used once and short enough to read at their call site: by default, a
  * declaration of at most three lines.
  */
-export const noSingleUsePrivateFunction: CreateRule = Rule.define({
+export const noSingleUsePrivateFunction = Rule.define({
   name: 'no-single-use-private-function',
   meta: ruleMeta({
     type: 'suggestion',
@@ -173,7 +161,15 @@ export const noSingleUsePrivateFunction: CreateRule = Rule.define({
     }
 
     return Visitor.on('Program', (program) => {
-      const exported = locallyExportedNames(program);
+      const exported = Arr.flatMap(program.body, (statement): ReadonlyArray<string> => {
+        if (statement.type === 'ExportNamedDeclaration' && !statement.source) {
+          return Arr.map(statement.specifiers, (specifier) => moduleExportName(specifier.local));
+        }
+
+        return statement.type === 'ExportDefaultDeclaration' && statement.declaration.type === 'Identifier'
+          ? [statement.declaration.name]
+          : [];
+      });
 
       // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
       return Effect.forEach(

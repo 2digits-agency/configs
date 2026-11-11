@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
@@ -76,7 +76,7 @@ function memberRoot(node: ESTree.Node): ESTree.Node {
   return root;
 }
 
-export const alchemyDomainPureDecide: CreateRule = Rule.define({
+export const alchemyDomainPureDecide = Rule.define({
   name: 'alchemy-domain-pure-decide',
   meta: ruleMeta({
     type: 'problem',
@@ -99,20 +99,20 @@ export const alchemyDomainPureDecide: CreateRule = Rule.define({
     }
 
     function report(node: ESTree.Node, impurity: Opt.Option<Impurity>, api: string) {
-      return Opt.match(
-        Opt.filter(impurity, () => Opt.exists(domainSection(node, file), ({ section }) => section === 'decide')),
-        {
+      return impurity.pipe(
+        Opt.filter(() => Opt.exists(domainSection(node, file), ({ section }) => section === 'decide')),
+        Opt.match({
           onNone: () => Effect.void,
           onSome: (messageId) => ctx.report(Diagnostic.fromId({ node, messageId, data: { api } })),
-        },
+        }),
       );
     }
 
     // `Clock.currentTimeMillis`, or `currentTimeMillis` imported from `effect/Clock`.
     function checkModule(node: ESTree.Node) {
-      return Opt.match(
-        Opt.filter(importedPath(node, file), (path) => path.length === 2),
-        {
+      return importedPath(node, file).pipe(
+        Opt.filter((path) => path.length === 2),
+        Opt.match({
           onNone: () => Effect.void,
           onSome: (path) => {
             const name = Arr.join(path, '.');
@@ -125,7 +125,7 @@ export const alchemyDomainPureDecide: CreateRule = Rule.define({
               name,
             );
           },
-        },
+        }),
       );
     }
 
@@ -136,9 +136,9 @@ export const alchemyDomainPureDecide: CreateRule = Rule.define({
       }
 
       return callee.type === 'MemberExpression' && isGlobal(callee.object, 'globalThis')
-        ? Opt.flatMap(
-            Opt.filter(staticPath(callee), (path) => path.length === 2),
-            (path) => Arr.get(path, 1),
+        ? staticPath(callee).pipe(
+            Opt.filter((path) => path.length === 2),
+            Opt.flatMap((path) => Arr.get(path, 1)),
           )
         : Opt.none();
     }
@@ -176,15 +176,13 @@ export const alchemyDomainPureDecide: CreateRule = Rule.define({
           Match.when('Date', () => report(node, Opt.some('time'), 'Date()')),
           Match.when('fetch', () => report(node, Opt.some('io'), 'fetch()')),
           Match.orElse(() =>
-            Opt.match(
-              Opt.filter(
-                Opt.flatMap(importedPath(node.callee, file), (path) => namespaceMember(path, 'Effect')),
-                isEffectIo,
-              ),
-              {
+            importedPath(node.callee, file).pipe(
+              Opt.flatMap(namespaceMember('Effect')),
+              Opt.filter(isEffectIo),
+              Opt.match({
                 onNone: () => Effect.void,
                 onSome: (member) => report(node, Opt.some('io'), `Effect.${member}`),
-              },
+              }),
             ),
           ),
         ),

@@ -1,5 +1,5 @@
 import type * as EffectBarrel from 'effect';
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
@@ -147,7 +147,7 @@ function slicedUtcIso(node: ESTree.CallExpression, imports: ImportBindings): Opt
   );
 }
 
-export const noUtcIsoSlicing: CreateRule = Rule.define({
+export const noUtcIsoSlicing = Rule.define({
   name: 'no-utc-iso-slicing',
   meta: ruleMeta({
     type: 'problem',

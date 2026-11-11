@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -37,7 +37,7 @@ function wrapsService(node: ESTree.CallExpression, imports: ImportBindings): boo
   );
 }
 
-export const noOptionOfService: CreateRule = Rule.define({
+export const noOptionOfService = Rule.define({
   name: 'no-option-of-service',
   meta: ruleMeta({
     type: 'problem',

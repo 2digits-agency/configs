@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -30,19 +30,6 @@ function isManualQueryTemplate(node: ESTree.TemplateLiteral): boolean {
 }
 
 /**
- * Whether a concatenation appends a value right after a query key, as in `'/users?page=' + page` or `base + '?page=' +
- * page`.
- *
- * @param node Binary expression.
- */
-function isManualQueryConcat(node: ESTree.BinaryExpression): boolean {
-  // `base + '?page=' + page` parses as `(base + '?page=') + page`.
-  const prefix = node.left.type === 'BinaryExpression' && node.left.operator === '+' ? node.left.right : node.left;
-
-  return node.operator === '+' && isStringLiteral(prefix) && endsInQueryKey(prefix.value);
-}
-
-/**
  * Whether `new URLSearchParams(…)` builds parameters, from nothing or from an object or array literal. Parsing a query
  * or form body string has no `UrlParams` counterpart, so other arguments are allowed.
  *
@@ -55,7 +42,7 @@ function buildsParams(node: ESTree.NewExpression): boolean {
   });
 }
 
-export const preferEffectUrlParams: CreateRule = Rule.define({
+export const preferEffectUrlParams = Rule.define({
   name: 'prefer-effect-url-params',
   meta: ruleMeta({
     type: 'suggestion',
@@ -91,9 +78,15 @@ export const preferEffectUrlParams: CreateRule = Rule.define({
           ? ctx.report(Diagnostic.fromId({ node, messageId: 'manualQuery' }))
           : Effect.void,
       ),
-      Visitor.on('BinaryExpression', (node) =>
-        isManualQueryConcat(node) ? ctx.report(Diagnostic.fromId({ node, messageId: 'manualQuery' })) : Effect.void,
-      ),
+      Visitor.on('BinaryExpression', (node) => {
+        // `base + '?page=' + page` parses as `(base + '?page=') + page`.
+        const prefix =
+          node.left.type === 'BinaryExpression' && node.left.operator === '+' ? node.left.right : node.left;
+
+        return node.operator === '+' && isStringLiteral(prefix) && endsInQueryKey(prefix.value)
+          ? ctx.report(Diagnostic.fromId({ node, messageId: 'manualQuery' }))
+          : Effect.void;
+      }),
     );
   },
 });

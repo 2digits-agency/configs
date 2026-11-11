@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -42,7 +42,7 @@ function isDestructuredIntoSegments(node: ESTree.CallExpression): boolean {
   );
 }
 
-export const preferEffectJwt: CreateRule = Rule.define({
+export const preferEffectJwt = Rule.define({
   name: 'prefer-effect-jwt',
   meta: ruleMeta({
     type: 'suggestion',

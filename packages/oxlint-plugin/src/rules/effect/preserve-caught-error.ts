@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
@@ -35,29 +35,7 @@ function isErrorHandler(node: FunctionNode, imports: ImportBindings): boolean {
   );
 }
 
-/**
- * Whether an Effect error handler constructs a new error without passing it the caught failure.
- *
- * @param node Handler.
- * @param imports Import bindings of the file.
- */
-function wrapperDropsCause(node: FunctionNode, imports: ImportBindings): boolean {
-  const parameter = firstIdentifierParameter(node);
-
-  return (
-    P.isNotNullish(node.body) &&
-    isErrorHandler(node, imports) &&
-    walkNodes(
-      node.body,
-      (child) =>
-        child.type === 'NewExpression' &&
-        isErrorConstructor(child) &&
-        !Opt.exists(parameter, ({ name }) => containsIdentifier(child, name)),
-    )
-  );
-}
-
-export const preserveCaughtError: CreateRule = Rule.define({
+export const preserveCaughtError = Rule.define({
   name: 'preserve-caught-error',
   meta: ruleMeta({
     type: 'suggestion',
@@ -74,7 +52,17 @@ export const preserveCaughtError: CreateRule = Rule.define({
     const imports = yield* importBindings;
 
     function check(node: FunctionNode) {
-      return wrapperDropsCause(node, imports)
+      const parameter = firstIdentifierParameter(node);
+
+      return P.isNotNullish(node.body) &&
+        isErrorHandler(node, imports) &&
+        walkNodes(
+          node.body,
+          (child) =>
+            child.type === 'NewExpression' &&
+            isErrorConstructor(child) &&
+            !Opt.exists(parameter, ({ name }) => containsIdentifier(child, name)),
+        )
         ? ctx.report(Diagnostic.fromId({ node, messageId: 'droppedCause' }))
         : Effect.void;
     }

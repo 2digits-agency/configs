@@ -8,14 +8,17 @@ import {
   argumentAt,
   containsSame,
   isFunctionNode,
+  isSomeSame,
   isStringLiteral,
   parentOf,
+  parentOfType,
   staticPropertyName,
   unwrapExpression,
   type FunctionNode,
 } from '../../../internal/ast';
 import type { ImportBindings } from '../../../internal/imports';
 import { isGlobalIn, lookupVariable, soleDefinition } from '../../../internal/scope';
+import { functionResult } from './callbacks';
 
 /**
  * What the line and delimiter helpers need from the file being linted.
@@ -36,7 +39,7 @@ function staticString(node: ESTree.Node): Opt.Option<string> {
   }
 
   return node.type === 'TemplateLiteral' && Arr.isReadonlyArrayEmpty(node.expressions)
-    ? Opt.flatMap(Arr.head(node.quasis), ({ value }) => Opt.fromNullishOr(value.cooked))
+    ? Opt.flatMapNullishOr(Arr.head(node.quasis), ({ value }) => value.cooked)
     : Opt.none();
 }
 
@@ -71,9 +74,9 @@ const cellDelimiters: ReadonlySet<string> = new Set([',', ';', '\t']);
  * @param node Separator argument.
  */
 export function isCellDelimiter(node: ESTree.Node): boolean {
-  return Opt.exists(
-    Opt.orElse(staticString(node), () => regexPattern(node)),
-    (text) => cellDelimiters.has(text === String.raw`\t` ? '\t' : text),
+  return staticString(node).pipe(
+    Opt.orElse(() => regexPattern(node)),
+    Opt.exists((text) => cellDelimiters.has(text === String.raw`\t` ? '\t' : text)),
   );
 }
 
@@ -127,9 +130,9 @@ export function splitCall(
   separator: (node: ESTree.Node) => boolean,
   imports: ImportBindings,
 ): Opt.Option<Opt.Option<ESTree.Expression>> {
-  return Opt.map(
-    Opt.filter(separatorCall(node, 'split', 'String', imports), (call) => separator(call.separator)),
-    ({ subject }) => subject,
+  return separatorCall(node, 'split', 'String', imports).pipe(
+    Opt.filter((call) => separator(call.separator)),
+    Opt.map(({ subject }) => subject),
   );
 }
 
@@ -145,9 +148,9 @@ export function joinCall(
   separator: (node: ESTree.Node) => boolean,
   imports: ImportBindings,
 ): Opt.Option<Opt.Option<ESTree.Expression>> {
-  return Opt.map(
-    Opt.filter(separatorCall(node, 'join', 'Array', imports), (call) => separator(call.separator)),
-    ({ subject }) => subject,
+  return separatorCall(node, 'join', 'Array', imports).pipe(
+    Opt.filter((call) => separator(call.separator)),
+    Opt.map(({ subject }) => subject),
   );
 }
 
@@ -187,9 +190,9 @@ function isReference(node: ESTree.Node): node is ESTree.IdentifierReference {
 function initializerOf(node: ESTree.IdentifierReference, context: LineContext): Opt.Option<ESTree.Expression> {
   const variable = lookupVariable(context.sourceCode, node, node.name);
 
-  return Opt.flatMap(
-    Opt.filter(soleDefinition(variable), (definition) => definition.type === 'Variable'),
-    (definition) =>
+  return soleDefinition(variable).pipe(
+    Opt.filter((definition) => definition.type === 'Variable'),
+    Opt.flatMap((definition) =>
       definition.node.type === 'VariableDeclarator' &&
       definition.node.id.type === 'Identifier' &&
       P.isNotNullish(definition.node.init) &&
@@ -198,6 +201,7 @@ function initializerOf(node: ESTree.IdentifierReference, context: LineContext): 
       )
         ? Opt.some(definition.node.init)
         : Opt.none(),
+    ),
   );
 }
 
@@ -387,9 +391,8 @@ function iteratedValues(
   const receiver =
     call.callee.type === 'MemberExpression' && Opt.isNone(imports.path(call.callee)) ? [call.callee.object] : [];
 
-  const pipeline = Opt.match(
-    Opt.filter(parentOf(call), (parent): parent is ESTree.CallExpression => parent.type === 'CallExpression'),
-    {
+  const pipeline = parentOfType(call, 'CallExpression').pipe(
+    Opt.match({
       onNone: () => [],
       onSome: (parent) =>
         Arr.isReadonlyArrayEmpty(before) &&
@@ -401,7 +404,7 @@ function iteratedValues(
               ...Arr.takeWhile(parent.arguments, (argument) => argument !== call),
             ]
           : [],
-    },
+    }),
   );
 
   return [...receiver, ...before, ...pipeline];
@@ -414,13 +417,11 @@ function iteratedValues(
  * @param context File context.
  */
 export function isPerLineCallback(node: ESTree.Node, context: LineContext): boolean {
-  return Opt.exists(
-    Opt.filter(
-      parentOf(node),
-      (parent): parent is ESTree.CallExpression =>
-        parent.type === 'CallExpression' && containsSame<ESTree.Node>(parent.arguments, node),
+  return parentOfType(node, 'CallExpression').pipe(
+    Opt.filter((parent) => containsSame<ESTree.Node>(parent.arguments, node)),
+    Opt.exists((call) =>
+      pipelineProduces(iteratedValues(call, node, context.imports), lineSource(context), context, 3),
     ),
-    (call) => pipelineProduces(iteratedValues(call, node, context.imports), lineSource(context), context, 3),
   );
 }
 
@@ -467,7 +468,7 @@ export function isLineValue(node: ESTree.Expression, context: LineContext): bool
 
       return (
         isFunctionNode(owner) &&
-        Opt.exists(Arr.head(owner.params), (parameter) => parameter === definition.name) &&
+        isSomeSame<ESTree.Node>(Arr.head(owner.params), definition.name) &&
         isPerLineCallback(owner, context)
       );
     }
@@ -481,23 +482,6 @@ export function isLineValue(node: ESTree.Expression, context: LineContext): bool
       producesCollection(loop.right, lineSource(context), context)
     );
   });
-}
-
-/**
- * The value a callback returns for each element: the body of an expression arrow or the argument of a lone `return`.
- *
- * @param node Callback.
- */
-function callbackResult(node: FunctionNode): Opt.Option<ESTree.Expression> {
-  if (node.body?.type !== 'BlockStatement') {
-    return Opt.map(Opt.fromNullishOr(node.body as ESTree.Expression | null | undefined), unwrapExpression);
-  }
-
-  const [statement] = node.body.body;
-
-  return node.body.body.length === 1 && statement?.type === 'ReturnStatement' && P.isNotNullish(statement.argument)
-    ? Opt.some(unwrapExpression(statement.argument))
-    : Opt.none();
 }
 
 /**
@@ -516,7 +500,7 @@ function isMappingCall(node: ESTree.Node, mapping: ElementMapping): boolean {
     Arr.some(
       node.arguments,
       (argument) =>
-        mapping.mapper(argument) || (isFunctionNode(argument) && Opt.exists(callbackResult(argument), mapping.element)),
+        mapping.mapper(argument) || (isFunctionNode(argument) && Opt.exists(functionResult(argument), mapping.element)),
     )
   );
 }

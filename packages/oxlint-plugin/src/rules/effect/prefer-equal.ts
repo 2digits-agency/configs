@@ -1,12 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -69,40 +61,18 @@ function comparedPair(
   );
 }
 
-/**
- * The first object pair a chain compares field by field at least twice.
- *
- * @param node Outermost logical expression.
- * @param operators Accepted comparison operators.
- * @param sourceCode Source of the file.
- */
-function repeatedPair(
-  node: ESTree.LogicalExpression,
-  operators: ReadonlyArray<string>,
-  sourceCode: OxlintSourceCode,
-): Opt.Option<string> {
-  const pairs = Arr.getSomes(
-    Arr.map(chainOperands(node, node.operator), (operand) => comparedPair(operand, operators, sourceCode)),
-  );
-
-  return Opt.map(
-    Arr.findFirst(pairs, (pair, index) => Arr.contains(Arr.take(pairs, index), pair)),
-    (pair) => pair,
-  );
-}
-
 // `Equivalence.make((a, b) => a.x === b.x && a.y === b.y)` already is the Effect way to compare fields.
 function isEquivalenceDefinition(node: ESTree.Node, imports: ImportBindings): boolean {
-  return Opt.exists(
-    Opt.flatMap(enclosingFunction(node), (callback) => callbackApi(callback, imports)),
-    (api) => api.length === 2 && api[0] === 'Equivalence' && api[1] === 'make',
+  return enclosingFunction(node).pipe(
+    Opt.flatMap((callback) => callbackApi(callback, imports)),
+    Opt.exists((api) => api.length === 2 && api[0] === 'Equivalence' && api[1] === 'make'),
   );
 }
 
 /**
  * Prefer Equal or an Equivalence over comparing two values field by field.
  */
-export const preferEqual: CreateRule = Rule.define({
+export const preferEqual = Rule.define({
   name: 'prefer-equal',
   meta: ruleMeta({
     type: 'suggestion',
@@ -134,12 +104,17 @@ export const preferEqual: CreateRule = Rule.define({
         return Effect.void;
       }
 
-      return Opt.match(
-        Opt.filter(repeatedPair(node, operators, ctx.sourceCode), () => !isEquivalenceDefinition(node, imports)),
-        {
+      const pairs = Arr.getSomes(
+        Arr.map(chainOperands(node, node.operator), (operand) => comparedPair(operand, operators, ctx.sourceCode)),
+      );
+
+      // The first object pair the chain compares field by field at least twice.
+      return Arr.findFirst(pairs, (pair, index) => Arr.contains(Arr.take(pairs, index), pair)).pipe(
+        Opt.filter(() => !isEquivalenceDefinition(node, imports)),
+        Opt.match({
           onNone: () => Effect.void,
           onSome: (pair) => ctx.report(Diagnostic.fromId({ node, messageId: 'preferEqual', data: { pair } })),
-        },
+        }),
       );
     });
   },

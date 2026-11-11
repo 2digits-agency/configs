@@ -86,8 +86,9 @@ export function discriminantFromComparison(
  * @param node - Node whose enclosing callback is inspected.
  */
 export function isInsideBroadEffectHandler(node: ESTree.Node): boolean {
-  return Opt.exists(Opt.flatMap(enclosingFunction(node), callbackCall), (call) =>
-    isBroadEffectCatchCallee(call.callee),
+  return enclosingFunction(node).pipe(
+    Opt.flatMap(callbackCall),
+    Opt.exists((call) => isBroadEffectCatchCallee(call.callee)),
   );
 }
 

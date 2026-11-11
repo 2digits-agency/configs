@@ -1,11 +1,18 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
-import { argumentAt, isLiteral, isStringLiteral, staticPropertyName, unwrapExpression } from '../../internal/ast';
+import {
+  argumentAt,
+  isLiteral,
+  isSomeSame,
+  isStringLiteral,
+  staticPropertyName,
+  unwrapExpression,
+} from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 
@@ -57,12 +64,12 @@ function patternCharacter(node: ESTree.Expression): Opt.Option<string> {
  * @param node Replace call.
  */
 function characterSwap(node: ESTree.CallExpression): Opt.Option<string> {
-  return Opt.flatMap(
-    Opt.all([Opt.flatMap(argumentAt(node, 0), patternCharacter), argumentAt(node, 1)]),
-    ([from, replacement]) =>
+  return Opt.all([Opt.flatMap(argumentAt(node, 0), patternCharacter), argumentAt(node, 1)]).pipe(
+    Opt.flatMap(([from, replacement]) =>
       isStringLiteral(replacement) && from.length === 1 && replacement.value.length === 1
         ? Opt.some(`${from}${replacement.value}`)
         : Opt.none(),
+    ),
   );
 }
 
@@ -131,10 +138,7 @@ function pipeSwaps(node: ESTree.CallExpression, imports: ImportBindings): Readon
 }
 
 function isTwoDigitZeroPadding(node: ESTree.CallExpression): boolean {
-  return (
-    Opt.exists(argumentAt(node, 0), (length) => isLiteral(length, 2)) &&
-    Opt.exists(argumentAt(node, 1), (fill) => isLiteral(fill, '0'))
-  );
+  return Opt.exists(argumentAt(node, 0), isLiteral(2)) && Opt.exists(argumentAt(node, 1), isLiteral('0'));
 }
 
 function isStringPadStart(node: ESTree.Node, imports: ImportBindings): boolean {
@@ -170,7 +174,7 @@ function isPaddedByteHex(node: ESTree.CallExpression, imports: ImportBindings): 
     );
   }
 
-  if (parent.type !== 'CallExpression' || !Opt.exists(argumentAt(parent, 0), (first) => first === node)) {
+  if (parent.type !== 'CallExpression' || !isSomeSame<ESTree.Node>(argumentAt(parent, 0), node)) {
     return false;
   }
 
@@ -184,11 +188,11 @@ function isHexToString(node: ESTree.CallExpression): boolean {
   return (
     memberCall(node, (name) => name === 'toString') &&
     node.arguments.length === 1 &&
-    Opt.exists(argumentAt(node, 0), (radix) => isLiteral(radix, 16))
+    Opt.exists(argumentAt(node, 0), isLiteral(16))
   );
 }
 
-export const noManualEncoding: CreateRule = Rule.define({
+export const noManualEncoding = Rule.define({
   name: 'no-manual-encoding',
   meta: ruleMeta({
     type: 'suggestion',

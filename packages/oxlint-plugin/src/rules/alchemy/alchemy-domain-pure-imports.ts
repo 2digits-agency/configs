@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -37,7 +37,7 @@ function importsDomain(program: ESTree.Program): boolean {
   );
 }
 
-export const alchemyDomainPureImports: CreateRule = Rule.define({
+export const alchemyDomainPureImports = Rule.define({
   name: 'alchemy-domain-pure-imports',
   meta: ruleMeta({
     type: 'problem',

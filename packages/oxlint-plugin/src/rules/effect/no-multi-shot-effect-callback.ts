@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -35,12 +35,15 @@ function isOnceListener(node: ESTree.CallExpression): boolean {
 }
 
 function isMultiShotRegistration(node: ESTree.CallExpression, resume: string): boolean {
-  return Opt.exists(Opt.map(staticPath(node.callee), Arr.lastNonEmpty), (method) =>
-    Opt.exists(
-      R.get(multiShotHandlerIndex, method),
-      (handlerIndex) =>
-        (method !== 'addEventListener' || !isOnceListener(node)) &&
-        Opt.exists(argumentAt(node, handlerIndex), (handler) => containsIdentifier(handler, resume)),
+  return staticPath(node.callee).pipe(
+    Opt.map(Arr.lastNonEmpty),
+    Opt.exists((method) =>
+      Opt.exists(
+        R.get(multiShotHandlerIndex, method),
+        (handlerIndex) =>
+          (method !== 'addEventListener' || !isOnceListener(node)) &&
+          Opt.exists(argumentAt(node, handlerIndex), (handler) => containsIdentifier(handler, resume)),
+      ),
     ),
   );
 }
@@ -64,7 +67,7 @@ function registersMultiShot(node: ESTree.CallExpression): boolean {
   });
 }
 
-export const noMultiShotEffectCallback: CreateRule = Rule.define({
+export const noMultiShotEffectCallback = Rule.define({
   name: 'no-multi-shot-effect-callback',
   meta: ruleMeta({
     type: 'problem',

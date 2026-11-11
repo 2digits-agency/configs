@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -74,9 +74,9 @@ function annotateMethod(node: ESTree.CallExpression, imports: ImportBindings): O
   const method =
     node.callee.type === 'MemberExpression'
       ? staticPropertyName(node.callee)
-      : Opt.flatMap(
-          Opt.filter(imports.path(node.callee), ([namespace]) => namespace === 'Schema'),
-          ([, member]) => Opt.fromNullishOr(member),
+      : imports.path(node.callee).pipe(
+          Opt.filter(([namespace]) => namespace === 'Schema'),
+          Opt.flatMapNullishOr(([, member]) => member),
         );
 
   return Opt.filter(method, isAnnotateMethod);
@@ -88,9 +88,9 @@ function annotateMethod(node: ESTree.CallExpression, imports: ImportBindings): O
  * @param node Annotate call.
  */
 function nonJsonAnnotations(node: ESTree.CallExpression): ReadonlyArray<ESTree.Node> {
-  return Opt.match(
-    Opt.filter(objectArgument(node), (annotations) => Opt.isNone(objectProperty(annotations, 'jsonSchema'))),
-    {
+  return objectArgument(node).pipe(
+    Opt.filter((annotations) => Opt.isNone(objectProperty(annotations, 'jsonSchema'))),
+    Opt.match({
       onNone: () => [],
       onSome: (annotations) =>
         Arr.getSomes(
@@ -98,11 +98,11 @@ function nonJsonAnnotations(node: ESTree.CallExpression): ReadonlyArray<ESTree.N
             Opt.flatMap(objectProperty(annotations, name), ({ value }) => nonJsonValue(value)),
           ),
         ),
-    },
+    }),
   );
 }
 
-export const noNonJsonSchemaAnnotation: CreateRule = Rule.define({
+export const noNonJsonSchemaAnnotation = Rule.define({
   name: 'no-non-json-schema-annotation',
   meta: ruleMeta({
     type: 'problem',

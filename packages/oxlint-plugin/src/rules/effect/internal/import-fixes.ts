@@ -5,7 +5,7 @@ import * as Result from 'effect/Result';
 import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
 
-import { containsSame, moduleExportName } from '../../../internal/ast';
+import { containsSame, isSomeSame, moduleExportName } from '../../../internal/ast';
 import { barrelModuleSource, isModuleName, isTypeOnlyImport, namespaceAlias, submoduleName } from './import-style';
 
 /**
@@ -113,7 +113,7 @@ function valueImportFixes(
  */
 function isAliasFree(sourceCode: OxlintSourceCode, alias: string, target: Opt.Option<Variable>): boolean {
   function isTarget(variable: Variable | null) {
-    return Opt.exists(target, (own) => own === variable);
+    return isSomeSame<Variable | null>(target, variable);
   }
 
   return !Arr.some(
@@ -172,9 +172,8 @@ export function namespaceFix(sourceCode: OxlintSourceCode, node: ESTree.ImportDe
         specifier.type !== 'ImportDefaultSpecifier' && !containsSame<ESTree.Node>(typeSpecifiers, specifier),
     );
 
-    return Opt.map(
-      Opt.all(Arr.map(valueSpecifiers, (specifier) => valueImportFixes(specifier, variables, alias))),
-      (fixes) => {
+    return Opt.all(Arr.map(valueSpecifiers, (specifier) => valueImportFixes(specifier, variables, alias))).pipe(
+      Opt.map((fixes) => {
         const source = sourceCode.getText(node.source);
 
         const typeImport = Arr.isReadonlyArrayEmpty(typeSpecifiers)
@@ -188,7 +187,7 @@ export function namespaceFix(sourceCode: OxlintSourceCode, node: ESTree.ImportDe
           Diagnostic.replaceText(node, `import * as ${alias} from ${source};${typeImport}`),
           ...Arr.flatten(fixes),
         );
-      },
+      }),
     );
   });
 }

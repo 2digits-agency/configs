@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -68,7 +68,7 @@ function fflateZipImports(declaration: Opt.Option<ESTree.ImportDeclaration>): Re
   });
 }
 
-export const preferEffectArchive: CreateRule = Rule.define({
+export const preferEffectArchive = Rule.define({
   name: 'prefer-effect-archive',
   meta: ruleMeta({
     type: 'suggestion',

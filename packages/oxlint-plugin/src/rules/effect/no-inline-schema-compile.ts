@@ -3,7 +3,6 @@ import {
   Rule,
   RuleContext,
   Visitor,
-  type CreateRule,
   type ESTree,
   type OxlintSourceCode,
   type Variable,
@@ -81,9 +80,9 @@ const isTransparentParentType = Schema.is(
 function compilerMethod(node: ESTree.Node, imports: ImportBindings, sourceCode: OxlintSourceCode): Opt.Option<string> {
   const method = Opt.filter(imports.member(node, 'Schema'), isCompilerMethod);
 
-  const isImport = Opt.exists(
-    Opt.flatMap(staticPath(node), ([root]) => lookupVariable(sourceCode, node, root)),
-    ({ defs }) => Arr.every(defs, (definition) => definition.type === 'ImportBinding'),
+  const isImport = staticPath(node).pipe(
+    Opt.flatMap(([root]) => lookupVariable(sourceCode, node, root)),
+    Opt.exists(({ defs }) => Arr.every(defs, (definition) => definition.type === 'ImportBinding')),
   );
 
   return isImport ? method : Opt.none();
@@ -109,9 +108,9 @@ function isImmediatelyInvoked(node: ESTree.CallExpression, current: ESTree.Node 
  * @param node Reference.
  */
 function memberChainRoot(node: ESTree.Node): ESTree.Node {
-  return Opt.match(
-    Opt.filter(parentOf(node), (parent) => parent.type === 'MemberExpression' && parent.object === node),
-    { onNone: () => node, onSome: memberChainRoot },
+  return parentOf(node).pipe(
+    Opt.filter((parent) => parent.type === 'MemberExpression' && parent.object === node),
+    Opt.match({ onNone: () => node, onSome: memberChainRoot }),
   );
 }
 
@@ -244,7 +243,7 @@ function inlineKind(
   return Opt.some(inlineSchema ? 'inlineSchema' : 'inlineCompile');
 }
 
-export const noInlineSchemaCompile: CreateRule = Rule.define({
+export const noInlineSchemaCompile = Rule.define({
   name: 'no-inline-schema-compile',
   meta: ruleMeta({
     type: 'problem',
@@ -267,17 +266,16 @@ export const noInlineSchemaCompile: CreateRule = Rule.define({
     }
 
     return Visitor.on('CallExpression', (node) =>
-      Opt.match(
-        Opt.zipWith(
-          compilerMethod(node.callee, imports, ctx.sourceCode),
-          inlineKind(node, imports, ctx.sourceCode),
-          (method, messageId) => ({ method, messageId }),
-        ),
-        {
+      Opt.zipWith(
+        compilerMethod(node.callee, imports, ctx.sourceCode),
+        inlineKind(node, imports, ctx.sourceCode),
+        (method, messageId) => ({ method, messageId }),
+      ).pipe(
+        Opt.match({
           onNone: () => Effect.void,
           onSome: ({ method, messageId }) =>
             ctx.report(Diagnostic.fromId({ node: node.callee, messageId, data: { method } })),
-        },
+        }),
       ),
     );
   },

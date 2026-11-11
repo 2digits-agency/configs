@@ -1,6 +1,7 @@
 import { RuleContext, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
@@ -18,9 +19,13 @@ const ModulePath = Schema.Array(Schema.String);
  * @param path Module path.
  * @param namespace Module namespace, such as `Effect`.
  */
-export function namespaceMember(path: ReadonlyArray<string>, namespace: string): Opt.Option<string> {
-  return path.length === 2 && Opt.contains(Arr.head(path), namespace) ? Arr.get(path, 1) : Opt.none();
-}
+export const namespaceMember: {
+  (namespace: string): (path: ReadonlyArray<string>) => Opt.Option<string>;
+
+  (path: ReadonlyArray<string>, namespace: string): Opt.Option<string>;
+} = Fn.dual(2, (path: ReadonlyArray<string>, namespace: string) =>
+  path.length === 2 && Opt.contains(Arr.head(path), namespace) ? Arr.get(path, 1) : Opt.none(),
+);
 
 /**
  * The Effect and Alchemy imports of one file: the module path each local binding names, such as `['Effect', 'map']` for
@@ -37,7 +42,7 @@ export class ImportBindings extends Schema.Class<ImportBindings, { readonly bran
    */
   path(node: ESTree.Node): Opt.Option<ReadonlyArray<string>> {
     return Opt.flatMap(staticPath(node), ([first, ...rest]) =>
-      Opt.map(Opt.fromNullishOr(this.bindings.get(first)), (imported) => [...imported, ...rest]),
+      Opt.fromNullishOr(this.bindings.get(first)).pipe(Opt.map((imported) => [...imported, ...rest])),
     );
   }
 
@@ -61,7 +66,7 @@ export class ImportBindings extends Schema.Class<ImportBindings, { readonly bran
    * @param namespace Module namespace, such as `Effect`.
    */
   member(node: ESTree.Node, namespace: string): Opt.Option<string> {
-    return Opt.flatMap(this.path(node), (path) => namespaceMember(path, namespace));
+    return Opt.flatMap(this.path(node), namespaceMember(namespace));
   }
 
   /**

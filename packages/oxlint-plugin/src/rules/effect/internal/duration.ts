@@ -60,7 +60,7 @@ const durationExpression = Match.type<DurationPosition>().pipe(
     () => (node) =>
       argumentAt(node, node.arguments.length - 1).pipe(
         Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
-        Opt.flatMap((options) => objectProperty(options, 'duration')),
+        Opt.flatMap(objectProperty('duration')),
         Opt.map(({ value }) => value),
       ),
   ),
@@ -79,7 +79,7 @@ export function durationArgument(
   imports: ImportBindings,
 ): Effect.Effect<Opt.Option<ESTree.Expression>, never, RuleContext> {
   return Opt.match(
-    imports.path(node.callee).pipe(Opt.flatMap((path) => Opt.fromNullishOr(durationApis.get(Arr.join(path, '.'))))),
+    imports.path(node.callee).pipe(Opt.flatMapNullishOr((path) => durationApis.get(Arr.join(path, '.')))),
     {
       onNone: () => Effect.succeedNone,
       onSome: (position) =>
@@ -221,8 +221,9 @@ const isInstantWord = Schema.is(
 export function millisName(name: string): Opt.Option<MillisKind> {
   const parts = nameWords(name);
 
-  return Opt.map(Opt.filter(Arr.last(parts), isMillisWord), (): MillisKind =>
-    Arr.some(parts, isInstantWord) ? 'instant' : 'duration',
+  return Arr.last(parts).pipe(
+    Opt.filter(isMillisWord),
+    Opt.map((): MillisKind => (Arr.some(parts, isInstantWord) ? 'instant' : 'duration')),
   );
 }
 

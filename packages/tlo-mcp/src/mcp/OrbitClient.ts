@@ -2,8 +2,8 @@ import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as P from 'effect/Predicate';
 import type * as Schema from 'effect/Schema';
-import * as Struct from 'effect/Struct';
 import * as McpClient from 'effect/ai/McpClient';
 import type * as McpClientError from 'effect/ai/McpClientError';
 import * as McpProtocol from 'effect/ai/McpProtocol';
@@ -59,21 +59,31 @@ const OrbitHttpClient = Layer.effect(
   }),
 ).pipe(Layer.provide(FetchHttpClient.layer));
 
+const containsMcpTool = Arr.containsWith<McpSchema.Tool | McpSchema.Tool['name']>((a, b) => {
+  const left = P.isString(a) ? a : a.name;
+
+  const right = P.isString(b) ? b : b.name;
+
+  return left === right;
+});
+
 export const OrbitClientLive = Layer.effect(
   OrbitClient,
   Effect.gen(function* () {
     const client = yield* McpClient.McpClient;
 
-    const upstream = yield* client.listTools();
+    const tools = yield* client
+      .listTools()
+      .pipe(Effect.map(Arr.filter((tool) => containsMcpTool(EXPOSED_TOOLS, tool))));
 
-    const missing = Arr.difference(EXPOSED_TOOLS, Arr.map(upstream, Struct.get('name')));
+    const missing = Arr.filter(EXPOSED_TOOLS, (name) => !containsMcpTool(tools, name));
 
     if (Arr.isReadonlyArrayNonEmpty(missing)) {
       yield* Effect.logWarning(`Orbit no longer offers these exposed tools: ${Arr.join(missing, ', ')}`);
     }
 
     return OrbitClient.of({
-      tools: Arr.filter(upstream, (tool) => Arr.contains(EXPOSED_TOOLS, tool.name)),
+      tools,
       instructions: client.instructions,
       callTool: Effect.fn('OrbitClient.callTool')(function* (tool, args) {
         return yield* client.callTool({ tool, arguments: args }, { timeout: '120 seconds' });

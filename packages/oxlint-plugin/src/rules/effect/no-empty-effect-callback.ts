@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -9,17 +9,7 @@ import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isImportedApi } from '../../internal/scope';
 
-function emptyRegister(node: ESTree.CallExpression): Opt.Option<FunctionNode> {
-  return Opt.filter(
-    argumentAt(node, 0),
-    (register): register is FunctionNode =>
-      isFunctionNode(register) &&
-      register.body?.type === 'BlockStatement' &&
-      Arr.isReadonlyArrayEmpty(register.body.body),
-  );
-}
-
-export const noEmptyEffectCallback: CreateRule = Rule.define({
+export const noEmptyEffectCallback = Rule.define({
   name: 'no-empty-effect-callback',
   meta: ruleMeta({
     type: 'suggestion',
@@ -71,13 +61,21 @@ export const noEmptyEffectCallback: CreateRule = Rule.define({
 
     return Visitor.on('CallExpression', (node) =>
       isCallbackApi(node.callee)
-        ? Opt.match(emptyRegister(node), {
-            onNone: () => Effect.void,
-            onSome: (register) =>
-              Effect.flatMap(neverFix(node, register), (fix) =>
-                ctx.report(withOptionalFix(Diagnostic.fromId({ node, messageId: 'emptyCallback' }), fix)),
-              ),
-          })
+        ? argumentAt(node, 0).pipe(
+            Opt.filter(
+              (register): register is FunctionNode =>
+                isFunctionNode(register) &&
+                register.body?.type === 'BlockStatement' &&
+                Arr.isReadonlyArrayEmpty(register.body.body),
+            ),
+            Opt.match({
+              onNone: () => Effect.void,
+              onSome: (register) =>
+                Effect.flatMap(neverFix(node, register), (fix) =>
+                  ctx.report(withOptionalFix(Diagnostic.fromId({ node, messageId: 'emptyCallback' }), fix)),
+                ),
+            }),
+          )
         : Effect.void,
     );
   },

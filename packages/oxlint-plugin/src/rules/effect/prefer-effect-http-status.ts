@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -88,19 +88,6 @@ const statusLiterals: ReadonlyMap<number, HttpStatus.Literal> = new Map(
 type MessageId = 'httpStatus' | 'statusName';
 
 /**
- * The status name for a numeric literal of a known status code.
- *
- * @param node Expression.
- */
-function statusLiteral(node: ESTree.Expression): Opt.Option<readonly [ESTree.Expression, HttpStatus.Literal]> {
-  const target = unwrapExpression(node);
-
-  return target.type === 'Literal' && P.isNumber(target.value)
-    ? Opt.map(Opt.fromNullishOr(statusLiterals.get(target.value)), (name) => Tuple.make(target, name))
-    : Opt.none();
-}
-
-/**
  * The status code arguments of a call to an Effect HTTP API, with the message each one gets: `HttpApiSchema.status`
  * takes the status name itself, while `HttpApiSchema.Empty`, `HttpServerResponse.setStatus` and the `status` option of
  * `HttpServerResponse` constructors take `HttpStatus.fromLiteral`.
@@ -113,11 +100,17 @@ function statusArguments(
   imports: ImportBindings,
 ): ReadonlyArray<readonly [ESTree.Expression, MessageId]> {
   if (imports.isApi(node.callee, 'HttpApiSchema', 'status' satisfies keyof typeof HttpApiSchema)) {
-    return Arr.map(Opt.toArray(argumentAt(node, 0)), (argument) => Tuple.make(argument, 'statusName'));
+    return argumentAt(node, 0).pipe(
+      Opt.toArray,
+      Arr.map((argument) => Tuple.make(argument, 'statusName')),
+    );
   }
 
   if (imports.isApi(node.callee, 'HttpApiSchema', 'Empty' satisfies keyof typeof HttpApiSchema)) {
-    return Arr.map(Opt.toArray(argumentAt(node, 0)), (argument) => Tuple.make(argument, 'httpStatus'));
+    return argumentAt(node, 0).pipe(
+      Opt.toArray,
+      Arr.map((argument) => Tuple.make(argument, 'httpStatus')),
+    );
   }
 
   // `setStatus(404)` or data-first `setStatus(response, 404)`; only a numeric literal is reported.
@@ -130,19 +123,19 @@ function statusArguments(
   // `HttpServerResponse.empty(options)` takes options first; the other constructors take them after the body, as in
   // `HttpServerResponse.json(body, options)`, so a body with its own `status` field is not read as one.
   const status = Opt.flatMap(imports.member(node.callee, 'HttpServerResponse'), (member) =>
-    Opt.flatMap(
-      Opt.filter(
-        argumentAt(node, member === ('empty' satisfies keyof typeof HttpServerResponse) ? 0 : 1),
-        (options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression',
-      ),
-      (options) => objectProperty(options, 'status'),
+    argumentAt(node, member === ('empty' satisfies keyof typeof HttpServerResponse) ? 0 : 1).pipe(
+      Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
+      Opt.flatMap(objectProperty('status')),
     ),
   );
 
-  return Arr.map(Opt.toArray(status), ({ value }) => Tuple.make(value as ESTree.Expression, 'httpStatus'));
+  return status.pipe(
+    Opt.toArray,
+    Arr.map(({ value }) => Tuple.make(value as ESTree.Expression, 'httpStatus')),
+  );
 }
 
-export const preferEffectHttpStatus: CreateRule = Rule.define({
+export const preferEffectHttpStatus = Rule.define({
   name: 'prefer-effect-http-status',
   meta: ruleMeta({
     type: 'suggestion',
@@ -163,9 +156,16 @@ export const preferEffectHttpStatus: CreateRule = Rule.define({
     }
 
     function report(node: ESTree.Expression, messageId: MessageId) {
-      return Opt.match(statusLiteral(node), {
+      const literal = unwrapExpression(node);
+
+      const status =
+        literal.type === 'Literal' && P.isNumber(literal.value)
+          ? Opt.fromNullishOr(statusLiterals.get(literal.value))
+          : Opt.none();
+
+      return Opt.match(status, {
         onNone: () => Effect.void,
-        onSome: ([literal, name]) =>
+        onSome: (name) =>
           ctx.report(
             Diagnostic.fromId({
               node: literal,

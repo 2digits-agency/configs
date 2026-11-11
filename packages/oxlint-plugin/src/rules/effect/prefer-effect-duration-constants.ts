@@ -1,12 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as HashMap from 'effect/HashMap';
@@ -160,8 +152,8 @@ function durationAnnotation(annotation: ESTree.Node, sourceCode: OxlintSourceCod
 
         return (
           imported &&
-          Opt.exists(Opt.fromNullishOr(imports.bindings.get(root)), (path) =>
-            Opt.contains(Arr.head([...path, ...rest]), 'Duration'),
+          Opt.fromNullishOr(imports.bindings.get(root)).pipe(
+            Opt.exists((path) => Opt.contains(Arr.head([...path, ...rest]), 'Duration')),
           )
         );
       }),
@@ -188,9 +180,9 @@ function declaratorOf(node: ESTree.Expression): Effect.Effect<Opt.Option<Numeric
 
   return expression.type === 'Identifier'
     ? Effect.map(resolveVariable(expression, expression.name), (variable) =>
-        Opt.filter(
-          Opt.map(soleDefinition(variable), ({ node: declaration }) => declaration as ESTree.Node),
-          isNumericDeclarator,
+        soleDefinition(variable).pipe(
+          Opt.map(({ node: declaration }) => declaration as ESTree.Node),
+          Opt.filter(isNumericDeclarator),
         ),
       )
     : Effect.succeedNone;
@@ -200,7 +192,7 @@ type Candidate = readonly [NumericDeclarator, boolean];
 
 const bySourcePosition = Order.mapInput(Order.Number, ([offset]: readonly [number, Candidate]) => offset);
 
-export const preferEffectDurationConstants: CreateRule = Rule.define({
+export const preferEffectDurationConstants = Rule.define({
   name: 'prefer-effect-duration-constants',
   meta: ruleMeta({
     type: 'suggestion',
@@ -272,9 +264,8 @@ export const preferEffectDurationConstants: CreateRule = Rule.define({
               messageId: 'durationConstant',
               data: {
                 name: node.id.name,
-                replacement: Opt.getOrElse(
-                  Opt.zipWith(numericValue(node.init), unit, durationConstructor),
-                  () => 'a Duration constructor such as Duration.seconds',
+                replacement: Opt.zipWith(numericValue(node.init), unit, durationConstructor).pipe(
+                  Opt.getOrElse(() => 'a Duration constructor such as Duration.seconds'),
                 ),
               },
             }),

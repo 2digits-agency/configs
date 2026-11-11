@@ -97,13 +97,17 @@ export const plainProperty = Match.type<ESTree.ObjectExpression['properties'][nu
   Match.orElse(() => Opt.none<ESTree.ObjectProperty>()),
 );
 
-export function objectProperty(node: ESTree.ObjectExpression, name: string): Opt.Option<ESTree.ObjectProperty> {
-  return Arr.findFirst(
+export const objectProperty: {
+  (name: string): (node: ESTree.ObjectExpression) => Opt.Option<ESTree.ObjectProperty>;
+
+  (node: ESTree.ObjectExpression, name: string): Opt.Option<ESTree.ObjectProperty>;
+} = Fn.dual(2, (node: ESTree.ObjectExpression, name: string) =>
+  Arr.findFirst(
     node.properties,
     (property): property is ESTree.ObjectProperty =>
       property.type === 'Property' && Opt.contains(propertyName(property), name),
-  );
-}
+  ),
+);
 
 /**
  * The argument at `index`, unless it is missing or spread.
@@ -282,9 +286,14 @@ export function isStringLiteral(node: ESTree.Node): node is ESTree.StringLiteral
   return node.type === 'Literal' && Str.isString(node.value);
 }
 
-export function isLiteral(node: ESTree.Node, value: string | number | boolean): boolean {
-  return node.type === 'Literal' && node.value === value;
-}
+export const isLiteral: {
+  (value: string | number | boolean): (node: ESTree.Node) => boolean;
+
+  (node: ESTree.Node, value: string | number | boolean): boolean;
+} = Fn.dual(
+  2,
+  (node: ESTree.Node, value: string | number | boolean) => node.type === 'Literal' && node.value === value,
+);
 
 /**
  * Whether the value of an expression is thrown away: an expression statement, `void x`, or a non-final sequence item.
@@ -308,7 +317,7 @@ export function isDiscarded(node: ESTree.Node): boolean {
  * @param node Construction.
  */
 export function isErrorConstructor(node: ESTree.NewExpression): boolean {
-  return Opt.exists(Opt.map(staticPath(node.callee), Arr.lastNonEmpty), Str.endsWith('Error'));
+  return staticPath(node.callee).pipe(Opt.map(Arr.lastNonEmpty), Opt.exists(Str.endsWith('Error')));
 }
 
 /**

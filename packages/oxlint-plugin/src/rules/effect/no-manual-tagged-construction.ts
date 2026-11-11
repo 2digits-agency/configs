@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -10,7 +10,7 @@ import { isMatchPatternObject } from './internal/tagged-values';
 /**
  * Prefer constructors to literal tagged objects, excluding direct Match patterns.
  */
-export const noManualTaggedConstruction: CreateRule = Rule.define({
+export const noManualTaggedConstruction = Rule.define({
   name: 'no-manual-tagged-construction',
   meta: ruleMeta({
     type: 'problem',

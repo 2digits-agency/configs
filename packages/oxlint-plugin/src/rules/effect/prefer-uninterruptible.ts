@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as R from 'effect/Record';
@@ -13,7 +13,7 @@ const maskReplacements: Readonly<Record<string, keyof typeof Effect>> = {
   uninterruptibleMask: 'uninterruptible',
 } satisfies Partial<Record<keyof typeof Effect, keyof typeof Effect>>;
 
-export const preferUninterruptible: CreateRule = Rule.define({
+export const preferUninterruptible = Rule.define({
   name: 'prefer-uninterruptible',
   meta: ruleMeta({
     type: 'suggestion',

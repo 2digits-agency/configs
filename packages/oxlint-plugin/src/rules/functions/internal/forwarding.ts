@@ -2,6 +2,7 @@ import type { ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
+import * as Str from 'effect/String';
 
 import { isFunctionNode, walkNodes, type FunctionNode } from '../../../internal/ast';
 import type { ImportBindings } from '../../../internal/imports';
@@ -37,15 +38,12 @@ function referencesAny(node: ESTree.Node, names: ReadonlyArray<string>): boolean
   );
 }
 
-function restName(node: FunctionNode): Opt.Option<string> {
-  return Opt.flatMap(Arr.last(node.params), (last) =>
-    last.type === 'RestElement' && last.argument.type === 'Identifier' ? Opt.some(last.argument.name) : Opt.none(),
-  );
-}
-
 // The parameter an argument passes on unchanged: `x` for parameter `x`, `...rest` for rest parameter `rest`.
 function forwardedName(argument: ESTree.CallExpression['arguments'][number], node: FunctionNode): Opt.Option<string> {
-  const rest = restName(node);
+  const rest = Arr.last(node.params).pipe(
+    Opt.filter((last) => last.type === 'RestElement'),
+    Opt.flatMap(parameterName),
+  );
 
   if (argument.type === 'SpreadElement') {
     return Opt.filter(rest, (name) => argument.argument.type === 'Identifier' && argument.argument.name === name);
@@ -69,12 +67,12 @@ function forwardedNames(
 ): Opt.Option<ReadonlyArray<string>> {
   return Opt.all(
     Arr.flatMap(call.arguments, (argument) =>
-      Opt.match(
-        Opt.filter(forwardedName(argument, node), (name) => Arr.contains(names, name)),
-        {
+      forwardedName(argument, node).pipe(
+        Opt.filter((name) => Arr.contains(names, name)),
+        Opt.match({
           onSome: (name) => [Opt.some(name)],
           onNone: () => (isFunctionNode(argument) || referencesAny(argument, names) ? [Opt.none<string>()] : []),
-        },
+        }),
       ),
     ),
   );
@@ -92,26 +90,23 @@ export function forwardedCall(node: FunctionNode): Opt.Option<Forwarding> {
     return Opt.none();
   }
 
-  return Opt.flatMap(
-    Opt.zipWith(
-      // The parameter names, or none when a parameter is destructured or has a default.
-      Opt.filter(Opt.all(Arr.map(node.params, parameterName)), Arr.isReadonlyArrayNonEmpty),
-      Opt.filter(
-        functionResult(node),
-        (expression): expression is ESTree.CallExpression =>
-          expression.type === 'CallExpression' && !expression.optional,
-      ),
-      (names, call) => ({ names, call }),
+  return Opt.zipWith(
+    // The parameter names, or none when a parameter is destructured or has a default.
+    Opt.filter(Opt.all(Arr.map(node.params, parameterName)), Arr.isReadonlyArrayNonEmpty),
+    Opt.filter(
+      functionResult(node),
+      (expression): expression is ESTree.CallExpression => expression.type === 'CallExpression' && !expression.optional,
     ),
-    ({ names, call }) =>
+    (names, call) => ({ names, call }),
+  ).pipe(
+    Opt.flatMap(({ names, call }) =>
       call.callee.type === 'Super' || referencesAny(call.callee, names)
         ? Opt.none()
-        : Opt.map(
-            Opt.filter(forwardedNames(call, node, names), (forwarded) =>
-              Arr.makeEquivalence<string>((a, b) => a === b)(forwarded, names),
-            ),
-            () => ({ call, exact: call.arguments.length === names.length }),
+        : forwardedNames(call, node, names).pipe(
+            Opt.filter((forwarded) => Arr.makeEquivalence(Str.Equivalence)(forwarded, names)),
+            Opt.map(() => ({ call, exact: call.arguments.length === names.length })),
           ),
+    ),
   );
 }
 
@@ -135,9 +130,9 @@ export function isEffectGuard(callee: ESTree.Expression | ESTree.Super, imports:
   const target = callee.type === 'CallExpression' ? callee.callee : callee;
 
   return Opt.exists(imports.path(target), (path) =>
-    Opt.exists(
-      Opt.filter(Arr.get(path, 1), () => path.length === 2),
-      (member) => (Opt.contains(Arr.head(path), 'Schema') ? member === 'is' : isGuardName(member)),
+    Arr.get(path, 1).pipe(
+      Opt.filter(() => path.length === 2),
+      Opt.exists((member) => (Opt.contains(Arr.head(path), 'Schema') ? member === 'is' : isGuardName(member))),
     ),
   );
 }

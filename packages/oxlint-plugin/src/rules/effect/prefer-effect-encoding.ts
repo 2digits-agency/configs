@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -45,12 +45,10 @@ function encodingArgument(node: ESTree.CallExpression, index: number): Opt.Optio
  * @param node `Uint8Array.fromBase64` call.
  */
 function isBase64UrlAlphabet(node: ESTree.CallExpression): boolean {
-  return Opt.exists(
-    Opt.flatMap(
-      Opt.filter(argumentAt(node, 1), (options) => options.type === 'ObjectExpression'),
-      (options) => objectProperty(options, 'alphabet'),
-    ),
-    ({ value }) => isLiteral(value, 'base64url'),
+  return argumentAt(node, 1).pipe(
+    Opt.filter((options) => options.type === 'ObjectExpression'),
+    Opt.flatMap(objectProperty('alphabet')),
+    Opt.exists(({ value }) => isLiteral(value, 'base64url')),
   );
 }
 
@@ -104,7 +102,7 @@ const GlobalBase64Name = Schema.Literals(['atob', 'btoa']);
 
 const isGlobalBase64Name = Schema.is(GlobalBase64Name);
 
-export const preferEffectEncoding: CreateRule = Rule.define({
+export const preferEffectEncoding = Rule.define({
   name: 'prefer-effect-encoding',
   meta: ruleMeta({
     type: 'suggestion',
@@ -142,9 +140,7 @@ export const preferEffectEncoding: CreateRule = Rule.define({
           ? node.callee.object
           : node.callee;
 
-      const name = Opt.flatMap(staticPath(node.callee), (path) =>
-        Opt.liftPredicate(Arr.lastNonEmpty(path), isGlobalBase64Name),
-      );
+      const name = staticPath(node.callee).pipe(Opt.map(Arr.lastNonEmpty), Opt.filter(isGlobalBase64Name));
 
       return Opt.match(name, {
         onNone: () => Effect.succeedNone,
@@ -157,13 +153,13 @@ export const preferEffectEncoding: CreateRule = Rule.define({
 
     return Visitor.on('CallExpression', (node) =>
       Effect.flatMap(globalBase64Call(node), (base64) =>
-        Opt.match(
-          Opt.orElse(base64, () => bufferEncoding(node)),
-          {
+        base64.pipe(
+          Opt.orElse(() => bufferEncoding(node)),
+          Opt.match({
             onNone: () => Effect.void,
             onSome: ({ messageId, native, replacement }) =>
               ctx.report(Diagnostic.fromId({ node, messageId, data: { native, replacement } })),
-          },
+          }),
         ),
       ),
     );

@@ -4,7 +4,6 @@ import {
   RuleContext,
   SourceCode,
   Visitor,
-  type CreateRule,
   type ESTree,
   type OxlintScope,
   type OxlintSourceCode,
@@ -153,7 +152,7 @@ function accessorKey(node: ESTree.Node): Opt.Option<string> {
 /**
  * Prefer Effect Array and Struct helpers for array idioms the Effect language service does not report.
  */
-export const preferEffectArrayOps: CreateRule = Rule.define({
+export const preferEffectArrayOps = Rule.define({
   name: 'prefer-effect-array-ops',
   meta: ruleMeta({
     type: 'suggestion',

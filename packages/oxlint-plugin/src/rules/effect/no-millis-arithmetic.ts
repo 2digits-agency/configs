@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type Definition, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type Definition, type ESTree } from 'effect-oxlint';
 import type * as DateTime from 'effect/DateTime';
 import type * as Duration from 'effect/Duration';
 import * as Effect from 'effect/Effect';
@@ -167,11 +167,11 @@ function isBinary(node: ESTree.Node): node is ESTree.BinaryExpression {
 
 function enclosingBinary(node: ESTree.Node): Opt.Option<ESTree.BinaryExpression> {
   return Opt.flatMap(parentOf(node), (parent) =>
-    isWrapperExpressionType(parent.type) ? enclosingBinary(parent) : Opt.filter(Opt.some(parent), isBinary),
+    isWrapperExpressionType(parent.type) ? enclosingBinary(parent) : Opt.liftPredicate(parent, isBinary),
   );
 }
 
-export const noMillisArithmetic: CreateRule = Rule.define({
+export const noMillisArithmetic = Rule.define({
   name: 'no-millis-arithmetic',
   meta: ruleMeta({
     type: 'suggestion',

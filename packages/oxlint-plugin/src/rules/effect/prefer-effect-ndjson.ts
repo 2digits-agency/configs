@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
@@ -17,7 +17,7 @@ import {
   type LineContext,
 } from './internal/lines';
 
-export const preferEffectNdjson: CreateRule = Rule.define({
+export const preferEffectNdjson = Rule.define({
   name: 'prefer-effect-ndjson',
   meta: ruleMeta({
     type: 'suggestion',

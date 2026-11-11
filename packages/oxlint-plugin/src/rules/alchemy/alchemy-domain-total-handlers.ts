@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -21,7 +21,7 @@ const isThrowingGetter = Schema.is(
   Schema.Literals(['getOrThrow', 'getOrThrowWith'] satisfies ReadonlyArray<keyof typeof Opt & keyof typeof Result>),
 );
 
-export const alchemyDomainTotalHandlers: CreateRule = Rule.define({
+export const alchemyDomainTotalHandlers = Rule.define({
   name: 'alchemy-domain-total-handlers',
   meta: ruleMeta({
     type: 'problem',
@@ -56,15 +56,14 @@ export const alchemyDomainTotalHandlers: CreateRule = Rule.define({
     }
 
     function checkGetter(node: ESTree.Node) {
-      return Opt.match(
+      return importedPath(node, file).pipe(
         Opt.filter(
-          importedPath(node, file),
           (path) =>
             path.length === 2 &&
             Opt.exists(Arr.head(path), isThrowingModule) &&
             Opt.exists(Arr.get(path, 1), isThrowingGetter),
         ),
-        { onNone: () => Effect.void, onSome: (path) => report(node, `\`${Arr.join(path, '.')}\``) },
+        Opt.match({ onNone: () => Effect.void, onSome: (path) => report(node, `\`${Arr.join(path, '.')}\``) }),
       );
     }
 

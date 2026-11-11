@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
@@ -12,14 +12,7 @@ const UrlParseMethod = Schema.Literals(['canParse', 'parse']);
 
 const isUrlParseMethod = Schema.is(UrlParseMethod);
 
-function isUrlParseCall(node: ESTree.CallExpression): boolean {
-  return Opt.exists(
-    staticPath(node.callee),
-    (path) => path.length === 2 && path[0] === 'URL' && isUrlParseMethod(path[1]),
-  );
-}
-
-export const preferEffectUrl: CreateRule = Rule.define({
+export const preferEffectUrl = Rule.define({
   name: 'prefer-effect-url',
   meta: ruleMeta({
     type: 'suggestion',
@@ -48,7 +41,10 @@ export const preferEffectUrl: CreateRule = Rule.define({
     return Visitor.merge(
       Visitor.on('NewExpression', (node) => reportWhenGlobal(node, node.callee)),
       Visitor.on('CallExpression', (node) =>
-        isUrlParseCall(node) && node.callee.type === 'MemberExpression'
+        Opt.exists(
+          staticPath(node.callee),
+          (path) => path.length === 2 && path[0] === 'URL' && isUrlParseMethod(path[1]),
+        ) && node.callee.type === 'MemberExpression'
           ? reportWhenGlobal(node, node.callee.object)
           : Effect.void,
       ),

@@ -55,9 +55,9 @@ function isImportBinding(sourceCode: OxlintSourceCode, node: ESTree.Node, name: 
  * @param file File being linted.
  */
 export function importedPath(node: ESTree.Node, file: DomainFile): Opt.Option<ReadonlyArray<string>> {
-  return Opt.flatMap(
-    Opt.filter(staticPath(node), (path) => isImportBinding(file.sourceCode, node, Arr.headNonEmpty(path))),
-    () => file.imports.path(node),
+  return staticPath(node).pipe(
+    Opt.filter((path) => isImportBinding(file.sourceCode, node, Arr.headNonEmpty(path))),
+    Opt.flatMap(() => file.imports.path(node)),
   );
 }
 
@@ -68,10 +68,7 @@ export function importedPath(node: ESTree.Node, file: DomainFile): Opt.Option<Re
  * @param file File being linted.
  */
 export function domainBlock(node: ESTree.CallExpression, file: DomainFile): Opt.Option<DomainBlock> {
-  return importedPath(node.callee, file).pipe(
-    Opt.flatMap((path) => namespaceMember(path, 'Domain')),
-    Opt.filter(isDomainBlock),
-  );
+  return importedPath(node.callee, file).pipe(Opt.flatMap(namespaceMember('Domain')), Opt.filter(isDomainBlock));
 }
 
 /**
