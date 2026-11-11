@@ -1,4 +1,5 @@
 import * as Arr from 'effect/Array';
+import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as SchemaGetter from 'effect/SchemaGetter';
 import * as Str from 'effect/String';
@@ -18,7 +19,7 @@ export const CloseProjectTask = {
  */
 function NullAs(sentinel: string) {
   return Schema.String.pipe(
-    Schema.decodeTo(Schema.NullOr(Schema.String), {
+    Schema.decodeTo(Schema.String.pipe(Schema.NullOr), {
       // eslint-disable-next-line unicorn/no-null -- the gateway's value for a cleared field
       decode: SchemaGetter.transform((value) => (value === sentinel ? null : value)),
       encode: SchemaGetter.transform((value) => value ?? sentinel),
@@ -36,10 +37,10 @@ const Flag = Schema.Literals([0, 1]).pipe(
 
 // Orbit's comma-separated list, where an empty string clears it.
 const CommaList = Schema.String.pipe(
-  Schema.decodeTo(Schema.String.pipe(Schema.NonEmptyArray, Schema.NullOr), {
+  Schema.decodeTo(Schema.NonEmptyArray(Schema.String).pipe(Schema.NullOr), {
     // eslint-disable-next-line unicorn/no-null -- the gateway's value for a cleared list
     decode: SchemaGetter.transform((list) => (list === '' ? null : Str.split(list, ','))),
-    encode: SchemaGetter.transform((list) => (list === null ? '' : Arr.join(list, ','))),
+    encode: SchemaGetter.transform((list) => (P.isNull(list) ? '' : Arr.join(list, ','))),
   }),
 );
 

@@ -655,6 +655,8 @@ const TASK_ID = 'PTHY2HYJYQJ9N35';
 
 const PROJECT_END = '2026-10-19';
 
+const decodeFieldsJson = Schema.decodeUnknownEffect(Schema.Unknown.pipe(Schema.fromJsonString));
+
 const PROJECT_ID = 'PR9TQKGXE3D3CYU';
 
 const USER_ID = 'UST7V7BUH3KZ2WQ';
@@ -775,9 +777,7 @@ describe('updateProject', () => {
 
       // oxlint-disable-next-line unicorn/no-array-for-each
       const sent = yield* Effect.forEach(calls, ({ name, args: { fieldsJson, ...args } }) =>
-        Schema.decodeUnknownEffect(Schema.fromJsonString(Schema.Unknown))(fieldsJson).pipe(
-          Effect.map((fields) => [name, args, fields]),
-        ),
+        decodeFieldsJson(fieldsJson).pipe(Effect.map((fields) => [name, args, fields])),
       );
 
       expect(sent).toStrictEqual([
@@ -865,9 +865,7 @@ describe('updateProjectTask', () => {
 
       // oxlint-disable-next-line unicorn/no-array-for-each
       const sent = yield* Effect.forEach(calls, ({ name, args: { fieldsJson, ...args } }) =>
-        Schema.decodeUnknownEffect(Schema.fromJsonString(Schema.Unknown))(fieldsJson).pipe(
-          Effect.map((fields) => [name, args, fields]),
-        ),
+        decodeFieldsJson(fieldsJson).pipe(Effect.map((fields) => [name, args, fields])),
       );
 
       expect(sent).toStrictEqual([
