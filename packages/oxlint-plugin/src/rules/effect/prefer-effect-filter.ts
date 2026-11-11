@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import type * as Result from 'effect/Result';
@@ -21,25 +21,7 @@ function returnsParameter(
   );
 }
 
-/**
- * `(x) => cond ? Result.succeed(x) : Result.fail(x)`, which `Filter.fromPredicate` expresses directly.
- *
- * @param node Function.
- * @param imports Import bindings of the file.
- */
-function isResultFilter(node: FunctionNode, imports: ImportBindings): boolean {
-  return Opt.exists(firstIdentifierParameter(node), ({ name }) =>
-    Opt.exists(
-      functionResult(node),
-      (result) =>
-        result.type === 'ConditionalExpression' &&
-        returnsParameter(result.consequent, 'succeed', name, imports) &&
-        returnsParameter(result.alternate, 'fail', name, imports),
-    ),
-  );
-}
-
-export const preferEffectFilter: CreateRule = Rule.define({
+export const preferEffectFilter = Rule.define({
   name: 'prefer-effect-filter',
   meta: ruleMeta({
     type: 'suggestion',
@@ -55,7 +37,15 @@ export const preferEffectFilter: CreateRule = Rule.define({
     const imports = yield* importBindings;
 
     function check(node: FunctionNode) {
-      return isResultFilter(node, imports)
+      return Opt.exists(firstIdentifierParameter(node), ({ name }) =>
+        Opt.exists(
+          functionResult(node),
+          (result) =>
+            result.type === 'ConditionalExpression' &&
+            returnsParameter(result.consequent, 'succeed', name, imports) &&
+            returnsParameter(result.alternate, 'fail', name, imports),
+        ),
+      )
         ? ctx.report(Diagnostic.fromId({ node, messageId: 'effectFilter' }))
         : Effect.void;
     }
