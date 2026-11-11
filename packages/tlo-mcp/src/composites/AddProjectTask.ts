@@ -1,4 +1,3 @@
-import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
@@ -88,26 +87,15 @@ export const AddProjectTask = Tool.make('AddProjectTask', {
 export const AddProjectTaskHandler = Effect.gen(function* () {
   const orbit = yield* Orbit;
 
-  return Effect.fn('AddProjectTask')(function* ({
-    startDate,
-    endDate,
-    assignees,
-    retainerId,
-    ...params
-  }: Tool.Parameters<typeof AddProjectTask>) {
+  return Effect.fn('AddProjectTask')(function* (params: Tool.Parameters<typeof AddProjectTask>) {
+    const { startDate, endDate } = params;
+
     if (P.isNotUndefined(startDate) && P.isNotUndefined(endDate) && endDate < startDate) {
       return yield* Effect.fail(
         OrbitReadError.make({ message: `endDate ${endDate} is before startDate ${startDate}.` }),
       );
     }
 
-    return yield* orbit.call(OrbitAddProjectTask, {
-      ...params,
-      ...(P.isUndefined(startDate) ? {} : { startDt: startDate }),
-      ...(P.isUndefined(endDate) ? {} : { endDt: endDate }),
-      ...(P.isUndefined(assignees) ? {} : { assignedTo: Arr.join(assignees, ',') }),
-      // Orbit takes NONE for no retainer.
-      ...(P.isUndefined(retainerId) ? {} : { retainerId: retainerId ?? 'NONE' }),
-    });
+    return yield* orbit.call(OrbitAddProjectTask, params);
   }, Effect.mapError(toReadError));
 });
