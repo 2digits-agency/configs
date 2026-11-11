@@ -9,15 +9,15 @@ import { Orbit } from '../orbit/Orbit.js';
 import { ApiId, LocalDate } from '../orbit/text.js';
 import { OrbitReadError, toReadError } from './OrbitReadError.js';
 
-const Text = Schema.String.check(Schema.isTrimmed(), Schema.isNonEmpty());
+export const Text = Schema.String.check(Schema.isTrimmed(), Schema.isNonEmpty());
 
-const Hours = Schema.Finite.check(Schema.isGreaterThanOrEqualTo(0));
+export const Hours = Schema.Finite.check(Schema.isGreaterThanOrEqualTo(0));
 
-const ProjectNumber = Schema.String.check(Schema.isPattern(/^\S+$/u)).annotate({
+export const ProjectNumber = Schema.String.check(Schema.isPattern(/^\S+$/u)).annotate({
   description: 'Project number the user sees, such as "2238"',
 });
 
-const Username = Text.check(Schema.isPattern(/^[^,]+$/u)).annotate({ description: 'Unique user name' });
+export const Username = Text.check(Schema.isPattern(/^[^,]+$/u)).annotate({ description: 'Unique user name' });
 
 /**
  * Orbit's `AddProjectTask` with typed, documented parameters. It is still one Orbit write per call, so Executor

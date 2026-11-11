@@ -28,6 +28,19 @@ export const ApiId = Schema.String.check(Schema.isPattern(/^[A-Z0-9]{15}$/u)).an
   description: 'Orbit api_id',
 });
 
+// Orbit starts every api_id with a two-letter type code, so a project passed as a task fails before Orbit is called.
+export const ProjectId = Schema.String.check(Schema.isPattern(/^PR[A-Z0-9]{13}$/u)).annotate({
+  description: 'Project api_id, starting with PR',
+});
+
+export const ProjectTaskId = Schema.String.check(Schema.isPattern(/^PT[A-Z0-9]{13}$/u)).annotate({
+  description: 'Project task api_id, starting with PT',
+});
+
+export const UserId = Schema.String.check(Schema.isPattern(/^US[A-Z0-9]{13}$/u)).annotate({
+  description: 'User api_id, starting with US',
+});
+
 // `DateTime.make` rolls 2026-02-30 over to March, so a date only counts when it formats back to itself.
 export const LocalDate = Schema.String.check(
   Schema.makeFilter((date) => DateTime.make(date).pipe(Opt.exists((day) => DateTime.formatIsoDateUtc(day) === date)), {
