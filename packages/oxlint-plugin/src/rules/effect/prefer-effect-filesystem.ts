@@ -14,6 +14,7 @@ export const preferEffectFileSystem: CreateRule = Rule.define({
   meta: ruleMeta({
     type: 'suggestion',
     description: 'Prefer the Effect FileSystem service over direct Node.js filesystem imports in Effect projects.',
+    docs: { recommended: false },
     messages: { effectFileSystem: 'Use the FileSystem service from effect/FileSystem instead of {{source}}.' },
     url: 'https://www.effect.website/docs/v4/api/effect/FileSystem',
   }),

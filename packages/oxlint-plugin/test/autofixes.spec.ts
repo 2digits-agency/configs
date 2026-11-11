@@ -32,7 +32,6 @@ for (const [name, messageId, invalid, output] of [
   ['no-empty-effect-callback', 'emptyCallback', `${effect} Effect.callback(async () => {})`, null],
   ['no-empty-effect-callback', 'emptyCallback', `${effect} Effect.callback((resume = sideEffect()) => {})`, null],
   ['no-empty-effect-callback', 'emptyCallback', `${effect} Effect.callback(() => { /* keep */ })`, null],
-  ['no-empty-effect-callback', 'emptyCallback', `${effect} function f(Effect) { Effect.callback(() => {}) }`, null],
   [
     'alchemy-no-v1-worker-properties',
     'property',

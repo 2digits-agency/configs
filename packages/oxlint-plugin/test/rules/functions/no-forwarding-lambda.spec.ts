@@ -1,20 +1,10 @@
 /* eslint-disable unicorn/no-null -- RuleTester requires null to assert that no fix or suggestion is offered. */
-import { describe, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { noForwardingLambda } from '../../../src/rules/functions/no-forwarding-lambda';
+import { createRuleTester } from '../../rule-tester';
 
-RuleTester.describe = describe;
-
-RuleTester.it = it;
-
-const tester = new RuleTester({
-  languageOptions: {
-    parserOptions: { lang: 'ts' },
-    sourceType: 'module',
-  },
-});
+const tester = createRuleTester();
 
 const imports = `
   import * as Arr from 'effect/Array'

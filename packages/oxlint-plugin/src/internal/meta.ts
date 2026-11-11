@@ -9,7 +9,8 @@ type MetaOptions = Parameters<typeof Rule.meta>[0] & {
 };
 
 /**
- * `Rule.meta` for a recommended rule of this plugin. Rules accept no options unless they pass `schema`.
+ * Shared metadata defaults: no options and recommended membership. Set `docs.recommended: false` for opt-in rules; the
+ * plugin derives both recommended exports from this flag and assigns their severity.
  *
  * @param options Rule metadata.
  */

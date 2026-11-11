@@ -1,14 +1,13 @@
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { noManualSse } from '../../../src/rules/effect/no-manual-sse';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
 const ruleName = 'no-manual-sse';
 
 const effect = `import * as Effect from 'effect/Effect';`;
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 testRule(ruleName, noManualSse, {
   valid: `

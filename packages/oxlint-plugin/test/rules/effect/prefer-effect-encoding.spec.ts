@@ -1,9 +1,7 @@
-import { RuleTester } from 'oxlint/plugins-dev';
-
 import { preferEffectEncoding } from '../../../src/rules/effect/prefer-effect-encoding';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 testRule('prefer-effect-encoding', preferEffectEncoding, {
   valid: `

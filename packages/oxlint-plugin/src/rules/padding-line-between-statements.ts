@@ -21,6 +21,8 @@ import * as Ref from 'effect/Ref';
 import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
 
+import { ruleMeta } from '../internal/meta';
+
 type Token = SyntaxToken | Comment;
 
 type NodeType = ESTree.Node['type'];
@@ -735,13 +737,11 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
  */
 export const paddingLineBetweenStatements = Rule.define({
   name: 'padding-line-between-statements',
-  meta: {
+  meta: ruleMeta({
     type: 'layout',
-    docs: {
-      description: 'Require or disallow padding lines between statements',
-      url: 'https://eslint.style/rules/padding-line-between-statements',
-      recommended: true,
-    },
+    description: 'Require or disallow padding lines between statements.',
+    url: 'https://eslint.style/rules/padding-line-between-statements',
+    docs: { recommended: false },
     fixable: 'whitespace',
     schema: {
       type: 'array',
@@ -779,7 +779,7 @@ export const paddingLineBetweenStatements = Rule.define({
       unexpectedBlankLine: 'Unexpected blank line before this statement.',
       expectedBlankLine: 'Expected blank line before this statement.',
     },
-  },
+  }),
   // Create keeps options, selector matches and scope state isolated per file.
   *create() {
     const context = yield* RuleContext;

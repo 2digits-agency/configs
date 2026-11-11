@@ -1,5 +1,5 @@
 import { preferEffectHttpStatus } from '../../../src/rules/effect/prefer-effect-http-status';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
 const valid = `
   import { HttpApiSchema } from 'effect/http-api'
@@ -12,6 +12,35 @@ const valid = `
   const other = client.status(404)
   const body = HttpServerResponse.json({ status: 200 })
 `;
+
+createRuleTester().run('prefer-effect-http-status', preferEffectHttpStatus, {
+  valid: [
+    'const schema = { httpApiStatus: 404 }',
+    `import * as HttpApiSchema from 'other-library'; HttpApiSchema.status(404)`,
+    `import type * as Api from 'effect/http-api/HttpApiSchema'; Api.status(404)`,
+    `import { type status } from 'effect/http-api/HttpApiSchema'; status(404)`,
+    `import * as Api from 'effect/http-api/HttpApiSchema'; function custom(Api: Client) { Api.status(404) }`,
+    `import { status as setStatus } from 'effect/http-api/HttpApiSchema'; function custom(setStatus: Setter) { setStatus(404) }`,
+  ],
+  invalid: [
+    {
+      code: `import * as Api from 'effect/http-api/HttpApiSchema'; Api['status'](404)`,
+      errors: [{ messageId: 'statusName', data: { code: '404', literal: 'NotFound' } }],
+    },
+    {
+      code: `import { status as setStatus } from 'effect/http-api/HttpApiSchema'; setStatus(201)`,
+      errors: [{ messageId: 'statusName', data: { code: '201', literal: 'Created' } }],
+    },
+    {
+      code: `import * as Http from 'effect/http'; Http.HttpServerResponse.empty({ status: 204 })`,
+      errors: [{ messageId: 'httpStatus', data: { code: '204', literal: 'NoContent' } }],
+    },
+    {
+      code: `import type { Schema } from 'effect'; const schema = { httpApiStatus: 418 }`,
+      errors: [{ messageId: 'httpStatus', data: { code: '418', literal: 'ImATeapot' } }],
+    },
+  ],
+});
 
 testRule('prefer-effect-http-status', preferEffectHttpStatus, {
   valid,

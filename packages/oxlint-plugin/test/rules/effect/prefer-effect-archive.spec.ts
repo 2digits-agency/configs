@@ -1,14 +1,13 @@
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { preferEffectArchive } from '../../../src/rules/effect/prefer-effect-archive';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
 const ruleName = 'prefer-effect-archive';
 
 const effect = `import * as Effect from 'effect/Effect';`;
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 testRule(ruleName, preferEffectArchive, {
   valid: `

@@ -5,17 +5,11 @@ import ts from 'dedent';
 import * as Arr from 'effect/Array';
 import * as Str from 'effect/String';
 import * as Struct from 'effect/Struct';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { rules, type PaddingLineOption } from '../../src';
+import { createRuleTester } from '../rule-tester';
 
-RuleTester.describe = describe;
-
-RuleTester.it = it;
-
-RuleTester.itOnly = it.only;
-
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 const always = { blankLine: 'always', prev: '*', next: '*' } satisfies PaddingLineOption;
 

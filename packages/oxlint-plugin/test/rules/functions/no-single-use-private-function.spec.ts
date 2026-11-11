@@ -1,14 +1,9 @@
-import { describe, it } from '@effect/vitest';
 import * as Str from 'effect/String';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { noSingleUsePrivateFunction } from '../../../src/rules/functions/no-single-use-private-function';
+import { createRuleTester } from '../../rule-tester';
 
-RuleTester.describe = describe;
-
-RuleTester.it = it;
-
-const tester = new RuleTester({
+const tester = createRuleTester({
   languageOptions: {
     parserOptions: { lang: 'ts', ecmaFeatures: { jsx: true } },
     sourceType: 'module',

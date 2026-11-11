@@ -13,15 +13,13 @@ export type { PaddingLineOption } from './rules/padding-line-between-statements'
 
 export type RuleName = keyof typeof rules;
 
-const optInRules: ReadonlyArray<RuleName> = ['prefer-effect-filesystem', 'prefer-effect-path'];
-
 /**
  * Recommended rules that warn instead of erroring: worth seeing, but they name well-known values rather than catch
  * defects.
  */
 const warnRules: ReadonlyArray<RuleName> = ['prefer-effect-http-status'];
 
-const recommendedRuleNames = Arr.filter(R.keys(rules), (name) => !Arr.contains(optInRules, name));
+const recommendedRuleNames = Arr.filter(R.keys(rules), (name) => rules[name].meta?.docs?.recommended === true);
 
 export const recommendedRules: Record<`2digits/${string}`, 'error' | 'warn'> = R.fromEntries(
   Arr.map(recommendedRuleNames, (name) => [

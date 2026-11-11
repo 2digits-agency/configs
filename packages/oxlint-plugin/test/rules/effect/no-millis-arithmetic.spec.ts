@@ -1,8 +1,7 @@
 import * as Arr from 'effect/Array';
-import { RuleTester } from 'oxlint/plugins-dev';
 
 import { noMillisArithmetic } from '../../../src/rules/effect/no-millis-arithmetic';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
 const ruleName = 'no-millis-arithmetic';
 
@@ -14,7 +13,7 @@ const dateTime = `import * as DateTime from 'effect/DateTime';`;
 
 const clock = `import * as Clock from 'effect/Clock';`;
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 testRule(ruleName, noMillisArithmetic, {
   valid: `

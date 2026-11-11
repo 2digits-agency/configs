@@ -26,3 +26,9 @@ for (const invalid of [
     messageId: 'matchStatus',
   });
 }
+
+testRule('prefer-effect-match-status', preferEffectMatchStatus, {
+  valid: 'const ok = response.status >= 200 && response.status < 300',
+  invalid: `import 'effect'; const ok = response.status >= 200 && response.status < 300`,
+  messageId: 'matchStatus',
+});

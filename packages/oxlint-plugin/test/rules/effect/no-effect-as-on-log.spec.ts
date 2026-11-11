@@ -1,18 +1,7 @@
-import { describe, it } from '@effect/vitest';
-import { RuleTester } from 'oxlint/plugins-dev';
-
 import { noEffectAsOnLog } from '../../../src/rules/effect/no-effect-as-on-log';
+import { createRuleTester } from '../../rule-tester';
 
-RuleTester.describe = describe;
-
-RuleTester.it = it;
-
-const tester = new RuleTester({
-  languageOptions: {
-    parserOptions: { lang: 'ts' },
-    sourceType: 'module',
-  },
-});
+const tester = createRuleTester();
 
 tester.run('no-effect-as-on-log', noEffectAsOnLog, {
   valid: [

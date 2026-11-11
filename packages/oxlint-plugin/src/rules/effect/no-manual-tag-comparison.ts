@@ -10,7 +10,8 @@ import { ruleMeta } from '../../internal/meta';
 import { discriminantFromComparison, isDiscriminantMember, isInsideBroadEffectHandler } from './internal/tagged-values';
 
 const Options = Schema.Struct({
-  discriminants: Schema.Array(Schema.String)
+  discriminants: Schema.Array(Schema.String.check(Schema.isMinLength(1)))
+    .check(Schema.isUnique())
     .annotate({
       description: "Discriminant properties checked in addition to `_tag`. Replaces the default `['kind', 'status']`.",
     })

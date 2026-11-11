@@ -1,9 +1,7 @@
-import { RuleTester } from 'oxlint/plugins-dev';
-
 import { noManualEncoding } from '../../../src/rules/effect/no-manual-encoding';
-import { testRule } from '../../rule-tester';
+import { createRuleTester, testRule } from '../../rule-tester';
 
-const tester = new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } });
+const tester = createRuleTester();
 
 testRule('no-manual-encoding', noManualEncoding, {
   valid: `

@@ -3,6 +3,8 @@ import { testRule } from '../../rule-tester';
 
 const valid = `
   import { Cookies, HttpServerRequest } from 'effect/http'
+  import * as C from 'effect/http/Cookies'
+  import { parseHeader as parse } from 'effect/http/Cookies'
   import * as Str from 'effect/String'
   const fixture = 'a=1; Path=/; HttpOnly'
   const fixtures = ['a=1; Path=/', 'b=2; Path=/admin']
@@ -12,6 +14,8 @@ const valid = `
   const session = request.cookies['session'] !== undefined
   const parsed = Cookies.parseHeader(request.headers.cookie ?? '')
   const theme = Cookies.parseHeader(document.cookie)
+  const alias = C.parseHeader(document.cookie)
+  const named = parse(document.cookie)
   const mediaType = contentType.split(';')
   const secure = Str.includes('Secure')(description)
   const message = \`Cookie \${name} expired; please sign in again\`
@@ -38,3 +42,9 @@ for (const [invalid, messageId] of [
     messageId,
   });
 }
+
+testRule('prefer-effect-cookies', preferEffectCookies, {
+  valid: 'const theme = document.cookie',
+  invalid: `import 'effect'; const theme = document.cookie`,
+  messageId: 'documentCookie',
+});
