@@ -29,6 +29,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
   `effect-promise-vs-trypromise`, `no-logging-in-catch`, and `throw-in-effect-gen`.
 - Effect modules over native or hand-written logic: `prefer-effect-predicate`, `prefer-effect-array-ops`,
   `prefer-equal`, and `prefer-struct-assign`. See [Effect modules over native logic](#effect-modules-over-native-logic).
+- Direct Effect combinators: `prefer-direct-effect-combinators` replaces indirect Option, Array, Result and Filter
+  chains with the API that does the same in one step. See [Direct Effect combinators](#direct-effect-combinators).
 - Syntax-safe Effect diagnostics proposed in open `Effect-TS/tsgo` issues: the remaining `cors-*`, `dual-*`,
   `no-*`, `prefer-*`, `preserve-*`, and `require-*` Effect rules.
 - Effect v4 API guidance for Array, DateTime, Duration, binary encodings, FileSystem, Filter, Headers, Match, Path, and Url,
@@ -284,6 +286,57 @@ offers a suggestion; the others report only.
   instances with their constructor. Two-object merges and copies get a `Struct.assign` suggestion rather than an
   autofix, because `Struct.assign` types its result from its generic parameters.
 
+## Direct Effect combinators
+
+`prefer-direct-effect-combinators` runs in files that import Effect. It reports two calls in a row that one Option, Array,
+Result or Filter API expresses, and callbacks that go through an API the outer call could apply itself. Each pattern
+matches the nested data-first form (`Opt.isSome(Opt.filter(o, p))`), `.pipe(...)` (`o.pipe(Opt.filter(p), Opt.isSome)`),
+`pipe(...)` and `flow(...)`, and a data-first call that starts a pipe (`Opt.some(x).pipe(Opt.filter(p))`). Calls are
+resolved through the file's imports, so `O.filter` after `import { Option as O } from 'effect'` or a named `filter`
+import match too, and the fix reuses the namespace the chain already names, adding an import only when it has none.
+
+- Option: `Opt.filter(Opt.some(x), p)` → `Opt.liftPredicate(x, p)`; `Opt.filter` then `Opt.isSome`/`isNone` →
+  `Opt.exists` (negated for `isNone`); `Opt.map` then `Opt.flatten` → `Opt.flatMap`; `Opt.map(f)` then
+  `Opt.getOrElse(g)` → `Opt.match({ onSome: f, onNone: g })`, or `Opt.exists(f)` when `g` is `() => false`;
+  `Opt.match(o, { onNone: () => false, onSome: p })` → `Opt.exists(o, p)`; `Opt.flatMap` with a callback that returns
+  `Opt.fromNullishOr(…)` or `Opt.some(…)` → `Opt.flatMapNullishOr` or `Opt.map`; `Opt.orElse(() => Opt.some(d))` →
+  `Opt.orElseSome(() => d)`; `Opt.getOrElse(() => null)` or `Fn.constNull` → `Opt.getOrNull`, and the same for
+  `undefined`.
+- Array: `Arr.findFirst` or `Arr.findFirstIndex` then `Opt.isSome`/`isNone` → `Arr.some`; `Arr.filter` then `Arr.head`
+  → `Arr.findFirst`; `Arr.filter` then `Arr.isReadonlyArrayNonEmpty`/`isReadonlyArrayEmpty` (or the mutable variants) →
+  `Arr.some`; `Arr.filter` then `Arr.length` → `Arr.countBy`; `Arr.map` then `Arr.flatten` → `Arr.flatMap`;
+  `Arr.filter(Opt.isSome)` then `Arr.map((o) => o.value)` or `Opt.getOrThrow` → `Arr.getSomes`, and likewise
+  `Arr.getSuccesses` and `Arr.getFailures`; `Arr.map(f)` then `Arr.filter(P.isNotNullish)` and `Arr.flatMap` with a
+  callback that returns `Arr.fromNullishOr(…)` → `Arr.flatMapNullishOr`; `Arr.head`/`Arr.last` then
+  `Opt.isSome`/`isNone` → `Arr.isReadonlyArrayNonEmpty`/`isReadonlyArrayEmpty`; `Arr.reverse` then `Arr.head` →
+  `Arr.last`.
+- Result: `Result.map(f)` then `Result.getOrElse(g)` → `Result.match`; `Result.map` and `Result.mapError` in either
+  order → `Result.mapBoth`; `Result.flatMap` with a callback that returns `Result.succeed(…)` → `Result.map`;
+  `Result.getOrElse(() => null)` → `Result.getOrNull` (and `undefined`); `Result.getSuccess`/`getFailure` then
+  `Opt.isSome`/`isNone` → `Result.isSuccess`/`isFailure`; `Result.getSuccess` then `Opt.getOrNull`, `getOrUndefined` or
+  `getOrElse` → the `Result` getter.
+- Filter: `(x) => Result.isSuccess(f(x))` → `Filter.toPredicate(f)`; `(x) => Result.getSuccess(f(x))` →
+  `Filter.toOption(f)`; `Opt.flatMap(o, Filter.toOption(f))` → `Opt.filterMap(o, f)`.
+
+Rewrites that keep the behavior are autofixed. The rest are suggestions or reports:
+
+- `Arr.filter` followed by `Arr.head` or an emptiness check is a suggestion, because the direct API stops at the first
+  match: the callback runs fewer times, and an exception a later element would throw no longer happens.
+- `Arr.findFirst` → `Arr.some` is autofixed only when the callback visibly returns a boolean (a comparison, `!`, a
+  boolean literal, or an Effect guard such as `P.isString`). Otherwise it is a suggestion, since `Arr.findFirst` also
+  takes a callback that returns an Option, and a function literal that returns an Option is not reported.
+- `Arr.map(f)` → `Arr.flatMapNullishOr(f)` and the Filter lambdas are reported without a fix when the new API would pass
+  `f` different arguments (an index) or read `f` too early (a `let`, or a binding declared after the function), and
+  `Filter.toPredicate(obj.check)` would lose `this`. An annotated Filter lambda gets a suggestion, because its type
+  annotations go away.
+- `Opt.getOrElse(Result.getSuccess(r), fallback)` is reported without a fix unless the fallback is a thunk, because
+  `Result.getOrElse` passes the failure to it.
+- A negation (`isNone`, emptiness checks) in the middle of a pipe, or in `flow`, and code with comments inside the
+  rewrite are reported without a fix.
+
+`Arr.some` and `Arr.last` take an array where `Arr.findFirst`, `Arr.filter` and `Arr.reverse` take any iterable, so a
+fix on a `Set` or other iterable fails type checking rather than changing behavior.
+
 ## Effect HTTP modules
 
 These rules point hand-written HTTP logic at the `effect/http` modules. They only run in files that import Effect and
@@ -518,13 +571,13 @@ The exported `PaddingLineOption` type describes each configuration entry. No opt
 
 ### Other fixes
 
-Run `vpr lint:oxlint:fix` from the repository root to apply fixes from `consistent-schema-pipe`, `prefer-effect-duration`, `no-empty-effect-callback`,
+Run `vpr lint:oxlint:fix` from the repository root to apply fixes from `consistent-schema-pipe`, `prefer-effect-duration`, `prefer-direct-effect-combinators`, `no-empty-effect-callback`,
 `no-effect-alchemy-barrel-imports`, `prefer-effect-alchemy-namespace-imports`, `prefer-effect-predicate`,
 `no-forwarding-lambda`, `alchemy-no-v1-worker-properties`, and `alchemy-no-deprecated-docker-constraints`.
 Fixes skip ambiguous bindings, conflicting properties, and unsupported import references. Oxlint applies one
 import-adding fix per file per run, so run it again until nothing changes. `oxlint --fix-suggestions` also applies the
-suggestions from `prefer-effect-predicate`, `no-forwarding-lambda`, `no-manual-tag-comparison` and
-`prefer-struct-assign`; review those changes.
+suggestions from `prefer-effect-predicate`, `prefer-direct-effect-combinators`, `no-forwarding-lambda`,
+`no-manual-tag-comparison` and `prefer-struct-assign`; review those changes.
 
 ## Adding a rule
 

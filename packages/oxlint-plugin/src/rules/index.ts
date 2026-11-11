@@ -47,6 +47,7 @@ import { noThrowInEffectCallback } from './effect/no-throw-in-effect-callback';
 import { noUppercaseHttpApiHeader } from './effect/no-uppercase-http-api-header';
 import { noZeroRetryTimes } from './effect/no-zero-retry-times';
 import { preferDataMatch } from './effect/prefer-data-match';
+import { preferDirectEffectCombinators } from './effect/prefer-direct-effect-combinators';
 import { preferEffectAlchemyNamespaceImports } from './effect/prefer-effect-alchemy-namespace-imports';
 import { preferEffectArchive } from './effect/prefer-effect-archive';
 import { preferEffectArrayOps } from './effect/prefer-effect-array-ops';
@@ -153,6 +154,7 @@ export const rules = {
   'no-zero-retry-times': noZeroRetryTimes,
   'padding-line-between-statements': paddingLineBetweenStatements,
   'prefer-data-match': preferDataMatch,
+  'prefer-direct-effect-combinators': preferDirectEffectCombinators,
   'prefer-effect-alchemy-namespace-imports': preferEffectAlchemyNamespaceImports,
   'prefer-effect-archive': preferEffectArchive,
   'prefer-effect-array-ops': preferEffectArrayOps,

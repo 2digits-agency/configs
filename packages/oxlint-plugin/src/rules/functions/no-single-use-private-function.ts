@@ -150,8 +150,10 @@ export const noSingleUsePrivateFunction = Rule.define({
         sourceCode.getDeclaredVariables(declaration),
         (variable) => variable.name === name.name,
       ).pipe(
-        Opt.map((variable) => Arr.filter(variable.references, (reference) => !reference.init)),
-        Opt.getOrElse(Arr.empty),
+        Opt.match({
+          onSome: (variable) => Arr.filter(variable.references, (reference) => !reference.init),
+          onNone: Arr.empty,
+        }),
       );
 
       return (
