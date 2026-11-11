@@ -37,8 +37,7 @@ function isCorsApi(node: ESTree.Node, imports: ImportBindings): boolean {
  */
 function credentialedWildcard(options: ESTree.ObjectExpression): boolean {
   const credentials = objectProperty(options, 'credentials').pipe(
-    Opt.map(({ value }): ESTree.Node => value),
-    Opt.getOrElse((): ESTree.Node => options),
+    Opt.match({ onSome: ({ value }): ESTree.Node => value, onNone: (): ESTree.Node => options }),
   );
 
   return (

@@ -1,26 +1,17 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type Definition,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
-import * as Tuple from 'effect/Tuple';
 
-import { callbackCall, containsRange, isConstDeclaration, isFunctionNode, type FunctionNode } from '../../internal/ast';
+import { callbackCall, isFunctionNode, type FunctionNode } from '../../internal/ast';
 import { argumentText } from '../../internal/fixes';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable } from '../../internal/scope';
-import { forwardedCall, isDetachableCallee, isEffectGuard, isTypeGuard } from './internal/forwarding';
+import { forwardedCall, isDetachableCallee, isEffectGuard, isSettledCallee, isTypeGuard } from './internal/forwarding';
 
 // Modules whose callbacks also receive an index or key, so `Arr.map(xs, f)` would pass `f` a second argument.
 const isIndexedModule = Schema.is(
@@ -170,65 +161,6 @@ const isMultiArgumentApi = Schema.is(
  * generic function passed instead, such as `Opt.some`, has nothing to infer from and gets `unknown`.
  */
 const isContextualModule = Schema.is(Schema.Literals(['Match']));
-
-/**
- * Whether a binding the callee reads already holds its final value wherever the callback is created. Passing the callee
- * reads the binding then, not when the callback runs: a `let` may change after it, and a `const` declared later, or
- * read from a hoisted function that may run before the declaration, throws.
- *
- * @param definition Definition of the binding.
- * @param callback Callback that would be replaced.
- */
-function isSettledAt(definition: Definition, callback: FunctionNode): boolean {
-  // A named function expression's own name is gone once the callback is.
-  if (containsRange(callback, definition.name)) {
-    return false;
-  }
-
-  if (definition.type !== 'Variable' && definition.type !== 'ClassName') {
-    return true;
-  }
-
-  if (definition.type === 'Variable' && !isConstDeclaration(definition.parent)) {
-    return false;
-  }
-
-  return (
-    Tuple.get(definition.node.range, 1) <= Tuple.get(callback.range, 0) && !hoistedBetween(callback, definition.node)
-  );
-}
-
-function hoistedBetween(node: ESTree.Node, declaration: ESTree.Node): boolean {
-  const parent = node.parent as ESTree.Node | null | undefined;
-
-  if (!parent || containsRange(parent, declaration)) {
-    return false;
-  }
-
-  return parent.type === 'FunctionDeclaration' || hoistedBetween(parent, declaration);
-}
-
-/**
- * Whether every binding a callee reads is settled where the callback is created and never reassigned afterwards, as a
- * function declaration or parameter can be: the callback reads the new value, the passed callee keeps the old one.
- *
- * @param sourceCode Source of the file.
- * @param callee Forwarded callee.
- * @param callback Callback that would be replaced.
- */
-function isSettledCallee(
-  sourceCode: OxlintSourceCode,
-  callee: ESTree.Expression | ESTree.Super,
-  callback: FunctionNode,
-): boolean {
-  return Arr.every(
-    Arr.filter(sourceCode.getScope(callee).references, ({ identifier }) => containsRange(callee, identifier)),
-    ({ resolved }) =>
-      !resolved ||
-      (!Arr.some(resolved.references, (reference) => reference.isWrite() && !reference.init) &&
-        Arr.every(resolved.defs, (definition) => isSettledAt(definition, callback))),
-  );
-}
 
 /**
  * Whether a callee is a function of this file with exactly one signature: a function declaration without overloads, or
