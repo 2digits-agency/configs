@@ -297,8 +297,8 @@ import match too, and the fix reuses the namespace the chain already names, addi
 
 - Option: `Opt.filter(Opt.some(x), p)` → `Opt.liftPredicate(x, p)`; `Opt.filter` then `Opt.isSome`/`isNone` →
   `Opt.exists` (negated for `isNone`); `Opt.map` then `Opt.flatten` → `Opt.flatMap`; `Opt.map(f)` then
-  `Opt.getOrElse(g)` → `Opt.match({ onSome: f, onNone: g })`, or `Opt.exists(f)` when `g` is `() => false`;
-  `Opt.match(o, { onNone: () => false, onSome: p })` → `Opt.exists(o, p)`; `Opt.flatMap` with a callback that returns
+  `Opt.getOrElse(g)` → `Opt.match({ onSome: f, onNone: g })`, or `Opt.exists(f)` when `g` is `() => false` and `f`
+  visibly returns a boolean; `Opt.match(o, { onNone: () => false, onSome: p })` with such a `p` → `Opt.exists(o, p)`; `Opt.flatMap` with a callback that returns
   `Opt.fromNullishOr(…)` or `Opt.some(…)` → `Opt.flatMapNullishOr` or `Opt.map`; `Opt.orElse(() => Opt.some(d))` →
   `Opt.orElseSome(() => d)`; `Opt.getOrElse(() => null)` or `Fn.constNull` → `Opt.getOrNull`, and the same for
   `undefined`.
@@ -325,6 +325,9 @@ Rewrites that keep the behavior are autofixed. The rest are suggestions or repor
 - `Arr.findFirst` → `Arr.some` is autofixed only when the callback visibly returns a boolean (a comparison, `!`, a
   boolean literal, or an Effect guard such as `P.isString`). Otherwise it is a suggestion, since `Arr.findFirst` also
   takes a callback that returns an Option, and a function literal that returns an Option is not reported.
+- `Arr.some` and `Arr.last` take an array where `Arr.findFirst`, `Arr.findFirstIndex` and `Arr.reverse` take any
+  iterable, so those rewrites are autofixed only when the input is visibly an array (an array literal or the result of
+  an `Arr` call). On other input, such as a `Set` or a variable, they are suggestions.
 - `Arr.map(f)` → `Arr.flatMapNullishOr(f)` and the Filter lambdas are reported without a fix when the new API would pass
   `f` different arguments (an index) or read `f` too early (a `let`, or a binding declared after the function), and
   `Filter.toPredicate(obj.check)` would lose `this`. An annotated Filter lambda gets a suggestion, because its type
@@ -333,9 +336,11 @@ Rewrites that keep the behavior are autofixed. The rest are suggestions or repor
   `Result.getOrElse` passes the failure to it.
 - A negation (`isNone`, emptiness checks) in the middle of a pipe, or in `flow`, and code with comments inside the
   rewrite are reported without a fix.
-
-`Arr.some` and `Arr.last` take an array where `Arr.findFirst`, `Arr.filter` and `Arr.reverse` take any iterable, so a
-fix on a `Set` or other iterable fails type checking rather than changing behavior.
+- A nested data-first chain whose outer call has arguments that may have side effects, such as
+  `Opt.getOrElse(Opt.map(o, f), makeFallback())`, is reported without a fix, because fusing the calls would run them in
+  a different order.
+- Callbacks with rest parameters or that read `arguments`, and Filter lambdas whose inner call has explicit type
+  arguments, are reported without a fix.
 
 ## Effect HTTP modules
 

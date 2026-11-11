@@ -24,11 +24,13 @@ import * as Struct from 'effect/Struct';
 import * as Tuple from 'effect/Tuple';
 
 import {
+  containsIdentifier,
   containsRange,
   isFunctionNode,
   isLiteral,
   plainProperty,
   propertyName,
+  staticPath,
   staticPropertyName,
   walkNodes,
   type FunctionNode,
@@ -109,9 +111,10 @@ interface Step {
 /**
  * How safely a rewrite applies: `fix` keeps the behavior, `boolean` is a suggestion because it only holds for a
  * callback that returns a boolean, `pure` is a suggestion because the direct API stops at the first match, so the
- * callback runs fewer times, and `none` is reported without a fix.
+ * callback runs fewer times, `array` is a suggestion because the direct API needs an array where the original takes any
+ * iterable, and `none` is reported without a fix.
  */
-type Safety = 'boolean' | 'fix' | 'none' | 'pure';
+type Safety = 'array' | 'boolean' | 'fix' | 'none' | 'pure';
 
 interface Rewrite {
   readonly api: Api;
@@ -123,6 +126,14 @@ interface Rewrite {
 interface Pair {
   readonly inner: Step;
   readonly outer: Step;
+  /**
+   * The value the inner step receives, when it is in the source: its `self`, the pipe subject or the previous step.
+   */
+  readonly input: Opt.Option<ESTree.Node>;
+  /**
+   * Whether the outer call is data-first, so its arguments evaluate after the inner call has run its callback.
+   */
+  readonly nested: boolean;
 }
 
 interface Tools {
@@ -397,14 +408,96 @@ function callbackResult(node: ESTree.Node): Opt.Option<ESTree.Expression> {
  * @param tools Rule tools.
  */
 function booleanCallbackSafety(pair: Pair, tools: Tools): Safety {
-  return Opt.exists(
-    firstArgument(pair.inner),
-    (callback) =>
-      isEffectGuard(callback, tools.imports) ||
-      Opt.exists(callbackResult(callback), (result) => returnsBoolean(result, tools.imports)),
-  )
+  return Opt.exists(firstArgument(pair.inner), (callback) => isBooleanCallback(callback, tools.imports))
     ? 'fix'
     : 'boolean';
+}
+
+// An Effect guard such as `P.isString`, or a function whose result is visibly a boolean.
+function isBooleanCallback(node: ESTree.Expression, imports: ImportBindings): boolean {
+  return isEffectGuard(node, imports) || Opt.exists(callbackResult(node), (result) => returnsBoolean(result, imports));
+}
+
+const arrayApis: ReadonlySet<string> = new Set([
+  'append',
+  'appendAll',
+  'dedupe',
+  'drop',
+  'empty',
+  'filter',
+  'filterMap',
+  'flatMap',
+  'flatMapNullishOr',
+  'flatten',
+  'fromIterable',
+  'getFailures',
+  'getSomes',
+  'getSuccesses',
+  'make',
+  'map',
+  'of',
+  'prepend',
+  'prependAll',
+  'range',
+  'replicate',
+  'reverse',
+  'sort',
+  'sortBy',
+  'sortWith',
+  'take',
+]);
+
+/**
+ * Whether an expression visibly evaluates to an array: an array literal, or an Effect Array call or step that returns
+ * one, such as `Arr.map(xs, f)` or `Arr.filter(p)` in a pipe.
+ *
+ * @param node Expression or pipe step.
+ * @param imports Import bindings of the file.
+ */
+function isArrayValued(node: ESTree.Node, imports: ImportBindings): boolean {
+  return (
+    node.type === 'ArrayExpression' ||
+    imports.isApi(node.type === 'CallExpression' ? node.callee : node, 'Array', [...arrayApis])
+  );
+}
+
+/**
+ * Downgrade a fix to a suggestion unless the inner step visibly receives an array. `Arr.some` and `Arr.last` take an
+ * array, while `Arr.findFirst`, `Arr.findFirstIndex` and `Arr.reverse` take any iterable, such as a `Set`.
+ *
+ * @param rewrite Rewrite to guard.
+ */
+function forArrays(rewrite: PairRewrite): PairRewrite {
+  return (pair, tools) =>
+    Opt.map(rewrite(pair, tools), (found) =>
+      found.safety === 'fix' && !Opt.exists(pair.input, (input) => isArrayValued(input, tools.imports))
+        ? Struct.assign(found, { safety: 'array' as const })
+        : found,
+    );
+}
+
+/**
+ * Whether a callback receives only its first argument: no second or rest parameter, and no `arguments`.
+ *
+ * @param node Callback.
+ */
+function takesOneArgument(node: ESTree.Node): boolean {
+  return (
+    isFunctionNode(node) &&
+    node.params.length <= 1 &&
+    Arr.every(node.params, (parameter) => parameter.type !== 'RestElement') &&
+    (node.type === 'ArrowFunctionExpression' || !containsIdentifier(node, 'arguments'))
+  );
+}
+
+// An argument whose evaluation has no effects, so evaluating it earlier changes nothing.
+function isInert(node: ESTree.Node): boolean {
+  return (
+    isFunctionNode(node) ||
+    node.type === 'Literal' ||
+    (node.type === 'TemplateLiteral' && Arr.isReadonlyArrayEmpty(node.expressions)) ||
+    Opt.isSome(staticPath(node))
+  );
 }
 
 // Skip `Arr.findFirst` with a callback that returns an Option, which `Arr.some` cannot express.
@@ -484,10 +577,7 @@ function nullishMapRewrite(pair: Pair, tools: Tools): Opt.Option<Rewrite> {
   )
     ? to('Array.flatMapNullishOr', {
         args: ({ inner }) => texts(tools, inner.args),
-        safety: ({ inner }) =>
-          Opt.exists(firstArgument(inner), (mapper) => isFunctionNode(mapper) && mapper.params.length <= 1)
-            ? 'fix'
-            : 'none',
+        safety: ({ inner }) => (Opt.exists(firstArgument(inner), takesOneArgument) ? 'fix' : 'none'),
       })(pair, tools)
     : Opt.none();
 }
@@ -507,8 +597,10 @@ const pairPatterns: ReadonlyArray<PairPattern> = [
   {
     inner: ['Option.map'],
     outer: ['Option.getOrElse'],
+    // `Opt.exists` needs a predicate, so `() => false` only makes it `exists` when the mapper returns a boolean.
     rewrite: (pair, tools) =>
-      Opt.exists(firstArgument(pair.outer), isFalseThunk)
+      Opt.exists(firstArgument(pair.outer), isFalseThunk) &&
+      Opt.exists(firstArgument(pair.inner), (mapper) => isBooleanCallback(mapper, tools.imports))
         ? to('Option.exists', { args: ({ inner }) => texts(tools, inner.args) })(pair, tools)
         : to('Option.match', { args: handlers('onSome', 'onNone') })(pair, tools),
   },
@@ -529,15 +621,19 @@ const pairPatterns: ReadonlyArray<PairPattern> = [
   {
     inner: ['Array.findFirst'],
     outer: ['Option.isSome'],
-    rewrite: unlessOptionCallback(to('Array.some', { safety: booleanCallbackSafety })),
+    rewrite: unlessOptionCallback(forArrays(to('Array.some', { safety: booleanCallbackSafety }))),
   },
   {
     inner: ['Array.findFirst'],
     outer: ['Option.isNone'],
-    rewrite: unlessOptionCallback(to('Array.some', { negate: true, safety: booleanCallbackSafety })),
+    rewrite: unlessOptionCallback(forArrays(to('Array.some', { negate: true, safety: booleanCallbackSafety }))),
   },
-  { inner: ['Array.findFirstIndex'], outer: ['Option.isSome'], rewrite: to('Array.some') },
-  { inner: ['Array.findFirstIndex'], outer: ['Option.isNone'], rewrite: to('Array.some', { negate: true }) },
+  { inner: ['Array.findFirstIndex'], outer: ['Option.isSome'], rewrite: forArrays(to('Array.some')) },
+  {
+    inner: ['Array.findFirstIndex'],
+    outer: ['Option.isNone'],
+    rewrite: forArrays(to('Array.some', { negate: true })),
+  },
   { inner: ['Array.filter'], outer: ['Array.head'], rewrite: to('Array.findFirst', { safety: () => 'pure' }) },
   {
     inner: ['Array.filter'],
@@ -555,7 +651,7 @@ const pairPatterns: ReadonlyArray<PairPattern> = [
   { inner: ['Array.map'], outer: ['Array.flatten'], rewrite: to('Array.flatMap') },
   { inner: ['Array.head', 'Array.last'], outer: ['Option.isSome'], rewrite: to('Array.isReadonlyArrayNonEmpty') },
   { inner: ['Array.head', 'Array.last'], outer: ['Option.isNone'], rewrite: to('Array.isReadonlyArrayEmpty') },
-  { inner: ['Array.reverse'], outer: ['Array.head'], rewrite: to('Array.last') },
+  { inner: ['Array.reverse'], outer: ['Array.head'], rewrite: forArrays(to('Array.last')) },
   {
     inner: ['Result.map'],
     outer: ['Result.getOrElse'],
@@ -573,12 +669,22 @@ const pairPatterns: ReadonlyArray<PairPattern> = [
   },
 ];
 
+/**
+ * The first pattern's rewrite of two steps. In a nested call such as `Opt.getOrElse(Opt.map(o, f), g)`, `f` runs before
+ * `g` is evaluated, while the fused call evaluates `g` first, so it is only fixed when the outer arguments have no
+ * effects.
+ *
+ * @param pair Steps.
+ * @param tools Rule tools.
+ */
 function pairRewrite(pair: Pair, tools: Tools): Opt.Option<Rewrite> {
+  const reordered = pair.nested && Arr.isReadonlyArrayNonEmpty(pair.inner.args) && !Arr.every(pair.outer.args, isInert);
+
   return Arr.findFirst(pairPatterns, (pattern) =>
     Arr.contains(pattern.inner, pair.inner.api) && Arr.contains(pattern.outer, pair.outer.api)
       ? pattern.rewrite(pair, tools)
       : Opt.none(),
-  );
+  ).pipe(Opt.map((rewrite) => (reordered ? Struct.assign(rewrite, { safety: 'none' as const }) : rewrite)));
 }
 
 /**
@@ -616,9 +722,9 @@ function returnedCall(node: ESTree.Node): Opt.Option<ESTree.CallExpression> {
  *
  * @param wrapper API the callback returns.
  * @param api API that applies `wrapper`.
- * @param maxParameters Parameters the new API passes to its callback.
+ * @param oneArgument Whether the new API passes its callback only the value, and no index.
  */
-function unwrapReturned(wrapper: Api, api: Api, maxParameters = Infinity): CallbackPattern['rewrite'] {
+function unwrapReturned(wrapper: Api, api: Api, oneArgument = false): CallbackPattern['rewrite'] {
   return (callback, { imports, sourceCode }) =>
     returnedCall(callback).pipe(
       Opt.filter(
@@ -626,7 +732,7 @@ function unwrapReturned(wrapper: Api, api: Api, maxParameters = Infinity): Callb
           isFunctionNode(callback) &&
           // A return type annotation would no longer match the unwrapped value.
           P.isNullish(callback.returnType) &&
-          callback.params.length <= maxParameters &&
+          (!oneArgument || takesOneArgument(callback)) &&
           apiIs(call, wrapper, imports),
       ),
       Opt.flatMap((call) =>
@@ -699,7 +805,7 @@ function constantFallback(module: 'Option' | 'Result'): CallbackPattern['rewrite
 }
 
 // `Opt.match(o, { onNone: () => false, onSome: p })` is `Opt.exists(o, p)`.
-function matchExists(callback: ESTree.Expression, { sourceCode }: Tools): Opt.Option<CallbackRewrite> {
+function matchExists(callback: ESTree.Expression, { imports, sourceCode }: Tools): Opt.Option<CallbackRewrite> {
   if (callback.type !== 'ObjectExpression' || callback.properties.length !== 2) {
     return Opt.none();
   }
@@ -713,6 +819,8 @@ function matchExists(callback: ESTree.Expression, { sourceCode }: Tools): Opt.Op
   return handler('onNone').pipe(
     Opt.filter((onNone) => properties.length === 2 && isFalseThunk(onNone.value)),
     Opt.flatMap(() => handler('onSome')),
+    // `Opt.exists` needs a predicate.
+    Opt.filter((onSome) => isBooleanCallback(onSome.value, imports)),
     Opt.map((onSome) => ({
       api: 'Option.exists',
       callback: '`onNone: () => false`',
@@ -749,7 +857,7 @@ const callbackPatterns: ReadonlyArray<CallbackPattern> = [
   { apis: ['Result.flatMap'], rewrite: unwrapReturned('Result.succeed', 'Result.map') },
   { apis: ['Result.getOrElse'], rewrite: constantFallback('Result') },
   // `Arr.flatMapNullishOr` passes no index.
-  { apis: ['Array.flatMap'], rewrite: unwrapReturned('Array.fromNullishOr', 'Array.flatMapNullishOr', 1) },
+  { apis: ['Array.flatMap'], rewrite: unwrapReturned('Array.fromNullishOr', 'Array.flatMapNullishOr', true) },
 ];
 
 function callbackRewrite(step: Step, tools: Tools): Opt.Option<CallbackRewrite> {
@@ -870,7 +978,13 @@ interface Edit {
   readonly text: string;
 }
 
-const pairMessages = { boolean: 'pairIfBoolean', fix: 'pair', none: 'pair', pure: 'pairIfPure' } as const;
+const pairMessages = {
+  array: 'pairIfArray',
+  boolean: 'pairIfBoolean',
+  fix: 'pair',
+  none: 'pair',
+  pure: 'pairIfPure',
+} as const;
 
 /**
  * Prefer the Effect API that does in one step what a chain of Option, Array, Result or Filter calls does indirectly.
@@ -886,6 +1000,8 @@ export const preferDirectEffectCombinators = Rule.define({
         'Use {{direct}} instead of {{inner}} followed by {{outer}}. It stops at the first match, so check that the callback has no side effects or exceptions that relied on running for every element.',
       pairIfBoolean:
         'Use {{direct}} instead of {{inner}} followed by {{outer}} if the callback returns a boolean. {{inner}} also accepts a callback that returns an Option, which {{direct}} would treat as a match.',
+      pairIfArray:
+        'Use {{direct}} instead of {{inner}} followed by {{outer}} if the input is an array. {{direct}} takes an array, while {{inner}} also takes other iterables, such as a Set.',
       callback: 'Use {{direct}} instead of {{outer}} with {{callback}}.',
       filterCheck:
         'Use {{direct}}({{filter}}) instead of a function that applies {{check}} to the Result of {{filter}}.',
@@ -1018,7 +1134,7 @@ export const preferDirectEffectCombinators = Rule.define({
         Opt.match({
           onNone: () => Effect.void,
           onSome: ({ outer, inner }) =>
-            reportPair(node, { inner: inner.step, outer }, (rewrite, name) =>
+            reportPair(node, { inner: inner.step, outer, input: Opt.some(inner.self), nested: true }, (rewrite, name) =>
               Opt.some([
                 {
                   range: node.range,
@@ -1038,22 +1154,26 @@ export const preferDirectEffectCombinators = Rule.define({
         Opt.match({
           onNone: () => Effect.void,
           onSome: ([inner, outer]) =>
-            reportPair(outer.node, { inner: inner.step, outer }, (rewrite, name) => {
-              const replacement = callText(name, [text(inner.self), ...rewrite.args]);
+            reportPair(
+              outer.node,
+              { inner: inner.step, outer, input: Opt.some(inner.self), nested: false },
+              (rewrite, name) => {
+                const replacement = callText(name, [text(inner.self), ...rewrite.args]);
 
-              if (steps.length === 1) {
-                return Opt.some([{ range: call.range, text: negatedWhen(rewrite, replacement, call) }]);
-              }
+                if (steps.length === 1) {
+                  return Opt.some([{ range: call.range, text: negatedWhen(rewrite, replacement, call) }]);
+                }
 
-              return rewrite.negate
-                ? Opt.none()
-                : Opt.product(subject, Arr.get(steps, 1)).pipe(
-                    Opt.map(([value, next]) => [
-                      { range: value.range, text: replacement },
-                      { range: [Tuple.get(outer.node.range, 0), Tuple.get(next.range, 0)], text: '' },
-                    ]),
-                  );
-            }),
+                return rewrite.negate
+                  ? Opt.none()
+                  : Opt.product(subject, Arr.get(steps, 1)).pipe(
+                      Opt.map(([value, next]) => [
+                        { range: value.range, text: replacement },
+                        { range: [Tuple.get(outer.node.range, 0), Tuple.get(next.range, 0)], text: '' },
+                      ]),
+                    );
+              },
+            ),
         }),
       );
     }
@@ -1072,25 +1192,29 @@ export const preferDirectEffectCombinators = Rule.define({
             Opt.match({
               onNone: () => Effect.void,
               onSome: ([inner, outer]) =>
-                reportPair(outer.node, { inner, outer }, (rewrite, name) => {
-                  const replacement = stepText(name, rewrite.args);
+                reportPair(
+                  outer.node,
+                  { inner, outer, input: index === 0 ? sequence.subject : Arr.get(steps, index - 1), nested: false },
+                  (rewrite, name) => {
+                    const replacement = stepText(name, rewrite.args);
 
-                  const range: Range = [Tuple.get(inner.node.range, 0), Tuple.get(outer.node.range, 1)];
+                    const range: Range = [Tuple.get(inner.node.range, 0), Tuple.get(outer.node.range, 1)];
 
-                  if (!rewrite.negate) {
-                    return Opt.some([{ range, text: replacement }]);
-                  }
+                    if (!rewrite.negate) {
+                      return Opt.some([{ range, text: replacement }]);
+                    }
 
-                  // A negated result can only wrap the whole pipe, so the step must be its last.
-                  return kind === 'pipe' && index + 2 === steps.length
-                    ? Opt.some([
-                        {
-                          range: call.range,
-                          text: negated(replaceRange(sourceCode, call, range, replacement), call),
-                        },
-                      ])
-                    : Opt.none();
-                }),
+                    // A negated result can only wrap the whole pipe, so the step must be its last.
+                    return kind === 'pipe' && index + 2 === steps.length
+                      ? Opt.some([
+                          {
+                            range: call.range,
+                            text: negated(replaceRange(sourceCode, call, range, replacement), call),
+                          },
+                        ])
+                      : Opt.none();
+                  },
+                ),
             }),
           ),
         { discard: true },
@@ -1138,8 +1262,11 @@ export const preferDirectEffectCombinators = Rule.define({
       return Opt.match(filterCheck(node, imports), {
         onNone: () => Effect.void,
         onSome: ({ check, filter, api }) => {
+          // Passing the callee drops explicit type arguments, such as `decode<User>(x)`.
           const settled =
-            isDetachableCallee(filter.callee, imports) && isSettledCallee(sourceCode, filter.callee, node);
+            P.isNullish(filter.typeArguments) &&
+            isDetachableCallee(filter.callee, imports) &&
+            isSettledCallee(sourceCode, filter.callee, node);
 
           return report({
             node,

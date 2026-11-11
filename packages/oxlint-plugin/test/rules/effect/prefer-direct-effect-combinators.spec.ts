@@ -69,6 +69,19 @@ const fixes: ReadonlyArray<Expected> = [
     `${opt} Opt.exists(o, (x) => x > 1)`,
   ],
   [`${opt} Opt.isSome(Opt.filter(o, /* keep */ p))`, 'pair', null],
+  // `Opt.exists` needs a predicate, so a mapper that does not return a boolean keeps `Opt.match`.
+  [
+    `${opt} Opt.getOrElse(Opt.map(o, (x) => x.count), () => false)`,
+    'pair',
+    `${opt} Opt.match(o, { onSome: (x) => x.count, onNone: () => false })`,
+  ],
+  // Nested, `f` runs before `makeFallback()` is evaluated; fused, it would run after.
+  [`${opt} Opt.getOrElse(Opt.map(o, f), makeFallback())`, 'pair', null],
+  [
+    `${opt} o.pipe(Opt.map(f), Opt.getOrElse(makeFallback()))`,
+    'pair',
+    `${opt} o.pipe(Opt.match({ onSome: f, onNone: makeFallback() }))`,
+  ],
   // Aliases
   [
     `import { Option as O } from 'effect'; O.isSome(O.filter(o, p))`,
@@ -81,13 +94,7 @@ const fixes: ReadonlyArray<Expected> = [
     `import * as Opt from 'effect/Option';\nimport { filter, isSome } from 'effect/Option'; Opt.exists(o, p)`,
   ],
   // Array
-  [`${arr} Opt.isSome(Arr.findFirst(xs, (x) => x.id === id))`, 'pair', `${arr} Arr.some(xs, (x) => x.id === id)`],
-  [
-    `${arr} import * as P from 'effect/Predicate'; Arr.findFirst(xs, P.isString).pipe(Opt.isNone)`,
-    'pair',
-    `${arr} import * as P from 'effect/Predicate'; !Arr.some(xs, P.isString)`,
-  ],
-  [`${arr} Opt.isSome(Arr.findFirstIndex(xs, p))`, 'pair', `${arr} Arr.some(xs, p)`],
+  [`${arr} Opt.isSome(Arr.findFirst([a, b], (x) => x > 1))`, 'pair', `${arr} Arr.some([a, b], (x) => x > 1)`],
   [`${arr} Arr.flatten(Arr.map(xs, f))`, 'pair', `${arr} Arr.flatMap(xs, f)`],
   [`${arr} ${fn} flow(Arr.map(f), Arr.flatten)`, 'pair', `${arr} ${fn} flow(Arr.flatMap(f))`],
   [`${arr} Arr.map(Arr.filter(xs, Opt.isSome), (o) => o.value)`, 'pair', `${arr} Arr.getSomes(xs)`],
@@ -111,7 +118,13 @@ const fixes: ReadonlyArray<Expected> = [
   [`${arr} Arr.length(Arr.filter(xs, p))`, 'pair', `${arr} Arr.countBy(xs, p)`],
   [`${arr} Opt.isSome(Arr.head(xs))`, 'pair', `${arr} Arr.isReadonlyArrayNonEmpty(xs)`],
   [`${arr} Arr.last(xs).pipe(Opt.isNone)`, 'pair', `${arr} Arr.isReadonlyArrayEmpty(xs)`],
-  [`${arr} Arr.head(Arr.reverse(xs))`, 'pair', `${arr} Arr.last(xs)`],
+  [`${arr} ${fn} pipe(xs, Arr.map(f), Arr.reverse, Arr.head)`, 'pair', `${arr} ${fn} pipe(xs, Arr.map(f), Arr.last)`],
+  // `Arr.flatMapNullishOr` passes no index, which a rest parameter could read.
+  [
+    `${arr} import * as P from 'effect/Predicate'; Arr.filter(Arr.map(xs, (...args) => args[1]), P.isNotNullish)`,
+    'pair',
+    null,
+  ],
   // Result
   [
     `${result} Result.getOrElse(Result.map(r, f), g)`,
@@ -159,6 +172,8 @@ const fixes: ReadonlyArray<Expected> = [
   ],
   // `parse` is not initialized yet where `Filter.toOption(parse)` would read it.
   [`${result} const parsed = (x) => Result.getSuccess(parse(x)); const parse = make()`, 'filterCheck', null],
+  // `Filter.toOption(decode)` would drop the type argument.
+  [`${result} const decode = make(); const parsed = (x) => Result.getSuccess(decode<User>(x))`, 'filterCheck', null],
   // `Filter.toPredicate(rules.check)` would lose `this`.
   [`${result} const valid = (x) => Result.isSuccess(rules.check(x))`, 'filterCheck', null],
   [
@@ -178,6 +193,19 @@ const suggestions: ReadonlyArray<Expected> = [
   [`${arr} Arr.isReadonlyArrayNonEmpty(Arr.filter(xs, p))`, 'pairIfPure', `${arr} Arr.some(xs, p)`],
   [`${arr} Arr.isArrayEmpty(Arr.filter(xs, p))`, 'pairIfPure', `${arr} !Arr.some(xs, p)`],
   [`${arr} Opt.isSome(Arr.findFirst(xs, isActive))`, 'pairIfBoolean', `${arr} Arr.some(xs, isActive)`],
+  // `xs` may be a Set, which `Arr.some` and `Arr.last` do not take.
+  [
+    `${arr} Opt.isSome(Arr.findFirst(xs, (x) => x.id === id))`,
+    'pairIfArray',
+    `${arr} Arr.some(xs, (x) => x.id === id)`,
+  ],
+  [
+    `${arr} import * as P from 'effect/Predicate'; Arr.findFirst(xs, P.isString).pipe(Opt.isNone)`,
+    'pairIfArray',
+    `${arr} import * as P from 'effect/Predicate'; !Arr.some(xs, P.isString)`,
+  ],
+  [`${arr} Opt.isSome(Arr.findFirstIndex(xs, p))`, 'pairIfArray', `${arr} Arr.some(xs, p)`],
+  [`${arr} Arr.head(Arr.reverse(xs))`, 'pairIfArray', `${arr} Arr.last(xs)`],
   [
     `${result} const valid = (x: string): boolean => Result.isSuccess(check(x))`,
     'filterCheck',
@@ -191,6 +219,8 @@ tester.run('prefer-direct-effect-combinators', preferDirectEffectCombinators, {
     `${opt} Opt.getOrElse(o, () => 0)`,
     `${opt} Opt.flatMap(o, (x) => Opt.fromNullishOr(f(x)) as Opt.Option<X>)`,
     `${opt} Opt.match(o, { onNone: () => true, onSome: p })`,
+    `${opt} Opt.match(o, { onNone: () => false, onSome: (x) => x.count })`,
+    `${arr} Arr.flatMap(xs, function (x) { return Arr.fromNullishOr(arguments[1]) })`,
     `${opt} Opt.flatMap(o, (x): Opt.Option<number> => Opt.some(x))`,
     `${opt} Opt.isSome(Opt.filter<number>(o, p))`,
     // `Arr.findFirst` with an Option-returning callback finds the first Some, which `Arr.some` cannot express.
