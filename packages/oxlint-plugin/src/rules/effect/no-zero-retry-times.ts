@@ -22,7 +22,7 @@ export const noZeroRetryTimes = Rule.define({
     return Visitor.on('CallExpression', (node) =>
       imports.isApi(node.callee, 'Effect', ['retry', 'repeat'] satisfies ReadonlyArray<keyof typeof Effect>)
         ? objectArgument(node).pipe(
-            Opt.flatMap((options) => objectProperty(options, 'times')),
+            Opt.flatMap(objectProperty('times')),
             Opt.filter((times) => isLiteral(times.value, 0)),
             Opt.match({
               onNone: () => Effect.void,

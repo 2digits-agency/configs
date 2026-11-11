@@ -125,7 +125,7 @@ function statusArguments(
   const status = Opt.flatMap(imports.member(node.callee, 'HttpServerResponse'), (member) =>
     argumentAt(node, member === ('empty' satisfies keyof typeof HttpServerResponse) ? 0 : 1).pipe(
       Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
-      Opt.flatMap((options) => objectProperty(options, 'status')),
+      Opt.flatMap(objectProperty('status')),
     ),
   );
 

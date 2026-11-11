@@ -68,10 +68,7 @@ export function importedPath(node: ESTree.Node, file: DomainFile): Opt.Option<Re
  * @param file File being linted.
  */
 export function domainBlock(node: ESTree.CallExpression, file: DomainFile): Opt.Option<DomainBlock> {
-  return importedPath(node.callee, file).pipe(
-    Opt.flatMap((path) => namespaceMember(path, 'Domain')),
-    Opt.filter(isDomainBlock),
-  );
+  return importedPath(node.callee, file).pipe(Opt.flatMap(namespaceMember('Domain')), Opt.filter(isDomainBlock));
 }
 
 /**

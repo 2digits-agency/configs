@@ -47,7 +47,7 @@ function encodingArgument(node: ESTree.CallExpression, index: number): Opt.Optio
 function isBase64UrlAlphabet(node: ESTree.CallExpression): boolean {
   return argumentAt(node, 1).pipe(
     Opt.filter((options) => options.type === 'ObjectExpression'),
-    Opt.flatMap((options) => objectProperty(options, 'alphabet')),
+    Opt.flatMap(objectProperty('alphabet')),
     Opt.exists(({ value }) => isLiteral(value, 'base64url')),
   );
 }

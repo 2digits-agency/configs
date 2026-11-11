@@ -38,7 +38,7 @@ export const alchemyNoPlaintextGithubSecret = Rule.define({
       argumentAt(node, 1).pipe(
         Opt.filter(() => imports.isApi(node.callee, 'GitHub', 'Secret')),
         Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
-        Opt.flatMap((options) => objectProperty(options, 'value')),
+        Opt.flatMap(objectProperty('value')),
         Opt.map(({ value }) => value),
         Opt.filter((value) => isPlaintextSecret(value, imports)),
         Opt.match({

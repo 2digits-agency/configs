@@ -138,10 +138,7 @@ function pipeSwaps(node: ESTree.CallExpression, imports: ImportBindings): Readon
 }
 
 function isTwoDigitZeroPadding(node: ESTree.CallExpression): boolean {
-  return (
-    Opt.exists(argumentAt(node, 0), (length) => isLiteral(length, 2)) &&
-    Opt.exists(argumentAt(node, 1), (fill) => isLiteral(fill, '0'))
-  );
+  return Opt.exists(argumentAt(node, 0), isLiteral(2)) && Opt.exists(argumentAt(node, 1), isLiteral('0'));
 }
 
 function isStringPadStart(node: ESTree.Node, imports: ImportBindings): boolean {
@@ -191,7 +188,7 @@ function isHexToString(node: ESTree.CallExpression): boolean {
   return (
     memberCall(node, (name) => name === 'toString') &&
     node.arguments.length === 1 &&
-    Opt.exists(argumentAt(node, 0), (radix) => isLiteral(radix, 16))
+    Opt.exists(argumentAt(node, 0), isLiteral(16))
   );
 }
 

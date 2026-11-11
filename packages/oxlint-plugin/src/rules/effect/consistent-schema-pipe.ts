@@ -266,7 +266,7 @@ function hasPipe(
     return unknownOrFalse;
   }
 
-  const member = Opt.flatMap(typePath(declared.typeName, imports), (path) => namespaceMember(path, 'Schema'));
+  const member = Opt.flatMap(typePath(declared.typeName, imports), namespaceMember('Schema'));
 
   if (Opt.isSome(member)) {
     // Schema.Constraint and its subtypes are not Pipeable, unlike Schema.Top and the schemas built on it.

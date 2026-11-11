@@ -60,7 +60,7 @@ const durationExpression = Match.type<DurationPosition>().pipe(
     () => (node) =>
       argumentAt(node, node.arguments.length - 1).pipe(
         Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
-        Opt.flatMap((options) => objectProperty(options, 'duration')),
+        Opt.flatMap(objectProperty('duration')),
         Opt.map(({ value }) => value),
       ),
   ),

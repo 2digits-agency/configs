@@ -26,9 +26,9 @@ export const alchemyNoReservedEventbridgeDefaultName = Rule.define({
       argumentAt(node, 1).pipe(
         Opt.filter(() => imports.isApiPath(node.callee, ['AWS', 'EventBridge', 'EventBus'])),
         Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
-        Opt.flatMap((options) => objectProperty(options, 'name')),
+        Opt.flatMap(objectProperty('name')),
         Opt.map(({ value }) => value),
-        Opt.filter((name) => isLiteral(name, 'default')),
+        Opt.filter(isLiteral('default')),
         Opt.match({
           onNone: () => Effect.void,
           onSome: (name) => ctx.report(Diagnostic.fromId({ node: name, messageId: 'reserved' })),

@@ -36,7 +36,7 @@ function discardingMethod(node: ESTree.CallExpression): Opt.Option<string> {
   }
 
   const preservesChecks = objectArgument(node).pipe(
-    Opt.flatMap((options) => objectProperty(options, 'unsafePreserveChecks')),
+    Opt.flatMap(objectProperty('unsafePreserveChecks')),
     Opt.exists((preserve) => isLiteral(preserve.value, true)),
   );
 

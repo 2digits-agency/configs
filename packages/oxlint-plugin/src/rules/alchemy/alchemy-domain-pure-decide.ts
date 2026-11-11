@@ -177,7 +177,7 @@ export const alchemyDomainPureDecide = Rule.define({
           Match.when('fetch', () => report(node, Opt.some('io'), 'fetch()')),
           Match.orElse(() =>
             importedPath(node.callee, file).pipe(
-              Opt.flatMap((path) => namespaceMember(path, 'Effect')),
+              Opt.flatMap(namespaceMember('Effect')),
               Opt.filter(isEffectIo),
               Opt.match({
                 onNone: () => Effect.void,
