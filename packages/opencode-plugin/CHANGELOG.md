@@ -1,3 +1,9 @@
+## @2digits/opencode-plugin@0.2.54
+
+### Update `posthog-node` to 5.68.2
+
+The plugin now sends telemetry with `posthog-node` 5.68.2.
+
 ## @2digits/opencode-plugin@0.2.53
 
 ### Update `posthog-node` to 5.63.2

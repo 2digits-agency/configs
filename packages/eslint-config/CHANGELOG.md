@@ -1,3 +1,9 @@
+## @2digits/eslint-config@5.12.2
+
+### Update `eslint-plugin-github-action` and `eslint-plugin-storybook`
+
+The config now uses `eslint-plugin-github-action` 0.5.0 and `eslint-plugin-storybook` 10.6.7.
+
 ## @2digits/eslint-config@5.12.1
 
 ### Update @eslint-react to 5.30 and typescript-eslint to 8.72.2
