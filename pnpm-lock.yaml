@@ -381,8 +381,8 @@ catalogs:
       specifier: 3.3.0
       version: 3.3.0
     knip:
-      specifier: 6.44.2
-      version: 6.44.2
+      specifier: 6.45.1
+      version: 6.45.1
     local-pkg:
       specifier: 2.0.0
       version: 2.0.0
@@ -548,7 +548,7 @@ importers:
         version: 10.14.0(jiti@2.7.0)(supports-color@7.2.0)
       knip:
         specifier: 'catalog:'
-        version: 6.44.2
+        version: 6.45.1
       node:
         specifier: runtime:26.13.0
         version: runtime:26.13.0
@@ -6147,8 +6147,8 @@ packages:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
 
-  knip@6.44.2:
-    resolution: {integrity: sha512-6URO7pnqtOnyvSsXfW6+8C9j1lfcicxUCysXO0RgMtHTZ96HqCXh29op8iabeQW5JeIc8dJWwzSdJVWDokeScQ==}
+  knip@6.45.1:
+    resolution: {integrity: sha512-zp3zXKy2cZWiIttdlWU5fisKxVQaLSU6471ej0KGz1GdHdaHxpzTAO/LIyFNc3gU3v1W7LJaqvYumoO3l/u+6A==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -7760,8 +7760,8 @@ packages:
     resolution: {integrity: sha512-8iAasVS4wUx0gPLjH8Xtz2PeDzTSiy8QiLGu2DT3X5GU+egFEQhpnbtkehbAwjvDcxIERmCYcysiODFmE3Ud0Q==}
     engines: {node: '>=18'}
 
-  unbash@6.0.1:
-    resolution: {integrity: sha512-0db9eS5iqybux41zLkX69nk90KTci7F7eZ+gXzEG/Q7E0tAqEBhRh5fkZvk1N7jT7QkGWqq34i8SFGPFEe1V8A==}
+  unbash@6.0.4:
+    resolution: {integrity: sha512-t3OptUArewg9OpYGDskTSlxhyLDahfmZ4d36hE44Efb1y3HRLLpzsVqwH+AwBVymP4t7pP71xN+nnduudn2awA==}
     engines: {node: '>=14'}
 
   uncase@0.3.0:
@@ -12950,7 +12950,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.44.2:
+  knip@6.45.1:
     dependencies:
       formatly: 0.11.4
       get-tsconfig: 4.14.3
@@ -12961,9 +12961,8 @@ snapshots:
       smol-toml: 1.9.1
       strip-json-comments: 5.0.3
       tinyglobby: 0.2.17
-      unbash: 6.0.1
+      unbash: 6.0.4
       yaml: 2.9.1
-      zod: 4.6.7
 
   kubernetes-types@1.30.0: {}
 
@@ -14852,7 +14851,7 @@ snapshots:
 
   uint8array-extras@1.6.0: {}
 
-  unbash@6.0.1: {}
+  unbash@6.0.4: {}
 
   uncase@0.3.0:
     dependencies:
