@@ -1,10 +1,10 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 
-export const effectPromiseVsTryPromise: CreateRule = Rule.define({
+export const effectPromiseVsTryPromise = Rule.define({
   name: 'effect-promise-vs-trypromise',
   meta: ruleMeta({
     type: 'problem',

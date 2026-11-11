@@ -44,9 +44,9 @@ export function resolveVariable(
  * @param variable Resolved variable.
  */
 export function soleDefinition(variable: Opt.Option<Variable>): Opt.Option<Definition> {
-  return Opt.flatMap(
-    Opt.filter(variable, ({ defs }) => defs.length === 1),
-    ({ defs }) => Arr.head(defs),
+  return variable.pipe(
+    Opt.filter(({ defs }) => defs.length === 1),
+    Opt.flatMap(({ defs }) => Arr.head(defs)),
   );
 }
 
@@ -96,9 +96,9 @@ function isRuntimeImport(definition: Definition): boolean {
  * @param node API expression.
  */
 export function isImportedApiIn(sourceCode: OxlintSourceCode, node: ESTree.Node): boolean {
-  return Opt.exists(
-    Opt.flatMap(staticPath(node), (path) => lookupVariable(sourceCode, node, Arr.headNonEmpty(path))),
-    ({ defs }) => Arr.some(defs, isRuntimeImport),
+  return staticPath(node).pipe(
+    Opt.flatMap((path) => lookupVariable(sourceCode, node, Arr.headNonEmpty(path))),
+    Opt.exists(({ defs }) => Arr.some(defs, isRuntimeImport)),
   );
 }
 

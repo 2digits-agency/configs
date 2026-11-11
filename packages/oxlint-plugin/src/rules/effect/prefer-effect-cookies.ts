@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
@@ -167,7 +167,7 @@ function isCookieConcat(node: ESTree.BinaryExpression): boolean {
   );
 }
 
-export const preferEffectCookies: CreateRule = Rule.define({
+export const preferEffectCookies = Rule.define({
   name: 'prefer-effect-cookies',
   meta: ruleMeta({
     type: 'suggestion',

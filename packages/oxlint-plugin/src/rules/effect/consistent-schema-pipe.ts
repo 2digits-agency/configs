@@ -1,13 +1,5 @@
 import type * as EffectBarrel from 'effect';
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
@@ -240,14 +232,16 @@ function typePath(node: ESTree.TSTypeName, imports: ImportBindings): Opt.Option<
  * @param from Reference site.
  */
 function typeParameter(name: string, from: ESTree.Node): Opt.Option<ESTree.TSTypeParameter> {
-  return Opt.flatMap(Opt.fromNullishOr(from.parent as ESTree.Node | null), (node) => {
-    const declared =
-      'typeParameters' in node && node.typeParameters?.type === 'TSTypeParameterDeclaration'
-        ? Arr.findFirst(node.typeParameters.params, (candidate) => candidate.name.name === name)
-        : Opt.none();
+  return Opt.fromNullishOr(from.parent as ESTree.Node | null).pipe(
+    Opt.flatMap((node) => {
+      const declared =
+        'typeParameters' in node && node.typeParameters?.type === 'TSTypeParameterDeclaration'
+          ? Arr.findFirst(node.typeParameters.params, (candidate) => candidate.name.name === name)
+          : Opt.none();
 
-    return Opt.orElse(declared, () => typeParameter(name, node));
-  });
+      return Opt.orElse(declared, () => typeParameter(name, node));
+    }),
+  );
 }
 
 /**
@@ -422,12 +416,9 @@ function callChain(node: ESTree.CallExpression, env: Env): Opt.Option<Chain> {
     const step: Step = { text: env.sourceCode.getText(node.callee), wrapper: false };
 
     function dataLastStep() {
-      return Opt.map(
-        Opt.filter(
-          node.callee.type === 'CallExpression' ? schemaMember(node.callee.callee, env) : Opt.none(),
-          isDataLastStep,
-        ),
-        (name) =>
+      return (node.callee.type === 'CallExpression' ? schemaMember(node.callee.callee, env) : Opt.none()).pipe(
+        Opt.filter(isDataLastStep),
+        Opt.map((name) =>
           appendSteps(
             argument,
             [step],
@@ -436,25 +427,29 @@ function callChain(node: ESTree.CallExpression, env: Env): Opt.Option<Chain> {
             !isPure(node.callee, env) && !isPure(argument, env),
             env,
           ),
+        ),
       );
     }
 
-    return Opt.match(Opt.filter(schemaMember(node.callee, env), isSchemaFunction), {
-      onNone: dataLastStep,
-      onSome: (name) => {
-        const wrapper = isWrapper(name);
+    return schemaMember(node.callee, env).pipe(
+      Opt.filter(isSchemaFunction),
+      Opt.match({
+        onNone: dataLastStep,
+        onSome: (name) => {
+          const wrapper = isWrapper(name);
 
-        return Opt.some(
-          appendSteps(
-            argument,
-            [Struct.assign(step, { wrapper })],
-            wrapper ? Opt.none() : Opt.some({ kind: 'modifierCall', name }),
-            false,
-            env,
-          ),
-        );
-      },
-    });
+          return Opt.some(
+            appendSteps(
+              argument,
+              [Struct.assign(step, { wrapper })],
+              wrapper ? Opt.none() : Opt.some({ kind: 'modifierCall', name }),
+              false,
+              env,
+            ),
+          );
+        },
+      }),
+    );
   });
 }
 
@@ -479,16 +474,16 @@ function pipeChain(node: ESTree.CallExpression, env: Env): Opt.Option<Chain> {
 
     const violation: Opt.Option<Violation> = functionPipe
       ? Opt.some({ kind: 'functionPipe' })
-      : Opt.map(
-          Opt.flatMap(firstWrapper, (index) => Opt.flatten(Arr.get(names, index))),
-          (name) => ({ kind: 'wrapperPipe', name }),
+      : firstWrapper.pipe(
+          Opt.flatMap((index) => Opt.flatten(Arr.get(names, index))),
+          Opt.map((name) => ({ kind: 'wrapperPipe', name })),
         );
 
     return appendSteps(
       receiver,
       Arr.map(args, (arg, index) => ({
         text: env.sourceCode.getText(arg),
-        wrapper: Opt.exists(Opt.flatten(Arr.get(names, index)), isWrapper),
+        wrapper: Arr.get(names, index).pipe(Opt.flatten, Opt.exists(isWrapper)),
       })),
       violation,
       reordersEffects,
@@ -570,7 +565,7 @@ function render(head: ESTree.Expression, steps: ReadonlyArray<Step>): string {
   return pipeSteps(target, pending, head);
 }
 
-export const consistentSchemaPipe: CreateRule = Rule.define({
+export const consistentSchemaPipe = Rule.define({
   name: 'consistent-schema-pipe',
   meta: ruleMeta({
     type: 'suggestion',
@@ -630,15 +625,13 @@ export const consistentSchemaPipe: CreateRule = Rule.define({
         ({ head, steps }) => !Opt.exists(Arr.head(steps), ({ wrapper }) => !wrapper) || !headLacksPipe(head, env),
       );
 
-      return Opt.match(
-        Opt.filter(
-          Opt.flatMap(chain, (found) => Opt.map(found.violation, (violation) => [found, violation] as const)),
-          () => !isNestedInChain(node, env),
-        ),
-        {
+      return chain.pipe(
+        Opt.flatMap((found) => Opt.map(found.violation, (violation) => [found, violation] as const)),
+        Opt.filter(() => !isNestedInChain(node, env)),
+        Opt.match({
           onNone: () => Effect.void,
           onSome: ([found, violation]) => report(node, found, violation),
-        },
+        }),
       );
     });
   },

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -21,7 +21,7 @@ function isOverridden(definition: ESTree.ObjectExpression, version: ESTree.Objec
   );
 }
 
-export const alchemyDomainRequireViewVersion: CreateRule = Rule.define({
+export const alchemyDomainRequireViewVersion = Rule.define({
   name: 'alchemy-domain-require-view-version',
   meta: ruleMeta({
     type: 'suggestion',
@@ -49,13 +49,11 @@ export const alchemyDomainRequireViewVersion: CreateRule = Rule.define({
     }
 
     return Visitor.on('CallExpression', (node) =>
-      Opt.match(
-        argumentAt(node, 1).pipe(
-          Opt.map(unwrapExpression),
-          Opt.filter((definition): definition is ESTree.ObjectExpression => definition.type === 'ObjectExpression'),
-          Opt.filter(() => Opt.contains(domainBlock(node, file), 'View')),
-        ),
-        { onNone: () => Effect.void, onSome: (definition) => check(node, definition) },
+      argumentAt(node, 1).pipe(
+        Opt.map(unwrapExpression),
+        Opt.filter((definition): definition is ESTree.ObjectExpression => definition.type === 'ObjectExpression'),
+        Opt.filter(() => Opt.contains(domainBlock(node, file), 'View')),
+        Opt.match({ onNone: () => Effect.void, onSome: (definition) => check(node, definition) }),
       ),
     );
   },

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -57,12 +57,12 @@ function patternCharacter(node: ESTree.Expression): Opt.Option<string> {
  * @param node Replace call.
  */
 function characterSwap(node: ESTree.CallExpression): Opt.Option<string> {
-  return Opt.flatMap(
-    Opt.all([Opt.flatMap(argumentAt(node, 0), patternCharacter), argumentAt(node, 1)]),
-    ([from, replacement]) =>
+  return Opt.all([Opt.flatMap(argumentAt(node, 0), patternCharacter), argumentAt(node, 1)]).pipe(
+    Opt.flatMap(([from, replacement]) =>
       isStringLiteral(replacement) && from.length === 1 && replacement.value.length === 1
         ? Opt.some(`${from}${replacement.value}`)
         : Opt.none(),
+    ),
   );
 }
 
@@ -188,7 +188,7 @@ function isHexToString(node: ESTree.CallExpression): boolean {
   );
 }
 
-export const noManualEncoding: CreateRule = Rule.define({
+export const noManualEncoding = Rule.define({
   name: 'no-manual-encoding',
   meta: ruleMeta({
     type: 'suggestion',

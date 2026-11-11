@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -58,7 +58,7 @@ function fileKindOf(name: string): Opt.Option<string> {
   return parts.length >= 3 && Str.isNonEmpty(Arr.headNonEmpty(parts)) ? Arr.get(parts, parts.length - 2) : Opt.none();
 }
 
-export const alchemyDomainBlockFileName: CreateRule = Rule.define({
+export const alchemyDomainBlockFileName = Rule.define({
   name: 'alchemy-domain-block-file-name',
   meta: ruleMeta({
     type: 'suggestion',
@@ -92,9 +92,9 @@ export const alchemyDomainBlockFileName: CreateRule = Rule.define({
     function declaration(node: ESTree.Node): Opt.Option<Declaration> {
       return node.type === 'CallExpression'
         ? Opt.flatMap(domainBlock(node, file), (block) =>
-            Opt.map(
-              Opt.orElse(R.get(fileKinds, block), () => R.get(sharedKinds, block)),
-              (kind): Declaration => ({ node: node.callee, block, kind }),
+            R.get(fileKinds, block).pipe(
+              Opt.orElse(() => R.get(sharedKinds, block)),
+              Opt.map((kind): Declaration => ({ node: node.callee, block, kind })),
             ),
           )
         : Opt.none();
@@ -136,9 +136,9 @@ export const alchemyDomainBlockFileName: CreateRule = Rule.define({
     return Visitor.merge(
       sharedDeclarations,
       Visitor.on('CallExpression', (node) =>
-        Opt.match(
-          Opt.filter(declaration(node), (found) => !isShared(found)),
-          { onNone: () => Effect.void, onSome: check },
+        declaration(node).pipe(
+          Opt.filter((found) => !isShared(found)),
+          Opt.match({ onNone: () => Effect.void, onSome: check }),
         ),
       ),
     );

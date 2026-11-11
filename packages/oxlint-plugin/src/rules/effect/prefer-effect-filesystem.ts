@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Schema from 'effect/Schema';
 
@@ -9,7 +9,7 @@ const NodeFileSystemSource = Schema.Literals(['fs', 'fs/promises', 'node:fs', 'n
 
 const isNodeFileSystemSource = Schema.is(NodeFileSystemSource);
 
-export const preferEffectFileSystem: CreateRule = Rule.define({
+export const preferEffectFileSystem = Rule.define({
   name: 'prefer-effect-filesystem',
   meta: ruleMeta({
     type: 'suggestion',

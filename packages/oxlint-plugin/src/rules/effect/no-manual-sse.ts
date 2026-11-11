@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -61,7 +61,7 @@ function isConcatenation(node: ESTree.Node): boolean {
   return node.type === 'BinaryExpression' && node.operator === '+';
 }
 
-export const noManualSse: CreateRule = Rule.define({
+export const noManualSse = Rule.define({
   name: 'no-manual-sse',
   meta: ruleMeta({
     type: 'suggestion',
@@ -102,13 +102,16 @@ export const noManualSse: CreateRule = Rule.define({
       Visitor.on('TemplateLiteral', checkText),
       Visitor.on('BinaryExpression', (node) => (isConcatenation(node) ? checkText(node) : Effect.void)),
       Visitor.on('CallExpression', (node) =>
-        Opt.match(Opt.filter(argumentAt(node, 0), isStringLiteral), {
-          onNone: () => Effect.void,
-          onSome: ({ value }) =>
-            isSseFieldPrefix(value) && isStartsWithCall(node)
-              ? ctx.report(Diagnostic.fromId({ node, messageId: 'parse', data: { prefix: value } }))
-              : Effect.void,
-        }),
+        argumentAt(node, 0).pipe(
+          Opt.filter(isStringLiteral),
+          Opt.match({
+            onNone: () => Effect.void,
+            onSome: ({ value }) =>
+              isSseFieldPrefix(value) && isStartsWithCall(node)
+                ? ctx.report(Diagnostic.fromId({ node, messageId: 'parse', data: { prefix: value } }))
+                : Effect.void,
+          }),
+        ),
       ),
     );
   },

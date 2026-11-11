@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -33,7 +33,7 @@ function unionMemberValue(member: ESTree.TSType): Opt.Option<string> {
     : Opt.none();
 }
 
-export const preferEffectHttpMethod: CreateRule = Rule.define({
+export const preferEffectHttpMethod = Rule.define({
   name: 'prefer-effect-http-method',
   meta: ruleMeta({
     type: 'suggestion',

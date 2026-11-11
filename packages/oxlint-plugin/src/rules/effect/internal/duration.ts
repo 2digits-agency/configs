@@ -221,8 +221,9 @@ const isInstantWord = Schema.is(
 export function millisName(name: string): Opt.Option<MillisKind> {
   const parts = nameWords(name);
 
-  return Opt.map(Opt.filter(Arr.last(parts), isMillisWord), (): MillisKind =>
-    Arr.some(parts, isInstantWord) ? 'instant' : 'duration',
+  return Arr.last(parts).pipe(
+    Opt.filter(isMillisWord),
+    Opt.map((): MillisKind => (Arr.some(parts, isInstantWord) ? 'instant' : 'duration')),
   );
 }
 

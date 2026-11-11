@@ -118,16 +118,18 @@ export function promiseInitializer(node: ESTree.Expression): boolean {
  * @param node Function.
  */
 export function functionResult(node: FunctionNode): Opt.Option<ESTree.Expression> {
-  return Opt.flatMap(Opt.fromNullishOr(node.body), (body) =>
-    body.type === 'BlockStatement'
-      ? Opt.map(
-          Opt.flatMapNullishOr(
-            Opt.filter(Arr.head(body.body), () => body.body.length === 1),
-            (statement) => (statement.type === 'ReturnStatement' ? statement.argument : undefined),
-          ),
-          unwrapExpression,
-        )
-      : Opt.some(unwrapExpression(body)),
+  return Opt.fromNullishOr(node.body).pipe(
+    Opt.flatMap((body) =>
+      body.type === 'BlockStatement'
+        ? Arr.head(body.body).pipe(
+            Opt.filter(() => body.body.length === 1),
+            Opt.flatMapNullishOr((statement) =>
+              statement.type === 'ReturnStatement' ? statement.argument : undefined,
+            ),
+            Opt.map(unwrapExpression),
+          )
+        : Opt.some(unwrapExpression(body)),
+    ),
   );
 }
 
@@ -137,12 +139,12 @@ export function functionResult(node: FunctionNode): Opt.Option<ESTree.Expression
  * @param node First call argument.
  */
 export function promiseThunkArgument(node: Opt.Option<ESTree.Expression>): Opt.Option<FunctionNode> {
-  return Opt.filter(
-    Opt.flatMap(node, (argument) =>
+  return node.pipe(
+    Opt.flatMap((argument) =>
       argument.type === 'ObjectExpression'
         ? Opt.map(objectProperty(argument, 'try'), ({ value }) => value)
         : Opt.some<ESTree.Node>(argument),
     ),
-    isFunctionNode,
+    Opt.filter(isFunctionNode),
   );
 }

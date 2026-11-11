@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
@@ -19,7 +19,7 @@ function isUrlParseCall(node: ESTree.CallExpression): boolean {
   );
 }
 
-export const preferEffectUrl: CreateRule = Rule.define({
+export const preferEffectUrl = Rule.define({
   name: 'prefer-effect-url',
   meta: ruleMeta({
     type: 'suggestion',

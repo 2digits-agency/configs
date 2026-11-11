@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -174,7 +174,7 @@ function parameterBinding(parameter: ESTree.ParamPattern): Opt.Option<ESTree.Bin
     : Opt.none();
 }
 
-export const preferEffectDurationTypes: CreateRule = Rule.define({
+export const preferEffectDurationTypes = Rule.define({
   name: 'prefer-effect-duration-types',
   meta: ruleMeta({
     type: 'suggestion',
@@ -215,16 +215,15 @@ export const preferEffectDurationTypes: CreateRule = Rule.define({
     }
 
     function checkField(node: ESTree.PropertyDefinition | ESTree.TSPropertySignature) {
-      return Opt.match(
+      return keyName(node).pipe(
         Opt.filter(
-          keyName(node),
           (name) =>
             isDurationName(name) &&
             isNumberType(node.typeAnnotation) &&
             !declarationFile &&
             !isForeignDeclaration(node, imports),
         ),
-        { onNone: () => Effect.void, onSome: (name) => report(node.key, name, 'durationType') },
+        Opt.match({ onNone: () => Effect.void, onSome: (name) => report(node.key, name, 'durationType') }),
       );
     }
 
@@ -236,12 +235,9 @@ export const preferEffectDurationTypes: CreateRule = Rule.define({
       Visitor.on('TSPropertySignature', checkField),
       Visitor.on('Property', (node) =>
         node.parent.type === 'ObjectExpression'
-          ? Opt.match(
-              Opt.filter(
-                propertyName(node as ESTree.ObjectProperty),
-                (name) => isDurationName(name) && isNumberSchema(node.value as ESTree.Expression, imports),
-              ),
-              { onNone: () => Effect.void, onSome: (name) => report(node.key, name, 'durationSchema') },
+          ? propertyName(node as ESTree.ObjectProperty).pipe(
+              Opt.filter((name) => isDurationName(name) && isNumberSchema(node.value as ESTree.Expression, imports)),
+              Opt.match({ onNone: () => Effect.void, onSome: (name) => report(node.key, name, 'durationSchema') }),
             )
           : Effect.void,
       ),

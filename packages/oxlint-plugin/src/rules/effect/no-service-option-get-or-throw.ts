@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -47,7 +47,7 @@ function throwsMissingService(node: ESTree.CallExpression, imports: ImportBindin
   );
 }
 
-export const noServiceOptionGetOrThrow: CreateRule = Rule.define({
+export const noServiceOptionGetOrThrow = Rule.define({
   name: 'no-service-option-get-or-throw',
   meta: ruleMeta({
     type: 'problem',

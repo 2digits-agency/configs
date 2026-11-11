@@ -1,12 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -67,16 +59,16 @@ function comparisonCount(node: Branch, value: string, sourceCode: OxlintSourceCo
  * @param sourceCode Source of the file.
  */
 function isLiteralComparisonChain(node: Branch, sourceCode: OxlintSourceCode): boolean {
-  return Opt.exists(
-    Opt.flatMap(comparedValue(node.test, sourceCode), (value) => comparisonCount(node, value, sourceCode)),
-    (count) => count > 1,
+  return comparedValue(node.test, sourceCode).pipe(
+    Opt.flatMap((value) => comparisonCount(node, value, sourceCode)),
+    Opt.exists((count) => count > 1),
   );
 }
 
 /**
  * Prefer Match for switches and `else if` chains in Effect files, and for repeated literal ternary comparisons.
  */
-export const preferEffectMatch: CreateRule = Rule.define({
+export const preferEffectMatch = Rule.define({
   name: 'prefer-effect-match',
   meta: ruleMeta({
     type: 'suggestion',

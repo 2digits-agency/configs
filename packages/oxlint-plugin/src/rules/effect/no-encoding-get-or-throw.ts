@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -60,12 +60,12 @@ function thrownDecode(
   const direct = Opt.filter(imports.member(node.callee, 'Result'), (member) => Arr.contains(getOrThrowMethods, member));
 
   if (Opt.isSome(direct)) {
-    return Opt.map(
-      Opt.flatMap(argumentAt(node, 0), (argument) => encodingDecoder(argument, imports)),
-      (decoder) => ({
+    return argumentAt(node, 0).pipe(
+      Opt.flatMap((argument) => encodingDecoder(argument, imports)),
+      Opt.map((decoder) => ({
         decoder,
         method: direct.value,
-      }),
+      })),
     );
   }
 
@@ -95,7 +95,7 @@ function thrownDecode(
   );
 }
 
-export const noEncodingGetOrThrow: CreateRule = Rule.define({
+export const noEncodingGetOrThrow = Rule.define({
   name: 'no-encoding-get-or-throw',
   meta: ruleMeta({
     type: 'problem',

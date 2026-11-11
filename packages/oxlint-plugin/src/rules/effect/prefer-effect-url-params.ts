@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -55,7 +55,7 @@ function buildsParams(node: ESTree.NewExpression): boolean {
   });
 }
 
-export const preferEffectUrlParams: CreateRule = Rule.define({
+export const preferEffectUrlParams = Rule.define({
   name: 'prefer-effect-url-params',
   meta: ruleMeta({
     type: 'suggestion',

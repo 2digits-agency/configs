@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree, type Variable } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type Variable } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as Config from 'effect/Config';
 import * as Effect from 'effect/Effect';
@@ -70,20 +70,21 @@ function receivingConfig(node: ESTree.CallExpression): Opt.Option<ESTree.Express
   }
 
   return node.arguments.length === 1
-    ? Opt.flatMap(
+    ? parentOfType(node, 'CallExpression').pipe(
         Opt.filter(
-          parentOfType(node, 'CallExpression'),
           (parent) =>
             isSomeSame<ESTree.Node>(argumentAt(parent, 0), node) &&
             parent.callee.type === 'MemberExpression' &&
             Opt.contains(staticPropertyName(parent.callee), 'pipe'),
         ),
-        (parent) => (parent.callee.type === 'MemberExpression' ? Opt.some(parent.callee.object) : Opt.none()),
+        Opt.flatMap((parent) =>
+          parent.callee.type === 'MemberExpression' ? Opt.some(parent.callee.object) : Opt.none(),
+        ),
       )
     : Opt.none();
 }
 
-export const noFunctionConfigDefault: CreateRule = Rule.define({
+export const noFunctionConfigDefault = Rule.define({
   name: 'no-function-config-default',
   meta: ruleMeta({
     type: 'problem',

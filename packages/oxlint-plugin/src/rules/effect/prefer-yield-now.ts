@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as Duration from 'effect/Duration';
 import * as Effect from 'effect/Effect';
@@ -39,7 +39,7 @@ function isZeroDuration(node: ESTree.Expression, imports: ImportBindings): boole
   );
 }
 
-export const preferYieldNow: CreateRule = Rule.define({
+export const preferYieldNow = Rule.define({
   name: 'prefer-yield-now',
   meta: ruleMeta({
     type: 'suggestion',

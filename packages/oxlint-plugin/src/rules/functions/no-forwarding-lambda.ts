@@ -3,7 +3,6 @@ import {
   Rule,
   RuleContext,
   Visitor,
-  type CreateRule,
   type Definition,
   type ESTree,
   type OxlintSourceCode,
@@ -310,7 +309,7 @@ function isAnnotated(node: FunctionNode): boolean {
 /**
  * Report callbacks of Effect APIs that only pass their parameters on, such as `Effect.map((value) => f(value))`.
  */
-export const noForwardingLambda: CreateRule = Rule.define({
+export const noForwardingLambda = Rule.define({
   name: 'no-forwarding-lambda',
   meta: ruleMeta({
     type: 'suggestion',

@@ -172,9 +172,8 @@ export function namespaceFix(sourceCode: OxlintSourceCode, node: ESTree.ImportDe
         specifier.type !== 'ImportDefaultSpecifier' && !containsSame<ESTree.Node>(typeSpecifiers, specifier),
     );
 
-    return Opt.map(
-      Opt.all(Arr.map(valueSpecifiers, (specifier) => valueImportFixes(specifier, variables, alias))),
-      (fixes) => {
+    return Opt.all(Arr.map(valueSpecifiers, (specifier) => valueImportFixes(specifier, variables, alias))).pipe(
+      Opt.map((fixes) => {
         const source = sourceCode.getText(node.source);
 
         const typeImport = Arr.isReadonlyArrayEmpty(typeSpecifiers)
@@ -188,7 +187,7 @@ export function namespaceFix(sourceCode: OxlintSourceCode, node: ESTree.ImportDe
           Diagnostic.replaceText(node, `import * as ${alias} from ${source};${typeImport}`),
           ...Arr.flatten(fixes),
         );
-      },
+      }),
     );
   });
 }

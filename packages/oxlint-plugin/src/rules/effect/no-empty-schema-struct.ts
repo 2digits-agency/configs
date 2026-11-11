@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -8,7 +8,7 @@ import { argumentAt } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 
-export const noEmptySchemaStruct: CreateRule = Rule.define({
+export const noEmptySchemaStruct = Rule.define({
   name: 'no-empty-schema-struct',
   meta: ruleMeta({
     type: 'problem',

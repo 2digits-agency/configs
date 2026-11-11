@@ -37,7 +37,7 @@ export class ImportBindings extends Schema.Class<ImportBindings, { readonly bran
    */
   path(node: ESTree.Node): Opt.Option<ReadonlyArray<string>> {
     return Opt.flatMap(staticPath(node), ([first, ...rest]) =>
-      Opt.map(Opt.fromNullishOr(this.bindings.get(first)), (imported) => [...imported, ...rest]),
+      Opt.fromNullishOr(this.bindings.get(first)).pipe(Opt.map((imported) => [...imported, ...rest])),
     );
   }
 

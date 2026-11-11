@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -101,7 +101,7 @@ function locallyExportedNames(program: ESTree.Program): ReadonlyArray<string> {
  * Report module-private functions that are used once and short enough to read at their call site: by default, a
  * declaration of at most three lines.
  */
-export const noSingleUsePrivateFunction: CreateRule = Rule.define({
+export const noSingleUsePrivateFunction = Rule.define({
   name: 'no-single-use-private-function',
   meta: ruleMeta({
     type: 'suggestion',

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type Definition, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type Definition, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -53,15 +53,15 @@ function isEndpointImport(definition: Definition, path: ReadonlyArray<string>): 
  * @param node Call.
  */
 function isEndpointCall(node: ESTree.CallExpression) {
-  return Opt.match(
-    Opt.filter(staticPath(node.callee), (path) => isEndpointMethod(Arr.lastNonEmpty(path))),
-    {
+  return staticPath(node.callee).pipe(
+    Opt.filter((path) => isEndpointMethod(Arr.lastNonEmpty(path))),
+    Opt.match({
       onNone: () => Effect.succeed(false),
       onSome: (path) =>
         Effect.map(resolveVariable(node, Arr.headNonEmpty(path)), (variable) =>
           Opt.exists(soleDefinition(variable), (definition) => isEndpointImport(definition, path)),
         ),
-    },
+    }),
   );
 }
 
@@ -79,14 +79,17 @@ function memberName(property: ESTree.ObjectProperty): Opt.Option<string> {
  * @param node Expression.
  */
 function directProperties(node: Opt.Option<ESTree.Expression>): Opt.Option<ReadonlyArray<ESTree.ObjectProperty>> {
-  return Opt.flatMap(
-    Opt.filter(node, (value): value is ESTree.ObjectExpression => value.type === 'ObjectExpression'),
-    (object) =>
-      Opt.flatMap(Opt.all(Arr.map(object.properties, plainProperty)), (properties) =>
-        Opt.flatMap(Opt.all(Arr.map(properties, memberName)), (names) =>
-          Arr.dedupe(names).length === names.length ? Opt.some(properties) : Opt.none(),
+  return node.pipe(
+    Opt.filter((value): value is ESTree.ObjectExpression => value.type === 'ObjectExpression'),
+    Opt.flatMap((object) =>
+      Opt.all(Arr.map(object.properties, plainProperty)).pipe(
+        Opt.flatMap((properties) =>
+          Opt.all(Arr.map(properties, memberName)).pipe(
+            Opt.flatMap((names) => (Arr.dedupe(names).length === names.length ? Opt.some(properties) : Opt.none())),
+          ),
         ),
       ),
+    ),
   );
 }
 
@@ -99,7 +102,7 @@ function headerProperties(node: ESTree.CallExpression): Opt.Option<ReadonlyArray
   );
 }
 
-export const noUppercaseHttpApiHeader: CreateRule = Rule.define({
+export const noUppercaseHttpApiHeader = Rule.define({
   name: 'no-uppercase-http-api-header',
   meta: ruleMeta({
     type: 'problem',
@@ -118,11 +121,14 @@ export const noUppercaseHttpApiHeader: CreateRule = Rule.define({
       return Effect.forEach(
         headers,
         (property) =>
-          Opt.match(Opt.filter(propertyName(property), hasAsciiUppercase), {
-            onNone: () => Effect.void,
-            onSome: (name) =>
-              ctx.report(Diagnostic.fromId({ node: property.key, messageId: 'uppercase', data: { name } })),
-          }),
+          propertyName(property).pipe(
+            Opt.filter(hasAsciiUppercase),
+            Opt.match({
+              onNone: () => Effect.void,
+              onSome: (name) =>
+                ctx.report(Diagnostic.fromId({ node: property.key, messageId: 'uppercase', data: { name } })),
+            }),
+          ),
         { discard: true },
       );
     }

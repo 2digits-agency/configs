@@ -1,5 +1,5 @@
 import type * as EffectBarrel from 'effect';
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as Console from 'effect/Console';
 import * as Effect from 'effect/Effect';
@@ -60,9 +60,9 @@ function loggerName(node: ESTree.Expression, imports: ImportBindings): Opt.Optio
 
   return imports.isApi(callee, 'Effect', effectLogMethods) || imports.isApi(callee, 'Console', consoleLogMethods)
     ? Opt.some(
-        Arr.join(
-          Opt.getOrElse(imports.path(callee), () => []),
-          '.',
+        imports.path(callee).pipe(
+          Opt.getOrElse(() => []),
+          Arr.join('.'),
         ),
       )
     : Opt.none();
@@ -107,10 +107,9 @@ function pipedAsOnLog(
   imports: ImportBindings,
 ): Opt.Option<AsOnLog> {
   return Opt.flatMap(step, (node) =>
-    Opt.zipWith(
-      Opt.flatMap(self, (value) => loggerName(value, imports)),
-      asStep(node, imports),
-      (logger, method): AsOnLog => ({ logger, method, node }),
+    self.pipe(
+      Opt.flatMap((value) => loggerName(value, imports)),
+      Opt.zipWith(asStep(node, imports), (logger, method): AsOnLog => ({ logger, method, node })),
     ),
   );
 }
@@ -131,17 +130,18 @@ function matchCall(node: ESTree.CallExpression, imports: ImportBindings): Opt.Op
   // `Effect.as(Effect.log(...), value)` and `Effect.asVoid(Effect.log(...))`
   const method = imports.isApi(callee, 'Effect', asMethods) ? effectMember(callee, imports) : Opt.none();
 
-  return Opt.flatMap(
-    Opt.filter(method, (name) => name !== 'as' || node.arguments.length === 2),
-    (name) =>
-      Opt.map(
-        Opt.flatMap(argumentAt(node, 0), (self) => loggerName(self, imports)),
-        (logger): AsOnLog => ({ logger, method: name, node }),
+  return method.pipe(
+    Opt.filter((name) => name !== 'as' || node.arguments.length === 2),
+    Opt.flatMap((name) =>
+      argumentAt(node, 0).pipe(
+        Opt.flatMap((self) => loggerName(self, imports)),
+        Opt.map((logger): AsOnLog => ({ logger, method: name, node })),
       ),
+    ),
   );
 }
 
-export const noEffectAsOnLog: CreateRule = Rule.define({
+export const noEffectAsOnLog = Rule.define({
   name: 'no-effect-as-on-log',
   meta: ruleMeta({
     type: 'suggestion',

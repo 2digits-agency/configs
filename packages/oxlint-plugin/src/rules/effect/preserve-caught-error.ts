@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
@@ -57,7 +57,7 @@ function wrapperDropsCause(node: FunctionNode, imports: ImportBindings): boolean
   );
 }
 
-export const preserveCaughtError: CreateRule = Rule.define({
+export const preserveCaughtError = Rule.define({
   name: 'preserve-caught-error',
   meta: ruleMeta({
     type: 'suggestion',

@@ -1,5 +1,5 @@
 /* oxlint-disable 2digits/prefer-effect-net-address -- The patterns below describe the IP text this rule reports. */
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as HashSet from 'effect/HashSet';
@@ -77,7 +77,7 @@ function topLevelStatement(node: ESTree.Node): ESTree.Node {
   });
 }
 
-export const preferEffectNetAddress: CreateRule = Rule.define({
+export const preferEffectNetAddress = Rule.define({
   name: 'prefer-effect-net-address',
   meta: ruleMeta({
     type: 'suggestion',
@@ -141,10 +141,13 @@ export const preferEffectNetAddress: CreateRule = Rule.define({
           : Effect.void,
       ),
       Visitor.on('CallExpression', (node) =>
-        Opt.match(Opt.filter(moduleImportMember(ctx.sourceCode, node.callee, netSources), isNodeIpCheck), {
-          onNone: () => (isIpPrefixCheck(node) ? reportIpText(node) : Effect.void),
-          onSome: (name) => ctx.report(Diagnostic.fromId({ node, messageId: 'nodeIpCheck', data: { name } })),
-        }),
+        moduleImportMember(ctx.sourceCode, node.callee, netSources).pipe(
+          Opt.filter(isNodeIpCheck),
+          Opt.match({
+            onNone: () => (isIpPrefixCheck(node) ? reportIpText(node) : Effect.void),
+            onSome: (name) => ctx.report(Diagnostic.fromId({ node, messageId: 'nodeIpCheck', data: { name } })),
+          }),
+        ),
       ),
       Visitor.on('Literal', (node) =>
         'regex' in node && Arr.some(ipPatterns, (pattern) => pattern.test(node.regex.pattern))

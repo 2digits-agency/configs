@@ -1,11 +1,11 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIdentifier } from '../../internal/scope';
 
-export const preferEffectHeaders: CreateRule = Rule.define({
+export const preferEffectHeaders = Rule.define({
   name: 'prefer-effect-headers',
   meta: ruleMeta({
     type: 'suggestion',

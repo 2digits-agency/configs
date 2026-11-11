@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
@@ -6,7 +6,7 @@ import { argumentAt, functionUsesFirstParameter, isFunctionNode } from '../../in
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 
-export const preferWithSpan: CreateRule = Rule.define({
+export const preferWithSpan = Rule.define({
   name: 'prefer-with-span',
   meta: ruleMeta({
     type: 'suggestion',

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -121,13 +121,12 @@ function matcherKind(
   parameter: string,
   imports: ImportBindings,
 ): Opt.Option<'value' | 'valueTags'> {
-  return Opt.flatMap(
+  return functionResult(node).pipe(
     Opt.filter(
-      functionResult(node),
       (result): result is ESTree.CallExpression =>
         result.type === 'CallExpression' && !walkNodes(result, (child) => child.type === 'ThisExpression'),
     ),
-    (result) => {
+    Opt.flatMap((result) => {
       if (isValuePipe(result, parameter, imports)) {
         return Opt.some('value' as const);
       }
@@ -138,14 +137,14 @@ function matcherKind(
       )
         ? Opt.some('valueTags' as const)
         : Opt.none();
-    },
+    }),
   );
 }
 
 /**
  * Report functions that build a value matcher for their own parameter instead of reusing a hoisted type matcher.
  */
-export const preferHoistedMatch: CreateRule = Rule.define({
+export const preferHoistedMatch = Rule.define({
   name: 'prefer-hoisted-match',
   meta: ruleMeta({
     type: 'suggestion',

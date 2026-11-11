@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import type * as Config from 'effect/Config';
 import * as Effect from 'effect/Effect';
@@ -54,7 +54,7 @@ function processEnvVariable(node: ESTree.MemberExpression): Opt.Option<string> {
     : Opt.filter(staticPropertyName(node), isDirectoryVariable);
 }
 
-export const preferEffectUserDirectories: CreateRule = Rule.define({
+export const preferEffectUserDirectories = Rule.define({
   name: 'prefer-effect-user-directories',
   meta: ruleMeta({
     type: 'suggestion',
@@ -99,9 +99,10 @@ export const preferEffectUserDirectories: CreateRule = Rule.define({
           >) && isImportedApiIn(ctx.sourceCode, node.callee);
 
         const configVariable = isConfigRead
-          ? Opt.filter(
-              Opt.map(Opt.filter(argumentAt(node, 0), isStringLiteral), ({ value }) => value),
-              isDirectoryVariable,
+          ? argumentAt(node, 0).pipe(
+              Opt.filter(isStringLiteral),
+              Opt.map(({ value }) => value),
+              Opt.filter(isDirectoryVariable),
             )
           : Opt.none();
 

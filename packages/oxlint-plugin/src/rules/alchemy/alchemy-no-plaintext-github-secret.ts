@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
@@ -18,7 +18,7 @@ function isPlaintextSecret(node: ESTree.Expression, imports: ImportBindings): bo
   );
 }
 
-export const alchemyNoPlaintextGithubSecret: CreateRule = Rule.define({
+export const alchemyNoPlaintextGithubSecret = Rule.define({
   name: 'alchemy-no-plaintext-github-secret',
   meta: ruleMeta({
     type: 'problem',
@@ -35,18 +35,16 @@ export const alchemyNoPlaintextGithubSecret: CreateRule = Rule.define({
     const imports = yield* importBindings;
 
     return Visitor.on('CallExpression', (node) =>
-      Opt.match(
-        argumentAt(node, 1).pipe(
-          Opt.filter(() => imports.isApi(node.callee, 'GitHub', 'Secret')),
-          Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
-          Opt.flatMap((options) => objectProperty(options, 'value')),
-          Opt.map(({ value }) => value),
-          Opt.filter((value) => isPlaintextSecret(value, imports)),
-        ),
-        {
+      argumentAt(node, 1).pipe(
+        Opt.filter(() => imports.isApi(node.callee, 'GitHub', 'Secret')),
+        Opt.filter((options): options is ESTree.ObjectExpression => options.type === 'ObjectExpression'),
+        Opt.flatMap((options) => objectProperty(options, 'value')),
+        Opt.map(({ value }) => value),
+        Opt.filter((value) => isPlaintextSecret(value, imports)),
+        Opt.match({
           onNone: () => Effect.void,
           onSome: (value) => ctx.report(Diagnostic.fromId({ node: value, messageId: 'plaintext' })),
-        },
+        }),
       ),
     );
   },

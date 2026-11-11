@@ -308,7 +308,7 @@ export function isDiscarded(node: ESTree.Node): boolean {
  * @param node Construction.
  */
 export function isErrorConstructor(node: ESTree.NewExpression): boolean {
-  return Opt.exists(Opt.map(staticPath(node.callee), Arr.lastNonEmpty), Str.endsWith('Error'));
+  return staticPath(node.callee).pipe(Opt.map(Arr.lastNonEmpty), Opt.exists(Str.endsWith('Error')));
 }
 
 /**

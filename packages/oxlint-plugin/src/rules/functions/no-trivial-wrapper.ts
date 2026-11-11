@@ -1,12 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -79,7 +71,7 @@ function trivialForwarding(node: FunctionNode, imports: ImportBindings): Opt.Opt
  * Report named functions that only pass their parameters on to another call, such as `isUser(input)` around
  * `Schema.is(User)(input)` or `logStep(message)` around `Effect.logDebug(message)`.
  */
-export const noTrivialWrapper: CreateRule = Rule.define({
+export const noTrivialWrapper = Rule.define({
   name: 'no-trivial-wrapper',
   meta: ruleMeta({
     type: 'suggestion',

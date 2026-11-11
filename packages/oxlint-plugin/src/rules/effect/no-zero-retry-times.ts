@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
@@ -6,7 +6,7 @@ import { isLiteral, objectArgument, objectProperty } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 
-export const noZeroRetryTimes: CreateRule = Rule.define({
+export const noZeroRetryTimes = Rule.define({
   name: 'no-zero-retry-times',
   meta: ruleMeta({
     type: 'problem',
@@ -21,15 +21,13 @@ export const noZeroRetryTimes: CreateRule = Rule.define({
 
     return Visitor.on('CallExpression', (node) =>
       imports.isApi(node.callee, 'Effect', ['retry', 'repeat'] satisfies ReadonlyArray<keyof typeof Effect>)
-        ? Opt.match(
-            Opt.filter(
-              Opt.flatMap(objectArgument(node), (options) => objectProperty(options, 'times')),
-              (times) => isLiteral(times.value, 0),
-            ),
-            {
+        ? objectArgument(node).pipe(
+            Opt.flatMap((options) => objectProperty(options, 'times')),
+            Opt.filter((times) => isLiteral(times.value, 0)),
+            Opt.match({
               onNone: () => Effect.void,
               onSome: (times) => ctx.report(Diagnostic.fromId({ node: times, messageId: 'zeroTimes' })),
-            },
+            }),
           )
         : Effect.void,
     );

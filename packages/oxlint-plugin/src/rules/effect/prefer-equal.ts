@@ -1,12 +1,4 @@
-import {
-  Diagnostic,
-  Rule,
-  RuleContext,
-  Visitor,
-  type CreateRule,
-  type ESTree,
-  type OxlintSourceCode,
-} from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -93,16 +85,16 @@ function repeatedPair(
 
 // `Equivalence.make((a, b) => a.x === b.x && a.y === b.y)` already is the Effect way to compare fields.
 function isEquivalenceDefinition(node: ESTree.Node, imports: ImportBindings): boolean {
-  return Opt.exists(
-    Opt.flatMap(enclosingFunction(node), (callback) => callbackApi(callback, imports)),
-    (api) => api.length === 2 && api[0] === 'Equivalence' && api[1] === 'make',
+  return enclosingFunction(node).pipe(
+    Opt.flatMap((callback) => callbackApi(callback, imports)),
+    Opt.exists((api) => api.length === 2 && api[0] === 'Equivalence' && api[1] === 'make'),
   );
 }
 
 /**
  * Prefer Equal or an Equivalence over comparing two values field by field.
  */
-export const preferEqual: CreateRule = Rule.define({
+export const preferEqual = Rule.define({
   name: 'prefer-equal',
   meta: ruleMeta({
     type: 'suggestion',
@@ -134,12 +126,12 @@ export const preferEqual: CreateRule = Rule.define({
         return Effect.void;
       }
 
-      return Opt.match(
-        Opt.filter(repeatedPair(node, operators, ctx.sourceCode), () => !isEquivalenceDefinition(node, imports)),
-        {
+      return repeatedPair(node, operators, ctx.sourceCode).pipe(
+        Opt.filter(() => !isEquivalenceDefinition(node, imports)),
+        Opt.match({
           onNone: () => Effect.void,
           onSome: (pair) => ctx.report(Diagnostic.fromId({ node, messageId: 'preferEqual', data: { pair } })),
-        },
+        }),
       );
     });
   },

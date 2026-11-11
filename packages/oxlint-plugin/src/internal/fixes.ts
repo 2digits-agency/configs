@@ -137,9 +137,9 @@ export function argumentText(sourceCode: OxlintSourceCode, node: ESTree.Node): s
  */
 export function plainOptions(node: ESTree.ObjectExpression, destination: string): boolean {
   const names = Arr.map(node.properties, (property) =>
-    Opt.flatMap(
-      Opt.filter(plainProperty(property), (plain) => plain.key.type === 'Identifier' || plain.key.type === 'Literal'),
-      (plain) => (plain.key.type === 'Literal' ? Opt.some(String(plain.key.value)) : propertyName(plain)),
+    plainProperty(property).pipe(
+      Opt.filter((plain) => plain.key.type === 'Identifier' || plain.key.type === 'Literal'),
+      Opt.flatMap((plain) => (plain.key.type === 'Literal' ? Opt.some(String(plain.key.value)) : propertyName(plain))),
     ),
   );
 

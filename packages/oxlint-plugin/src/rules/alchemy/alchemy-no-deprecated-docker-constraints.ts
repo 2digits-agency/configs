@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
@@ -8,7 +8,7 @@ import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isImportedApi } from '../../internal/scope';
 
-export const alchemyNoDeprecatedDockerConstraints: CreateRule = Rule.define({
+export const alchemyNoDeprecatedDockerConstraints = Rule.define({
   name: 'alchemy-no-deprecated-docker-constraints',
   meta: ruleMeta({
     type: 'problem',
@@ -49,11 +49,11 @@ export const alchemyNoDeprecatedDockerConstraints: CreateRule = Rule.define({
         (argument): argument is ESTree.ObjectExpression => argument.type === 'ObjectExpression',
       );
 
-      return Opt.match(
-        Opt.flatMap(options, (object) =>
+      return options.pipe(
+        Opt.flatMap((object) =>
           Opt.map(objectProperty(object, 'constraints'), (constraints) => [object, constraints] as const),
         ),
-        { onNone: () => Effect.void, onSome: ([object, constraints]) => report(node, object, constraints) },
+        Opt.match({ onNone: () => Effect.void, onSome: ([object, constraints]) => report(node, object, constraints) }),
       );
     });
   },

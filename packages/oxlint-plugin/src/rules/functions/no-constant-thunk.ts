@@ -3,7 +3,6 @@ import {
   Rule,
   RuleContext,
   Visitor,
-  type CreateRule,
   type Definition,
   type ESTree,
   type OxlintSourceCode,
@@ -248,7 +247,7 @@ function isTopLevel(node: ESTree.Node): boolean {
  * Report top-level functions without parameters that always return the same value, such as `function userSchema() {
  * return Schema.Struct(…) }`.
  */
-export const noConstantThunk: CreateRule = Rule.define({
+export const noConstantThunk = Rule.define({
   name: 'no-constant-thunk',
   meta: ruleMeta({
     type: 'suggestion',

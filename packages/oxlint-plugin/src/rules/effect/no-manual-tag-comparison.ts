@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -22,7 +22,7 @@ export type NoManualTagComparisonOptions = typeof Options.Type;
 /**
  * Prefer Match/Predicate helpers; broad catch handlers belong to the error-tag rule, which only knows `_tag`.
  */
-export const noManualTagComparison: CreateRule = Rule.define({
+export const noManualTagComparison = Rule.define({
   name: 'no-manual-tag-comparison',
   meta: ruleMeta({
     type: 'problem',

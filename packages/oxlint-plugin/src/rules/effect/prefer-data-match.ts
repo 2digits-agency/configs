@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -69,23 +69,23 @@ function returnsValue(node: Opt.Option<ESTree.Statement>): boolean {
  * @param node Statement to look past.
  */
 function nextReturn(node: ESTree.IfStatement): Opt.Option<ESTree.Statement> {
-  return Opt.flatMap(
-    Opt.filter(parentOf(node), (parent) => parent.type === 'BlockStatement' || parent.type === 'Program'),
-    (parent) => {
+  return parentOf(node).pipe(
+    Opt.filter((parent) => parent.type === 'BlockStatement' || parent.type === 'Program'),
+    Opt.flatMap((parent) => {
       const body = (parent as ESTree.BlockStatement | ESTree.Program).body as ReadonlyArray<ESTree.Node>;
 
       return Opt.filter(
         Arr.get(body, body.indexOf(node) + 1),
         (next): next is ESTree.ReturnStatement => next.type === 'ReturnStatement',
       );
-    },
+    }),
   );
 }
 
 /**
  * Prefer the data type's own `match` over branching on its guards when both branches produce a value.
  */
-export const preferDataMatch: CreateRule = Rule.define({
+export const preferDataMatch = Rule.define({
   name: 'prefer-data-match',
   meta: ruleMeta({
     type: 'suggestion',
@@ -103,11 +103,14 @@ export const preferDataMatch: CreateRule = Rule.define({
     const imports = yield* importBindings;
 
     function reportWhen(node: ESTree.Node, test: ESTree.Expression, producesValues: () => boolean) {
-      return Opt.match(Opt.filter(guardPath(test, imports), producesValues), {
-        onNone: () => Effect.void,
-        onSome: ([module, guard]) =>
-          ctx.report(Diagnostic.fromId({ node, messageId: 'preferMatch', data: { module, guard } })),
-      });
+      return guardPath(test, imports).pipe(
+        Opt.filter(producesValues),
+        Opt.match({
+          onNone: () => Effect.void,
+          onSome: ([module, guard]) =>
+            ctx.report(Diagnostic.fromId({ node, messageId: 'preferMatch', data: { module, guard } })),
+        }),
+      );
     }
 
     return Visitor.merge(
@@ -120,7 +123,7 @@ export const preferDataMatch: CreateRule = Rule.define({
           node.test,
           () =>
             returnsValue(Opt.some(node.consequent)) &&
-            returnsValue(Opt.orElse(Opt.fromNullishOr(node.alternate), () => nextReturn(node))),
+            returnsValue(Opt.fromNullishOr(node.alternate).pipe(Opt.orElse(() => nextReturn(node)))),
         ),
       ),
     );

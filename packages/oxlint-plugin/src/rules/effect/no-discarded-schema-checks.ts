@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
@@ -35,15 +35,15 @@ function discardingMethod(node: ESTree.CallExpression): Opt.Option<string> {
     return Opt.none();
   }
 
-  const preservesChecks = Opt.exists(
-    Opt.flatMap(objectArgument(node), (options) => objectProperty(options, 'unsafePreserveChecks')),
-    (preserve) => isLiteral(preserve.value, true),
+  const preservesChecks = objectArgument(node).pipe(
+    Opt.flatMap((options) => objectProperty(options, 'unsafePreserveChecks')),
+    Opt.exists((preserve) => isLiteral(preserve.value, true)),
   );
 
   return preservesChecks ? Opt.none() : Opt.filter(staticPropertyName(node.callee), isSchemaMapMethod);
 }
 
-export const noDiscardedSchemaChecks: CreateRule = Rule.define({
+export const noDiscardedSchemaChecks = Rule.define({
   name: 'no-discarded-schema-checks',
   meta: ruleMeta({
     type: 'problem',

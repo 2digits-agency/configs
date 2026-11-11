@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -16,7 +16,7 @@ const deprecatedResources: Readonly<Record<string, string>> = {
   'AWS.EKS.Manifest': 'Kubernetes.Manifest from alchemy/Kubernetes',
 };
 
-export const alchemyNoDeprecatedResource: CreateRule = Rule.define({
+export const alchemyNoDeprecatedResource = Rule.define({
   name: 'alchemy-no-deprecated-resource',
   meta: ruleMeta({
     type: 'problem',
@@ -32,16 +32,16 @@ export const alchemyNoDeprecatedResource: CreateRule = Rule.define({
     const imports = yield* importBindings;
 
     return Visitor.on('CallExpression', (node) =>
-      Opt.match(
-        Opt.flatMap(imports.path(node.callee), (path) => {
+      imports.path(node.callee).pipe(
+        Opt.flatMap((path) => {
           const api = Arr.join(path, '.');
 
           return Opt.map(R.get(deprecatedResources, api), (replacement) => ({ api, replacement }));
         }),
-        {
+        Opt.match({
           onNone: () => Effect.void,
           onSome: (data) => ctx.report(Diagnostic.fromId({ node: node.callee, messageId: 'deprecated', data })),
-        },
+        }),
       ),
     );
   },

@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -70,7 +70,7 @@ function interpolatedName(node: ESTree.TemplateLiteral): Opt.Option<string> {
     : Opt.none();
 }
 
-export const banErrorString: CreateRule = Rule.define({
+export const banErrorString = Rule.define({
   name: 'ban-error-string',
   meta: ruleMeta({
     type: 'problem',
@@ -118,20 +118,19 @@ export const banErrorString: CreateRule = Rule.define({
 
     return Visitor.merge(
       Visitor.on('NewExpression', (node) =>
-        Opt.match(
+        argumentAt(node, 0).pipe(
           Opt.filter(
-            argumentAt(node, 0),
             (first): first is ESTree.CallExpression =>
               first.type === 'CallExpression' && isStringCall(first) && isErrorConstructor(node),
           ),
-          {
+          Opt.match({
             onNone: () => Effect.void,
             onSome: (message) =>
               Opt.match(argumentAt(message, 0), {
                 onNone: () => Effect.void,
                 onSome: (cause) => reportMessage(message, cause),
               }),
-          },
+          }),
         ),
       ),
       Visitor.on('CallExpression', (node) => reportName(node, stringifiedName(node))),

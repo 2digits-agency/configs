@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -42,9 +42,9 @@ function effectMember(
   path: Opt.Option<ReadonlyArray<string>>,
   isMember: (name: unknown) => boolean,
 ): Opt.Option<string> {
-  return Opt.flatMap(
-    Opt.filter(path, ([namespace, member]) => namespace === 'Effect' && isMember(member)),
-    ([, member]) => Opt.fromNullishOr(member),
+  return path.pipe(
+    Opt.filter(([namespace, member]) => namespace === 'Effect' && isMember(member)),
+    Opt.flatMap(([, member]) => Opt.fromNullishOr(member)),
   );
 }
 
@@ -57,9 +57,9 @@ function effectMember(
 function catchMethod(node: ESTree.Node, imports: ImportBindings): Opt.Option<string> {
   return Opt.flatMap(parentOf(node), (parent) => {
     const method = isFunctionNode(parent)
-      ? Opt.flatMap(
-          Opt.filter(callbackCall(parent), (call) => isSomeSame<ESTree.Node>(Arr.last(call.arguments), parent)),
-          (call) => effectMember(imports.path(call.callee), isCatchMethod),
+      ? callbackCall(parent).pipe(
+          Opt.filter((call) => isSomeSame<ESTree.Node>(Arr.last(call.arguments), parent)),
+          Opt.flatMap((call) => effectMember(imports.path(call.callee), isCatchMethod)),
         )
       : Opt.none();
 
@@ -67,7 +67,7 @@ function catchMethod(node: ESTree.Node, imports: ImportBindings): Opt.Option<str
   });
 }
 
-export const noLoggingInCatch: CreateRule = Rule.define({
+export const noLoggingInCatch = Rule.define({
   name: 'no-logging-in-catch',
   meta: ruleMeta({
     type: 'suggestion',
@@ -82,9 +82,8 @@ export const noLoggingInCatch: CreateRule = Rule.define({
     return Visitor.on('CallExpression', (node) => {
       const path = imports.path(node.callee);
 
-      return Opt.match(
-        Opt.zipWith(effectMember(path, isLogMethod), catchMethod(node, imports), (_, method) => method),
-        {
+      return Opt.zipWith(effectMember(path, isLogMethod), catchMethod(node, imports), (_, method) => method).pipe(
+        Opt.match({
           onNone: () => Effect.void,
           onSome: (method) =>
             ctx.report(
@@ -92,15 +91,15 @@ export const noLoggingInCatch: CreateRule = Rule.define({
                 node,
                 messageId: 'logging',
                 data: {
-                  logger: Arr.join(
-                    Opt.getOrElse(path, () => []),
-                    '.',
+                  logger: path.pipe(
+                    Opt.getOrElse(() => []),
+                    Arr.join('.'),
                   ),
                   catchMethod: method,
                 },
               }),
             ),
-        },
+        }),
       );
     });
   },

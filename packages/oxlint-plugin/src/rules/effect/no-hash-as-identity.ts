@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import type * as Hash from 'effect/Hash';
@@ -26,7 +26,7 @@ function isKeyedCall(node: ESTree.CallExpression): boolean {
   );
 }
 
-export const noHashAsIdentity: CreateRule = Rule.define({
+export const noHashAsIdentity = Rule.define({
   name: 'no-hash-as-identity',
   meta: ruleMeta({
     type: 'problem',

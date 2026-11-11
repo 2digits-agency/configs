@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type CreateRule, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
@@ -28,7 +28,7 @@ function isTypedErrorCallback(callback: FunctionNode, imports: ImportBindings): 
   );
 }
 
-export const noThrowInEffectCallback: CreateRule = Rule.define({
+export const noThrowInEffectCallback = Rule.define({
   name: 'no-throw-in-effect-callback',
   meta: ruleMeta({
     type: 'problem',
