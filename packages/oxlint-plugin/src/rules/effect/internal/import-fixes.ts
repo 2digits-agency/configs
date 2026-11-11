@@ -5,7 +5,7 @@ import * as Result from 'effect/Result';
 import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
 
-import { containsSame, moduleExportName } from '../../../internal/ast';
+import { containsSame, isSomeSame, moduleExportName } from '../../../internal/ast';
 import { barrelModuleSource, isModuleName, isTypeOnlyImport, namespaceAlias, submoduleName } from './import-style';
 
 /**
@@ -113,7 +113,7 @@ function valueImportFixes(
  */
 function isAliasFree(sourceCode: OxlintSourceCode, alias: string, target: Opt.Option<Variable>): boolean {
   function isTarget(variable: Variable | null) {
-    return Opt.exists(target, (own) => own === variable);
+    return isSomeSame<Variable | null>(target, variable);
   }
 
   return !Arr.some(

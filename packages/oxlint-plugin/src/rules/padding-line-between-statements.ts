@@ -559,14 +559,11 @@ function verifyPair(
 function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<PaddingLineOption>) {
   const sourceCode = context.sourceCode;
 
-  const selectors = Arr.fromIterable(
-    new Set(
-      Fn.pipe(
-        options,
-        Arr.flatMap((option) => [...Arr.ensure(option.prev), ...Arr.ensure(option.next)]),
-        Arr.flatMap((matcher) => (P.isString(matcher) ? [] : [matcher.selector])),
-      ),
-    ),
+  const selectors = Fn.pipe(
+    options,
+    Arr.flatMap((option) => [...Arr.ensure(option.prev), ...Arr.ensure(option.next)]),
+    Arr.flatMap((matcher) => (P.isString(matcher) ? [] : [matcher.selector])),
+    Arr.dedupe,
   );
 
   // Collections are mutated only inside Ref updates, avoiding quadratic copies during traversal.

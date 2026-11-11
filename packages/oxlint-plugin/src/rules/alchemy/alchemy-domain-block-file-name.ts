@@ -46,18 +46,6 @@ interface Declaration {
   readonly kind: string;
 }
 
-/**
- * The kind a file name declares, such as `aggregate` for `Order.aggregate.ts`. `aggregate.ts` and `.aggregate.ts` lack
- * the noun, so they declare none.
- *
- * @param name File name without directories.
- */
-function fileKindOf(name: string): Opt.Option<string> {
-  const parts = Str.split(name, '.');
-
-  return parts.length >= 3 && Str.isNonEmpty(Arr.headNonEmpty(parts)) ? Arr.get(parts, parts.length - 2) : Opt.none();
-}
-
 export const alchemyDomainBlockFileName = Rule.define({
   name: 'alchemy-domain-block-file-name',
   meta: ruleMeta({
@@ -80,7 +68,14 @@ export const alchemyDomainBlockFileName = Rule.define({
       return {};
     }
 
-    const fileKind = fileKindOf(name);
+    const parts = Str.split(name, '.');
+
+    /*
+     * The kind the file name declares, such as `aggregate` for `Order.aggregate.ts`. `aggregate.ts` and `.aggregate.ts`
+     * lack the noun, so they declare none.
+     */
+    const fileKind =
+      parts.length >= 3 && Str.isNonEmpty(Arr.headNonEmpty(parts)) ? Arr.get(parts, parts.length - 2) : Opt.none();
 
     const inHostFile = Opt.exists(fileKind, isHostKind);
 

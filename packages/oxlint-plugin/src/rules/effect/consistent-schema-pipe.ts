@@ -16,6 +16,7 @@ import {
   containsRange,
   containsSame,
   isSomeSame,
+  parentOf,
   staticPath,
   staticPropertyName,
 } from '../../internal/ast';
@@ -232,7 +233,7 @@ function typePath(node: ESTree.TSTypeName, imports: ImportBindings): Opt.Option<
  * @param from Reference site.
  */
 function typeParameter(name: string, from: ESTree.Node): Opt.Option<ESTree.TSTypeParameter> {
-  return Opt.fromNullishOr(from.parent as ESTree.Node | null).pipe(
+  return parentOf(from).pipe(
     Opt.flatMap((node) => {
       const declared =
         'typeParameters' in node && node.typeParameters?.type === 'TSTypeParameterDeclaration'

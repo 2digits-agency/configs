@@ -19,13 +19,6 @@ function isHashCall(node: ESTree.Node, imports: ImportBindings): boolean {
   return node.type === 'CallExpression' && imports.isApi(node.callee, 'Hash', 'hash' satisfies keyof typeof Hash);
 }
 
-function isKeyedCall(node: ESTree.CallExpression): boolean {
-  return (
-    node.callee.type === 'MemberExpression' &&
-    Opt.exists(staticPath(node.callee), (path) => isKeyedMethod(Arr.lastNonEmpty(path)))
-  );
-}
-
 export const noHashAsIdentity = Rule.define({
   name: 'no-hash-as-identity',
   meta: ruleMeta({
@@ -63,7 +56,8 @@ export const noHashAsIdentity = Rule.define({
           : Effect.void,
       ),
       Visitor.on('CallExpression', (node) =>
-        isKeyedCall(node)
+        node.callee.type === 'MemberExpression' &&
+        Opt.exists(staticPath(node.callee), (path) => isKeyedMethod(Arr.lastNonEmpty(path)))
           ? Opt.match(argumentAt(node, 0), {
               onNone: () => Effect.void,
               onSome: (key) => reportWhen(key, isHashValue(key)),

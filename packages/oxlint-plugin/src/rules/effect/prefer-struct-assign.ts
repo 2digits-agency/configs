@@ -71,8 +71,7 @@ function hasLiteralValue(node: ESTree.Expression | ESTree.SpreadElement | null):
 // Struct.assign's generic `that` parameter does not pass that type on.
 function needsContextualType(value: ESTree.Expression): boolean {
   return (
-    hasUntypedParameter(value) ||
-    (value.type === 'CallExpression' && Arr.some(value.arguments, (argument) => hasUntypedParameter(argument)))
+    hasUntypedParameter(value) || (value.type === 'CallExpression' && Arr.some(value.arguments, hasUntypedParameter))
   );
 }
 

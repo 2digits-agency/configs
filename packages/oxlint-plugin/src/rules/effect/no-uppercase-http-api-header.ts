@@ -81,14 +81,9 @@ function memberName(property: ESTree.ObjectProperty): Opt.Option<string> {
 function directProperties(node: Opt.Option<ESTree.Expression>): Opt.Option<ReadonlyArray<ESTree.ObjectProperty>> {
   return node.pipe(
     Opt.filter((value): value is ESTree.ObjectExpression => value.type === 'ObjectExpression'),
-    Opt.flatMap((object) =>
-      Opt.all(Arr.map(object.properties, plainProperty)).pipe(
-        Opt.flatMap((properties) =>
-          Opt.all(Arr.map(properties, memberName)).pipe(
-            Opt.flatMap((names) => (Arr.dedupe(names).length === names.length ? Opt.some(properties) : Opt.none())),
-          ),
-        ),
-      ),
+    Opt.flatMap((object) => Opt.all(Arr.map(object.properties, plainProperty))),
+    Opt.filter((properties) =>
+      Opt.all(Arr.map(properties, memberName)).pipe(Opt.exists((names) => Arr.dedupe(names).length === names.length)),
     ),
   );
 }

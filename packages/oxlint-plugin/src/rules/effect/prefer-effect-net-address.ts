@@ -58,13 +58,6 @@ const ipPatterns: ReadonlyArray<RegExp> = [
   /::ffff:/iu,
 ];
 
-function isIpComparison(node: ESTree.BinaryExpression): boolean {
-  return (
-    isEqualityOperator(node.operator) &&
-    Arr.some([node.left, node.right], (side) => isStringLiteral(side) && isSpecialIpLiteral(side.value))
-  );
-}
-
 /**
  * The statement at the top of the program that holds `node`, so one hand-written classifier is reported once.
  *
@@ -154,7 +147,12 @@ export const preferEffectNetAddress = Rule.define({
           ? reportIpText(node)
           : Effect.void,
       ),
-      Visitor.on('BinaryExpression', (node) => (isIpComparison(node) ? reportIpText(node) : Effect.void)),
+      Visitor.on('BinaryExpression', (node) =>
+        isEqualityOperator(node.operator) &&
+        Arr.some([node.left, node.right], (side) => isStringLiteral(side) && isSpecialIpLiteral(side.value))
+          ? reportIpText(node)
+          : Effect.void,
+      ),
     );
   },
 });

@@ -79,7 +79,7 @@ export function durationArgument(
   imports: ImportBindings,
 ): Effect.Effect<Opt.Option<ESTree.Expression>, never, RuleContext> {
   return Opt.match(
-    imports.path(node.callee).pipe(Opt.flatMap((path) => Opt.fromNullishOr(durationApis.get(Arr.join(path, '.'))))),
+    imports.path(node.callee).pipe(Opt.flatMapNullishOr((path) => durationApis.get(Arr.join(path, '.')))),
     {
       onNone: () => Effect.succeedNone,
       onSome: (position) =>

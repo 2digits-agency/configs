@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -25,12 +25,6 @@ function isMethodList(values: ReadonlyArray<Opt.Option<string>>): boolean {
     Opt.all(values),
     (methods) => Arr.every(methods, HttpMethod.isHttpMethod) && new Set(methods).size >= minimumMethods,
   );
-}
-
-function unionMemberValue(member: ESTree.TSType): Opt.Option<string> {
-  return member.type === 'TSLiteralType' && isStringLiteral(member.literal)
-    ? Opt.some(member.literal.value)
-    : Opt.none();
 }
 
 export const preferEffectHttpMethod = Rule.define({
@@ -64,7 +58,13 @@ export const preferEffectHttpMethod = Rule.define({
           : Effect.void,
       ),
       Visitor.on('TSUnionType', (node) =>
-        isMethodList(Arr.map(node.types, unionMemberValue))
+        isMethodList(
+          Arr.map(node.types, (member) =>
+            member.type === 'TSLiteralType' && isStringLiteral(member.literal)
+              ? Opt.some(member.literal.value)
+              : Opt.none(),
+          ),
+        )
           ? ctx.report(Diagnostic.fromId({ node, messageId: 'methodList' }))
           : Effect.void,
       ),

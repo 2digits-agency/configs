@@ -8,7 +8,7 @@ import * as Str from 'effect/String';
 import { isFunctionNode, type FunctionNode } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-import { forwardedCall, isDetachableCallee, isEffectGuard, isTypeGuard, type Forwarding } from './internal/forwarding';
+import { forwardedCall, isDetachableCallee, isEffectGuard, isTypeGuard } from './internal/forwarding';
 
 const maxCalleeLength = 60;
 
@@ -45,29 +45,6 @@ function narrowsBeyondCallee(
 }
 
 /**
- * The call a named function trivially wraps. Fixed arguments only leave a constant to hoist for `Match.valueTags(x,
- * cases)`, as `Match.typeTags`, and a one-step `pipe(x, step)`, as `step`. Others, such as `Cron.parseUnsafe(x, zone)`,
- * are a named partial application. `set.has` loses its `this` when passed as a value, so the wrapper is how a module
- * exposes it.
- *
- * @param node Wrapper.
- * @param imports Import bindings of the file.
- */
-function trivialForwarding(node: FunctionNode, imports: ImportBindings): Opt.Option<Forwarding> {
-  return Opt.filter(forwardedCall(node), ({ call, exact }) => {
-    const { callee } = call;
-
-    return (
-      !narrowsBeyondCallee(node, callee, imports) &&
-      isDetachableCallee(callee, imports) &&
-      (exact ||
-        imports.isApi(callee, 'Match', 'valueTags') ||
-        (imports.isApi(callee, 'Function', 'pipe') && call.arguments.length === 2))
-    );
-  });
-}
-
-/**
  * Report named functions that only pass their parameters on to another call, such as `isUser(input)` around
  * `Schema.is(User)(input)` or `logStep(message)` around `Effect.logDebug(message)`.
  */
@@ -89,17 +66,32 @@ export const noTrivialWrapper = Rule.define({
     const imports = yield* importBindings;
 
     function check(node: FunctionNode, name: ESTree.BindingIdentifier) {
-      return Opt.match(trivialForwarding(node, imports), {
-        onNone: () => Effect.void,
-        onSome: ({ call, exact }) =>
-          ctx.report(
-            Diagnostic.fromId({
-              node: name,
-              messageId: exact ? 'forwardsParameters' : 'forwardsWithArguments',
-              data: { name: name.name, callee: calleeText(call, ctx.sourceCode) },
-            }),
-          ),
-      });
+      return forwardedCall(node).pipe(
+        /*
+         * Fixed arguments only leave a constant to hoist for `Match.valueTags(x, cases)`, as `Match.typeTags`, and a
+         * one-step `pipe(x, step)`, as `step`. Others, such as `Cron.parseUnsafe(x, zone)`, are a named partial
+         * application. `set.has` loses its `this` when passed as a value, so the wrapper is how a module exposes it.
+         */
+        Opt.filter(
+          ({ call, exact }) =>
+            !narrowsBeyondCallee(node, call.callee, imports) &&
+            isDetachableCallee(call.callee, imports) &&
+            (exact ||
+              imports.isApi(call.callee, 'Match', 'valueTags') ||
+              (imports.isApi(call.callee, 'Function', 'pipe') && call.arguments.length === 2)),
+        ),
+        Opt.match({
+          onNone: () => Effect.void,
+          onSome: ({ call, exact }) =>
+            ctx.report(
+              Diagnostic.fromId({
+                node: name,
+                messageId: exact ? 'forwardsParameters' : 'forwardsWithArguments',
+                data: { name: name.name, callee: calleeText(call, ctx.sourceCode) },
+              }),
+            ),
+        }),
+      );
     }
 
     return Visitor.merge(

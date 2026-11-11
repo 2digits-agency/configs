@@ -10,6 +10,7 @@ import {
 } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Equivalence from 'effect/Equivalence';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
@@ -17,6 +18,7 @@ import * as Schema from 'effect/Schema';
 
 import {
   argumentAt,
+  findAncestor,
   isSomeSame,
   parentOf,
   parentOfType,
@@ -141,7 +143,7 @@ function globalReferences(globalScope: OxlintScope | null): ReadonlyArray<Refere
               Scope.getReferences,
             ),
           ],
-          (left, right) => left === right,
+          Equivalence.strictEqual(),
         ),
     }),
   );
@@ -193,18 +195,9 @@ function browserApiRead(identifier: ESTree.Node): Opt.Option<BrowserApiRead> {
  */
 function runsDuringRender(node: ESTree.Node): boolean {
   return Opt.exists(
-    findFunction(node),
+    findAncestor(node, isFunction),
     (fn) => isComponentOrHook(fn) || (isRenderTimeCallback(fn) && runsDuringRender(fn)),
   );
-}
-
-/**
- * The nearest function around a node.
- *
- * @param node Start node, not tested itself.
- */
-function findFunction(node: ESTree.Node): Opt.Option<FunctionNode> {
-  return Opt.flatMap(parentOf(node), (parent) => (isFunction(parent) ? Opt.some(parent) : findFunction(parent)));
 }
 
 /**

@@ -76,7 +76,7 @@ function annotateMethod(node: ESTree.CallExpression, imports: ImportBindings): O
       ? staticPropertyName(node.callee)
       : imports.path(node.callee).pipe(
           Opt.filter(([namespace]) => namespace === 'Schema'),
-          Opt.flatMap(([, member]) => Opt.fromNullishOr(member)),
+          Opt.flatMapNullishOr(([, member]) => member),
         );
 
   return Opt.filter(method, isAnnotateMethod);

@@ -78,17 +78,6 @@ export function isGlobalIdentifier(node: ESTree.Node, name: string): Effect.Effe
     : Effect.succeed(false);
 }
 
-function isRuntimeImport(definition: Definition): boolean {
-  const specifier = definition.node;
-
-  return (
-    definition.type === 'ImportBinding' &&
-    specifier.parent?.type === 'ImportDeclaration' &&
-    specifier.parent.importKind !== 'type' &&
-    (specifier.type !== 'ImportSpecifier' || specifier.importKind !== 'type')
-  );
-}
-
 /**
  * Whether the root of an API expression still resolves to a runtime import, synchronously, for use inside tree walks.
  *
@@ -98,7 +87,16 @@ function isRuntimeImport(definition: Definition): boolean {
 export function isImportedApiIn(sourceCode: OxlintSourceCode, node: ESTree.Node): boolean {
   return staticPath(node).pipe(
     Opt.flatMap((path) => lookupVariable(sourceCode, node, Arr.headNonEmpty(path))),
-    Opt.exists(({ defs }) => Arr.some(defs, isRuntimeImport)),
+    Opt.exists(({ defs }) =>
+      Arr.some(
+        defs,
+        ({ type, node: specifier }) =>
+          type === 'ImportBinding' &&
+          specifier.parent?.type === 'ImportDeclaration' &&
+          specifier.parent.importKind !== 'type' &&
+          (specifier.type !== 'ImportSpecifier' || specifier.importKind !== 'type'),
+      ),
+    ),
   );
 }
 

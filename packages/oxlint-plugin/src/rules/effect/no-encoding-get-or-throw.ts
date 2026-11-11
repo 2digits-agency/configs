@@ -27,10 +27,11 @@ function encodingDecoder(node: ESTree.Node, imports: ImportBindings): Opt.Option
     return Opt.none();
   }
 
-  return Opt.flatMap(imports.path(target.callee), (path) =>
-    path.length === 2 && Arr.contains(encodingModules, path[0]) && Arr.contains(decoders, path[1])
-      ? Opt.some(Arr.join(path, '.'))
-      : Opt.none(),
+  return imports.path(target.callee).pipe(
+    Opt.filter(
+      (path) => path.length === 2 && Arr.contains(encodingModules, path[0]) && Arr.contains(decoders, path[1]),
+    ),
+    Opt.map(Arr.join('.')),
   );
 }
 

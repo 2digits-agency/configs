@@ -12,13 +12,6 @@ const UrlParseMethod = Schema.Literals(['canParse', 'parse']);
 
 const isUrlParseMethod = Schema.is(UrlParseMethod);
 
-function isUrlParseCall(node: ESTree.CallExpression): boolean {
-  return Opt.exists(
-    staticPath(node.callee),
-    (path) => path.length === 2 && path[0] === 'URL' && isUrlParseMethod(path[1]),
-  );
-}
-
 export const preferEffectUrl = Rule.define({
   name: 'prefer-effect-url',
   meta: ruleMeta({
@@ -48,7 +41,10 @@ export const preferEffectUrl = Rule.define({
     return Visitor.merge(
       Visitor.on('NewExpression', (node) => reportWhenGlobal(node, node.callee)),
       Visitor.on('CallExpression', (node) =>
-        isUrlParseCall(node) && node.callee.type === 'MemberExpression'
+        Opt.exists(
+          staticPath(node.callee),
+          (path) => path.length === 2 && path[0] === 'URL' && isUrlParseMethod(path[1]),
+        ) && node.callee.type === 'MemberExpression'
           ? reportWhenGlobal(node, node.callee.object)
           : Effect.void,
       ),

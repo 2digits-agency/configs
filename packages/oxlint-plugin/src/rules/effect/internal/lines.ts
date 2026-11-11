@@ -8,14 +8,17 @@ import {
   argumentAt,
   containsSame,
   isFunctionNode,
+  isSomeSame,
   isStringLiteral,
   parentOf,
+  parentOfType,
   staticPropertyName,
   unwrapExpression,
   type FunctionNode,
 } from '../../../internal/ast';
 import type { ImportBindings } from '../../../internal/imports';
 import { isGlobalIn, lookupVariable, soleDefinition } from '../../../internal/scope';
+import { functionResult } from './callbacks';
 
 /**
  * What the line and delimiter helpers need from the file being linted.
@@ -36,7 +39,7 @@ function staticString(node: ESTree.Node): Opt.Option<string> {
   }
 
   return node.type === 'TemplateLiteral' && Arr.isReadonlyArrayEmpty(node.expressions)
-    ? Opt.flatMap(Arr.head(node.quasis), ({ value }) => Opt.fromNullishOr(value.cooked))
+    ? Opt.flatMapNullishOr(Arr.head(node.quasis), ({ value }) => value.cooked)
     : Opt.none();
 }
 
@@ -388,8 +391,7 @@ function iteratedValues(
   const receiver =
     call.callee.type === 'MemberExpression' && Opt.isNone(imports.path(call.callee)) ? [call.callee.object] : [];
 
-  const pipeline = parentOf(call).pipe(
-    Opt.filter((parent): parent is ESTree.CallExpression => parent.type === 'CallExpression'),
+  const pipeline = parentOfType(call, 'CallExpression').pipe(
     Opt.match({
       onNone: () => [],
       onSome: (parent) =>
@@ -415,11 +417,8 @@ function iteratedValues(
  * @param context File context.
  */
 export function isPerLineCallback(node: ESTree.Node, context: LineContext): boolean {
-  return parentOf(node).pipe(
-    Opt.filter(
-      (parent): parent is ESTree.CallExpression =>
-        parent.type === 'CallExpression' && containsSame<ESTree.Node>(parent.arguments, node),
-    ),
+  return parentOfType(node, 'CallExpression').pipe(
+    Opt.filter((parent) => containsSame<ESTree.Node>(parent.arguments, node)),
     Opt.exists((call) =>
       pipelineProduces(iteratedValues(call, node, context.imports), lineSource(context), context, 3),
     ),
@@ -469,7 +468,7 @@ export function isLineValue(node: ESTree.Expression, context: LineContext): bool
 
       return (
         isFunctionNode(owner) &&
-        Opt.exists(Arr.head(owner.params), (parameter) => parameter === definition.name) &&
+        isSomeSame<ESTree.Node>(Arr.head(owner.params), definition.name) &&
         isPerLineCallback(owner, context)
       );
     }
@@ -483,23 +482,6 @@ export function isLineValue(node: ESTree.Expression, context: LineContext): bool
       producesCollection(loop.right, lineSource(context), context)
     );
   });
-}
-
-/**
- * The value a callback returns for each element: the body of an expression arrow or the argument of a lone `return`.
- *
- * @param node Callback.
- */
-function callbackResult(node: FunctionNode): Opt.Option<ESTree.Expression> {
-  if (node.body?.type !== 'BlockStatement') {
-    return Opt.fromNullishOr(node.body as ESTree.Expression | null | undefined).pipe(Opt.map(unwrapExpression));
-  }
-
-  const [statement] = node.body.body;
-
-  return node.body.body.length === 1 && statement?.type === 'ReturnStatement' && P.isNotNullish(statement.argument)
-    ? Opt.some(unwrapExpression(statement.argument))
-    : Opt.none();
 }
 
 /**
@@ -518,7 +500,7 @@ function isMappingCall(node: ESTree.Node, mapping: ElementMapping): boolean {
     Arr.some(
       node.arguments,
       (argument) =>
-        mapping.mapper(argument) || (isFunctionNode(argument) && Opt.exists(callbackResult(argument), mapping.element)),
+        mapping.mapper(argument) || (isFunctionNode(argument) && Opt.exists(functionResult(argument), mapping.element)),
     )
   );
 }

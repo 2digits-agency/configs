@@ -61,28 +61,6 @@ function comparedPair(
   );
 }
 
-/**
- * The first object pair a chain compares field by field at least twice.
- *
- * @param node Outermost logical expression.
- * @param operators Accepted comparison operators.
- * @param sourceCode Source of the file.
- */
-function repeatedPair(
-  node: ESTree.LogicalExpression,
-  operators: ReadonlyArray<string>,
-  sourceCode: OxlintSourceCode,
-): Opt.Option<string> {
-  const pairs = Arr.getSomes(
-    Arr.map(chainOperands(node, node.operator), (operand) => comparedPair(operand, operators, sourceCode)),
-  );
-
-  return Opt.map(
-    Arr.findFirst(pairs, (pair, index) => Arr.contains(Arr.take(pairs, index), pair)),
-    (pair) => pair,
-  );
-}
-
 // `Equivalence.make((a, b) => a.x === b.x && a.y === b.y)` already is the Effect way to compare fields.
 function isEquivalenceDefinition(node: ESTree.Node, imports: ImportBindings): boolean {
   return enclosingFunction(node).pipe(
@@ -126,7 +104,12 @@ export const preferEqual = Rule.define({
         return Effect.void;
       }
 
-      return repeatedPair(node, operators, ctx.sourceCode).pipe(
+      const pairs = Arr.getSomes(
+        Arr.map(chainOperands(node, node.operator), (operand) => comparedPair(operand, operators, ctx.sourceCode)),
+      );
+
+      // The first object pair the chain compares field by field at least twice.
+      return Arr.findFirst(pairs, (pair, index) => Arr.contains(Arr.take(pairs, index), pair)).pipe(
         Opt.filter(() => !isEquivalenceDefinition(node, imports)),
         Opt.match({
           onNone: () => Effect.void,

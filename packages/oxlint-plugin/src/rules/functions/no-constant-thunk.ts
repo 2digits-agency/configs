@@ -135,25 +135,6 @@ function isLocalFunction(node: ESTree.Expression, env: Constness): boolean {
   );
 }
 
-function isConstantIdentifier(node: ESTree.Node & { readonly name: string }, env: Constness): boolean {
-  // A `let` binding can change between calls; the function would see the change and a constant would not.
-  return !Opt.exists(
-    definitionOf(node, env),
-    (definition) =>
-      definition.type === 'Variable' &&
-      definition.parent?.type === 'VariableDeclaration' &&
-      !isConstDeclaration(definition.parent),
-  );
-}
-
-function isConstantProperty(property: ESTree.ObjectPropertyKind, env: Constness): boolean {
-  if (property.type === 'SpreadElement') {
-    return isConstant(property.argument, env);
-  }
-
-  return (!property.computed || isConstant(property.key as ESTree.Expression, env)) && isConstant(property.value, env);
-}
-
 function isConstant(node: ESTree.Node, env: Constness): boolean {
   return Match.value(node).pipe(
     Match.discriminators('type')({
@@ -161,7 +142,15 @@ function isConstant(node: ESTree.Node, env: Constness): boolean {
       Literal: (literal) => !('regex' in literal),
       ArrowFunctionExpression: Fn.constTrue,
       FunctionExpression: Fn.constTrue,
-      Identifier: (identifier) => isConstantIdentifier(identifier, env),
+      // A `let` binding can change between calls; the function would see the change and a constant would not.
+      Identifier: (identifier) =>
+        !Opt.exists(
+          definitionOf(identifier, env),
+          (definition) =>
+            definition.type === 'Variable' &&
+            definition.parent?.type === 'VariableDeclaration' &&
+            !isConstDeclaration(definition.parent),
+        ),
       TemplateLiteral: ({ expressions }) => Arr.every(expressions, (expression) => isConstant(expression, env)),
       ParenthesizedExpression: ({ expression }) => isConstant(expression, env),
       TSAsExpression: ({ expression }) => isConstant(expression, env),
@@ -183,7 +172,13 @@ function isConstant(node: ESTree.Node, env: Constness): boolean {
         isConstant(test, env) && isConstant(consequent, env) && isConstant(alternate, env),
       ArrayExpression: ({ elements }) =>
         Arr.every(elements, (element) => P.isNull(element) || isConstant(element, env)),
-      ObjectExpression: ({ properties }) => Arr.every(properties, (property) => isConstantProperty(property, env)),
+      ObjectExpression: ({ properties }) =>
+        Arr.every(properties, (property) =>
+          property.type === 'SpreadElement'
+            ? isConstant(property.argument, env)
+            : (!property.computed || isConstant(property.key as ESTree.Expression, env)) &&
+              isConstant(property.value, env),
+        ),
       CallExpression: (call) => isConstantCall(call, env),
     }),
     Match.orElse(Fn.constFalse),

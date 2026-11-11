@@ -17,24 +17,6 @@ function unsafeDualParameter(node: ESTree.ParamPattern): boolean {
   );
 }
 
-/**
- * The numeric arity literal of a `Function.dual` call whose implementation has an optional, default or rest parameter.
- *
- * @param node `Function.dual` call.
- */
-function unsafeArity(node: ESTree.CallExpression): Opt.Option<ESTree.Expression> {
-  return Opt.filter(
-    argumentAt(node, 0),
-    (arity) =>
-      arity.type === 'Literal' &&
-      P.isNumber(arity.value) &&
-      Opt.exists(
-        argumentAt(node, 1),
-        (implementation) => isFunctionNode(implementation) && Arr.some(implementation.params, unsafeDualParameter),
-      ),
-  );
-}
-
 export const dualNumericArityWithOptionalParameter = Rule.define({
   name: 'dual-numeric-arity-with-optional-parameter',
   meta: ruleMeta({
@@ -53,10 +35,22 @@ export const dualNumericArityWithOptionalParameter = Rule.define({
 
     return Visitor.on('CallExpression', (node) =>
       imports.isApi(node.callee, 'Function', 'dual' satisfies keyof typeof Fn)
-        ? Opt.match(unsafeArity(node), {
-            onNone: () => Effect.void,
-            onSome: (arity) => ctx.report(Diagnostic.fromId({ node: arity, messageId: 'unsafeArity' })),
-          })
+        ? argumentAt(node, 0).pipe(
+            Opt.filter(
+              (arity) =>
+                arity.type === 'Literal' &&
+                P.isNumber(arity.value) &&
+                Opt.exists(
+                  argumentAt(node, 1),
+                  (implementation) =>
+                    isFunctionNode(implementation) && Arr.some(implementation.params, unsafeDualParameter),
+                ),
+            ),
+            Opt.match({
+              onNone: () => Effect.void,
+              onSome: (arity) => ctx.report(Diagnostic.fromId({ node: arity, messageId: 'unsafeArity' })),
+            }),
+          )
         : Effect.void,
     );
   },

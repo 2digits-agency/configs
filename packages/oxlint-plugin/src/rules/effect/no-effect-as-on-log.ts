@@ -69,7 +69,7 @@ function loggerName(node: ESTree.Expression, imports: ImportBindings): Opt.Optio
 }
 
 function effectMember(node: ESTree.Node, imports: ImportBindings): Opt.Option<string> {
-  return Opt.flatMap(imports.path(node), ([, member]) => Opt.fromNullishOr(member));
+  return Opt.flatMapNullishOr(imports.path(node), ([, member]) => member);
 }
 
 /**

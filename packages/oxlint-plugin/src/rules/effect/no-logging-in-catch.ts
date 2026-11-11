@@ -44,7 +44,7 @@ function effectMember(
 ): Opt.Option<string> {
   return path.pipe(
     Opt.filter(([namespace, member]) => namespace === 'Effect' && isMember(member)),
-    Opt.flatMap(([, member]) => Opt.fromNullishOr(member)),
+    Opt.flatMapNullishOr(([, member]) => member),
   );
 }
 

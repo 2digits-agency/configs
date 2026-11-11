@@ -5,7 +5,14 @@ import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
-import { argumentAt, isLiteral, isStringLiteral, staticPropertyName, unwrapExpression } from '../../internal/ast';
+import {
+  argumentAt,
+  isLiteral,
+  isSomeSame,
+  isStringLiteral,
+  staticPropertyName,
+  unwrapExpression,
+} from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 
@@ -170,7 +177,7 @@ function isPaddedByteHex(node: ESTree.CallExpression, imports: ImportBindings): 
     );
   }
 
-  if (parent.type !== 'CallExpression' || !Opt.exists(argumentAt(parent, 0), (first) => first === node)) {
+  if (parent.type !== 'CallExpression' || !isSomeSame<ESTree.Node>(argumentAt(parent, 0), node)) {
     return false;
   }
 

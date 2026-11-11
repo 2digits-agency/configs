@@ -41,19 +41,6 @@ const isDirectoryVariable = Schema.is(DirectoryVariable);
 
 const osSources: ReadonlyArray<string> = ['node:os', 'os'];
 
-/**
- * The directory variable a `process.env.NAME` or `process.env['NAME']` read names, unless it is assigned to.
- *
- * @param node Member expression.
- */
-function processEnvVariable(node: ESTree.MemberExpression): Opt.Option<string> {
-  const isAssigned = node.parent.type === 'AssignmentExpression' && node.parent.left === node;
-
-  return isAssigned || !Opt.exists(staticPath(node.object), (path) => Arr.join(path, '.') === 'process.env')
-    ? Opt.none()
-    : Opt.filter(staticPropertyName(node), isDirectoryVariable);
-}
-
 export const preferEffectUserDirectories = Rule.define({
   name: 'prefer-effect-user-directories',
   meta: ruleMeta({
@@ -108,15 +95,23 @@ export const preferEffectUserDirectories = Rule.define({
 
         return Opt.match(configVariable, { onNone: () => Effect.void, onSome: (name) => reportVariable(node, name) });
       }),
-      Visitor.on('MemberExpression', (node) =>
-        Opt.match(processEnvVariable(node), {
+      // `process.env.NAME` or `process.env['NAME']`, unless it is assigned to.
+      Visitor.on('MemberExpression', (node) => {
+        const isAssigned = node.parent.type === 'AssignmentExpression' && node.parent.left === node;
+
+        const envVariable =
+          isAssigned || !Opt.exists(staticPath(node.object), (path) => Arr.join(path, '.') === 'process.env')
+            ? Opt.none()
+            : Opt.filter(staticPropertyName(node), isDirectoryVariable);
+
+        return Opt.match(envVariable, {
           onNone: () => Effect.void,
           onSome: (name) =>
             node.object.type === 'MemberExpression'
               ? Effect.when(reportVariable(node, name), isGlobalIdentifier(node.object.object, 'process'))
               : Effect.void,
-        }),
-      ),
+        });
+      }),
     );
   },
 });

@@ -167,7 +167,7 @@ function isBinary(node: ESTree.Node): node is ESTree.BinaryExpression {
 
 function enclosingBinary(node: ESTree.Node): Opt.Option<ESTree.BinaryExpression> {
   return Opt.flatMap(parentOf(node), (parent) =>
-    isWrapperExpressionType(parent.type) ? enclosingBinary(parent) : Opt.some(parent).pipe(Opt.filter(isBinary)),
+    isWrapperExpressionType(parent.type) ? enclosingBinary(parent) : Opt.liftPredicate(parent, isBinary),
   );
 }
 

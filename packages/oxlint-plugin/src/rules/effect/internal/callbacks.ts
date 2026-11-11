@@ -51,18 +51,6 @@ export function callbackApi(node: FunctionNode, imports: ImportBindings): Opt.Op
   return Opt.flatMap(callbackCall(node), (call) => imports.path(call.callee));
 }
 
-function callHost(node: FunctionNode): Opt.Option<ESTree.CallExpression | ESTree.NewExpression> {
-  const argument: ESTree.Node =
-    node.parent.type === 'Property' && node.parent.value === node ? node.parent.parent : node;
-
-  return Opt.filter(
-    parentOf(argument),
-    (call): call is ESTree.CallExpression | ESTree.NewExpression =>
-      (call.type === 'CallExpression' || call.type === 'NewExpression') &&
-      containsSame<ESTree.Node>(call.arguments, argument),
-  );
-}
-
 function rootCallee(node: ESTree.Node): ESTree.Node {
   return node.type === 'CallExpression' ? rootCallee(node.callee) : node;
 }
@@ -76,27 +64,34 @@ function rootCallee(node: ESTree.Node): ESTree.Node {
  * @param imports Import bindings of the file.
  */
 export function isForeignCallback(node: FunctionNode, imports: ImportBindings): boolean {
-  return Opt.exists(callHost(node), (call) => Opt.isNone(imports.path(rootCallee(call.callee))));
+  const argument: ESTree.Node =
+    node.parent.type === 'Property' && node.parent.value === node ? node.parent.parent : node;
+
+  return parentOf(argument).pipe(
+    Opt.filter(
+      (call): call is ESTree.CallExpression | ESTree.NewExpression =>
+        (call.type === 'CallExpression' || call.type === 'NewExpression') &&
+        containsSame<ESTree.Node>(call.arguments, argument),
+    ),
+    Opt.exists((call) => Opt.isNone(imports.path(rootCallee(call.callee)))),
+  );
 }
 
 const PromiseChainMethod = Schema.Literals(['catch', 'finally', 'then']);
 
 const isPromiseChainMethod = Schema.is(PromiseChainMethod);
 
-function isPromiseCall(node: ESTree.CallExpression): boolean {
-  const path = staticPath(node.callee);
-
-  return (
-    Opt.exists(path, (parts) => Arr.join(parts, '.') === 'fetch') ||
-    Opt.exists(path, ([first, second]) => first === 'Promise' && second !== 'withResolvers') ||
-    Opt.exists(path, (parts) => isPromiseChainMethod(Arr.lastNonEmpty(parts))) ||
-    (isFunctionNode(node.callee) && node.callee.async)
-  );
-}
-
 const promiseExpression = Match.type<ESTree.Expression>().pipe(
   Match.discriminators('type')({
-    CallExpression: isPromiseCall,
+    CallExpression: ({ callee }) =>
+      Opt.exists(
+        staticPath(callee),
+        (path) =>
+          Arr.join(path, '.') === 'fetch' ||
+          (Arr.headNonEmpty(path) === 'Promise' && path[1] !== 'withResolvers') ||
+          isPromiseChainMethod(Arr.lastNonEmpty(path)),
+      ) ||
+      (isFunctionNode(callee) && callee.async),
     NewExpression: ({ callee }) => Opt.exists(staticPath(callee), (path) => Arr.join(path, '.') === 'Promise'),
   }),
   Match.orElse(Fn.constFalse),

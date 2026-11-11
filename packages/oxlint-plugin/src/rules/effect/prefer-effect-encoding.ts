@@ -140,9 +140,7 @@ export const preferEffectEncoding = Rule.define({
           ? node.callee.object
           : node.callee;
 
-      const name = Opt.flatMap(staticPath(node.callee), (path) =>
-        Opt.liftPredicate(Arr.lastNonEmpty(path), isGlobalBase64Name),
-      );
+      const name = staticPath(node.callee).pipe(Opt.map(Arr.lastNonEmpty), Opt.filter(isGlobalBase64Name));
 
       return Opt.match(name, {
         onNone: () => Effect.succeedNone,

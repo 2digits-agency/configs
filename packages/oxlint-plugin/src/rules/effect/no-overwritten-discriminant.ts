@@ -6,25 +6,6 @@ import * as Opt from 'effect/Option';
 import { propertyName } from '../../internal/ast';
 import { ruleMeta } from '../../internal/meta';
 
-/**
- * The `_tag` property of an object literal when a spread follows it.
- *
- * @param node Object literal.
- */
-function overwrittenTag(node: ESTree.ObjectExpression): Opt.Option<ESTree.ObjectProperty> {
-  return Opt.flatMap(
-    Arr.findFirstWithIndex(
-      node.properties,
-      (property): property is ESTree.ObjectProperty =>
-        property.type === 'Property' && Opt.contains(propertyName(property), '_tag'),
-    ),
-    ([property, index]) =>
-      Arr.some(Arr.drop(node.properties, index + 1), (later) => later.type === 'SpreadElement')
-        ? Opt.some(property)
-        : Opt.none(),
-  );
-}
-
 export const noOverwrittenDiscriminant = Rule.define({
   name: 'no-overwritten-discriminant',
   meta: ruleMeta({
@@ -37,10 +18,19 @@ export const noOverwrittenDiscriminant = Rule.define({
     const ctx = yield* RuleContext;
 
     return Visitor.on('ObjectExpression', (node) =>
-      Opt.match(overwrittenTag(node), {
-        onNone: () => Effect.void,
-        onSome: (property) => ctx.report(Diagnostic.fromId({ node: property, messageId: 'overwritten' })),
-      }),
+      Arr.findFirstWithIndex(
+        node.properties,
+        (property): property is ESTree.ObjectProperty =>
+          property.type === 'Property' && Opt.contains(propertyName(property), '_tag'),
+      ).pipe(
+        Opt.filter(([, index]) =>
+          Arr.some(Arr.drop(node.properties, index + 1), (later) => later.type === 'SpreadElement'),
+        ),
+        Opt.match({
+          onNone: () => Effect.void,
+          onSome: ([property]) => ctx.report(Diagnostic.fromId({ node: property, messageId: 'overwritten' })),
+        }),
+      ),
     );
   },
 });

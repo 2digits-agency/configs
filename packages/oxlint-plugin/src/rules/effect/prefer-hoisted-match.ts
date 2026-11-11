@@ -47,7 +47,7 @@ function isValuePipe(node: ESTree.CallExpression, parameter: string, imports: Im
 
   return (
     (imports.isApiPath(node.callee, ['pipe']) || imports.isApiPath(node.callee, ['Function', 'pipe'])) &&
-    isMatchValueOf(node.arguments[0], parameter, imports)
+    Opt.exists(argumentAt(node, 0), (first) => isMatchValueOf(first, parameter, imports))
   );
 }
 
@@ -65,7 +65,7 @@ function valueTagsCases(
 ): Opt.Option<ESTree.Node> {
   if (imports.isApi(node.callee, 'Match', 'valueTags')) {
     return node.arguments.length === 2 && isParameterReference(argumentAt(node, 0), parameter)
-      ? Opt.fromNullishOr(node.arguments[1])
+      ? Arr.get(node.arguments, 1)
       : Opt.none();
   }
 

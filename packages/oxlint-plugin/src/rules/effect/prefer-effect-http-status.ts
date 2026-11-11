@@ -88,19 +88,6 @@ const statusLiterals: ReadonlyMap<number, HttpStatus.Literal> = new Map(
 type MessageId = 'httpStatus' | 'statusName';
 
 /**
- * The status name for a numeric literal of a known status code.
- *
- * @param node Expression.
- */
-function statusLiteral(node: ESTree.Expression): Opt.Option<readonly [ESTree.Expression, HttpStatus.Literal]> {
-  const target = unwrapExpression(node);
-
-  return target.type === 'Literal' && P.isNumber(target.value)
-    ? Opt.fromNullishOr(statusLiterals.get(target.value)).pipe(Opt.map((name) => Tuple.make(target, name)))
-    : Opt.none();
-}
-
-/**
  * The status code arguments of a call to an Effect HTTP API, with the message each one gets: `HttpApiSchema.status`
  * takes the status name itself, while `HttpApiSchema.Empty`, `HttpServerResponse.setStatus` and the `status` option of
  * `HttpServerResponse` constructors take `HttpStatus.fromLiteral`.
@@ -169,9 +156,16 @@ export const preferEffectHttpStatus = Rule.define({
     }
 
     function report(node: ESTree.Expression, messageId: MessageId) {
-      return Opt.match(statusLiteral(node), {
+      const literal = unwrapExpression(node);
+
+      const status =
+        literal.type === 'Literal' && P.isNumber(literal.value)
+          ? Opt.fromNullishOr(statusLiterals.get(literal.value))
+          : Opt.none();
+
+      return Opt.match(status, {
         onNone: () => Effect.void,
-        onSome: ([literal, name]) =>
+        onSome: (name) =>
           ctx.report(
             Diagnostic.fromId({
               node: literal,
