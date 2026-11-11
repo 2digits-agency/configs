@@ -1,3 +1,9 @@
+## @2digits/tsconfig@1.2.7
+
+### Update `@effect/tsgo` to 0.67.7
+
+The config now expects `@effect/tsgo` 0.67.7.
+
 ## @2digits/tsconfig@1.2.6
 
 ### Update Effect tsgo

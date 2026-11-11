@@ -1,3 +1,9 @@
+## @2digits/prettier-config@4.0.54
+
+### Update `prettier` and `@prettier/plugin-oxc`
+
+The config now uses `@prettier/plugin-oxc` 0.2.4 and expects `prettier` 3.10.0.
+
 ## @2digits/prettier-config@4.0.53
 
 ### Update local-pkg to 2.0.0

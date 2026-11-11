@@ -1,3 +1,21 @@
+## @2digits/tlo-mcp@2.5.0
+
+### Forward `SetTicketOwner` and `LinkTicketToProject`
+
+Agents can now change a ticket's owner, which is not the same as its assignee, and link a ticket to a project or project task, which time logged with `logMinutes` needs. The gateway forwards Orbit's own tools with their schemas and write annotations, so Executor approves each call like the other ticket writes.
+
+### Update `effect`, `@effect/platform-node` and `@yielded/oauth`
+
+The gateway now runs on `effect` and `@effect/platform-node` 4.1.4 and `@yielded/oauth` 0.1.0-beta.48.
+
+### Forward `CloseProjectTask` and `UpdateProject`
+
+Agents can now close a project task, such as one added by mistake, and change a project's dates with `UpdateProject`. The gateway forwards Orbit's own tools with their schemas and write annotations, so Executor approves each call like the other writes.
+
+### Typed ticket and project write tools
+
+The gateway now defines `SetTicketOwner`, `LinkTicketToProject`, `CloseProjectTask` and `UpdateProject` itself instead of forwarding Orbit's untyped schemas, and adds `UpdateProjectTask` the same way. `SetTicketOwner` and `LinkTicketToProject` take a ticket number as well as an api_id, and `LinkTicketToProject` unlinks with `null`. `UpdateProject` and `UpdateProjectTask` take typed, documented fields instead of a `fieldsJson` string; `null` clears a field and `recurring` is a boolean. Moving task dates with `UpdateProjectTask` is what lets a project's end date move earlier. Every api_id parameter checks Orbit's type prefix, so a project api_id passed as a task, or a name passed as a user, is rejected before Orbit is called. Each call is still exactly one Orbit write, so Executor approves each one.
+
 ## @2digits/tlo-mcp@2.4.0
 
 ### Add `CloseTicketSilently`

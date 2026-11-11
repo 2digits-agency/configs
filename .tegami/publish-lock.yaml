@@ -1,27 +1,33 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update @eslint-react to 5.30 and typescript-eslint to 8.72.2\n\n`no-unnecessary-use-callback` and `no-unnecessary-use-memo` no longer crash with `Cannot read properties of undefined (reading 'type')` when a `useCallback` or `useMemo` result is used inside a `useEffect`. @eslint-react 5.30 changed its `useEffect` check to accept only call expressions, and both rules now pass it only those.\n"
-    filename: 2026-11-10-3e9c51b7.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `eslint-plugin-github-action` and `eslint-plugin-storybook`\n\nThe config now uses `eslint-plugin-github-action` 0.5.0 and `eslint-plugin-storybook` 10.6.7.\n"
+    filename: 2026-11-11-09fda43f.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Autofixes and suggestions for new Effect rules\n\n- `prefer-effect-predicate` now autofixes checks that Effect implements the same way, such as `typeof x === 'string'` to `P.isString(x)` and `x == null` to `P.isNullish(x)`, and adds the `effect/Predicate` import when needed. Checks with a different result or type, such as `typeof x === 'object'` or `x instanceof Map`, get a suggestion instead. Negated checks now suggest `!P.isNumber(x)`, which narrows, instead of `P.not(P.isNumber)`.\n- `no-forwarding-lambda` autofixes `(x) => parse(x)` to `parse` when `parse` is a local function with one signature, and suggests the rewrite for other callees such as Effect APIs. It offers neither when the callee reads a `let`, a reassigned binding, or a binding that is not initialized yet where the callback is created.\n- `no-manual-tag-comparison` suggests `P.isTagged(x, 'A')` for `x._tag === 'A'`.\n- `prefer-struct-assign` suggests `Struct.assign(a, b)` for two-object merges and copies.\n"
-    filename: 2026-11-09-5b8d21fa.md
+  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 5.68.2\n\nThe plugin now sends telemetry with `posthog-node` 5.68.2.\n"
+    filename: 2026-11-11-db0bc1d0.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect encoding modules for structured text\n\n- Added `prefer-effect-ndjson`: reports `JSON.parse` on each line of text split on line breaks, and `JSON.stringify` results joined with line breaks. Use `Ndjson` from `effect/encoding`.\n- Added `prefer-effect-csv`: reports lines split again on `,`, `;` or a tab, and rows of cells joined with one of those and then with line breaks. Use `Csv` from `effect/encoding`, which quotes cells that contain the delimiter, quotes or line breaks. Single comma lists and multi-character separators such as `', '` are allowed.\n- Added `prefer-effect-format-parser`: reports parsers from third-party YAML, TOML, INI, JSON5, JSONC, CSV, NDJSON, streaming JSON and XML packages such as `yaml`, `js-yaml`, `smol-toml`, `ini`, `json5`, `jsonc-parser`, `papaparse`, `csv-parse` and `fast-xml-parser`, and names the `effect/encoding` module to use instead. Serializers of packages whose Effect module only parses, such as `YAML.stringify`, stay allowed.\n\nAll three run only in files that import Effect and are in `recommendedRules`.\n"
-    filename: 2026-11-09-5c3e9b14.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Update `effect` to 4.1.4\n\nThe Effect rules now run on `effect` 4.1.4.\n"
+    filename: 2026-11-11-2e8b03b6.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect Sse, Tar and Zip\n\nThree new rules in `recommendedRules` point Effect files at the `Sse`, `Tar` and `Zip` modules of `effect/encoding`:\n\n- `prefer-effect-sse` reports imports of Server-Sent Events libraries such as `eventsource-parser`, `eventsource`, `@microsoft/fetch-event-source` and `better-sse`, and `new EventSource(…)`. Use `HttpClient` with `Sse.decode` or `Sse.decodeSchema` to read event streams, and `Sse.encode` or `HttpApiSchema.StreamSse` to write them.\n- `no-manual-sse` reports event frames built by hand, such as `` `data: ${JSON.stringify(event)}\\n\\n` ``, and parsers that test lines with `startsWith('data: ')`. Use `Sse.encoder.write` and `Sse.decode`, which handle line breaks inside `data` and field injection through `id` or `event`.\n- `prefer-effect-archive` reports imports of tar and zip codecs such as `tar-stream`, `jszip`, `adm-zip`, `yauzl`, `archiver` and the zip exports of `fflate`. Use `Tar` or `Zip`. `tar`, `tar-fs` and `extract-zip`, which extract to disk with path-traversal guards, are not reported.\n"
-    filename: 2026-11-09-5ce3a8d1.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer direct Effect combinators\n\nAdded `prefer-direct-effect-combinators` to `recommendedRules`. In files that import Effect, it reports Option, Array, Result and Filter chains that one API expresses directly, in nested data-first calls and in `.pipe(...)`, `pipe(...)` and `flow(...)`, whatever the file's import aliases:\n\n- Option: `Opt.filter(Opt.some(x), p)` → `Opt.liftPredicate(x, p)`, `Opt.isSome(Opt.filter(o, p))` → `Opt.exists(o, p)`, `Opt.flatMap(o, (x) => Opt.fromNullishOr(f(x)))` → `Opt.flatMapNullishOr`, `Opt.flatten(Opt.map(o, f))` → `Opt.flatMap(o, f)`, `Opt.getOrElse(Opt.map(o, f), () => d)` → `Opt.match`, and `Opt.getOrElse(o, () => null)` → `Opt.getOrNull(o)`.\n- Array: `Opt.isSome(Arr.findFirst(xs, p))` → `Arr.some(xs, p)`, `Arr.head(Arr.filter(xs, p))` → `Arr.findFirst(xs, p)`, `Arr.flatten(Arr.map(xs, f))` → `Arr.flatMap(xs, f)`, `Arr.filter(Opt.isSome)` then `Arr.map((o) => o.value)` → `Arr.getSomes`, and `Arr.length(Arr.filter(xs, p))` → `Arr.countBy(xs, p)`.\n- Result: `Result.getOrElse(Result.map(r, f), g)` → `Result.match`, `Result.map` with `Result.mapError` → `Result.mapBoth`, and `Opt.isSome(Result.getSuccess(r))` → `Result.isSuccess(r)`.\n- Filter: `(x) => Result.isSuccess(f(x))` → `Filter.toPredicate(f)` and `(x) => Result.getSuccess(f(x))` → `Filter.toOption(f)`.\n\nRewrites that keep the behavior are autofixed. `Arr.filter` followed by `Arr.head` or an emptiness check is a suggestion, because the direct API stops at the first match, and `Arr.findFirst` → `Arr.some` is a suggestion unless the callback visibly returns a boolean. The README lists every pattern.\n"
+    filename: 2026-11-11-prefer-direct-effect-combinators.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect Jwt, NetAddress and UserDirectories\n\nThree new recommended rules for files that import Effect:\n\n- `prefer-effect-jwt` reports JWT libraries such as `jose` and `jsonwebtoken`, and tokens split on `'.'` by hand. Use `Jwt.verify` or `Jwt.verifyWithKeySet` from `effect/jose`.\n- `prefer-effect-net-address` reports `net.isIP`, IP address packages, regular expressions that match IP text, and comparisons with loopback or unspecified addresses. Use `NetAddress` and `IpNetwork` from `effect/net`.\n- `prefer-effect-user-directories` reports `os.homedir()`, reads of `HOME`, `XDG_*_HOME`, `APPDATA` and similar variables, and packages such as `env-paths`. Use the `UserDirectories` service from `effect/persistence`.\n"
-    filename: 2026-11-09-7c41d2a9.md
+  - content: "---\npackages:\n  \"@2digits/prettier-config\":\n    type: patch\n---\n\n### Update `prettier` and `@prettier/plugin-oxc`\n\nThe config now uses `@prettier/plugin-oxc` 0.2.4 and expects `prettier` 3.10.0.\n"
+    filename: 2026-11-11-0f15dcdb.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Add rules for the Effect HTTP modules\n\nFour new recommended rules point hand-written HTTP logic at `effect/http`, in files that import Effect:\n\n- `prefer-effect-cookies` reports `document.cookie`, cookie headers split or matched by hand, cookies built with interpolated attributes such as `` `${name}=${value}; Path=/` ``, and Set-Cookie strings searched for attributes such as `'; Secure'`. Use `HttpServerRequest` cookies, `Cookies.parseHeader`, `Cookies.fromSetCookie`, `Cookies.makeCookie` or `HttpServerResponse.setCookie`.\n- `prefer-effect-match-status` reports hand-written 2xx range checks such as `response.status < 200 || response.status >= 300`. Use `HttpClientResponse.filterStatusOk` or `matchStatus`, or `response.ok` on a native fetch `Response`.\n- `prefer-effect-url-params` reports query strings built by hand (`` `${base}/tags?search=${q}` ``) and `new URLSearchParams({ … })`. Use `HttpClientRequest.setUrlParams`, the `urlParams` request option, or `UrlParams`. Test files are skipped.\n- `prefer-effect-http-method` reports lists and union types of six or more HTTP methods. Use `HttpMethod.HttpMethod`, `HttpMethod.all` or `HttpMethod.isHttpMethod`.\n\n`prefer-effect-http-status` reports status code numbers passed to Effect HTTP APIs, such as `HttpApiSchema.status(404)` or `{ httpApiStatus: 401 }`, and suggests the status name. It is recommended as a warning, so `recommendedRules` and `configs.recommended` now hold `'warn'` for it and `'error'` for every other rule.\n"
-    filename: 2026-11-09-a7c4e2d1.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Forward `SetTicketOwner` and `LinkTicketToProject`\n\nAgents can now change a ticket's owner, which is not the same as its assignee, and link a ticket to a project or project task, which time logged with `logMinutes` needs. The gateway forwards Orbit's own tools with their schemas and write annotations, so Executor approves each call like the other ticket writes.\n"
+    filename: 2026-11-10-tlo-ticket-owner-project.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect v4 binary encodings\n\n- `prefer-effect-encoding` now names the Effect v4 `effect/encoding` function to use (`Base64.decodeString`, `Base64Url.decode`, `Hex.encode`, …) instead of the removed v3 `Encoding` module. It also reports `.toString('base64')` on any expression, such as `Buffer.from(bytes).toString('base64')`, which it missed before, and `Uint8Array.fromBase64`, `Uint8Array.fromHex` and `globalThis.atob`/`btoa`. `atob` and `btoa` now point to `Base64.decode` and `Base64.encode` on bytes, since they work on binary strings rather than UTF-8 text. Projects may see new diagnostics.\n- Added `no-manual-encoding`: reports hand-written Base64Url conversions (a `replace` chain or `pipe` of `Str.replace` steps that swaps `+`/`-` and `/`/`_`) and hand-written byte hex (`byte.toString(16)` padded to two digits with `'0'`). Use `Base64Url` or `Hex.encode`.\n- Added `no-encoding-get-or-throw`: reports `Result.getOrThrow` and `Result.getOrThrowWith` on `Base64`, `Base64Url` and `Hex` decoders, which turns their typed `EncodingError` into an exception, unless a step before it can recover the failure. Use `Effect.fromResult`, `Result.match` or `Result.getOrElse`.\n\nBoth new rules are in `recommendedRules`.\n"
-    filename: 2026-11-09-b64e7a1d.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Update `effect`, `@effect/platform-node` and `@yielded/oauth`\n\nThe gateway now runs on `effect` and `@effect/platform-node` 4.1.4 and `@yielded/oauth` 0.1.0-beta.48.\n"
+    filename: 2026-11-11-d6b4f018.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Rebuild every rule on effect-oxlint\n\nAll custom rules now use effect-oxlint's `Rule.define`, `Visitor`, `Diagnostic` and `RuleContext`, with `Ref` for per-file state and Effect `Schema` for fixed name lists and rule options. Diagnostics and autofixes are unchanged. The default export is now built with `Plugin.define`, so it also offers `configs.recommended` and `configs.all` for loading the plugin by its package name; `rules` and `recommendedRules` stay as they were.\n"
-    filename: 2026-11-09-e0f1a7c3.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Forward `CloseProjectTask` and `UpdateProject`\n\nAgents can now close a project task, such as one added by mistake, and change a project's dates with `UpdateProject`. The gateway forwards Orbit's own tools with their schemas and write annotations, so Executor approves each call like the other writes.\n"
+    filename: 2026-11-11-tlo-project-task-dates.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Typed ticket and project write tools\n\nThe gateway now defines `SetTicketOwner`, `LinkTicketToProject`, `CloseProjectTask` and `UpdateProject` itself instead of forwarding Orbit's untyped schemas, and adds `UpdateProjectTask` the same way. `SetTicketOwner` and `LinkTicketToProject` take a ticket number as well as an api_id, and `LinkTicketToProject` unlinks with `null`. `UpdateProject` and `UpdateProjectTask` take typed, documented fields instead of a `fieldsJson` string; `null` clears a field and `recurring` is a boolean. Moving task dates with `UpdateProjectTask` is what lets a project's end date move earlier. Every api_id parameter checks Orbit's type prefix, so a project api_id passed as a task, or a name passed as a user, is rejected before Orbit is called. Each call is still exactly one Orbit write, so Executor approves each one.\n"
+    filename: 2026-11-11-tlo-typed-ticket-project-tools.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.67.7\n\nThe config now expects `@effect/tsgo` 0.67.7.\n"
+    filename: 2026-11-11-18a63854.md
     v: 0.0.0
 core:packages:
   - id: npm:@2digits/config-monorepo
@@ -30,47 +36,53 @@ core:packages:
     updated: false
   - id: npm:@2digits/constants
     updated: false
-  - changelogIds:
-      - 2026-11-10-3e9c51b7.md
-    id: npm:@2digits/eslint-config
-    updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
-  - id: npm:@2digits/opencode-plugin
-    updated: false
-  - id: npm:@2digits/oxfmt-config
-    updated: false
+  - changelogIds:
+      - 2026-11-11-09fda43f.md
+    id: npm:@2digits/eslint-config
+    updated: true
+  - changelogIds:
+      - 2026-11-11-db0bc1d0.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
   - id: npm:@2digits/oxlint-config
     updated: true
-  - id: npm:@2digits/prettier-config
+  - id: npm:@2digits/oxfmt-config
     updated: false
   - changelogIds:
-      - 2026-11-09-5b8d21fa.md
-      - 2026-11-09-5c3e9b14.md
-      - 2026-11-09-5ce3a8d1.md
-      - 2026-11-09-7c41d2a9.md
-      - 2026-11-09-a7c4e2d1.md
-      - 2026-11-09-b64e7a1d.md
-      - 2026-11-09-e0f1a7c3.md
+      - 2026-11-11-2e8b03b6.md
+      - 2026-11-11-prefer-direct-effect-combinators.md
     id: npm:@2digits/oxlint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-11-11-0f15dcdb.md
+    id: npm:@2digits/prettier-config
+    updated: true
+  - changelogIds:
+      - 2026-11-10-tlo-ticket-owner-project.md
+      - 2026-11-11-d6b4f018.md
+      - 2026-11-11-tlo-project-task-dates.md
+      - 2026-11-11-tlo-typed-ticket-project-tools.md
+    id: npm:@2digits/tlo-mcp
     updated: true
   - id: npm:@2digits/renovate-config
     updated: false
-  - id: npm:@2digits/tlo-mcp
-    updated: false
-  - id: npm:@2digits/tsconfig
-    updated: false
+  - changelogIds:
+      - 2026-11-11-18a63854.md
+    id: npm:@2digits/tsconfig
+    updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
   - id: npm:@2digits/constants
-  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
+  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/opencode-plugin
-  - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
-  - id: npm:@2digits/prettier-config
+  - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-plugin
-  - id: npm:@2digits/renovate-config
+  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/tlo-mcp
+  - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tsconfig
