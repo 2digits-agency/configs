@@ -321,8 +321,8 @@ catalogs:
       specifier: 1.0.0-rc.5
       version: 1.0.0-rc.5
     eslint-plugin-github-action:
-      specifier: 0.4.0
-      version: 0.4.0
+      specifier: 0.5.0
+      version: 0.5.0
     eslint-plugin-jsdoc:
       specifier: 65.4.5
       version: 65.4.5
@@ -732,7 +732,7 @@ importers:
         version: 1.0.0-rc.5(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-github-action:
         specifier: 'catalog:'
-        version: 0.4.0(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
+        version: 0.5.0(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
       eslint-plugin-jsdoc:
         specifier: 'catalog:'
         version: 65.4.5(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
@@ -2357,8 +2357,8 @@ packages:
     resolution: {integrity: sha512-7OsC1gNORBEawOa5+j2pXN9vsicaIOH5cPXxoR6fJOmH6/EXpJB2CajXOu1fPRFun2m1lktEFX11+P89hqO/og==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@ntnyq/utils@0.22.0':
-    resolution: {integrity: sha512-HI88N7b2ET1B6B73JpjR0qovRnGq1HEfZaVx2IKPeTjAuBFg5KmXHY8B95Xa8ZnHep7oMI0x5gFn2mkC6/8dVw==}
+  '@ntnyq/utils@0.26.0':
+    resolution: {integrity: sha512-ejxU8uzfL7DJ+EJtGBr28L20r+z/TZ5gUgIfcXe9SMtWZ7AEYz0iWBaZGW+AMuJQ/aaAd8t1D/0Vz+HfjUS0qg==}
     engines: {node: ^22.19.0 || >=24.11.0}
 
   '@one-ini/wasm@0.2.1':
@@ -5264,9 +5264,9 @@ packages:
     peerDependencies:
       eslint: '>=8'
 
-  eslint-plugin-github-action@0.4.0:
-    resolution: {integrity: sha512-VQQYQuLrjZI1QW3IydLUearNcZh6fMvo4Sr9EsW8lv2ljUG38XjKMwgyVsZrMxy1MxZOSBK+JyDufmFYDF9qLg==}
-    engines: {node: ^22.13.0 || >=24}
+  eslint-plugin-github-action@0.5.0:
+    resolution: {integrity: sha512-QrhGsMJA+bbH7GT3Ve5YMV5Eakk17AzfU7wvsq8hA2VK3BIQmKdNizhSXaFWGIGnvQ6hcq8FwG9XH5NK/nESVg==}
+    engines: {node: ^22.19.0 || >=24.11.0}
     peerDependencies:
       eslint: ^9.5.0 || ^10.0.0
 
@@ -9559,7 +9559,7 @@ snapshots:
     dependencies:
       semver: 7.8.5
 
-  '@ntnyq/utils@0.22.0': {}
+  '@ntnyq/utils@0.26.0': {}
 
   '@one-ini/wasm@0.2.1': {}
 
@@ -11866,9 +11866,9 @@ snapshots:
       eslint: 10.14.0(jiti@2.7.0)(supports-color@7.2.0)
       eslint-compat-utils: 0.5.1(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0))
 
-  eslint-plugin-github-action@0.4.0(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0)):
+  eslint-plugin-github-action@0.5.0(eslint@10.14.0(jiti@2.7.0)(supports-color@7.2.0)):
     dependencies:
-      '@ntnyq/utils': 0.22.0
+      '@ntnyq/utils': 0.26.0
       eslint: 10.14.0(jiti@2.7.0)(supports-color@7.2.0)
       uncase: 0.3.0
       yaml-eslint-parser: 2.1.0
