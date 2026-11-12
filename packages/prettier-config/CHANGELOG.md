@@ -1,3 +1,9 @@
+## @2digits/prettier-config@4.0.55
+
+### Update `prettier` to 3.10.1
+
+The config now expects `prettier` 3.10.1.
+
 ## @2digits/prettier-config@4.0.54
 
 ### Update `prettier` and `@prettier/plugin-oxc`

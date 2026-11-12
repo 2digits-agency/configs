@@ -1,3 +1,13 @@
+## @2digits/eslint-config@5.12.3
+
+### Require Node 26.13.1
+
+The Node engine is now `26.13.1`, and the eslint config's `node.version` setting follows it.
+
+### Update `@eslint-react` and `eslint-plugin-turbo`
+
+The config now uses `@eslint-react/eslint-plugin` and `@eslint-react/kit` 5.30.2 and `eslint-plugin-turbo` 2.11.11.
+
 ## @2digits/eslint-config@5.12.2
 
 ### Update `eslint-plugin-github-action` and `eslint-plugin-storybook`
