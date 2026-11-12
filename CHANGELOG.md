@@ -1,3 +1,14 @@
+## @2digits/config-monorepo@0.1.21
+
+### Update pnpm, turbo, tsrs and renovate
+
+- Updated `pnpm` to `12.20.0`, `turbo` to `2.11.11`, `tsrs` to `0.24.0-ts7.1.0-beta` and `renovate` to `44.235.3`
+- Updated the GitButler skill to `0.5.2275`
+
+### Require Node 26.13.1
+
+The Node engine is now `26.13.1`, and the eslint config's `node.version` setting follows it.
+
 ## @2digits/config-monorepo@0.1.20
 
 ### Require Node 26

@@ -1,3 +1,13 @@
+## @2digits/tsconfig@1.2.8
+
+### Enable the `onExitFailureToOnError` Effect diagnostic
+
+The Effect config now reports `onExitFailureToOnError` as an error. It flags `Effect.onExit` callbacks that only act on failure, where `Effect.onError` says the same thing directly.
+
+### Update `@effect/tsgo` to 0.68.1
+
+The config now expects `@effect/tsgo` 0.68.1.
+
 ## @2digits/tsconfig@1.2.7
 
 ### Update `@effect/tsgo` to 0.67.7

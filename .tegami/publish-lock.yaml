@@ -1,88 +1,76 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `eslint-plugin-github-action` and `eslint-plugin-storybook`\n\nThe config now uses `eslint-plugin-github-action` 0.5.0 and `eslint-plugin-storybook` 10.6.7.\n"
-    filename: 2026-11-11-09fda43f.md
+  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update pnpm, turbo, tsrs and renovate\n\n- Updated `pnpm` to `12.20.0`, `turbo` to `2.11.11`, `tsrs` to `0.24.0-ts7.1.0-beta` and `renovate` to `44.235.3`\n- Updated the GitButler skill to `0.5.2275`\n"
+    filename: 2026-11-12-6abebb2c.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 5.68.2\n\nThe plugin now sends telemetry with `posthog-node` 5.68.2.\n"
-    filename: 2026-11-11-db0bc1d0.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Require Node 26.13.1\n\nThe Node engine is now `26.13.1`, and the eslint config's `node.version` setting follows it.\n"
+    filename: 2026-11-12-9fa1f507.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Update `effect` to 4.1.4\n\nThe Effect rules now run on `effect` 4.1.4.\n"
-    filename: 2026-11-11-2e8b03b6.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `@eslint-react` and `eslint-plugin-turbo`\n\nThe config now uses `@eslint-react/eslint-plugin` and `@eslint-react/kit` 5.30.2 and `eslint-plugin-turbo` 2.11.11.\n"
+    filename: 2026-11-12-bf5e2951.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer direct Effect combinators\n\nAdded `prefer-direct-effect-combinators` to `recommendedRules`. In files that import Effect, it reports Option, Array, Result and Filter chains that one API expresses directly, in nested data-first calls and in `.pipe(...)`, `pipe(...)` and `flow(...)`, whatever the file's import aliases:\n\n- Option: `Opt.filter(Opt.some(x), p)` → `Opt.liftPredicate(x, p)`, `Opt.isSome(Opt.filter(o, p))` → `Opt.exists(o, p)`, `Opt.flatMap(o, (x) => Opt.fromNullishOr(f(x)))` → `Opt.flatMapNullishOr`, `Opt.flatten(Opt.map(o, f))` → `Opt.flatMap(o, f)`, `Opt.getOrElse(Opt.map(o, f), () => d)` → `Opt.match`, and `Opt.getOrElse(o, () => null)` → `Opt.getOrNull(o)`.\n- Array: `Opt.isSome(Arr.findFirst(xs, p))` → `Arr.some(xs, p)`, `Arr.head(Arr.filter(xs, p))` → `Arr.findFirst(xs, p)`, `Arr.flatten(Arr.map(xs, f))` → `Arr.flatMap(xs, f)`, `Arr.filter(Opt.isSome)` then `Arr.map((o) => o.value)` → `Arr.getSomes`, and `Arr.length(Arr.filter(xs, p))` → `Arr.countBy(xs, p)`.\n- Result: `Result.getOrElse(Result.map(r, f), g)` → `Result.match`, `Result.map` with `Result.mapError` → `Result.mapBoth`, and `Opt.isSome(Result.getSuccess(r))` → `Result.isSuccess(r)`.\n- Filter: `(x) => Result.isSuccess(f(x))` → `Filter.toPredicate(f)` and `(x) => Result.getSuccess(f(x))` → `Filter.toOption(f)`.\n\nRewrites that keep the behavior are autofixed. `Arr.filter` followed by `Arr.head` or an emptiness check is a suggestion, because the direct API stops at the first match, and `Arr.findFirst` → `Arr.some` is a suggestion unless the callback visibly returns a boolean. The README lists every pattern.\n"
-    filename: 2026-11-11-prefer-direct-effect-combinators.md
+  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 5.70.0\n\nThe plugin now sends telemetry with `posthog-node` 5.70.0.\n"
+    filename: 2026-11-12-1bed84df.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/prettier-config\":\n    type: patch\n---\n\n### Update `prettier` and `@prettier/plugin-oxc`\n\nThe config now uses `@prettier/plugin-oxc` 0.2.4 and expects `prettier` 3.10.0.\n"
-    filename: 2026-11-11-0f15dcdb.md
+  - content: "---\npackages:\n  \"@2digits/prettier-config\":\n    type: patch\n---\n\n### Update `prettier` to 3.10.1\n\nThe config now expects `prettier` 3.10.1.\n"
+    filename: 2026-11-12-e4839fb4.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Forward `SetTicketOwner` and `LinkTicketToProject`\n\nAgents can now change a ticket's owner, which is not the same as its assignee, and link a ticket to a project or project task, which time logged with `logMinutes` needs. The gateway forwards Orbit's own tools with their schemas and write annotations, so Executor approves each call like the other ticket writes.\n"
-    filename: 2026-11-10-tlo-ticket-owner-project.md
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Enable the `onExitFailureToOnError` Effect diagnostic\n\nThe Effect config now reports `onExitFailureToOnError` as an error. It flags `Effect.onExit` callbacks that only act on failure, where `Effect.onError` says the same thing directly.\n"
+    filename: 2026-11-12-54d5e723.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Update `effect`, `@effect/platform-node` and `@yielded/oauth`\n\nThe gateway now runs on `effect` and `@effect/platform-node` 4.1.4 and `@yielded/oauth` 0.1.0-beta.48.\n"
-    filename: 2026-11-11-d6b4f018.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Forward `CloseProjectTask` and `UpdateProject`\n\nAgents can now close a project task, such as one added by mistake, and change a project's dates with `UpdateProject`. The gateway forwards Orbit's own tools with their schemas and write annotations, so Executor approves each call like the other writes.\n"
-    filename: 2026-11-11-tlo-project-task-dates.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Typed ticket and project write tools\n\nThe gateway now defines `SetTicketOwner`, `LinkTicketToProject`, `CloseProjectTask` and `UpdateProject` itself instead of forwarding Orbit's untyped schemas, and adds `UpdateProjectTask` the same way. `SetTicketOwner` and `LinkTicketToProject` take a ticket number as well as an api_id, and `LinkTicketToProject` unlinks with `null`. `UpdateProject` and `UpdateProjectTask` take typed, documented fields instead of a `fieldsJson` string; `null` clears a field and `recurring` is a boolean. Moving task dates with `UpdateProjectTask` is what lets a project's end date move earlier. Every api_id parameter checks Orbit's type prefix, so a project api_id passed as a task, or a name passed as a user, is rejected before Orbit is called. Each call is still exactly one Orbit write, so Executor approves each one.\n"
-    filename: 2026-11-11-tlo-typed-ticket-project-tools.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.67.7\n\nThe config now expects `@effect/tsgo` 0.67.7.\n"
-    filename: 2026-11-11-18a63854.md
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.68.1\n\nThe config now expects `@effect/tsgo` 0.68.1.\n"
+    filename: 2026-11-12-8017a0f4.md
     v: 0.0.0
 core:packages:
-  - id: npm:@2digits/config-monorepo
-    updated: false
+  - changelogIds:
+      - 2026-11-12-6abebb2c.md
+      - 2026-11-12-9fa1f507.md
+    id: npm:@2digits/config-monorepo
+    updated: true
   - id: npm:@2digits/cli
     updated: false
   - id: npm:@2digits/constants
     updated: false
+  - changelogIds:
+      - 2026-11-12-9fa1f507.md
+      - 2026-11-12-bf5e2951.md
+    id: npm:@2digits/eslint-config
+    updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
   - changelogIds:
-      - 2026-11-11-09fda43f.md
-    id: npm:@2digits/eslint-config
-    updated: true
-  - changelogIds:
-      - 2026-11-11-db0bc1d0.md
+      - 2026-11-12-1bed84df.md
     id: npm:@2digits/opencode-plugin
     updated: true
   - id: npm:@2digits/oxlint-config
-    updated: true
-  - id: npm:@2digits/oxfmt-config
+    updated: false
+  - id: npm:@2digits/oxlint-plugin
     updated: false
   - changelogIds:
-      - 2026-11-11-2e8b03b6.md
-      - 2026-11-11-prefer-direct-effect-combinators.md
-    id: npm:@2digits/oxlint-plugin
-    updated: true
-  - changelogIds:
-      - 2026-11-11-0f15dcdb.md
+      - 2026-11-12-e4839fb4.md
     id: npm:@2digits/prettier-config
-    updated: true
-  - changelogIds:
-      - 2026-11-10-tlo-ticket-owner-project.md
-      - 2026-11-11-d6b4f018.md
-      - 2026-11-11-tlo-project-task-dates.md
-      - 2026-11-11-tlo-typed-ticket-project-tools.md
-    id: npm:@2digits/tlo-mcp
     updated: true
   - id: npm:@2digits/renovate-config
     updated: false
+  - id: npm:@2digits/tlo-mcp
+    updated: false
   - changelogIds:
-      - 2026-11-11-18a63854.md
+      - 2026-11-12-54d5e723.md
+      - 2026-11-12-8017a0f4.md
     id: npm:@2digits/tsconfig
     updated: true
+  - id: npm:@2digits/oxfmt-config
+    updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
   - id: npm:@2digits/constants
-  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/eslint-config
+  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxlint-config
-  - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/prettier-config
-  - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/renovate-config
+  - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig
+  - id: npm:@2digits/oxfmt-config
