@@ -90,7 +90,7 @@ tester.run('prefer-flow', preferFlow, {
       output: `import * as Fn from 'effect/Function';\nimport * as Effect from 'effect/Effect'\nimport * as Opt from 'effect/Option'\nEffect.map(Fn.flow(Opt.map(toDto), Opt.getOrNull))`,
     },
     {
-      // \`Fn.flow\` would build the array once, so every call would return the same, possibly mutated, array.
+      // `Fn.flow` would build the array once, so every call would return the same, possibly mutated, array.
       code: `${imports} Effect.map((rows) => rows.pipe(Effect.succeed, Effect.as([])))`,
       errors: [
         {
@@ -103,7 +103,23 @@ tester.run('prefer-flow', preferFlow, {
       output: null,
     },
     {
-      // \`MutableRef.get\` would read the limit once, when the flow is built, instead of on every call.
+      // The data-first `Opt.getOrElse` runs its fallback once, when the flow is built, instead of on every call.
+      code: `${imports} Effect.map((rows) => rows.pipe(Effect.succeed, Effect.as(Opt.getOrElse(maybe, () => config.limit))))`,
+      errors: [
+        {
+          messageId: 'preferFlow',
+          suggestions: [
+            {
+              messageId: 'useFlow',
+              output: `${imports} Effect.map(Fn.flow(Effect.succeed, Effect.as(Opt.getOrElse(maybe, () => config.limit))))`,
+            },
+          ],
+        },
+      ],
+      output: null,
+    },
+    {
+      // `MutableRef.get` would read the limit once, when the flow is built, instead of on every call.
       code: `${imports} import * as MutableRef from 'effect/MutableRef'\nEffect.map((rows) => rows.pipe(Effect.succeed, Effect.as(MutableRef.get(limit))))`,
       errors: [
         {

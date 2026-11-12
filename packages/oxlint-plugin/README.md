@@ -509,8 +509,8 @@ These rules report functions that only add an indirection, so the underlying cal
   once instead of on every call, so it is only autofixed when each one is a function, binding, module member or call
   to a pure module, the same modules `no-constant-thunk` trusts, with such arguments, such as
   `Opt.map(Struct.get('id'))`. Others get a suggestion: array and object literals, which every call would then share,
-  calls that can read changing state, such as `Arr.take(config.limit)` or `MutableRef.get(ref)`, and annotated
-  callbacks.
+  calls that can read changing state, such as `Arr.take(config.limit)`, `MutableRef.get(ref)` or a nested data-first
+  call that runs a function right away, such as `Opt.getOrElse(maybe, () => config.limit)`, and annotated callbacks.
 - `no-single-use-private-function`: a non-exported top-level function, or `Effect.fn` constant, that is referenced
   exactly once and is at most `maxLines` lines long (default `3`). Inline it at its call site. Components, hooks,
   type predicates and recursive functions are exempt.

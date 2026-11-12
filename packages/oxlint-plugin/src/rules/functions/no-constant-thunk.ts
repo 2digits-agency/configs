@@ -13,35 +13,13 @@ import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
-import * as Schema from 'effect/Schema';
 
 import { isConstDeclaration, isFunctionNode, staticPropertyName, type FunctionNode } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable, soleDefinition } from '../../internal/scope';
 import { functionResult } from '../effect/internal/callbacks';
-import { isPureApi } from './internal/pure-api';
-
-/*
- * Modules whose functions call their callbacks right away, such as `Option.map(some, f)` or `pipe(value, f)`, so the
- * result is only constant when no function argument can read changing state.
- */
-const isEagerModule = Schema.is(
-  Schema.Literals([
-    'BigDecimal',
-    'Data',
-    'DateTime',
-    'Duration',
-    'Exit',
-    'Option',
-    'Result',
-    'String',
-    'Struct',
-    'pipe',
-  ]),
-);
-
-const isEagerMember = Schema.is(Schema.Literals(['pipe', 'value', 'valueTags']));
+import { isEagerApi, isLocalFunction, isPureApi } from './internal/pure-api';
 
 /**
  * What constness depends on: the file's scopes, to tell `const` from `let`, and its import bindings.
@@ -71,7 +49,7 @@ function isConstantCall(node: ESTree.CallExpression, env: Constness): boolean {
       isConstantCall(callee.object, env)) ||
     (callee.type === 'CallExpression' && isConstantCall(callee, env));
 
-  const eager = Opt.exists(Arr.head(path), isEagerModule) || Opt.exists(Arr.get(path, 1), isEagerMember);
+  const eager = isEagerApi(path);
 
   return (
     !node.optional &&
@@ -79,26 +57,10 @@ function isConstantCall(node: ESTree.CallExpression, env: Constness): boolean {
     Arr.every(
       node.arguments,
       (argument) =>
-        argument.type !== 'SpreadElement' && isConstant(argument, env) && (!eager || !isLocalFunction(argument, env)),
+        argument.type !== 'SpreadElement' &&
+        isConstant(argument, env) &&
+        (!eager || !isLocalFunction(argument, env.sourceCode)),
     )
-  );
-}
-
-// A function whose body this rule doesn't see: an inline function, or a local or imported function binding.
-function isLocalFunction(node: ESTree.Expression, env: Constness): boolean {
-  if (node.type !== 'Identifier') {
-    return isFunctionNode(node);
-  }
-
-  return Opt.exists(
-    definitionOf(node, env),
-    (definition) =>
-      definition.type === 'FunctionName' ||
-      definition.type === 'ImportBinding' ||
-      (definition.type === 'Variable' &&
-        definition.node.type === 'VariableDeclarator' &&
-        P.isNotNull(definition.node.init) &&
-        isFunctionNode(definition.node.init)),
   );
 }
 

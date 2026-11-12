@@ -1,4 +1,4 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
@@ -11,7 +11,7 @@ import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { functionResult } from '../effect/internal/callbacks';
 import { isAnnotated, isDetachableCallee, isSettledCallee, unaryEffectCallback } from './internal/forwarding';
-import { isPureApi } from './internal/pure-api';
+import { isEagerApi, isLocalFunction, isPureApi } from './internal/pure-api';
 
 // `Fn.flow` has overloads for at most nine functions.
 const maxFlowLength = 9;
@@ -146,15 +146,42 @@ function pipeline(node: FunctionNode, imports: ImportBindings): Opt.Option<Pipel
 }
 
 /**
+ * What stability depends on: the file's scopes, to find function bindings, and its import bindings.
+ */
+interface Env {
+  readonly sourceCode: OxlintSourceCode;
+  readonly imports: ImportBindings;
+}
+
+/**
+ * Whether a call to a pure module gives the same function or value when `Fn.flow(…)` calls it once as when the callback
+ * calls it every time, such as `Opt.map(Struct.get('id'))`.
+ *
+ * @param call Pipeline step or nested call.
+ * @param env File the call is in.
+ */
+function isStableCall(call: ESTree.CallExpression, env: Env): boolean {
+  return (
+    !call.optional &&
+    (call.callee.type === 'CallExpression'
+      ? isStable(call.callee, env)
+      : Opt.exists(env.imports.path(call.callee), isPureApi)) &&
+    Arr.every(call.arguments, (argument) => isStable(argument, env))
+  );
+}
+
+/**
  * Whether evaluating an expression once, when `Fn.flow(…)` is built, gives the same result as evaluating it on every
  * call of the callback: functions, primitive literals, bindings, module members and calls to pure Effect modules. Array
  * and object literals are fresh on every call, and a shared one could be mutated by one call and seen by the next;
- * `MutableRef.get(ref)` and other calls outside pure modules can read state that changes between calls.
+ * `MutableRef.get(ref)` and other calls outside pure modules can read state that changes between calls. A nested
+ * data-first call that runs a function right away, such as `Opt.getOrElse(o, () => config.limit)`, would also read that
+ * state only once.
  *
- * @param node Pipeline function or one of its arguments.
- * @param imports Import bindings of the file.
+ * @param node Argument of a pipeline step.
+ * @param env File the expression is in.
  */
-function isStable(node: ESTree.Node, imports: ImportBindings): boolean {
+function isStable(node: ESTree.Node, env: Env): boolean {
   return Match.value(node).pipe(
     Match.discriminators('type')({
       // A regex literal is a fresh `RegExp` per call; a shared one keeps `lastIndex` between `/g` matches.
@@ -162,16 +189,14 @@ function isStable(node: ESTree.Node, imports: ImportBindings): boolean {
       Identifier: Fn.constTrue,
       ArrowFunctionExpression: Fn.constTrue,
       FunctionExpression: Fn.constTrue,
-      TemplateLiteral: ({ expressions }) => Arr.every(expressions, (expression) => isStable(expression, imports)),
+      TemplateLiteral: ({ expressions }) => Arr.every(expressions, (expression) => isStable(expression, env)),
       // A property of a module, such as `Schema.String`; any other object may change between calls.
-      MemberExpression: (member) => Opt.isSome(imports.path(member)),
-      UnaryExpression: ({ argument, operator }) => operator !== 'delete' && isStable(argument, imports),
+      MemberExpression: (member) => Opt.isSome(env.imports.path(member)),
+      UnaryExpression: ({ argument, operator }) => operator !== 'delete' && isStable(argument, env),
       CallExpression: (call) =>
-        !call.optional &&
-        (call.callee.type === 'CallExpression'
-          ? isStable(call.callee, imports)
-          : Opt.exists(imports.path(call.callee), isPureApi)) &&
-        Arr.every(call.arguments, (argument) => isStable(argument, imports)),
+        isStableCall(call, env) &&
+        (!Opt.exists(env.imports.path(call.callee), isEagerApi) ||
+          Arr.every(call.arguments, (argument) => !isLocalFunction(argument, env.sourceCode))),
     }),
     Match.orElse(Fn.constFalse),
   );
@@ -228,7 +253,16 @@ export const preferFlow = Rule.define({
       );
 
       return yield* ctx.report(
-        !isAnnotated(node) && Arr.every(functions, (expression) => isStable(expression, imports))
+        !isAnnotated(node) &&
+          /*
+           * A step is a data-last call such as `Opt.getOrElse(() => 0)`, which only stores its function arguments, so
+           * only the calls nested in its arguments must not run them.
+           */
+          Arr.every(functions, (expression) =>
+            expression.type === 'CallExpression'
+              ? isStableCall(expression, { sourceCode, imports })
+              : isStable(expression, { sourceCode, imports }),
+          )
           ? Diagnostic.withFix(diagnostic, fix)
           : Diagnostic.withSuggestions(diagnostic, [{ messageId: 'useFlow', fix }]),
       );
