@@ -1,6 +1,7 @@
 import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import type * as Duration from 'effect/Duration';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
 
 import { namespaceImport } from '../../internal/fixes';
@@ -41,9 +42,10 @@ export const preferEffectDuration = Rule.define({
     });
 
     return Visitor.on('CallExpression', (node) =>
-      Effect.flatMap(durationArgument(node, imports), (duration) =>
-        duration.pipe(
-          Opt.filter((expression) => Opt.isSome(numericValue(expression))),
+      Effect.flatMap(
+        durationArgument(node, imports),
+        Fn.flow(
+          Opt.filter(Fn.flow(numericValue, Opt.isSome)),
           Opt.match({
             onNone: () => Effect.void,
             onSome: (expression) => report(node, expression),
