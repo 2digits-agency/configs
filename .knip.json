@@ -1,14 +1,7 @@
 {
   "$schema": "./node_modules/knip/schema.json",
   "ignore": ["mise.local.toml"],
-  "ignoreDependencies": [
-    "vite",
-    "@arethetypeswrong/core",
-    "publint",
-    "pkg-pr-new",
-    "@typescript/native-preview",
-    "tsrs"
-  ],
+  "ignoreDependencies": ["vite", "@arethetypeswrong/core", "publint", "@typescript/native-preview", "tsrs"],
   "tsdown": { "config": "vite.config.ts" },
   "vitest": { "config": ["vite.config.ts"] },
   "workspaces": {
