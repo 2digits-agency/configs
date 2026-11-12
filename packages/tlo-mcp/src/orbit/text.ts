@@ -1,6 +1,7 @@
 import * as Arr from 'effect/Array';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
@@ -101,7 +102,7 @@ export const Timestamp = Schema.String.pipe(
       const iso = Str.replace(' ', 'T')(local);
 
       return DateTime.makeZoned(`${iso}:00Z`, { timeZone: TIME_ZONE, adjustForTimeZone: true }).pipe(
-        Opt.filter((zoned) => zoned.pipe(DateTime.formatIsoZoned, Str.startsWith(`${iso}:00`))),
+        Opt.filter(Fn.flow(DateTime.formatIsoZoned, Str.startsWith(`${iso}:00`))),
         Effect.fromOption,
         Effect.mapError(
           () => new SchemaIssue.InvalidValue({ message: 'Expected an existing yyyy-MM-dd HH:mm' }, local, options),

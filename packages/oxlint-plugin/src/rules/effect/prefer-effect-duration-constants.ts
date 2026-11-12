@@ -1,6 +1,7 @@
 import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
 import * as HashMap from 'effect/HashMap';
 import * as Opt from 'effect/Option';
 import * as Order from 'effect/Order';
@@ -179,8 +180,10 @@ function declaratorOf(node: ESTree.Expression): Effect.Effect<Opt.Option<Numeric
   const expression = unwrapExpression(node);
 
   return expression.type === 'Identifier'
-    ? Effect.map(resolveVariable(expression, expression.name), (variable) =>
-        soleDefinition(variable).pipe(
+    ? Effect.map(
+        resolveVariable(expression, expression.name),
+        Fn.flow(
+          soleDefinition,
           Opt.map(({ node: declaration }) => declaration as ESTree.Node),
           Opt.filter(isNumericDeclarator),
         ),

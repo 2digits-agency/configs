@@ -152,9 +152,9 @@ export const preferEffectEncoding = Rule.define({
     }
 
     return Visitor.on('CallExpression', (node) =>
-      Effect.flatMap(globalBase64Call(node), (base64) =>
-        base64.pipe(
-          Opt.orElse(() => bufferEncoding(node)),
+      globalBase64Call(node).pipe(
+        Effect.map(Opt.orElse(() => bufferEncoding(node))),
+        Effect.flatMap(
           Opt.match({
             onNone: () => Effect.void,
             onSome: ({ messageId, native, replacement }) =>
