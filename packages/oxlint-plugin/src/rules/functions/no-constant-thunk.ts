@@ -20,37 +20,7 @@ import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable, soleDefinition } from '../../internal/scope';
 import { functionResult } from '../effect/internal/callbacks';
-
-/**
- * Modules whose functions build immutable values or lazy descriptions, so calling them once at module load is the same
- * as calling them on every use.
- */
-const isPureModule = Schema.is(
-  Schema.Literals([
-    'BigDecimal',
-    'Config',
-    'Data',
-    'DateTime',
-    'Duration',
-    'Effect',
-    'Equivalence',
-    'Exit',
-    'Function',
-    'Layer',
-    'Match',
-    'Option',
-    'Order',
-    'Predicate',
-    'Result',
-    'Schedule',
-    'Schema',
-    'Stream',
-    'String',
-    'Struct',
-    'flow',
-    'pipe',
-  ]),
-);
+import { isPureApi } from './internal/pure-api';
 
 /*
  * Modules whose functions call their callbacks right away, such as `Option.map(some, f)` or `pipe(value, f)`, so the
@@ -73,9 +43,6 @@ const isEagerModule = Schema.is(
 
 const isEagerMember = Schema.is(Schema.Literals(['pipe', 'value', 'valueTags']));
 
-// `Effect.runSync`, `DateTime.nowUnsafe`, `Ref.makeUnsafe` and similar run effects or read mutable state.
-const impureMember = /^run|unsafe/iu;
-
 /**
  * What constness depends on: the file's scopes, to tell `const` from `let`, and its import bindings.
  */
@@ -93,7 +60,7 @@ function isConstantCall(node: ESTree.CallExpression, env: Constness): boolean {
 
   const path = Opt.getOrElse(env.imports.path(callee), (): ReadonlyArray<string> => []);
 
-  const pureApi = Opt.exists(Arr.head(path), isPureModule) && !Arr.some(path, (part) => impureMember.test(part));
+  const pureApi = isPureApi(path);
 
   // `Schema.Struct(…).pipe(…)`, `Match.type<A>().pipe(…)` and curried `Schema.decodeUnknownEffect(User)(…)`.
   const pureBuilder =

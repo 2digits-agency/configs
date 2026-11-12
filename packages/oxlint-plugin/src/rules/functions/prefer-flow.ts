@@ -4,7 +4,6 @@ import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
-import * as P from 'effect/Predicate';
 
 import { staticPropertyName, walkNodes, type FunctionNode } from '../../internal/ast';
 import { argumentText, namespaceImport } from '../../internal/fixes';
@@ -12,12 +11,10 @@ import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { functionResult } from '../effect/internal/callbacks';
 import { isAnnotated, isDetachableCallee, isSettledCallee, unaryEffectCallback } from './internal/forwarding';
+import { isPureApi } from './internal/pure-api';
 
 // `Fn.flow` has overloads for at most nine functions.
 const maxFlowLength = 9;
-
-// `Effect.runSync`, `DateTime.nowUnsafe` and similar run effects or read mutable state when they are called.
-const impureMember = /^run|unsafe/iu;
 
 /**
  * The functions a callback runs its parameter through, in order, and whether the pipeline uses a `.pipe` method.
@@ -150,7 +147,9 @@ function pipeline(node: FunctionNode, imports: ImportBindings): Opt.Option<Pipel
 
 /**
  * Whether evaluating an expression once, when `Fn.flow(…)` is built, gives the same result as evaluating it on every
- * call of the callback: functions, literals, bindings, module members and calls to pure Effect APIs.
+ * call of the callback: functions, primitive literals, bindings, module members and calls to pure Effect modules. Array
+ * and object literals are fresh on every call, and a shared one could be mutated by one call and seen by the next;
+ * `MutableRef.get(ref)` and other calls outside pure modules can read state that changes between calls.
  *
  * @param node Pipeline function or one of its arguments.
  * @param imports Import bindings of the file.
@@ -167,18 +166,11 @@ function isStable(node: ESTree.Node, imports: ImportBindings): boolean {
       // A property of a module, such as `Schema.String`; any other object may change between calls.
       MemberExpression: (member) => Opt.isSome(imports.path(member)),
       UnaryExpression: ({ argument, operator }) => operator !== 'delete' && isStable(argument, imports),
-      ArrayExpression: ({ elements }) =>
-        Arr.every(elements, (element) => P.isNotNull(element) && isStable(element, imports)),
-      ObjectExpression: ({ properties }) =>
-        Arr.every(
-          properties,
-          (property) => property.type === 'Property' && !property.computed && isStable(property.value, imports),
-        ),
       CallExpression: (call) =>
         !call.optional &&
         (call.callee.type === 'CallExpression'
           ? isStable(call.callee, imports)
-          : Opt.exists(imports.path(call.callee), (path) => !Arr.some(path, (part) => impureMember.test(part)))) &&
+          : Opt.exists(imports.path(call.callee), isPureApi)) &&
         Arr.every(call.arguments, (argument) => isStable(argument, imports)),
     }),
     Match.orElse(Fn.constFalse),

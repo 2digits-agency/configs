@@ -506,9 +506,11 @@ These rules report functions that only add an indirection, so the underlying cal
   `Effect.map((rows) => Arr.head(rows).pipe(Opt.map(toDto), Opt.getOrElse(() => null)))`, `pipe(x, f, g)`, `x.pipe(f, g)`
   or `g(f(x))`. Write `Fn.flow(Arr.head, Opt.map(toDto), Opt.getOrElse(() => null))`. Pipelines of one function are
   left to `no-forwarding-lambda`, and the same multi-argument APIs are exempt. The fix builds the pipeline functions
-  once instead of on every call, so it is only autofixed when each one is a function, binding, module member or pure
-  Effect API call with such arguments, such as `Opt.map(Struct.get('id'))`; others, such as `Arr.take(config.limit)`,
-  and annotated callbacks get a suggestion.
+  once instead of on every call, so it is only autofixed when each one is a function, binding, module member or call
+  to a pure module, the same modules `no-constant-thunk` trusts, with such arguments, such as
+  `Opt.map(Struct.get('id'))`. Others get a suggestion: array and object literals, which every call would then share,
+  calls that can read changing state, such as `Arr.take(config.limit)` or `MutableRef.get(ref)`, and annotated
+  callbacks.
 - `no-single-use-private-function`: a non-exported top-level function, or `Effect.fn` constant, that is referenced
   exactly once and is at most `maxLines` lines long (default `3`). Inline it at its call site. Components, hooks,
   type predicates and recursive functions are exempt.

@@ -85,9 +85,38 @@ tester.run('prefer-flow', preferFlow, {
       output: `import { pipe } from 'effect'\nimport * as F from 'effect/Function'\nimport * as Opt from 'effect/Option'\nOpt.map(maybe, F.flow(toDto, toJson))`,
     },
     {
-      code: `import * as Arr from 'effect/Array'\nimport * as Effect from 'effect/Effect'\nEffect.map((rows) => rows.pipe(Arr.take(2), Arr.map(toDto)))`,
+      code: `import * as Effect from 'effect/Effect'\nimport * as Opt from 'effect/Option'\nEffect.map((row) => row.pipe(Opt.map(toDto), Opt.getOrNull))`,
       errors: [{ messageId: 'preferFlow' }],
-      output: `import * as Fn from 'effect/Function';\nimport * as Arr from 'effect/Array'\nimport * as Effect from 'effect/Effect'\nEffect.map(Fn.flow(Arr.take(2), Arr.map(toDto)))`,
+      output: `import * as Fn from 'effect/Function';\nimport * as Effect from 'effect/Effect'\nimport * as Opt from 'effect/Option'\nEffect.map(Fn.flow(Opt.map(toDto), Opt.getOrNull))`,
+    },
+    {
+      // \`Fn.flow\` would build the array once, so every call would return the same, possibly mutated, array.
+      code: `${imports} Effect.map((rows) => rows.pipe(Effect.succeed, Effect.as([])))`,
+      errors: [
+        {
+          messageId: 'preferFlow',
+          suggestions: [
+            { messageId: 'useFlow', output: `${imports} Effect.map(Fn.flow(Effect.succeed, Effect.as([])))` },
+          ],
+        },
+      ],
+      output: null,
+    },
+    {
+      // \`MutableRef.get\` would read the limit once, when the flow is built, instead of on every call.
+      code: `${imports} import * as MutableRef from 'effect/MutableRef'\nEffect.map((rows) => rows.pipe(Effect.succeed, Effect.as(MutableRef.get(limit))))`,
+      errors: [
+        {
+          messageId: 'preferFlow',
+          suggestions: [
+            {
+              messageId: 'useFlow',
+              output: `${imports} import * as MutableRef from 'effect/MutableRef'\nEffect.map(Fn.flow(Effect.succeed, Effect.as(MutableRef.get(limit))))`,
+            },
+          ],
+        },
+      ],
+      output: null,
     },
     {
       // `config.limit` is read once instead of on every call.
