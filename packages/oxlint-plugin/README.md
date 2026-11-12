@@ -494,12 +494,21 @@ These rules report functions that only add an indirection, so the underlying cal
   exempt. Type predicates are exempt unless they wrap an Effect guard on an untyped or `unknown` parameter.
 - `no-forwarding-lambda`: a callback of an Effect API that only forwards its parameters, such as
   `Effect.map((user) => toDto(user))`. APIs whose callbacks receive more than one argument, such as the index of `Array`, `Record`,
-  `Effect.forEach` and `Stream.map` or the `Exit` of `Effect.acquireRelease`, are exempt, and so are factory calls other than Effect APIs.
+  `Effect.forEach` and `Stream.map`, the `Exit` of `Effect.acquireRelease` or the two values an `Order` compares, are
+  exempt, and so are factory calls other than Effect APIs. The list of those APIs is checked against the `effect`
+  types, so type-checking fails, naming the API, when an `effect` update adds or removes one.
   Passing the callee reads it when the callback is created rather than when it runs, so the rule only offers a rewrite
   when every binding the callee reads is a `const`, function, parameter or import that is already initialized there
   and never reassigned.
   A local function with one signature is autofixed; other callees, such as Effect APIs, get a suggestion, because
   TypeScript infers a passed function from its last overload and Effect's dual APIs then stop type-checking.
+- `prefer-flow`: a callback of an Effect API that only runs its one parameter through a pipeline, such as
+  `Effect.map((rows) => Arr.head(rows).pipe(Opt.map(toDto), Opt.getOrElse(() => null)))`, `pipe(x, f, g)`, `x.pipe(f, g)`
+  or `g(f(x))`. Write `Fn.flow(Arr.head, Opt.map(toDto), Opt.getOrElse(() => null))`. Pipelines of one function are
+  left to `no-forwarding-lambda`, and the same multi-argument APIs are exempt. The fix builds the pipeline functions
+  once instead of on every call, so it is only autofixed when each one is a function, binding, module member or pure
+  Effect API call with such arguments, such as `Opt.map(Struct.get('id'))`; others, such as `Arr.take(config.limit)`,
+  and annotated callbacks get a suggestion.
 - `no-single-use-private-function`: a non-exported top-level function, or `Effect.fn` constant, that is referenced
   exactly once and is at most `maxLines` lines long (default `3`). Inline it at its call site. Components, hooks,
   type predicates and recursive functions are exempt.

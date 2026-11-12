@@ -90,6 +90,7 @@ import { noConstantThunk } from './functions/no-constant-thunk';
 import { noForwardingLambda } from './functions/no-forwarding-lambda';
 import { noSingleUsePrivateFunction } from './functions/no-single-use-private-function';
 import { noTrivialWrapper } from './functions/no-trivial-wrapper';
+import { preferFlow } from './functions/prefer-flow';
 import { noUtcIsoSlicing } from './no-utc-iso-slicing';
 import { paddingLineBetweenStatements } from './padding-line-between-statements';
 import { noBrowserApiInRender } from './react/no-browser-api-in-render';
@@ -185,6 +186,7 @@ export const rules = {
   'prefer-effect-user-directories': preferEffectUserDirectories,
   'prefer-hoisted-match': preferHoistedMatch,
   'prefer-equal': preferEqual,
+  'prefer-flow': preferFlow,
   'prefer-struct-assign': preferStructAssign,
   'prefer-uninterruptible': preferUninterruptible,
   'prefer-with-span': preferWithSpan,
