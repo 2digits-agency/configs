@@ -119,7 +119,7 @@ export const noBrowserApiInRender = Rule.define({
       return Effect.forEach(
         reads,
         ({ name, node }) => ctx.report(Diagnostic.fromId({ node, messageId: 'browserApiInRender', data: { name } })),
-        { discard: true },
+        { concurrency: 1, discard: true },
       );
     });
   },

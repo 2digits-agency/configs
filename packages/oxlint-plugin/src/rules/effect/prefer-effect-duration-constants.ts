@@ -305,7 +305,10 @@ export const preferEffectDurationConstants = Rule.define({
       Visitor.onExit('Program', () =>
         Effect.flatMap(Ref.get(candidates), (current) =>
           // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
-          Effect.forEach(Arr.sort(HashMap.toEntries(current), bySourcePosition), reportCandidate, { discard: true }),
+          Effect.forEach(Arr.sort(HashMap.toEntries(current), bySourcePosition), reportCandidate, {
+            concurrency: 1,
+            discard: true,
+          }),
         ),
       ),
     );

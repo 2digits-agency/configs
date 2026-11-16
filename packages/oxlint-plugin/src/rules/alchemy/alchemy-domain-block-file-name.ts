@@ -109,8 +109,10 @@ export const alchemyDomainBlockFileName = Rule.define({
       (node) => Opt.filter(declaration(node), isShared),
       (shared) =>
         Effect.flatMap(Ref.get(hosted), (isHosted) =>
-          // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
-          isHosted ? Effect.void : Effect.forEach(shared, (found) => report('fileName', found), { discard: true }),
+          isHosted
+            ? Effect.void
+            : // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+              Effect.forEach(shared, (found) => report('fileName', found), { concurrency: 1, discard: true }),
         ),
     );
 

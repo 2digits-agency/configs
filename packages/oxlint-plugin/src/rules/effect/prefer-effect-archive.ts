@@ -104,6 +104,7 @@ export const preferEffectArchive = Rule.define({
 
       // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
       return Effect.forEach(fflateZipImports(declaration), (specifier) => report(specifier, 'fflate', 'Zip'), {
+        concurrency: 1,
         discard: true,
       });
     });

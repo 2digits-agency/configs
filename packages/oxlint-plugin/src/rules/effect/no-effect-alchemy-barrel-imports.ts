@@ -52,7 +52,7 @@ export const noEffectAlchemyBarrelImports = Rule.define({
             specifier.type === 'ImportSpecifier' && !isTypeOnlyImport(node, specifier),
         ),
         (specifier) => reportSpecifier(node, specifier),
-        { discard: true },
+        { concurrency: 1, discard: true },
       ),
     );
   },

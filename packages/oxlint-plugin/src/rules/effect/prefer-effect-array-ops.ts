@@ -193,7 +193,7 @@ export const preferEffectArrayOps = Rule.define({
                 onSome: (key) =>
                   ctx.report(Diagnostic.fromId({ node: argument, messageId: 'structGet', data: { key } })),
               }),
-            { discard: true },
+            { concurrency: 1, discard: true },
           )
         : Effect.void;
     }

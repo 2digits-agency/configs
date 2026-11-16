@@ -210,7 +210,7 @@ export const preferEffectDurationTypes = Rule.define({
           Effect.forEach(
             Arr.filter(Arr.getSomes(Arr.map(node.params, parameterBinding)), ({ name }) => isDurationName(name)),
             (binding) => report(binding, binding.name, 'durationType'),
-            { discard: true },
+            { concurrency: 1, discard: true },
           );
     }
 

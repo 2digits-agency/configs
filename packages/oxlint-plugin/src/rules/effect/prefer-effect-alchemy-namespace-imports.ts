@@ -50,7 +50,7 @@ export const preferEffectAlchemyNamespaceImports = Rule.define({
               ? Effect.void
               : report(specifier.local, 'alias')
             : report(specifier, 'namespace'),
-        { discard: true },
+        { concurrency: 1, discard: true },
       );
     }
 

@@ -108,7 +108,7 @@ export const preferEffectFormatParser = Rule.define({
       );
 
       // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
-      return Effect.forEach(uses, ([member, api]) => report(member, format, api), { discard: true });
+      return Effect.forEach(uses, ([member, api]) => report(member, format, api), { concurrency: 1, discard: true });
     }
 
     function reportSpecifier(
@@ -137,6 +137,7 @@ export const preferEffectFormatParser = Rule.define({
             ? Effect.void
             : // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
               Effect.forEach(declaration.specifiers, (specifier) => reportSpecifier(declaration, specifier, format), {
+                concurrency: 1,
                 discard: true,
               }),
       }),

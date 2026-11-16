@@ -124,7 +124,7 @@ export const noUppercaseHttpApiHeader = Rule.define({
                 ctx.report(Diagnostic.fromId({ node: property.key, messageId: 'uppercase', data: { name } })),
             }),
           ),
-        { discard: true },
+        { concurrency: 1, discard: true },
       );
     }
 

@@ -185,12 +185,13 @@ export const preferEffectHttpStatus = Rule.define({
             Opt.contains(propertyName(property), 'httpApiStatus'),
           ),
           (property) => report(property.value, 'httpStatus'),
-          { discard: true },
+          { concurrency: 1, discard: true },
         ),
       ),
       Visitor.on('CallExpression', (node) =>
         // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
         Effect.forEach(statusArguments(node, imports), ([argument, messageId]) => report(argument, messageId), {
+          concurrency: 1,
           discard: true,
         }),
       ),

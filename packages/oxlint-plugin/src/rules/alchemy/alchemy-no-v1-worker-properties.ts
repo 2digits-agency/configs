@@ -54,7 +54,7 @@ export const alchemyNoV1WorkerProperties = Rule.define({
               ),
             ),
           ),
-        { discard: true },
+        { concurrency: 1, discard: true },
       );
     });
 

@@ -557,6 +557,7 @@ describe('addProjectTask', () => {
           { projectId: '2238', name: 'Meeting', retainerId: 'NONE' },
         ],
         (input) => Effect.flip(call('AddProjectTask', input)).pipe(Effect.map(({ message }) => message)),
+        { concurrency: 1 },
       );
 
       expect(invalid).toHaveLength(8);
@@ -637,8 +638,10 @@ describe('closeTicketSilently', () => {
       expect([unknown.isError, textOf(unknown)]).toStrictEqual([true, 'No ticket with number 9481 found.']);
 
       // oxlint-disable-next-line unicorn/no-array-for-each
-      const invalid = yield* Effect.forEach(['#9481', '', 'tc8gn5ejb8act6e'], (ticket) =>
-        Effect.flip(call('CloseTicketSilently', { ticket })).pipe(Effect.map(({ message }) => message)),
+      const invalid = yield* Effect.forEach(
+        ['#9481', '', 'tc8gn5ejb8act6e'],
+        (ticket) => Effect.flip(call('CloseTicketSilently', { ticket })).pipe(Effect.map(({ message }) => message)),
+        { concurrency: 1 },
       );
 
       expect(Arr.every(invalid, Str.startsWith("Invalid parameters for tool 'CloseTicketSilently'"))).toBeTruthy();
@@ -688,7 +691,9 @@ describe('ticket owner and project link', () => {
 
       expect(ownerSet).toStrictEqual({ ticketId: 'TCRFWYDSTH445WJ', ownerId: USER_ID, message: 'Owner set.' });
 
-      const [link, unlink] = yield* Effect.all([structured(TicketLinked, linked), structured(TicketLinked, unlinked)]);
+      const [link, unlink] = yield* Effect.all([structured(TicketLinked, linked), structured(TicketLinked, unlinked)], {
+        concurrency: 'unbounded',
+      });
 
       expect(link).toStrictEqual({ ticketId: 'TCRFWYDSTH445WJ', taskId: TASK_ID, message: 'Linked.' });
 
@@ -714,6 +719,7 @@ describe('ticket owner and project link', () => {
           Effect.flip(call(name, input)).pipe(
             Effect.map(({ message }) => Str.startsWith(`Invalid parameters for tool '${name}'`)(message)),
           ),
+        { concurrency: 1 },
       );
 
       expect(invalid).toStrictEqual([true, true, true, true, true]);
@@ -738,10 +744,10 @@ describe('closeProjectTask', () => {
 
       expect(Arr.map(calls, ({ args }) => args)).toStrictEqual([{ taskId: TASK_ID }, { taskId: TASK_ID, force: true }]);
 
-      const answers = yield* Effect.all([
-        structured(ProjectTaskCloseResult, warned),
-        structured(ProjectTaskCloseResult, closed),
-      ]);
+      const answers = yield* Effect.all(
+        [structured(ProjectTaskCloseResult, warned), structured(ProjectTaskCloseResult, closed)],
+        { concurrency: 'unbounded' },
+      );
 
       expect(answers).toStrictEqual([
         { taskId: TASK_ID, message: warning },
@@ -776,8 +782,11 @@ describe('updateProject', () => {
       yield* call('UpdateProject', { project: PROJECT_ID, changes: { endDate: null, ownerId: null } });
 
       // oxlint-disable-next-line unicorn/no-array-for-each
-      const sent = yield* Effect.forEach(calls, ({ name, args: { fieldsJson, ...args } }) =>
-        decodeFieldsJson(fieldsJson).pipe(Effect.map((fields) => [name, args, fields])),
+      const sent = yield* Effect.forEach(
+        calls,
+        ({ name, args: { fieldsJson, ...args } }) =>
+          decodeFieldsJson(fieldsJson).pipe(Effect.map((fields) => [name, args, fields])),
+        { concurrency: 'unbounded' },
       );
 
       expect(sent).toStrictEqual([
@@ -828,6 +837,7 @@ describe('updateProject', () => {
           { project: '23 25', changes: { name: 'Website' } },
         ],
         (input) => Effect.flip(call('UpdateProject', input)).pipe(Effect.map(({ message }) => message)),
+        { concurrency: 1 },
       );
 
       expect(invalid).toHaveLength(6);
@@ -864,8 +874,11 @@ describe('updateProjectTask', () => {
       });
 
       // oxlint-disable-next-line unicorn/no-array-for-each
-      const sent = yield* Effect.forEach(calls, ({ name, args: { fieldsJson, ...args } }) =>
-        decodeFieldsJson(fieldsJson).pipe(Effect.map((fields) => [name, args, fields])),
+      const sent = yield* Effect.forEach(
+        calls,
+        ({ name, args: { fieldsJson, ...args } }) =>
+          decodeFieldsJson(fieldsJson).pipe(Effect.map((fields) => [name, args, fields])),
+        { concurrency: 'unbounded' },
       );
 
       expect(sent).toStrictEqual([
@@ -921,6 +934,7 @@ describe('updateProjectTask', () => {
           { taskId: TASK_ID, changes: { retainerId: 'NONE' } },
         ],
         (input) => Effect.flip(call('UpdateProjectTask', input)).pipe(Effect.map(({ message }) => message)),
+        { concurrency: 1 },
       );
 
       expect(invalid).toHaveLength(5);

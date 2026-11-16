@@ -68,7 +68,10 @@ export const noHashAsIdentity = Rule.define({
         isEqualityOperator(node.operator)
           ? reportWhen(
               node,
-              Effect.map(Effect.all([isHashValue(node.left), isHashValue(node.right)]), Arr.every(Boolean)),
+              Effect.map(
+                Effect.all([isHashValue(node.left), isHashValue(node.right)], { concurrency: 1 }),
+                Arr.every(Boolean),
+              ),
             )
           : Effect.void,
       ),
