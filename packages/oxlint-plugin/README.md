@@ -289,14 +289,15 @@ These rules only run in files that import Effect and complement the `preferEffec
 - `prefer-effect-number` replaces hand-written arithmetic that `effect/Number` names, adding the import when the file
   lacks one ([Effect-TS/tsgo#1046](https://github.com/Effect-TS/tsgo/issues/1046)):
   - `Math.min(hi, Math.max(lo, x))` and `Math.max(lo, Math.min(hi, x))`, with the arguments of each call in any order,
-    become `Num.clamp(x, { minimum: lo, maximum: hi })`. The value is the inner argument that is not a number literal or
-    a name such as `min`, `maxWidth`, `upperBound` or `hi`. With `Math.min` outside, either inner argument may be the
-    value; with `Math.max` outside, a wrong choice would change the result, so when neither or both inner arguments
-    look like a bound it is reported without a fix. The fix differs in three edge cases: for `NaN`, `Num.clamp` returns
-    `minimum` where the `Math` version returns `NaN`; when `minimum > maximum`, `Num.clamp` returns `maximum` where
-    `Math.max(lo, Math.min(hi, x))` returns `lo` (literal bounds in that order are not reported); and with `-0` and `0`
-    among the operands, the sign of a zero result can differ. The fix evaluates the value before the bounds, so when
-    more than one operand is a call or another expression with effects it is a suggestion.
+    and the same with `Num.min` and `Num.max`, become `Num.clamp(x, { minimum: lo, maximum: hi })`. The value is the
+    inner argument that is not a number literal or a name such as `min`, `maxWidth`, `upperBound` or `hi`. With
+    `Math.min` outside, either inner argument may be the value; with `Math.max` outside, a wrong choice would change the
+    result, so when neither or both inner arguments look like a bound it is reported without a fix. The fix differs in
+    three edge cases: for `NaN`, `Num.clamp` returns `minimum` where the `Math` version returns `NaN`; when `minimum >
+    maximum`, `Num.clamp` returns `maximum` where `Math.max(lo, Math.min(hi, x))` returns `lo` (literal bounds in that
+    order are not reported); and with `-0` and `0` among the operands, the sign of a zero result can differ. The fix
+    evaluates the value before the bounds, so when more than one operand is a call or another expression with effects it
+    is a suggestion.
   - `Math.round(x * 100) / 100`, also with `10 ** n` or `Math.pow(10, n)` as the factor, becomes `Num.round(x, 2)` or
     `Num.round(x, n)`. A precision with effects is reported without a fix, since the fix evaluates it once, and so is
     `10 ** n * x` when `x` has effects, since the fix reads `n` after `x`.
@@ -306,6 +307,28 @@ These rules only run in files that import Effect and complement the `preferEffec
     such as `new Array(3)`, while `Num.sumAll` iterates them as `undefined` and returns `NaN`. Optional calls, a reduce
     without a start value, callbacks that take an index, and local bindings that shadow the `Arr` or `Num` import are
     not reported.
+  - `(n) => n + 1` and `(n) => n - 1` become `Num.increment` and `Num.decrement`, which are those same functions. Only
+    arrows with one untyped or `number` parameter are reported, and `1 + n` is left alone because it concatenates
+    strings the other way round.
+  - `(a, b) => a - b` passed to `.sort`, `.toSorted` or `Arr.sort` becomes `Num.Order`, and `(a, b) => b - a` becomes
+    `Order.flip(Num.Order)`. They sort numbers the same way, except `NaN`, which `Num.Order` puts first.
+  - `x >= lo && x <= hi` in any operand order becomes `Num.between(x, { minimum: lo, maximum: hi })`, and
+    `x < lo || x > hi` becomes `!Num.between(…)`. Without types, `from <= date && date <= to` may compare strings or
+    Dates, so the rule only autofixes when a bound is a number literal, offers a suggestion when both bounds have bound
+    names such as `lower` and `upper`, and skips other bounds and string literals. A value or bound with effects is
+    reported without a fix, since the original reads the value twice and may skip the second bound.
+  - `b === 0 ? fallback : a / b` and `b !== 0 ? a / b : fallback` become
+    `Opt.getOrElse(Num.divide(a, b), () => fallback)`, which checks `b === 0` the same way. A dividend or divisor with
+    effects is reported without a fix. `b > 0` is a different check and is not reported.
+  - `Math.max(...xs)` and `Math.min(...xs)` are reported with `Arr.max(xs, Num.Order)` or `Arr.min` as the advice, but
+    not fixed: `Arr.max` needs a non-empty array where `Math.max()` of an empty array is `-Infinity`, and it skips
+    `NaN`.
+  - `Number.isNaN(Number(s))`, or `isNaN(n)` with `const n = Number(s)`, also with `parseFloat`, is reported with
+    `Num.parse(s)` as the advice but not fixed, because `Number('')` is 0 and `parseFloat('12px')` is 12 where
+    `Num.parse` returns none.
+
+  Fixes import Number as `Num`, Option as `Opt` and Order as `Order`, the aliases the import style rules use, and
+  reuse a namespace import of those modules when the file has one.
 
 ## Direct Effect combinators
 

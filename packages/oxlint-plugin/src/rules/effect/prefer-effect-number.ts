@@ -12,30 +12,69 @@ import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
+import * as Num from 'effect/Number';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
+import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 
 import { argumentAt, staticPath, staticPropertyName, unwrapExpression } from '../../internal/ast';
-import { argumentText, replaceWithNamespace } from '../../internal/fixes';
+import { argumentText, namespaceImport } from '../../internal/fixes';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-import { isGlobalIn, isImportedApiIn } from '../../internal/scope';
+import { isGlobalIn, isImportedApiIn, lookupVariable, soleDefinition } from '../../internal/scope';
+import { namespaceAlias } from './internal/import-style';
 
-type Kind = 'clamp' | 'round' | 'sumAll' | 'multiplyAll';
+type Kind =
+  | 'clamp'
+  | 'round'
+  | 'sumAll'
+  | 'multiplyAll'
+  | 'increment'
+  | 'decrement'
+  | 'order'
+  | 'between'
+  | 'divide'
+  | 'extreme'
+  | 'parse';
 
 /**
  * `fix` keeps the behavior, `suggest` changes it in edge cases, `report` has no safe rewrite.
  */
 type Mode = 'fix' | 'suggest' | 'report';
 
+// The Effect module behind each namespace. The fix imports it under the alias the import style rules use: `Num` for Number.
+const namespaceModules = { num: 'Number', opt: 'Option', order: 'Order' } as const;
+
+type Namespace = keyof typeof namespaceModules;
+
+/**
+ * The local name of each namespace a replacement uses, after the fix adds the missing imports.
+ */
+type Namespaces = Readonly<Record<Namespace, string>>;
+
 interface Finding {
   readonly kind: Kind;
   readonly mode: Mode;
   /**
-   * Replacement text for the `effect/Number` alias the file ends up with.
+   * The node to report and replace, when it is not the visited node.
    */
-  readonly replacement: (alias: string) => string;
+  readonly target?: ESTree.Node;
+  readonly data?: Readonly<Record<string, string>>;
+  /**
+   * Namespaces the replacement uses besides `num`.
+   */
+  readonly extra?: ReadonlyArray<Exclude<Namespace, 'num'>>;
+  readonly replacement: (namespaces: Namespaces) => string;
+}
+
+/**
+ * What a check reads from the file: its source, its imports, and the scope of the visited node.
+ */
+interface Env {
+  readonly sourceCode: OxlintSourceCode;
+  readonly imports: ImportBindings;
+  readonly scope: OxlintScope;
 }
 
 type Pair = readonly [ESTree.Expression, ESTree.Expression];
@@ -185,31 +224,58 @@ function isParameterPair(
 }
 
 /**
- * `Math.min(hi, Math.max(lo, x))` or `Math.max(lo, Math.min(hi, x))`, with the arguments of each call in either order.
+ * Which of `min` and `max` a call names, on the global `Math` or Effect's Number module, with its two arguments.
+ *
+ * @param node Expression.
+ * @param env File being linted.
+ */
+function minMaxCall(node: ESTree.Expression, env: Env): Opt.Option<readonly ['min' | 'max', Pair]> {
+  const call = unwrapExpression(node);
+
+  if (call.type !== 'CallExpression' || call.optional || call.arguments.length !== 2) {
+    return Opt.none();
+  }
+
+  const callee = call.callee;
+
+  const member =
+    callee.type === 'MemberExpression' && !callee.optional && isGlobalIn(env.scope, callee.object, 'Math')
+      ? staticPropertyName(callee)
+      : Opt.filter(env.imports.member(callee, 'Number'), () => isImportedApiIn(env.sourceCode, callee));
+
+  return Opt.all([Opt.filter(member, isMinMax), argumentAt(call, 0), argumentAt(call, 1)]).pipe(
+    Opt.map(([name, first, second]) => [name, [first, second]] as const),
+  );
+}
+
+/**
+ * The arguments of `node` when it calls the `min` or `max` named by `member`.
+ *
+ * @param node Expression.
+ * @param member `min` or `max`.
+ * @param env File being linted.
+ */
+function minMaxPair(node: ESTree.Expression, member: 'min' | 'max', env: Env): Opt.Option<Pair> {
+  return Opt.flatMap(minMaxCall(node, env), ([name, pair]) => (name === member ? Opt.some(pair) : Opt.none()));
+}
+
+/**
+ * `Math.min(hi, Math.max(lo, x))` or `Math.max(lo, Math.min(hi, x))`, with the arguments of each call in either order,
+ * and the same with Effect's `Num.min` and `Num.max`.
  *
  * @param node Outer call.
- * @param scope Scope of the call.
- * @param sourceCode Source of the file.
+ * @param env File being linted.
  */
-function clampFinding(
-  node: ESTree.CallExpression,
-  scope: OxlintScope,
-  sourceCode: OxlintSourceCode,
-): Opt.Option<Finding> {
-  const outerMember = node.callee.type === 'MemberExpression' ? staticPropertyName(node.callee) : Opt.none();
+function clampFinding(node: ESTree.CallExpression, env: Env): Opt.Option<Finding> {
+  const { sourceCode } = env;
 
-  return outerMember.pipe(
-    Opt.filter(isMinMax),
-    Opt.flatMap((outer) => {
+  return minMaxCall(node, env).pipe(
+    Opt.flatMap(([outer, [first, second]]) => {
       const inner = outer === 'min' ? 'max' : 'min';
 
-      return mathPair(node, scope, outer).pipe(
-        Opt.flatMap(([first, second]) =>
-          mathPair(second, scope, inner).pipe(
-            Opt.map((pair) => [first, pair] as const),
-            Opt.orElse(() => Opt.map(mathPair(first, scope, inner), (pair) => [second, pair] as const)),
-          ),
-        ),
+      return minMaxPair(second, inner, env).pipe(
+        Opt.map((pair) => [first, pair] as const),
+        Opt.orElse(() => Opt.map(minMaxPair(first, inner, env), (pair) => [second, pair] as const)),
         Opt.flatMap(([outerBound, [innerFirst, innerSecond]]) => {
           /*
            * With `Math.min` outside, `Math.max(lo, x)` is symmetric and either inner argument can be the value. With
@@ -239,8 +305,8 @@ function clampFinding(
                 : reordersSafely([outerBound, innerFirst, innerSecond])
                   ? 'fix'
                   : 'suggest',
-            replacement: (alias) =>
-              `${alias}.clamp(${argumentText(sourceCode, value)}, { minimum: ${argumentText(sourceCode, minimum)}, maximum: ${argumentText(sourceCode, maximum)} })`,
+            replacement: ({ num }) =>
+              `${num}.clamp(${argumentText(sourceCode, value)}, { minimum: ${argumentText(sourceCode, minimum)}, maximum: ${argumentText(sourceCode, maximum)} })`,
           } satisfies Finding);
         }),
       );
@@ -270,7 +336,9 @@ function precisionOf(node: ESTree.Expression, scope: OxlintScope): Opt.Option<ES
       Opt.map(Math.log10),
       Opt.map(Math.round),
       Opt.filter(
-        (power) => power >= 1 && power <= maxExactPowerOfTen && Opt.contains(numericValue(factor), 10 ** power),
+        (power) =>
+          Num.between(power, { minimum: 1, maximum: maxExactPowerOfTen }) &&
+          Opt.contains(numericValue(factor), 10 ** power),
       ),
     ),
   );
@@ -323,7 +391,7 @@ function roundFinding(
         return {
           kind: 'round',
           mode,
-          replacement: (alias) => `${alias}.round(${argumentText(sourceCode, value)}, ${precisionText})`,
+          replacement: ({ num }) => `${num}.round(${argumentText(sourceCode, value)}, ${precisionText})`,
         } satisfies Finding;
       }),
     ),
@@ -400,10 +468,10 @@ function aggregateFinding(
     kind,
     // Number.multiplyAll returns 0 at the first 0, so `[0, NaN]` gives 0 where the reduce gives NaN.
     mode: kind === 'sumAll' ? 'fix' : 'suggest',
-    replacement: (alias) =>
+    replacement: ({ num }) =>
       Opt.match(collection, {
-        onNone: () => `${alias}.${kind}`,
-        onSome: (items) => `${alias}.${kind}(${argumentText(sourceCode, items)})`,
+        onNone: () => `${num}.${kind}`,
+        onSome: (items) => `${num}.${kind}(${argumentText(sourceCode, items)})`,
       }),
   };
 }
@@ -472,20 +540,477 @@ function reduceFinding(
 }
 
 /**
- * Prefer Effect Number helpers over hand-written clamping, rounding, sums and products in Effect files.
+ * Whether a parameter is a plain name, untyped or typed as `number`.
+ *
+ * @param node Parameter.
+ */
+function isNumberParameter(node: ESTree.Node): node is ESTree.BindingIdentifier {
+  return (
+    node.type === 'Identifier' &&
+    (P.isNullish(node.typeAnnotation) || node.typeAnnotation.typeAnnotation.type === 'TSNumberKeyword')
+  );
+}
+
+/**
+ * The parameters and returned expression of an arrow such as `(a, b) => a - b`, without a return type or type
+ * parameters.
+ *
+ * @param node Expression.
+ * @param arity Number of parameters.
+ */
+function arrowBody(
+  node: ESTree.Node,
+  arity: number,
+): Opt.Option<readonly [ReadonlyArray<ESTree.BindingIdentifier>, ESTree.Expression]> {
+  if (
+    node.type !== 'ArrowFunctionExpression' ||
+    node.async ||
+    P.isNotNullish(node.returnType) ||
+    P.isNotNullish(node.typeParameters) ||
+    node.params.length !== arity ||
+    node.body.type === 'BlockStatement'
+  ) {
+    return Opt.none();
+  }
+
+  const params = Arr.filter(node.params, isNumberParameter);
+
+  return params.length === arity ? Opt.some([params, unwrapExpression(node.body)] as const) : Opt.none();
+}
+
+function isIdentifierNamed(node: ESTree.Expression, name: string): boolean {
+  const expression = unwrapExpression(node);
+
+  return expression.type === 'Identifier' && expression.name === name;
+}
+
+/**
+ * `(n) => n + 1` or `(n) => n - 1`. `Num.increment` is `(n) => n + 1`, so the fix keeps the result for any value; `1 +
+ * n` is left alone because it concatenates strings the other way round.
+ *
+ * @param node Arrow function.
+ */
+function stepFinding(node: ESTree.ArrowFunctionExpression): Opt.Option<Finding> {
+  return arrowBody(node, 1).pipe(
+    Opt.flatMap(([[param], body]) =>
+      P.isNotUndefined(param) &&
+      body.type === 'BinaryExpression' &&
+      (body.operator === '+' || body.operator === '-') &&
+      isIdentifierNamed(body.left, param.name) &&
+      body.right.type === 'Literal' &&
+      body.right.value === 1
+        ? Opt.some<Kind>(body.operator === '+' ? 'increment' : 'decrement')
+        : Opt.none(),
+    ),
+    Opt.map((kind) => ({ kind, mode: 'fix', replacement: ({ num }) => `${num}.${kind}` }) satisfies Finding),
+  );
+}
+
+/**
+ * The comparator a sort call takes: the argument of a native `.sort` or `.toSorted`, or the last argument of
+ * `Arr.sort`.
+ *
+ * @param node Call.
+ * @param env File being linted.
+ */
+function sortComparator(node: ESTree.CallExpression, env: Env): Opt.Option<ESTree.Expression> {
+  const callee = node.callee;
+
+  if (env.imports.isApi(callee, 'Array', 'sort') && isImportedApiIn(env.sourceCode, callee)) {
+    return node.arguments.length === 1 || node.arguments.length === 2
+      ? argumentAt(node, node.arguments.length - 1)
+      : Opt.none();
+  }
+
+  return !node.optional &&
+    node.arguments.length === 1 &&
+    callee.type === 'MemberExpression' &&
+    !callee.optional &&
+    Opt.exists(staticPropertyName(callee), (name) => name === 'sort' || name === 'toSorted') &&
+    Opt.isNone(env.imports.path(callee))
+    ? argumentAt(node, 0)
+    : Opt.none();
+}
+
+/**
+ * `(a, b) => a - b` or `(a, b) => b - a` passed to a sort. Number.Order sorts numbers the same way, except NaN, which
+ * it orders first.
+ *
+ * @param node Sort call.
+ * @param env File being linted.
+ */
+function orderFinding(node: ESTree.CallExpression, env: Env): Opt.Option<Finding> {
+  return sortComparator(node, env).pipe(
+    Opt.flatMap((comparator) =>
+      arrowBody(comparator, 2).pipe(
+        Opt.flatMap(([[first, second], body]) => {
+          if (
+            P.isUndefined(first) ||
+            P.isUndefined(second) ||
+            first.name === second.name ||
+            body.type !== 'BinaryExpression' ||
+            body.operator !== '-'
+          ) {
+            return Opt.none();
+          }
+
+          if (isIdentifierNamed(body.left, first.name) && isIdentifierNamed(body.right, second.name)) {
+            return Opt.some({
+              kind: 'order',
+              mode: 'fix',
+              target: comparator,
+              data: { order: 'Num.Order' },
+              replacement: ({ num }) => `${num}.Order`,
+            } satisfies Finding);
+          }
+
+          return isIdentifierNamed(body.left, second.name) && isIdentifierNamed(body.right, first.name)
+            ? Opt.some({
+                kind: 'order',
+                mode: 'fix',
+                target: comparator,
+                data: { order: 'Order.flip(Num.Order)' },
+                extra: ['order'],
+                replacement: ({ num, order }) => `${order}.flip(${num}.Order)`,
+              } satisfies Finding)
+            : Opt.none();
+        }),
+      ),
+    ),
+  );
+}
+
+/**
+ * The two sides of an ordering comparison, smaller first: `a <= b` and `b >= a` both give `[a, b]`.
+ */
+interface Comparison {
+  readonly small: ESTree.Expression;
+  readonly big: ESTree.Expression;
+}
+
+function comparison(node: ESTree.Expression, strict: boolean): Opt.Option<Comparison> {
+  const expression = unwrapExpression(node);
+
+  if (expression.type !== 'BinaryExpression' || expression.left.type === 'PrivateIdentifier') {
+    return Opt.none();
+  }
+
+  const { operator, left, right } = expression;
+
+  if (operator === (strict ? '<' : '<=')) {
+    return Opt.some({ small: left, big: right });
+  }
+
+  return operator === (strict ? '>' : '>=') ? Opt.some({ small: right, big: left }) : Opt.none();
+}
+
+/**
+ * Which bound a comparison sets for the value with source text `value`: `x <= hi` sets the upper bound, and in the
+ * negated form `x < lo` sets the lower one.
+ *
+ * @param check Comparison.
+ * @param value Source text of the value.
+ * @param strict Whether the comparison is the negated, strict form.
+ * @param sourceCode Source of the file.
+ */
+function boundOf(
+  check: Comparison,
+  value: string,
+  strict: boolean,
+  sourceCode: OxlintSourceCode,
+): Opt.Option<readonly ['lower' | 'upper', ESTree.Expression]> {
+  if (sourceCode.getText(unwrapExpression(check.small)) === value) {
+    return Opt.some([strict ? 'lower' : 'upper', check.big]);
+  }
+
+  return sourceCode.getText(unwrapExpression(check.big)) === value
+    ? Opt.some([strict ? 'upper' : 'lower', check.small])
+    : Opt.none();
+}
+
+/**
+ * The value and its bounds when two comparisons set opposite bounds for `value`.
+ *
+ * @param value Candidate value, an operand of `first`.
+ * @param first First comparison.
+ * @param second Second comparison.
+ * @param strict Whether the comparisons are the negated, strict form.
+ * @param sourceCode Source of the file.
+ */
+function range(
+  value: ESTree.Expression,
+  first: Comparison,
+  second: Comparison,
+  strict: boolean,
+  sourceCode: OxlintSourceCode,
+): Opt.Option<readonly [ESTree.Expression, ESTree.Expression, ESTree.Expression]> {
+  const text = sourceCode.getText(unwrapExpression(value));
+
+  return Opt.zipWith(
+    boundOf(first, text, strict, sourceCode),
+    boundOf(second, text, strict, sourceCode),
+    ([firstSide, firstBound], [secondSide, secondBound]) =>
+      firstSide === secondSide
+        ? Opt.none()
+        : Opt.some(
+            firstSide === 'lower'
+              ? ([value, firstBound, secondBound] as const)
+              : ([value, secondBound, firstBound] as const),
+          ),
+  ).pipe(Opt.flatten);
+}
+
+// `c >= 'a' && c <= 'z'` compares strings, and `10n` is a bigint, which Number.between does not take.
+function isNonNumberLiteral(node: ESTree.Expression): boolean {
+  const expression = unwrapExpression(node);
+
+  return (
+    expression.type === 'TemplateLiteral' ||
+    (expression.type === 'Literal' && (P.isString(expression.value) || P.isBigInt(expression.value)))
+  );
+}
+
+/**
+ * `x >= lo && x <= hi` in any operand order, or the negated `x < lo || x > hi`.
+ *
+ * @param node Logical expression.
+ * @param sourceCode Source of the file.
+ */
+function betweenFinding(node: ESTree.LogicalExpression, sourceCode: OxlintSourceCode): Opt.Option<Finding> {
+  if (node.operator !== '&&' && node.operator !== '||') {
+    return Opt.none();
+  }
+
+  const strict = node.operator === '||';
+
+  return Opt.all([comparison(node.left, strict), comparison(node.right, strict)]).pipe(
+    Opt.flatMap(([first, second]) =>
+      Arr.findFirst(
+        Arr.filter([first.small, first.big], (value) => Opt.isNone(numericValue(value))),
+        (value) => range(value, first, second, strict, sourceCode),
+      ),
+    ),
+    Opt.filter((operands): boolean => !Arr.some(operands, isNonNumberLiteral)),
+    /*
+     * Without types, `from <= date && date <= to` may compare strings or Dates. A number literal bound makes the
+     * comparison numeric; bounds named like `lower` and `upper` only make it likely.
+     */
+    Opt.filter(([, minimum, maximum]) => Arr.every([minimum, maximum], isBoundLike)),
+    Opt.map(
+      ([value, minimum, maximum]) =>
+        ({
+          kind: 'between',
+          // The original reads the value twice and may skip the second bound.
+          mode: Arr.every([value, minimum, maximum], isSideEffectFree)
+            ? Arr.some([minimum, maximum], (bound) => Opt.isSome(numericValue(bound)))
+              ? 'fix'
+              : 'suggest'
+            : 'report',
+          replacement: ({ num }) =>
+            `${strict ? '!' : ''}${num}.between(${argumentText(sourceCode, value)}, { minimum: ${argumentText(sourceCode, minimum)}, maximum: ${argumentText(sourceCode, maximum)} })`,
+        }) satisfies Finding,
+    ),
+  );
+}
+
+/**
+ * The divisor a test compares with zero: `b` in `b === 0` or `0 !== b`, with whether the test is negated.
+ *
+ * @param node Test.
+ */
+function isZero(node: ESTree.Expression): boolean {
+  return Opt.contains(numericValue(node), 0);
+}
+
+function zeroCheck(node: ESTree.Expression): Opt.Option<readonly [ESTree.Expression, boolean]> {
+  const test = unwrapExpression(node);
+
+  if (test.type !== 'BinaryExpression' || (test.operator !== '===' && test.operator !== '!==')) {
+    return Opt.none();
+  }
+
+  const divisor = isZero(test.right) ? Opt.some(test.left) : isZero(test.left) ? Opt.some(test.right) : Opt.none();
+
+  return divisor.pipe(
+    Opt.filter((side) => Opt.isNone(numericValue(side))),
+    Opt.map((side) => [side, test.operator === '!=='] as const),
+  );
+}
+
+/**
+ * `b === 0 ? fallback : a / b` or `b !== 0 ? a / b : fallback`. Number.divide checks `b === 0` too.
+ *
+ * @param node Conditional.
+ * @param sourceCode Source of the file.
+ */
+function divideFinding(node: ESTree.ConditionalExpression, sourceCode: OxlintSourceCode): Opt.Option<Finding> {
+  return zeroCheck(node.test).pipe(
+    Opt.flatMap(([divisor, negated]) => {
+      const [fallback, quotient] = negated ? [node.alternate, node.consequent] : [node.consequent, node.alternate];
+
+      const division = unwrapExpression(quotient);
+
+      if (
+        division.type !== 'BinaryExpression' ||
+        division.operator !== '/' ||
+        sourceCode.getText(unwrapExpression(division.right)) !== sourceCode.getText(unwrapExpression(divisor))
+      ) {
+        return Opt.none();
+      }
+
+      const dividend = division.left;
+
+      const fallbackText =
+        unwrapExpression(fallback).type === 'ObjectExpression'
+          ? `(${sourceCode.getText(fallback)})`
+          : argumentText(sourceCode, fallback);
+
+      return Opt.some({
+        kind: 'divide',
+        // The fix evaluates the dividend before the divisor, and the divisor once.
+        mode: isSideEffectFree(dividend) && isSideEffectFree(divisor) ? 'fix' : 'report',
+        extra: ['opt'],
+        replacement: ({ num, opt }) =>
+          `${opt}.getOrElse(${num}.divide(${argumentText(sourceCode, dividend)}, ${argumentText(sourceCode, divisor)}), () => ${fallbackText})`,
+      } satisfies Finding);
+    }),
+  );
+}
+
+/**
+ * `Math.max(...xs)` or `Math.min(...xs)`. Arr.max needs a non-empty array and skips NaN, so this is only reported.
+ *
+ * @param node Call.
+ * @param env File being linted.
+ */
+function extremeFinding(node: ESTree.CallExpression, env: Env): Opt.Option<Finding> {
+  const callee = node.callee;
+
+  if (
+    node.optional ||
+    node.arguments.length !== 1 ||
+    !Opt.exists(Arr.head(node.arguments), (argument) => argument.type === 'SpreadElement') ||
+    callee.type !== 'MemberExpression' ||
+    callee.optional ||
+    !isGlobalIn(env.scope, callee.object, 'Math')
+  ) {
+    return Opt.none();
+  }
+
+  return staticPropertyName(callee).pipe(
+    Opt.filter(isMinMax),
+    Opt.map(
+      (member) =>
+        ({
+          kind: 'extreme',
+          mode: 'report',
+          data: { api: `Arr.${member}`, math: `Math.${member}`, empty: member === 'max' ? '-Infinity' : 'Infinity' },
+          replacement: () => '',
+        }) satisfies Finding,
+    ),
+  );
+}
+
+/**
+ * The function a conversion such as `Number(s)` or `parseFloat(s)` calls.
+ *
+ * @param node Expression.
+ * @param sourceCode Source of the file.
+ */
+function conversionName(node: ESTree.Node, sourceCode: OxlintSourceCode): Opt.Option<string> {
+  const call = node.type === 'CallExpression' ? node : Opt.getOrNull(Opt.none<ESTree.CallExpression>());
+
+  if (P.isNull(call) || call.optional || call.arguments.length !== 1 || call.callee.type !== 'Identifier') {
+    return Opt.none();
+  }
+
+  const { name } = call.callee;
+
+  return Opt.liftPredicate(
+    name,
+    (candidate) =>
+      (candidate === 'Number' || candidate === 'parseFloat') &&
+      isGlobalIn(sourceCode.getScope(call), call.callee, candidate),
+  );
+}
+
+/**
+ * `Number.isNaN(Number(s))` or `isNaN(n)` where `const n = Number(s)`, also with `parseFloat`. Number.parse returns
+ * none for `''` where `Number('')` is 0, so this is only reported.
+ *
+ * @param node Call.
+ * @param env File being linted.
+ */
+function parseFinding(node: ESTree.CallExpression, env: Env): Opt.Option<Finding> {
+  const callee = node.callee;
+
+  const isNaNCheck =
+    !node.optional &&
+    node.arguments.length === 1 &&
+    (isGlobalIn(env.scope, callee, 'isNaN') ||
+      (callee.type === 'MemberExpression' &&
+        !callee.optional &&
+        isGlobalIn(env.scope, callee.object, 'Number') &&
+        Opt.contains(staticPropertyName(callee), 'isNaN')));
+
+  if (!isNaNCheck) {
+    return Opt.none();
+  }
+
+  const converted = argumentAt(node, 0).pipe(
+    Opt.map(unwrapExpression),
+    Opt.flatMap((argument) =>
+      argument.type === 'Identifier'
+        ? soleDefinition(lookupVariable(env.sourceCode, argument, argument.name)).pipe(
+            Opt.flatMap(({ node: declarator }) =>
+              declarator.type === 'VariableDeclarator' && P.isNotNullish(declarator.init)
+                ? Opt.some(unwrapExpression(declarator.init))
+                : Opt.none(),
+            ),
+          )
+        : Opt.some(argument),
+    ),
+  );
+
+  return converted.pipe(
+    Opt.flatMap((conversion) => conversionName(conversion, env.sourceCode)),
+    Opt.map(
+      (name) =>
+        ({
+          kind: 'parse',
+          mode: 'report',
+          data: { conversion: `${name}(…)` },
+          replacement: () => '',
+        }) satisfies Finding,
+    ),
+  );
+}
+
+/**
+ * Prefer Effect Number helpers over hand-written clamping, rounding, ranges, sums, products, steps, comparators,
+ * guarded division, spread extremes and NaN-checked parsing in Effect files.
  */
 export const preferEffectNumber = Rule.define({
   name: 'prefer-effect-number',
   meta: ruleMeta({
     type: 'suggestion',
     description:
-      'Prefer Effect Number helpers over nested Math.min and Math.max, scaled Math.round, and sum or product reduces in Effect files.',
+      'Prefer Effect Number helpers over hand-written clamping, rounding, ranges, sums, products, comparators and parsing in Effect files.',
     messages: {
-      clamp: 'Use Number.clamp from Effect instead of nesting Math.min and Math.max.',
+      clamp: 'Use Number.clamp from Effect instead of nesting min and max.',
       round: 'Use Number.round from Effect instead of scaling Math.round by a power of ten.',
       sumAll: 'Use Number.sumAll from Effect instead of summing with reduce.',
       multiplyAll:
         'Use Number.multiplyAll from Effect instead of multiplying with reduce. It returns 0 at the first 0, even when NaN or Infinity follows.',
+      increment: 'Use Number.increment from Effect instead of (n) => n + 1.',
+      decrement: 'Use Number.decrement from Effect instead of (n) => n - 1.',
+      order: 'Use {{order}} from Effect instead of a comparator that subtracts. It sorts the same, except NaN.',
+      between: 'Use Number.between from Effect instead of comparing with both bounds.',
+      divide: 'Use Number.divide from Effect, which returns none for a zero divisor, instead of checking for 0 first.',
+      extreme:
+        'Use {{api}} with Number.Order instead of {{math}} over a spread. It needs a non-empty array, where {{math}} of an empty array is {{empty}}, and it skips NaN.',
+      parse:
+        "Use Number.parse from Effect, which returns an Option, instead of {{conversion}} with a NaN check. Number.parse returns none for '' and '12px'.",
       replace: 'Replace with Number.{{api}}.',
     },
     url: 'https://www.effect.website/docs/v4/api/effect/Number',
@@ -501,17 +1026,37 @@ export const preferEffectNumber = Rule.define({
       return {};
     }
 
-    const report = Effect.fnUntraced(function* (node: ESTree.Node, finding: Finding) {
+    const report = Effect.fnUntraced(function* (visited: ESTree.Node, finding: Finding) {
       const { kind, mode } = finding;
 
-      const diagnostic = Diagnostic.fromId({ node, messageId: kind });
+      const node = finding.target ?? visited;
+
+      const diagnostic = Diagnostic.fromId({ node, messageId: kind, data: finding.data ?? {} });
 
       // A rewrite would drop the comments inside the expression.
       if (mode === 'report' || Arr.isReadonlyArrayNonEmpty(ctx.sourceCode.getCommentsInside(node))) {
         return yield* ctx.report(diagnostic);
       }
 
-      const fix = yield* replaceWithNamespace(node, 'effect/Number', 'Num', finding.replacement);
+      // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
+      const imported = yield* Effect.forEach(['num', ...(finding.extra ?? [])] as const, (namespace) =>
+        Effect.map(
+          namespaceImport(node, `effect/${namespaceModules[namespace]}`, namespaceAlias(namespaceModules[namespace])),
+          (found) => [namespace, found] as const,
+        ),
+      );
+
+      const names = R.map(namespaceModules, (module, namespace) =>
+        Opt.match(
+          Arr.findFirst(imported, ([used]) => used === namespace),
+          { onNone: () => namespaceAlias(module), onSome: ([, found]) => found.name },
+        ),
+      );
+
+      const fix = Diagnostic.composeFixes(
+        ...Arr.flatMap(imported, ([, found]) => Opt.toArray(found.fix)),
+        Diagnostic.replaceText(node, finding.replacement(names)),
+      );
 
       return yield* ctx.report(
         mode === 'fix'
@@ -524,12 +1069,21 @@ export const preferEffectNumber = Rule.define({
       return Opt.match(finding, { onNone: () => Effect.void, onSome: (found) => report(node, found) });
     }
 
+    function env(node: ESTree.Node) {
+      return Effect.map(SourceCode.getScope(node), (scope): Env => ({ sourceCode: ctx.sourceCode, imports, scope }));
+    }
+
     return Visitor.merge(
       Visitor.on('CallExpression', (node) =>
-        Effect.flatMap(SourceCode.getScope(node), (scope) =>
+        Effect.flatMap(env(node), (found) =>
           reportFinding(
             node,
-            Opt.orElse(clampFinding(node, scope, ctx.sourceCode), () => reduceFinding(node, imports, ctx.sourceCode)),
+            clampFinding(node, found).pipe(
+              Opt.orElse(() => reduceFinding(node, imports, ctx.sourceCode)),
+              Opt.orElse(() => orderFinding(node, found)),
+              Opt.orElse(() => extremeFinding(node, found)),
+              Opt.orElse(() => parseFinding(node, found)),
+            ),
           ),
         ),
       ),
@@ -538,6 +1092,9 @@ export const preferEffectNumber = Rule.define({
           reportFinding(node, roundFinding(node, scope, ctx.sourceCode)),
         ),
       ),
+      Visitor.on('ArrowFunctionExpression', (node) => reportFinding(node, stepFinding(node))),
+      Visitor.on('LogicalExpression', (node) => reportFinding(node, betweenFinding(node, ctx.sourceCode))),
+      Visitor.on('ConditionalExpression', (node) => reportFinding(node, divideFinding(node, ctx.sourceCode))),
     );
   },
 });
