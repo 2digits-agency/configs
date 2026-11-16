@@ -300,8 +300,10 @@ These rules only run in files that import Effect and complement the `preferEffec
     `Num.round(x, n)`. A precision with effects is reported without a fix, since the fix evaluates it once.
   - `xs.reduce((a, b) => a + b, 0)`, `Arr.reduce(xs, 0, Num.sum)` and the data-last `Arr.reduce(0, …)` become
     `Num.sumAll(xs)` or `Num.sumAll`. The product with `1` gets a `Num.multiplyAll` suggestion, because it returns 0
-    at the first 0, so `[0, NaN]` gives 0 where the reduce gives `NaN`. Optional calls, a reduce without a start value
-    and callbacks that take an index are not reported.
+    at the first 0, so `[0, NaN]` gives 0 where the reduce gives `NaN`. `reduce` skips the holes of a sparse array
+    such as `new Array(3)`, while `Num.sumAll` iterates them as `undefined` and returns `NaN`. Optional calls, a reduce
+    without a start value, callbacks that take an index, and local bindings that shadow the `Arr` or `Num` import are
+    not reported.
 
 ## Direct Effect combinators
 

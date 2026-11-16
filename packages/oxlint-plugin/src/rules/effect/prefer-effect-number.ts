@@ -20,7 +20,7 @@ import { argumentAt, staticPath, staticPropertyName, unwrapExpression } from '..
 import { argumentText, replaceWithNamespace } from '../../internal/fixes';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-import { isGlobalIn } from '../../internal/scope';
+import { isGlobalIn, isImportedApiIn } from '../../internal/scope';
 
 type Kind = 'clamp' | 'round' | 'sumAll' | 'multiplyAll';
 
@@ -317,15 +317,21 @@ function roundFinding(
  *
  * @param node Reducer.
  * @param imports Effect imports of the file.
+ * @param sourceCode Source of the file.
  */
-function reducerOperator(node: ESTree.Expression, imports: ImportBindings): Opt.Option<'+' | '*'> {
+function reducerOperator(
+  node: ESTree.Expression,
+  imports: ImportBindings,
+  sourceCode: OxlintSourceCode,
+): Opt.Option<'+' | '*'> {
   const reducer = unwrapExpression(node);
 
-  if (imports.isApi(reducer, 'Number', 'sum')) {
+  // A local binding that shadows the import is not Effect's reducer.
+  if (imports.isApi(reducer, 'Number', 'sum') && isImportedApiIn(sourceCode, reducer)) {
     return Opt.some('+');
   }
 
-  if (imports.isApi(reducer, 'Number', 'multiply')) {
+  if (imports.isApi(reducer, 'Number', 'multiply') && isImportedApiIn(sourceCode, reducer)) {
     return Opt.some('*');
   }
 
@@ -405,7 +411,7 @@ function reduceFinding(
   imports: ImportBindings,
   sourceCode: OxlintSourceCode,
 ): Opt.Option<Finding> {
-  if (imports.isApi(node.callee, 'Array', 'reduce')) {
+  if (imports.isApi(node.callee, 'Array', 'reduce') && isImportedApiIn(sourceCode, node.callee)) {
     if (node.arguments.length !== 2 && node.arguments.length !== 3) {
       return Opt.none();
     }
@@ -416,7 +422,9 @@ function reduceFinding(
         : [Opt.none(), argumentAt(node, 0), argumentAt(node, 1)];
 
     return Opt.all([initial, reducer]).pipe(
-      Opt.flatMap(([init, fn]) => Opt.flatMap(reducerOperator(fn, imports), (operator) => reduceKind(operator, init))),
+      Opt.flatMap(([init, fn]) =>
+        Opt.flatMap(reducerOperator(fn, imports, sourceCode), (operator) => reduceKind(operator, init)),
+      ),
       Opt.filter(() => node.arguments.length === 2 || Opt.isSome(collection)),
       Opt.map((kind) => aggregateFinding(kind, collection, sourceCode)),
     );
@@ -437,7 +445,9 @@ function reduceFinding(
   }
 
   return Opt.all([argumentAt(node, 0), argumentAt(node, 1)]).pipe(
-    Opt.flatMap(([fn, init]) => Opt.flatMap(reducerOperator(fn, imports), (operator) => reduceKind(operator, init))),
+    Opt.flatMap(([fn, init]) =>
+      Opt.flatMap(reducerOperator(fn, imports, sourceCode), (operator) => reduceKind(operator, init)),
+    ),
     Opt.map((kind) => aggregateFinding(kind, Opt.some(callee.object), sourceCode)),
   );
 }

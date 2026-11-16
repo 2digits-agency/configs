@@ -30,6 +30,12 @@ const valid = `${header}
   const optional = values?.reduce((a, b) => a + b, 0)
   const withIndex = values.reduce((a, b, index) => a + b, 0)
   const clamped = Num.clamp(value, { minimum: 0, maximum: 10 })
+  function local(Arr: { reduce: (xs: Array<number>, start: number, f: (a: number, b: number) => number) => string }) {
+    return Arr.reduce(values, 0, (a, b) => a + b)
+  }
+  function localNum(Num: { sum: (a: number, b: number) => number }) {
+    return values.reduce(Num.sum, 0)
+  }
 `;
 
 // Rewrites that keep the behavior get a fix.
