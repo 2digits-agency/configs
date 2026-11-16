@@ -15,6 +15,10 @@ interface RuleCase {
    * File name of the valid case, such as a `.spec.ts` file that the rule skips.
    */
   readonly validFilename?: string;
+  /**
+   * File name of the invalid case, such as a `.js` file where a rule acts differently.
+   */
+  readonly invalidFilename?: string;
   readonly options?: RuleTester.ValidTestCase['options'];
   readonly output?: string | null;
   readonly suggestions?: Array<RuleTester.ErrorSuggestion> | null;
@@ -43,7 +47,7 @@ export function testRule(name: RuleName, rule: Rule, ruleCase: RuleCase): void {
     invalid: [
       {
         code: ruleCase.invalid,
-        filename: 'invalid.ts',
+        filename: ruleCase.invalidFilename ?? 'invalid.ts',
         ...options,
         ...languageOptions,
         errors: [

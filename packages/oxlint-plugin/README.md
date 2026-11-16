@@ -28,7 +28,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Copied and adapted Effect practices: `avoid-data-tagged-error`, `ban-error-string`,
   `effect-promise-vs-trypromise`, `no-logging-in-catch`, and `throw-in-effect-gen`.
 - Effect modules over native or hand-written logic: `prefer-effect-predicate`, `prefer-effect-array-ops`,
-  `prefer-equal`, and `prefer-struct-assign`. See [Effect modules over native logic](#effect-modules-over-native-logic).
+  `prefer-effect-number`, `prefer-equal`, and `prefer-struct-assign`. See
+  [Effect modules over native logic](#effect-modules-over-native-logic).
 - Direct Effect combinators: `prefer-direct-effect-combinators` replaces indirect Option, Array, Result and Filter
   chains with the API that does the same in one step. See [Direct Effect combinators](#direct-effect-combinators).
 - Syntax-safe Effect diagnostics proposed in open `Effect-TS/tsgo` issues: the remaining `cors-*`, `dual-*`,
@@ -251,8 +252,8 @@ modules for structured text. Plain `JSON.parse` and `JSON.stringify` are left to
 ## Effect modules over native logic
 
 These rules only run in files that import Effect and complement the `preferEffectArray`, `preferEffectRecord`, and
-`preferEffectString` diagnostics from `@effect/tsgo`. `prefer-effect-predicate` autofixes and `prefer-struct-assign`
-offers a suggestion; the others report only.
+`preferEffectString` diagnostics from `@effect/tsgo`. `prefer-effect-predicate` and `prefer-effect-number` autofix and
+`prefer-struct-assign` offers a suggestion; the others report only.
 
 - `prefer-effect-predicate` reports `typeof x === '…'`, comparisons with `undefined` or `null`, and `instanceof` on
   built-ins such as `String`, `Date`, or `Array`, and names the guard to use: `P.isString`, `!P.isNumber`,
@@ -285,6 +286,58 @@ offers a suggestion; the others report only.
   lose their contextual type. `Struct.assign` also drops a class instance's prototype, so rebuild Schema and Data class
   instances with their constructor. Two-object merges and copies get a `Struct.assign` suggestion rather than an
   autofix, because `Struct.assign` types its result from its generic parameters.
+- `prefer-effect-number` replaces hand-written arithmetic that `effect/Number` names, adding the import when the file
+  lacks one ([Effect-TS/tsgo#1046](https://github.com/Effect-TS/tsgo/issues/1046)):
+  - `Math.min(hi, Math.max(lo, x))` and `Math.max(lo, Math.min(hi, x))`, with the arguments of each call in any order,
+    and the same with `Num.min` and `Num.max`, become `Num.clamp(x, { minimum: lo, maximum: hi })`. The value is the
+    inner argument that is not a number literal or a name such as `min`, `maxWidth`, `upperBound` or `hi`. With
+    `Math.min` outside, either inner argument may be the value; with `Math.max` outside, a wrong choice would change the
+    result, so when neither or both inner arguments look like a bound it is reported without a fix. The fix differs in
+    three edge cases: for `NaN`, `Num.clamp` returns `minimum` where the `Math` version returns `NaN`; when `minimum >
+    maximum`, `Num.clamp` returns `maximum` where `Math.max(lo, Math.min(hi, x))` returns `lo` (literal bounds in that
+    order are not reported); and with `-0` and `0` among the operands, the sign of a zero result can differ. The fix
+    evaluates the value before the bounds, so when more than one operand is a call or another expression with effects it
+    is a suggestion.
+  - `Math.round(x * 100) / 100`, also with `10 ** n` or `Math.pow(10, n)` as the factor, becomes `Num.round(x, 2)` or
+    `Num.round(x, n)`. A precision with effects is reported without a fix, since the fix evaluates it once, and so is
+    `10 ** n * x` when `x` has effects, since the fix reads `n` after `x`.
+  - `xs.reduce((a, b) => a + b, 0)`, `Arr.reduce(xs, 0, Num.sum)` and the data-last `Arr.reduce(0, …)` become
+    `Num.sumAll(xs)` or `Num.sumAll`. The product with `1` gets a `Num.multiplyAll` suggestion, because it returns 0
+    at the first 0, so `[0, NaN]` gives 0 where the reduce gives `NaN`. `reduce` skips the holes of a sparse array
+    such as `new Array(3)`, while `Num.sumAll` iterates them as `undefined` and returns `NaN`. Optional calls, a reduce
+    without a start value, callbacks that take an index, and local bindings that shadow the `Arr` or `Num` import are
+    not reported.
+  - `(n) => n + 1`, `(n) => ++n` and `(n) => n += 1` become `Num.increment`, and the same with `- 1`, `--n` and `-= 1`
+    become `Num.decrement`. Only arrows with one untyped or `number` parameter are reported, and `1 + n` is left alone
+    because it concatenates strings the other way round. `n + 1` and `n += 1` are valid TypeScript for a string too, so
+    they are only autofixed when the parameter is annotated `number`, and get a suggestion otherwise. `(n) => n++` and
+    `(n) => n--` return `n` unchanged, because a postfix update returns the old value, so they are reported as a likely
+    bug without a fix.
+  - `(a, b) => a - b` passed to `.sort`, `.toSorted` or `Arr.sort` becomes `Num.Order`, and `(a, b) => b - a` becomes
+    `Order.flip(Num.Order)`. They sort numbers the same way, except `NaN`, which `Num.Order` puts first.
+  - `x >= lo && x <= hi` in any operand order becomes `Num.between(x, { minimum: lo, maximum: hi })`, and `x < lo || x >
+    hi` becomes `!Num.between(…)`. `Num.Order` puts `NaN` below every number, so a `NaN` value makes the `||` form true
+    where the original is false, and a `NaN` lower bound passes `Num.between`. The rule therefore only autofixes the
+    `&&` form with a number literal lower bound and offers a suggestion otherwise. Without types, `from <= date && date
+    <= to` may compare strings or Dates, so both bounds must be number literals or have bound names such as `lower` and
+    `upper`, and string literals are skipped. A value or bound with effects is reported without a fix.
+  - `b === 0 ? fallback : a / b` and `b !== 0 ? a / b : fallback` become `Opt.getOrElse(Num.divide(a, b), () =>
+    fallback)`, which checks `b === 0` the same way. A dividend or divisor with effects, or a fallback with `await` or
+    `yield`, is reported without a fix. `b > 0` is a different check and is not reported.
+  - `Math.max(...xs)` and `Math.min(...xs)` are reported with `Arr.max(xs, Num.Order)` or `Arr.min` as the advice, but
+    not fixed: `Arr.max` needs a non-empty array where `Math.max()` of an empty array is `-Infinity`, and it skips
+    `NaN`.
+  - `Number.isNaN(Number(s))`, or `isNaN(n)` with `const n = Number(s)` (not a `let`, which may be reassigned), also
+    with `parseFloat`, is reported with `Num.parse(s)` as the advice but not fixed, because `Number('')` is 0 and
+    `parseFloat('12px')` is 12 where `Num.parse` returns none.
+
+  In JavaScript files the `Num.increment`, `Num.decrement`, `Num.Order` and `Num.between` fixes are suggestions,
+  because an untyped parameter may be a numeric string that `+`, `-` and `>=` coerce and Effect does not, or a bigint
+  that `++n` and `--n` step and Effect does not. TypeScript rejects those values in the fixed code, so in TypeScript
+  files they stay autofixes.
+
+  Fixes import Number as `Num`, Option as `Opt` and Order as `Order`, the aliases the import style rules use, and
+  reuse a namespace import of those modules when the file has one.
 
 ## Direct Effect combinators
 
@@ -577,12 +630,13 @@ The exported `PaddingLineOption` type describes each configuration entry. No opt
 ### Other fixes
 
 Run `vpr lint:oxlint:fix` from the repository root to apply fixes from `consistent-schema-pipe`, `prefer-effect-duration`, `prefer-direct-effect-combinators`, `no-empty-effect-callback`,
-`no-effect-alchemy-barrel-imports`, `prefer-effect-alchemy-namespace-imports`, `prefer-effect-predicate`,
+`no-effect-alchemy-barrel-imports`, `prefer-effect-alchemy-namespace-imports`, `prefer-effect-number`,
+`prefer-effect-predicate`,
 `no-forwarding-lambda`, `alchemy-no-v1-worker-properties`, and `alchemy-no-deprecated-docker-constraints`.
 Fixes skip ambiguous bindings, conflicting properties, and unsupported import references. Oxlint applies one
 import-adding fix per file per run, so run it again until nothing changes. `oxlint --fix-suggestions` also applies the
-suggestions from `prefer-effect-predicate`, `prefer-direct-effect-combinators`, `no-forwarding-lambda`,
-`no-manual-tag-comparison` and `prefer-struct-assign`; review those changes.
+suggestions from `prefer-effect-number`, `prefer-effect-predicate`, `prefer-direct-effect-combinators`,
+`no-forwarding-lambda`, `no-manual-tag-comparison` and `prefer-struct-assign`; review those changes.
 
 ## Adding a rule
 

@@ -1,6 +1,7 @@
 import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Num from 'effect/Number';
 import * as Opt from 'effect/Option';
 
 import { isEqualityOperator } from '../../internal/ast';
@@ -48,7 +49,7 @@ function comparisonCount(node: Branch, value: string, sourceCode: OxlintSourceCo
   }
 
   return isBranch(node.alternate)
-    ? Opt.map(comparisonCount(node.alternate, value, sourceCode), (count) => count + 1)
+    ? Opt.map(comparisonCount(node.alternate, value, sourceCode), Num.increment)
     : Opt.some(1);
 }
 
