@@ -80,6 +80,7 @@ import { preferEffectUserDirectories } from './effect/prefer-effect-user-directo
 import { preferEqual } from './effect/prefer-equal';
 import { preferHoistedMatch } from './effect/prefer-hoisted-match';
 import { preferStructAssign } from './effect/prefer-struct-assign';
+import { preferTaggedErrorHandling } from './effect/prefer-tagged-error-handling';
 import { preferUninterruptible } from './effect/prefer-uninterruptible';
 import { preferWithSpan } from './effect/prefer-with-span';
 import { preferYieldNow } from './effect/prefer-yield-now';
@@ -189,6 +190,7 @@ export const rules = {
   'prefer-hoisted-match': preferHoistedMatch,
   'prefer-equal': preferEqual,
   'prefer-struct-assign': preferStructAssign,
+  'prefer-tagged-error-handling': preferTaggedErrorHandling,
   'prefer-uninterruptible': preferUninterruptible,
   'prefer-with-span': preferWithSpan,
   'prefer-yield-now': preferYieldNow,
