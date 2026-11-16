@@ -1,29 +1,34 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update pnpm, turbo, tsrs and renovate\n\n- Updated `pnpm` to `12.20.0`, `turbo` to `2.11.11`, `tsrs` to `0.24.0-ts7.1.0-beta` and `renovate` to `44.235.3`\n- Updated the GitButler skill to `0.5.2275`\n"
-    filename: 2026-11-12-6abebb2c.md
+  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update pnpm, tsrs, renovate and `@oxc-node/cli`\n\n- Updated `pnpm` to `12.21.0`, `tsrs` to `0.25.0-ts7.1.0-beta`, `renovate` to `44.242.0` and `@oxc-node/cli` to `1.0.2`\n- Updated the GitButler skill to `0.5.2281`\n"
+    filename: 2026-11-16-934d6611.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Require Node 26.13.1\n\nThe Node engine is now `26.13.1`, and the eslint config's `node.version` setting follows it.\n"
-    filename: 2026-11-12-9fa1f507.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `eslint-plugin-unicorn` to 80.0.0\n\nThe config follows unicorn's updated recommended set:\n\n- Enabled the new `unicorn/prefer-options-parameter`, `unicorn/prefer-regexp-exec` and `unicorn/require-spread-parentheses` rules\n- Turned off `unicorn/no-async-promise-finally`, which unicorn no longer recommends\n"
+    filename: 2026-11-16-5175914c.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `@eslint-react` and `eslint-plugin-turbo`\n\nThe config now uses `@eslint-react/eslint-plugin` and `@eslint-react/kit` 5.30.2 and `eslint-plugin-turbo` 2.11.11.\n"
-    filename: 2026-11-12-bf5e2951.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n  \"@2digits/oxlint-config\":\n    type: patch\n---\n\n### Update `eslint-plugin-zod` to 5.3.0\n\n- Enabled the new `zod/no-reshape-on-refined-object` rule. It reports `.extend()`, `.pick()`, `.omit()` and similar calls on an object schema that already has refinements, which throw at runtime.\n- The oxlint config leaves the new opt-in `zod/consistent-object-property-key-style` rule unset and types its options.\n"
+    filename: 2026-11-16-8065ba0a.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 5.70.0\n\nThe plugin now sends telemetry with `posthog-node` 5.70.0.\n"
-    filename: 2026-11-12-1bed84df.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `@stylistic/eslint-plugin`, `eslint-plugin-jsdoc`, `@eslint-react` and `eslint`\n\nThe config now uses `@stylistic/eslint-plugin` 6.0.1, `eslint-plugin-jsdoc` 65.4.8 and `@eslint-react/eslint-plugin` and `@eslint-react/kit` 5.30.3, and expects `eslint` 10.15.0. The generated rule types mark the stylistic rules that v6 deprecates and drop `stylistic/exp-list-style` and `stylistic/jsx-indent`, which v6 removes.\n"
+    filename: 2026-11-16-d0ac58ee.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/prettier-config\":\n    type: patch\n---\n\n### Update `prettier` to 3.10.1\n\nThe config now expects `prettier` 3.10.1.\n"
-    filename: 2026-11-12-e4839fb4.md
+  - content: "---\npackages:\n  \"@2digits/eslint-plugin\":\n    type: patch\n---\n\n### Update `eslint` to 10.15.0\n\nThe plugin now builds on `eslint` 10.15.0.\n"
+    filename: 2026-11-16-88292a8c.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Enable the `onExitFailureToOnError` Effect diagnostic\n\nThe Effect config now reports `onExitFailureToOnError` as an error. It flags `Effect.onExit` callbacks that only act on failure, where `Effect.onError` says the same thing directly.\n"
-    filename: 2026-11-12-54d5e723.md
+  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 5.74.0\n\nThe plugin now sends telemetry with `posthog-node` 5.74.0.\n"
+    filename: 2026-11-16-252053a2.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.68.1\n\nThe config now expects `@effect/tsgo` 0.68.1.\n"
-    filename: 2026-11-12-8017a0f4.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: patch\n---\n\n### Update `@stylistic/eslint-plugin` and `oxlint-tsgolint`\n\nThe config now uses `@stylistic/eslint-plugin` 6.0.1 and expects `oxlint-tsgolint` 7.0.2007.\n"
+    filename: 2026-11-16-7fd9a06f.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Enable the `missingConcurrencyOption` Effect diagnostic\n\nThe Effect config now reports `missingConcurrencyOption` as an error. It flags `Effect.all` and `Effect.forEach` calls without a `concurrency` option, which run sequentially by default, so each call states whether it runs one at a time (`concurrency: 1`) or in parallel.\n"
+    filename: 2026-11-16-77239a77.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.69.0\n\nThe config now expects `@effect/tsgo` 0.69.0.\n"
+    filename: 2026-11-16-c21253d0.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-11-12-6abebb2c.md
-      - 2026-11-12-9fa1f507.md
+      - 2026-11-16-934d6611.md
     id: npm:@2digits/config-monorepo
     updated: true
   - id: npm:@2digits/cli
@@ -31,35 +36,39 @@ core:packages:
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-11-12-9fa1f507.md
-      - 2026-11-12-bf5e2951.md
+      - 2026-11-16-5175914c.md
+      - 2026-11-16-8065ba0a.md
+      - 2026-11-16-d0ac58ee.md
     id: npm:@2digits/eslint-config
     updated: true
-  - id: npm:@2digits/eslint-plugin
-    updated: false
   - changelogIds:
-      - 2026-11-12-1bed84df.md
+      - 2026-11-16-88292a8c.md
+    id: npm:@2digits/eslint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-11-16-252053a2.md
     id: npm:@2digits/opencode-plugin
     updated: true
-  - id: npm:@2digits/oxlint-config
-    updated: false
-  - id: npm:@2digits/oxlint-plugin
+  - id: npm:@2digits/oxfmt-config
     updated: false
   - changelogIds:
-      - 2026-11-12-e4839fb4.md
-    id: npm:@2digits/prettier-config
+      - 2026-11-16-7fd9a06f.md
+      - 2026-11-16-8065ba0a.md
+    id: npm:@2digits/oxlint-config
     updated: true
+  - id: npm:@2digits/oxlint-plugin
+    updated: false
+  - id: npm:@2digits/prettier-config
+    updated: false
   - id: npm:@2digits/renovate-config
     updated: false
   - id: npm:@2digits/tlo-mcp
     updated: false
   - changelogIds:
-      - 2026-11-12-54d5e723.md
-      - 2026-11-12-8017a0f4.md
+      - 2026-11-16-77239a77.md
+      - 2026-11-16-c21253d0.md
     id: npm:@2digits/tsconfig
     updated: true
-  - id: npm:@2digits/oxfmt-config
-    updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
@@ -67,10 +76,10 @@ npm:packages:
   - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
+  - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/prettier-config
   - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig
-  - id: npm:@2digits/oxfmt-config

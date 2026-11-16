@@ -1,3 +1,21 @@
+## @2digits/eslint-config@5.12.4
+
+### Update `eslint-plugin-unicorn` to 80.0.0
+
+The config follows unicorn's updated recommended set:
+
+- Enabled the new `unicorn/prefer-options-parameter`, `unicorn/prefer-regexp-exec` and `unicorn/require-spread-parentheses` rules
+- Turned off `unicorn/no-async-promise-finally`, which unicorn no longer recommends
+
+### Update `eslint-plugin-zod` to 5.3.0
+
+- Enabled the new `zod/no-reshape-on-refined-object` rule. It reports `.extend()`, `.pick()`, `.omit()` and similar calls on an object schema that already has refinements, which throw at runtime.
+- The oxlint config leaves the new opt-in `zod/consistent-object-property-key-style` rule unset and types its options.
+
+### Update `@stylistic/eslint-plugin`, `eslint-plugin-jsdoc`, `@eslint-react` and `eslint`
+
+The config now uses `@stylistic/eslint-plugin` 6.0.1, `eslint-plugin-jsdoc` 65.4.8 and `@eslint-react/eslint-plugin` and `@eslint-react/kit` 5.30.3, and expects `eslint` 10.15.0. The generated rule types mark the stylistic rules that v6 deprecates and drop `stylistic/exp-list-style` and `stylistic/jsx-indent`, which v6 removes.
+
 ## @2digits/eslint-config@5.12.3
 
 ### Require Node 26.13.1

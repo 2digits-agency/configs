@@ -1,3 +1,13 @@
+## @2digits/tsconfig@1.2.9
+
+### Enable the `missingConcurrencyOption` Effect diagnostic
+
+The Effect config now reports `missingConcurrencyOption` as an error. It flags `Effect.all` and `Effect.forEach` calls without a `concurrency` option, which run sequentially by default, so each call states whether it runs one at a time (`concurrency: 1`) or in parallel.
+
+### Update `@effect/tsgo` to 0.69.0
+
+The config now expects `@effect/tsgo` 0.69.0.
+
 ## @2digits/tsconfig@1.2.8
 
 ### Enable the `onExitFailureToOnError` Effect diagnostic
