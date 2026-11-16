@@ -416,6 +416,49 @@ describe('oxlint config', () => {
     });
   });
 
+  it('reports Reflect.apply and Reflect.get but allows fn.apply', () => {
+    // Load the built public preset and keep only the rules that recommend or ban `Reflect` calls.
+    const config = `
+      import twoDigits from '${presetUrl}';
+      const config = twoDigits({ react: false, ts: false, vitest: false, zod: false });
+      export default {
+        ...config,
+        jsPlugins: [],
+        overrides: config.overrides.map(({ jsPlugins, ...override }) => ({
+          ...override,
+          rules: Object.fromEntries(
+            Object.entries(override.rules ?? {}).filter(([name]) =>
+              name === 'no-restricted-properties' || name === 'unicorn/prefer-reflect-apply'),
+          ),
+        })),
+      };
+    `;
+
+    const source = `
+      export function call(fn, self, args) {
+        return Reflect.apply(fn, self, args);
+      }
+
+      export function read(target, key) {
+        return Reflect.get(target, key);
+      }
+
+      export function legacy(fn, self, args) {
+        return [fn.apply(self, args), Reflect.ownKeys(self)];
+      }
+    `;
+
+    withTemporaryProject({ 'oxlint.config.mjs': config, 'reflect.js': source }, (directory) => {
+      const { status, output } = runOxlint(directory, 'reflect.js');
+
+      expect(status, output).toBe(1);
+
+      expect(output.match(/no-restricted-properties/gu), output).toHaveLength(2);
+
+      expect(output).not.toContain('prefer-reflect-apply');
+    });
+  });
+
   it('configures eslint-plugin-zod', () => {
     expect(jsPluginOf(zodConfig)).toMatchObject({ name: 'zod' });
 
