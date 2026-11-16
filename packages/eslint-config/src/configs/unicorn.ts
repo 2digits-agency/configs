@@ -35,6 +35,8 @@ export function unicorn(): Array<TypedFlatConfigItem> {
         'unicorn/prefer-await': 'off',
         'unicorn/prefer-module': 'off',
         'unicorn/prefer-number-coercion': 'off',
+        // `no-restricted-properties` bans `Reflect.apply`; call the function directly instead.
+        'unicorn/prefer-reflect-apply': 'off',
         'unicorn/prefer-ternary': 'off',
         'unicorn/prefer-top-level-await': 'off',
         'unicorn/require-array-sort-compare': 'off',

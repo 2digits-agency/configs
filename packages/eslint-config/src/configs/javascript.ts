@@ -110,6 +110,12 @@ export function javascript(options: OptionsOverrides = {}): Array<TypedFlatConfi
           { message: 'Use `Object.defineProperty` instead.', property: '__defineSetter__' },
           { message: 'Use `Object.getOwnPropertyDescriptor` instead.', property: '__lookupGetter__' },
           { message: 'Use `Object.getOwnPropertyDescriptor` instead.', property: '__lookupSetter__' },
+          { message: 'Call the function directly.', object: 'Reflect', property: 'apply' },
+          {
+            message: 'Use typed property access, or decode dynamic input into a domain type first.',
+            object: 'Reflect',
+            property: 'get',
+          },
         ],
         'no-restricted-syntax': [
           'error',
