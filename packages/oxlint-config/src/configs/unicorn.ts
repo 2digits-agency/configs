@@ -118,7 +118,8 @@ export function unicorn(): Array<FlatConfigItem> {
         'unicorn/prefer-optional-catch-binding': 'error',
         'unicorn/prefer-prototype-methods': 'error',
         'unicorn/prefer-query-selector': 'error',
-        'unicorn/prefer-reflect-apply': 'error',
+        // `no-restricted-properties` bans `Reflect.apply`; call the function directly instead.
+        'unicorn/prefer-reflect-apply': undefined,
         'unicorn/prefer-regexp-test': 'error',
         'unicorn/prefer-response-static-json': 'error',
         'unicorn/prefer-set-has': 'error',
