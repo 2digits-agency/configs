@@ -16,6 +16,7 @@ import {
   firstIdentifierParameter,
   isFunctionNode,
   isSomeSame,
+  isWrapperExpressionType,
   parentOf,
   staticPath,
   staticPropertyName,
@@ -25,7 +26,7 @@ import {
 } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-import { callbackApi, functionProperty } from './internal/callbacks';
+import { callbackApi, functionProperty, functionResult } from './internal/callbacks';
 
 const ErrorHandlerMethod = Schema.Literals([
   ...(['catch', 'catchCause', 'mapError'] satisfies ReadonlyArray<keyof typeof Effect>),
@@ -35,11 +36,15 @@ const ErrorHandlerMethod = Schema.Literals([
 
 const isErrorHandlerMethod = Schema.is(ErrorHandlerMethod);
 
-const tapFailureMethods = [
-  ...(['tapCause', 'tapError'] satisfies ReadonlyArray<keyof typeof Effect>),
+const tapCauseMethods = [
+  'tapCause' satisfies keyof typeof Effect,
   // Effect v3 name, which the current Effect types no longer export.
   'tapErrorCause',
 ];
+
+const tapFailureMethods = [...tapCauseMethods, 'tapError' satisfies keyof typeof Effect];
+
+const passThroughMethods = ['as', 'asSome', 'asVoid', 'map', 'withSpan'] satisfies ReadonlyArray<keyof typeof Effect>;
 
 const effectLogMethods = [
   'log',
@@ -72,8 +77,8 @@ function isLogApi(node: ESTree.Node, imports: ImportBindings): boolean {
 }
 
 /**
- * Whether a tap handler logs what it receives: `Effect.logError` itself, or a function that passes its parameter to
- * `Effect.log*` or `Console.*`.
+ * Whether a tap handler logs what it receives: `Effect.logError` itself, or a function that returns an `Effect.log*` or
+ * `Console.*` effect with its parameter.
  *
  * @param node Tap handler.
  * @param imports Import bindings of the file.
@@ -82,80 +87,129 @@ function logsInput(node: ESTree.Expression, imports: ImportBindings): boolean {
   const handler = unwrapExpression(node);
 
   return isFunctionNode(handler)
-    ? Opt.exists(
-        firstIdentifierParameter(handler),
-        ({ name }) =>
-          P.isNotNullish(handler.body) &&
-          walkNodes(
-            handler.body,
-            (child) =>
-              child.type === 'CallExpression' && isLogApi(child.callee, imports) && containsIdentifier(child, name),
-          ),
+    ? Opt.exists(firstIdentifierParameter(handler), ({ name }) =>
+        Opt.exists(
+          functionResult(handler),
+          (result) =>
+            result.type === 'CallExpression' && isLogApi(result.callee, imports) && containsIdentifier(result, name),
+        ),
       )
     : isLogApi(handler, imports);
 }
 
 /**
- * Whether an effect or pipe step logs failures: `Effect.tapError(Effect.logError)`, its data-first form, or a
- * `.pipe(…)` or `pipe(…)` that contains such a step.
+ * Whether a step logs the failures that reach it: `Effect.tapError(Effect.logError)` or its data-first form.
  *
- * @param node Effect or pipe step.
+ * @param node Pipe step or effect.
+ * @param tapMethods Tap methods that see every failure the handler receives.
  * @param imports Import bindings of the file.
  */
-function logsFailure(node: ESTree.Node, imports: ImportBindings): boolean {
+function isLoggingTap(node: ESTree.Node, tapMethods: ReadonlyArray<string>, imports: ImportBindings): boolean {
+  return (
+    node.type === 'CallExpression' &&
+    imports.isApi(node.callee, 'Effect', tapMethods) &&
+    Opt.exists(Arr.last(node.arguments), (handler) => handler.type !== 'SpreadElement' && logsInput(handler, imports))
+  );
+}
+
+function isPipeMethod(node: ESTree.Node): node is ESTree.MemberExpression {
+  return node.type === 'MemberExpression' && Opt.contains(staticPropertyName(node), 'pipe');
+}
+
+function isPipeFunction(node: ESTree.Node, imports: ImportBindings): boolean {
+  return imports.isApiPath(node, ['pipe']) || imports.isApiPath(node, ['Function', 'pipe']);
+}
+
+/**
+ * The steps that build an effect, in order: the receiver and arguments of `.pipe(…)`, or the arguments of `pipe(…)`,
+ * flattened.
+ *
+ * @param node Effect.
+ * @param imports Import bindings of the file.
+ */
+function pipelineSteps(node: ESTree.Node, imports: ImportBindings): ReadonlyArray<ESTree.Node> {
   if (node.type !== 'CallExpression') {
-    return false;
+    return [node];
   }
 
   const callee = unwrapExpression(node.callee);
 
-  if (imports.isApi(callee, 'Effect', tapFailureMethods)) {
-    return Opt.exists(
-      Arr.last(node.arguments),
-      (handler) => handler.type !== 'SpreadElement' && logsInput(handler, imports),
-    );
+  if (isPipeMethod(callee)) {
+    return [...pipelineSteps(callee.object, imports), ...node.arguments];
   }
 
-  const isPipeMethod = callee.type === 'MemberExpression' && Opt.contains(staticPropertyName(callee), 'pipe');
-
-  return (
-    (isPipeMethod && logsFailure(callee.object, imports)) ||
-    ((isPipeMethod || imports.isApiPath(callee, ['pipe']) || imports.isApiPath(callee, ['Function', 'pipe'])) &&
-      Arr.some(node.arguments, (argument) => logsFailure(argument, imports)))
-  );
+  return isPipeFunction(callee, imports)
+    ? Arr.match(node.arguments, {
+        onEmpty: () => [node],
+        onNonEmpty: ([source, ...steps]) => [...pipelineSteps(source, imports), ...steps],
+      })
+    : [node];
 }
 
 /**
- * Whether the failure reaches the handler after a step that logs it: an earlier step of the same pipe or `Effect.fn`
- * pipeline, the receiver of `.pipe(…)`, or the source of a data-first call.
+ * The steps a failure passes through before it reaches the handler call, in order: earlier steps of the same pipe or
+ * `Effect.fn` pipeline and the receiver of `.pipe(…)`, or the source of a data-first call.
+ *
+ * @param handlerCall Call that receives the handler.
+ * @param imports Import bindings of the file.
+ */
+function stepsBefore(handlerCall: ESTree.CallExpression, imports: ImportBindings): ReadonlyArray<ESTree.Node> {
+  if (handlerCall.arguments.length > 1) {
+    return Opt.match(Arr.head(handlerCall.arguments), {
+      onNone: () => [],
+      onSome: (source) => pipelineSteps(source, imports),
+    });
+  }
+
+  const pipeline = handlerCall.parent;
+
+  if (pipeline.type !== 'CallExpression' || !containsSame<ESTree.Node>(pipeline.arguments, handlerCall)) {
+    return [];
+  }
+
+  const callee = unwrapExpression(pipeline.callee);
+
+  const earlier = Arr.takeWhile(pipeline.arguments, (argument) => argument !== handlerCall);
+
+  if (isPipeMethod(callee)) {
+    return [...pipelineSteps(callee.object, imports), ...earlier];
+  }
+
+  return isPipeFunction(callee, imports)
+    ? Arr.match(earlier, {
+        onEmpty: () => [],
+        onNonEmpty: ([source, ...steps]) => [...pipelineSteps(source, imports), ...steps],
+      })
+    : earlier;
+}
+
+/**
+ * Whether the failure was logged right before the handler: the nearest earlier step that can change failures is a
+ * logging tap. A step such as `Effect.flatMap` in between can add a failure the tap never saw.
  *
  * @param node Error handler.
  * @param imports Import bindings of the file.
  */
 function isLoggedBefore(node: FunctionNode, imports: ImportBindings): boolean {
-  return Opt.exists(callbackCall(node), (handlerCall) => {
-    if (handlerCall.arguments.length > 1) {
-      return Opt.exists(Arr.head(handlerCall.arguments), (source) => logsFailure(source, imports));
-    }
-
-    const pipeline = handlerCall.parent;
-
-    if (pipeline.type !== 'CallExpression' || !containsSame<ESTree.Node>(pipeline.arguments, handlerCall)) {
-      return false;
-    }
-
-    const callee = unwrapExpression(pipeline.callee);
-
-    return (
-      Arr.some(
-        Arr.takeWhile(pipeline.arguments, (argument) => argument !== handlerCall),
-        (step) => logsFailure(step, imports),
-      ) ||
-      (callee.type === 'MemberExpression' &&
-        Opt.contains(staticPropertyName(callee), 'pipe') &&
-        logsFailure(callee.object, imports))
-    );
-  });
+  return Opt.exists(callbackCall(node), (handlerCall) =>
+    Opt.exists(
+      Arr.findLast(
+        stepsBefore(handlerCall, imports),
+        (step) =>
+          // Steps such as `Effect.map(f)` or `Effect.asVoid` pass failures through unchanged.
+          !imports.isApi(step.type === 'CallExpression' ? step.callee : step, 'Effect', passThroughMethods),
+      ),
+      (step) =>
+        isLoggingTap(
+          step,
+          // `Effect.tapError` does not see the defects and interruptions an `Effect.catchCause` handler receives.
+          imports.isApi(handlerCall.callee, 'Effect', 'catchCause' satisfies keyof typeof Effect)
+            ? tapCauseMethods
+            : tapFailureMethods,
+          imports,
+        ),
+    ),
+  );
 }
 
 /**
@@ -176,6 +230,18 @@ function constructedClass(node: ESTree.Node): Opt.Option<ESTree.Node> {
 }
 
 /**
+ * The outermost type assertion, `satisfies` or parentheses around a node, or the node itself.
+ *
+ * @param node Expression.
+ */
+function outermostWrapper(node: ESTree.Node): ESTree.Node {
+  return Opt.match(
+    Opt.filter(parentOf(node), (parent) => isWrapperExpressionType(parent.type)),
+    { onNone: () => node, onSome: outermostWrapper },
+  );
+}
+
+/**
  * Whether the handler fails with `node`: a value it returns, the argument of `Effect.fail`, or a `yield*` operand.
  *
  * @param node Construction inside the handler.
@@ -183,16 +249,18 @@ function constructedClass(node: ESTree.Node): Opt.Option<ESTree.Node> {
  * @param imports Import bindings of the file.
  */
 function isFailureValue(node: ESTree.Node, handler: FunctionNode, imports: ImportBindings): boolean {
+  const value = outermostWrapper(node);
+
   return (
-    handler.body === node ||
+    handler.body === value ||
     Opt.exists(
-      parentOf(node),
+      parentOf(value),
       (parent) =>
         (parent.type === 'ReturnStatement' && isSomeSame(enclosingFunction(parent), handler)) ||
         (parent.type === 'YieldExpression' && parent.delegate) ||
         (parent.type === 'CallExpression' &&
           imports.isApi(parent.callee, 'Effect', 'fail' satisfies keyof typeof Effect) &&
-          isSomeSame<ESTree.Node>(Arr.head(parent.arguments), node)),
+          isSomeSame<ESTree.Node>(Arr.head(parent.arguments), value)),
     )
   );
 }

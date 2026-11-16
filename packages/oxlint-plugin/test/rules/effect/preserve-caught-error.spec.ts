@@ -42,12 +42,14 @@ tester.run('preserve-caught-error', preserveCaughtError, {
     // The failure was logged before the handler narrows it.
     `${imports} program.pipe(Effect.tapError(Effect.logError), Effect.mapError(() => new DatabaseError()))`,
     `${imports} program.pipe(Effect.tapCause(Effect.logError), Effect.catch(() => Effect.fail(new DatabaseError())))`,
+    `${imports} program.pipe(Effect.tapCause(Effect.logError), Effect.catchCause(() => Effect.fail(new DatabaseError())))`,
     `${imports} program.pipe(Effect.tapError(Console.error), Effect.mapError(() => DatabaseError.make({})))`,
     `${imports} program.pipe(Effect.tapError((error) => Effect.logWarning('read failed', error)), Effect.mapError(() => new DatabaseError()))`,
     `${imports} program.pipe(Effect.tapError(Effect.logError)).pipe(Effect.map(f), Effect.mapError(() => new DatabaseError()))`,
     `${imports} pipe(program, Effect.tapError(Effect.logError), Effect.mapError(() => new DatabaseError()))`,
     `${imports} Effect.mapError(Effect.tapError(program, Effect.logError), () => new DatabaseError())`,
     `${imports} Effect.fn('read')(function* () {}, Effect.tapCause(Effect.logError), Effect.catch(() => Effect.fail(new DatabaseError())))`,
+    `${imports} program.pipe(Effect.tapError(Effect.logError), Effect.map(f), Effect.asVoid, Effect.mapError(() => new DatabaseError()))`,
   ],
   invalid: [
     {
@@ -85,6 +87,25 @@ tester.run('preserve-caught-error', preserveCaughtError, {
     // Only a tap that logs the failure, before the handler, exempts it.
     {
       code: `${imports} program.pipe(Effect.tapError(() => Effect.logError('read failed')), Effect.mapError(() => new Failed()))`,
+      errors: droppedCause,
+    },
+    // A step after the tap can add a failure the tap never saw.
+    {
+      code: `${imports} program.pipe(Effect.tapError(Effect.logError), Effect.flatMap(() => Effect.fail(new NetworkError())), Effect.mapError(() => new DatabaseError()))`,
+      errors: droppedCause,
+    },
+    // A defect bypasses `Effect.tapError`, but reaches `Effect.catchCause`.
+    {
+      code: `${imports} program.pipe(Effect.tapError(Effect.logError), Effect.catchCause(() => Effect.fail(new DatabaseError())))`,
+      errors: droppedCause,
+    },
+    // The log effect is built but not returned, so it never runs.
+    {
+      code: `${imports} program.pipe(Effect.tapError((error) => { Effect.logError(error); return Effect.void }), Effect.mapError(() => new DatabaseError()))`,
+      errors: droppedCause,
+    },
+    {
+      code: `${imports} program.pipe(Effect.mapError(() => new BadRequest() as BadRequest))`,
       errors: droppedCause,
     },
     {

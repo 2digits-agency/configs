@@ -64,9 +64,11 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
   without passing in the failure they receive. It counts `new XError(…)` and `XError.make(…)` anywhere in the handler,
   and any PascalCase class the handler returns, passes to `Effect.fail` or `yield*`s, such as `new BadRequest(…)`.
   Classes from Effect imports, such as `SchemaIssue.InvalidValue`, only count by their `Error` suffix. A
-  handler is exempt when an earlier `Effect.tapError` or `Effect.tapCause` step logs the failure with `Effect.log*` or
-  `Console.*`: in the same `.pipe`, `pipe` or `Effect.fn` pipeline, a receiving `.pipe`, or the source of a data-first
-  call. The `catchCause`, `.make`, PascalCase and logging cases are adapted from anti-slop's
+  handler is exempt when the step right before it is an `Effect.tapError` or `Effect.tapCause` whose handler is, or
+  returns, an `Effect.log*` or `Console.*` call with the failure: in the same `.pipe`, `pipe` or `Effect.fn` pipeline, a
+  receiving `.pipe`, or the source of a data-first call. Only `Effect.map`, `Effect.as*` and `Effect.withSpan` may sit
+  in between; any other step, such as `Effect.flatMap`, can add a failure the tap never logged. An `Effect.catchCause`
+  handler also receives defects, so only `Effect.tapCause` exempts it. The `catchCause`, `.make`, PascalCase and logging cases are adapted from anti-slop's
   [`require-cause-when-narrowing`](https://github.com/K-Mistele/anti-slop/blob/main/src/effect/rules/require-cause-when-narrowing.ts);
   unlike upstream, a tap that does not log the failure, or that only logs one tag, does not exempt the handler.
 - Local dates: `no-utc-iso-slicing` reports `.slice`, `.substring`, `.substr`, `.split`, `.replace` and `.replaceAll`
