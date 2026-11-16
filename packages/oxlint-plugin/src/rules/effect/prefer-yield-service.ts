@@ -6,8 +6,9 @@ import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 
 import { isWrapperExpressionType, parentOf, parentOfType, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 
 const effectProvides = ['provide', 'provideContext'] satisfies ReadonlyArray<keyof typeof Effect>;
 
@@ -86,8 +87,11 @@ export const preferYieldService = Rule.define({
         return Effect.void;
       }
 
-      const call = Arr.findFirst(ctx.sourceCode.getDeclaredVariables(node), (variable) =>
-        Arr.findFirst(variable.references, ({ identifier }) => providingCall(identifier, imports)),
+      // A binding that is reassigned may hold an independently built context by the time it is provided.
+      const call = Arr.findFirst(ctx.sourceCode.getDeclaredVariables(node), ({ references }) =>
+        Arr.some(references, (reference) => reference.isWrite() && !reference.init)
+          ? Opt.none()
+          : Arr.findFirst(references, ({ identifier }) => providingCall(identifier, imports)),
       );
 
       return Opt.match(call, {

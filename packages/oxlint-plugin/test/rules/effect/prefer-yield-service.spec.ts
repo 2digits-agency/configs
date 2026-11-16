@@ -49,6 +49,13 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
           const services = yield* Effect.context<Store>()
           return (services: Context.Context<Store>) => work.pipe(Effect.provide(services))
         })`,
+        // The binding holds an independently built context by the time it is provided.
+        `${imports}
+        Effect.gen(function* () {
+          let services = yield* Effect.context<Store>()
+          services = Context.make(Store, replacementStore)
+          return yield* Effect.provideContext(work, services)
+        })`,
         // Not Effect's Effect.
         `
         import * as Effect from 'other-library'

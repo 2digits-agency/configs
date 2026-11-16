@@ -73,6 +73,24 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
             locked: locked(request),
           })
         }))`,
+        // A declared method also runs later than the generator that declares it.
+        `${imports}
+        Effect.gen(function* () {
+          const httpClient = yield* HttpClient.HttpClient
+          function execute() {
+            return request.pipe(Effect.provideService(HttpClient.HttpClient, httpClient))
+          }
+          return { execute }
+        })`,
+        // A block-local tag that shadows the yielded one names a different service.
+        `${imports}
+        Effect.gen(function* () {
+          const service = yield* Tag
+          {
+            const Tag = OtherTag
+            yield* Effect.provideService(work, Tag, service)
+          }
+        })`,
         // Not Effect's Effect.
         `
         import { Effect } from 'other-library'

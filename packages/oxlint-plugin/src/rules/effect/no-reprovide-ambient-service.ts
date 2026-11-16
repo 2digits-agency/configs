@@ -1,14 +1,22 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type Variable } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Equivalence from 'effect/Equivalence';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 
-import { argumentAt, enclosingFunction, parentOfType, unwrapExpression, type FunctionNode } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import {
+  argumentAt,
+  findAncestor,
+  parentOfType,
+  staticPath,
+  unwrapExpression,
+  type FunctionNode,
+} from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable, soleDefinition } from '../../internal/scope';
+import type { ImportBindings } from '../../schemas/imports';
 
 /**
  * The service a `yield* Tag` or `yield* Effect.service(Tag)` initializer reads from the environment.
@@ -61,6 +69,24 @@ function provideServiceArguments(
 
 const sameFunction = Opt.makeEquivalence(Equivalence.strictEqual<FunctionNode>());
 
+const sameVariable = Opt.makeEquivalence(Equivalence.strictEqual<Variable>());
+
+/**
+ * The innermost function around `node`, including function declarations, which also run later than where they are
+ * written.
+ *
+ * @param node Start node.
+ */
+function owningFunction(node: ESTree.Node): Opt.Option<FunctionNode> {
+  return findAncestor(
+    node,
+    (ancestor): ancestor is FunctionNode =>
+      ancestor.type === 'ArrowFunctionExpression' ||
+      ancestor.type === 'FunctionDeclaration' ||
+      ancestor.type === 'FunctionExpression',
+  );
+}
+
 /**
  * Whether `node` is a pipeline step of `Effect.fn(body, ...steps)` or `Effect.fn('name')(body, ...steps)`, which runs
  * on every later call of the function rather than where it is written.
@@ -77,6 +103,7 @@ function isEffectFnStep(node: ESTree.CallExpression, imports: ImportBindings): b
       imports.isApi(callee.type === 'CallExpression' ? callee.callee : callee, 'Effect', [
         'fn',
         'fnUntraced',
+        'fnUntracedEager',
       ] satisfies ReadonlyArray<keyof typeof Effect>)
     );
   });
@@ -122,7 +149,7 @@ export const noReprovideAmbientService = Rule.define({
 
       return soleDefinition(variable).pipe(
         Opt.flatMap(({ node }) => (node.type === 'VariableDeclarator' ? Opt.some(node) : Opt.none())),
-        Opt.filter((declarator) => sameFunction(enclosingFunction(declarator), enclosingFunction(site))),
+        Opt.filter((declarator) => sameFunction(owningFunction(declarator), owningFunction(site))),
         Opt.flatMapNullishOr(({ init }) => init),
         Opt.filter(() =>
           Opt.exists(variable, ({ references }) =>
@@ -133,13 +160,26 @@ export const noReprovideAmbientService = Rule.define({
       );
     }
 
+    /**
+     * The binding the root of a tag expression names, such as `HttpClient` in `HttpClient.HttpClient`.
+     *
+     * @param tag Tag expression.
+     */
+    function rootVariable(tag: ESTree.Expression): Opt.Option<Variable> {
+      return Opt.flatMap(staticPath(tag), (path) => lookupVariable(ctx.sourceCode, tag, Arr.headNonEmpty(path)));
+    }
+
     return Visitor.on('CallExpression', (node) => {
       const provided = Opt.flatMap(provideServiceArguments(node, imports), ([tag, implementation]) => {
-        const service = ctx.sourceCode.getText(unwrapExpression(tag));
+        const requested = unwrapExpression(tag);
 
+        const service = ctx.sourceCode.getText(requested);
+
+        // Same text through the same binding, so a block-local `Tag` that shadows the yielded one is a different service.
         return Opt.exists(
           ambientService(unwrapExpression(implementation), node),
-          (yielded) => ctx.sourceCode.getText(yielded) === service,
+          (yielded) =>
+            ctx.sourceCode.getText(yielded) === service && sameVariable(rootVariable(yielded), rootVariable(requested)),
         )
           ? Opt.some(service)
           : Opt.none();
