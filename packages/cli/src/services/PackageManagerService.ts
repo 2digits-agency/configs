@@ -86,11 +86,14 @@ export class PackageManagerService extends Context.Service<PackageManagerService
 
           const childProcess = yield* command;
 
-          const { exitCode, stderr } = yield* Effect.all({
-            stdout: childProcess.stdout.pipe(Stream.decodeText(), Stream.tap(Effect.logDebug), Stream.mkString),
-            stderr: childProcess.stderr.pipe(Stream.decodeText(), Stream.tap(Effect.logDebug), Stream.mkString),
-            exitCode: childProcess.exitCode,
-          });
+          const { exitCode, stderr } = yield* Effect.all(
+            {
+              stdout: childProcess.stdout.pipe(Stream.decodeText(), Stream.tap(Effect.logDebug), Stream.mkString),
+              stderr: childProcess.stderr.pipe(Stream.decodeText(), Stream.tap(Effect.logDebug), Stream.mkString),
+              exitCode: childProcess.exitCode,
+            },
+            { concurrency: 'unbounded' },
+          );
 
           if (exitCode !== 0) {
             yield* Effect.logError(`Command failed with exit code ${exitCode}: ${command.toString()}`);

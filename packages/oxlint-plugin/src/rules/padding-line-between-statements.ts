@@ -683,6 +683,7 @@ function* createVisitor(context: RuleContext['Service'], options: ReadonlyArray<
             Arr.map(pairs, ({ prevNode, nextNode }) =>
               verifyPair(prevNode, nextNode, getPaddingType(prevNode, nextNode, matchedNodes)),
             ),
+            { concurrency: 1 },
           ),
         ),
       );

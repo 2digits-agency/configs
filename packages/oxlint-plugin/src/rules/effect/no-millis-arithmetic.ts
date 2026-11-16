@@ -296,7 +296,7 @@ export const noMillisArithmetic = Rule.define({
       }
 
       return Effect.map(
-        Effect.all({ left: millisKind(node.left, depth), right: millisKind(node.right, depth) }),
+        Effect.all({ left: millisKind(node.left, depth), right: millisKind(node.right, depth) }, { concurrency: 1 }),
         (operands): Opt.Option<Operands> =>
           Opt.isNone(operands.left) && Opt.isNone(operands.right) ? Opt.none() : Opt.some(operands),
       );

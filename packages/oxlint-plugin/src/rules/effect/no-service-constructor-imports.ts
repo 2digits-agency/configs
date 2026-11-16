@@ -50,7 +50,7 @@ export const noServiceConstructorImports = Rule.define({
                   )
                 : Effect.void;
             },
-            { discard: true },
+            { concurrency: 1, discard: true },
           )
         : Effect.void,
     );

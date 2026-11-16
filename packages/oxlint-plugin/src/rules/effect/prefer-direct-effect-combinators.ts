@@ -1217,7 +1217,7 @@ export const preferDirectEffectCombinators = Rule.define({
                 ),
             }),
           ),
-        { discard: true },
+        { concurrency: 1, discard: true },
       );
     }
 
@@ -1291,10 +1291,11 @@ export const preferDirectEffectCombinators = Rule.define({
     return Visitor.merge(
       Visitor.on('CallExpression', (node) =>
         Effect.andThen(
-          Effect.all([checkNested(node), checkCallback(node)], { discard: true }),
+          Effect.all([checkNested(node), checkCallback(node)], { concurrency: 1, discard: true }),
           Opt.match(sequenceOf(node, imports), {
             onNone: () => Effect.void,
-            onSome: (sequence) => Effect.all([checkSubject(sequence), checkSteps(sequence)], { discard: true }),
+            onSome: (sequence) =>
+              Effect.all([checkSubject(sequence), checkSteps(sequence)], { concurrency: 1, discard: true }),
           }),
         ),
       ),

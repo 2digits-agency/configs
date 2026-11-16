@@ -130,7 +130,7 @@ export const noNonJsonSchemaAnnotation = Rule.define({
           Effect.forEach(
             nonJsonAnnotations(node),
             (invalid) => ctx.report(Diagnostic.fromId({ node: invalid, messageId: 'nonJson' })),
-            { discard: true },
+            { concurrency: 1, discard: true },
           ),
       }),
     );

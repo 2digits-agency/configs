@@ -116,6 +116,7 @@ export class EslintSetupService extends Context.Service<EslintSetupService>()(
 
             return finalBackupPath;
           }),
+          { concurrency: 'unbounded' },
         );
       });
 

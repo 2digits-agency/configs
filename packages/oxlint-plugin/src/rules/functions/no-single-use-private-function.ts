@@ -180,7 +180,7 @@ export const noSingleUsePrivateFunction = Rule.define({
           (candidate) => isSingleUse(candidate, exported),
         ),
         ({ name }) => ctx.report(Diagnostic.fromId({ node: name, messageId: 'singleUse', data: { name: name.name } })),
-        { discard: true },
+        { concurrency: 1, discard: true },
       );
     });
   },

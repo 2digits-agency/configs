@@ -90,7 +90,7 @@ export const OrbitToolsLive = Layer.effectDiscard(
           ),
         });
       }),
-      { discard: true },
+      { concurrency: 1, discard: true },
     );
 
     // Gateway tools next to the forwarded allowlist; they call Orbit through the same client.

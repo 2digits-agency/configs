@@ -344,7 +344,7 @@ describe('orbit OAuth', () => {
 
         yield* Deferred.succeed(allowSave, undefined);
 
-        const tokens = yield* Effect.all([Fiber.join(first), Fiber.join(second)]);
+        const tokens = yield* Effect.all([Fiber.join(first), Fiber.join(second)], { concurrency: 'unbounded' });
 
         expect(Arr.map(tokens, (element) => Redacted.value(element))).toStrictEqual([NEW_ACCESS, NEW_ACCESS]);
 

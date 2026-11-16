@@ -121,10 +121,8 @@ export const noManualTagComparison = Rule.define({
         }),
       ),
       Visitor.on('SwitchStatement', (node) =>
-        isDiscriminantMember(node.discriminant, discriminants)
-          ? isOwnedElsewhere(node, node.discriminant)
-            ? Effect.void
-            : ctx.report(diagnostic(node, node.discriminant, 'Switch'))
+        isDiscriminantMember(node.discriminant, discriminants) && !isOwnedElsewhere(node, node.discriminant)
+          ? ctx.report(diagnostic(node, node.discriminant, 'Switch'))
           : Effect.void,
       ),
     );

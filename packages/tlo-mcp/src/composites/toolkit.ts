@@ -30,16 +30,19 @@ export const CompositeTools = Toolkit.make(
 );
 
 export const CompositeToolsLive = CompositeTools.toLayer(
-  Effect.all({
-    GetMyWorkday: GetMyWorkdayHandler,
-    GetTicketContext: GetTicketContextHandler,
-    GetBoardContext: GetBoardContextHandler,
-    AddProjectTask: AddProjectTaskHandler,
-    CloseProjectTask: CloseProjectTaskHandler,
-    UpdateProject: UpdateProjectHandler,
-    UpdateProjectTask: UpdateProjectTaskHandler,
-    CloseTicketSilently: CloseTicketSilentlyHandler,
-    SetTicketOwner: SetTicketOwnerHandler,
-    LinkTicketToProject: LinkTicketToProjectHandler,
-  }),
+  Effect.all(
+    {
+      GetMyWorkday: GetMyWorkdayHandler,
+      GetTicketContext: GetTicketContextHandler,
+      GetBoardContext: GetBoardContextHandler,
+      AddProjectTask: AddProjectTaskHandler,
+      CloseProjectTask: CloseProjectTaskHandler,
+      UpdateProject: UpdateProjectHandler,
+      UpdateProjectTask: UpdateProjectTaskHandler,
+      CloseTicketSilently: CloseTicketSilentlyHandler,
+      SetTicketOwner: SetTicketOwnerHandler,
+      LinkTicketToProject: LinkTicketToProjectHandler,
+    },
+    { concurrency: 'unbounded' },
+  ),
 );

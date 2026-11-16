@@ -39,10 +39,13 @@ export class ProjectDetectionService extends Context.Service<ProjectDetectionSer
 
             const packageJsonPath = path.join(entryPath, 'package.json');
 
-            const [stat, hasPackageJson] = yield* Effect.all([
-              fs.stat(entryPath).pipe(Effect.orElseSucceed(() => undefined)),
-              fs.exists(packageJsonPath).pipe(Effect.orElseSucceed(() => false)),
-            ]);
+            const [stat, hasPackageJson] = yield* Effect.all(
+              [
+                fs.stat(entryPath).pipe(Effect.orElseSucceed(() => undefined)),
+                fs.exists(packageJsonPath).pipe(Effect.orElseSucceed(() => false)),
+              ],
+              { concurrency: 'unbounded' },
+            );
 
             return hasPackageJson && stat?.type === 'Directory' ? Opt.some(entryPath) : Opt.none();
           }),
