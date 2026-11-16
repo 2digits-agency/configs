@@ -1,3 +1,14 @@
+## @2digits/oxlint-config@3.3.4
+
+### Update `@stylistic/eslint-plugin` and `oxlint-tsgolint`
+
+The config now uses `@stylistic/eslint-plugin` 6.0.1 and expects `oxlint-tsgolint` 7.0.2007.
+
+### Update `eslint-plugin-zod` to 5.3.0
+
+- Enabled the new `zod/no-reshape-on-refined-object` rule. It reports `.extend()`, `.pick()`, `.omit()` and similar calls on an object schema that already has refinements, which throw at runtime.
+- The oxlint config leaves the new opt-in `zod/consistent-object-property-key-style` rule unset and types its options.
+
 ## @2digits/oxlint-config@3.3.0
 
 ### Report more manual branching that Effect Match handles

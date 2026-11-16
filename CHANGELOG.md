@@ -1,3 +1,10 @@
+## @2digits/config-monorepo@0.1.22
+
+### Update pnpm, tsrs, renovate and `@oxc-node/cli`
+
+- Updated `pnpm` to `12.21.0`, `tsrs` to `0.25.0-ts7.1.0-beta`, `renovate` to `44.242.0` and `@oxc-node/cli` to `1.0.2`
+- Updated the GitButler skill to `0.5.2281`
+
 ## @2digits/config-monorepo@0.1.21
 
 ### Update pnpm, turbo, tsrs and renovate

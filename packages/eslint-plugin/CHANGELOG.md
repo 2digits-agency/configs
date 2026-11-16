@@ -1,3 +1,9 @@
+## @2digits/eslint-plugin@4.1.1
+
+### Update `eslint` to 10.15.0
+
+The plugin now builds on `eslint` 10.15.0.
+
 ## @2digits/eslint-plugin@4.1.0
 
 ### Add `no-utc-iso-slicing`
