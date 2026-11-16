@@ -253,11 +253,50 @@ function isEmptyCollection(init: ESTree.Expression): boolean {
 function isEntryRead(identifier: ESTree.Node): boolean {
   const { parent } = identifier;
 
-  return (
-    parent?.type === 'MemberExpression' &&
-    parent.object === identifier &&
-    (parent.computed || Opt.contains(staticPropertyName(parent), 'get'))
-  );
+  if (parent?.type !== 'MemberExpression' || parent.object !== identifier) {
+    return false;
+  }
+
+  const isCalled = parent.parent.type === 'CallExpression' && parent.parent.callee === parent;
+
+  return isCalled
+    ? Opt.contains(staticPropertyName(parent), 'get')
+    : parent.computed && !Opt.contains(staticPropertyName(parent), 'length');
+}
+
+/**
+ * Whether a reference is the collection an accumulation adds to, or the copy of itself it spreads or concatenates, as
+ * opposed to a read of the collection inside the added value, such as `out.push(out.includes(x) ? y : x)`.
+ *
+ * @param site Accumulation.
+ * @param identifier Reference to the collection.
+ */
+function isSiteReference(site: Accumulation, identifier: ESTree.Node): boolean {
+  const { node, target } = site;
+
+  if (identifier === target) {
+    return true;
+  }
+
+  if (node.type !== 'AssignmentExpression' || node.left.type !== 'Identifier') {
+    return false;
+  }
+
+  const right = unwrapExpression(node.right);
+
+  if (right.type === 'CallExpression') {
+    return right.callee.type === 'MemberExpression' && unwrapExpression(right.callee.object) === identifier;
+  }
+
+  function isSpreadOfIdentifier(part: ESTree.Node | null) {
+    return part?.type === 'SpreadElement' && unwrapExpression(part.argument) === identifier;
+  }
+
+  if (right.type === 'ArrayExpression') {
+    return Arr.some(right.elements, isSpreadOfIdentifier);
+  }
+
+  return right.type === 'ObjectExpression' && Arr.some(right.properties, isSpreadOfIdentifier);
 }
 
 function enclosingAnyFunction(node: ESTree.Node): Opt.Option<ESTree.Node> {
@@ -355,7 +394,7 @@ export const noAccumulatingLoop = Rule.define({
         }
 
         if (containsRange(loop, identifier)) {
-          return Arr.some(sites, ({ node }) => containsRange(node, identifier)) || isEntryRead(identifier);
+          return Arr.some(sites, (site) => isSiteReference(site, identifier)) || isEntryRead(identifier);
         }
 
         return Tuple.get(identifier.range, 0) > Tuple.get(loop.range, 1) && !isMutation(identifier);
@@ -384,8 +423,10 @@ export const noAccumulatingLoop = Rule.define({
         return;
       }
 
-      const outer = Arr.filter(Arr.getSomes(Arr.map(descendants(loop.body), accumulation)), ({ target }) =>
-        isDeclaredOutside(variableOf(target), loop),
+      // A callback the loop registers, such as an event listener, adds to the collection later, not in the loop.
+      const outer = Arr.filter(
+        Arr.getSomes(Arr.map(descendants(loop.body), accumulation)),
+        ({ node, target }) => isOwnedBy(node, loop) && isDeclaredOutside(variableOf(target), loop),
       );
 
       if (!Arr.isArrayNonEmpty(outer)) {

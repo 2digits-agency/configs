@@ -14,7 +14,7 @@ export const noMutableModuleState = Rule.define({
   name: 'no-mutable-module-state',
   meta: ruleMeta({
     type: 'suggestion',
-    description: 'Disallow module-level `let` and `var` bindings that functions reassign.',
+    description: 'Disallow module-level `let` and `var` bindings, exported or not, that functions reassign.',
     messages: {
       mutableModuleState:
         'Module-level `{{name}}` is reassigned inside {{functions}}, so its value depends on which functions ran before and in what order. Give it one owner that controls every update, such as a `Ref` in a service, or derive the value where it is needed.',
@@ -29,9 +29,13 @@ export const noMutableModuleState = Rule.define({
     }
 
     return Visitor.on('Program', (program) => {
-      const declarators = Arr.flatMap(program.body, (statement) =>
-        statement.type === 'VariableDeclaration' && !isConstDeclaration(statement) ? statement.declarations : [],
-      );
+      const declarators = Arr.flatMap(program.body, (statement) => {
+        const declaration = statement.type === 'ExportNamedDeclaration' ? statement.declaration : statement;
+
+        return declaration?.type === 'VariableDeclaration' && !isConstDeclaration(declaration)
+          ? declaration.declarations
+          : [];
+      });
 
       const reports = Arr.flatMap(declarators, (declarator) =>
         Arr.flatMap(ctx.sourceCode.getDeclaredVariables(declarator), (variable) => {

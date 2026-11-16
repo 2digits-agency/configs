@@ -38,6 +38,14 @@ tester.run('no-mutable-module-state', noMutableModuleState, {
       errors: [{ messageId: 'mutableModuleState', data: { name: 'client', functions: '1 function' } }],
     },
     {
+      code: 'export let calls = 0; export function tick() { calls++; }',
+      errors: [{ messageId: 'mutableModuleState', data: { name: 'calls', functions: '1 function' } }],
+    },
+    {
+      code: 'export var { a, b } = defaults; export function reset() { b = 2; }',
+      errors: [{ messageId: 'mutableModuleState', data: { name: 'b', functions: '1 function' } }],
+    },
+    {
       // Destructured bindings are reported one by one.
       code: 'let { a, b } = defaults; export function reset() { a = 1; }',
       errors: [{ messageId: 'mutableModuleState', data: { name: 'a', functions: '1 function' } }],

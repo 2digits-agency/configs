@@ -50,6 +50,13 @@ tester.run('no-accumulating-loop', noAccumulatingLoop, {
     'const visited = new Set(); for (const x of xs) { if (visited.has(x.id)) dup(x); visited.add(x.id); }',
     'const queue = []; queue.push(root); for (const node of queue) queue.push(...node.children);',
     'const firstFive = []; for (const x of xs) { if (firstFive.length < 5) firstFive.push(x); }',
+    // Reads of the collection inside the added value, or through a computed method call.
+    'const out = []; for (const x of xs) out.push(out.includes(x) ? null : x);',
+    'const out = []; for (const x of xs) out.push({ x, index: out.length });',
+    "const out = []; for (const x of xs) { if (!out['includes'](x)) out.push(x); }",
+    "const seen = new Set(); for (const x of xs) { if (seen['has'](x)) dup(x); seen.add(x); }",
+    // A listener the loop registers fills the collection later.
+    "const events = []; for (const socket of sockets) socket.on('data', (data) => events.push(data));",
     // Other code builds the collection too.
     'const both = []; for (const x of xs) both.push(x); for (const y of ys) both.push(y);',
     'const ids = []; for (const x of xs) ids.push(x.id); ids.push(extra);',

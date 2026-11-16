@@ -586,7 +586,8 @@ Adapted from the Martin Fowler rules in
   starts as an empty literal or `new Map()`/`new Set()` in the same function, nothing adds to it before or after the
   loop, and the loop only adds to it or reads entries with `get` or `[key]`, as a `groupBy` would. Loops that exit
   early with `return` or `break`, await on each iteration (left to `no-await-in-loop`), read the collection otherwise
-  (`includes`, `has`, `length`, a worklist), or change other outer state are exempt, and so are `while` loops. It
+  (`includes`, `has`, `length`, a worklist, also inside the added value), or change other outer state are exempt, and so
+  are `while` loops. Additions in a callback the loop registers, such as an event listener, do not count. It
   completes `unicorn/no-array-reduce` and `unicorn/no-array-for-each`, which move code from `reduce` and `forEach` to
   loops: this rule moves the loops that only build a collection on to a pipeline.
 - `no-repeated-switch` (warning) reports a value that one file branches on over the same cases in several places:
@@ -595,7 +596,7 @@ Adapted from the Martin Fowler rules in
   same text such as `part.type` can name unrelated unions. Handle the cases once with a lookup table, one exhaustive
   `Match`, or a `Data.TaggedEnum`. In Effect files `prefer-effect-match` already reports each switch and `else if`
   chain; this rule adds the repetition across a file, also in files without Effect and for runs of guard `if`s.
-- `no-mutable-module-state` (opt-in) reports a top-level `let` or `var` that a function reassigns. Keep the state in one
+- `no-mutable-module-state` (opt-in) reports a top-level `let` or `var`, exported or not, that a function reassigns. Keep the state in one
   owner, such as a `Ref` in a service. It is not in `recommendedRules`, because lazy singletons, worker state and
   browser stores reassign module bindings on purpose; enable it for Effect-only packages.
 
