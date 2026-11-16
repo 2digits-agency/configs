@@ -197,6 +197,15 @@ export function isFunctionNode(node: ESTree.Node | null | undefined): node is Fu
   return P.isNotNullish(node) && isFunctionNodeType(node.type);
 }
 
+/**
+ * Whether a node is any function, including a function declaration, which `isFunctionNode` leaves out.
+ *
+ * @param node Node.
+ */
+export function isAnyFunction(node: ESTree.Node): node is ESTree.Function | ESTree.ArrowFunctionExpression {
+  return node.type === 'FunctionDeclaration' || isFunctionNode(node);
+}
+
 export const isConstDeclaration = Match.type<ESTree.Node | null | undefined>().pipe(
   Match.when({ type: 'VariableDeclaration', kind: 'const' }, Fn.constTrue),
   Match.orElse(Fn.constFalse),
