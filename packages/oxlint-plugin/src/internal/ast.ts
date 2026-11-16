@@ -77,11 +77,11 @@ export function staticPath(node: ESTree.Node): Opt.Option<Arr.NonEmptyReadonlyAr
 }
 
 /**
- * The static name of an object literal key: `name: …`, `'name': …` or a shorthand property.
+ * The static name of an object literal or type literal key: `name: …`, `'name': …` or a shorthand property.
  *
- * @param property Object literal property.
+ * @param property Object literal property or type member.
  */
-export const propertyName = Match.type<ESTree.ObjectProperty>().pipe(
+export const propertyName = Match.type<ESTree.ObjectProperty | ESTree.TSPropertySignature>().pipe(
   Match.when({ computed: false, key: { type: 'Identifier' } }, ({ key }) => Opt.some(key.name)),
   Match.when({ key: { type: 'Literal', value: Str.isString } }, ({ key }) => Opt.some(key.value)),
   Match.orElse(() => Opt.none<string>()),
