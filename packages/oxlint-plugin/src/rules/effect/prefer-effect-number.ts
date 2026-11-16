@@ -42,8 +42,10 @@ type Pair = readonly [ESTree.Expression, ESTree.Expression];
 
 const isMinMax = Schema.is(Schema.Literals(['min', 'max']));
 
-// Names that read as a bound rather than the clamped value, such as `min`, `maxWidth` or `upperBound`.
-const isBoundName = Schema.is(Schema.String.check(Schema.isPattern(/min|max|lower|upper|bound|limit/iu)));
+// Names that read as a bound rather than the clamped value, such as `min`, `maxWidth`, `upperBound` or `hi`.
+const isBoundName = Schema.is(
+  Schema.String.check(Schema.isPattern(/min|max|lower|upper|bound|limit|^(?:lo|hi|low|high)$/iu)),
+);
 
 // Every power of ten up to 1e22 is an exact double, so `Math.pow(10, k)` equals the literal.
 const maxExactPowerOfTen = 22;
@@ -209,7 +211,13 @@ function clampFinding(
           ),
         ),
         Opt.flatMap(([outerBound, [innerFirst, innerSecond]]) => {
-          // `Math.max` and `Math.min` are symmetric, so which inner argument is the value only changes the fix's text.
+          /*
+           * With `Math.min` outside, `Math.max(lo, x)` is symmetric and either inner argument can be the value. With
+           * `Math.max` outside, taking the wrong one as the value gives a fix that returns `x` below the minimum, so
+           * an unclear value is reported without a fix.
+           */
+          const unclearValue = isBoundLike(innerFirst) === isBoundLike(innerSecond);
+
           const [innerBound, value] =
             isBoundLike(innerSecond) && !isBoundLike(innerFirst)
               ? [innerSecond, innerFirst]
@@ -225,7 +233,12 @@ function clampFinding(
           return Opt.some({
             kind: 'clamp',
             // The fix evaluates the value first and the bounds after it.
-            mode: reordersSafely([outerBound, innerFirst, innerSecond]) ? 'fix' : 'suggest',
+            mode:
+              outer === 'max' && unclearValue
+                ? 'report'
+                : reordersSafely([outerBound, innerFirst, innerSecond])
+                  ? 'fix'
+                  : 'suggest',
             replacement: (alias) =>
               `${alias}.clamp(${argumentText(sourceCode, value)}, { minimum: ${argumentText(sourceCode, minimum)}, maximum: ${argumentText(sourceCode, maximum)} })`,
           } satisfies Finding);
@@ -287,19 +300,25 @@ function roundFinding(
     Opt.filter(
       (product): product is ESTree.BinaryExpression => product.type === 'BinaryExpression' && product.operator === '*',
     ),
-    Opt.flatMap(({ left, right }) =>
+    Opt.flatMap(({ left, right }): Opt.Option<readonly [ESTree.Expression, ESTree.Expression, boolean]> =>
       isSameFactor(right, divisor, sourceCode)
-        ? Opt.some([left, right] as const)
+        ? Opt.some([left, right, false] as const)
         : isSameFactor(left, divisor, sourceCode)
-          ? Opt.some([right, left] as const)
+          ? Opt.some([right, left, true] as const)
           : Opt.none(),
     ),
-    Opt.flatMap(([value, factor]) =>
+    Opt.flatMap(([value, factor, factorFirst]) =>
       Opt.map(precisionOf(factor, scope), (precision) => {
         const precisionText = P.isNumber(precision) ? String(precision) : argumentText(sourceCode, precision);
 
-        // The original evaluates the precision twice; the fix evaluates it once.
-        const mode: Mode = P.isNumber(precision) || isSideEffectFree(precision) ? 'fix' : 'report';
+        /*
+         * The original evaluates the precision twice and the fix once, after the value. A factor before a value with
+         * effects, as in `10 ** n * next()`, would read `n` after `next()` instead of before it.
+         */
+        const mode: Mode =
+          P.isNumber(precision) || (isSideEffectFree(precision) && (!factorFirst || isSideEffectFree(value)))
+            ? 'fix'
+            : 'report';
 
         return {
           kind: 'round',

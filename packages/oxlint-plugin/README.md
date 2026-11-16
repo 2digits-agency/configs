@@ -290,14 +290,16 @@ These rules only run in files that import Effect and complement the `preferEffec
   lacks one ([Effect-TS/tsgo#1046](https://github.com/Effect-TS/tsgo/issues/1046)):
   - `Math.min(hi, Math.max(lo, x))` and `Math.max(lo, Math.min(hi, x))`, with the arguments of each call in any order,
     become `Num.clamp(x, { minimum: lo, maximum: hi })`. The value is the inner argument that is not a number literal or
-    a name such as `min`, `maxWidth` or `upperBound`; since `Math.max` and `Math.min` are symmetric, the choice only
-    changes how the fix reads. The fix differs in three edge cases: for `NaN`, `Num.clamp` returns `minimum` where the
-    `Math` version returns `NaN`; when `minimum > maximum`, `Num.clamp` returns `maximum` where
+    a name such as `min`, `maxWidth`, `upperBound` or `hi`. With `Math.min` outside, either inner argument may be the
+    value; with `Math.max` outside, a wrong choice would change the result, so when neither or both inner arguments
+    look like a bound it is reported without a fix. The fix differs in three edge cases: for `NaN`, `Num.clamp` returns
+    `minimum` where the `Math` version returns `NaN`; when `minimum > maximum`, `Num.clamp` returns `maximum` where
     `Math.max(lo, Math.min(hi, x))` returns `lo` (literal bounds in that order are not reported); and with `-0` and `0`
     among the operands, the sign of a zero result can differ. The fix evaluates the value before the bounds, so when
     more than one operand is a call or another expression with effects it is a suggestion.
   - `Math.round(x * 100) / 100`, also with `10 ** n` or `Math.pow(10, n)` as the factor, becomes `Num.round(x, 2)` or
-    `Num.round(x, n)`. A precision with effects is reported without a fix, since the fix evaluates it once.
+    `Num.round(x, n)`. A precision with effects is reported without a fix, since the fix evaluates it once, and so is
+    `10 ** n * x` when `x` has effects, since the fix reads `n` after `x`.
   - `xs.reduce((a, b) => a + b, 0)`, `Arr.reduce(xs, 0, Num.sum)` and the data-last `Arr.reduce(0, …)` become
     `Num.sumAll(xs)` or `Num.sumAll`. The product with `1` gets a `Num.multiplyAll` suggestion, because it returns 0
     at the first 0, so `[0, NaN]` gives 0 where the reduce gives `NaN`. `reduce` skips the holes of a sparse array

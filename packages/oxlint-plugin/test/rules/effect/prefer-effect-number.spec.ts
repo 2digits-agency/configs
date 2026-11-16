@@ -46,6 +46,8 @@ for (const [invalid, messageId, output] of [
   ['Math.min(Math.max(value, lower), upper)', 'clamp', 'Num.clamp(value, { minimum: lower, maximum: upper })'],
   ['Math.min(hi, Math.max(lo, value))', 'clamp', 'Num.clamp(value, { minimum: lo, maximum: hi })'],
   ['Math.min(10, Math.max(0, next()))', 'clamp', 'Num.clamp(next(), { minimum: 0, maximum: 10 })'],
+  ['Math.max(0, Math.min(value, hi))', 'clamp', 'Num.clamp(value, { minimum: 0, maximum: hi })'],
+  ['Math.max(lo, Math.min(hi, value))', 'clamp', 'Num.clamp(value, { minimum: lo, maximum: hi })'],
   ['Math.round(value * 100) / 100', 'round', 'Num.round(value, 2)'],
   ['Math.round(1e3 * value) / 1000', 'round', 'Num.round(value, 3)'],
   ['Math.round(value * 10 ** digits) / 10 ** digits', 'round', 'Num.round(value, digits)'],
@@ -82,6 +84,8 @@ for (const [invalid, messageId, api, suggestion] of [
 // The precision would run once instead of twice, or a comment would be lost: report only.
 for (const [invalid, messageId] of [
   ['Math.round(value * 10 ** next()) / 10 ** next()', 'round'],
+  ['Math.round(10 ** digits * next()) / 10 ** digits', 'round'],
+  ['Math.max(0, Math.min(value, other))', 'clamp'],
   ['Math.min(10, /* upper */ Math.max(0, value))', 'clamp'],
 ] as const) {
   testRule(ruleName, preferEffectNumber, {
