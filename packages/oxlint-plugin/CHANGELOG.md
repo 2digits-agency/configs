@@ -1,3 +1,20 @@
+## @2digits/oxlint-plugin@0.10.0
+
+### Prefer Effect Number helpers
+
+Added `prefer-effect-number` to `recommendedRules`. In files that import Effect, it rewrites hand-written arithmetic to `effect/Number` ([Effect-TS/tsgo#1046](https://github.com/Effect-TS/tsgo/issues/1046)):
+
+- `Math.min(hi, Math.max(lo, x))` and `Math.max(lo, Math.min(hi, x))`, also with `Num.min` and `Num.max` → `Num.clamp(x, { minimum: lo, maximum: hi })`, autofixed. For `NaN`, `Num.clamp` returns `minimum` instead of `NaN`. When more than one operand has effects, the fix is a suggestion because it changes the evaluation order.
+- `Math.round(x * 100) / 100`, also with `10 ** n` or `Math.pow(10, n)` as the factor → `Num.round(x, 2)`, autofixed.
+- `xs.reduce((a, b) => a + b, 0)` and `Arr.reduce(xs, 0, Num.sum)` → `Num.sumAll(xs)`, autofixed. The product with `1` gets a `Num.multiplyAll` suggestion, because it returns 0 at the first 0, even when `NaN` follows.
+- `(n) => n + 1`, `++n` and `n += 1` → `Num.increment`, and the `- 1` forms → `Num.decrement`, autofixed. `n + 1` and `n += 1` are only autofixed with a `number` annotation, because they also concatenate strings. `(n) => n++` returns `n` unchanged and is reported as a likely bug.
+- `(a, b) => a - b` in `.sort`, `.toSorted` or `Arr.sort` → `Num.Order`, and `b - a` → `Order.flip(Num.Order)`, autofixed. Only `NaN` sorts differently.
+- `x >= lo && x <= hi` → `Num.between(x, { minimum: lo, maximum: hi })`, and `x < lo || x > hi` → `!Num.between(…)`. Autofixed for the `&&` form with a number literal lower bound and a suggestion otherwise, because `Num.Order` orders `NaN`. Both bounds must be number literals or named like `lower` and `upper`, because the rule cannot tell numbers from date strings.
+- `b === 0 ? fallback : a / b` → `Opt.getOrElse(Num.divide(a, b), () => fallback)`, autofixed.
+- `Math.max(...xs)` and `Number.isNaN(Number(s))` are reported with `Arr.max(xs, Num.Order)` and `Num.parse(s)` as advice, without a fix, because empty arrays, `NaN`, `''` and `'12px'` behave differently.
+
+Fixes import Number as `Num`, Option as `Opt` and Order as `Order`. In JavaScript files, the `Num.increment`, `Num.decrement`, `Num.Order` and `Num.between` fixes are suggestions, because numeric strings and bigints behave differently there.
+
 ## @2digits/oxlint-plugin@0.9.0
 
 ### Update `effect` to 4.1.4
