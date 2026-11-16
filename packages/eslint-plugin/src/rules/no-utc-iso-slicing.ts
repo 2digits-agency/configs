@@ -27,34 +27,29 @@ function effectModule(source: string): Array<string> | undefined {
 }
 
 function collectBindings(program: TSESTree.Program): Map<string, Array<string>> {
-  const bindings = new Map<string, Array<string>>();
+  return new Map(
+    program.body.flatMap((statement) => {
+      const path =
+        statement.type === AST_NODE_TYPES.ImportDeclaration ? effectModule(statement.source.value) : undefined;
 
-  for (const statement of program.body) {
-    if (statement.type !== AST_NODE_TYPES.ImportDeclaration) {
-      continue;
-    }
+      if (path === undefined || statement.type !== AST_NODE_TYPES.ImportDeclaration) {
+        return [];
+      }
 
-    const path = effectModule(statement.source.value);
+      return statement.specifiers.map((specifier): [string, Array<string>] => {
+        if (specifier.type !== AST_NODE_TYPES.ImportSpecifier) {
+          return [specifier.local.name, path];
+        }
 
-    if (path === undefined) {
-      continue;
-    }
-
-    for (const specifier of statement.specifiers) {
-      if (specifier.type === AST_NODE_TYPES.ImportSpecifier) {
         const { imported } = specifier;
 
-        bindings.set(specifier.local.name, [
-          ...path,
-          imported.type === AST_NODE_TYPES.Identifier ? imported.name : imported.value,
-        ]);
-      } else {
-        bindings.set(specifier.local.name, path);
-      }
-    }
-  }
-
-  return bindings;
+        return [
+          specifier.local.name,
+          [...path, imported.type === AST_NODE_TYPES.Identifier ? imported.name : imported.value],
+        ];
+      });
+    }),
+  );
 }
 
 function unwrap(node: TSESTree.Node): TSESTree.Node {
