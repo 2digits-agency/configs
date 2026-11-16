@@ -50,6 +50,7 @@ export class GatewayError extends Schema.TaggedError<GatewayError, { readonly br
   'GatewayError',
   {
     message: Schema.String,
+    cause: Schema.Defect().pipe(Schema.optional),
   },
 ) {}
 
@@ -84,8 +85,8 @@ export const loadGatewayKey = Effect.fn('Gateway.loadKey')(
 
     return yield* fs.readFileString(file).pipe(Effect.flatMap(Schema.decodeEffect(GatewayKey)));
   },
-  Effect.mapError(() =>
-    GatewayError.make({ message: 'Cannot load private gateway key. Check its permissions and format.' }),
+  Effect.mapError((cause) =>
+    GatewayError.make({ message: 'Cannot load private gateway key. Check its permissions and format.', cause }),
   ),
 );
 

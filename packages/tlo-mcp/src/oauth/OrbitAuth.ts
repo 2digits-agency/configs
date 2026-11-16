@@ -79,7 +79,9 @@ export const OrbitAuthLayer = Layer.effect(
       },
       Effect.scoped,
       Effect.timeout('15 seconds'),
-      Effect.mapError(() => OrbitAuthError.make({ message: 'Invalid or unavailable Orbit OAuth metadata.' })),
+      Effect.mapError((cause) =>
+        OrbitAuthError.make({ message: 'Invalid or unavailable Orbit OAuth metadata.', cause }),
+      ),
     );
 
     const discover = yield* discoverEndpoints().pipe(
@@ -250,6 +252,7 @@ export const OrbitAuthLayer = Layer.effect(
           ? error
           : OrbitAuthError.make({
               message: 'Orbit authentication unavailable. Check connectivity or run tlo-mcp login again.',
+              cause: error,
             }),
       ),
     );

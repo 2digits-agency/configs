@@ -111,7 +111,9 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
 
           return P.isUndefined(content) ? undefined : yield* decodeSessionJson(content);
         },
-        Effect.mapError(() => OrbitAuthError.make({ message: 'Could not read credentials. Run tlo-mcp login again.' })),
+        Effect.mapError((cause) =>
+          OrbitAuthError.make({ message: 'Could not read credentials. Run tlo-mcp login again.', cause }),
+        ),
       );
 
       const save = Effect.fn('SessionStore.save')(
@@ -140,8 +142,8 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
           }
         },
         Effect.scoped,
-        Effect.mapError(() =>
-          OrbitAuthError.make({ message: 'Could not persist OAuth credentials. Run tlo-mcp login again.' }),
+        Effect.mapError((cause) =>
+          OrbitAuthError.make({ message: 'Could not persist OAuth credentials. Run tlo-mcp login again.', cause }),
         ),
       );
 
@@ -157,7 +159,7 @@ export function makeSessionStoreLayer(options: { readonly directory?: string; re
             yield* fs.remove(file, { force: true });
           }
         },
-        Effect.mapError(() => OrbitAuthError.make({ message: 'Could not remove OAuth credentials.' })),
+        Effect.mapError((cause) => OrbitAuthError.make({ message: 'Could not remove OAuth credentials.', cause })),
       );
 
       const lock = Effect.fn('SessionStore.lock')(
