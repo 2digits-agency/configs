@@ -533,7 +533,8 @@ These rules only run in files that import Effect and report without autofixes.
 
 ## anti-slop Effect rules
 
-Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/main/src/effect/rules):
+Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/main/src/effect/rules) and its fork
+[`K-Mistele/anti-slop`](https://github.com/K-Mistele/anti-slop):
 
 - `no-manual-effect-error-tag`: prefer tagged handlers for `_tag` comparisons/switches in broad Effect catches.
 - `no-manual-tag-comparison`: prefer Match/Predicate for literal `_tag` comparisons and switches outside those catches,
@@ -553,6 +554,13 @@ Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/m
   elsewhere. The filter of `Extract` or `Exclude`, as in `Extract<Payment, { _tag: 'Refund' }>`, is also skipped: it
   selects members of an existing union, which no constructor replaces. A `_tag` type literal passed to any other
   generic, such as `Array<{ _tag: 'A' }>`, is still reported.
+- `no-reprovide-ambient-service` (from the fork): reject `Effect.provideService(Tag, service)` when `service` is a
+  never-reassigned binding of `yield* Tag` or `yield* Effect.service(Tag)` in the same function. The effect already
+  has `Tag` in its R channel, so the provide does nothing. Covers the data-first and curried forms. Unlike upstream, a
+  provide inside a nested function or an `Effect.fn` pipeline is not reported: those run later, such as a service
+  method built in `Layer.effect`, and providing the captured service there keeps it out of the service interface, as
+  the `leakingRequirements` diagnostic requires. A different implementation derived from the ambient one, such as a
+  client configured per tenant, is not reported either.
 - `no-service-constructor-imports`: reject relative named `make[A-Z]` imports outside `.test`/`.spec` files.
 - `prefer-effect-match`: also reports chained literal ternaries comparing the same source expression, while retaining
   the existing Effect-file switch diagnostic. In Effect files it also reports `else if` chains; see
@@ -561,12 +569,16 @@ Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/m
   error's `reason`) over `Predicate.isTagged` checks, data-first or curried, in broad Effect catches. Adapted from
   [`K-Mistele/anti-slop`](https://github.com/K-Mistele/anti-slop/blob/main/src/effect/rules/prefer-tagged-error-handling.ts),
   a fork of anti-slop; it also recognizes `isTagged` through an Effect import such as `P.isTagged`.
+- `prefer-yield-service` (from the fork): reject `const services = yield* Effect.context()` when `services` is passed
+  to `Effect.provide`, `Effect.provideContext`, `Layer.provide` or `Layer.succeedContext`. `yield*` each service
+  instead. Keeping the context for a runtime bridge, such as `Effect.runForkWith(services)`, is not reported.
 
 All are included in `recommendedRules`, without autofixes. Like upstream, these are syntactic policies: they do not
 require Effect imports, infer tagged types, or prove that constructors exist. Catch and pattern exemptions recognize
 the literal `Effect`/`Match` identifiers, not aliases or shadowing. Constructor imports are matched by imported name
 (including aliases), not return type; package/absolute imports are excluded. The switch rules can overlap with the
-existing `prefer-effect-match` diagnostic.
+existing `prefer-effect-match` diagnostic. The two service rules, like their upstream versions, only recognize `Effect`
+and `Layer` imported from `effect`, and follow the provided binding through scope.
 
 ## Wrapper and helper rules
 

@@ -61,8 +61,10 @@ describe('anti-slop public rules', () => {
       'no-manual-tag-comparison',
       'no-manual-tagged-construction',
       'no-manual-tagged-type',
+      'no-reprovide-ambient-service',
       'no-service-constructor-imports',
       'prefer-effect-match',
+      'prefer-yield-service',
     ] as const) {
       expect(rules[name]).toBeDefined();
 
