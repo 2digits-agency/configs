@@ -70,6 +70,7 @@ import { preferEffectMatch } from './effect/prefer-effect-match';
 import { preferEffectMatchStatus } from './effect/prefer-effect-match-status';
 import { preferEffectNdjson } from './effect/prefer-effect-ndjson';
 import { preferEffectNetAddress } from './effect/prefer-effect-net-address';
+import { preferEffectNumber } from './effect/prefer-effect-number';
 import { preferEffectPath } from './effect/prefer-effect-path';
 import { preferEffectPredicate } from './effect/prefer-effect-predicate';
 import { preferEffectSse } from './effect/prefer-effect-sse';
@@ -177,6 +178,7 @@ export const rules = {
   'prefer-effect-match-status': preferEffectMatchStatus,
   'prefer-effect-ndjson': preferEffectNdjson,
   'prefer-effect-net-address': preferEffectNetAddress,
+  'prefer-effect-number': preferEffectNumber,
   'prefer-effect-path': preferEffectPath,
   'prefer-effect-predicate': preferEffectPredicate,
   'prefer-effect-sse': preferEffectSse,
