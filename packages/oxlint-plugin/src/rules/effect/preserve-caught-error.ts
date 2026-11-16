@@ -77,6 +77,30 @@ function isLogApi(node: ESTree.Node, imports: ImportBindings): boolean {
 }
 
 /**
+ * The effect a tap handler always returns: its expression body, or the final `return` of a block whose other statements
+ * only declare variables.
+ *
+ * @param handler Tap handler.
+ */
+function tapResult(handler: FunctionNode): Opt.Option<ESTree.Expression> {
+  const body = handler.body;
+
+  if (body?.type !== 'BlockStatement') {
+    return functionResult(handler);
+  }
+
+  return Arr.matchRight(body.body, {
+    onEmpty: () => Opt.none(),
+    onNonEmpty: (setup, last) =>
+      last.type === 'ReturnStatement' &&
+      P.isNotNullish(last.argument) &&
+      Arr.every(setup, (statement) => statement.type === 'VariableDeclaration')
+        ? Opt.some(unwrapExpression(last.argument))
+        : Opt.none(),
+  });
+}
+
+/**
  * Whether a tap handler logs what it receives: `Effect.logError` itself, or a function that returns an `Effect.log*` or
  * `Console.*` effect with its parameter.
  *
@@ -89,7 +113,7 @@ function logsInput(node: ESTree.Expression, imports: ImportBindings): boolean {
   return isFunctionNode(handler)
     ? Opt.exists(firstIdentifierParameter(handler), ({ name }) =>
         Opt.exists(
-          functionResult(handler),
+          tapResult(handler),
           (result) =>
             result.type === 'CallExpression' && isLogApi(result.callee, imports) && containsIdentifier(result, name),
         ),

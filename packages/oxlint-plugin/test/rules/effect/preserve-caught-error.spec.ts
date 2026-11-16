@@ -45,6 +45,7 @@ tester.run('preserve-caught-error', preserveCaughtError, {
     `${imports} program.pipe(Effect.tapCause(Effect.logError), Effect.catchCause(() => Effect.fail(new DatabaseError())))`,
     `${imports} program.pipe(Effect.tapError(Console.error), Effect.mapError(() => DatabaseError.make({})))`,
     `${imports} program.pipe(Effect.tapError((error) => Effect.logWarning('read failed', error)), Effect.mapError(() => new DatabaseError()))`,
+    `${imports} program.pipe(Effect.tapError((error) => { const message = 'read failed'; return Effect.logError(message, error) }), Effect.mapError(() => new DatabaseError()))`,
     `${imports} program.pipe(Effect.tapError(Effect.logError)).pipe(Effect.map(f), Effect.mapError(() => new DatabaseError()))`,
     `${imports} pipe(program, Effect.tapError(Effect.logError), Effect.mapError(() => new DatabaseError()))`,
     `${imports} Effect.mapError(Effect.tapError(program, Effect.logError), () => new DatabaseError())`,
@@ -102,6 +103,11 @@ tester.run('preserve-caught-error', preserveCaughtError, {
     // The log effect is built but not returned, so it never runs.
     {
       code: `${imports} program.pipe(Effect.tapError((error) => { Effect.logError(error); return Effect.void }), Effect.mapError(() => new DatabaseError()))`,
+      errors: droppedCause,
+    },
+    // A branch can return before the log.
+    {
+      code: `${imports} program.pipe(Effect.tapError((error) => { if (quiet) { return Effect.void } return Effect.logError(error) }), Effect.mapError(() => new DatabaseError()))`,
       errors: droppedCause,
     },
     {
