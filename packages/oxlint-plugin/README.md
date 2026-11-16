@@ -307,25 +307,31 @@ These rules only run in files that import Effect and complement the `preferEffec
     such as `new Array(3)`, while `Num.sumAll` iterates them as `undefined` and returns `NaN`. Optional calls, a reduce
     without a start value, callbacks that take an index, and local bindings that shadow the `Arr` or `Num` import are
     not reported.
-  - `(n) => n + 1` and `(n) => n - 1` become `Num.increment` and `Num.decrement`, which are those same functions. Only
-    arrows with one untyped or `number` parameter are reported, and `1 + n` is left alone because it concatenates
-    strings the other way round.
+  - `(n) => n + 1`, `(n) => ++n` and `(n) => n += 1` become `Num.increment`, and the same with `- 1`, `--n` and `-= 1`
+    become `Num.decrement`. Only arrows with one untyped or `number` parameter are reported, and `1 + n` is left alone
+    because it concatenates strings the other way round. `(n) => n++` and `(n) => n--` return `n` unchanged, because a
+    postfix update returns the old value, so they are reported as a likely bug without a fix.
   - `(a, b) => a - b` passed to `.sort`, `.toSorted` or `Arr.sort` becomes `Num.Order`, and `(a, b) => b - a` becomes
     `Order.flip(Num.Order)`. They sort numbers the same way, except `NaN`, which `Num.Order` puts first.
-  - `x >= lo && x <= hi` in any operand order becomes `Num.between(x, { minimum: lo, maximum: hi })`, and
-    `x < lo || x > hi` becomes `!Num.between(…)`. Without types, `from <= date && date <= to` may compare strings or
-    Dates, so the rule only autofixes when a bound is a number literal, offers a suggestion when both bounds have bound
-    names such as `lower` and `upper`, and skips other bounds and string literals. A value or bound with effects is
-    reported without a fix, since the original reads the value twice and may skip the second bound.
-  - `b === 0 ? fallback : a / b` and `b !== 0 ? a / b : fallback` become
-    `Opt.getOrElse(Num.divide(a, b), () => fallback)`, which checks `b === 0` the same way. A dividend or divisor with
-    effects is reported without a fix. `b > 0` is a different check and is not reported.
+  - `x >= lo && x <= hi` in any operand order becomes `Num.between(x, { minimum: lo, maximum: hi })`, and `x < lo || x >
+    hi` becomes `!Num.between(…)`. `Num.Order` puts `NaN` below every number, so a `NaN` value makes the `||` form true
+    where the original is false, and a `NaN` lower bound passes `Num.between`. The rule therefore only autofixes the
+    `&&` form with a number literal lower bound and offers a suggestion otherwise. Without types, `from <= date && date
+    <= to` may compare strings or Dates, so both bounds must be number literals or have bound names such as `lower` and
+    `upper`, and string literals are skipped. A value or bound with effects is reported without a fix.
+  - `b === 0 ? fallback : a / b` and `b !== 0 ? a / b : fallback` become `Opt.getOrElse(Num.divide(a, b), () =>
+    fallback)`, which checks `b === 0` the same way. A dividend or divisor with effects, or a fallback with `await` or
+    `yield`, is reported without a fix. `b > 0` is a different check and is not reported.
   - `Math.max(...xs)` and `Math.min(...xs)` are reported with `Arr.max(xs, Num.Order)` or `Arr.min` as the advice, but
     not fixed: `Arr.max` needs a non-empty array where `Math.max()` of an empty array is `-Infinity`, and it skips
     `NaN`.
-  - `Number.isNaN(Number(s))`, or `isNaN(n)` with `const n = Number(s)`, also with `parseFloat`, is reported with
-    `Num.parse(s)` as the advice but not fixed, because `Number('')` is 0 and `parseFloat('12px')` is 12 where
-    `Num.parse` returns none.
+  - `Number.isNaN(Number(s))`, or `isNaN(n)` with `const n = Number(s)` (not a `let`, which may be reassigned), also
+    with `parseFloat`, is reported with `Num.parse(s)` as the advice but not fixed, because `Number('')` is 0 and
+    `parseFloat('12px')` is 12 where `Num.parse` returns none.
+
+  In JavaScript files the `Num.increment`, `Num.Order` and `Num.between` fixes are suggestions, because an untyped
+  parameter may be a numeric string that `+`, `-` and `>=` coerce and Effect does not. TypeScript rejects strings
+  there, so in TypeScript files they stay autofixes.
 
   Fixes import Number as `Num`, Option as `Opt` and Order as `Order`, the aliases the import style rules use, and
   reuse a namespace import of those modules when the file has one.

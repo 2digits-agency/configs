@@ -18,7 +18,14 @@ import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 
-import { argumentAt, staticPath, staticPropertyName, unwrapExpression } from '../../internal/ast';
+import {
+  argumentAt,
+  isConstDeclaration,
+  staticPath,
+  staticPropertyName,
+  unwrapExpression,
+  walkNodes,
+} from '../../internal/ast';
 import { argumentText, namespaceImport } from '../../internal/fixes';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
@@ -32,6 +39,7 @@ type Kind =
   | 'multiplyAll'
   | 'increment'
   | 'decrement'
+  | 'unchangedStep'
   | 'order'
   | 'between'
   | 'divide'
@@ -85,6 +93,15 @@ const isMinMax = Schema.is(Schema.Literals(['min', 'max']));
 const isBoundName = Schema.is(
   Schema.String.check(Schema.isPattern(/min|max|lower|upper|bound|limit|^(?:lo|hi|low|high)$/iu)),
 );
+
+/*
+ * Kinds whose fix is exact for numbers but not for numeric strings: `'5' + 1` concatenates, `'10' - '2'` subtracts and
+ * `'100' >= 0` coerces, where Number.increment, Number.Order and Number.between do not. TypeScript rejects strings in
+ * the original code, so the fix is only downgraded in JavaScript files.
+ */
+const numbersOnly: ReadonlySet<Kind> = new Set(['increment', 'order', 'between']);
+
+const isTypeScriptFile = Schema.is(Schema.String.check(Schema.isPattern(/\.[cm]?tsx?$/u)));
 
 // Every power of ten up to 1e22 is an exact double, so `Math.pow(10, k)` equals the literal.
 const maxExactPowerOfTen = 22;
@@ -584,25 +601,72 @@ function isIdentifierNamed(node: ESTree.Expression, name: string): boolean {
   return expression.type === 'Identifier' && expression.name === name;
 }
 
+type Step = readonly ['+' | '-', 'new' | 'old'];
+
 /**
- * `(n) => n + 1` or `(n) => n - 1`. `Num.increment` is `(n) => n + 1`, so the fix keeps the result for any value; `1 +
- * n` is left alone because it concatenates strings the other way round.
+ * The step a one-parameter arrow applies to its parameter: `n + 1`, `++n` and `n += 1` return `n + 1`, and `n++`
+ * returns `n` unchanged, because a postfix update returns the value before it.
+ *
+ * @param body Arrow body.
+ * @param name Parameter name.
+ */
+function stepOf(body: ESTree.Expression, name: string): Opt.Option<Step> {
+  if (body.type === 'BinaryExpression') {
+    return binaryStep(body, name);
+  }
+
+  if (body.type === 'AssignmentExpression') {
+    return assignmentStep(body, name);
+  }
+
+  return body.type === 'UpdateExpression' && body.argument.type === 'Identifier' && body.argument.name === name
+    ? Opt.some([body.operator === '++' ? '+' : '-', body.prefix ? 'new' : 'old'])
+    : Opt.none();
+}
+
+// `1 + n` is left alone because it concatenates strings the other way round.
+function binaryStep(body: ESTree.Expression, name: string): Opt.Option<Step> {
+  if (body.type !== 'BinaryExpression' || body.left.type === 'PrivateIdentifier') {
+    return Opt.none();
+  }
+
+  return (body.operator === '+' || body.operator === '-') &&
+    isIdentifierNamed(body.left, name) &&
+    Opt.contains(numericValue(body.right), 1)
+    ? Opt.some([body.operator, 'new'])
+    : Opt.none();
+}
+
+function assignmentStep(body: ESTree.AssignmentExpression, name: string): Opt.Option<Step> {
+  return (body.operator === '+=' || body.operator === '-=') &&
+    body.left.type === 'Identifier' &&
+    body.left.name === name &&
+    Opt.contains(numericValue(body.right), 1)
+    ? Opt.some([body.operator === '+=' ? '+' : '-', 'new'])
+    : Opt.none();
+}
+
+/**
+ * `(n) => n + 1`, `(n) => ++n` or `(n) => n += 1`, and the same with `- 1`. `Num.increment` is `(n) => n + 1`, so the
+ * fix keeps the result. `(n) => n++` returns `n` unchanged, so it is reported as a likely bug without a fix.
  *
  * @param node Arrow function.
  */
 function stepFinding(node: ESTree.ArrowFunctionExpression): Opt.Option<Finding> {
   return arrowBody(node, 1).pipe(
-    Opt.flatMap(([[param], body]) =>
-      P.isNotUndefined(param) &&
-      body.type === 'BinaryExpression' &&
-      (body.operator === '+' || body.operator === '-') &&
-      isIdentifierNamed(body.left, param.name) &&
-      body.right.type === 'Literal' &&
-      body.right.value === 1
-        ? Opt.some<Kind>(body.operator === '+' ? 'increment' : 'decrement')
-        : Opt.none(),
-    ),
-    Opt.map((kind) => ({ kind, mode: 'fix', replacement: ({ num }) => `${num}.${kind}` }) satisfies Finding),
+    Opt.flatMap(([[param], body]) => (P.isUndefined(param) ? Opt.none() : stepOf(body, param.name))),
+    Opt.map(([operator, result]): Finding => {
+      const kind = operator === '+' ? 'increment' : 'decrement';
+
+      return result === 'new'
+        ? { kind, mode: 'fix', replacement: ({ num }) => `${num}.${kind}` }
+        : {
+            kind: 'unchangedStep',
+            mode: 'report',
+            data: { step: operator === '+' ? 'n++' : 'n--', api: `Num.${kind}` },
+            replacement: () => '',
+          };
+    }),
   );
 }
 
@@ -801,8 +865,13 @@ function betweenFinding(node: ESTree.LogicalExpression, sourceCode: OxlintSource
         ({
           kind: 'between',
           // The original reads the value twice and may skip the second bound.
+          /*
+           * Number.Order puts NaN below every number. For a NaN value, `x < lo || x > hi` is false where
+           * `!Num.between` is true, and a NaN lower bound passes Num.between where `x >= lo` fails, so only the `&&`
+           * form with a number literal lower bound is exact.
+           */
           mode: Arr.every([value, minimum, maximum], isSideEffectFree)
-            ? Arr.some([minimum, maximum], (bound) => Opt.isSome(numericValue(bound)))
+            ? !strict && Opt.isSome(numericValue(minimum))
               ? 'fix'
               : 'suggest'
             : 'report',
@@ -868,7 +937,13 @@ function divideFinding(node: ESTree.ConditionalExpression, sourceCode: OxlintSou
       return Opt.some({
         kind: 'divide',
         // The fix evaluates the dividend before the divisor, and the divisor once.
-        mode: isSideEffectFree(dividend) && isSideEffectFree(divisor) ? 'fix' : 'report',
+        // An `await` or `yield` in the fallback would end up in a plain arrow, which is a syntax error.
+        mode:
+          isSideEffectFree(dividend) &&
+          isSideEffectFree(divisor) &&
+          !walkNodes(fallback, (inner) => inner.type === 'AwaitExpression' || inner.type === 'YieldExpression')
+            ? 'fix'
+            : 'report',
         extra: ['opt'],
         replacement: ({ num, opt }) =>
           `${opt}.getOrElse(${num}.divide(${argumentText(sourceCode, dividend)}, ${argumentText(sourceCode, divisor)}), () => ${fallbackText})`,
@@ -963,7 +1038,10 @@ function parseFinding(node: ESTree.CallExpression, env: Env): Opt.Option<Finding
       argument.type === 'Identifier'
         ? soleDefinition(lookupVariable(env.sourceCode, argument, argument.name)).pipe(
             Opt.flatMap(({ node: declarator }) =>
-              declarator.type === 'VariableDeclarator' && P.isNotNullish(declarator.init)
+              // A `let` may hold another value by the time it is checked.
+              declarator.type === 'VariableDeclarator' &&
+              P.isNotNullish(declarator.init) &&
+              isConstDeclaration(declarator.parent)
                 ? Opt.some(unwrapExpression(declarator.init))
                 : Opt.none(),
             ),
@@ -1004,6 +1082,8 @@ export const preferEffectNumber = Rule.define({
         'Use Number.multiplyAll from Effect instead of multiplying with reduce. It returns 0 at the first 0, even when NaN or Infinity follows.',
       increment: 'Use Number.increment from Effect instead of (n) => n + 1.',
       decrement: 'Use Number.decrement from Effect instead of (n) => n - 1.',
+      unchangedStep:
+        'This callback returns n unchanged, because {{step}} returns the value before the update. Use {{api}} to return the next value.',
       order: 'Use {{order}} from Effect instead of a comparator that subtracts. It sorts the same, except NaN.',
       between: 'Use Number.between from Effect instead of comparing with both bounds.',
       divide: 'Use Number.divide from Effect, which returns none for a zero divisor, instead of checking for 0 first.',
@@ -1026,8 +1106,12 @@ export const preferEffectNumber = Rule.define({
       return {};
     }
 
+    const typed = isTypeScriptFile(ctx.filename);
+
     const report = Effect.fnUntraced(function* (visited: ESTree.Node, finding: Finding) {
-      const { kind, mode } = finding;
+      const { kind } = finding;
+
+      const mode = !typed && finding.mode === 'fix' && numbersOnly.has(kind) ? 'suggest' : finding.mode;
 
       const node = finding.target ?? visited;
 
@@ -1039,11 +1123,14 @@ export const preferEffectNumber = Rule.define({
       }
 
       // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
-      const imported = yield* Effect.forEach(['num', ...(finding.extra ?? [])] as const, (namespace) =>
-        Effect.map(
-          namespaceImport(node, `effect/${namespaceModules[namespace]}`, namespaceAlias(namespaceModules[namespace])),
-          (found) => [namespace, found] as const,
-        ),
+      const imported = yield* Effect.forEach(
+        ['num', ...(finding.extra ?? [])] as const,
+        (namespace) =>
+          Effect.map(
+            namespaceImport(node, `effect/${namespaceModules[namespace]}`, namespaceAlias(namespaceModules[namespace])),
+            (found) => [namespace, found] as const,
+          ),
+        { concurrency: 1 },
       );
 
       const names = R.map(namespaceModules, (module, namespace) =>

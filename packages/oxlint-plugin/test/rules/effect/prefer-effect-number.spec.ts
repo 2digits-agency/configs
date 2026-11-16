@@ -55,6 +55,9 @@ const valid = `${header}
   const withDefault = Math.max(...values, 0)
   const converted = Number(input)
   const checked = Number.isNaN(value)
+  let reassigned = Number(input)
+  reassigned = Math.sqrt(value)
+  const reassignedCheck = Number.isNaN(reassigned)
 `;
 
 // Rewrites that keep the behavior get a fix.
@@ -80,12 +83,14 @@ for (const [invalid, messageId, output] of [
   ['Num.max(lower, Num.min(value, upper))', 'clamp', 'Num.clamp(value, { minimum: lower, maximum: upper })'],
   ['Ref.update(counter, (n) => n + 1)', 'increment', 'Ref.update(counter, Num.increment)'],
   ['Arr.map(values, (n: number) => n - 1)', 'decrement', 'Arr.map(values, Num.decrement)'],
+  ['Arr.map(values, (n) => ++n)', 'increment', 'Arr.map(values, Num.increment)'],
+  ['Ref.update(counter, (n) => (n -= 1))', 'decrement', 'Ref.update(counter, Num.decrement)'],
   ['values.toSorted((a, b) => a - b)', 'order', 'values.toSorted(Num.Order)'],
   ['Arr.sort(values, (left, right) => right - left)', 'order', 'Arr.sort(values, Order.flip(Num.Order))'],
   ['values.pipe(Arr.sort((a, b) => a - b))', 'order', 'values.pipe(Arr.sort(Num.Order))'],
   ['score >= 0 && score <= 100', 'between', 'Num.between(score, { minimum: 0, maximum: 100 })'],
   ['upper >= value && 0 <= value', 'between', 'Num.between(value, { minimum: 0, maximum: upper })'],
-  ['value < 0 || 100 < value', 'between', '!Num.between(value, { minimum: 0, maximum: 100 })'],
+  ['values.map((n) => --n)', 'decrement', 'values.map(Num.decrement)'],
   ['count === 0 ? 0 : total / count', 'divide', 'Opt.getOrElse(Num.divide(total, count), () => 0)'],
   ['0 !== count ? total / count : fallback', 'divide', 'Opt.getOrElse(Num.divide(total, count), () => fallback)'],
   [
@@ -107,6 +112,8 @@ for (const [invalid, messageId, api, suggestion] of [
   ['Math.min(limit(), Math.max(0, value))', 'clamp', 'clamp', 'Num.clamp(value, { minimum: 0, maximum: limit() })'],
   ['values.reduce((a, b) => a * b, 1)', 'multiplyAll', 'multiplyAll', 'Num.multiplyAll(values)'],
   ['Arr.reduce(values, 1, Num.multiply)', 'multiplyAll', 'multiplyAll', 'Num.multiplyAll(values)'],
+  ['value < 0 || 100 < value', 'between', 'between', '!Num.between(value, { minimum: 0, maximum: 100 })'],
+  ['value >= lower && value <= 100', 'between', 'between', 'Num.between(value, { minimum: lower, maximum: 100 })'],
   [
     'value >= lowerBound && value <= upperBound',
     'between',
@@ -130,6 +137,8 @@ for (const [invalid, messageId] of [
   ['Math.max(0, Math.min(value, other))', 'clamp'],
   ['next() >= 0 && next() <= 10', 'between'],
   ['count === 0 ? 0 : next() / count', 'divide'],
+  ['count === 0 ? await fallback() : total / count', 'divide'],
+  ['Arr.map(values, (n) => n++)', 'unchangedStep'],
   ['Math.max(...values)', 'extreme'],
   ['Number.isNaN(Number(input))', 'parse'],
   ['const port = parseFloat(input); if (isNaN(port)) {}', 'parse'],
@@ -173,3 +182,22 @@ import { Effect } from 'effect'
     const average = Opt.getOrElse(Num.divide(total, count), () => 0)
   `,
 });
+
+// In JavaScript, untyped parameters may be numeric strings, which subtraction and comparison coerce.
+for (const [invalid, api, suggestion] of [
+  ['values.sort((a, b) => a - b)', 'order', 'values.sort(Num.Order)'],
+  ['values.map((n) => n + 1)', 'increment', 'values.map(Num.increment)'],
+  ['score >= 0 && score <= 100', 'between', 'Num.between(score, { minimum: 0, maximum: 100 })'],
+] as const) {
+  testRule(ruleName, preferEffectNumber, {
+    valid: `import * as Num from 'effect/Number'\nconst total = Num.sum(1, 2)`,
+    validFilename: 'valid.js',
+    invalid: `import * as Num from 'effect/Number'\n${invalid}`,
+    invalidFilename: 'invalid.js',
+    messageId: api,
+    output: null,
+    suggestions: [
+      { messageId: 'replace', data: { api }, output: `import * as Num from 'effect/Number'\n${suggestion}` },
+    ],
+  });
+}
