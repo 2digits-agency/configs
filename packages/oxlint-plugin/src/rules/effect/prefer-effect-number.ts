@@ -95,11 +95,12 @@ const isBoundName = Schema.is(
 );
 
 /*
- * Kinds whose fix is exact for numbers but not for numeric strings: `'5' + 1` concatenates, `'10' - '2'` subtracts and
- * `'100' >= 0` coerces, where Number.increment, Number.Order and Number.between do not. TypeScript rejects strings in
- * the original code, so the fix is only downgraded in JavaScript files.
+ * Kinds whose fix is exact for numbers but not for every value an untyped parameter can hold: `'5' + 1` concatenates,
+ * `'10' - '2'` subtracts and `'100' >= 0` coerces, where Number.increment, Number.Order and Number.between do not, and
+ * `--n` also steps a bigint, where Number.decrement throws. TypeScript rejects those values in the fixed code, so the fix
+ * is only downgraded in JavaScript files.
  */
-const numbersOnly: ReadonlySet<Kind> = new Set(['increment', 'order', 'between']);
+const numbersOnly: ReadonlySet<Kind> = new Set(['increment', 'decrement', 'order', 'between']);
 
 const isTypeScriptFile = Schema.is(Schema.String.check(Schema.isPattern(/\.[cm]?tsx?$/u)));
 
@@ -654,12 +655,20 @@ function assignmentStep(body: ESTree.AssignmentExpression, name: string): Opt.Op
  */
 function stepFinding(node: ESTree.ArrowFunctionExpression): Opt.Option<Finding> {
   return arrowBody(node, 1).pipe(
-    Opt.flatMap(([[param], body]) => (P.isUndefined(param) ? Opt.none() : stepOf(body, param.name))),
-    Opt.map(([operator, result]): Finding => {
+    Opt.flatMap(([[param], body]) =>
+      P.isUndefined(param) ? Opt.none() : Opt.map(stepOf(body, param.name), (step) => [step, param, body] as const),
+    ),
+    Opt.map(([[operator, result], param, body]): Finding => {
       const kind = operator === '+' ? 'increment' : 'decrement';
 
+      /*
+       * `name + 1` is valid TypeScript for a string, so without a `number` annotation the `+` forms may concatenate.
+       * `++n`, `n - 1` and `n -= 1` do not type-check for strings.
+       */
+      const concatenates = operator === '+' && body.type !== 'UpdateExpression' && P.isNullish(param.typeAnnotation);
+
       return result === 'new'
-        ? { kind, mode: 'fix', replacement: ({ num }) => `${num}.${kind}` }
+        ? { kind, mode: concatenates ? 'suggest' : 'fix', replacement: ({ num }) => `${num}.${kind}` }
         : {
             kind: 'unchangedStep',
             mode: 'report',

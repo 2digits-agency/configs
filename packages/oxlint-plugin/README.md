@@ -309,8 +309,10 @@ These rules only run in files that import Effect and complement the `preferEffec
     not reported.
   - `(n) => n + 1`, `(n) => ++n` and `(n) => n += 1` become `Num.increment`, and the same with `- 1`, `--n` and `-= 1`
     become `Num.decrement`. Only arrows with one untyped or `number` parameter are reported, and `1 + n` is left alone
-    because it concatenates strings the other way round. `(n) => n++` and `(n) => n--` return `n` unchanged, because a
-    postfix update returns the old value, so they are reported as a likely bug without a fix.
+    because it concatenates strings the other way round. `n + 1` and `n += 1` are valid TypeScript for a string too, so
+    they are only autofixed when the parameter is annotated `number`, and get a suggestion otherwise. `(n) => n++` and
+    `(n) => n--` return `n` unchanged, because a postfix update returns the old value, so they are reported as a likely
+    bug without a fix.
   - `(a, b) => a - b` passed to `.sort`, `.toSorted` or `Arr.sort` becomes `Num.Order`, and `(a, b) => b - a` becomes
     `Order.flip(Num.Order)`. They sort numbers the same way, except `NaN`, which `Num.Order` puts first.
   - `x >= lo && x <= hi` in any operand order becomes `Num.between(x, { minimum: lo, maximum: hi })`, and `x < lo || x >
@@ -329,9 +331,10 @@ These rules only run in files that import Effect and complement the `preferEffec
     with `parseFloat`, is reported with `Num.parse(s)` as the advice but not fixed, because `Number('')` is 0 and
     `parseFloat('12px')` is 12 where `Num.parse` returns none.
 
-  In JavaScript files the `Num.increment`, `Num.Order` and `Num.between` fixes are suggestions, because an untyped
-  parameter may be a numeric string that `+`, `-` and `>=` coerce and Effect does not. TypeScript rejects strings
-  there, so in TypeScript files they stay autofixes.
+  In JavaScript files the `Num.increment`, `Num.decrement`, `Num.Order` and `Num.between` fixes are suggestions,
+  because an untyped parameter may be a numeric string that `+`, `-` and `>=` coerce and Effect does not, or a bigint
+  that `++n` and `--n` step and Effect does not. TypeScript rejects those values in the fixed code, so in TypeScript
+  files they stay autofixes.
 
   Fixes import Number as `Num`, Option as `Opt` and Order as `Order`, the aliases the import style rules use, and
   reuse a namespace import of those modules when the file has one.
