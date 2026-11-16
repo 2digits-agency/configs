@@ -40,6 +40,10 @@ declare module 'oxlint' {
     'zod/array-style'?: RuleWithOptions<{ readonly style: 'function' | 'method' }>;
     'zod/consistent-import'?: RuleWithOptions<{ readonly syntax: 'default' | 'named' | 'namespace' }>;
     'zod/consistent-import-source'?: RuleWithOptions<{ readonly sources: Array<'zod' | 'zod/v3' | 'zod/v4'> }>;
+    'zod/consistent-object-property-key-style'?: RuleWithOptions<{
+      readonly style?: 'camelCase' | 'snake_case';
+      readonly allow?: Array<'looseObject' | 'object' | 'strictObject'>;
+    }>;
     'zod/consistent-object-schema-type'?: RuleWithOptions<{
       readonly allow: Array<'looseObject' | 'object' | 'strictObject'>;
     }>;
@@ -68,6 +72,7 @@ declare module 'oxlint' {
       readonly preferredMethod: 'default' | 'none' | 'optional';
     }>;
     'zod/no-promise-schema'?: AllowWarnDeny;
+    'zod/no-reshape-on-refined-object'?: AllowWarnDeny;
     'zod/no-schema-with-is-nullable'?: AllowWarnDeny;
     'zod/no-schema-with-is-optional'?: AllowWarnDeny;
     'zod/no-throw-in-refine'?: AllowWarnDeny;

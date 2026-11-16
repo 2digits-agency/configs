@@ -36,6 +36,7 @@ export async function zod(options: OptionsOverrides = {}): Promise<Array<TypedFl
         'zod/no-number-schema-with-step': 'error',
         'zod/no-optional-and-default-together': ['warn', { preferredMethod: 'default' }],
         'zod/no-promise-schema': 'error',
+        'zod/no-reshape-on-refined-object': 'error',
         'zod/no-schema-with-is-nullable': 'error',
         'zod/no-schema-with-is-optional': 'error',
         'zod/no-throw-in-refine': 'error',
