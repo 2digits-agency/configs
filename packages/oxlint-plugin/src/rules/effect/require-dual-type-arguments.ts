@@ -7,9 +7,10 @@ import * as Schema from 'effect/Schema';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isImportedApiIn } from '../../internal/scope';
+import { TypeScriptFile } from '../../schemas/names';
 
 // JavaScript has no syntax for type arguments.
-const isTypeScriptFile = Schema.is(Schema.String.check(Schema.isPattern(/\.[cm]?tsx?$/u)));
+const isTypeScriptFile = Schema.is(TypeScriptFile);
 
 export const requireDualTypeArguments = Rule.define({
   name: 'require-dual-type-arguments',

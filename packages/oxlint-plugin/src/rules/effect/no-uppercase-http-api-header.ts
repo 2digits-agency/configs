@@ -8,13 +8,13 @@ import * as Schema from 'effect/Schema';
 import { argumentAt, plainProperty, propertyName, staticPath } from '../../internal/ast';
 import { ruleMeta } from '../../internal/meta';
 import { resolveVariable, soleDefinition } from '../../internal/scope';
+import { AsciiUppercase } from '../../schemas/names';
+import { EndpointMethod } from '../../schemas/platform';
 import { isTypeOnlyImport } from './internal/import-style';
-
-const EndpointMethod = Schema.Literals(['get', 'post', 'put', 'patch', 'delete', 'head', 'options']);
 
 const isEndpointMethod = Schema.is(EndpointMethod);
 
-const hasAsciiUppercase = Schema.is(Schema.String.check(Schema.isPattern(/[A-Z]/u)));
+const hasAsciiUppercase = Schema.is(AsciiUppercase);
 
 function isEndpointImport(definition: Definition, path: ReadonlyArray<string>): boolean {
   const declaration = definition.parent;

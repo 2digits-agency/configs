@@ -9,12 +9,7 @@ import * as Str from 'effect/String';
 import { argumentAt, isStringLiteral } from '../../internal/ast';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIdentifier } from '../../internal/scope';
-
-const DomainFileName = Schema.String.check(
-  Schema.isPattern(
-    /\.(?:aggregate|api|command|context|event|external|id|middleware|model|policy|projection|rejection|saga|stream|view)\.[cm]?tsx?$/u,
-  ),
-);
+import { DomainFileName } from '../../schemas/alchemy';
 
 const isDomainFileName = Schema.is(DomainFileName);
 

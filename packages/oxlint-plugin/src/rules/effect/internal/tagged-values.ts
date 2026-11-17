@@ -1,6 +1,5 @@
 import type { ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
-import type * as Effect from 'effect/Effect';
 import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
@@ -16,15 +15,7 @@ import {
   parentOfType,
   staticPropertyName,
 } from '../../../internal/ast';
-
-// `catchAll` is the Effect v3 name, which the current Effect types no longer export.
-const BroadCatchName = Schema.Literals([
-  'catch' satisfies keyof typeof Effect,
-  'catchAll',
-  'catchIf' satisfies keyof typeof Effect,
-]);
-
-const MatchPatternName = Schema.Literals(['when', 'not'] satisfies ReadonlyArray<keyof typeof Match>);
+import { BroadCatchName, MatchPatternName } from '../../../schemas/effect';
 
 function staticMemberOf(object: string, isName: (name: string) => boolean) {
   return Match.type<ESTree.Expression>().pipe(

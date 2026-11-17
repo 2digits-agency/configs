@@ -3,11 +3,11 @@ import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as R from 'effect/Record';
-import type * as Result from 'effect/Result';
 import * as Schema from 'effect/Schema';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { ThrowingGetter, ThrowingModule } from '../../schemas/effect';
 import { domainSection, importedPath, isImportReference, type DomainFile } from './internal/domain';
 
 const totalSections: Readonly<Record<string, ReadonlyArray<string>>> = {
@@ -15,11 +15,9 @@ const totalSections: Readonly<Record<string, ReadonlyArray<string>>> = {
   View: ['evolve'],
 };
 
-const isThrowingModule = Schema.is(Schema.Literals(['Option', 'Result']));
+const isThrowingModule = Schema.is(ThrowingModule);
 
-const isThrowingGetter = Schema.is(
-  Schema.Literals(['getOrThrow', 'getOrThrowWith'] satisfies ReadonlyArray<keyof typeof Opt & keyof typeof Result>),
-);
+const isThrowingGetter = Schema.is(ThrowingGetter);
 
 export const alchemyDomainTotalHandlers = Rule.define({
   name: 'alchemy-domain-total-handlers',

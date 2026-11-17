@@ -13,16 +13,13 @@ import {
   staticPropertyName,
   unwrapExpression,
 } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const NonJsonGlobal = Schema.Literals(['NaN', 'Infinity', 'undefined']);
+import { AnnotateMethod } from '../../schemas/effect';
+import type { ImportBindings } from '../../schemas/imports';
+import { NonJsonGlobal } from '../../schemas/platform';
 
 const isNonJsonGlobal = Schema.is(NonJsonGlobal);
-
-const AnnotateMethod = Schema.Literals(['annotate', 'annotateEncoded', 'annotateKey'] satisfies ReadonlyArray<
-  keyof typeof Schema
->);
 
 const isAnnotateMethod = Schema.is(AnnotateMethod);
 

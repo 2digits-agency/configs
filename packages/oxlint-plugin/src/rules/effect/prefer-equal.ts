@@ -4,8 +4,9 @@ import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
 import { enclosingFunction, staticPropertyName, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 import { callbackApi } from './internal/callbacks';
 
 const comparisonOperators: Readonly<Record<ESTree.LogicalExpression['operator'], ReadonlyArray<string>>> = {

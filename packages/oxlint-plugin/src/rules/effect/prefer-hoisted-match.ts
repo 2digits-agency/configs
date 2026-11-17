@@ -12,8 +12,9 @@ import {
   walkNodes,
   type FunctionNode,
 } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 import { functionResult } from './internal/callbacks';
 
 function isParameterReference(node: Opt.Option<ESTree.Expression>, parameter: string): boolean {

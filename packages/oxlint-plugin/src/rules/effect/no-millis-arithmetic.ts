@@ -16,17 +16,20 @@ import {
   staticPropertyName,
   unwrapExpression,
 } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isImportedApi, resolveVariable, soleDefinition } from '../../internal/scope';
+import { ArithmeticOperator } from '../../schemas/ast';
+import type { ImportBindings } from '../../schemas/imports';
+import type { MillisKind } from '../../schemas/time';
 import { isForeignCallback } from './internal/callbacks';
-import { millisName, type MillisKind } from './internal/duration';
+import { millisName } from './internal/duration';
 
 type DateTimeApi = `DateTime.${keyof typeof DateTime}`;
 
 type DurationApi = `Duration.${keyof typeof Duration}`;
 
-const isArithmeticOperator = Schema.is(Schema.Literals(['*', '+', '-', '/']));
+const isArithmeticOperator = Schema.is(ArithmeticOperator);
 
 const durationSuggestions: Readonly<Record<string, DurationApi>> = {
   '!==': 'Duration.equals',

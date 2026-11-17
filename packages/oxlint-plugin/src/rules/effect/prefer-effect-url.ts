@@ -7,8 +7,7 @@ import { staticPath } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIdentifier } from '../../internal/scope';
-
-const UrlParseMethod = Schema.Literals(['canParse', 'parse']);
+import { UrlParseMethod } from '../../schemas/platform';
 
 const isUrlParseMethod = Schema.is(UrlParseMethod);
 

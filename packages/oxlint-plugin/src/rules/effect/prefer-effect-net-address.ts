@@ -10,31 +10,14 @@ import * as Schema from 'effect/Schema';
 import { argumentAt, isEqualityOperator, isStringLiteral, parentOf, staticPropertyName } from '../../internal/ast';
 import { importBindings, moduleImportMember } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const IpLibrary = Schema.Literals([
-  'ip',
-  'ip-address',
-  'ip-range-check',
-  'ip-regex',
-  'ipaddr.js',
-  'is-ip',
-  'is-localhost-ip',
-  'netmask',
-  'private-ip',
-]);
+import { IpLibrary } from '../../schemas/imports';
+import { NodeIpCheck, SpecialIpLiteral } from '../../schemas/platform';
 
 const isIpLibrary = Schema.is(IpLibrary);
-
-const NodeIpCheck = Schema.Literals(['isIP', 'isIPv4', 'isIPv6']);
 
 const isNodeIpCheck = Schema.is(NodeIpCheck);
 
 const netSources: ReadonlyArray<string> = ['net', 'node:net'];
-
-/**
- * Special-purpose addresses that code compares against as text.
- */
-const SpecialIpLiteral = Schema.Literals(['0.0.0.0', '127.0.0.1', '255.255.255.255', '::', '::1']);
 
 const isSpecialIpLiteral = Schema.is(SpecialIpLiteral);
 

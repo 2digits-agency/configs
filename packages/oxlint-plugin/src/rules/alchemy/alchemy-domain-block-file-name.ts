@@ -9,7 +9,9 @@ import * as Str from 'effect/String';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-import { domainBlock, type DomainBlock, type DomainFile } from './internal/domain';
+import { type DomainBlock, HostKind } from '../../schemas/alchemy';
+import { TestOrStoryFilename } from '../../schemas/names';
+import { domainBlock, type DomainFile } from './internal/domain';
 
 const fileKinds: Readonly<Record<string, string>> = {
   Aggregate: 'aggregate',
@@ -31,11 +33,9 @@ const sharedKinds: Readonly<Record<string, string>> = {
   Rejection: 'rejection',
 };
 
-const isHostKind = Schema.is(Schema.Literals(['command', 'external', 'stream']));
+const isHostKind = Schema.is(HostKind);
 
-const TestFile = Schema.String.check(Schema.isPattern(/\.(?:test|spec|stories?)\.[cm]?[jt]sx?$/u));
-
-const isTestFile = Schema.is(TestFile);
+const isTestFile = Schema.is(TestOrStoryFilename);
 
 /**
  * A Domain block declaration and the file kind it belongs in.

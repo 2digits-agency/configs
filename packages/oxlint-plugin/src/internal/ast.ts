@@ -9,33 +9,20 @@ import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
+import { EqualityOperator, FunctionNodeType, WrapperExpressionType } from '../schemas/ast';
+
 export type FunctionNode = ESTree.ArrowFunctionExpression | ESTree.Function;
 
-type WrapperExpression =
+export type WrapperExpression =
   | ESTree.ParenthesizedExpression
   | ESTree.TSAsExpression
   | ESTree.TSNonNullExpression
   | ESTree.TSSatisfiesExpression
   | ESTree.TSTypeAssertion;
 
-/**
- * Expression wrappers that do not change the runtime value: parentheses, type assertions and non-null assertions.
- */
-const WrapperExpressionType = Schema.Literals([
-  'ParenthesizedExpression',
-  'TSAsExpression',
-  'TSNonNullExpression',
-  'TSSatisfiesExpression',
-  'TSTypeAssertion',
-] satisfies ReadonlyArray<WrapperExpression['type']>);
-
 export const isWrapperExpressionType = Schema.is(WrapperExpressionType);
 
-const EqualityOperator = Schema.Literals(['==', '===', '!=', '!==']);
-
 export const isEqualityOperator = Schema.is(EqualityOperator);
-
-const FunctionNodeType = Schema.Literals(['ArrowFunctionExpression', 'FunctionExpression']);
 
 const isFunctionNodeType = Schema.is(FunctionNodeType);
 
@@ -75,6 +62,19 @@ export function staticPath(node: ESTree.Node): Opt.Option<Arr.NonEmptyReadonlyAr
     ? Opt.zipWith(staticPath(target.object), staticPropertyName(target), (path, name) => Arr.append(path, name))
     : Opt.none();
 }
+
+/**
+ * The member a two-part module path names in `namespace`, such as `map` for `['Effect', 'map']`.
+ *
+ * @param path Module path.
+ * @param namespace Module namespace, such as `Effect`.
+ */
+export const namespaceMember = Fn.dual<
+  (namespace: string) => (path: ReadonlyArray<string>) => Opt.Option<string>,
+  (path: ReadonlyArray<string>, namespace: string) => Opt.Option<string>
+>(2, (path, namespace) =>
+  path.length === 2 && Opt.contains(Arr.head(path), namespace) ? Arr.get(path, 1) : Opt.none(),
+);
 
 /**
  * The static name of an object literal or type literal key: `name: …`, `'name': …` or a shorthand property.

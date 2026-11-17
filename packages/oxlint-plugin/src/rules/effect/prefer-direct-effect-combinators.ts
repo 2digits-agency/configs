@@ -36,9 +36,10 @@ import {
   type FunctionNode,
 } from '../../internal/ast';
 import { argumentText, namespaceImport } from '../../internal/fixes';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIn } from '../../internal/scope';
+import type { ImportBindings } from '../../schemas/imports';
 import { isDetachableCallee, isEffectGuard, isSettledCallee } from '../functions/internal/forwarding';
 import { functionResult } from './internal/callbacks';
 import { namespaceAlias } from './internal/import-style';

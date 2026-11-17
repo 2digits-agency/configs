@@ -8,10 +8,10 @@ import * as Ref from 'effect/Ref';
 import * as Schema from 'effect/Schema';
 
 import { argumentAt, isEqualityOperator, staticPath } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const KeyedMethod = Schema.Literals(['delete', 'get', 'has', 'set']);
+import type { ImportBindings } from '../../schemas/imports';
+import { KeyedMethod } from '../../schemas/platform';
 
 const isKeyedMethod = Schema.is(KeyedMethod);
 

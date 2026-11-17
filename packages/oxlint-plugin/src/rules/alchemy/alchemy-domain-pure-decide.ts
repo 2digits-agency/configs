@@ -6,10 +6,11 @@ import * as Opt from 'effect/Option';
 import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 
-import { staticPath } from '../../internal/ast';
-import { importBindings, namespaceMember } from '../../internal/imports';
+import { staticPath, namespaceMember } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIn } from '../../internal/scope';
+import { EffectIo } from '../../schemas/effect';
 import { domainSection, importedPath, isImportReference, type DomainFile } from './internal/domain';
 
 type Impurity = 'io' | 'random' | 'time';
@@ -64,7 +65,7 @@ const memberImpurities: Readonly<Record<string, Impurity>> = {
   'Jwks.layerRemote': 'io',
 };
 
-const isEffectIo = Schema.is(Schema.Literals(['promise', 'tryPromise'] satisfies ReadonlyArray<keyof typeof Effect>));
+const isEffectIo = Schema.is(EffectIo);
 
 function memberRoot(node: ESTree.Node): ESTree.Node {
   let root = node;

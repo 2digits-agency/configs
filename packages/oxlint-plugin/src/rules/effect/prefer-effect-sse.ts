@@ -5,24 +5,8 @@ import * as Schema from 'effect/Schema';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIdentifier } from '../../internal/scope';
+import { SsePackage } from '../../schemas/imports';
 import { onRuntimeImport, packageName } from './internal/package-imports';
-
-/**
- * Server-Sent Events clients, parsers and server helpers that `Sse` with `HttpClient`, `HttpServerResponse` or
- * `HttpApiSchema.StreamSse` replaces.
- */
-const SsePackage = Schema.Literals([
-  '@microsoft/fetch-event-source',
-  'better-sse',
-  'event-source-polyfill',
-  'eventsource',
-  'eventsource-client',
-  'eventsource-parser',
-  'extended-eventsource',
-  'fetch-event-stream',
-  'reconnecting-eventsource',
-  'sse.js',
-]);
 
 const isSsePackage = Schema.is(SsePackage);
 

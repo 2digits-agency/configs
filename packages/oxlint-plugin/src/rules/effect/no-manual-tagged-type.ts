@@ -11,6 +11,7 @@ import * as Str from 'effect/String';
 import { findAncestor, isSomeSame, parentOf, parentOfType, propertyName } from '../../internal/ast';
 import { isDeclarationFilename } from '../../internal/files';
 import { ruleMeta } from '../../internal/meta';
+import { UnionFilterName } from '../../schemas/names';
 
 /**
  * Whether a type names concrete tags: a string literal such as `'Ready'`, or a union of them. `string`, type parameters
@@ -22,8 +23,6 @@ const isLiteralTagType: (node: ESTree.TSType) => boolean = Match.type<ESTree.TST
   Match.when({ type: 'TSUnionType' }, ({ types }) => Arr.every(types, isLiteralTagType)),
   Match.orElse(Fn.constFalse),
 );
-
-const UnionFilterName = Schema.Literals(['Extract', 'Exclude']);
 
 const isUnionFilterName = Schema.is(UnionFilterName);
 

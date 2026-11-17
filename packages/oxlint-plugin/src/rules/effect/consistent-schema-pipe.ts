@@ -19,113 +19,27 @@ import {
   parentOf,
   staticPath,
   staticPropertyName,
+  namespaceMember,
 } from '../../internal/ast';
-import { importBindings, namespaceMember, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isImportedApiIn, lookupVariable } from '../../internal/scope';
+import { MemberSafeHead, PureLeaf } from '../../schemas/ast';
+import { DataLastStep, Modifier, SchemaMethod, Wrapper } from '../../schemas/effect';
+import type { ImportBindings } from '../../schemas/imports';
+import { ConstructorName } from '../../schemas/names';
 
-type SchemaApi = keyof typeof Schema;
+const isModifier = Schema.is(Modifier);
 
-// Lists follow docs/adr/0001 for the catalog's Effect version; revisit them when Effect adds Schema functions.
-const isModifier = Schema.is(
-  Schema.Literals([
-    'flip',
-    'fromFormData',
-    'fromJsonString',
-    'fromURLSearchParams',
-    'mutable',
-    'mutableKey',
-    'NullishOr',
-    'NullOr',
-    'optional',
-    'optionalKey',
-    'OptionFromNullishOr',
-    'OptionFromNullOr',
-    'OptionFromOptional',
-    'OptionFromOptionalKey',
-    'OptionFromOptionalNullOr',
-    'OptionFromUndefinedOr',
-    'readonlyKey',
-    'RedactedFromValue',
-    'required',
-    'requiredKey',
-    'toCodecArrayFromSingle',
-    'toCodecGoJson',
-    'toCodecIso',
-    'toCodecJson',
-    'toCodecStringTree',
-    'toEncoded',
-    'toType',
-    'UndefinedOr',
-  ] satisfies ReadonlyArray<SchemaApi>),
-);
+const isWrapper = Schema.is(Wrapper);
 
-const isWrapper = Schema.is(
-  Schema.Literals([
-    'Array',
-    'ArrayEnsure',
-    'Chunk',
-    'HashSet',
-    'NonEmptyArray',
-    'Option',
-    'ReadonlySet',
-    'Redacted',
-    'Tree',
-    'UniqueArray',
-  ] satisfies ReadonlyArray<SchemaApi>),
-);
+const isDataLastStep = Schema.is(DataLastStep);
 
-const isDataLastStep = Schema.is(
-  Schema.Literals([
-    'annotate',
-    'annotateEncoded',
-    'annotateKey',
-    'brand',
-    'catchDecoding',
-    'catchDecodingWithContext',
-    'catchEncoding',
-    'catchEncodingWithContext',
-    'check',
-    'decode',
-    'decodeTo',
-    'encode',
-    'encodeKeys',
-    'encodeTo',
-    'extendTo',
-    'fieldsAssign',
-    'fromBrand',
-    'middlewareDecoding',
-    'middlewareEncoding',
-    'overrideToCodecIso',
-    'overrideToEquivalence',
-    'overrideToFormatter',
-    'refine',
-    'toTaggedUnion',
-    'withConstructorDefault',
-    'withDecodingDefault',
-    'withDecodingDefaultKey',
-    'withDecodingDefaultType',
-    'withDecodingDefaultTypeKey',
-  ] satisfies ReadonlyArray<SchemaApi>),
-);
+const isSchemaMethod = Schema.is(SchemaMethod);
 
-// Schema methods that return a schema, so a head built from them still has `.pipe`.
-const isSchemaMethod = Schema.is(
-  Schema.Literals(['annotate', 'annotateKey', 'check', 'mapFields'] satisfies ReadonlyArray<
-    keyof Schema.Struct<Schema.Struct.Fields>
-  >),
-);
+const isMemberSafeHead = Schema.is(MemberSafeHead);
 
-// Heads that can take `.pipe(...)` without parentheses.
-const isMemberSafeHead = Schema.is(
-  Schema.Literals(['CallExpression', 'Identifier', 'MemberExpression', 'ThisExpression']),
-);
-
-const isPureLeaf = Schema.is(
-  Schema.Literals(['ArrowFunctionExpression', 'FunctionExpression', 'Identifier', 'Literal', 'ThisExpression']),
-);
-
-const ConstructorName = Schema.String.check(Schema.isPattern(/^\p{Lu}/u));
+const isPureLeaf = Schema.is(PureLeaf);
 
 const isConstructorName = Schema.is(ConstructorName);
 

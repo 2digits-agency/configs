@@ -5,8 +5,9 @@ import * as Opt from 'effect/Option';
 import type * as Result from 'effect/Result';
 
 import { argumentAt, staticPropertyName, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 
 const encodingModules = ['Base64', 'Base64Url', 'Hex'] as const;
 

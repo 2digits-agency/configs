@@ -7,8 +7,7 @@ import * as Schema from 'effect/Schema';
 import { staticPropertyName, unwrapExpression } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const StatusName = Schema.Literals(['status', 'statusCode']);
+import { StatusName } from '../../schemas/names';
 
 const isStatusName = Schema.is(StatusName);
 
