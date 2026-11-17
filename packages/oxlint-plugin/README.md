@@ -49,7 +49,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Schema compiler hoisting from t3code: `no-inline-schema-compile` reports `Schema.decode*`, `Schema.encode*`,
   `Schema.is`, and `Schema.asserts` compilers that are built and invoked inside a function body when their schema
   could be hoisted to module scope.
-- Typed dual APIs: `require-dual-type-arguments` reports every `Function.dual` call without type arguments, also as
+- Typed dual APIs: `require-dual-type-arguments` reports every `Function.dual` call without type arguments in
+  TypeScript files, also as
   `dual` imported from `effect/Function` and with an existing function such as `Fn.dual(2, BigDecimal.divideUnsafe)`.
   Without them TypeScript does not check the implementation against an annotation on the constant (inline parameters
   become `any`), and the data-last form returns `any`. Write

@@ -15,7 +15,26 @@ const valid = `
   >(2, BigDecimal.divideUnsafe)
   const local = { dual: (arity, body) => body }
   local.dual(2, (self: number, that: number) => self + that)
+  type Dual = (arity: number, body: unknown) => unknown
+  function shadowed(dual: Dual, Fn: { dual: Dual }) {
+    dual(2, (self: number, that: number) => self + that)
+    Fn.dual(2, (self: number, that: number) => self + that)
+  }
 `;
+
+testRule('require-dual-type-arguments', requireDualTypeArguments, {
+  valid: `
+    import * as Fn from 'effect/Function'
+    export const add = Fn.dual(2, (self, that) => self + that)
+  `,
+  validFilename: 'valid.js',
+  invalid: `
+    import * as Fn from 'effect/Function'
+    export const add = Fn.dual(2, (self, that) => self + that)
+  `,
+  invalidFilename: 'invalid.mts',
+  messageId: 'missingTypeArguments',
+});
 
 for (const invalid of [
   `
