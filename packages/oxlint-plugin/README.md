@@ -538,7 +538,9 @@ Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/m
   parameter or another type reference describes any tagged value, as in `<A extends { readonly _tag: string }>`,
   which no constructor defines.
   Declaration files and `declare module`/`declare global` blocks are skipped, because they describe values defined
-  elsewhere.
+  elsewhere. The filter of `Extract` or `Exclude`, as in `Extract<Payment, { _tag: 'Refund' }>`, is also skipped: it
+  selects members of an existing union, which no constructor replaces. A `_tag` type literal passed to any other
+  generic, such as `Array<{ _tag: 'A' }>`, is still reported.
 - `no-service-constructor-imports`: reject relative named `make[A-Z]` imports outside `.test`/`.spec` files.
 - `prefer-effect-match`: also reports chained literal ternaries comparing the same source expression, while retaining
   the existing Effect-file switch diagnostic. In Effect files it also reports `else if` chains; see

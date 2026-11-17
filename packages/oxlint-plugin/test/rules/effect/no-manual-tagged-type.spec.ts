@@ -12,6 +12,8 @@ const valid = `
   type Loose = { readonly _tag: 'Ready' | string };
   declare module 'external' { interface Node { readonly _tag: 'Leaf' } }
   declare global { interface Window { readonly _tag: 'Browser' } }
+  type Refund = Extract<Payment, { _tag: 'Refund' }>;
+  type Open = Exclude<Payment, { readonly _tag: 'Refund' } | { readonly _tag: 'Void' }>;
 `;
 
 for (const invalid of [
@@ -22,6 +24,9 @@ for (const invalid of [
   `const handle = (event: { readonly _tag?: 'Ready' }) => event;`,
   `const tagOf = <A extends { readonly _tag: 'Ready' }>(value: A) => value;`,
   `namespace Domain { export interface Value { readonly _tag: 'Ready' } }`,
+  `type Values = Array<{ readonly _tag: 'Ready' }>;`,
+  `type Value = Extract<{ readonly _tag: 'Ready' }, Payment>;`,
+  `type Values = Record<string, { readonly _tag: 'Ready' }>;`,
 ]) {
   testRule('no-manual-tagged-type', rules['no-manual-tagged-type'], { valid, invalid, messageId: 'manualTaggedType' });
 }
