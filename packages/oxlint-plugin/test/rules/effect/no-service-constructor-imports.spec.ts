@@ -60,6 +60,7 @@ describe('anti-slop public rules', () => {
       'no-manual-effect-error-tag',
       'no-manual-tag-comparison',
       'no-manual-tagged-construction',
+      'no-manual-tagged-type',
       'no-service-constructor-imports',
       'prefer-effect-match',
     ] as const) {

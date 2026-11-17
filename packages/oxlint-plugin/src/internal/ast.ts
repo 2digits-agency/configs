@@ -64,7 +64,7 @@ export function staticPath(node: ESTree.Node): Opt.Option<Arr.NonEmptyReadonlyAr
 }
 
 /**
- * The member a two-part module path names in `namespace`, such as `map` for `['Effect', 'map']`.
+ * <<<<<<< HEAD The member a two-part module path names in `namespace`, such as `map` for `['Effect', 'map']`.
  *
  * @param path Module path.
  * @param namespace Module namespace, such as `Effect`.
@@ -77,11 +77,15 @@ export const namespaceMember = Fn.dual<
 );
 
 /**
- * The static name of an object literal key: `name: …`, `'name': …` or a shorthand property.
+ * # The static name of an object literal key: `name: …`, `'name': …` or a shorthand property.
  *
- * @param property Object literal property.
+ * The static name of an object literal or type literal key: `name: …`, `'name': …` or a shorthand property.
+ *
+ * > > > > > > > Origin/main.
+ *
+ * @param property Object literal property or type member.
  */
-export const propertyName = Match.type<ESTree.ObjectProperty>().pipe(
+export const propertyName = Match.type<ESTree.ObjectProperty | ESTree.TSPropertySignature>().pipe(
   Match.when({ computed: false, key: { type: 'Identifier' } }, ({ key }) => Opt.some(key.name)),
   Match.when({ key: { type: 'Literal', value: Str.isString } }, ({ key }) => Opt.some(key.value)),
   Match.orElse(() => Opt.none<string>()),

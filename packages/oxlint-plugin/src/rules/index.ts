@@ -36,6 +36,7 @@ import { noManualEncoding } from './effect/no-manual-encoding';
 import { noManualSse } from './effect/no-manual-sse';
 import { noManualTagComparison } from './effect/no-manual-tag-comparison';
 import { noManualTaggedConstruction } from './effect/no-manual-tagged-construction';
+import { noManualTaggedType } from './effect/no-manual-tagged-type';
 import { noMillisArithmetic } from './effect/no-millis-arithmetic';
 import { noMultiShotEffectCallback } from './effect/no-multi-shot-effect-callback';
 import { noNonJsonSchemaAnnotation } from './effect/no-non-json-schema-annotation';
@@ -141,6 +142,7 @@ export const rules = {
   'no-manual-sse': noManualSse,
   'no-manual-tag-comparison': noManualTagComparison,
   'no-manual-tagged-construction': noManualTaggedConstruction,
+  'no-manual-tagged-type': noManualTaggedType,
   'no-millis-arithmetic': noMillisArithmetic,
   'no-multi-shot-effect-callback': noMultiShotEffectCallback,
   'no-non-json-schema-annotation': noNonJsonSchemaAnnotation,

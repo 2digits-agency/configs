@@ -44,3 +44,6 @@ export const ErrorLikeName = Schema.Literals(['error', 'err', 'e', 'cause', 'exc
 export const StatusName = Schema.Literals(['status', 'statusCode']);
 
 export const AsciiUppercase = Schema.String.check(Schema.isPattern(/[A-Z]/u));
+
+// TypeScript utility types that narrow a union to some of its members.
+export const UnionFilterName = Schema.Literals(['Extract', 'Exclude']);
