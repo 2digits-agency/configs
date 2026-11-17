@@ -2,22 +2,14 @@ import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxli
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
-import * as Schema from 'effect/Schema';
 
 import { isStringLiteral, staticPropertyName } from '../../internal/ast';
 import { argumentText, replaceWithNamespace } from '../../internal/fixes';
 import { ruleMeta } from '../../internal/meta';
+import { TagComparisonOptions } from '../../schemas/options';
 import { discriminantFromComparison, isDiscriminantMember, isInsideBroadEffectHandler } from './internal/tagged-values';
 
-const Options = Schema.Struct({
-  discriminants: Schema.Array(Schema.String)
-    .annotate({
-      description: "Discriminant properties checked in addition to `_tag`. Replaces the default `['kind', 'status']`.",
-    })
-    .pipe(Schema.optionalKey),
-});
-
-export type NoManualTagComparisonOptions = typeof Options.Type;
+export type NoManualTagComparisonOptions = NonNullable<typeof TagComparisonOptions.Type>;
 
 /**
  * Prefer Match/Predicate helpers; broad catch handlers belong to the error-tag rule, which only knows `_tag`.
@@ -58,7 +50,7 @@ export const noManualTagComparison = Rule.define({
     ],
     defaultOptions: [{ discriminants: ['kind', 'status'] } satisfies NoManualTagComparisonOptions],
   }),
-  options: Options.pipe(Schema.UndefinedOr),
+  options: TagComparisonOptions,
   *create(options) {
     const ctx = yield* RuleContext;
 

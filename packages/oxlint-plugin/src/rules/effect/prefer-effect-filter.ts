@@ -4,8 +4,9 @@ import * as Opt from 'effect/Option';
 import type * as Result from 'effect/Result';
 
 import { argumentAt, firstIdentifierParameter, type FunctionNode } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 import { functionResult } from './internal/callbacks';
 
 function returnsParameter(

@@ -11,6 +11,7 @@ import { argumentText, replaceWithNamespace } from '../../internal/fixes';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIn } from '../../internal/scope';
+import { NegatedOperator } from '../../schemas/ast';
 
 type FunctionLike = ESTree.ArrowFunctionExpression | ESTree.Function;
 
@@ -82,8 +83,6 @@ const instanceChecks: Readonly<Record<string, readonly [PredicateCheck['namespac
   Symbol: ['P', 'isSymbol', 'different'],
   Uint8Array: ['P', 'isUint8Array', 'exact'],
 };
-
-const NegatedOperator = Schema.Literals(['!==', '!=']);
 
 const isNegated = Schema.is(NegatedOperator);
 

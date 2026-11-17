@@ -27,34 +27,14 @@ import {
   type FunctionNode,
 } from '../../internal/ast';
 import { ruleMeta } from '../../internal/meta';
-
-const BrowserGlobal = Schema.Literals(['document', 'localStorage', 'navigator', 'sessionStorage', 'window']);
+import { ComponentName, HookName } from '../../schemas/names';
+import { BrowserGlobal, ComponentWrapperName, SynchronousArrayMethod } from '../../schemas/platform';
 
 const isBrowserGlobal = Schema.is(BrowserGlobal);
 
 const BROWSER_GLOBALS_PATTERN = /\b(?:document|localStorage|navigator|sessionStorage|window)\b/u;
 
-/**
- * Array methods that call their callback synchronously, so a callback created during render also runs during it.
- */
-const isSynchronousArrayMethod = Schema.is(
-  Schema.Literals([
-    'every',
-    'filter',
-    'find',
-    'findIndex',
-    'findLast',
-    'findLastIndex',
-    'flatMap',
-    'forEach',
-    'map',
-    'reduce',
-    'reduceRight',
-    'some',
-    'sort',
-    'toSorted',
-  ]),
-);
+const isSynchronousArrayMethod = Schema.is(SynchronousArrayMethod);
 
 /**
  * Hooks whose callback argument at this index runs during render.
@@ -65,13 +45,9 @@ const RENDER_TIME_HOOK_CALLBACKS: Readonly<Record<string, number>> = {
   useState: 0,
 };
 
-const isComponentWrapperName = Schema.is(Schema.Literals(['forwardRef', 'memo']));
-
-const HookName = Schema.String.check(Schema.isPattern(/^use[A-Z0-9]/u));
+const isComponentWrapperName = Schema.is(ComponentWrapperName);
 
 const isHookName = Schema.is(HookName);
-
-const ComponentName = Schema.String.check(Schema.isPattern(/^_?[A-Z]/u));
 
 const isComponentName = Schema.is(ComponentName);
 

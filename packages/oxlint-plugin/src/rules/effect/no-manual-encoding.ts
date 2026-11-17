@@ -13,10 +13,10 @@ import {
   staticPropertyName,
   unwrapExpression,
 } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const ReplaceMethod = Schema.Literals(['replace', 'replaceAll']);
+import type { ImportBindings } from '../../schemas/imports';
+import { ReplaceMethod } from '../../schemas/platform';
 
 const isReplaceMethod = Schema.is(ReplaceMethod);
 

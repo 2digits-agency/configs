@@ -11,27 +11,11 @@ import {
   propertyName,
   staticPath,
   unwrapExpression,
+  namespaceMember,
 } from '../../../internal/ast';
-import { namespaceMember, type ImportBindings } from '../../../internal/imports';
 import { lookupVariable, soleDefinition } from '../../../internal/scope';
-
-export const DomainBlock = Schema.Literals([
-  'Aggregate',
-  'Api',
-  'Command',
-  'Event',
-  'ExternalSystem',
-  'Model',
-  'Policy',
-  'Projection',
-  'Rejection',
-  'RequestContext',
-  'Saga',
-  'Stream',
-  'View',
-]);
-
-export type DomainBlock = typeof DomainBlock.Type;
+import { DomainBlock } from '../../../schemas/alchemy';
+import type { ImportBindings } from '../../../schemas/imports';
 
 const isDomainBlock = Schema.is(DomainBlock);
 

@@ -3,8 +3,9 @@ import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
 import { argumentAt, isStringLiteral, objectProperty, staticPath, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 
 function isPlaintextSecret(node: ESTree.Expression, imports: ImportBindings): boolean {
   const value = unwrapExpression(node);

@@ -5,13 +5,11 @@ import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
 import { ruleMeta } from '../../internal/meta';
+import { DirectiveLike, ExactDirective } from '../../schemas/platform';
 
-// Anything that reads like `use client`, `use server` or `use cache`, in any case or spacing.
-const isDirectiveLike = Schema.is(Schema.String.check(Schema.isPattern(/^\s*use[\s_-]*(?:client|server|cache)\b/iu)));
+const isDirectiveLike = Schema.is(DirectiveLike);
 
-const isExactDirective = Schema.is(
-  Schema.String.check(Schema.isPattern(/^use (?:client|server|cache(?:: [\w-]+)?)$/u)),
-);
+const isExactDirective = Schema.is(ExactDirective);
 
 export const validDirective = Rule.define({
   name: 'valid-directive',

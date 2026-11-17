@@ -12,20 +12,8 @@ import {
   propertyName,
   findAncestor,
 } from '../../../internal/ast';
-import type { ImportBindings } from '../../../internal/imports';
-
-const WorkerHandler = Schema.Literals([
-  'alarm',
-  'fetch',
-  'queue',
-  'rpc',
-  'scheduled',
-  'tail',
-  'trace',
-  'webSocketClose',
-  'webSocketError',
-  'webSocketMessage',
-]);
+import { WorkerHandler } from '../../../schemas/alchemy';
+import type { ImportBindings } from '../../../schemas/imports';
 
 const isWorkerHandler = Schema.is(WorkerHandler);
 

@@ -6,8 +6,11 @@ import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
 import { containsRange, isFunctionNode, moduleExportName, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
+import { ComponentOrHook } from '../../schemas/names';
+import { SingleUsePrivateFunctionOptions } from '../../schemas/options';
 import { isTypeGuard } from './internal/forwarding';
 
 interface Candidate {
@@ -23,12 +26,7 @@ const maxLineWidth = 120;
 
 const fnPath = ['Effect', 'fn' satisfies keyof typeof Effect];
 
-// Components (PascalCase) and hooks (`useX`) stay named.
-const isComponentOrHook = Schema.is(Schema.String.check(Schema.isPattern(/^\p{Lu}|^use\p{Lu}/u)));
-
-const Options = Schema.Struct({
-  maxLines: Schema.Int.pipe(Schema.optionalKey),
-});
+const isComponentOrHook = Schema.is(ComponentOrHook);
 
 /**
  * Whether a variable initializer is a function: an arrow or function expression, or `Effect.fn(body)`,
@@ -109,7 +107,7 @@ export const noSingleUsePrivateFunction = Rule.define({
       },
     ],
   }),
-  options: Options.pipe(Schema.UndefinedOr),
+  options: SingleUsePrivateFunctionOptions,
   *create(options) {
     const ctx = yield* RuleContext;
 

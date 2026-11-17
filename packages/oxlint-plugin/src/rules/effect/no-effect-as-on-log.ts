@@ -7,8 +7,9 @@ import type * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
 
 import { argumentAt, staticPropertyName, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 
 const effectLogMethods = [
   'log',

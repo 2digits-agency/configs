@@ -15,10 +15,7 @@ import {
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIdentifier } from '../../internal/scope';
-
-const Encoding = Schema.Literals(['base64', 'base64url', 'hex']);
-
-type Encoding = typeof Encoding.Type;
+import { Encoding, GlobalBase64Name } from '../../schemas/platform';
 
 const isEncoding = Schema.is(Encoding);
 
@@ -97,8 +94,6 @@ const globalBase64 = {
   atob: { messageId: 'atob', native: 'atob', replacement: 'Base64.decode' },
   btoa: { messageId: 'btoa', native: 'btoa', replacement: 'Base64.encode' },
 } as const satisfies Record<string, NativeEncoding>;
-
-const GlobalBase64Name = Schema.Literals(['atob', 'btoa']);
 
 const isGlobalBase64Name = Schema.is(GlobalBase64Name);
 

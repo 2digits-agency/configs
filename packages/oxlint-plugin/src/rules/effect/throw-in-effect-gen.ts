@@ -4,8 +4,9 @@ import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 
 import { argumentAt, callbackCall, enclosingFunction, isSomeSame, type FunctionNode } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 
 const generatorMethods = ['fn', 'fnUntraced', 'gen'] as const satisfies ReadonlyArray<keyof typeof Effect>;
 

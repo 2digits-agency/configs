@@ -7,8 +7,9 @@ import type * as HttpMiddleware from 'effect/http/HttpMiddleware';
 import type * as HttpRouter from 'effect/http/HttpRouter';
 
 import { isLiteral, objectArgument, objectProperty, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 
 function wildcardOrigins(node: ESTree.Expression): boolean {
   const origins = unwrapExpression(node);

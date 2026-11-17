@@ -7,10 +7,12 @@ import * as Str from 'effect/String';
 import { moduleExportName } from '../../internal/ast';
 import { isTestFilename } from '../../internal/files';
 import { ruleMeta } from '../../internal/meta';
+import { RelativeSource } from '../../schemas/imports';
+import { ServiceConstructorName } from '../../schemas/names';
 
-const isServiceConstructorName = Schema.is(Schema.String.check(Schema.isPattern(/^make[A-Z]/u)));
+const isServiceConstructorName = Schema.is(ServiceConstructorName);
 
-const isRelativeSource = Schema.is(Schema.String.check(Schema.isPattern(/^\.\.?\//u)));
+const isRelativeSource = Schema.is(RelativeSource);
 
 /**
  * Keep relative make<Capability> imports in tests, not runtime composition.

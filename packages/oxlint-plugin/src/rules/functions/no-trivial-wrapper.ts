@@ -6,8 +6,9 @@ import * as P from 'effect/Predicate';
 import * as Str from 'effect/String';
 
 import { isFunctionNode, type FunctionNode } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 import { forwardedCall, isDetachableCallee, isEffectGuard, isTypeGuard } from './internal/forwarding';
 
 const maxCalleeLength = 60;

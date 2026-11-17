@@ -16,7 +16,8 @@ import {
   unwrapExpression,
   type FunctionNode,
 } from '../../../internal/ast';
-import type { ImportBindings } from '../../../internal/imports';
+import type { ImportBindings } from '../../../schemas/imports';
+import { PromiseChainMethod } from '../../../schemas/platform';
 
 /**
  * The call whose options object holds `node` as the property `name`, such as `Effect.tryPromise({ try: node })`.
@@ -76,8 +77,6 @@ export function isForeignCallback(node: FunctionNode, imports: ImportBindings): 
     Opt.exists((call) => Opt.isNone(imports.path(rootCallee(call.callee)))),
   );
 }
-
-const PromiseChainMethod = Schema.Literals(['catch', 'finally', 'then']);
 
 const isPromiseChainMethod = Schema.is(PromiseChainMethod);
 

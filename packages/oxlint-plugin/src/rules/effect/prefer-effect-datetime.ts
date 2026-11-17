@@ -6,8 +6,7 @@ import * as Schema from 'effect/Schema';
 import { staticPropertyName } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const NativeDateFormattingMethod = Schema.Literals(['toISOString', 'toLocaleDateString', 'toLocaleTimeString']);
+import { NativeDateFormattingMethod } from '../../schemas/time';
 
 const isNativeDateFormattingMethod = Schema.is(NativeDateFormattingMethod);
 

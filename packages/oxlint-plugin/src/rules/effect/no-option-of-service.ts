@@ -4,8 +4,9 @@ import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 
 import { argumentAt, staticPath, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 
 // `either` is the Effect v3 name, which the current Effect types no longer export.
 const wrapperMethods = ['option' satisfies keyof typeof Effect, 'either'];

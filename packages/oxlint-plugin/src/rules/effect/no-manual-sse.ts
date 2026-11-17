@@ -7,25 +7,14 @@ import * as Schema from 'effect/Schema';
 import { argumentAt, isStringLiteral, parentOf, staticPropertyName, unwrapExpression } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { SseFieldPrefix, SseFrame } from '../../schemas/platform';
 
 /**
  * Stands in for an interpolated value, which never contains a line break.
  */
 const hole = '\0';
 
-/**
- * Text that starts an SSE field line (`data:`, `event:`, `id:` or `retry:`) and ends with the blank line that
- * dispatches the event. A comment frame such as `: ping\n\n` has no field, and `Sse.encoder` cannot write it.
- */
-const SseFrame = Schema.String.check(Schema.isPattern(/(?:^|[\n\r])(?:data|event|id|retry):.*(?:\r?\n){2}$/su));
-
 const isSseFrame = Schema.is(SseFrame);
-
-/**
- * Field prefixes a hand-written parser tests lines against. `data:` without a space is left out because it also starts
- * data URLs.
- */
-const SseFieldPrefix = Schema.Literals(['data: ', 'event: ', 'id: ', 'retry: ']);
 
 const isSseFieldPrefix = Schema.is(SseFieldPrefix);
 

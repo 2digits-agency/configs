@@ -1,86 +1,15 @@
 import { RuleContext, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
-import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
 
+import { EffectSource, ImportBindings } from '../schemas/imports';
 import { moduleExportName, staticPath } from './ast';
 import { isImportedApiIn } from './scope';
-
-const ModulePath = Schema.Array(Schema.String);
-
-/**
- * The member a two-part module path names in `namespace`, such as `map` for `['Effect', 'map']`.
- *
- * @param path Module path.
- * @param namespace Module namespace, such as `Effect`.
- */
-export const namespaceMember: {
-  (namespace: string): (path: ReadonlyArray<string>) => Opt.Option<string>;
-
-  (path: ReadonlyArray<string>, namespace: string): Opt.Option<string>;
-} = Fn.dual(2, (path: ReadonlyArray<string>, namespace: string) =>
-  path.length === 2 && Opt.contains(Arr.head(path), namespace) ? Arr.get(path, 1) : Opt.none(),
-);
-
-/**
- * The Effect and Alchemy imports of one file: the module path each local binding names, such as `['Effect', 'map']` for
- * `import { map } from 'effect/Effect'`, and whether the file imports Effect at all.
- */
-export class ImportBindings extends Schema.Class<ImportBindings, { readonly brand: unique symbol }>('ImportBindings')({
-  bindings: Schema.ReadonlyMap(Schema.String, ModulePath),
-  hasEffectImport: Schema.Boolean,
-}) {
-  /**
-   * The module path an expression names through an import, such as `['Schema', 'Struct']` for `S.Struct`.
-   *
-   * @param node Callee or reference.
-   */
-  path(node: ESTree.Node): Opt.Option<ReadonlyArray<string>> {
-    return Opt.flatMap(staticPath(node), ([first, ...rest]) =>
-      Opt.fromNullishOr(this.bindings.get(first)).pipe(Opt.map((imported) => [...imported, ...rest])),
-    );
-  }
-
-  /**
-   * Whether an expression names `namespace.member`, or any of several members.
-   *
-   * @param node Callee or reference.
-   * @param namespace Module namespace, such as `Effect`.
-   * @param member Accepted member name or names.
-   */
-  isApi(node: ESTree.Node, namespace: string, member: string | ReadonlyArray<string>): boolean {
-    const members = Str.isString(member) ? [member] : member;
-
-    return Opt.exists(this.member(node, namespace), (name) => Arr.contains(members, name));
-  }
-
-  /**
-   * The member of `namespace` an expression names, such as `map` for `Effect.map`.
-   *
-   * @param node Callee or reference.
-   * @param namespace Module namespace, such as `Effect`.
-   */
-  member(node: ESTree.Node, namespace: string): Opt.Option<string> {
-    return Opt.flatMap(this.path(node), namespaceMember(namespace));
-  }
-
-  /**
-   * Whether an expression names exactly the module path `expected`.
-   *
-   * @param node Callee or reference.
-   * @param expected Full module path.
-   */
-  isApiPath(node: ESTree.Node, expected: ReadonlyArray<string>): boolean {
-    return Opt.exists(this.path(node), (path) => Arr.makeEquivalence(Str.Equivalence)(path, expected));
-  }
-}
-
-const EffectSource = Schema.String.check(Schema.isPattern(/^(?:effect(?:\/.*)?|@effect\/.*)$/u));
 
 const isEffectSource = Schema.is(EffectSource);
 

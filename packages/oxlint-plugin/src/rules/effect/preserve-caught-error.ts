@@ -11,15 +11,11 @@ import {
   walkNodes,
   type FunctionNode,
 } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { ErrorHandlerMethod } from '../../schemas/effect';
+import type { ImportBindings } from '../../schemas/imports';
 import { callbackApi, functionProperty } from './internal/callbacks';
-
-const ErrorHandlerMethod = Schema.Literals([
-  ...(['catch', 'mapError'] satisfies ReadonlyArray<keyof typeof Effect>),
-  // Effect v3 name, which the current Effect types no longer export.
-  'catchAll',
-]);
 
 const isErrorHandlerMethod = Schema.is(ErrorHandlerMethod);
 

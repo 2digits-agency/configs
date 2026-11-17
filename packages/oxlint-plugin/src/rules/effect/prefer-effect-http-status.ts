@@ -10,8 +10,9 @@ import type * as HttpServerResponse from 'effect/http/HttpServerResponse';
 import * as HttpStatus from 'effect/http/HttpStatus';
 
 import { argumentAt, objectProperty, plainProperty, propertyName, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 
 /**
  * Every `HttpStatus.Literal` except `Ok`, the alias of `OK`. Effect does not export its code table, so the type keeps

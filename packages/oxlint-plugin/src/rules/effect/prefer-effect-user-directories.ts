@@ -9,33 +9,10 @@ import { argumentAt, isStringLiteral, staticPath, staticPropertyName } from '../
 import { importBindings, moduleImportMember } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIdentifier, isImportedApiIn } from '../../internal/scope';
-
-const DirectoryLibrary = Schema.Literals([
-  'appdirsjs',
-  'application-config-path',
-  'env-paths',
-  'os-homedir',
-  'platform-folders',
-  'user-home',
-  'xdg-app-paths',
-  'xdg-basedir',
-]);
+import { DirectoryLibrary } from '../../schemas/imports';
+import { DirectoryVariable } from '../../schemas/platform';
 
 const isDirectoryLibrary = Schema.is(DirectoryLibrary);
-
-/**
- * Environment variables that `UserDirectories` reads through the `ConfigProvider`.
- */
-const DirectoryVariable = Schema.Literals([
-  'APPDATA',
-  'HOME',
-  'LOCALAPPDATA',
-  'USERPROFILE',
-  'XDG_CACHE_HOME',
-  'XDG_CONFIG_HOME',
-  'XDG_DATA_HOME',
-  'XDG_STATE_HOME',
-]);
 
 const isDirectoryVariable = Schema.is(DirectoryVariable);
 
