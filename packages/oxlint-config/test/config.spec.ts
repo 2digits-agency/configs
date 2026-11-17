@@ -459,6 +459,42 @@ describe('oxlint config', () => {
     });
   });
 
+  it.for([
+    { moduleMocks: false, reports: 2, status: 1 },
+    { moduleMocks: true, reports: 0, status: 0 },
+  ])('reports $reports module mocks with moduleMocks: $moduleMocks', ({ moduleMocks, reports, status: expected }) => {
+    // Load the built public preset and keep only the module mock rule.
+    const config = `
+      import twoDigits from '${presetUrl}';
+      const config = twoDigits({ react: false, ts: false, vitest: { enable: true, moduleMocks: ${moduleMocks} }, zod: false });
+      export default {
+        ...config,
+        jsPlugins: [],
+        overrides: config.overrides.map(({ jsPlugins, ...override }) => ({
+          ...override,
+          rules: Object.fromEntries(
+            Object.entries(override.rules ?? {}).filter(([name]) => name === 'vitest/no-restricted-vi-methods'),
+          ),
+        })),
+      };
+    `;
+
+    const source = `
+      import { vi } from 'vitest';
+      vi.mock('./service');
+      vi.doMock('./service');
+      vi.spyOn(console, 'log');
+    `;
+
+    withTemporaryProject({ 'oxlint.config.mjs': config, 'service.spec.ts': source }, (directory) => {
+      const { status, output } = runOxlint(directory, 'service.spec.ts');
+
+      expect(status, output).toBe(expected);
+
+      expect(output.matchAll(/vitest\(no-restricted-vi-methods\)/gu).toArray(), output).toHaveLength(reports);
+    });
+  });
+
   it('configures eslint-plugin-zod', () => {
     expect(jsPluginOf(zodConfig)).toMatchObject({ name: 'zod' });
 

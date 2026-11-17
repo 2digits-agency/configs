@@ -36,6 +36,14 @@ export interface OptionsWithVitest extends OptionsWithFiles {
    * @default true
    */
   typecheck?: boolean;
+
+  /**
+   * Allow `vi.mock` and `vi.doMock`. Effect projects replace dependencies through layers instead, so module mocking is
+   * reported when `effect` is installed.
+   *
+   * @default !isPackageExists('effect')
+   */
+  moduleMocks?: boolean;
 }
 
 export interface OptionsWithIgnores {
