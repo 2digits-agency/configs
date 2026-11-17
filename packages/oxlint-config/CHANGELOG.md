@@ -1,3 +1,13 @@
+## @2digits/oxlint-config@3.4.0
+
+### Ban `Reflect.apply` and `Reflect.get`
+
+`no-restricted-properties` now reports `Reflect.apply` and `Reflect.get`. Call the function directly, and read properties with typed access or after decoding dynamic input into a domain type. `unicorn/prefer-reflect-apply` is turned off, because it recommends `Reflect.apply`.
+
+### Update Oxlint to 1.94.0
+
+The config now expects `oxlint` 1.94.0, and the plugin builds on `@oxlint/plugins` 1.94.0.
+
 ## @2digits/oxlint-config@3.3.4
 
 ### Update `@stylistic/eslint-plugin` and `oxlint-tsgolint`

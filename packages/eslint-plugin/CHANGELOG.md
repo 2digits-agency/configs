@@ -1,3 +1,9 @@
+## @2digits/eslint-plugin@4.1.2
+
+### Update `@typescript-eslint` packages to 8.73.0
+
+The plugin now builds on `@typescript-eslint/utils` and `@typescript-eslint/scope-manager` 8.73.0.
+
 ## @2digits/eslint-plugin@4.1.1
 
 ### Update `eslint` to 10.15.0
