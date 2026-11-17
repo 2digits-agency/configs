@@ -1,3 +1,10 @@
+## @2digits/config-monorepo@0.1.23
+
+### Update Vite+, renovate and pkg-pr-new
+
+- Updated `vite-plus` to `1.7.0`, `renovate` to `44.248.0` and `pkg-pr-new` to `0.0.94`
+- Updated the GitButler skill to `0.5.2282`
+
 ## @2digits/config-monorepo@0.1.22
 
 ### Update pnpm, tsrs, renovate and `@oxc-node/cli`

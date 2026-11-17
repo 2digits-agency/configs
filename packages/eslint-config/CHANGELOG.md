@@ -1,3 +1,13 @@
+## @2digits/eslint-config@5.13.0
+
+### Ban `Reflect.apply` and `Reflect.get`
+
+`no-restricted-properties` now reports `Reflect.apply` and `Reflect.get`. Call the function directly, and read properties with typed access or after decoding dynamic input into a domain type. `unicorn/prefer-reflect-apply` is turned off, because it recommends `Reflect.apply`.
+
+### Update `typescript-eslint` to 8.73.0 and `eslint-plugin-jsdoc` to 65.4.10
+
+The config enables typescript-eslint's new `ts/no-unsafe-class-instance-assignment` rule, which reports object literals and other non-instance values used where a class instance is expected.
+
 ## @2digits/eslint-config@5.12.4
 
 ### Update `eslint-plugin-unicorn` to 80.0.0

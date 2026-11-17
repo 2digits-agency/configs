@@ -1,3 +1,14 @@
+## @2digits/tsconfig@1.2.10
+
+### Update `@effect/tsgo` to 0.70.0
+
+The Effect config now expects `@effect/tsgo` 0.70.0 and enables its two new diagnostics as errors:
+
+- `flatMapProvideServiceToProvideServiceEffect` suggests `Effect.provideServiceEffect` when a `flatMap` or `andThen` callback only forwards its parameter to `Effect.provideService`
+- `forLoopPushToForEach` suggests `Effect.forEach` instead of a `for-of` loop that pushes yielded Effect results into an array
+
+It also drops the `debug` option, which 0.70.0 no longer supports.
+
 ## @2digits/tsconfig@1.2.9
 
 ### Enable the `missingConcurrencyOption` Effect diagnostic

@@ -1,3 +1,9 @@
+## @2digits/oxfmt-config@0.3.35
+
+### Update `oxfmt` to 0.79.0
+
+The config now expects `oxfmt` 0.79.0.
+
 ## @2digits/oxfmt-config@0.3.34
 
 ### Update Oxfmt
