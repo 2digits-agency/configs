@@ -54,12 +54,12 @@ const register = Effect.fn('OrbitProxy.test.register')(function* (callTool: Orbi
     Layer.succeed(McpSchema.McpServerClient, {
       clientId: 1,
       protocolVersion: '2025-06-18',
-      clientCapabilities: {},
-      clientInfo: { name: 'test', version: '1' },
+      clientCapabilities: McpSchema.ClientCapabilities.make({}),
+      clientInfo: McpSchema.Implementation.make({ name: 'test', version: '1' }),
       initializePayload: {
         protocolVersion: '2025-06-18',
-        capabilities: {},
-        clientInfo: { name: 'test', version: '1' },
+        capabilities: McpSchema.ClientCapabilities.make({}),
+        clientInfo: McpSchema.Implementation.make({ name: 'test', version: '1' }),
       },
       getClient: Effect.die('Unexpected reverse request'),
     }),
@@ -85,7 +85,7 @@ const register = Effect.fn('OrbitProxy.test.register')(function* (callTool: Orbi
 const requestContext = Layer.succeed(McpSchema.McpRequestContext, {
   clientId: 1,
   protocolVersion: '2025-06-18',
-  clientCapabilities: {},
+  clientCapabilities: McpSchema.ClientCapabilities.make({}),
 });
 
 describe('orbit MCP proxy', () => {

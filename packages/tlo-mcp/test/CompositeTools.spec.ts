@@ -156,7 +156,7 @@ const setup = Effect.fn('CompositeTools.test.setup')(function* (
 const requestContext = Layer.succeed(McpSchema.McpRequestContext, {
   clientId: 1,
   protocolVersion: '2025-06-18',
-  clientCapabilities: {},
+  clientCapabilities: McpSchema.ClientCapabilities.make({}),
 });
 
 /**
