@@ -32,14 +32,17 @@ export const openTunnel = Effect.fn('Gateway.openTunnel')(
     return {
       endpoint: `https://tlo.${hostname}/mcp`,
       closed: connection.closed.pipe(
-        Effect.mapError(() => GatewayError.make({ message: 'OpenTunnel stopped unexpectedly. Restart tlo-mcp.' })),
+        Effect.mapError((cause) =>
+          GatewayError.make({ message: 'OpenTunnel stopped unexpectedly. Restart tlo-mcp.', cause }),
+        ),
       ),
     };
   },
   Effect.timeout('180 seconds'),
-  Effect.mapError(() =>
+  Effect.mapError((cause) =>
     GatewayError.make({
       message: 'Could not connect OpenTunnel. Check network access and retry; existing tunnel identity is preserved.',
+      cause,
     }),
   ),
 );

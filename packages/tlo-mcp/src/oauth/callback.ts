@@ -86,7 +86,7 @@ export const listenForLogin = Effect.fn('OrbitAuth.listenForLogin')(function* (s
   const nativeServer = yield* Effect.sync(createServer);
 
   const server = yield* NodeHttpServer.make(() => nativeServer, { port: 0, host: '127.0.0.1' }).pipe(
-    Effect.mapError(() => OrbitAuthError.make({ message: 'Could not bind OAuth callback.' })),
+    Effect.mapError((cause) => OrbitAuthError.make({ message: 'Could not bind OAuth callback.', cause })),
   );
 
   if (!P.isTagged(server.address, 'InetAddressV4')) {
@@ -130,7 +130,9 @@ export const listenForLogin = Effect.fn('OrbitAuth.listenForLogin')(function* (s
     redirectUri,
     code: Deferred.await(result).pipe(
       Effect.timeout('3 minutes'),
-      Effect.mapError(() => OrbitAuthError.make({ message: 'Login denied or timed out. Run tlo-mcp login again.' })),
+      Effect.mapError((cause) =>
+        OrbitAuthError.make({ message: 'Login denied or timed out. Run tlo-mcp login again.', cause }),
+      ),
     ),
   };
 });

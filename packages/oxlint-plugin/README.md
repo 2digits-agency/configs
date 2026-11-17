@@ -59,6 +59,18 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Log results: `no-effect-as-on-log` reports `Effect.as`, `Effect.asSome` and `Effect.asVoid` applied to an
   `Effect.log*` or `Console.*` log effect (`.pipe(Effect.as(x))`, `pipe(log, Effect.as(x))` or data-first). Write
   `Effect.gen` that `yield*`s the log and returns the value instead.
+- Dropped causes: `preserve-caught-error` reports `Effect.mapError`, `Effect.catch` and `Effect.catchCause` handlers
+  (and the v3 `catchAll`), and the `catch` option of `Effect.try`/`Effect.tryPromise`, that construct a new error
+  without passing in the failure they receive. It counts `new XError(…)` and `XError.make(…)` anywhere in the handler,
+  and any PascalCase class the handler returns, passes to `Effect.fail` or `yield*`s, such as `new BadRequest(…)`.
+  Classes from Effect imports, such as `SchemaIssue.InvalidValue`, only count by their `Error` suffix. A
+  handler is exempt when the step right before it is an `Effect.tapError` or `Effect.tapCause` whose handler is, or
+  returns, an `Effect.log*` or `Console.*` call with the failure: in the same `.pipe`, `pipe` or `Effect.fn` pipeline, a
+  receiving `.pipe`, or the source of a data-first call. Only `Effect.map`, `Effect.as*` and `Effect.withSpan` may sit
+  in between; any other step, such as `Effect.flatMap`, can add a failure the tap never logged. An `Effect.catchCause`
+  handler also receives defects, so only `Effect.tapCause` exempts it. The `catchCause`, `.make`, PascalCase and logging cases are adapted from anti-slop's
+  [`require-cause-when-narrowing`](https://github.com/K-Mistele/anti-slop/blob/main/src/effect/rules/require-cause-when-narrowing.ts);
+  unlike upstream, a tap that does not log the failure, or that only logs one tag, does not exempt the handler.
 - Local dates: `no-utc-iso-slicing` reports `.slice`, `.substring`, `.substr`, `.split`, `.replace` and `.replaceAll`
   on `x.toISOString()` or `DateTime.formatIso(x)`, and the matching `effect/String` steps in `pipe`, `flow` and
   `.pipe`. Both strings are UTC, so a sliced date is the previous day just after midnight in Europe/Amsterdam. Format

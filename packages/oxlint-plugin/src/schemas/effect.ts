@@ -44,7 +44,7 @@ export const BroadCatchName = CatchMethod.pick(['catch', 'catchAll', 'catchIf'])
  */
 export const ErrorHandlerMethod = Schema.Literals([
   ...CatchMethod.pick(['catch', 'catchAll']).literals,
-  'mapError' satisfies EffectApi,
+  ...(['catchCause', 'mapError'] satisfies ReadonlyArray<EffectApi>),
 ]);
 
 export const PureCallbackMethod = Schema.Literals([

@@ -48,6 +48,7 @@ export class OrbitAuthError extends Schema.TaggedError<OrbitAuthError, { readonl
   'OrbitAuthError',
   {
     message: Schema.String,
+    cause: Schema.Defect().pipe(Schema.optional),
   },
 ) {}
 
