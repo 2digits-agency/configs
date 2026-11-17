@@ -1,6 +1,7 @@
 import { Diagnostic, Rule, RuleContext, Visitor, type Definition, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
@@ -54,7 +55,7 @@ function isEndpointImport(definition: Definition, path: ReadonlyArray<string>): 
  */
 function isEndpointCall(node: ESTree.CallExpression) {
   return staticPath(node.callee).pipe(
-    Opt.filter((path) => isEndpointMethod(Arr.lastNonEmpty(path))),
+    Opt.filter(Fn.flow(Arr.lastNonEmpty, isEndpointMethod)),
     Opt.match({
       onNone: () => Effect.succeed(false),
       onSome: (path) =>

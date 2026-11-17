@@ -1,6 +1,7 @@
 import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
+import * as Fn from 'effect/Function';
 import type * as Hash from 'effect/Hash';
 import * as HashSet from 'effect/HashSet';
 import * as Opt from 'effect/Option';
@@ -57,7 +58,7 @@ export const noHashAsIdentity = Rule.define({
       ),
       Visitor.on('CallExpression', (node) =>
         node.callee.type === 'MemberExpression' &&
-        Opt.exists(staticPath(node.callee), (path) => isKeyedMethod(Arr.lastNonEmpty(path)))
+        Opt.exists(staticPath(node.callee), Fn.flow(Arr.lastNonEmpty, isKeyedMethod))
           ? Opt.match(argumentAt(node, 0), {
               onNone: () => Effect.void,
               onSome: (key) => reportWhen(key, isHashValue(key)),

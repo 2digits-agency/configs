@@ -1,11 +1,20 @@
+import type * as EffectBarrel from 'effect';
 import type { Definition, ESTree, OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
+import * as Struct from 'effect/Struct';
 import * as Tuple from 'effect/Tuple';
 
-import { containsRange, isConstDeclaration, isFunctionNode, walkNodes, type FunctionNode } from '../../../internal/ast';
+import {
+  callbackCall,
+  containsRange,
+  isConstDeclaration,
+  isFunctionNode,
+  walkNodes,
+  type FunctionNode,
+} from '../../../internal/ast';
 import type { ImportBindings } from '../../../internal/imports';
 import { functionResult } from '../../effect/internal/callbacks';
 
@@ -216,5 +225,293 @@ export function isSettledCallee(
       !resolved ||
       (!Arr.some(resolved.references, (reference) => reference.isWrite() && !reference.init) &&
         Arr.every(resolved.defs, (definition) => isSettledAt(definition, callback))),
+  );
+}
+
+// The modules of the `effect` barrel, such as `Effect` or `Array`, without its functions such as `pipe`.
+type EffectModule = Extract<keyof typeof EffectBarrel, Capitalize<keyof typeof EffectBarrel>>;
+
+/*
+ * The parameter lists of every overload of a function, for up to ten overloads; no `effect` 4.1 API has more than
+ * eight. A function with fewer overloads also matches, and the extra lists hold no callbacks.
+ */
+/* eslint-disable ts/method-signature-style -- Method signatures compare parameters bivariantly, so an overload whose
+ * parameters only resolve to `never` once its type parameters are erased, such as `Effect.catchReason`, still matches.
+ */
+type CallParameters<T> = T extends {
+  call(...args: infer TArgs1): unknown;
+
+  call(...args: infer TArgs2): unknown;
+
+  call(...args: infer TArgs3): unknown;
+
+  call(...args: infer TArgs4): unknown;
+
+  call(...args: infer TArgs5): unknown;
+
+  call(...args: infer TArgs6): unknown;
+
+  call(...args: infer TArgs7): unknown;
+
+  call(...args: infer TArgs8): unknown;
+
+  call(...args: infer TArgs9): unknown;
+
+  call(...args: infer TArgs10): unknown;
+}['call']
+  ? TArgs1 | TArgs2 | TArgs3 | TArgs4 | TArgs5 | TArgs6 | TArgs7 | TArgs8 | TArgs9 | TArgs10
+  : never;
+/* eslint-enable ts/method-signature-style */
+
+type IsAny<T> = 0 extends 1 & T ? true : false;
+
+// `true` for a function that receives more than one argument, including a rest parameter.
+type MultiArgumentCallback<T> =
+  IsAny<T> extends true
+    ? never
+    : T extends (...args: infer TArgs) => unknown
+      ? TArgs['length'] extends 0 | 1
+        ? never
+        : true
+      : never;
+
+// Per position, because indexing the tuple with `number` merges a callback with an `unknown` parameter into `unknown`.
+type MultiArgumentParameters<TArgs> =
+  TArgs extends ReadonlyArray<unknown>
+    ? { readonly [TIndex in keyof TArgs]: MultiArgumentCallback<TArgs[TIndex]> }[number]
+    : never;
+
+/*
+ * Every Effect API with a parameter that is a function receiving more than one argument, such as the index of
+ * `Stream.map`, the `Exit` of `Effect.acquireRelease`, the accumulator of `Stream.scan` or the two values an `Order`
+ * compares. Passing a function there directly would give it those extra arguments.
+ */
+type MultiArgumentApi = {
+  readonly [TModule in EffectModule]: {
+    readonly [TMember in Extract<keyof (typeof EffectBarrel)[TModule], string>]: true extends MultiArgumentParameters<
+      CallParameters<(typeof EffectBarrel)[TModule][TMember]>
+    >
+      ? `${TModule}.${TMember}`
+      : never;
+  }[Extract<keyof (typeof EffectBarrel)[TModule], string>];
+}[EffectModule];
+
+/*
+ * Collection modules whose callbacks can receive an index or key, so `Arr.map(xs, f)` would pass `f` a second argument.
+ * They are exempt as a whole because their types do not always show it: `Chunk.filter` declares a one-argument
+ * predicate but delegates to `Array.filter`, which also passes the index.
+ */
+const indexedModules = [
+  'Array',
+  'Chunk',
+  'HashMap',
+  'HashSet',
+  'Iterable',
+  'MutableHashMap',
+  'MutableHashSet',
+  'MutableList',
+  'Record',
+  'Trie',
+  'Tuple',
+  'TxChunk',
+  'TxHashMap',
+] as const satisfies ReadonlyArray<EffectModule>;
+
+const isIndexedModule = Schema.is(Schema.Literals(indexedModules));
+
+/*
+ * Modules whose handlers take their parameter type from the pattern, such as `Match.tag('Known', (known) => …)`. A
+ * generic function passed instead, such as `Opt.some`, has nothing to infer from and gets `unknown`.
+ */
+const contextualModules = ['Match'] as const satisfies ReadonlyArray<EffectModule>;
+
+const isContextualModule = Schema.is(Schema.Literals(contextualModules));
+
+/*
+ * The multi-argument APIs of the other modules. `satisfies` keeps this list equal to `MultiArgumentApi`: an `effect`
+ * update that adds one fails as a missing property, and one that drops one fails as an unknown property.
+ */
+const multiArgumentApis = {
+  'Channel.acquireRelease': true,
+  'Channel.acquireUseRelease': true,
+  'Channel.catchCauseFilter': true,
+  'Channel.catchReason': true,
+  'Channel.catchReasons': true,
+  'Channel.combine': true,
+  'Channel.filterArrayEffect': true,
+  'Channel.fromTransform': true,
+  'Channel.fromTransformBracket': true,
+  'Channel.map': true,
+  'Channel.mapAccum': true,
+  'Channel.mapEffect': true,
+  'Channel.runFold': true,
+  'Channel.runFoldEffect': true,
+  'Channel.scan': true,
+  'Channel.scanEffect': true,
+  'Channel.transformPull': true,
+  'Combiner.make': true,
+  'Combiner.max': true,
+  'Combiner.min': true,
+  'Effect.acquireRelease': true,
+  'Effect.acquireUseRelease': true,
+  'Effect.callback': true,
+  'Effect.catchCauseFilter': true,
+  'Effect.catchReason': true,
+  'Effect.catchReasons': true,
+  'Effect.effectify': true,
+  'Effect.filter': true,
+  'Effect.findFirst': true,
+  'Effect.findFirstFilter': true,
+  'Effect.fn': true,
+  'Effect.fnUntraced': true,
+  'Effect.fnUntracedEager': true,
+  'Effect.forEach': true,
+  'Effect.onErrorFilter': true,
+  'Effect.onExitFilter': true,
+  'Effect.partition': true,
+  'Effect.reduce': true,
+  'Effect.repeatOrElse': true,
+  'Effect.retryOrElse': true,
+  'Effect.tapCauseFilter': true,
+  'Effect.validate': true,
+  'Effect.withSpan': true,
+  'Effect.zipWith': true,
+  'Equivalence.Array': true,
+  'Equivalence.Record': true,
+  'Equivalence.combine': true,
+  'Equivalence.make': true,
+  'Equivalence.mapInput': true,
+  'Filter.zipWith': true,
+  'Function.dual': true,
+  'Function.flip': true,
+  'Function.flow': true,
+  'Function.tupled': true,
+  'Graph.complement': true,
+  'Graph.findEdge': true,
+  'Graph.findEdges': true,
+  'Layer.fromBuild': true,
+  'Layer.fromBuildMemo': true,
+  'Metric.mapInput': true,
+  'Newtype.makeEquivalence': true,
+  'Newtype.makeOrder': true,
+  'Optic.makeLens': true,
+  'Optic.makeOptional': true,
+  'Option.containsWith': true,
+  'Option.lift2': true,
+  'Option.liftNullishOr': true,
+  'Option.liftThrowable': true,
+  'Option.makeEquivalence': true,
+  'Option.makeOrder': true,
+  'Option.reduceCompact': true,
+  'Option.zipWith': true,
+  'Order.Array': true,
+  'Order.clamp': true,
+  'Order.combine': true,
+  'Order.flip': true,
+  'Order.isBetween': true,
+  'Order.isGreaterThan': true,
+  'Order.isGreaterThanOrEqualTo': true,
+  'Order.isLessThan': true,
+  'Order.isLessThanOrEqualTo': true,
+  'Order.make': true,
+  'Order.mapInput': true,
+  'Order.max': true,
+  'Order.min': true,
+  'Redacted.makeEquivalence': true,
+  'Reducer.make': true,
+  'RequestResolver.around': true,
+  'RequestResolver.make': true,
+  'Result.makeEquivalence': true,
+  'Schema.makeFilter': true,
+  'Schema.middlewareDecoding': true,
+  'Schema.middlewareEncoding': true,
+  'SchemaGetter.checkEffect': true,
+  'SchemaGetter.fail': true,
+  'SchemaGetter.transformEffect': true,
+  'SchemaGetter.transformOptionalEffect': true,
+  'Sink.fold': true,
+  'Sink.foldArray': true,
+  'Sink.foldUntil': true,
+  'Sink.fromTransform': true,
+  'Sink.reduce': true,
+  'Sink.reduceArray': true,
+  'Sink.reduceEffect': true,
+  'Sink.reduceWhile': true,
+  'Sink.reduceWhileArray': true,
+  'Sink.reduceWhileArrayEffect': true,
+  'Sink.reduceWhileEffect': true,
+  'Sink.summarized': true,
+  'Stream.catchCauseFilter': true,
+  'Stream.catchReason': true,
+  'Stream.catchReasons': true,
+  'Stream.changesWith': true,
+  'Stream.changesWithEffect': true,
+  'Stream.combine': true,
+  'Stream.combineArray': true,
+  'Stream.crossWith': true,
+  'Stream.dropUntil': true,
+  'Stream.dropUntilEffect': true,
+  'Stream.dropWhile': true,
+  'Stream.dropWhileEffect': true,
+  'Stream.filterEffect': true,
+  'Stream.map': true,
+  'Stream.mapAccum': true,
+  'Stream.mapAccumArray': true,
+  'Stream.mapAccumArrayEffect': true,
+  'Stream.mapAccumEffect': true,
+  'Stream.mapArray': true,
+  'Stream.mapArrayEffect': true,
+  'Stream.mapEffect': true,
+  'Stream.runFold': true,
+  'Stream.runFoldEffect': true,
+  'Stream.scan': true,
+  'Stream.scanEffect': true,
+  'Stream.takeUntil': true,
+  'Stream.takeUntilEffect': true,
+  'Stream.takeWhile': true,
+  'Stream.takeWhileEffect': true,
+  'Stream.transformPull': true,
+  'Stream.transformPullBracket': true,
+  'Stream.zipLatestWith': true,
+  'Stream.zipWith': true,
+  'Stream.zipWithArray': true,
+  'TextDiff.diffWith': true,
+  'TxHashSet.reduce': true,
+  'TxPriorityQueue.empty': true,
+  'TxPriorityQueue.fromIterable': true,
+  'TxPriorityQueue.make': true,
+  'UndefinedOr.liftThrowable': true,
+  'Unify.unify': true,
+} satisfies Record<
+  Exclude<MultiArgumentApi, `${(typeof indexedModules)[number] | (typeof contextualModules)[number]}.${string}`>,
+  true
+>;
+
+const isMultiArgumentApi = Schema.is(Schema.Literals(Struct.keys(multiArgumentApis)));
+
+/**
+ * The Effect API call that receives a callback and passes it one argument, such as `Effect.map(…)`, so a function with
+ * one parameter can replace the callback as is.
+ *
+ * @param node Callback.
+ * @param imports Import bindings of the file.
+ */
+export function unaryEffectCallback(node: FunctionNode, imports: ImportBindings): Opt.Option<ESTree.CallExpression> {
+  return Opt.filter(callbackCall(node), (parent) =>
+    Opt.exists(
+      imports.path(parent.callee),
+      (path) =>
+        path.length === 2 &&
+        !Opt.exists(Arr.head(path), (module) => isIndexedModule(module) || isContextualModule(module)) &&
+        !isMultiArgumentApi(Arr.join(path, '.')),
+    ),
+  );
+}
+
+// Annotations on the callback can type it differently from the callee's own signature.
+export function isAnnotated(node: FunctionNode): boolean {
+  return (
+    Boolean(node.returnType) ||
+    Arr.some(node.params, (parameter) => parameter.type === 'Identifier' && Boolean(parameter.typeAnnotation))
   );
 }

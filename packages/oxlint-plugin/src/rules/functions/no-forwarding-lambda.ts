@@ -3,164 +3,22 @@ import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
-import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
-import { callbackCall, isFunctionNode, type FunctionNode } from '../../internal/ast';
+import { isFunctionNode, type FunctionNode } from '../../internal/ast';
 import { argumentText } from '../../internal/fixes';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable } from '../../internal/scope';
-import { forwardedCall, isDetachableCallee, isEffectGuard, isSettledCallee, isTypeGuard } from './internal/forwarding';
-
-// Modules whose callbacks also receive an index or key, so `Arr.map(xs, f)` would pass `f` a second argument.
-const isIndexedModule = Schema.is(
-  Schema.Literals([
-    'Array',
-    'Chunk',
-    'HashMap',
-    'HashSet',
-    'Iterable',
-    'MutableHashMap',
-    'MutableHashSet',
-    'MutableList',
-    'Record',
-    'Trie',
-    'Tuple',
-    'TxChunk',
-    'TxHashMap',
-  ]),
-);
-
-/*
- * Other Effect APIs whose callbacks receive more than one argument, such as an index, the `Exit` of
- * `Effect.acquireRelease` or the accumulator of `Stream.scan`, found from the callback signatures in the `effect` 4.1
- * declarations. Passing a function directly would give it those extra arguments.
- */
-const isMultiArgumentApi = Schema.is(
-  Schema.Literals([
-    'Channel.acquireRelease',
-    'Channel.acquireUseRelease',
-    'Channel.catchCauseFilter',
-    'Channel.catchReason',
-    'Channel.combine',
-    'Channel.filterArrayEffect',
-    'Channel.fromTransform',
-    'Channel.fromTransformBracket',
-    'Channel.map',
-    'Channel.mapAccum',
-    'Channel.mapEffect',
-    'Channel.runFold',
-    'Channel.runFoldEffect',
-    'Channel.scan',
-    'Channel.scanEffect',
-    'Channel.transformPull',
-    'Combiner.make',
-    'Duration.matchPair',
-    'Effect.acquireRelease',
-    'Effect.acquireUseRelease',
-    'Effect.catchCauseFilter',
-    'Effect.catchReason',
-    'Effect.effectify',
-    'Effect.filter',
-    'Effect.findFirst',
-    'Effect.findFirstFilter',
-    'Effect.forEach',
-    'Effect.onErrorFilter',
-    'Effect.onExitFilter',
-    'Effect.partition',
-    'Effect.reduce',
-    'Effect.repeatOrElse',
-    'Effect.retryOrElse',
-    'Effect.tapCauseFilter',
-    'Effect.validate',
-    'Effect.zipWith',
-    'Equivalence.make',
-    'Filter.zipWith',
-    'Graph.complement',
-    'Graph.findEdge',
-    'Graph.findEdges',
-    'Graph.floydWarshall',
-    'Layer.fromBuild',
-    'Layer.fromBuildMemo',
-    'Metric.mapInput',
-    'Optic.fromChecks',
-    'Optic.makeLens',
-    'Optic.makeOptional',
-    'Option.containsWith',
-    'Option.lift2',
-    'Option.reduceCompact',
-    'Option.zipWith',
-    'Order.make',
-    'Reducer.make',
-    'RequestResolver.around',
-    'RequestResolver.make',
-    'RequestResolver.makeGrouped',
-    'RequestResolver.makeWith',
-    'Schema.makeFilter',
-    'Schema.makeIsMultipleOf',
-    'Schema.middlewareDecoding',
-    'Schema.middlewareEncoding',
-    'SchemaGetter.checkEffect',
-    'SchemaGetter.fail',
-    'SchemaGetter.transformEffect',
-    'SchemaGetter.transformOptionalEffect',
-    'SchemaTransformation.transformEffect',
-    'Sink.fold',
-    'Sink.foldArray',
-    'Sink.foldUntil',
-    'Sink.fromTransform',
-    'Sink.reduce',
-    'Sink.reduceArray',
-    'Sink.reduceEffect',
-    'Sink.reduceWhile',
-    'Sink.reduceWhileArray',
-    'Sink.reduceWhileArrayEffect',
-    'Sink.reduceWhileEffect',
-    'Sink.summarized',
-    'Stream.catchCauseFilter',
-    'Stream.catchReason',
-    'Stream.changesWith',
-    'Stream.changesWithEffect',
-    'Stream.combine',
-    'Stream.combineArray',
-    'Stream.crossWith',
-    'Stream.dropUntil',
-    'Stream.dropUntilEffect',
-    'Stream.dropWhile',
-    'Stream.dropWhileEffect',
-    'Stream.filterEffect',
-    'Stream.map',
-    'Stream.mapAccum',
-    'Stream.mapAccumArray',
-    'Stream.mapAccumArrayEffect',
-    'Stream.mapAccumEffect',
-    'Stream.mapArray',
-    'Stream.mapArrayEffect',
-    'Stream.mapEffect',
-    'Stream.runFold',
-    'Stream.runFoldEffect',
-    'Stream.scan',
-    'Stream.scanEffect',
-    'Stream.takeUntil',
-    'Stream.takeUntilEffect',
-    'Stream.takeWhile',
-    'Stream.takeWhileEffect',
-    'Stream.transformPull',
-    'Stream.transformPullBracket',
-    'Stream.zipLatestWith',
-    'Stream.zipWith',
-    'Stream.zipWithArray',
-    'TextDiff.diffWith',
-    'TxHashSet.reduce',
-  ]),
-);
-
-/*
- * Modules whose handlers take their parameter type from the pattern, such as `Match.tag('Known', (known) => …)`. A
- * generic function passed instead, such as `Opt.some`, has nothing to infer from and gets `unknown`.
- */
-const isContextualModule = Schema.is(Schema.Literals(['Match']));
+import {
+  forwardedCall,
+  isAnnotated,
+  isDetachableCallee,
+  isEffectGuard,
+  isSettledCallee,
+  isTypeGuard,
+  unaryEffectCallback,
+} from './internal/forwarding';
 
 /**
  * Whether a callee is a function of this file with exactly one signature: a function declaration without overloads, or
@@ -197,14 +55,6 @@ function isLocalSingleSignature(sourceCode: OxlintSourceCode, callee: ESTree.Exp
       isFunctionNode(declarator.init)
     );
   });
-}
-
-// Annotations on the callback can type it differently from the callee's own signature.
-function isAnnotated(node: FunctionNode): boolean {
-  return (
-    Boolean(node.returnType) ||
-    Arr.some(node.params, (parameter) => parameter.type === 'Identifier' && Boolean(parameter.typeAnnotation))
-  );
 }
 
 /**
@@ -254,14 +104,7 @@ export const noForwardingLambda = Rule.define({
 
     // Report when the Effect API that receives the callback passes it one argument and the callee can replace it as is.
     function check(node: FunctionNode) {
-      return callbackCall(node).pipe(
-        Opt.flatMap((parent) => imports.path(parent.callee)),
-        Opt.filter(
-          (path) =>
-            path.length === 2 &&
-            !Opt.exists(Arr.head(path), (module) => isIndexedModule(module) || isContextualModule(module)) &&
-            !isMultiArgumentApi(Arr.join(path, '.')),
-        ),
+      return unaryEffectCallback(node, imports).pipe(
         Opt.flatMap(() => forwardedCall(node)),
         Opt.filter(
           ({ exact, call }) =>

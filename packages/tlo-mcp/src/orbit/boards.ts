@@ -1,4 +1,5 @@
 import * as Arr from 'effect/Array';
+import * as Fn from 'effect/Function';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
@@ -64,7 +65,7 @@ const Count = Schema.FiniteFromString.check(Schema.isInt());
 const Flag = Schema.String.pipe(
   Schema.optionalKey,
   Schema.decodeTo(Schema.Boolean, {
-    decode: SchemaGetter.transformOptional((marker) => marker.pipe(Opt.isSome, Opt.some)),
+    decode: SchemaGetter.transformOptional(Fn.flow(Opt.isSome, Opt.some)),
     encode: SchemaGetter.forbiddenEncoding,
   }),
 );

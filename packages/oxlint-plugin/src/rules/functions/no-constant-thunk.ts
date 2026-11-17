@@ -13,68 +13,13 @@ import * as Fn from 'effect/Function';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
-import * as Schema from 'effect/Schema';
 
 import { isConstDeclaration, isFunctionNode, staticPropertyName, type FunctionNode } from '../../internal/ast';
 import { importBindings, type ImportBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable, soleDefinition } from '../../internal/scope';
 import { functionResult } from '../effect/internal/callbacks';
-
-/**
- * Modules whose functions build immutable values or lazy descriptions, so calling them once at module load is the same
- * as calling them on every use.
- */
-const isPureModule = Schema.is(
-  Schema.Literals([
-    'BigDecimal',
-    'Config',
-    'Data',
-    'DateTime',
-    'Duration',
-    'Effect',
-    'Equivalence',
-    'Exit',
-    'Function',
-    'Layer',
-    'Match',
-    'Option',
-    'Order',
-    'Predicate',
-    'Result',
-    'Schedule',
-    'Schema',
-    'Stream',
-    'String',
-    'Struct',
-    'flow',
-    'pipe',
-  ]),
-);
-
-/*
- * Modules whose functions call their callbacks right away, such as `Option.map(some, f)` or `pipe(value, f)`, so the
- * result is only constant when no function argument can read changing state.
- */
-const isEagerModule = Schema.is(
-  Schema.Literals([
-    'BigDecimal',
-    'Data',
-    'DateTime',
-    'Duration',
-    'Exit',
-    'Option',
-    'Result',
-    'String',
-    'Struct',
-    'pipe',
-  ]),
-);
-
-const isEagerMember = Schema.is(Schema.Literals(['pipe', 'value', 'valueTags']));
-
-// `Effect.runSync`, `DateTime.nowUnsafe`, `Ref.makeUnsafe` and similar run effects or read mutable state.
-const impureMember = /^run|unsafe/iu;
+import { isEagerApi, isLocalFunction, isPureApi } from './internal/pure-api';
 
 /**
  * What constness depends on: the file's scopes, to tell `const` from `let`, and its import bindings.
@@ -93,7 +38,7 @@ function isConstantCall(node: ESTree.CallExpression, env: Constness): boolean {
 
   const path = Opt.getOrElse(env.imports.path(callee), (): ReadonlyArray<string> => []);
 
-  const pureApi = Opt.exists(Arr.head(path), isPureModule) && !Arr.some(path, (part) => impureMember.test(part));
+  const pureApi = isPureApi(path);
 
   // `Schema.Struct(…).pipe(…)`, `Match.type<A>().pipe(…)` and curried `Schema.decodeUnknownEffect(User)(…)`.
   const pureBuilder =
@@ -104,7 +49,7 @@ function isConstantCall(node: ESTree.CallExpression, env: Constness): boolean {
       isConstantCall(callee.object, env)) ||
     (callee.type === 'CallExpression' && isConstantCall(callee, env));
 
-  const eager = Opt.exists(Arr.head(path), isEagerModule) || Opt.exists(Arr.get(path, 1), isEagerMember);
+  const eager = isEagerApi(path);
 
   return (
     !node.optional &&
@@ -112,26 +57,10 @@ function isConstantCall(node: ESTree.CallExpression, env: Constness): boolean {
     Arr.every(
       node.arguments,
       (argument) =>
-        argument.type !== 'SpreadElement' && isConstant(argument, env) && (!eager || !isLocalFunction(argument, env)),
+        argument.type !== 'SpreadElement' &&
+        isConstant(argument, env) &&
+        (!eager || !isLocalFunction(argument, env.sourceCode)),
     )
-  );
-}
-
-// A function whose body this rule doesn't see: an inline function, or a local or imported function binding.
-function isLocalFunction(node: ESTree.Expression, env: Constness): boolean {
-  if (node.type !== 'Identifier') {
-    return isFunctionNode(node);
-  }
-
-  return Opt.exists(
-    definitionOf(node, env),
-    (definition) =>
-      definition.type === 'FunctionName' ||
-      definition.type === 'ImportBinding' ||
-      (definition.type === 'Variable' &&
-        definition.node.type === 'VariableDeclarator' &&
-        P.isNotNull(definition.node.init) &&
-        isFunctionNode(definition.node.init)),
   );
 }
 
