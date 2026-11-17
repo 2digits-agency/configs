@@ -84,6 +84,7 @@ import { preferUninterruptible } from './effect/prefer-uninterruptible';
 import { preferWithSpan } from './effect/prefer-with-span';
 import { preferYieldNow } from './effect/prefer-yield-now';
 import { preserveCaughtError } from './effect/preserve-caught-error';
+import { requireDualTypeArguments } from './effect/require-dual-type-arguments';
 import { requireSchemaClassBrand } from './effect/require-schema-class-brand';
 import { requireTryPromiseAbortSignal } from './effect/require-try-promise-abort-signal';
 import { throwInEffectGen } from './effect/throw-in-effect-gen';
@@ -192,6 +193,7 @@ export const rules = {
   'prefer-with-span': preferWithSpan,
   'prefer-yield-now': preferYieldNow,
   'preserve-caught-error': preserveCaughtError,
+  'require-dual-type-arguments': requireDualTypeArguments,
   'require-schema-class-brand': requireSchemaClassBrand,
   'require-try-promise-abort-signal': requireTryPromiseAbortSignal,
   'throw-in-effect-gen': throwInEffectGen,

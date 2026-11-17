@@ -19,11 +19,10 @@ const ModulePath = Schema.Array(Schema.String);
  * @param path Module path.
  * @param namespace Module namespace, such as `Effect`.
  */
-export const namespaceMember: {
-  (namespace: string): (path: ReadonlyArray<string>) => Opt.Option<string>;
-
-  (path: ReadonlyArray<string>, namespace: string): Opt.Option<string>;
-} = Fn.dual(2, (path: ReadonlyArray<string>, namespace: string) =>
+export const namespaceMember = Fn.dual<
+  (namespace: string) => (path: ReadonlyArray<string>) => Opt.Option<string>,
+  (path: ReadonlyArray<string>, namespace: string) => Opt.Option<string>
+>(2, (path, namespace) =>
   path.length === 2 && Opt.contains(Arr.head(path), namespace) ? Arr.get(path, 1) : Opt.none(),
 );
 
