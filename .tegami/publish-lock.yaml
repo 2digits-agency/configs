@@ -1,26 +1,65 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect Number helpers\n\nAdded `prefer-effect-number` to `recommendedRules`. In files that import Effect, it rewrites hand-written arithmetic to `effect/Number` ([Effect-TS/tsgo#1046](https://github.com/Effect-TS/tsgo/issues/1046)):\n\n- `Math.min(hi, Math.max(lo, x))` and `Math.max(lo, Math.min(hi, x))`, also with `Num.min` and `Num.max` → `Num.clamp(x, { minimum: lo, maximum: hi })`, autofixed. For `NaN`, `Num.clamp` returns `minimum` instead of `NaN`. When more than one operand has effects, the fix is a suggestion because it changes the evaluation order.\n- `Math.round(x * 100) / 100`, also with `10 ** n` or `Math.pow(10, n)` as the factor → `Num.round(x, 2)`, autofixed.\n- `xs.reduce((a, b) => a + b, 0)` and `Arr.reduce(xs, 0, Num.sum)` → `Num.sumAll(xs)`, autofixed. The product with `1` gets a `Num.multiplyAll` suggestion, because it returns 0 at the first 0, even when `NaN` follows.\n- `(n) => n + 1`, `++n` and `n += 1` → `Num.increment`, and the `- 1` forms → `Num.decrement`, autofixed. `n + 1` and `n += 1` are only autofixed with a `number` annotation, because they also concatenate strings. `(n) => n++` returns `n` unchanged and is reported as a likely bug.\n- `(a, b) => a - b` in `.sort`, `.toSorted` or `Arr.sort` → `Num.Order`, and `b - a` → `Order.flip(Num.Order)`, autofixed. Only `NaN` sorts differently.\n- `x >= lo && x <= hi` → `Num.between(x, { minimum: lo, maximum: hi })`, and `x < lo || x > hi` → `!Num.between(…)`. Autofixed for the `&&` form with a number literal lower bound and a suggestion otherwise, because `Num.Order` orders `NaN`. Both bounds must be number literals or named like `lower` and `upper`, because the rule cannot tell numbers from date strings.\n- `b === 0 ? fallback : a / b` → `Opt.getOrElse(Num.divide(a, b), () => fallback)`, autofixed.\n- `Math.max(...xs)` and `Number.isNaN(Number(s))` are reported with `Arr.max(xs, Num.Order)` and `Num.parse(s)` as advice, without a fix, because empty arrays, `NaN`, `''` and `'12px'` behave differently.\n\nFixes import Number as `Num`, Option as `Opt` and Order as `Order`. In JavaScript files, the `Num.increment`, `Num.decrement`, `Num.Order` and `Num.between` fixes are suggestions, because numeric strings and bigints behave differently there.\n"
-    filename: 2026-11-16-7cfa5613.md
+  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update Vite+, renovate and pkg-pr-new\n\n- Updated `vite-plus` to `1.7.0`, `renovate` to `44.248.0` and `pkg-pr-new` to `0.0.94`\n- Updated the GitButler skill to `0.5.2282`\n"
+    filename: 2026-11-17-29df98c6.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/eslint-plugin\":\n    type: patch\n---\n\n### Update `@typescript-eslint` packages to 8.73.0\n\nThe plugin now builds on `@typescript-eslint/utils` and `@typescript-eslint/scope-manager` 8.73.0.\n"
+    filename: 2026-11-17-2c45630e.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: minor\n  \"@2digits/oxlint-config\":\n    type: minor\n---\n\n### Ban `Reflect.apply` and `Reflect.get`\n\n`no-restricted-properties` now reports `Reflect.apply` and `Reflect.get`. Call the function directly, and read properties with typed access or after decoding dynamic input into a domain type. `unicorn/prefer-reflect-apply` is turned off, because it recommends `Reflect.apply`.\n"
+    filename: 2026-11-16-restrict-reflect-get-apply.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `typescript-eslint` to 8.73.0 and `eslint-plugin-jsdoc` to 65.4.10\n\nThe config enables typescript-eslint's new `ts/no-unsafe-class-instance-assignment` rule, which reports object literals and other non-instance values used where a class instance is expected.\n"
+    filename: 2026-11-17-eb97c835.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `@opencode-ai/plugin` to 1.19.6\n\nThe plugin now builds on `@opencode-ai/plugin` 1.19.6.\n"
+    filename: 2026-11-17-4e122f36.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxfmt-config\":\n    type: patch\n---\n\n### Update `oxfmt` to 0.79.0\n\nThe config now expects `oxfmt` 0.79.0.\n"
+    filename: 2026-11-17-f1437b2a.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: patch\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Update Oxlint to 1.94.0\n\nThe config now expects `oxlint` 1.94.0, and the plugin builds on `@oxlint/plugins` 1.94.0.\n"
+    filename: 2026-11-17-e9fd24f1.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Require type arguments on `Function.dual`\n\nAdded `require-dual-type-arguments` to `recommendedRules`. In TypeScript files, it reports every `Function.dual` call without type arguments, including `dual` imported from `effect/Function` and calls that pass an existing function, such as `Fn.dual(2, BigDecimal.divideUnsafe)`. Without type arguments, TypeScript does not check the implementation against an overload annotation on the constant: inline parameters become `any`, and the data-last form returns `any`. Pass both signatures instead:\n\n```ts\nexport const clientOf = Fn.dual<\n  (project: ProjectRef) => (clients: ReadonlyArray<Client>) => ClientRef,\n  (clients: ReadonlyArray<Client>, project: ProjectRef) => ClientRef\n>(2, (clients, project) => …);\n```\n"
+    filename: 2026-11-17-require-dual-type-arguments.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.70.0\n\nThe Effect config now expects `@effect/tsgo` 0.70.0 and enables its two new diagnostics as errors:\n\n- `flatMapProvideServiceToProvideServiceEffect` suggests `Effect.provideServiceEffect` when a `flatMap` or `andThen` callback only forwards its parameter to `Effect.provideService`\n- `forLoopPushToForEach` suggests `Effect.forEach` instead of a `for-of` loop that pushes yielded Effect results into an array\n\nIt also drops the `debug` option, which 0.70.0 no longer supports.\n"
+    filename: 2026-11-17-d41a6dde.md
     v: 0.0.0
 core:packages:
-  - id: npm:@2digits/config-monorepo
-    updated: false
+  - changelogIds:
+      - 2026-11-17-29df98c6.md
+    id: npm:@2digits/config-monorepo
+    updated: true
   - id: npm:@2digits/cli
     updated: false
   - id: npm:@2digits/constants
     updated: false
-  - id: npm:@2digits/eslint-config
-    updated: false
-  - id: npm:@2digits/eslint-plugin
-    updated: false
-  - id: npm:@2digits/opencode-plugin
-    updated: false
-  - id: npm:@2digits/oxfmt-config
-    updated: false
-  - id: npm:@2digits/oxlint-config
+  - changelogIds:
+      - 2026-11-17-2c45630e.md
+    id: npm:@2digits/eslint-plugin
     updated: true
   - changelogIds:
-      - 2026-11-16-7cfa5613.md
+      - 2026-11-16-restrict-reflect-get-apply.md
+      - 2026-11-17-eb97c835.md
+    id: npm:@2digits/eslint-config
+    updated: true
+  - changelogIds:
+      - 2026-11-17-4e122f36.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
+  - changelogIds:
+      - 2026-11-17-f1437b2a.md
+    id: npm:@2digits/oxfmt-config
+    updated: true
+  - changelogIds:
+      - 2026-11-16-restrict-reflect-get-apply.md
+      - 2026-11-17-e9fd24f1.md
+    id: npm:@2digits/oxlint-config
+    updated: true
+  - changelogIds:
+      - 2026-11-17-e9fd24f1.md
+      - 2026-11-17-require-dual-type-arguments.md
     id: npm:@2digits/oxlint-plugin
     updated: true
   - id: npm:@2digits/prettier-config
@@ -29,14 +68,16 @@ core:packages:
     updated: false
   - id: npm:@2digits/tlo-mcp
     updated: false
-  - id: npm:@2digits/tsconfig
-    updated: false
+  - changelogIds:
+      - 2026-11-17-d41a6dde.md
+    id: npm:@2digits/tsconfig
+    updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
   - id: npm:@2digits/constants
-  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
+  - id: npm:@2digits/eslint-config
   - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config

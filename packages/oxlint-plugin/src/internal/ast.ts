@@ -69,11 +69,10 @@ export function staticPath(node: ESTree.Node): Opt.Option<Arr.NonEmptyReadonlyAr
  * @param path Module path.
  * @param namespace Module namespace, such as `Effect`.
  */
-export const namespaceMember: {
-  (namespace: string): (path: ReadonlyArray<string>) => Opt.Option<string>;
-
-  (path: ReadonlyArray<string>, namespace: string): Opt.Option<string>;
-} = Fn.dual(2, (path: ReadonlyArray<string>, namespace: string) =>
+export const namespaceMember = Fn.dual<
+  (namespace: string) => (path: ReadonlyArray<string>) => Opt.Option<string>,
+  (path: ReadonlyArray<string>, namespace: string) => Opt.Option<string>
+>(2, (path, namespace) =>
   path.length === 2 && Opt.contains(Arr.head(path), namespace) ? Arr.get(path, 1) : Opt.none(),
 );
 
@@ -98,11 +97,10 @@ export const plainProperty = Match.type<ESTree.ObjectExpression['properties'][nu
   Match.orElse(() => Opt.none<ESTree.ObjectProperty>()),
 );
 
-export const objectProperty: {
-  (name: string): (node: ESTree.ObjectExpression) => Opt.Option<ESTree.ObjectProperty>;
-
-  (node: ESTree.ObjectExpression, name: string): Opt.Option<ESTree.ObjectProperty>;
-} = Fn.dual(2, (node: ESTree.ObjectExpression, name: string) =>
+export const objectProperty = Fn.dual<
+  (name: string) => (node: ESTree.ObjectExpression) => Opt.Option<ESTree.ObjectProperty>,
+  (node: ESTree.ObjectExpression, name: string) => Opt.Option<ESTree.ObjectProperty>
+>(2, (node, name) =>
   Arr.findFirst(
     node.properties,
     (property): property is ESTree.ObjectProperty =>
@@ -287,14 +285,10 @@ export function isStringLiteral(node: ESTree.Node): node is ESTree.StringLiteral
   return node.type === 'Literal' && Str.isString(node.value);
 }
 
-export const isLiteral: {
-  (value: string | number | boolean): (node: ESTree.Node) => boolean;
-
-  (node: ESTree.Node, value: string | number | boolean): boolean;
-} = Fn.dual(
-  2,
-  (node: ESTree.Node, value: string | number | boolean) => node.type === 'Literal' && node.value === value,
-);
+export const isLiteral = Fn.dual<
+  (value: string | number | boolean) => (node: ESTree.Node) => boolean,
+  (node: ESTree.Node, value: string | number | boolean) => boolean
+>(2, (node, value) => node.type === 'Literal' && node.value === value);
 
 /**
  * Whether the value of an expression is thrown away: an expression statement, `void x`, or a non-final sequence item.
