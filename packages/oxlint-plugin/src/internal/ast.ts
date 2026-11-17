@@ -64,7 +64,7 @@ export function staticPath(node: ESTree.Node): Opt.Option<Arr.NonEmptyReadonlyAr
 }
 
 /**
- * <<<<<<< HEAD The member a two-part module path names in `namespace`, such as `map` for `['Effect', 'map']`.
+ * The member a two-part module path names in `namespace`, such as `map` for `['Effect', 'map']`.
  *
  * @param path Module path.
  * @param namespace Module namespace, such as `Effect`.
@@ -77,11 +77,7 @@ export const namespaceMember = Fn.dual<
 );
 
 /**
- * # The static name of an object literal key: `name: …`, `'name': …` or a shorthand property.
- *
  * The static name of an object literal or type literal key: `name: …`, `'name': …` or a shorthand property.
- *
- * > > > > > > > Origin/main.
  *
  * @param property Object literal property or type member.
  */
