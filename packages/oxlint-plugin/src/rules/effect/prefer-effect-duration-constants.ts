@@ -10,9 +10,11 @@ import * as Schema from 'effect/Schema';
 import * as Tuple from 'effect/Tuple';
 
 import { isConstDeclaration, unwrapExpression, walkNodes } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable, resolveVariable, soleDefinition } from '../../internal/scope';
+import type { ImportBindings } from '../../schemas/imports';
+import { DurationUnitName, DurationWord, NonDurationWord, SingularUnit } from '../../schemas/time';
 import {
   durationArgument,
   durationConstructor,
@@ -45,42 +47,18 @@ const unitWords: Readonly<Record<string, DurationUnit>> = {
   weeks: 'weeks',
 };
 
-const isSingularUnit = Schema.is(Schema.Literals(['day', 'hour', 'minute', 'second', 'week']));
+const isSingularUnit = Schema.is(SingularUnit);
 
-// Singular units name a quantity (`ONE_DAY`), not the unit of the number, so they only mark the name as a duration.
-const isDurationWord = Schema.is(
-  Schema.Literals([
-    'backoff',
-    'cooldown',
-    'day',
-    'debounce',
-    'delay',
-    'duration',
-    'expiration',
-    'expiry',
-    'hour',
-    'interval',
-    'lifetime',
-    'minute',
-    'second',
-    'throttle',
-    'timeout',
-    'ttl',
-    'week',
-  ]),
-);
+const isDurationWord = Schema.is(DurationWord);
 
-// Conversion factors (`MS_PER_SECOND`, see also `SECONDS_IN_MINUTE` below), rates (`REQUESTS_PER_SECOND`), and timestamps (`CREATED_AT_MS`) are not durations.
-const isNonDurationWord = Schema.is(Schema.Literals(['at', 'epoch', 'per', 'timestamp']));
+const isNonDurationWord = Schema.is(NonDurationWord);
 
 /**
  * What a binding name says about its number: a unit, a duration of unknown unit, explicitly not a duration, or nothing.
  */
 type NameUnit = DurationUnit | 'excluded' | 'none' | 'unknown';
 
-const isDurationUnit = Schema.is(
-  Schema.Literals(['days', 'hours', 'millis', 'minutes', 'seconds', 'weeks'] satisfies ReadonlyArray<DurationUnit>),
-);
+const isDurationUnit = Schema.is(DurationUnitName);
 
 /**
  * Classify a binding name by its last word: a unit (`TIMEOUT_MS`, `ttlSeconds`) or a duration concept

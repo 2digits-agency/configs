@@ -6,7 +6,8 @@ import * as Str from 'effect/String';
 import * as Tuple from 'effect/Tuple';
 
 import { containsRange, isConstDeclaration, isFunctionNode, walkNodes, type FunctionNode } from '../../../internal/ast';
-import type { ImportBindings } from '../../../internal/imports';
+import type { ImportBindings } from '../../../schemas/imports';
+import { GuardName } from '../../../schemas/names';
 import { functionResult } from '../../effect/internal/callbacks';
 
 export interface Forwarding {
@@ -20,7 +21,7 @@ export interface Forwarding {
   readonly exact: boolean;
 }
 
-const isGuardName = Schema.is(Schema.String.check(Schema.isPattern(/^is\p{Lu}/u)));
+const isGuardName = Schema.is(GuardName);
 
 function parameterName(parameter: ESTree.ParamPattern): Opt.Option<string> {
   if (parameter.type === 'Identifier') {

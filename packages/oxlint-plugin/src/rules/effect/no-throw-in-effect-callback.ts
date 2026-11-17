@@ -6,13 +6,8 @@ import * as Schema from 'effect/Schema';
 import { enclosingFunction } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { PureCallbackMethod } from '../../schemas/effect';
 import { callbackApi, functionProperty } from './internal/callbacks';
-
-const PureCallbackMethod = Schema.Literals([
-  ...(['andThen', 'map', 'mapError', 'tap', 'tapError'] satisfies ReadonlyArray<keyof typeof Effect>),
-  // Effect v3 name, which the current Effect types no longer export.
-  'tapErrorCause',
-]);
 
 const isPureCallbackMethod = Schema.is(PureCallbackMethod);
 

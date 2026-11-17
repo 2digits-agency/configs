@@ -5,8 +5,9 @@ import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 
 import { argumentAt, staticPath, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 
 const getOrThrowMethods = ['getOrThrow', 'getOrThrowWith'] as const satisfies ReadonlyArray<keyof typeof Opt>;
 

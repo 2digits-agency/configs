@@ -16,37 +16,24 @@ import {
   unwrapExpression,
   type FunctionNode,
 } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { NumberUnionMember } from '../../schemas/ast';
+import { NumberMethod, NumberPreservingStepName, NumberSchemaName, SchemaWrapper } from '../../schemas/effect';
+import type { ImportBindings } from '../../schemas/imports';
+import { DeclarationFile } from '../../schemas/names';
 import { isForeignCallback } from './internal/callbacks';
 import { millisName } from './internal/duration';
 
-type SchemaApi = keyof typeof Schema;
+const isNumberSchemaName = Schema.is(NumberSchemaName);
 
-const isNumberSchemaName = Schema.is(
-  Schema.Literals(['Finite', 'FiniteFromString', 'Int', 'Number', 'NumberFromString'] satisfies Array<SchemaApi>),
-);
+const isSchemaWrapper = Schema.is(SchemaWrapper);
 
-const isSchemaWrapper = Schema.is(
-  Schema.Literals(['NullOr', 'NullishOr', 'UndefinedOr', 'optional', 'optionalKey'] satisfies Array<SchemaApi>),
-);
+const isNumberPreservingStepName = Schema.is(NumberPreservingStepName);
 
-// Pipe steps that keep a number a number. Any other step, such as `Schema.decodeTo(Schema.Duration, ...)`, may not.
-const isNumberPreservingStepName = Schema.is(
-  Schema.Literals([
-    'annotate',
-    'annotateKey',
-    'brand',
-    'check',
-    'withConstructorDefault',
-    'withDecodingDefault',
-    'withDecodingDefaultKey',
-  ] satisfies Array<SchemaApi>),
-);
+const isNumberMethod = Schema.is(NumberMethod);
 
-const isNumberMethod = Schema.is(Schema.Literals(['annotate', 'check']));
-
-const isNumberUnionMember = Schema.is(Schema.Literals(['TSNullKeyword', 'TSNumberKeyword', 'TSUndefinedKeyword']));
+const isNumberUnionMember = Schema.is(NumberUnionMember);
 
 function schemaApiName(node: ESTree.Node, imports: ImportBindings): Opt.Option<string> {
   return imports.member(node, 'Schema');
@@ -125,8 +112,6 @@ function keyName(node: ESTree.PropertyDefinition | ESTree.TSPropertySignature): 
 
   return node.key.type === 'Identifier' ? Opt.some(node.key.name) : Opt.none();
 }
-
-const DeclarationFile = Schema.String.check(Schema.isPattern(/\.d\.[cm]?ts$/u));
 
 const isDeclarationFile = Schema.is(DeclarationFile);
 

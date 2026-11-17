@@ -6,12 +6,7 @@ import * as Schema from 'effect/Schema';
 import { isLiteral, objectArgument, objectProperty, staticPropertyName, unwrapExpression } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const SchemaMapMethod = Schema.Literals(['mapElements', 'mapFields', 'mapMembers'] satisfies ReadonlyArray<
-  | keyof Schema.Struct<Schema.Struct.Fields>
-  | keyof Schema.Tuple<Schema.Tuple.Elements>
-  | keyof Schema.Union<ReadonlyArray<Schema.Constraint>>
->);
+import { SchemaMapMethod } from '../../schemas/effect';
 
 const isSchemaMapMethod = Schema.is(SchemaMapMethod);
 

@@ -4,8 +4,7 @@ import * as Schema from 'effect/Schema';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const NodePathSource = Schema.Literals(['node:path', 'path']);
+import { NodePathSource } from '../../schemas/imports';
 
 const isNodePathSource = Schema.is(NodePathSource);
 

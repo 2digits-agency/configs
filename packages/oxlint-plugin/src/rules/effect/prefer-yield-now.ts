@@ -6,12 +6,10 @@ import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 
 import { argumentAt, isLiteral, isStringLiteral, unwrapExpression } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const ZeroDurationInput = Schema.String.check(
-  Schema.isPattern(/^0\s*(?:nanos?|micros?|millis?|seconds?|minutes?|hours?|days?|weeks?)$/i),
-);
+import type { ImportBindings } from '../../schemas/imports';
+import { ZeroDurationInput } from '../../schemas/time';
 
 const isZeroDurationInput = Schema.is(ZeroDurationInput);
 

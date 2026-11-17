@@ -6,6 +6,9 @@ import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
+import { EffectPackageRoot, EffectPackageSubmodule, EffectVitestSource } from '../../../schemas/imports';
+import { ModuleName } from '../../../schemas/names';
+
 const effectImportAliases: Readonly<Record<string, string>> = {
   Array: 'Arr',
   Boolean: 'Bool',
@@ -18,26 +21,11 @@ const effectImportAliases: Readonly<Record<string, string>> = {
   String: 'Str',
 };
 
-/**
- * Effect and Alchemy module namespaces are PascalCase; lowercase and SCREAMING_SNAKE exports such as `ALCHEMY_DEV` are
- * plain values.
- */
-const ModuleName = Schema.String.check(Schema.isPattern(/^\p{Lu}[^_]*$/u));
-
 export const isModuleName = Schema.is(ModuleName);
-
-const EffectVitestSource = Schema.String.check(Schema.isPattern(/^@effect\/vitest(?:\/.*)?$/u));
 
 const isEffectVitestSource = Schema.is(EffectVitestSource);
 
-/**
- * A scoped Effect package root such as `@effect/platform`, whose named imports are module namespaces.
- */
-const EffectPackageRoot = Schema.String.check(Schema.isPattern(/^@effect\/[^/]+$/u));
-
 const isEffectPackageRoot = Schema.is(EffectPackageRoot);
-
-const EffectPackageSubmodule = Schema.String.check(Schema.isPattern(/^@effect\/[^/]+\//u));
 
 const isEffectPackageSubmodule = Schema.is(EffectPackageSubmodule);
 

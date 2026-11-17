@@ -6,8 +6,9 @@ import * as Schema from 'effect/Schema';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { RemovedApi } from '../../schemas/alchemy';
 
-const isRemovedApi = Schema.is(Schema.Literals(['Secret', 'Variable']));
+const isRemovedApi = Schema.is(RemovedApi);
 
 export const alchemyNoRemovedConfigApi = Rule.define({
   name: 'alchemy-no-removed-config-api',

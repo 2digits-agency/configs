@@ -5,30 +5,12 @@ import * as Opt from 'effect/Option';
 import * as Schema from 'effect/Schema';
 
 import { callbackCall, isFunctionNode, isSomeSame, parentOf } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const CatchMethod = Schema.Literals([
-  ...(['catch', 'catchIf', 'catchTag', 'orElseSucceed'] satisfies ReadonlyArray<keyof typeof Effect>),
-  // Effect v3 names, which the current Effect types no longer export.
-  'catchAll',
-  'catchAllCause',
-  'catchSome',
-  'catchSomeCause',
-  'orElse',
-  'orElseFail',
-]);
+import { CatchMethod, LogMethod } from '../../schemas/effect';
+import type { ImportBindings } from '../../schemas/imports';
 
 const isCatchMethod = Schema.is(CatchMethod);
-
-const LogMethod = Schema.Literals([
-  'log',
-  'logDebug',
-  'logError',
-  'logInfo',
-  'logTrace',
-  'logWarning',
-] satisfies ReadonlyArray<keyof typeof Effect>);
 
 const isLogMethod = Schema.is(LogMethod);
 

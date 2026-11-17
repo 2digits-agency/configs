@@ -7,20 +7,10 @@ import * as Schema from 'effect/Schema';
 import { argumentAt, isLiteral, parentOfType, staticPath, staticPropertyName } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const JwtLibrary = Schema.Literals([
-  '@tsndr/cloudflare-worker-jwt',
-  'fast-jwt',
-  'hono/jwt',
-  'jose',
-  'jsonwebtoken',
-  'jwt-decode',
-  'jwt-simple',
-]);
+import { JwtLibrary } from '../../schemas/imports';
+import { JwtSegmentName } from '../../schemas/platform';
 
 const isJwtLibrary = Schema.is(JwtLibrary);
-
-const JwtSegmentName = Schema.Literals(['header', 'payload', 'signature']);
 
 const isJwtSegmentName = Schema.is(JwtSegmentName);
 

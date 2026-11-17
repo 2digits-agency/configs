@@ -14,8 +14,9 @@ import * as Str from 'effect/String';
 import type * as TestClock from 'effect/testing/TestClock';
 
 import { argumentAt, objectProperty, unwrapExpression } from '../../../internal/ast';
-import type { ImportBindings } from '../../../internal/imports';
 import { isImportedApi } from '../../../internal/scope';
+import type { ImportBindings } from '../../../schemas/imports';
+import { InstantWord, MillisFactor, type MillisKind, MillisWord, SixtyFactor, TimeFactor } from '../../../schemas/time';
 
 type DurationPosition = 'first' | 'last' | 'options.duration';
 
@@ -146,12 +147,11 @@ function factors(node: ESTree.Expression): Opt.Option<ReadonlyArray<number>> {
     : Opt.none();
 }
 
-// Minute, hour, and day sizes in milliseconds are unambiguous on their own.
-const isMillisFactor = Schema.is(Schema.Literals([60_000, 3_600_000, 86_400_000]));
+const isMillisFactor = Schema.is(MillisFactor);
 
-const isSixtyFactor = Schema.is(Schema.Literals([60, 3600, 86_400]));
+const isSixtyFactor = Schema.is(SixtyFactor);
 
-const isTimeFactor = Schema.is(Schema.Literals([7, 24, 60, 1000, 3600, 86_400]));
+const isTimeFactor = Schema.is(TimeFactor);
 
 /**
  * Hand-written time arithmetic such as `5 * 60 * 1000`, `24 * 60 * 60`, or `5 * 60_000`, and whether it counts
@@ -183,33 +183,9 @@ export const nameWords: (name: string) => Array<string> = Fn.flow(
   Arr.map(Str.toLowerCase),
 );
 
-/**
- * What a millisecond number stands for: a point in time (epoch millis) or an amount of time.
- */
-export const MillisKind = Schema.Literals(['duration', 'instant']);
+const isMillisWord = Schema.is(MillisWord);
 
-export type MillisKind = typeof MillisKind.Type;
-
-const isMillisWord = Schema.is(Schema.Literals(['millis', 'milliseconds', 'ms']));
-
-const isInstantWord = Schema.is(
-  Schema.Literals([
-    'at',
-    'created',
-    'deadline',
-    'end',
-    'ended',
-    'epoch',
-    'last',
-    'now',
-    'since',
-    'start',
-    'started',
-    'timestamp',
-    'until',
-    'updated',
-  ]),
-);
+const isInstantWord = Schema.is(InstantWord);
 
 /**
  * Classify a binding name that ends in a millisecond unit (`timeoutMs`, `TTL_MILLIS`, `expiresAtMs`). Names that

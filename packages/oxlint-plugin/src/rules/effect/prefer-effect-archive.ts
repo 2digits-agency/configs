@@ -8,6 +8,7 @@ import * as Schema from 'effect/Schema';
 import { moduleExportName } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import { FflateZipExport } from '../../schemas/imports';
 import { onRuntimeImport, packageName } from './internal/package-imports';
 
 /**
@@ -33,24 +34,6 @@ const archivePackages: Readonly<Record<string, string>> = {
   yazl: 'Zip',
   'zip-stream': 'Zip',
 };
-
-/**
- * The zip exports of `fflate`, which also exports gzip, zlib and raw deflate codecs that `Zip` does not replace.
- */
-const FflateZipExport = Schema.Literals([
-  'AsyncUnzipInflate',
-  'AsyncZipDeflate',
-  'Unzip',
-  'UnzipInflate',
-  'UnzipPassThrough',
-  'Zip',
-  'ZipDeflate',
-  'ZipPassThrough',
-  'unzip',
-  'unzipSync',
-  'zip',
-  'zipSync',
-]);
 
 const isFflateZipExport = Schema.is(FflateZipExport);
 

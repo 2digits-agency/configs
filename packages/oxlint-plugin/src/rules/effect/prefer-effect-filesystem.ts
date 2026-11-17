@@ -4,8 +4,7 @@ import * as Schema from 'effect/Schema';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-
-const NodeFileSystemSource = Schema.Literals(['fs', 'fs/promises', 'node:fs', 'node:fs/promises']);
+import { NodeFileSystemSource } from '../../schemas/imports';
 
 const isNodeFileSystemSource = Schema.is(NodeFileSystemSource);
 

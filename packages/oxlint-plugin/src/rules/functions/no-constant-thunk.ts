@@ -16,62 +16,18 @@ import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 
 import { isConstDeclaration, isFunctionNode, staticPropertyName, type FunctionNode } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable, soleDefinition } from '../../internal/scope';
+import { EagerMember, EagerModule, PureModule } from '../../schemas/effect';
+import type { ImportBindings } from '../../schemas/imports';
 import { functionResult } from '../effect/internal/callbacks';
 
-/**
- * Modules whose functions build immutable values or lazy descriptions, so calling them once at module load is the same
- * as calling them on every use.
- */
-const isPureModule = Schema.is(
-  Schema.Literals([
-    'BigDecimal',
-    'Config',
-    'Data',
-    'DateTime',
-    'Duration',
-    'Effect',
-    'Equivalence',
-    'Exit',
-    'Function',
-    'Layer',
-    'Match',
-    'Option',
-    'Order',
-    'Predicate',
-    'Result',
-    'Schedule',
-    'Schema',
-    'Stream',
-    'String',
-    'Struct',
-    'flow',
-    'pipe',
-  ]),
-);
+const isPureModule = Schema.is(PureModule);
 
-/*
- * Modules whose functions call their callbacks right away, such as `Option.map(some, f)` or `pipe(value, f)`, so the
- * result is only constant when no function argument can read changing state.
- */
-const isEagerModule = Schema.is(
-  Schema.Literals([
-    'BigDecimal',
-    'Data',
-    'DateTime',
-    'Duration',
-    'Exit',
-    'Option',
-    'Result',
-    'String',
-    'Struct',
-    'pipe',
-  ]),
-);
+const isEagerModule = Schema.is(EagerModule);
 
-const isEagerMember = Schema.is(Schema.Literals(['pipe', 'value', 'valueTags']));
+const isEagerMember = Schema.is(EagerMember);
 
 // `Effect.runSync`, `DateTime.nowUnsafe`, `Ref.makeUnsafe` and similar run effects or read mutable state.
 const impureMember = /^run|unsafe/iu;

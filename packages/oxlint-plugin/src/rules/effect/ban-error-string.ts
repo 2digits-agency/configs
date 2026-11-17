@@ -6,8 +6,7 @@ import * as Schema from 'effect/Schema';
 
 import { argumentAt, isErrorConstructor, isSomeSame, parentOfType, staticPath } from '../../internal/ast';
 import { ruleMeta } from '../../internal/meta';
-
-const ErrorLikeName = Schema.Literals(['error', 'err', 'e', 'cause', 'exception', 'ex']);
+import { ErrorLikeName } from '../../schemas/names';
 
 const isErrorLikeName = Schema.is(ErrorLikeName);
 

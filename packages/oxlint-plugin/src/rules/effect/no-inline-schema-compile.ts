@@ -14,61 +14,22 @@ import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
 
 import { containsRange, findAncestor, parentOf, staticPath, unwrapExpression, walkNodes } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable } from '../../internal/scope';
-
-const CompilerMethod = Schema.Literals([
-  'asserts',
-  'decodeEffect',
-  'decodeExit',
-  'decodeOption',
-  'decodePromise',
-  'decodeResult',
-  'decodeSync',
-  'decodeUnknownEffect',
-  'decodeUnknownExit',
-  'decodeUnknownOption',
-  'decodeUnknownPromise',
-  'decodeUnknownResult',
-  'decodeUnknownSync',
-  'encodeEffect',
-  'encodeExit',
-  'encodeOption',
-  'encodePromise',
-  'encodeResult',
-  'encodeSync',
-  'encodeUnknownEffect',
-  'encodeUnknownExit',
-  'encodeUnknownOption',
-  'encodeUnknownPromise',
-  'encodeUnknownResult',
-  'encodeUnknownSync',
-  'is',
-] satisfies ReadonlyArray<keyof typeof Schema>);
+import { DynamicType, FunctionType, ModuleScope, TransparentParentType } from '../../schemas/ast';
+import { CompilerMethod } from '../../schemas/effect';
+import type { ImportBindings } from '../../schemas/imports';
 
 const isCompilerMethod = Schema.is(CompilerMethod);
 
-const isModuleScope = Schema.is(Schema.Literals(['global', 'module']));
+const isModuleScope = Schema.is(ModuleScope);
 
-const isFunctionType = Schema.is(
-  Schema.Literals(['ArrowFunctionExpression', 'FunctionDeclaration', 'FunctionExpression']),
-);
+const isFunctionType = Schema.is(FunctionType);
 
-const isDynamicType = Schema.is(
-  Schema.Literals([
-    'AssignmentExpression',
-    'AwaitExpression',
-    'ImportExpression',
-    'TaggedTemplateExpression',
-    'UpdateExpression',
-    'YieldExpression',
-  ]),
-);
+const isDynamicType = Schema.is(DynamicType);
 
-const isTransparentParentType = Schema.is(
-  Schema.Literals(['ParenthesizedExpression', 'TSAsExpression', 'TSNonNullExpression']),
-);
+const isTransparentParentType = Schema.is(TransparentParentType);
 
 /**
  * The Schema compiler a callee names, when its root resolves to the import itself and not to a shadowing local.

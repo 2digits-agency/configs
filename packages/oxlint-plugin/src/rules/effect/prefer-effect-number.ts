@@ -27,9 +27,11 @@ import {
   walkNodes,
 } from '../../internal/ast';
 import { argumentText, namespaceImport } from '../../internal/fixes';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIn, isImportedApiIn, lookupVariable, soleDefinition } from '../../internal/scope';
+import type { ImportBindings } from '../../schemas/imports';
+import { BoundName, MinMax, TypeScriptFile } from '../../schemas/names';
 import { namespaceAlias } from './internal/import-style';
 
 type Kind =
@@ -87,12 +89,9 @@ interface Env {
 
 type Pair = readonly [ESTree.Expression, ESTree.Expression];
 
-const isMinMax = Schema.is(Schema.Literals(['min', 'max']));
+const isMinMax = Schema.is(MinMax);
 
-// Names that read as a bound rather than the clamped value, such as `min`, `maxWidth`, `upperBound` or `hi`.
-const isBoundName = Schema.is(
-  Schema.String.check(Schema.isPattern(/min|max|lower|upper|bound|limit|^(?:lo|hi|low|high)$/iu)),
-);
+const isBoundName = Schema.is(BoundName);
 
 /*
  * Kinds whose fix is exact for numbers but not for every value an untyped parameter can hold: `'5' + 1` concatenates,
@@ -102,7 +101,7 @@ const isBoundName = Schema.is(
  */
 const numbersOnly: ReadonlySet<Kind> = new Set(['increment', 'decrement', 'order', 'between']);
 
-const isTypeScriptFile = Schema.is(Schema.String.check(Schema.isPattern(/\.[cm]?tsx?$/u)));
+const isTypeScriptFile = Schema.is(TypeScriptFile);
 
 // Every power of ten up to 1e22 is an exact double, so `Math.pow(10, k)` equals the literal.
 const maxExactPowerOfTen = 22;

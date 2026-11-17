@@ -9,10 +9,12 @@ import * as Schema from 'effect/Schema';
 import type * as Str from 'effect/String';
 
 import { argumentAt, staticPropertyName, unwrapExpression } from '../internal/ast';
-import { importBindings, type ImportBindings } from '../internal/imports';
+import { importBindings } from '../internal/imports';
 import { ruleMeta } from '../internal/meta';
+import type { ImportBindings } from '../schemas/imports';
+import { StringMethod } from '../schemas/platform';
 
-const isStringMethod = Schema.is(Schema.Literals(['replace', 'replaceAll', 'slice', 'split', 'substr', 'substring']));
+const isStringMethod = Schema.is(StringMethod);
 
 const stringSteps = [
   'replace',

@@ -16,8 +16,8 @@ import {
   unwrapExpression,
   type FunctionNode,
 } from '../../../internal/ast';
-import type { ImportBindings } from '../../../internal/imports';
 import { isGlobalIn, lookupVariable, soleDefinition } from '../../../internal/scope';
+import type { ImportBindings } from '../../../schemas/imports';
 import { functionResult } from './callbacks';
 
 /**

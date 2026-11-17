@@ -15,19 +15,15 @@ import {
   staticPropertyName,
   unwrapExpression,
 } from '../../internal/ast';
-import { importBindings, type ImportBindings } from '../../internal/imports';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIdentifier } from '../../internal/scope';
-
-const CookieHeader = Schema.Literals(['cookie', 'set-cookie']);
+import type { ImportBindings } from '../../schemas/imports';
+import { CookieHeader, InspectMethod, ParseMethod } from '../../schemas/platform';
 
 const isCookieHeader = Schema.is(CookieHeader);
 
-const ParseMethod = Schema.Literals(['split', 'match', 'matchAll']);
-
 const isParseMethod = Schema.is(ParseMethod);
-
-const InspectMethod = Schema.Literals(['includes', 'startsWith', 'endsWith']);
 
 const isInspectMethod = Schema.is(InspectMethod);
 
