@@ -1,3 +1,5 @@
+// Compiles Schema parsers on first use; it must run before the rules build their Schema guards and decoders.
+import 'effect/schema/SchemaJITCompiler/enable';
 import { Plugin } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as R from 'effect/Record';
