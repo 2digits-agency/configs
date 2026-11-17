@@ -543,6 +543,16 @@ Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/m
   `else if` chains `prefer-effect-match` reports.
 - `no-manual-tagged-construction`: prefer existing constructors over literal string `_tag` objects; direct
   `Match.when`/`Match.not` pattern objects are exempt.
+- `no-manual-tagged-type`: report `_tag` written by hand in a type, such as `type Ready = { readonly _tag: 'Ready' }`;
+  define the value with a tagged Schema or Data constructor and infer the type, such as `typeof Ready.Type`. Adapted
+  from the [`K-Mistele/anti-slop`](https://github.com/K-Mistele/anti-slop/blob/main/src/effect/rules/no-manual-tagged-type.ts)
+  fork. Unlike upstream, it only reports `_tag` types that are string literals or unions of them: `string`, a type
+  parameter or another type reference describes any tagged value, as in `<A extends { readonly _tag: string }>`,
+  which no constructor defines.
+  Declaration files and `declare module`/`declare global` blocks are skipped, because they describe values defined
+  elsewhere. The filter of `Extract` or `Exclude`, as in `Extract<Payment, { _tag: 'Refund' }>`, is also skipped: it
+  selects members of an existing union, which no constructor replaces. A `_tag` type literal passed to any other
+  generic, such as `Array<{ _tag: 'A' }>`, is still reported.
 - `no-service-constructor-imports`: reject relative named `make[A-Z]` imports outside `.test`/`.spec` files.
 - `prefer-effect-match`: also reports chained literal ternaries comparing the same source expression, while retaining
   the existing Effect-file switch diagnostic. In Effect files it also reports `else if` chains; see
