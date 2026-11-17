@@ -5,10 +5,10 @@ Custom [Oxlint JavaScript plugin](https://oxc.rs/docs/guide/usage/linter/writing
 
 The recommended set is enabled by default by `@2digits/oxlint-config`. The opt-in `prefer-effect-filesystem` and
 `prefer-effect-path` rules are excluded because the configured `@effect/tsgo/nodeBuiltinImport` diagnostic already
-enforces those imports more broadly, and the opt-in `no-mutable-module-state` because lazy singletons and browser
-stores are common legitimate uses. `prefer-effect-http-status` is recommended at `warn`, because it only names
-well-known numbers (see [Effect HTTP modules](#effect-http-modules)), and so are `no-accumulating-loop` and
-`no-repeated-switch`, which point at [code smells](#code-smells) rather than defects; every other recommended rule is an
+enforces those imports more broadly, and the opt-in [code smell](#code-smells) rules `no-accumulating-loop` and
+`no-mutable-module-state` because existing projects have many reports or legitimate uses. `prefer-effect-http-status` is
+recommended at `warn`, because it only names well-known numbers (see [Effect HTTP modules](#effect-http-modules)), and
+so is `no-repeated-switch`, which points at a code smell rather than a defect; every other recommended rule is an
 error. To
 register the plugin directly:
 
@@ -85,7 +85,7 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Schema chain style: `consistent-schema-pipe` applies Schema modifiers and data-last steps with `.pipe(...)`
   (`Schema.String.pipe(Schema.optionalKey)`) and calls Schema wrappers such as `Schema.Array(...)` directly. See
   [ADR 0001](../../docs/adr/0001-schema-modifiers-pipe-wrappers-call.md).
-- Code smells from Martin Fowler's _Refactoring_: `no-accumulating-loop`, `no-repeated-switch` and the opt-in
+- Code smells from Martin Fowler's _Refactoring_: `no-repeated-switch` and the opt-in `no-accumulating-loop` and
   `no-mutable-module-state`. See [Code smells](#code-smells).
 - React hydration: `no-browser-api-in-render` reports reads of `window`, `document`, `navigator`, `localStorage` and
   `sessionStorage` (also through `globalThis`) in a component or hook body, or in a `useState`, `useReducer` or
@@ -579,7 +579,7 @@ Adapted from the Martin Fowler rules in
 [`K-Mistele/anti-slop`](https://github.com/K-Mistele/anti-slop/tree/main/src/martinfowler/rules) (`loops`,
 `repeated-switches` and `mutable-data`). They skip `.test` and `.spec` files and offer no fixes.
 
-- `no-accumulating-loop` (warning) reports a `for`, `for…of` or `for…in` loop that builds an array, object, `Map` or
+- `no-accumulating-loop` (opt-in) reports a `for`, `for…of` or `for…in` loop that builds an array, object, `Map` or
   `Set` by `push`, `unshift`, `set`, `add`, computed-key assignment, `[...all, x]` or `all.concat(x)`. Express it as
   `map`, `filter`, `flatMap` or `groupBy` (Effect `Array` and `Record`), `Object.fromEntries`, `new Map(…)`, or
   `Effect.forEach` when each iteration runs an effect. Only the loop that alone builds the collection is reported: it
@@ -589,7 +589,9 @@ Adapted from the Martin Fowler rules in
   (`includes`, `has`, `length`, a worklist, also inside the added value), or change other outer state are exempt, and so
   are `while` loops. Additions in a callback the loop registers, such as an event listener, do not count. It
   completes `unicorn/no-array-reduce` and `unicorn/no-array-for-each`, which move code from `reduce` and `forEach` to
-  loops: this rule moves the loops that only build a collection on to a pipeline.
+  loops: this rule moves the loops that only build a collection on to a pipeline. It is not in `recommendedRules`,
+  because existing Effect services have dozens of these loops each; enable it with
+  `'2digits/no-accumulating-loop': 'warn'` where a project wants pipelines.
 - `no-repeated-switch` (warning) reports a value that one file branches on over the same cases in several places:
   `switch` statements, `else if` chains and ternary chains over the same value, and runs of adjacent guard `if`s.
   Places count as the same switch when they compare the same source text and share at least two cases, because the

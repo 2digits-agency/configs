@@ -490,7 +490,9 @@ describe('oxlint config', () => {
     expect([
       recommendedRules['2digits/prefer-effect-filesystem'],
       recommendedRules['2digits/prefer-effect-path'],
-    ]).toStrictEqual([undefined, undefined]);
+      recommendedRules['2digits/no-accumulating-loop'],
+      recommendedRules['2digits/no-mutable-module-state'],
+    ]).toStrictEqual([undefined, undefined, undefined, undefined]);
   });
 
   it('enables Effect duration guidance by default', () => {
@@ -500,8 +502,10 @@ describe('oxlint config', () => {
     ]).toStrictEqual(['error', 'error']);
   });
 
-  it('warns about status code numbers instead of erroring', () => {
+  it('warns about status code numbers and repeated switches instead of erroring', () => {
     expect(twoDigitsPluginRules['2digits/prefer-effect-http-status']).toBe('warn');
+
+    expect(twoDigitsPluginRules['2digits/no-repeated-switch']).toBe('warn');
   });
 
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
