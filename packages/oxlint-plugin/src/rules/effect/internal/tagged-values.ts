@@ -84,12 +84,21 @@ export function isInsideBroadEffectHandler(node: ESTree.Node): boolean {
 }
 
 /**
+ * Static access to a nested error's `reason`, such as `error.reason` or `error['reason']`.
+ *
+ * @param node - Candidate syntax node.
+ */
+export function isReasonMember(node: ESTree.Node): boolean {
+  return node.type === 'MemberExpression' && Opt.contains(staticPropertyName(node), 'reason');
+}
+
+/**
  * Distinguish nested error `reason._tag` from the outer error tag.
  *
  * @param node - Tag member to inspect.
  */
 export function isReasonTagMember(node: ESTree.MemberExpression): boolean {
-  return node.object.type === 'MemberExpression' && Opt.contains(staticPropertyName(node.object), 'reason');
+  return isReasonMember(node.object);
 }
 
 /**

@@ -557,6 +557,10 @@ Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/m
 - `prefer-effect-match`: also reports chained literal ternaries comparing the same source expression, while retaining
   the existing Effect-file switch diagnostic. In Effect files it also reports `else if` chains; see
   [Effect Match](#effect-match).
+- `prefer-tagged-error-handling`: prefer `Effect.catchTag`/`catchTags` (or `catchReason`/`catchReasons` for an
+  error's `reason`) over `Predicate.isTagged` checks, data-first or curried, in broad Effect catches. Adapted from
+  [`K-Mistele/anti-slop`](https://github.com/K-Mistele/anti-slop/blob/main/src/effect/rules/prefer-tagged-error-handling.ts),
+  a fork of anti-slop; it also recognizes `isTagged` through an Effect import such as `P.isTagged`.
 
 All are included in `recommendedRules`, without autofixes. Like upstream, these are syntactic policies: they do not
 require Effect imports, infer tagged types, or prove that constructors exist. Catch and pattern exemptions recognize
