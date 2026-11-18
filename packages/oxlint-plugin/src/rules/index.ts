@@ -41,6 +41,7 @@ import { noMillisArithmetic } from './effect/no-millis-arithmetic';
 import { noMultiShotEffectCallback } from './effect/no-multi-shot-effect-callback';
 import { noNonJsonSchemaAnnotation } from './effect/no-non-json-schema-annotation';
 import { noOptionOfService } from './effect/no-option-of-service';
+import { noOrDieInServiceConstruction } from './effect/no-ordie-in-service-construction';
 import { noOverwrittenDiscriminant } from './effect/no-overwritten-discriminant';
 import { noServiceConstructorImports } from './effect/no-service-constructor-imports';
 import { noServiceOptionGetOrThrow } from './effect/no-service-option-get-or-throw';
@@ -148,6 +149,7 @@ export const rules = {
   'no-multi-shot-effect-callback': noMultiShotEffectCallback,
   'no-non-json-schema-annotation': noNonJsonSchemaAnnotation,
   'no-option-of-service': noOptionOfService,
+  'no-ordie-in-service-construction': noOrDieInServiceConstruction,
   'no-overwritten-discriminant': noOverwrittenDiscriminant,
   'no-service-option-get-or-throw': noServiceOptionGetOrThrow,
   'no-single-use-private-function': noSingleUsePrivateFunction,
