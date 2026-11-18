@@ -9,6 +9,7 @@ import * as Str from 'effect/String';
 import { isEqualityOperator, isWrapperExpressionType, unwrapExpression } from '../../internal/ast';
 import { isTestFilename } from '../../internal/files';
 import { ruleMeta } from '../../internal/meta';
+import { ConstructorName } from '../../schemas/names';
 
 /**
  * Places that branch on one value must share this many cases to count as the same switch: the same text, such as
@@ -18,7 +19,7 @@ const minSharedCases = 2;
 
 const maxExpressionLength = 60;
 
-const isPascalCase = Schema.is(Schema.String.check(Schema.isPattern(/^\p{Lu}/u)));
+const isPascalCase = Schema.is(ConstructorName);
 
 interface Comparison {
   /**

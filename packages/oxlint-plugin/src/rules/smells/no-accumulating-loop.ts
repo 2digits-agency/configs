@@ -18,6 +18,8 @@ import {
 import { isTestFilename } from '../../internal/files';
 import { ruleMeta } from '../../internal/meta';
 import { lookupVariable, soleDefinition } from '../../internal/scope';
+import { BreakableType, LoopType } from '../../schemas/ast';
+import { CollectingMethod, CollectionConstructor, RemovingMethod } from '../../schemas/names';
 
 type LoopNode = ESTree.ForInStatement | ESTree.ForOfStatement | ESTree.ForStatement;
 
@@ -30,28 +32,15 @@ interface Accumulation {
   readonly how: string;
 }
 
-const isCollectingMethod = Schema.is(Schema.Literals(['push', 'unshift', 'set', 'add']));
+const isCollectingMethod = Schema.is(CollectingMethod);
 
-const isRemovingMethod = Schema.is(
-  Schema.Literals(['clear', 'delete', 'fill', 'pop', 'reverse', 'shift', 'sort', 'splice']),
-);
+const isRemovingMethod = Schema.is(RemovingMethod);
 
-const isEmptyCollectionConstructor = Schema.is(Schema.Literals(['Map', 'Set']));
-
-const LoopType = Schema.Literals(['ForStatement', 'ForInStatement', 'ForOfStatement']);
+const isEmptyCollectionConstructor = Schema.is(CollectionConstructor);
 
 const isLoopType = Schema.is(LoopType);
 
-const isBreakableType = Schema.is(
-  Schema.Literals([
-    'ForStatement',
-    'ForInStatement',
-    'ForOfStatement',
-    'WhileStatement',
-    'DoWhileStatement',
-    'SwitchStatement',
-  ]),
-);
+const isBreakableType = Schema.is(BreakableType);
 
 function isLoop(node: ESTree.Node): node is LoopNode {
   return isLoopType(node.type);

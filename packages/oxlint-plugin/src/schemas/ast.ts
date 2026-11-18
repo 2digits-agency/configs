@@ -76,3 +76,19 @@ export const NegatedOperator = EqualityOperator.pick(['!==', '!=']);
 export const ArithmeticOperator = Schema.Literals(['*', '+', '-', '/'] satisfies ReadonlyArray<BinaryOperator>);
 
 export const ModuleScope = Schema.Literals(['global', 'module'] satisfies ReadonlyArray<ScopeType>);
+
+export const LoopType = Schema.Literals([
+  'ForStatement',
+  'ForInStatement',
+  'ForOfStatement',
+] satisfies ReadonlyArray<NodeType>);
+
+/**
+ * Statements a `break` without a label leaves.
+ */
+export const BreakableType = Schema.Literals([
+  ...LoopType.literals,
+  'WhileStatement',
+  'DoWhileStatement',
+  'SwitchStatement',
+] satisfies ReadonlyArray<NodeType>);

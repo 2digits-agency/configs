@@ -47,3 +47,27 @@ export const AsciiUppercase = Schema.String.check(Schema.isPattern(/[A-Z]/u));
 
 // TypeScript utility types that narrow a union to some of its members.
 export const UnionFilterName = Schema.Literals(['Extract', 'Exclude']);
+
+type CollectionMethod = keyof Array<unknown> | keyof Map<unknown, unknown> | keyof Set<unknown>;
+
+// Methods that add to an array, Map or Set.
+export const CollectingMethod = Schema.Literals([
+  'push',
+  'unshift',
+  'set',
+  'add',
+] satisfies ReadonlyArray<CollectionMethod>);
+
+// Methods that remove from or reorder an array, Map or Set.
+export const RemovingMethod = Schema.Literals([
+  'clear',
+  'delete',
+  'fill',
+  'pop',
+  'reverse',
+  'shift',
+  'sort',
+  'splice',
+] satisfies ReadonlyArray<CollectionMethod>);
+
+export const CollectionConstructor = Schema.Literals(['Map', 'Set'] satisfies ReadonlyArray<keyof typeof globalThis>);
