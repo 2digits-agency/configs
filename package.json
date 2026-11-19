@@ -14,7 +14,7 @@
     "clean": "find . -name node_modules -o -name .turbo -o -name dist -type d -prune | xargs rm -rf",
     "dev": "turbo run dev docs:dev",
     "docs": "turbo run docs",
-    "fix": "pnpm '/^(lint|lint:oxlint|format):fix$/'",
+    "fix": "pnpm run '/^(lint|lint:oxlint|format):fix$/'",
     "format": "oxfmt . --check",
     "format:fix": "oxfmt .",
     "knip": "knip",
@@ -57,7 +57,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "12.21.0",
+      "version": "12.22.0",
       "onFail": "download"
     },
     "runtime": {
@@ -69,5 +69,5 @@
   "engines": {
     "node": "26.13.1"
   },
-  "packageManager": "pnpm@12.21.0"
+  "packageManager": "pnpm@12.22.0"
 }
