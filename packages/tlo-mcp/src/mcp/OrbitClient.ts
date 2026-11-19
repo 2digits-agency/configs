@@ -51,7 +51,7 @@ const STARTUP_TIMEOUT = '10 minutes';
 const decodeMethod = Schema.decodeUnknownOption(Schema.Struct({ method: Schema.String }).pipe(Schema.fromJsonString));
 
 function startupMethod(request: HttpClientRequest.HttpClientRequest): string | undefined {
-  if (request.body._tag !== 'Uint8Array') {
+  if (!P.isTagged(request.body, 'Uint8Array')) {
     return undefined;
   }
 
@@ -67,9 +67,10 @@ function startupMethod(request: HttpClientRequest.HttpClientRequest): string | u
  * @param now
  */
 function retryAfter(response: HttpClientResponse.HttpClientResponse, now: number): Duration.Duration {
-  const parsed = Headers.parseRetryAfter(response.headers['retry-after'] ?? '');
-
-  return Result.isSuccess(parsed) ? Headers.retryAfterDelay(parsed.success, now) : Duration.minutes(1);
+  return Result.match(Headers.parseRetryAfter(response.headers['retry-after'] ?? ''), {
+    onSuccess: (retryAfter) => Headers.retryAfterDelay(retryAfter, now),
+    onFailure: () => Duration.minutes(1),
+  });
 }
 
 /**

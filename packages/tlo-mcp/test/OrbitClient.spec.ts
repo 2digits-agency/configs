@@ -25,6 +25,8 @@ const Message = Schema.Struct({
   params: Schema.JsonObject.pipe(Schema.optionalKey),
 });
 
+const INITIALIZED = 'notifications/initialized';
+
 const decodeJson = Schema.decodeUnknownEffect(Message.pipe(Schema.fromJsonString));
 
 // GetProject is exposed; DeleteProjectItem exists upstream but is not.
@@ -104,7 +106,7 @@ function orbit(
           return limited;
         }
 
-        if (message.method === 'notifications/initialized') {
+        if (message.method === INITIALIZED) {
           return new Response(undefined, { status: 202 });
         }
 
@@ -168,7 +170,7 @@ describe('orbit MCP client', () => {
       expect(sent).toStrictEqual([
         { method: 'initialize', authorization: 'Bearer token-2', session: undefined, redirect: 'error' },
         {
-          method: 'notifications/initialized',
+          method: INITIALIZED,
           authorization: 'Bearer token-3',
           session: 'orbit-session',
           redirect: 'error',
@@ -210,7 +212,7 @@ describe('orbit MCP client', () => {
     // Orbit allows one request per minute: two 429s on the handshake exceed the MCP client's default 60-second deadline.
     // The TestClock starts at the epoch, so the tools/list date asks for a wait until 148 seconds.
     const limits: Record<string, Array<string>> = {
-      'notifications/initialized': ['59', '59'],
+      [INITIALIZED]: ['59', '59'],
       'tools/list': ['Thu, 01 Jan 1970 00:02:28 GMT'],
     };
 
@@ -230,11 +232,7 @@ describe('orbit MCP client', () => {
 
       yield* TestClock.adjust('117 seconds');
 
-      expect(Arr.map(sent, Struct.get('method'))).toStrictEqual([
-        'initialize',
-        'notifications/initialized',
-        'notifications/initialized',
-      ]);
+      expect(Arr.map(sent, Struct.get('method'))).toStrictEqual(['initialize', INITIALIZED, INITIALIZED]);
 
       // The handshake completes at 118 seconds; tools/list then waits until the date Orbit sent.
       yield* TestClock.adjust('30 seconds');
@@ -249,9 +247,9 @@ describe('orbit MCP client', () => {
 
       expect(Arr.map(sent, Struct.get('method'))).toStrictEqual([
         'initialize',
-        'notifications/initialized',
-        'notifications/initialized',
-        'notifications/initialized',
+        INITIALIZED,
+        INITIALIZED,
+        INITIALIZED,
         'tools/list',
         'tools/list',
       ]);
