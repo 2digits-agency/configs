@@ -1,9 +1,12 @@
 import * as Arr from 'effect/Array';
 import * as Context from 'effect/Context';
+import * as Duration from 'effect/Duration';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
+import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
-import type * as Schema from 'effect/Schema';
+import * as Schema from 'effect/Schema';
+import * as Str from 'effect/String';
 import * as McpClient from 'effect/ai/McpClient';
 import type * as McpClientError from 'effect/ai/McpClientError';
 import * as McpProtocol from 'effect/ai/McpProtocol';
@@ -12,6 +15,7 @@ import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import * as HttpClient from 'effect/http/HttpClient';
 import * as HttpClientError from 'effect/http/HttpClientError';
 import * as HttpClientRequest from 'effect/http/HttpClientRequest';
+import type * as HttpClientResponse from 'effect/http/HttpClientResponse';
 
 import { OrbitAuth } from '../oauth/OrbitAuth.js';
 import { ORBIT_RESOURCE } from '../oauth/session.js';
@@ -30,6 +34,35 @@ export interface OrbitClientShape {
 }
 
 export class OrbitClient extends Context.Service<OrbitClient, OrbitClientShape>()('@2digits/tlo-mcp/mcp/OrbitClient') {}
+
+/**
+ * Messages the gateway sends while starting. Orbit can rate limit them to one request per minute, so the gateway waits
+ * out a 429 instead of failing to start; `tools/call` is never replayed.
+ */
+const STARTUP_METHODS: ReadonlySet<string> = new Set(['initialize', 'notifications/initialized', 'tools/list']);
+
+/**
+ * Bounds the startup handshake and tool discovery, including the Retry-After waits.
+ */
+const STARTUP_TIMEOUT = '10 minutes';
+
+const decodeMethod = Schema.decodeUnknownOption(Schema.Struct({ method: Schema.String }).pipe(Schema.fromJsonString));
+
+function startupMethod(request: HttpClientRequest.HttpClientRequest): string | undefined {
+  if (request.body._tag !== 'Uint8Array') {
+    return undefined;
+  }
+
+  const method = Opt.getOrUndefined(decodeMethod(new TextDecoder().decode(request.body.body)))?.method;
+
+  return P.isNotUndefined(method) && STARTUP_METHODS.has(method) ? method : undefined;
+}
+
+function retryAfter(response: HttpClientResponse.HttpClientResponse): Duration.Duration {
+  const value = Str.trim(response.headers['retry-after'] ?? '');
+
+  return /^\d+$/u.test(value) ? Duration.seconds(Number(value)) : Duration.minutes(1);
+}
 
 /**
  * Fetch client that refreshes the Orbit bearer token per request and refuses redirects.
@@ -55,6 +88,29 @@ const OrbitHttpClient = Layer.effect(
         ),
       ),
       HttpClient.transform(Effect.provideService(FetchHttpClient.RequestInit, { redirect: 'error' })),
+      HttpClient.transform((send, request) => {
+        const method = startupMethod(request);
+
+        if (P.isUndefined(method)) {
+          return send;
+        }
+
+        const attempt: typeof send = send.pipe(
+          Effect.flatMap((response) => {
+            if (response.status !== 429) {
+              return Effect.succeed(response);
+            }
+
+            const delay = retryAfter(response);
+
+            return Effect.logWarning(
+              `Orbit rate limited ${method}; retrying in ${Duration.format(delay)} (Retry-After).`,
+            ).pipe(Effect.andThen(Effect.sleep(delay)), Effect.andThen(Effect.suspend(() => attempt)));
+          }),
+        );
+
+        return attempt;
+      }),
     );
   }),
 ).pipe(Layer.provide(FetchHttpClient.layer));
@@ -97,6 +153,7 @@ export const OrbitClientLive = Layer.effect(
       version: '1.0.0',
       protocol: McpProtocol.v2025_11_25,
       url: ORBIT_RESOURCE,
+      timeout: STARTUP_TIMEOUT,
     }),
   ),
   Layer.provide(OrbitHttpClient),
