@@ -1,3 +1,11 @@
+## @2digits/config-monorepo@0.1.24
+
+### Update pnpm, knip, turbo, vitest and renovate
+
+- Updated `pnpm` to `12.22.0`, `knip` to `6.46.1`, `turbo` to `2.11.13`, `vitest` to `5.1.1` and `renovate` to `44.253.4`
+- The `fix` script now calls `pnpm run` with its script regex, because knip 6.46 reads a bare `pnpm '/regex/'` as a binary call
+- Updated the GitButler skill to `0.5.2287`
+
 ## @2digits/config-monorepo@0.1.23
 
 ### Update Vite+, renovate and pkg-pr-new

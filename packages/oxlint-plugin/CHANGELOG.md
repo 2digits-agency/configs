@@ -1,3 +1,27 @@
+## @2digits/oxlint-plugin@0.12.0
+
+### `preserve-caught-error` covers more Effect error handlers
+
+The rule now also reports:
+
+- `Effect.catchCause` handlers.
+- `XError.make(…)` constructions, such as `Schema.TaggedError` classes.
+- PascalCase errors without an `Error` suffix, such as `new BadRequest(…)`, when the handler returns them, passes them to `Effect.fail` or `yield*`s them.
+
+A handler is no longer reported when the step right before it logs the failure, such as `Effect.tapError(Effect.logError)`. Only `Effect.map`, `Effect.as*` and `Effect.withSpan` may sit in between. These cases are adapted from anti-slop's `require-cause-when-narrowing`.
+
+### Report hand-written tagged types
+
+Added `no-manual-tagged-type` to `recommendedRules`, adapted from [anti-slop](https://github.com/K-Mistele/anti-slop/blob/main/src/effect/rules/no-manual-tagged-type.ts). It reports a `_tag` written by hand in a type, such as `type Ready = { readonly _tag: 'Ready' }`: define the value with a tagged Schema or Data constructor and infer its type, such as `typeof Ready.Type`. Only literal tags are reported, so `{ readonly _tag: string }` constraints stay allowed, declaration files and `declare` blocks are skipped, and so is the filter of `Extract` or `Exclude`, such as `Extract<Payment, { _tag: 'Refund' }>`.
+
+### Prefer tagged error handlers over `Predicate.isTagged`
+
+Added `prefer-tagged-error-handling` to `recommendedRules`. It reports `Predicate.isTagged(error, 'A')` and `Predicate.isTagged('A')(error)` inside a broad Effect catch handler (`Effect.catch`, `Effect.catchIf` or `Effect.catchAll`): use `Effect.catchTag`/`Effect.catchTags`, or `Effect.catchReason`/`Effect.catchReasons` when the check is on the error's `reason`. It complements `no-manual-effect-error-tag`, which reports `_tag` comparisons in the same handlers.
+
+### Compile Schema guards with the Effect JIT compiler
+
+The plugin now enables `effect/schema/SchemaJITCompiler`, so the Schema guards and decoders in its rules compile to JavaScript on first use. If the runtime blocks `new Function`, they keep using the interpreter.
+
 ## @2digits/oxlint-plugin@0.11.0
 
 ### Update Oxlint to 1.94.0

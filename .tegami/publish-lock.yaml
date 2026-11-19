@@ -1,34 +1,34 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update Vite+, renovate and pkg-pr-new\n\n- Updated `vite-plus` to `1.7.0`, `renovate` to `44.248.0` and `pkg-pr-new` to `0.0.94`\n- Updated the GitButler skill to `0.5.2282`\n"
-    filename: 2026-11-17-29df98c6.md
+  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update pnpm, knip, turbo, vitest and renovate\n\n- Updated `pnpm` to `12.22.0`, `knip` to `6.46.1`, `turbo` to `2.11.13`, `vitest` to `5.1.1` and `renovate` to `44.253.4`\n- The `fix` script now calls `pnpm run` with its script regex, because knip 6.46 reads a bare `pnpm '/regex/'` as a binary call\n- Updated the GitButler skill to `0.5.2287`\n"
+    filename: 2026-11-19-bc293af0.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/eslint-plugin\":\n    type: patch\n---\n\n### Update `@typescript-eslint` packages to 8.73.0\n\nThe plugin now builds on `@typescript-eslint/utils` and `@typescript-eslint/scope-manager` 8.73.0.\n"
-    filename: 2026-11-17-2c45630e.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `@eslint/markdown` to 9.0.0 and other ESLint plugins\n\n- Updated `@eslint/markdown` to `9.0.0`\n- Updated `@eslint-react/eslint-plugin` and `@eslint-react/kit` to `5.30.5`\n- Updated `@tanstack/eslint-plugin-query` to `5.108.1`\n- Updated `eslint-plugin-jsdoc` to `65.5.0`, whose `jsdoc/imports-as-dependencies` rule now accepts options\n- Updated `eslint-plugin-turbo` to `2.11.13`\n"
+    filename: 2026-11-19-ea78daff.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: minor\n  \"@2digits/oxlint-config\":\n    type: minor\n---\n\n### Ban `Reflect.apply` and `Reflect.get`\n\n`no-restricted-properties` now reports `Reflect.apply` and `Reflect.get`. Call the function directly, and read properties with typed access or after decoding dynamic input into a domain type. `unicorn/prefer-reflect-apply` is turned off, because it recommends `Reflect.apply`.\n"
-    filename: 2026-11-16-restrict-reflect-get-apply.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### `preserve-caught-error` covers more Effect error handlers\n\nThe rule now also reports:\n\n- `Effect.catchCause` handlers.\n- `XError.make(…)` constructions, such as `Schema.TaggedError` classes.\n- PascalCase errors without an `Error` suffix, such as `new BadRequest(…)`, when the handler returns them, passes them to `Effect.fail` or `yield*`s them.\n\nA handler is no longer reported when the step right before it logs the failure, such as `Effect.tapError(Effect.logError)`. Only `Effect.map`, `Effect.as*` and `Effect.withSpan` may sit in between. These cases are adapted from anti-slop's `require-cause-when-narrowing`.\n"
+    filename: 2026-11-16-c4e1a7.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `typescript-eslint` to 8.73.0 and `eslint-plugin-jsdoc` to 65.4.10\n\nThe config enables typescript-eslint's new `ts/no-unsafe-class-instance-assignment` rule, which reports object literals and other non-instance values used where a class instance is expected.\n"
-    filename: 2026-11-17-eb97c835.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Report hand-written tagged types\n\nAdded `no-manual-tagged-type` to `recommendedRules`, adapted from [anti-slop](https://github.com/K-Mistele/anti-slop/blob/main/src/effect/rules/no-manual-tagged-type.ts). It reports a `_tag` written by hand in a type, such as `type Ready = { readonly _tag: 'Ready' }`: define the value with a tagged Schema or Data constructor and infer its type, such as `typeof Ready.Type`. Only literal tags are reported, so `{ readonly _tag: string }` constraints stay allowed, declaration files and `declare` blocks are skipped, and so is the filter of `Extract` or `Exclude`, such as `Extract<Payment, { _tag: 'Refund' }>`.\n"
+    filename: 2026-11-16-no-manual-tagged-type.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `@opencode-ai/plugin` to 1.19.6\n\nThe plugin now builds on `@opencode-ai/plugin` 1.19.6.\n"
-    filename: 2026-11-17-4e122f36.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer tagged error handlers over `Predicate.isTagged`\n\nAdded `prefer-tagged-error-handling` to `recommendedRules`. It reports `Predicate.isTagged(error, 'A')` and `Predicate.isTagged('A')(error)` inside a broad Effect catch handler (`Effect.catch`, `Effect.catchIf` or `Effect.catchAll`): use `Effect.catchTag`/`Effect.catchTags`, or `Effect.catchReason`/`Effect.catchReasons` when the check is on the error's `reason`. It complements `no-manual-effect-error-tag`, which reports `_tag` comparisons in the same handlers.\n"
+    filename: 2026-11-16-prefer-tagged-error-handling.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxfmt-config\":\n    type: patch\n---\n\n### Update `oxfmt` to 0.79.0\n\nThe config now expects `oxfmt` 0.79.0.\n"
-    filename: 2026-11-17-f1437b2a.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Compile Schema guards with the Effect JIT compiler\n\nThe plugin now enables `effect/schema/SchemaJITCompiler`, so the Schema guards and decoders in its rules compile to JavaScript on first use. If the runtime blocks `new Function`, they keep using the interpreter.\n"
+    filename: 2026-11-17-schema-jit-compiler.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: patch\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Update Oxlint to 1.94.0\n\nThe config now expects `oxlint` 1.94.0, and the plugin builds on `@oxlint/plugins` 1.94.0.\n"
-    filename: 2026-11-17-e9fd24f1.md
+  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 6.0.4\n\nThe plugin now sends its events with `posthog-node` 6.0.4.\n"
+    filename: 2026-11-19-4765cb92.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Require type arguments on `Function.dual`\n\nAdded `require-dual-type-arguments` to `recommendedRules`. In TypeScript files, it reports every `Function.dual` call without type arguments, including `dual` imported from `effect/Function` and calls that pass an existing function, such as `Fn.dual(2, BigDecimal.divideUnsafe)`. Without type arguments, TypeScript does not check the implementation against an overload annotation on the constant: inline parameters become `any`, and the data-last form returns `any`. Pass both signatures instead:\n\n```ts\nexport const clientOf = Fn.dual<\n  (project: ProjectRef) => (clients: ReadonlyArray<Client>) => ClientRef,\n  (clients: ReadonlyArray<Client>, project: ProjectRef) => ClientRef\n>(2, (clients, project) => …);\n```\n"
-    filename: 2026-11-17-require-dual-type-arguments.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Login and gateway errors keep their underlying cause\n\n`OrbitAuthError` and `GatewayError` now carry the failure they replace as `cause`, so errors such as \"Could not read credentials\" or \"Could not connect OpenTunnel\" print the reason underneath them.\n"
+    filename: 2026-11-16-9b2d0e.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.70.0\n\nThe Effect config now expects `@effect/tsgo` 0.70.0 and enables its two new diagnostics as errors:\n\n- `flatMapProvideServiceToProvideServiceEffect` suggests `Effect.provideServiceEffect` when a `flatMap` or `andThen` callback only forwards its parameter to `Effect.provideService`\n- `forLoopPushToForEach` suggests `Effect.forEach` instead of a `for-of` loop that pushes yielded Effect results into an array\n\nIt also drops the `debug` option, which 0.70.0 no longer supports.\n"
-    filename: 2026-11-17-d41a6dde.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Update `@yielded/oauth` to 0.1.0-beta.49\n\nThe gateway now builds on `@yielded/oauth` 0.1.0-beta.49.\n"
+    filename: 2026-11-19-6d2fd33d.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-11-17-29df98c6.md
+      - 2026-11-19-bc293af0.md
     id: npm:@2digits/config-monorepo
     updated: true
   - id: npm:@2digits/cli
@@ -36,53 +36,48 @@ core:packages:
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-11-17-2c45630e.md
-    id: npm:@2digits/eslint-plugin
-    updated: true
-  - changelogIds:
-      - 2026-11-16-restrict-reflect-get-apply.md
-      - 2026-11-17-eb97c835.md
+      - 2026-11-19-ea78daff.md
     id: npm:@2digits/eslint-config
     updated: true
-  - changelogIds:
-      - 2026-11-17-4e122f36.md
-    id: npm:@2digits/opencode-plugin
-    updated: true
-  - changelogIds:
-      - 2026-11-17-f1437b2a.md
-    id: npm:@2digits/oxfmt-config
-    updated: true
-  - changelogIds:
-      - 2026-11-16-restrict-reflect-get-apply.md
-      - 2026-11-17-e9fd24f1.md
-    id: npm:@2digits/oxlint-config
-    updated: true
-  - changelogIds:
-      - 2026-11-17-e9fd24f1.md
-      - 2026-11-17-require-dual-type-arguments.md
-    id: npm:@2digits/oxlint-plugin
+  - id: npm:@2digits/eslint-plugin
+    updated: false
+  - id: npm:@2digits/oxfmt-config
+    updated: false
+  - id: npm:@2digits/oxlint-config
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
+  - changelogIds:
+      - 2026-11-16-c4e1a7.md
+      - 2026-11-16-no-manual-tagged-type.md
+      - 2026-11-16-prefer-tagged-error-handling.md
+      - 2026-11-17-schema-jit-compiler.md
+    id: npm:@2digits/oxlint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-11-19-4765cb92.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
   - id: npm:@2digits/renovate-config
     updated: false
-  - id: npm:@2digits/tlo-mcp
+  - id: npm:@2digits/tsconfig
     updated: false
   - changelogIds:
-      - 2026-11-17-d41a6dde.md
-    id: npm:@2digits/tsconfig
+      - 2026-11-16-9b2d0e.md
+      - 2026-11-19-6d2fd33d.md
+    id: npm:@2digits/tlo-mcp
     updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
   - id: npm:@2digits/cli
   - id: npm:@2digits/constants
-  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/eslint-config
-  - id: npm:@2digits/opencode-plugin
+  - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
-  - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/prettier-config
+  - id: npm:@2digits/oxlint-plugin
+  - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/renovate-config
-  - id: npm:@2digits/tlo-mcp
   - id: npm:@2digits/tsconfig
+  - id: npm:@2digits/tlo-mcp

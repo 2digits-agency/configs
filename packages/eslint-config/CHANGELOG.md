@@ -1,3 +1,13 @@
+## @2digits/eslint-config@5.13.1
+
+### Update `@eslint/markdown` to 9.0.0 and other ESLint plugins
+
+- Updated `@eslint/markdown` to `9.0.0`
+- Updated `@eslint-react/eslint-plugin` and `@eslint-react/kit` to `5.30.5`
+- Updated `@tanstack/eslint-plugin-query` to `5.108.1`
+- Updated `eslint-plugin-jsdoc` to `65.5.0`, whose `jsdoc/imports-as-dependencies` rule now accepts options
+- Updated `eslint-plugin-turbo` to `2.11.13`
+
 ## @2digits/eslint-config@5.13.0
 
 ### Ban `Reflect.apply` and `Reflect.get`
