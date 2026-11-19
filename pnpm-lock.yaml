@@ -276,8 +276,8 @@ catalogs:
       specifier: 1.6.28
       version: 1.6.28
     '@yielded/oauth':
-      specifier: 0.1.0-beta.48
-      version: 0.1.0-beta.48
+      specifier: 0.1.0-beta.49
+      version: 0.1.0-beta.49
     dedent:
       specifier: 1.7.2
       version: 1.7.2
@@ -1183,7 +1183,7 @@ importers:
         version: 0.6.2(effect@4.1.4)(undici@8.12.4)
       '@yielded/oauth':
         specifier: 'catalog:'
-        version: 0.1.0-beta.48(effect@4.1.4)
+        version: 0.1.0-beta.49(effect@4.1.4)
       effect:
         specifier: 'catalog:'
         version: 4.1.4
@@ -4316,8 +4316,8 @@ packages:
     engines: {node: '>=18.12.0'}
     hasBin: true
 
-  '@yielded/oauth@0.1.0-beta.48':
-    resolution: {integrity: sha512-gcNiWIT5Cga0u1i3anv4jpE7txkACaOm5c4a3gwjsZ7MzGoLr42MzmrOFyeI3y+CRKQfdI/6o4toWCs8PFzA3Q==}
+  '@yielded/oauth@0.1.0-beta.49':
+    resolution: {integrity: sha512-72QK+QroH2umLKLTeeW+eaErNWgCWoTfx3tjvvEeChWrTj4P5EqpdHw13KLbFM3/OnqJocRuYwX5XR1GxluMVg==}
     peerDependencies:
       effect: ^4.1.2
 
@@ -10939,7 +10939,7 @@ snapshots:
     transitivePeerDependencies:
       - typanion
 
-  '@yielded/oauth@0.1.0-beta.48(effect@4.1.4)':
+  '@yielded/oauth@0.1.0-beta.49(effect@4.1.4)':
     dependencies:
       effect: 4.1.4
 
