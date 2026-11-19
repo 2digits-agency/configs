@@ -1,3 +1,13 @@
+## @2digits/tlo-mcp@2.5.1
+
+### Login and gateway errors keep their underlying cause
+
+`OrbitAuthError` and `GatewayError` now carry the failure they replace as `cause`, so errors such as "Could not read credentials" or "Could not connect OpenTunnel" print the reason underneath them.
+
+### Update `@yielded/oauth` to 0.1.0-beta.49
+
+The gateway now builds on `@yielded/oauth` 0.1.0-beta.49.
+
 ## @2digits/tlo-mcp@2.5.0
 
 ### Forward `SetTicketOwner` and `LinkTicketToProject`
