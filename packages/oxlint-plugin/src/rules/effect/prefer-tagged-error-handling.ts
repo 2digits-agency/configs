@@ -4,9 +4,10 @@ import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import type * as P from 'effect/Predicate';
 
-import { staticPath } from '../../internal/ast';
-import { importBindings, namespaceMember, type ImportBindings } from '../../internal/imports';
+import { namespaceMember, staticPath } from '../../internal/ast';
+import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
+import type { ImportBindings } from '../../schemas/imports';
 import { isInsideBroadEffectHandler, isReasonMember } from './internal/tagged-values';
 
 const isTagged = 'isTagged' satisfies keyof typeof P;
