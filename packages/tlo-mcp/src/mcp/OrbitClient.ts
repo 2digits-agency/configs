@@ -1,17 +1,19 @@
 import * as Arr from 'effect/Array';
+import * as Clock from 'effect/Clock';
 import * as Context from 'effect/Context';
 import * as Duration from 'effect/Duration';
 import * as Effect from 'effect/Effect';
 import * as Layer from 'effect/Layer';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
+import * as Result from 'effect/Result';
 import * as Schema from 'effect/Schema';
-import * as Str from 'effect/String';
 import * as McpClient from 'effect/ai/McpClient';
 import type * as McpClientError from 'effect/ai/McpClientError';
 import * as McpProtocol from 'effect/ai/McpProtocol';
 import type * as McpSchema from 'effect/ai/McpSchema';
 import * as FetchHttpClient from 'effect/http/FetchHttpClient';
+import * as Headers from 'effect/http/Headers';
 import * as HttpClient from 'effect/http/HttpClient';
 import * as HttpClientError from 'effect/http/HttpClientError';
 import * as HttpClientRequest from 'effect/http/HttpClientRequest';
@@ -58,10 +60,16 @@ function startupMethod(request: HttpClientRequest.HttpClientRequest): string | u
   return P.isNotUndefined(method) && STARTUP_METHODS.has(method) ? method : undefined;
 }
 
-function retryAfter(response: HttpClientResponse.HttpClientResponse): Duration.Duration {
-  const value = Str.trim(response.headers['retry-after'] ?? '');
+/**
+ * The wait a 429 asks for, as seconds or an HTTP date; one minute when Orbit omits it or sends something else.
+ *
+ * @param response
+ * @param now
+ */
+function retryAfter(response: HttpClientResponse.HttpClientResponse, now: number): Duration.Duration {
+  const parsed = Headers.parseRetryAfter(response.headers['retry-after'] ?? '');
 
-  return /^\d+$/u.test(value) ? Duration.seconds(Number(value)) : Duration.minutes(1);
+  return Result.isSuccess(parsed) ? Headers.retryAfterDelay(parsed.success, now) : Duration.minutes(1);
 }
 
 /**
@@ -75,7 +83,7 @@ const OrbitHttpClient = Layer.effect(
     // Fail startup with the typed login error; later refresh failures surface as the transport error's cause.
     yield* auth.accessToken;
 
-    return (yield* HttpClient.HttpClient).pipe(
+    const authorized = (yield* HttpClient.HttpClient).pipe(
       HttpClient.mapRequestEffect((request) =>
         auth.accessToken.pipe(
           Effect.mapBoth({
@@ -88,6 +96,9 @@ const OrbitHttpClient = Layer.effect(
         ),
       ),
       HttpClient.transform(Effect.provideService(FetchHttpClient.RequestInit, { redirect: 'error' })),
+    );
+
+    const client: typeof authorized = authorized.pipe(
       HttpClient.transform((send, request) => {
         const method = startupMethod(request);
 
@@ -95,23 +106,32 @@ const OrbitHttpClient = Layer.effect(
           return send;
         }
 
-        const attempt: typeof send = send.pipe(
-          Effect.flatMap((response) => {
-            if (response.status !== 429) {
-              return Effect.succeed(response);
-            }
+        return send.pipe(
+          Effect.flatMap(
+            Effect.fnUntraced(function* (response) {
+              if (response.status !== 429) {
+                return response;
+              }
 
-            const delay = retryAfter(response);
+              const now = yield* Clock.currentTimeMillis;
 
-            return Effect.logWarning(
-              `Orbit rate limited ${method}; retrying in ${Duration.format(delay)} (Retry-After).`,
-            ).pipe(Effect.andThen(Effect.sleep(delay)), Effect.andThen(Effect.suspend(() => attempt)));
-          }),
+              const delay = retryAfter(response, now);
+
+              yield* Effect.logWarning(
+                `Orbit rate limited ${method}; retrying in ${Duration.format(delay)} (Retry-After).`,
+              );
+
+              yield* Effect.sleep(delay);
+
+              // Through the whole client, so the retry signs the request with a fresh token after a long wait.
+              return yield* client.execute(request);
+            }),
+          ),
         );
-
-        return attempt;
       }),
     );
+
+    return client;
   }),
 ).pipe(Layer.provide(FetchHttpClient.layer));
 

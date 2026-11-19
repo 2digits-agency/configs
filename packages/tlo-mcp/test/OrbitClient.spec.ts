@@ -208,7 +208,11 @@ describe('orbit MCP client', () => {
 
   it.effect('waits out Orbit rate limits on the startup handshake for as long as Retry-After asks', () => {
     // Orbit allows one request per minute: two 429s on the handshake exceed the MCP client's default 60-second deadline.
-    const limits: Record<string, Array<string>> = { 'notifications/initialized': ['59', '59'], 'tools/list': ['30'] };
+    // The TestClock starts at the epoch, so the tools/list date asks for a wait until 148 seconds.
+    const limits: Record<string, Array<string>> = {
+      'notifications/initialized': ['59', '59'],
+      'tools/list': ['Thu, 01 Jan 1970 00:02:28 GMT'],
+    };
 
     const { sent, fetch } = orbit(
       () => Effect.die('Unexpected tool call'),
@@ -222,7 +226,7 @@ describe('orbit MCP client', () => {
     );
 
     return Effect.gen(function* () {
-      const starting = yield* Layer.build(OrbitClientLive.pipe(Layer.provide(auth))).pipe(Effect.forkScoped);
+      const starting = yield* Layer.build(OrbitClientLive.pipe(Layer.provide(countingAuth()))).pipe(Effect.forkScoped);
 
       yield* TestClock.adjust('117 seconds');
 
@@ -232,7 +236,7 @@ describe('orbit MCP client', () => {
         'notifications/initialized',
       ]);
 
-      // The handshake completes at 118 seconds; tools/list then waits 30 more.
+      // The handshake completes at 118 seconds; tools/list then waits until the date Orbit sent.
       yield* TestClock.adjust('30 seconds');
 
       expect(starting.pollUnsafe()).toBeUndefined();
@@ -251,6 +255,9 @@ describe('orbit MCP client', () => {
         'tools/list',
         'tools/list',
       ]);
+
+      // Each retry fetches its own token, so one that expired during the wait is refreshed.
+      expect(new Set(Arr.map(sent, Struct.get('authorization'))).size).toBe(sent.length);
     }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetch), Effect.scoped);
   });
 
