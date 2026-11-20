@@ -160,22 +160,25 @@ function enclosingSection(
 }
 
 /**
- * The definition section (`decide`, `evolve`, `reply`, ...) of the `Domain.<Block>(name, definition)` call that
- * contains `node`. A helper declared in the same file counts as part of the section that names it, as a handler
+ * The definition sections (`decide`, `evolve`, `reply`, ...) of the `Domain.<Block>(name, definition)` calls that
+ * contain `node`. A helper declared in the same file counts as part of every section that names it, as a handler
  * (`evolve: { TicketAppeared: placed }`) or a call (`decide: { Open: (s) => openFor(s) }`), one level deep.
  *
  * @param node Node inside the definition.
  * @param file File being linted.
  */
-export function domainSection(node: ESTree.Node, file: DomainFile): Opt.Option<DomainSection> {
+export function domainSections(node: ESTree.Node, file: DomainFile): ReadonlyArray<DomainSection> {
   const [section, named] = enclosingSection(node, file);
 
-  return Opt.orElse(section, () =>
-    Arr.findFirst(named, (declaration) =>
-      Arr.findFirst(
-        Arr.flatMap(file.sourceCode.getDeclaredVariables(declaration), ({ references }) => references),
-        ({ identifier, init }) => (init ? Opt.none() : Tuple.get(enclosingSection(identifier, file), 0)),
+  return Opt.match(section, {
+    onSome: Arr.of,
+    onNone: () =>
+      Arr.flatMap(named, (declaration) =>
+        Arr.flatMap(file.sourceCode.getDeclaredVariables(declaration), ({ references }) =>
+          Arr.flatMap(references, ({ identifier, init }) =>
+            init ? [] : Opt.toArray(Tuple.get(enclosingSection(identifier, file), 0)),
+          ),
+        ),
       ),
-    ),
-  );
+  });
 }

@@ -121,13 +121,13 @@ model correct. They only look at calls on a `@alchemy.run/domain` import, so oth
   `*Set`) and commands named after a field they set (`Set*`, `Update*`, `Change*`, `Modify*`). Name the business fact
   instead: `MoneyWithdrawn`, not `BalanceChanged`.
 - `alchemy-domain-stack-providers` requires the Stack in `alchemy.run.ts` that registers `Cloudflare.providers()` to
-  register `DomainCloudflare.providers()` from `@alchemy.run/domain/Cloudflare` too; without them the deploy fails with no
-  provider for `Cloudflare.Domain.Backfill`. It is not in the recommended set, since a Stack alone does not show whether
-  it hosts a model: `@2digits/oxlint-config` enables it when `@alchemy.run/domain` is installed.
+  register `DomainCloudflare.providers()` from `@alchemy.run/domain/Cloudflare` too; without them the deploy fails with
+  no provider for `Cloudflare.Domain.Backfill`. It is not in the recommended set, since a Stack alone does not show
+  whether it hosts a model: `@2digits/oxlint-config` enables it when `@alchemy.run/domain` is installed.
 
 None of them autofix. The rules are syntax-only. `alchemy-domain-pure-decide` and `alchemy-domain-total-handlers` follow
-a helper declared in the same file one level deep, whether a section passes it as a handler or calls it; helpers in
-other files are not followed.
+a helper declared in the same file one level deep, whether a section passes it as a handler or calls it, and check it
+for every section that uses it; helpers in other files are not followed.
 
 ## Endpoint header schema keys
 

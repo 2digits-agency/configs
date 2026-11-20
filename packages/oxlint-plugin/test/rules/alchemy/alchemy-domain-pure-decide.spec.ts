@@ -57,6 +57,21 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       `,
     ],
     invalid: [
+      // A helper shared by evolve and decide counts for decide, whichever section comes first.
+      {
+        code: `${header}
+          const stamp = () => Date.now()
+          export class Account extends Domain.Aggregate('Account', {
+            evolve: { Opened: (s) => ({ ...s, at: stamp() }) },
+            decide: { Open: (s) => [new Opened({ at: stamp() })] },
+          }) {}
+        `,
+        errors: [{ messageId: 'time', data: { api: 'Date.now()' } }],
+      },
+      {
+        code: `const stamp = () => Date.now()\n${aggregate('(s) => [new Opened({ at: stamp() })]', 'Opened: (s) => ({ ...s, at: stamp() })')}`,
+        errors: [{ messageId: 'time', data: { api: 'Date.now()' } }],
+      },
       {
         code: `const stamp = () => Date.now()\n${aggregate('(s) => [new Opened({ at: stamp() })]')}`,
         errors: [{ messageId: 'time', data: { api: 'Date.now()' } }],

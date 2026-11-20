@@ -8,7 +8,7 @@ import * as Schema from 'effect/Schema';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { ThrowingGetter, ThrowingModule } from '../../schemas/effect';
-import { domainSection, importedPath, isImportReference, type DomainFile } from './internal/domain';
+import { domainSections, importedPath, isImportReference, type DomainFile } from './internal/domain';
 
 const totalSections: Readonly<Record<string, ReadonlyArray<string>>> = {
   Aggregate: ['evolve', 'reply'],
@@ -38,19 +38,17 @@ export const alchemyDomainTotalHandlers = Rule.define({
 
     const file: DomainFile = { sourceCode: ctx.sourceCode, imports: yield* importBindings };
 
+    // The first section that restricts `node`: a helper shared by `decide` and `evolve` counts for both.
     function report(node: ESTree.Node, api: string) {
-      return Opt.match(domainSection(node, file), {
-        onNone: () => Effect.void,
-        onSome: ({ block, section }) => {
-          if (block === 'Aggregate' && section === 'decide') {
-            return ctx.report(Diagnostic.fromId({ node, messageId: 'reject', data: { api } }));
-          }
+      return Arr.findFirst(domainSections(node, file), ({ block, section }) => {
+        if (block === 'Aggregate' && section === 'decide') {
+          return Opt.some(Diagnostic.fromId({ node, messageId: 'reject', data: { api } }));
+        }
 
-          return Opt.exists(R.get(totalSections, block), Arr.contains(section))
-            ? ctx.report(Diagnostic.fromId({ node, messageId: 'partial', data: { section, api } }))
-            : Effect.void;
-        },
-      });
+        return Opt.exists(R.get(totalSections, block), Arr.contains(section))
+          ? Opt.some(Diagnostic.fromId({ node, messageId: 'partial', data: { section, api } }))
+          : Opt.none();
+      }).pipe(Opt.match({ onNone: () => Effect.void, onSome: (diagnostic) => ctx.report(diagnostic) }));
     }
 
     function checkGetter(node: ESTree.Node) {
