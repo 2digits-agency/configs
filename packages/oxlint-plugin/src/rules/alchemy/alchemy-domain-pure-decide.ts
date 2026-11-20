@@ -11,7 +11,7 @@ import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIn } from '../../internal/scope';
 import { EffectIo } from '../../schemas/effect';
-import { domainSection, importedPath, isImportReference, type DomainFile } from './internal/domain';
+import { domainSections, importedPath, isImportReference, type DomainFile } from './internal/domain';
 
 type Impurity = 'io' | 'random' | 'time';
 
@@ -101,7 +101,7 @@ export const alchemyDomainPureDecide = Rule.define({
 
     function report(node: ESTree.Node, impurity: Opt.Option<Impurity>, api: string) {
       return impurity.pipe(
-        Opt.filter(() => Opt.exists(domainSection(node, file), ({ section }) => section === 'decide')),
+        Opt.filter(() => Arr.some(domainSections(node, file), ({ section }) => section === 'decide')),
         Opt.match({
           onNone: () => Effect.void,
           onSome: (messageId) => ctx.report(Diagnostic.fromId({ node, messageId, data: { api } })),

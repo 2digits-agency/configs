@@ -46,6 +46,16 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         errors: [{ messageId: 'import', data: { source: '@aws-sdk/client-s3' } }],
       },
       {
+        filename: 'src/Ledger/AccountLedger.query.ts',
+        code: `${header}import { D1Database } from '@alchemy.run/cloudflare'`,
+        errors: [{ messageId: 'import', data: { source: '@alchemy.run/cloudflare' } }],
+      },
+      {
+        filename: 'src/RoutineApi.api.ts',
+        code: `${header}import * as DomainHttp from '@alchemy.run/domain/Http'\nimport * as Story from '@alchemy.run/domain/Story'`,
+        errors: [{ messageId: 'import', data: { source: '@alchemy.run/domain/Http' } }],
+      },
+      {
         filename,
         code: `${header}import S3 = require('@aws-sdk/client-s3')`,
         errors: [{ messageId: 'import', data: { source: '@aws-sdk/client-s3' } }],

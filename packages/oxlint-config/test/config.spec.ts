@@ -594,6 +594,33 @@ describe('oxlint config', () => {
     expect(JSON.stringify(twoDigits({ react: true, ts: true, vitest: true, zod: true }))).not.toContain('effecttsgo');
   });
 
+  it('checks the Alchemy Domain Stack only when the alchemy config is enabled', () => {
+    expect(recommendedRules['2digits/alchemy-domain-stack-providers']).toBeUndefined();
+
+    const stack = `
+      import * as Cloudflare from '@alchemy.run/cloudflare';
+      import * as Alchemy from 'alchemy';
+      export default Alchemy.Stack('Bank', { providers: Cloudflare.providers() }, program);
+    `;
+
+    for (const enable of [true, false]) {
+      withTemporaryProject(
+        {
+          'oxlint.config.mjs': `
+            import twoDigits from '${presetUrl}';
+            export default twoDigits({ alchemy: ${enable}, react: false, ts: false, vitest: false, zod: false });
+          `,
+          'alchemy.run.ts': stack,
+        },
+        (directory) => {
+          const { output } = runOxlint(directory, 'alchemy.run.ts');
+
+          expect(output.includes('2digits(alchemy-domain-stack-providers)')).toBe(enable);
+        },
+      );
+    }
+  });
+
   it('loads and executes eslint-plugin-zod', () => {
     const { status, output } = runOxlint(fixtureDirectory, invalidFixture);
 

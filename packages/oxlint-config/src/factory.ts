@@ -2,6 +2,7 @@ import { isPackageExists } from 'local-pkg';
 import { defineConfig } from 'oxlint-flat-config';
 
 import {
+  alchemy,
   boolean,
   ignores,
   imports,
@@ -37,6 +38,7 @@ interface Oxlint2DigitsOptions {
   react?: SharedOptions<OptionsWithReact> | boolean;
   vitest?: SharedOptions<OptionsWithVitest> | boolean;
   zod?: SharedOptions<OptionsOverrides> | boolean;
+  alchemy?: SharedOptions<OptionsOverrides> | boolean;
 }
 
 function enabled<T extends SharedOptions>(options: T | boolean | undefined, defaults?: boolean): options is T {
@@ -91,6 +93,10 @@ export function twoDigits(options: Oxlint2DigitsOptions = {}, ...userConfig: Arr
 
   if (enabled(options.zod, isPackageExists('zod'))) {
     configs.push(zod(extractConfig(options.zod)));
+  }
+
+  if (enabled(options.alchemy, isPackageExists('@alchemy.run/domain'))) {
+    configs.push(alchemy(extractConfig(options.alchemy)));
   }
 
   return defineConfig(configs, userConfig);

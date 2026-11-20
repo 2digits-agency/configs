@@ -12,11 +12,17 @@ const header = `
   import * as Opt from 'effect/Option'
 `;
 
+const getOrThrow = '`Option.getOrThrow`';
+
 new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: 'module' } }).run(
   'alchemy-domain-total-handlers',
   alchemyDomainTotalHandlers,
   {
     valid: [
+      `${header}
+        export const runIdOf = (s) => Opt.getOrThrow(s.running)
+        export class Status extends Domain.View('Status', { evolve: { Started: (v, e) => ({ ...v, runId: e.runId }) } }) {}
+      `,
       `${header}
         export class Account extends Domain.Aggregate('Account', {
           evolve: { Opened: (s, e) => { const Opt = { getOrThrow: (o) => o ?? s }; return Opt.getOrThrow(e.state) } },
@@ -46,6 +52,31 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       `,
     ],
     invalid: [
+      // A helper the view's validate uses first still counts for its evolve.
+      {
+        code: `${header}
+          const runOf = (s) => Opt.getOrThrow(s.running)
+          export class Status extends Domain.View('Status', {
+            validate: (request, s) => runOf(s),
+            evolve: { Started: (v, e) => ({ ...v, runId: runOf(e) }) },
+          }) {}
+        `,
+        errors: [{ messageId: 'partial', data: { section: 'evolve', api: getOrThrow } }],
+      },
+      {
+        code: `${header}
+          function placed(v, e) { return { ...v, ticket: Opt.getOrThrow(e.ticket) } }
+          export class OpenTickets extends Domain.View('OpenTickets', { evolve: { TicketAppeared: placed } }) {}
+        `,
+        errors: [{ messageId: 'partial', data: { section: 'evolve', api: getOrThrow } }],
+      },
+      {
+        code: `${header}
+          const runningOf = (s) => { if (s._tag !== 'Running') throw new Error('idle'); return s }
+          export class DailyImport extends Domain.Aggregate('DailyImport', { decide: { Stop: (s) => [new Stopped({ runId: runningOf(s).runId })] } }) {}
+        `,
+        errors: [{ messageId: 'reject', data: { api: '`throw`' } }],
+      },
       {
         code: `${header}
           export class DailyImport extends Domain.Aggregate('DailyImport', {
@@ -60,7 +91,7 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
             reply: { StartDailyImport: (s) => ({ runId: Opt.getOrThrow(s.running) }) },
           }) {}
         `,
-        errors: [{ messageId: 'partial', data: { section: 'reply', api: '`Option.getOrThrow`' } }],
+        errors: [{ messageId: 'partial', data: { section: 'reply', api: getOrThrow } }],
       },
       {
         code: `${header}
@@ -89,7 +120,7 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
             evolve: { Renamed: (s, e) => Struct.evolve(s, { name: () => Opt.getOrThrow(e.name) }) },
           }) {}
         `,
-        errors: [{ messageId: 'partial', data: { section: 'evolve', api: '`Option.getOrThrow`' } }],
+        errors: [{ messageId: 'partial', data: { section: 'evolve', api: getOrThrow } }],
       },
       {
         code: `${header}
@@ -98,7 +129,7 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
             reply: { Start: (s) => ({ runId: pipe(s.running, Opt.getOrThrow) }) },
           }) {}
         `,
-        errors: [{ messageId: 'partial', data: { section: 'reply', api: '`Option.getOrThrow`' } }],
+        errors: [{ messageId: 'partial', data: { section: 'reply', api: getOrThrow } }],
       },
     ],
   },
