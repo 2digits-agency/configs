@@ -405,13 +405,13 @@ describe('oxlint config', () => {
       'vitest/expect-expect': [
         'error',
         {
-          additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live'],
+          additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live', 'it.prop', 'it.effect.prop'],
           assertFunctionNames: ['expect', 'expectTypeOf', 'assert', 'assertType', 'assert*', '*Equal'],
         },
       ],
       'vitest/no-standalone-expect': [
         'error',
-        { additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live'] },
+        { additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live', 'it.prop', 'it.effect.prop'] },
       ],
     });
   });
