@@ -416,6 +416,65 @@ describe('oxlint config', () => {
     });
   });
 
+  it('counts @effect/vitest property tests as test blocks', () => {
+    // Load the built public preset and keep only the two rules that know test blocks.
+    const config = `
+      import twoDigits from '${presetUrl}';
+      const config = twoDigits({ react: false, ts: false, vitest: true, zod: false });
+      export default {
+        ...config,
+        jsPlugins: [],
+        options: { ...config.options, typeAware: false },
+        overrides: config.overrides.map(({ jsPlugins, ...override }) => ({
+          ...override,
+          rules: Object.fromEntries(
+            Object.entries(override.rules ?? {}).filter(([name]) =>
+              name === 'vitest/no-standalone-expect' || name === 'vitest/expect-expect'),
+          ),
+        })),
+      };
+    `;
+
+    const asserting = `
+      import { describe, expect, it } from '@effect/vitest';
+
+      describe('properties', () => {
+        it.prop('holds', [1], ([n]) => {
+          expect(n).toBe(n);
+        });
+
+        it.effect.prop('holds as an effect', [1], ([n]) => {
+          expect(n).toBe(n);
+        });
+      });
+    `;
+
+    const silent = `
+      import { describe, it } from '@effect/vitest';
+
+      describe('properties', () => {
+        it.prop('asserts nothing', [1], () => {});
+
+        it.effect.prop('asserts nothing as an effect', [1], () => {});
+      });
+    `;
+
+    withTemporaryProject(
+      { 'oxlint.config.mjs': config, 'asserting.spec.ts': asserting, 'silent.spec.ts': silent },
+      (directory) => {
+        const good = runOxlint(directory, 'asserting.spec.ts');
+
+        expect(good.status, good.output).toBe(0);
+
+        const bad = runOxlint(directory, 'silent.spec.ts');
+
+        expect(bad.status, bad.output).toBe(1);
+
+        expect(bad.output.match(/vitest\(expect-expect\)/gu), bad.output).toHaveLength(2);
+      },
+    );
+  });
+
   it('reports Reflect.apply and Reflect.get but allows fn.apply', () => {
     // Load the built public preset and keep only the rules that recommend or ban `Reflect` calls.
     const config = `
