@@ -29,6 +29,8 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
   alchemyDomainPureDecide,
   {
     valid: [
+      `function stamp() { return Date.now() }\n${aggregate('(s) => [new Opened({})]', 'Opened: (s) => ({ ...s, at: stamp() })')}`,
+      `export const stamp = () => Date.now()\n${aggregate('(s) => [new Opened({})]')}`,
       aggregate('(s, cmd, { now }) => [new Opened({ at: now, due: new Date(cmd.due) })]'),
       aggregate('(s) => [new Opened({})]', 'Opened: (s) => ({ ...s, seenAt: Date.now() })'),
       `import { Digest } from 'effect/crypto'\n${aggregate(
@@ -55,6 +57,14 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       `,
     ],
     invalid: [
+      {
+        code: `const stamp = () => Date.now()\n${aggregate('(s) => [new Opened({ at: stamp() })]')}`,
+        errors: [{ messageId: 'time', data: { api: 'Date.now()' } }],
+      },
+      {
+        code: `function open(s) { return [new Opened({ id: crypto.randomUUID() })] }\n${aggregate('open')}`,
+        errors: [{ messageId: 'random', data: { api: 'crypto.randomUUID()' } }],
+      },
       { code: aggregate('(s) => [new Opened({ at: Date.now() })]'), errors: [{ messageId: 'time' }] },
       { code: aggregate('(s) => [new Opened({ at: new Date() })]'), errors: [{ messageId: 'time' }] },
       {

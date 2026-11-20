@@ -18,6 +18,10 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
   {
     valid: [
       `${header}
+        export const runIdOf = (s) => Opt.getOrThrow(s.running)
+        export class Status extends Domain.View('Status', { evolve: { Started: (v, e) => ({ ...v, runId: e.runId }) } }) {}
+      `,
+      `${header}
         export class Account extends Domain.Aggregate('Account', {
           evolve: { Opened: (s, e) => { const Opt = { getOrThrow: (o) => o ?? s }; return Opt.getOrThrow(e.state) } },
         }) {}
@@ -46,6 +50,20 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
       `,
     ],
     invalid: [
+      {
+        code: `${header}
+          function placed(v, e) { return { ...v, ticket: Opt.getOrThrow(e.ticket) } }
+          export class OpenTickets extends Domain.View('OpenTickets', { evolve: { TicketAppeared: placed } }) {}
+        `,
+        errors: [{ messageId: 'partial', data: { section: 'evolve', api: '`Option.getOrThrow`' } }],
+      },
+      {
+        code: `${header}
+          const runningOf = (s) => { if (s._tag !== 'Running') throw new Error('idle'); return s }
+          export class DailyImport extends Domain.Aggregate('DailyImport', { decide: { Stop: (s) => [new Stopped({ runId: runningOf(s).runId })] } }) {}
+        `,
+        errors: [{ messageId: 'reject', data: { api: '`throw`' } }],
+      },
       {
         code: `${header}
           export class DailyImport extends Domain.Aggregate('DailyImport', {

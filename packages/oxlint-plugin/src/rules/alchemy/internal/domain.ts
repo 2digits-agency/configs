@@ -3,6 +3,7 @@ import * as Arr from 'effect/Array';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
+import * as Tuple from 'effect/Tuple';
 
 import {
   argumentAt,
@@ -115,21 +116,66 @@ function definitionBlock(definition: ESTree.Node, file: DomainFile): Opt.Option<
 }
 
 /**
+ * The section of the definition that contains `node` itself, and the named functions and constants passed on the way
+ * up, whose references may place `node` in a section too.
+ *
+ * @param node Node to start from.
+ * @param file File being linted.
+ */
+function enclosingSection(
+  node: ESTree.Node,
+  file: DomainFile,
+): readonly [Opt.Option<DomainSection>, ReadonlyArray<ESTree.Node>] {
+  const named: Array<ESTree.Node> = [];
+
+  let child = node;
+
+  let parent = parentOf(node);
+
+  while (Opt.isSome(parent)) {
+    const { value } = parent;
+
+    const block = value.type === 'Property' && value.value === child ? definitionBlock(value.parent, file) : Opt.none();
+
+    if (Opt.isSome(block)) {
+      return [
+        Opt.map(propertyName(value as ESTree.ObjectProperty), (section) => ({ block: block.value, section })),
+        named,
+      ];
+    }
+
+    if (
+      (value.type === 'FunctionDeclaration' && P.isNotNull(value.id)) ||
+      (value.type === 'VariableDeclarator' && value.id.type === 'Identifier')
+    ) {
+      named.push(value);
+    }
+
+    child = value;
+
+    parent = parentOf(value);
+  }
+
+  return [Opt.none(), named];
+}
+
+/**
  * The definition section (`decide`, `evolve`, `reply`, ...) of the `Domain.<Block>(name, definition)` call that
- * contains `node`.
+ * contains `node`. A helper declared in the same file counts as part of the section that names it, as a handler
+ * (`evolve: { TicketAppeared: placed }`) or a call (`decide: { Open: (s) => openFor(s) }`), one level deep.
  *
  * @param node Node inside the definition.
  * @param file File being linted.
  */
 export function domainSection(node: ESTree.Node, file: DomainFile): Opt.Option<DomainSection> {
-  return Opt.flatMap(parentOf(node), (parent) => {
-    const block =
-      parent.type === 'Property' && parent.value === node ? definitionBlock(parent.parent, file) : Opt.none();
+  const [section, named] = enclosingSection(node, file);
 
-    return Opt.match(block, {
-      onNone: () => domainSection(parent, file),
-      onSome: (found) =>
-        Opt.map(propertyName(parent as ESTree.ObjectProperty), (section) => ({ block: found, section })),
-    });
-  });
+  return Opt.orElse(section, () =>
+    Arr.findFirst(named, (declaration) =>
+      Arr.findFirst(
+        Arr.flatMap(file.sourceCode.getDeclaredVariables(declaration), ({ references }) => references),
+        ({ identifier, init }) => (init ? Opt.none() : Tuple.get(enclosingSection(identifier, file), 0)),
+      ),
+    ),
+  );
 }
