@@ -18,10 +18,15 @@ export type RuleName = keyof typeof rules;
 const optInRules: ReadonlyArray<RuleName> = ['prefer-effect-filesystem', 'prefer-effect-path'];
 
 /**
- * Recommended rules that warn instead of erroring: worth seeing, but they name well-known values rather than catch
- * defects.
+ * Recommended rules that warn instead of erroring: worth seeing, but they name well-known values or point at code
+ * smells rather than catch defects.
  */
-const warnRules: ReadonlyArray<RuleName> = ['prefer-effect-http-status'];
+const warnRules: ReadonlyArray<RuleName> = [
+  'no-accumulating-loop',
+  'no-mutable-module-state',
+  'no-repeated-switch',
+  'prefer-effect-http-status',
+];
 
 const recommendedRuleNames = Arr.filter(R.keys(rules), (name) => !Arr.contains(optInRules, name));
 

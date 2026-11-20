@@ -121,8 +121,6 @@ export async function runAutofixFixture({
     ignore: ['node_modules', 'eslint.config.ts'],
   });
 
-  const changedFiles: Record<string, string> = {};
-
   const results = await Promise.all(
     files.toSorted().map(async (file) => {
       const [content, source] = await Promise.all([
@@ -134,11 +132,9 @@ export async function runAutofixFixture({
     }),
   );
 
-  for (const { file, content, source } of results) {
-    if (content !== source) {
-      changedFiles[file] = content;
-    }
-  }
+  const changedFiles: Record<string, string> = Object.fromEntries(
+    results.filter(({ content, source }) => content !== source).map(({ file, content }) => [file, content]),
+  );
 
   return { changedFiles };
 }

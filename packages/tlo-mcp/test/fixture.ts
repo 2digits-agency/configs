@@ -1,4 +1,5 @@
 import * as NodeServices from '@effect/platform-node/NodeServices';
+import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as FileSystem from 'effect/FileSystem';
 import * as Opt from 'effect/Option';
@@ -18,17 +19,16 @@ const fixtures = await Effect.gen(function* () {
 
   const directory = yield* path.fromFileUrl(directoryUrl);
 
-  const fixtures = new Map<string, string>();
-
   const files = yield* fs.readDirectory(directory);
 
-  for (const file of files) {
-    const text = yield* fs.readFileString(path.join(directory, file));
+  const entries = yield* Effect.all(
+    Arr.map(files, (file) =>
+      Effect.map(fs.readFileString(path.join(directory, file)), (text) => [path.basename(file, '.txt'), text] as const),
+    ),
+    { concurrency: 'unbounded' },
+  );
 
-    fixtures.set(path.basename(file, '.txt'), text);
-  }
-
-  return fixtures;
+  return new Map(entries);
 }).pipe(Effect.provide(NodeServices.layer), Effect.runPromise);
 
 export function fixture(name: string) {

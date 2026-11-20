@@ -99,6 +99,9 @@ import { paddingLineBetweenStatements } from './padding-line-between-statements'
 import { noBrowserApiInRender } from './react/no-browser-api-in-render';
 import { noExportAllInClient } from './react/no-export-all-in-client';
 import { validDirective } from './react/valid-directive';
+import { noAccumulatingLoop } from './smells/no-accumulating-loop';
+import { noMutableModuleState } from './smells/no-mutable-module-state';
+import { noRepeatedSwitch } from './smells/no-repeated-switch';
 
 export const rules = {
   'alchemy-domain-block-file-name': alchemyDomainBlockFileName,
@@ -121,6 +124,7 @@ export const rules = {
   'cors-credentials-with-wildcard': corsCredentialsWithWildcard,
   'dual-numeric-arity-with-optional-parameter': dualNumericArityWithOptionalParameter,
   'effect-promise-vs-trypromise': effectPromiseVsTryPromise,
+  'no-accumulating-loop': noAccumulatingLoop,
   'no-already-started-promise': noAlreadyStartedPromise,
   'no-async-effect-try': noAsyncEffectTry,
   'no-browser-api-in-render': noBrowserApiInRender,
@@ -147,8 +151,10 @@ export const rules = {
   'no-millis-arithmetic': noMillisArithmetic,
   'no-multi-shot-effect-callback': noMultiShotEffectCallback,
   'no-non-json-schema-annotation': noNonJsonSchemaAnnotation,
+  'no-mutable-module-state': noMutableModuleState,
   'no-option-of-service': noOptionOfService,
   'no-overwritten-discriminant': noOverwrittenDiscriminant,
+  'no-repeated-switch': noRepeatedSwitch,
   'no-service-option-get-or-throw': noServiceOptionGetOrThrow,
   'no-single-use-private-function': noSingleUsePrivateFunction,
   'no-service-constructor-imports': noServiceConstructorImports,

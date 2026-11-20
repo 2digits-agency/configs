@@ -500,8 +500,13 @@ describe('oxlint config', () => {
     ]).toStrictEqual(['error', 'error']);
   });
 
-  it('warns about status code numbers instead of erroring', () => {
-    expect(twoDigitsPluginRules['2digits/prefer-effect-http-status']).toBe('warn');
+  it('warns about status code numbers and code smells instead of erroring', () => {
+    expect([
+      twoDigitsPluginRules['2digits/prefer-effect-http-status'],
+      twoDigitsPluginRules['2digits/no-accumulating-loop'],
+      twoDigitsPluginRules['2digits/no-mutable-module-state'],
+      twoDigitsPluginRules['2digits/no-repeated-switch'],
+    ]).toStrictEqual(['warn', 'warn', 'warn', 'warn']);
   });
 
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {

@@ -6,7 +6,9 @@ Custom [Oxlint JavaScript plugin](https://oxc.rs/docs/guide/usage/linter/writing
 The recommended set is enabled by default by `@2digits/oxlint-config`. The opt-in `prefer-effect-filesystem` and
 `prefer-effect-path` rules are excluded because the configured `@effect/tsgo/nodeBuiltinImport` diagnostic already
 enforces those imports more broadly. `prefer-effect-http-status` is recommended at `warn`, because it only names
-well-known numbers (see [Effect HTTP modules](#effect-http-modules)); every other recommended rule is an error. To
+well-known numbers (see [Effect HTTP modules](#effect-http-modules)), and so are the [code smell](#code-smells) rules
+`no-accumulating-loop`, `no-mutable-module-state` and `no-repeated-switch`, which point at smells rather than defects;
+every other recommended rule is an error. To
 register the plugin directly:
 
 ```ts
@@ -82,6 +84,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Schema chain style: `consistent-schema-pipe` applies Schema modifiers and data-last steps with `.pipe(...)`
   (`Schema.String.pipe(Schema.optionalKey)`) and calls Schema wrappers such as `Schema.Array(...)` directly. See
   [ADR 0001](../../docs/adr/0001-schema-modifiers-pipe-wrappers-call.md).
+- Code smells from Martin Fowler's _Refactoring_: `no-accumulating-loop`, `no-mutable-module-state` and
+  `no-repeated-switch`. See [Code smells](#code-smells).
 - React hydration: `no-browser-api-in-render` reports reads of `window`, `document`, `navigator`, `localStorage` and
   `sessionStorage` (also through `globalThis`) in a component or hook body, or in a `useState`, `useReducer` or
   `useMemo` callback, even behind a `typeof window` guard. Effects, event handlers, other callbacks and
@@ -567,6 +571,38 @@ require Effect imports, infer tagged types, or prove that constructors exist. Ca
 the literal `Effect`/`Match` identifiers, not aliases or shadowing. Constructor imports are matched by imported name
 (including aliases), not return type; package/absolute imports are excluded. The switch rules can overlap with the
 existing `prefer-effect-match` diagnostic.
+
+## Code smells
+
+Adapted from the Martin Fowler rules in
+[`K-Mistele/anti-slop`](https://github.com/K-Mistele/anti-slop/tree/main/src/martinfowler/rules) (`loops`,
+`repeated-switches` and `mutable-data`). They skip `.test` and `.spec` files and offer no fixes.
+
+- `no-accumulating-loop` (warning) reports a `for`, `for…of` or `for…in` loop that builds an array, object, `Map` or
+  `Set` by `push`, `unshift`, `set`, `add`, computed-key assignment, `[...all, x]` or `all.concat(x)`. Express it as
+  `map`, `filter`, `flatMap` or `groupBy` (Effect `Array` and `Record`), `Object.fromEntries`, `new Map(…)`, or
+  `Effect.forEach` when each iteration runs an effect. Only the loop that alone builds the collection is reported: it
+  starts as an empty literal or `new Map()`/`new Set()` in the same function, nothing adds to it before or after the
+  loop, and the loop only adds to it or reads entries with `get` or `[key]`, as a `groupBy` would. Loops that exit
+  early with `return` or `break`, await on each iteration (left to `no-await-in-loop`), read the collection otherwise
+  (`includes`, `has`, `length`, a worklist, also inside the added value), or change other outer state are exempt, and so
+  are `while` loops. Additions in a callback the loop registers, such as an event listener, do not count. It
+  completes `unicorn/no-array-reduce` and `unicorn/no-array-for-each`, which move code from `reduce` and `forEach` to
+  loops: this rule moves the loops that only build a collection on to a pipeline.
+- `no-repeated-switch` (warning) reports a value that one file branches on over the same cases in several places:
+  `switch` statements, `else if` chains and ternary chains over the same value, and runs of adjacent guard `if`s.
+  Places count as the same switch when they compare the same source text and share at least two cases, because the
+  same text such as `part.type` can name unrelated unions. Handle the cases once with a lookup table, one exhaustive
+  `Match`, or a `Data.TaggedEnum`. In Effect files `prefer-effect-match` already reports each switch and `else if`
+  chain; this rule adds the repetition across a file, also in files without Effect and for runs of guard `if`s.
+- `no-mutable-module-state` (warning) reports a top-level `let` or `var`, exported or not, that a function reassigns.
+  Keep the state in one owner, such as a `Ref` in a service. A deliberate lazy singleton or browser store can disable it
+  on its line.
+
+The upstream `global-data`, `long-function`, `long-parameter-list`, `message-chains` and `mysterious-name` rules were
+not ported: size limits are already the `max-lines-per-function`, `max-statements` and `max-params` rules that
+`@2digits/oxlint-config` leaves off, mutable exports are `import/no-mutable-exports`, and most chain and naming reports
+on real projects were navigation through plain data and `run` entry points.
 
 ## Wrapper and helper rules
 
