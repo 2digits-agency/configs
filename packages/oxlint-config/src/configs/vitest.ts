@@ -43,8 +43,32 @@ export function vitest(options: OptionsWithVitest = {}): Array<FlatConfigItem> {
         'vitest/expect-expect': [
           'error',
           {
-            additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live'],
-            assertFunctionNames: ['expect', 'expectTypeOf', 'assert', 'assertType', 'assert*', '*Equal'],
+            additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live', 'it.prop', 'it.effect.prop'],
+            assertFunctionNames: [
+              'expect',
+              'expectTypeOf',
+              'assert',
+              'assertType',
+              'assert*',
+              '*Equal',
+              // Foldkit's test helpers: `Scene.expect…`, `Lazy.expectAllReused` and `Story.expectOutMessage`.
+              'Scene.expect*',
+              'Lazy.expect*',
+              'Story.expect*',
+              // The steps of an `@alchemy.run/domain` story that check an outcome; `Story.given`, `when` and `call` only set it up.
+              'Story.then',
+              'Story.rejected',
+              'Story.replied',
+              'Story.state',
+              'Story.view',
+              'Story.emitted',
+              'Story.streamed',
+              'Story.query',
+              'Story.returned',
+              'Story.failed',
+              'Story.died',
+              'Story.saga',
+            ],
           },
         ],
         'vitest/hoisted-apis-on-top': 'error',
@@ -69,7 +93,7 @@ export function vitest(options: OptionsWithVitest = {}): Array<FlatConfigItem> {
         'vitest/no-restricted-vi-methods': undefined,
         'vitest/no-standalone-expect': [
           'error',
-          { additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live'] },
+          { additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live', 'it.prop', 'it.effect.prop'] },
         ],
         'vitest/no-test-prefixes': 'error',
         'vitest/no-test-return-statement': 'error',
