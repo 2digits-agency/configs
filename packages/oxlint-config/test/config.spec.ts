@@ -402,12 +402,10 @@ describe('oxlint config', () => {
 
     expect(rulesOf(vitest(), '2digits:vitest/rules')).toMatchObject({
       'vitest/consistent-test-it': ['error', { fn: 'it', withinDescribe: 'it' }],
+      // The test below lints which calls count as assertions.
       'vitest/expect-expect': [
         'error',
-        {
-          additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live', 'it.prop', 'it.effect.prop'],
-          assertFunctionNames: ['expect', 'expectTypeOf', 'assert', 'assertType', 'assert*', '*Equal'],
-        },
+        { additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live', 'it.prop', 'it.effect.prop'] },
       ],
       'vitest/no-standalone-expect': [
         'error',
@@ -416,7 +414,7 @@ describe('oxlint config', () => {
     });
   });
 
-  it('counts @effect/vitest property tests as test blocks', () => {
+  it('counts property tests as test blocks, and Foldkit and alchemy story checks as assertions', () => {
     // Load the built public preset and keep only the two rules that know test blocks.
     const config = `
       import twoDigits from '${presetUrl}';
@@ -436,7 +434,9 @@ describe('oxlint config', () => {
     `;
 
     const asserting = `
+      import { Story } from '@alchemy.run/domain';
       import { describe, expect, it } from '@effect/vitest';
+      import { Lazy, Scene } from 'foldkit/test';
 
       describe('properties', () => {
         it.prop('holds', [1], ([n]) => {
@@ -447,15 +447,42 @@ describe('oxlint config', () => {
           expect(n).toBe(n);
         });
       });
+
+      describe('helpers', () => {
+        it('checks with an assert helper', () => {
+          assertValid(value);
+        });
+
+        it('checks with an equality helper', () => {
+          deepEqual(value, value);
+        });
+
+        it('checks a scene', () => {
+          Scene.scene({}, Scene.expectAll(Scene.role('button')).toExist());
+        });
+
+        it('checks that a view is reused', () => {
+          Lazy.expectAllReused(view, [model, model]);
+        });
+
+        it.effect('checks a story', () => story(Story.when(ref, command), Story.then(ref, [event])));
+
+        it.effect('checks a rejection', () => story(Story.when(ref, command), Story.rejected(rejection)));
+      });
     `;
 
     const silent = `
+      import { Story } from '@alchemy.run/domain';
       import { describe, it } from '@effect/vitest';
 
       describe('properties', () => {
         it.prop('asserts nothing', [1], () => {});
 
         it.effect.prop('asserts nothing as an effect', [1], () => {});
+      });
+
+      describe('helpers', () => {
+        it.effect('only sets up a story', () => story(Story.given(ref, [event]), Story.when(ref, command)));
       });
     `;
 
@@ -470,7 +497,7 @@ describe('oxlint config', () => {
 
         expect(bad.status, bad.output).toBe(1);
 
-        expect(bad.output.match(/vitest\(expect-expect\)/gu), bad.output).toHaveLength(2);
+        expect(bad.output.match(/vitest\(expect-expect\)/gu), bad.output).toHaveLength(3);
       },
     );
   });
