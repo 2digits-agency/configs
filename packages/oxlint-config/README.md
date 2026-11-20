@@ -2,8 +2,8 @@
 
 Like `@2digits/eslint-config`, the default export `twoDigits(options, ...userConfigs)` builds the config from named
 [oxlint-flat-config](https://github.com/liangmiQwQ/oxlint-flat-config) objects (`2digits:javascript`,
-`2digits:typescript/rules`, ...). The `ts`, `react`, `vitest` and `zod` configs are enabled when their package is
-installed, and accept `overrides` for their rules. Your flat config objects apply after the built-in ones; later objects
+`2digits:typescript/rules`, ...). The `ts`, `react`, `vitest`, `zod` and `alchemy` configs are enabled when their
+package (`@alchemy.run/domain` for `alchemy`) is installed, and accept `overrides` for their rules. Your flat config objects apply after the built-in ones; later objects
 win, like ESLint:
 
 ```ts

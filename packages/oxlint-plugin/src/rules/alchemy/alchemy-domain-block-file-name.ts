@@ -1,39 +1,20 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
+import { AST, Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
-import * as R from 'effect/Record';
 import * as Ref from 'effect/Ref';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-import { type DomainBlock, HostKind } from '../../schemas/alchemy';
+import { blockFileKinds, type DomainBlock, HostKind, SharedBlock } from '../../schemas/alchemy';
 import { TestOrStoryFilename } from '../../schemas/names';
 import { domainBlock, type DomainFile } from './internal/domain';
 
-const fileKinds: Readonly<Record<string, string>> = {
-  Aggregate: 'aggregate',
-  Api: 'api',
-  Command: 'command',
-  ExternalSystem: 'external',
-  Model: 'model',
-  Policy: 'policy',
-  Projection: 'projection',
-  RequestContext: 'context',
-  Saga: 'saga',
-  Stream: 'stream',
-  View: 'view',
-};
-
-// Events and rejections may also live in the command, external system or stream file that records or returns them.
-const sharedKinds: Readonly<Record<string, string>> = {
-  Event: 'event',
-  Rejection: 'rejection',
-};
-
 const isHostKind = Schema.is(HostKind);
+
+const isSharedBlock = Schema.is(SharedBlock);
 
 const isTestFile = Schema.is(TestOrStoryFilename);
 
@@ -85,18 +66,15 @@ export const alchemyDomainBlockFileName = Rule.define({
     const hosted = yield* Ref.make(false);
 
     function declaration(node: ESTree.Node): Opt.Option<Declaration> {
-      return node.type === 'CallExpression'
-        ? Opt.flatMap(domainBlock(node, file), (block) =>
-            R.get(fileKinds, block).pipe(
-              Opt.orElse(() => R.get(sharedKinds, block)),
-              Opt.map((kind): Declaration => ({ node: node.callee, block, kind })),
-            ),
-          )
-        : Opt.none();
+      return AST.narrow(node, 'CallExpression').pipe(
+        Opt.flatMap((call) =>
+          Opt.map(domainBlock(call, file), (block) => ({ node: call.callee, block, kind: blockFileKinds[block] })),
+        ),
+      );
     }
 
     function isShared({ block }: Declaration) {
-      return inHostFile && R.has(sharedKinds, block);
+      return inHostFile && isSharedBlock(block);
     }
 
     function report(messageId: 'fileName' | 'oneBlock', { node, block, kind }: Declaration) {

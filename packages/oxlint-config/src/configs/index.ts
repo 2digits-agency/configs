@@ -1,5 +1,7 @@
 export * from './2digits';
 
+export * from './alchemy';
+
 export * from './boolean';
 
 export * from './ignores';

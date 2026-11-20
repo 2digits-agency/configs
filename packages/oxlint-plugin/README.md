@@ -109,10 +109,25 @@ model correct. They only look at calls on a `@alchemy.run/domain` import, so oth
 - `alchemy-domain-block-file-name` requires one block per file, named after its kind (`Account.aggregate.ts`,
   `WithdrawMoney.command.ts`, `FraudCheck.external.ts`, `CurrentActor.context.ts`). Events and rejections may share
   the file of the command, external system or stream that uses them; in their own `.event.ts` or `.rejection.ts` file, one per file. Test and story files are skipped.
-- `alchemy-domain-pure-imports` restricts block files (`*.aggregate.ts`, `*.command.ts`, `*.middleware.ts`, ...) that
-  import `@alchemy.run/domain` to relative imports, `effect` and `@alchemy.run/domain`.
+- `alchemy-domain-pure-imports` restricts block files (`*.aggregate.ts`, `*.command.ts`, `*.query.ts`, ...) that
+  import `@alchemy.run/domain` to relative imports, `effect`, `@alchemy.run/domain` and `@alchemy.run/domain/Story`.
+  Entrypoints that host or publish the model (`/Cloudflare`, `/Http`, `/Ai`, `/Cli`) belong in the server package.
+- `alchemy-domain-require-description` requires a `{ description }` as the last argument of every declaration
+  (`Domain.RequestContext` excepted). `toMcp` tools, `toCli` help and the `toHttpApi` OpenAPI document show it. Test and
+  story files are skipped.
+- `alchemy-domain-api-explicit-members` requires a `Domain.Api` to list `commands`, `views`, `streams` and `queries`. A
+  kind it leaves out is served whole, including whatever the model gains later; write `[]` for none.
+- `alchemy-domain-event-name` warns about events named after a field change (`*Changed`, `*Updated`, `*Modified`,
+  `*Set`) and commands named after a field they set (`Set*`, `Update*`, `Change*`, `Modify*`). Name the business fact
+  instead: `MoneyWithdrawn`, not `BalanceChanged`.
+- `alchemy-domain-stack-providers` requires the Stack in `alchemy.run.ts` that registers `Cloudflare.providers()` to
+  register `DomainCloudflare.providers()` from `@alchemy.run/domain/Cloudflare` too; without them the deploy fails with no
+  provider for `Cloudflare.Domain.Backfill`. It is not in the recommended set, since a Stack alone does not show whether
+  it hosts a model: `@2digits/oxlint-config` enables it when `@alchemy.run/domain` is installed.
 
-None of them autofix. The rules are syntax-only, so a helper called from `decide` or `evolve` is not followed.
+None of them autofix. The rules are syntax-only. `alchemy-domain-pure-decide` and `alchemy-domain-total-handlers` follow
+a helper declared in the same file one level deep, whether a section passes it as a handler or calls it; helpers in
+other files are not followed.
 
 ## Endpoint header schema keys
 

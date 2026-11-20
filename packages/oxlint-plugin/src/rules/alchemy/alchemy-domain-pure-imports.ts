@@ -21,7 +21,8 @@ function isAllowed(source: string): boolean {
     source === 'effect' ||
     Str.startsWith('effect/')(source) ||
     source === domainPackage ||
-    Str.startsWith(`${domainPackage}/`)(source)
+    // Its other entrypoints host, publish or serve the model: `/Cloudflare`, `/Http`, `/Ai`, `/Cli`, `/Foldkit`.
+    source === `${domainPackage}/Story`
   );
 }
 
@@ -40,7 +41,7 @@ export const alchemyDomainPureImports = Rule.define({
       'Restrict Alchemy Domain block files to imports from `@alchemy.run/domain`, `effect` and the domain package itself.',
     messages: {
       import:
-        'A domain block imports only `@alchemy.run/domain`, `effect` and relative files, not `{{source}}`. Put code that touches infrastructure in the server package.',
+        'A domain block imports only `@alchemy.run/domain`, `@alchemy.run/domain/Story`, `effect` and relative files, not `{{source}}`. Put code that touches infrastructure or publishes the model in the server package.',
       dynamic:
         'A domain block imports only `@alchemy.run/domain`, `effect` and relative files, so its import sources must be string literals.',
     },

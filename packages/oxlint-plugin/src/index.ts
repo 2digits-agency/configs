@@ -15,13 +15,21 @@ export type { PaddingLineOption } from './rules/padding-line-between-statements'
 
 export type RuleName = keyof typeof rules;
 
-const optInRules: ReadonlyArray<RuleName> = ['prefer-effect-filesystem', 'prefer-effect-path'];
+/**
+ * Rules a config turns on only where they apply: `alchemy-domain-stack-providers` cannot tell from a Stack alone
+ * whether it hosts a Domain model, so `@2digits/oxlint-config` enables it when `@alchemy.run/domain` is installed.
+ */
+const optInRules: ReadonlyArray<RuleName> = [
+  'alchemy-domain-stack-providers',
+  'prefer-effect-filesystem',
+  'prefer-effect-path',
+];
 
 /**
- * Recommended rules that warn instead of erroring: worth seeing, but they name well-known values rather than catch
- * defects.
+ * Recommended rules that warn instead of erroring: worth seeing, but they name well-known values or judge names rather
+ * than catch defects.
  */
-const warnRules: ReadonlyArray<RuleName> = ['prefer-effect-http-status'];
+const warnRules: ReadonlyArray<RuleName> = ['alchemy-domain-event-name', 'prefer-effect-http-status'];
 
 const recommendedRuleNames = Arr.filter(R.keys(rules), (name) => !Arr.contains(optInRules, name));
 

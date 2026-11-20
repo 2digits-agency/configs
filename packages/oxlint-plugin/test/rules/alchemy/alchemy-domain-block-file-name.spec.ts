@@ -40,6 +40,10 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         `,
       },
       {
+        filename: 'src/Ledger/AccountLedger.query.ts',
+        code: `${header}export class AccountLedger extends Domain.Query('AccountLedger', { success: LedgerRow }) {}`,
+      },
+      {
         filename: 'src/CurrentActor.context.ts',
         code: `${header}export class CurrentActor extends Domain.RequestContext<CurrentActor>()('Bank/CurrentActor', Actor) {}`,
       },
@@ -68,6 +72,11 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'ts' }, sourceType: '
         filename: 'src/Account/Account.aggregate.ts',
         code: `${header}export class AccountSummary extends Domain.View('AccountSummary', {}) {}`,
         errors: [{ messageId: 'fileName', data: { block: 'View', kind: 'view' } }],
+      },
+      {
+        filename: 'src/Ledger/Ledger.projection.ts',
+        code: `${header}export class AccountLedger extends Domain.Query('AccountLedger', { success: LedgerRow }) {}`,
+        errors: [{ messageId: 'fileName', data: { block: 'Query', kind: 'query' } }],
       },
       {
         filename: 'src/Account/DepositMoney.command.ts',
