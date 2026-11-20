@@ -10,6 +10,7 @@ import {
   isLiteral,
   isSomeSame,
   isStringLiteral,
+  staticPath,
   staticPropertyName,
   unwrapExpression,
   walkNodes,
@@ -193,20 +194,60 @@ function isUnpaddedBase64(node: ESTree.CallExpression, imports: ImportBindings):
   );
 }
 
+function readsLength(node: ESTree.Node): boolean {
+  return walkNodes(
+    node,
+    (child) => child.type === 'MemberExpression' && Opt.contains(staticPropertyName(child), 'length'),
+  );
+}
+
 /**
- * Whether an expression rounds a length up to a multiple of four, the Base64 block size: it contains `% 4`, `/ 4` or `&
- * 3`.
+ * Whether an expression is `Math.ceil(s.length / 4)`.
+ *
+ * @param node Expression.
+ */
+function isLengthInBlocks(node: ESTree.Node): boolean {
+  if (
+    node.type !== 'CallExpression' ||
+    !Opt.exists(staticPath(node.callee), (path) => Arr.join(path, '.') === 'Math.ceil')
+  ) {
+    return false;
+  }
+
+  return Opt.exists(argumentAt(node, 0), (argument) => {
+    const quotient = unwrapExpression(argument);
+
+    return (
+      quotient.type === 'BinaryExpression' &&
+      quotient.operator === '/' &&
+      isLiteral(quotient.right, 4) &&
+      readsLength(quotient.left)
+    );
+  });
+}
+
+/**
+ * Whether an expression rounds a string's length to the Base64 block size of four: `s.length % 4` or `s.length & 3` for
+ * the missing padding, or `Math.ceil(s.length / 4) * 4` for the padded length. A width that is not a `.length`, as in
+ * `'='.repeat(width / 4)`, is a separator.
  *
  * @param node Length expression.
  */
 function isBase64BlockArithmetic(node: ESTree.Node): boolean {
-  return walkNodes(
-    node,
-    (child) =>
-      child.type === 'BinaryExpression' &&
-      (((child.operator === '%' || child.operator === '/') && isLiteral(child.right, 4)) ||
-        (child.operator === '&' && isLiteral(child.right, 3))),
-  );
+  return walkNodes(node, (child) => {
+    if (child.type !== 'BinaryExpression') {
+      return false;
+    }
+
+    if (
+      (child.operator === '%' && isLiteral(child.right, 4)) ||
+      (child.operator === '&' && isLiteral(child.right, 3))
+    ) {
+      return readsLength(child.left);
+    }
+
+    return child.operator === '*' && isLiteral(child.right, 4) && isLengthInBlocks(unwrapExpression(child.left));
+  });
 }
 
 /**

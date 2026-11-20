@@ -1,10 +1,11 @@
-import { Diagnostic, Rule, RuleContext, Visitor, type ESTree } from 'effect-oxlint';
+import { Diagnostic, Rule, RuleContext, Visitor, type ESTree, type OxlintSourceCode } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Match from 'effect/Match';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as R from 'effect/Record';
+import * as Str from 'effect/String';
 
 import {
   argumentAt,
@@ -16,7 +17,7 @@ import {
 } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
-import type { ImportBindings } from '../../schemas/imports';
+import { lookupVariable } from '../../internal/scope';
 import { onRuntimeImport, packageName } from './internal/package-imports';
 
 type LibraryMessage = 'bigIntLibrary' | 'decimalLibrary' | 'rationalLibrary';
@@ -49,36 +50,48 @@ function memberCallName(node: ESTree.Expression): Opt.Option<string> {
     : Opt.none();
 }
 
-function hasPath(node: ESTree.Node, ...paths: ReadonlyArray<ReadonlyArray<string>>): boolean {
-  return Opt.exists(staticPath(node), (path) =>
-    Arr.some(
-      paths,
-      (expected) => path.length === expected.length && Arr.every(path, (part, i) => part === expected[i]),
+const numberParsers: ReadonlyArray<string> = ['Number', 'Number.parseFloat', 'parseFloat'];
+
+/**
+ * The dotted path a callee names through a global, such as `Number.parseFloat`. A root declared in the file, such as a
+ * parameter, a local function or an import (Effect's `Number` module too), is none.
+ *
+ * @param sourceCode Source of the file.
+ * @param node Callee.
+ */
+function globalPath(sourceCode: OxlintSourceCode, node: ESTree.Node): Opt.Option<string> {
+  return staticPath(node).pipe(
+    Opt.filter(
+      (path) =>
+        !Opt.exists(lookupVariable(sourceCode, node, Arr.headNonEmpty(path)), ({ defs }) => Arr.isArrayNonEmpty(defs)),
     ),
+    Opt.map(Arr.join('.')),
   );
 }
 
-const isNumericNode = Match.type<ESTree.Expression>().pipe(
+const isNumericOperation = Match.type<ESTree.Expression>().pipe(
   Match.when({ type: 'Literal' }, ({ value }) => P.isNumber(value)),
   Match.when({ type: 'BinaryExpression' }, ({ operator }) => Arr.contains(numericOperators, operator)),
   Match.when({ type: 'UnaryExpression' }, ({ operator }) => operator === '-' || operator === '+'),
-  Match.when(
-    { type: 'CallExpression' },
-    ({ callee }) =>
-      Opt.exists(staticPath(callee), ([root]) => root === 'Math') ||
-      hasPath(callee, ['Number'], ['parseFloat'], ['Number', 'parseFloat']),
-  ),
   Match.orElse(() => false),
 );
 
 /**
- * Whether an expression is a number: a number literal, arithmetic other than `+`, a unary sign, or a call of `Math.*`,
- * `Number(…)` or `parseFloat(…)`.
+ * Whether an expression is a number: a number literal, arithmetic other than `+`, a unary sign, or a call of the global
+ * `Math.*`, `Number(…)` or `parseFloat(…)`.
  *
  * @param node Expression.
+ * @param sourceCode Source of the file.
  */
-function isNumericExpression(node: ESTree.Expression): boolean {
-  return isNumericNode(unwrapExpression(node));
+function isNumericExpression(node: ESTree.Expression, sourceCode: OxlintSourceCode): boolean {
+  const expression = unwrapExpression(node);
+
+  return expression.type === 'CallExpression'
+    ? Opt.exists(
+        globalPath(sourceCode, expression.callee),
+        (path) => Str.startsWith('Math.')(path) || Arr.contains(numberParsers, path),
+      )
+    : isNumericOperation(expression);
 }
 
 /**
@@ -86,15 +99,16 @@ function isNumericExpression(node: ESTree.Expression): boolean {
  * `n.toString()` and `` `${n}` `` of a numeric expression.
  *
  * @param node Expression.
+ * @param sourceCode Source of the file.
  */
-function isNumberText(node: ESTree.Expression): boolean {
+function isNumberText(node: ESTree.Expression, sourceCode: OxlintSourceCode): boolean {
   const expression = unwrapExpression(node);
 
   if (expression.type === 'TemplateLiteral') {
     return (
       expression.expressions.length === 1 &&
       Arr.every(expression.quasis, ({ value }) => value.cooked === '') &&
-      Arr.every(expression.expressions, isNumericExpression)
+      Arr.every(expression.expressions, (part) => isNumericExpression(part, sourceCode))
     );
   }
 
@@ -109,24 +123,26 @@ function isNumberText(node: ESTree.Expression): boolean {
   if (Opt.contains(memberCallName(expression), 'toString') && expression.callee.type === 'MemberExpression') {
     return (
       Arr.isReadonlyArrayEmpty(expression.arguments) &&
-      isNumericExpression(expression.callee.object as ESTree.Expression)
+      isNumericExpression(expression.callee.object as ESTree.Expression, sourceCode)
     );
   }
 
-  return hasPath(expression.callee, ['String']) && Opt.exists(argumentAt(expression, 0), isNumericExpression);
+  return (
+    Opt.contains(globalPath(sourceCode, expression.callee), 'String') &&
+    Opt.exists(argumentAt(expression, 0), (argument) => isNumericExpression(argument, sourceCode))
+  );
 }
 
 /**
- * Whether a call parses `x.toFixed(n)` back into a number: `parseFloat(…)`, `Number.parseFloat(…)` or `Number(…)`.
+ * Whether a call parses `x.toFixed(n)` back into a number with the global `parseFloat(…)`, `Number.parseFloat(…)` or
+ * `Number(…)`.
  *
  * @param node Call.
- * @param imports Import bindings of the file.
+ * @param sourceCode Source of the file.
  */
-function isToFixedRoundTrip(node: ESTree.CallExpression, imports: ImportBindings): boolean {
+function isToFixedRoundTrip(node: ESTree.CallExpression, sourceCode: OxlintSourceCode): boolean {
   return (
-    hasPath(node.callee, ['Number'], ['parseFloat'], ['Number', 'parseFloat']) &&
-    // `Number` imported from Effect is the module, not the global.
-    Opt.isNone(imports.path(node.callee)) &&
+    Opt.exists(globalPath(sourceCode, node.callee), (path) => Arr.contains(numberParsers, path)) &&
     Opt.exists(argumentAt(node, 0), (argument) => Opt.contains(memberCallName(unwrapExpression(argument)), 'toFixed'))
   );
 }
@@ -218,11 +234,11 @@ export const preferEffectExactNumbers = Rule.define({
     }
 
     function checkCall(node: ESTree.CallExpression) {
-      if (isToFixedRoundTrip(node, imports)) {
+      if (isToFixedRoundTrip(node, ctx.sourceCode)) {
         return report(node, 'toFixedRoundTrip');
       }
 
-      if (Opt.exists(splitSubject(node, '.'), isNumberText)) {
+      if (Opt.exists(splitSubject(node, '.'), (subject) => isNumberText(subject, ctx.sourceCode))) {
         return report(node, 'decimalSplit');
       }
 

@@ -39,6 +39,11 @@ tester.run(ruleName, preferEffectExactNumbers, {
     `${effect} const label = price.toFixed(2); const n = parseFloat(input); const m = Number(x.toString());`,
     // Effect's Number module is not the global Number.
     `${effect} import { Number } from 'effect'; const rounded = Number(x.toFixed(2));`,
+    // Local functions, parameters and imports that shadow the globals.
+    `${effect} function parseFloat(text: string) { return { text }; } const parsed = parseFloat(price.toFixed(2));`,
+    `${effect} const parse = (Number: (text: string) => unknown) => Number(price.toFixed(2));`,
+    `${effect} import { String } from './text'; const parts = String(a / b).split('.');`,
+    `${effect} import Math from './math'; const parts = String(Math.max(a, b)).split('.');`,
     // Dotted text that is not a number: versions, hosts and string values.
     `${effect} const [major, minor] = version.split('.'); const parts = String(host).split('.'); const p = name.toString().split('.');`,
     `${effect} ${str} const labels = Str.split(hostname, '.');`,

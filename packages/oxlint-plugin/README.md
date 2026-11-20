@@ -476,8 +476,9 @@ UTF-8 text and run the same in Node.js, browsers, and Workers, and their decoder
   or `pipe` (use `Hex.encode`). A single swap, such as `.replace(/\+/g, ' ')`, is allowed. It also reports `=`
   padding handled by hand: `Base64.encode(x)` with its `=` removed through `.replace(/=+$/, '')`, `.replaceAll('=', '')`
   or a `Str.replace` step (use `Base64.encodeUnpadded`), and `'='.repeat(…)`, `.padEnd(…, '=')` or
-  `Str.padEnd(…, '=')` whose length rounds to a multiple of four with `% 4`, `/ 4` or `& 3` (use
-  `Base64.decodeLenient`, which decodes unpadded Base64 and Base64Url). Separators such as `'='.repeat(40)` are allowed.
+  `Str.padEnd(…, '=')` whose length rounds a string's `.length` to a multiple of four with `s.length % 4`,
+  `s.length & 3` or `Math.ceil(s.length / 4) * 4` (use `Base64.decodeLenient`, which decodes unpadded Base64 and
+  Base64Url). Separators such as `'='.repeat(40)` or `'='.repeat(width / 4)` are allowed.
 - `no-encoding-get-or-throw` reports `Result.getOrThrow` and `Result.getOrThrowWith` on a `Base64`, `Base64Url`, or
   `Hex` decoder, directly or as a `pipe` step with only `Result.map` steps before it, because it turns the typed
   `EncodingError` back into an exception. Use `yield* Effect.fromResult(Base64.decode(x))`, `Result.match`, or
@@ -553,7 +554,8 @@ These rules only run in files that import Effect and report without autofixes.
   - `decimal.js`, `decimal.js-light`, `big.js`, `bignumber.js` and `currency.js` at `BigDecimal`, `fraction.js` and
     `fractional` at `Rational`, and `big-integer`, `bn.js` and `jsbi` at native `bigint` with `effect/BigInt`.
   - `parseFloat(x.toFixed(n))`, `Number.parseFloat(…)`, `Number(…)` and `+x.toFixed(n)` at `Num.round(x, n)`, or
-    `BigDecimal.round` for values that must stay exact. `Number` imported from Effect is the module and is skipped.
+    `BigDecimal.round` for values that must stay exact. Only the globals count: a local `parseFloat`, a
+    parameter named `Number` or Effect's imported `Number` module is skipped, and so are a shadowed `String` or `Math`.
   - The text of a number split on `'.'` at `BigDecimal`: `x.toFixed(2).split('.')`, and `String(n)`, `n.toString()`
     and `` `${n}` `` of a numeric expression such as `a / b`, `Math.*()` or `Number(…)`. `version.split('.')` and
     other strings are not reported.

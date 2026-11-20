@@ -1,3 +1,4 @@
+import * as BigDecimal from 'effect/BigDecimal';
 import * as Effect from 'effect/Effect';
 import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
@@ -34,8 +35,11 @@ export const UpdateProjectTask = Tool.make('UpdateProjectTask', {
         description: 'Budgeted hours; per invoicing period when the task is recurring',
       }).pipe(Schema.optionalKey),
       rateId: ApiId.annotate({ description: 'Rate card api_id from ListRates' }).pipe(Schema.optionalKey),
-      rate: Schema.Finite.check(Schema.isGreaterThan(0))
-        .annotate({ description: 'Hourly rate; only together with rateId, and only when the user gave one' })
+      rate: Schema.BigDecimalFromString.check(Schema.isGreaterThanBigDecimal(BigDecimal.fromBigInt(0n)))
+        .annotate({
+          description:
+            'Hourly rate as a decimal string, such as "95.50"; only together with rateId, and only when the user gave one',
+        })
         .pipe(Schema.optionalKey),
       // The JSON schema drops annotations of LocalDate's custom check, so describe the dates on their keys.
       startDate: LocalDate.annotateKey({ description: 'Start date as yyyy-MM-dd' }).pipe(Schema.optionalKey),

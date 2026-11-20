@@ -71,6 +71,8 @@ tester.run('no-manual-encoding Base64 padding', noManualEncoding, {
     `${base64Import} const unpadded = Base64.encodeUnpadded(bytes); const bytes2 = Base64.decodeLenient(text);`,
     // Separators and columns padded with '=' are not Base64 blocks.
     `${effectImport} console.log('='.repeat(40)); const heading = title.padEnd(20, '=');`,
+    // Widths that are not a string's length.
+    `${effectImport} const rule = '='.repeat(width / 4); const cell = title.padEnd(Math.ceil(width / 4) * 4, '='); const gap = '='.repeat(columns % 4);`,
   ],
   invalid: [
     {

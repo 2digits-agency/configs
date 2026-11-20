@@ -1,4 +1,5 @@
 import * as Arr from 'effect/Array';
+import * as BigDecimal from 'effect/BigDecimal';
 import * as DateTime from 'effect/DateTime';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
@@ -55,6 +56,17 @@ export function NullAs(sentinel: string) {
     }),
   );
 }
+
+/**
+ * An amount of money that Orbit reads and writes as a JSON number, such as `BILLING_BUDGET` and `RATE`, kept exact as a
+ * `BigDecimal`. A number converts through its shortest decimal text, so `1250.1` stays `1250.1`.
+ */
+export const OrbitMoney = Schema.Finite.pipe(
+  Schema.decodeTo(Schema.BigDecimal, {
+    decode: SchemaGetter.transform(BigDecimal.fromNumberUnsafe),
+    encode: SchemaGetter.transform(BigDecimal.toNumberUnsafe),
+  }),
+);
 
 // Orbit's comma-separated list, where an empty string clears it.
 export const CommaList = Schema.String.pipe(
