@@ -26,6 +26,7 @@ const ProjectFields = Schema.Struct({
   purchaseOrder: Schema.String.pipe(Schema.optionalKey),
   startDate: Schema.String.pipe(Schema.optionalKey),
   endDate: NullAs('').pipe(Schema.optionalKey),
+  // oxlint-disable-next-line 2digits/require-big-decimal-money -- Orbit's BILLING_BUDGET is a JSON number; moving the tool and payload to BigDecimal is a separate change
   fixedPrice: Schema.Finite.pipe(Schema.optionalKey),
   ownerId: NullAs('').pipe(Schema.optionalKey),
   folderId: Schema.String.pipe(Schema.optionalKey),

@@ -41,6 +41,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
   [Effect encoding formats](#effect-encoding-formats).
 - Effect encoding streams and archives: `prefer-effect-sse`, `no-manual-sse`, and `prefer-effect-archive`. See
   [Server-Sent Events and archives](#server-sent-events-and-archives).
+- Exact numbers, money and text diffs: `prefer-effect-exact-numbers`, `require-big-decimal-money`, and
+  `prefer-effect-text-diff`. See [Exact numbers, money and text diffs](#exact-numbers-money-and-text-diffs).
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
   and no root-barrel module imports. `@effect/vitest` and lowercase unstable barrels are intentionally exempt.
 - Alchemy v2 practices: every other `alchemy-*` rule.
@@ -471,7 +473,11 @@ UTF-8 text and run the same in Node.js, browsers, and Workers, and their decoder
 - `no-manual-encoding` reports, in files that import Effect, hand-written conversions: a `replace`/`replaceAll` chain
   or a `pipe` of `Str.replace`/`Str.replaceAll` steps that swaps both `+`/`-` and `/`/`_` (use `Base64Url.encode` or
   `Base64Url.decode`), and `byte.toString(16)` padded to two digits with `'0'` through `.padStart`, `Str.padStart`,
-  or `pipe` (use `Hex.encode`). A single swap, such as `.replace(/\+/g, ' ')`, is allowed.
+  or `pipe` (use `Hex.encode`). A single swap, such as `.replace(/\+/g, ' ')`, is allowed. It also reports `=`
+  padding handled by hand: `Base64.encode(x)` with its `=` removed through `.replace(/=+$/, '')`, `.replaceAll('=', '')`
+  or a `Str.replace` step (use `Base64.encodeUnpadded`), and `'='.repeat(…)`, `.padEnd(…, '=')` or
+  `Str.padEnd(…, '=')` whose length rounds to a multiple of four with `% 4`, `/ 4` or `& 3` (use
+  `Base64.decodeLenient`, which decodes unpadded Base64 and Base64Url). Separators such as `'='.repeat(40)` are allowed.
 - `no-encoding-get-or-throw` reports `Result.getOrThrow` and `Result.getOrThrowWith` on a `Base64`, `Base64Url`, or
   `Hex` decoder, directly or as a `pipe` step with only `Result.map` steps before it, because it turns the typed
   `EncodingError` back into an exception. Use `yield* Effect.fromResult(Base64.decode(x))`, `Result.match`, or
@@ -530,6 +536,42 @@ These rules only run in files that import Effect and report without autofixes.
   `dirs.config`, `dirs.data`, `dirs.cache` and `dirs.state` follow the XDG, macOS and Windows conventions, and
   `dirs.home` returns the home directory. `tmpdir()`, other `node:os` functions and environment records passed to a
   `ConfigProvider` are not reported.
+- `prefer-effect-password` reports imports of `argon2`, `@node-rs/argon2`, `argon2-browser`, `pbkdf2`,
+  `@noble/hashes/argon2`, `@noble/hashes/pbkdf2` and `crypto-js/pbkdf2`, and calls of `pbkdf2` and `pbkdf2Sync` from
+  `node:crypto`. Use the `Password` service from `effect/crypto`: it hashes with Argon2id or PBKDF2 into PHC strings,
+  verifies a hash with the costs it states, and reports when a hash needs a rehash. Argon2id needs a `Kdf` layer that
+  provides it, such as `NodeCrypto.layerKdf`. To derive a key rather than store a password, use `Kdf`. `bcrypt`,
+  `bcryptjs` and `scrypt` are not reported, because `Password` cannot verify their hashes. `Password` is marked
+  unstable.
+
+## Exact numbers, money and text diffs
+
+These rules only run in files that import Effect and report without autofixes.
+
+- `prefer-effect-exact-numbers` points arbitrary-precision libraries and numbers handled as text at the Effect module
+  that fits:
+  - `decimal.js`, `decimal.js-light`, `big.js`, `bignumber.js` and `currency.js` at `BigDecimal`, `fraction.js` and
+    `fractional` at `Rational`, and `big-integer`, `bn.js` and `jsbi` at native `bigint` with `effect/BigInt`.
+  - `parseFloat(x.toFixed(n))`, `Number.parseFloat(…)`, `Number(…)` and `+x.toFixed(n)` at `Num.round(x, n)`, or
+    `BigDecimal.round` for values that must stay exact. `Number` imported from Effect is the module and is skipped.
+  - The text of a number split on `'.'` at `BigDecimal`: `x.toFixed(2).split('.')`, and `String(n)`, `n.toString()`
+    and `` `${n}` `` of a numeric expression such as `a / b`, `Math.*()` or `Number(…)`. `version.split('.')` and
+    other strings are not reported.
+  - Text split on `'/'` into a numerator and denominator, as in `const [num, den] = text.split('/').map(Number)`, at
+    `Rational.fromString`. Dates and paths split on `'/'` are not reported.
+- `require-big-decimal-money` reports schema fields whose name says they hold money, such as `price`, `unitPrice`,
+  `amountCents`, `service_fee`, `balance` or `subtotal`, and whose schema decodes to a plain number:
+  `Schema.Number`, `Finite` or `Int`, also wrapped in `optional`, `NullOr` and similar, refined with `.check(…)` or
+  piped through modifiers. Use `Schema.BigDecimal`, whose JSON codec encodes a string, or
+  `Schema.BigDecimalFromString` in place of `Schema.NumberFromString` and `FiniteFromString`, and calculate with
+  `BigDecimal`. Names that end in `Id`, `Rate`, `Percent`, `Count`, `At` and similar are not amounts. `amount` and
+  `total` alone do not make a name money, because they as often count results, followers or tickets: `totalPrice` is
+  reported, `totalAmount` is not.
+- `prefer-effect-text-diff` reports `diff` (jsdiff) exports that `TextDiff` from `effect` replaces: `diffLines`
+  (`TextDiff.lines`), `diffChars` (`TextDiff.codePoints`), `diffArrays` (`TextDiff.diff`), `structuredPatch`
+  (`TextDiff.hunks`), and `createPatch`, `createTwoFilesPatch` and `formatPatch` (`TextDiff.unified`), by name or
+  through a namespace import, and the `fast-diff` and `diff-sequences` packages. Word, sentence, CSS and JSON diffs and
+  `applyPatch` or `parsePatch` have no `TextDiff` counterpart and stay allowed.
 
 ## anti-slop Effect rules
 

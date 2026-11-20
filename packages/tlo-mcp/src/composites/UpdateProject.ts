@@ -34,6 +34,7 @@ export const UpdateProject = Tool.make('UpdateProject', {
       endDate: LocalDate.pipe(Schema.NullOr)
         .annotateKey({ description: 'End date as yyyy-MM-dd, not before startDate; null clears it' })
         .pipe(Schema.optionalKey),
+      // oxlint-disable-next-line 2digits/require-big-decimal-money -- Orbit's BILLING_BUDGET is a JSON number; moving the tool and payload to BigDecimal is a separate change
       fixedPrice: Schema.Finite.check(Schema.isGreaterThanOrEqualTo(0))
         .annotate({
           description:

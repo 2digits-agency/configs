@@ -61,3 +61,46 @@ tester.run('no-manual-encoding chains and byte hex', noManualEncoding, {
     },
   ],
 });
+
+const base64Import = `import { Base64 } from 'effect/encoding';`;
+
+tester.run('no-manual-encoding Base64 padding', noManualEncoding, {
+  valid: [
+    `${effectImport} const label = title.replace(/=+$/, '');`,
+    `${base64Import} const encoded = Base64.encode(bytes).replace(/=/g, '%3D');`,
+    `${base64Import} const unpadded = Base64.encodeUnpadded(bytes); const bytes2 = Base64.decodeLenient(text);`,
+    // Separators and columns padded with '=' are not Base64 blocks.
+    `${effectImport} console.log('='.repeat(40)); const heading = title.padEnd(20, '=');`,
+  ],
+  invalid: [
+    {
+      code: `${base64Import} const a = Base64.encode(bytes).replace(/=+$/, ''); const b = Base64.encode(bytes).replaceAll('=', '');`,
+      errors: [{ messageId: 'base64Unpadded' }, { messageId: 'base64Unpadded' }],
+    },
+    {
+      code: `
+        ${base64Import}
+        import * as Str from 'effect/String';
+        import { pipe } from 'effect/Function';
+        const a = pipe(Base64.encode(bytes), Str.replace(/=+$/, ''));
+        const b = Base64.encode(bytes).pipe(Str.replaceAll('=', ''));
+      `,
+      errors: [{ messageId: 'base64Unpadded' }, { messageId: 'base64Unpadded' }],
+    },
+    {
+      // Converting to Base64Url already covers the stripped padding, so the chain is reported once.
+      code: `${base64Import} Base64.encode(bytes).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');`,
+      errors: [{ messageId: 'base64Url' }],
+    },
+    {
+      code: `
+        ${base64Import}
+        import * as Str from 'effect/String';
+        const a = Base64.decode(input + '='.repeat((4 - (input.length % 4)) % 4));
+        const b = input.padEnd(Math.ceil(input.length / 4) * 4, '=');
+        const c = Str.padEnd(input.length + ((4 - (input.length & 3)) & 3), '=')(input);
+      `,
+      errors: [{ messageId: 'base64Padding' }, { messageId: 'base64Padding' }, { messageId: 'base64Padding' }],
+    },
+  ],
+});
