@@ -1,3 +1,39 @@
+## @2digits/oxlint-plugin@0.13.0
+
+### Prefer Effect BigDecimal, Rational, Password and TextDiff
+
+Four new recommended rules for files that import Effect, and new checks in `no-manual-encoding`:
+
+- `require-big-decimal-money` reports schema fields named for money, such as `price`, `amountCents` or `service_fee`, that decode to `Schema.Number`, `Finite` or `Int`. Use `Schema.BigDecimal`, or `Schema.BigDecimalFromString` in place of `NumberFromString`.
+- `prefer-effect-exact-numbers` names the Effect module for arbitrary-precision libraries and numbers handled as text: `decimal.js`, `big.js` and `bignumber.js` become `BigDecimal`, `fraction.js` becomes `Rational`, `bn.js` and `jsbi` become native `bigint` with `effect/BigInt`, `parseFloat(x.toFixed(2))` becomes `Num.round`, a number's text split on `'.'` becomes `BigDecimal`, and a fraction split on `'/'` becomes `Rational.fromString`.
+- `prefer-effect-password` reports Argon2 and PBKDF2 libraries and `pbkdf2` from `node:crypto`. Use the `Password` service from `effect/crypto`, new in Effect 4.1.5.
+- `prefer-effect-text-diff` reports `diff` (jsdiff) exports that `TextDiff` replaces, such as `diffLines` and `structuredPatch`, and the `fast-diff` and `diff-sequences` packages.
+- `no-manual-encoding` now reports `=` stripped from `Base64.encode` output (use `Base64.encodeUnpadded`) and Base64 padded to a multiple of four by hand (use `Base64.decodeLenient`).
+
+### Update `effect` to 4.1.5
+
+The package now builds on `effect` 4.1.5 and `@effect/platform-node` 4.1.5.
+
+### New Alchemy Domain rules
+
+- `alchemy-domain-require-description` requires a `{ description }` on every Domain declaration, which `toMcp`, `toCli`
+  and the `toHttpApi` OpenAPI document show.
+- `alchemy-domain-api-explicit-members` requires a `Domain.Api` to list `commands`, `views`, `streams` and `queries`, so
+  it never serves what the model gains later by default.
+- `alchemy-domain-event-name` warns about events and commands named after a field change, such as `RosterChanged` or
+  `SetRoster`.
+- `alchemy-domain-stack-providers` requires `DomainCloudflare.providers()` next to `Cloudflare.providers()` in
+  `alchemy.run.ts`. `@2digits/oxlint-config` enables it through its new `alchemy` option, on by default when
+  `@alchemy.run/domain` is installed.
+
+### Alchemy Domain rules cover more
+
+- The rules know `Domain.Query` and `.query.ts` files.
+- `alchemy-domain-pure-imports` reports `@alchemy.run/domain` entrypoints other than the root and `/Story`, such as
+  `/Http` or `/Cloudflare`, in domain block files.
+- `alchemy-domain-pure-decide` and `alchemy-domain-total-handlers` follow helpers declared in the same file, whether a
+  section passes them as a handler (`evolve: { Opened: opened }`) or calls them.
+
 ## @2digits/oxlint-plugin@0.12.0
 
 ### `preserve-caught-error` covers more Effect error handlers

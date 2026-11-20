@@ -1,3 +1,10 @@
+## @2digits/config-monorepo@0.1.25
+
+### Update knip, renovate and tsrs
+
+- Updated `knip` to `6.47.0`, `renovate` to `44.256.1` and `tsrs` to `7.1.0-beta.tsrs3`
+- Updated `@effect/vitest` to `4.1.5` and `baseline-browser-mapping` to `2.11.39`
+
 ## @2digits/config-monorepo@0.1.24
 
 ### Update pnpm, knip, turbo, vitest and renovate

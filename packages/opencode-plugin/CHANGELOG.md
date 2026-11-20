@@ -1,3 +1,9 @@
+## @2digits/opencode-plugin@0.2.59
+
+### Update `posthog-node` to 6.0.5
+
+The plugin now sends its events with `posthog-node` 6.0.5.
+
 ## @2digits/opencode-plugin@0.2.58
 
 ### Update `posthog-node` to 6.0.4

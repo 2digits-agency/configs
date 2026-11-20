@@ -1,3 +1,13 @@
+## @2digits/tsconfig@1.2.11
+
+### Update `@effect/tsgo` to 0.73.2
+
+The Effect config now expects `@effect/tsgo` 0.73.2 and enables its three new diagnostics as errors:
+
+- `flatMapMapToZipWith` suggests `Effect.zipWith` when `Effect.flatMap` only maps an independent effect with its parameter
+- `promiseAllInEffect` flags `Promise.all` and `Promise.allSettled` fanning out over an array inside Effect code, where `Effect.forEach` or `Effect.all` with a `concurrency` option belongs
+- `promiseRaceInEffect` flags `Promise.race` and `Promise.any` inside Effect code, which leave the losing promises running
+
 ## @2digits/tsconfig@1.2.10
 
 ### Update `@effect/tsgo` to 0.70.0

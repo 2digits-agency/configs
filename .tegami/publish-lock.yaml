@@ -1,34 +1,37 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update pnpm, knip, turbo, vitest and renovate\n\n- Updated `pnpm` to `12.22.0`, `knip` to `6.46.1`, `turbo` to `2.11.13`, `vitest` to `5.1.1` and `renovate` to `44.253.4`\n- The `fix` script now calls `pnpm run` with its script regex, because knip 6.46 reads a bare `pnpm '/regex/'` as a binary call\n- Updated the GitButler skill to `0.5.2287`\n"
-    filename: 2026-11-19-bc293af0.md
+  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update knip, renovate and tsrs\n\n- Updated `knip` to `6.47.0`, `renovate` to `44.256.1` and `tsrs` to `7.1.0-beta.tsrs3`\n- Updated `@effect/vitest` to `4.1.5` and `baseline-browser-mapping` to `2.11.39`\n"
+    filename: 2026-11-20-e729bdb3.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `@eslint/markdown` to 9.0.0 and other ESLint plugins\n\n- Updated `@eslint/markdown` to `9.0.0`\n- Updated `@eslint-react/eslint-plugin` and `@eslint-react/kit` to `5.30.5`\n- Updated `@tanstack/eslint-plugin-query` to `5.108.1`\n- Updated `eslint-plugin-jsdoc` to `65.5.0`, whose `jsdoc/imports-as-dependencies` rule now accepts options\n- Updated `eslint-plugin-turbo` to `2.11.13`\n"
-    filename: 2026-11-19-ea78daff.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `eslint-plugin-storybook` to 10.6.8\n\nThe Storybook rules now come from `eslint-plugin-storybook` 10.6.8.\n"
+    filename: 2026-11-20-aee5466b.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### `preserve-caught-error` covers more Effect error handlers\n\nThe rule now also reports:\n\n- `Effect.catchCause` handlers.\n- `XError.make(…)` constructions, such as `Schema.TaggedError` classes.\n- PascalCase errors without an `Error` suffix, such as `new BadRequest(…)`, when the handler returns them, passes them to `Effect.fail` or `yield*`s them.\n\nA handler is no longer reported when the step right before it logs the failure, such as `Effect.tapError(Effect.logError)`. Only `Effect.map`, `Effect.as*` and `Effect.withSpan` may sit in between. These cases are adapted from anti-slop's `require-cause-when-narrowing`.\n"
-    filename: 2026-11-16-c4e1a7.md
+  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 6.0.5\n\nThe plugin now sends its events with `posthog-node` 6.0.5.\n"
+    filename: 2026-11-20-d7b57058.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Report hand-written tagged types\n\nAdded `no-manual-tagged-type` to `recommendedRules`, adapted from [anti-slop](https://github.com/K-Mistele/anti-slop/blob/main/src/effect/rules/no-manual-tagged-type.ts). It reports a `_tag` written by hand in a type, such as `type Ready = { readonly _tag: 'Ready' }`: define the value with a tagged Schema or Data constructor and infer its type, such as `typeof Ready.Type`. Only literal tags are reported, so `{ readonly _tag: string }` constraints stay allowed, declaration files and `declare` blocks are skipped, and so is the filter of `Extract` or `Exclude`, such as `Extract<Payment, { _tag: 'Refund' }>`.\n"
-    filename: 2026-11-16-no-manual-tagged-type.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: patch\n---\n\n### Count `@effect/vitest` property tests as test blocks\n\n`vitest/no-standalone-expect` and `vitest/expect-expect` accept `it.prop` and `it.effect.prop` from `@effect/vitest`, so an `expect` inside a property test is no longer reported as outside a test.\n"
+    filename: 2026-11-20-52273b9c.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer tagged error handlers over `Predicate.isTagged`\n\nAdded `prefer-tagged-error-handling` to `recommendedRules`. It reports `Predicate.isTagged(error, 'A')` and `Predicate.isTagged('A')(error)` inside a broad Effect catch handler (`Effect.catch`, `Effect.catchIf` or `Effect.catchAll`): use `Effect.catchTag`/`Effect.catchTags`, or `Effect.catchReason`/`Effect.catchReasons` when the check is on the error's `reason`. It complements `no-manual-effect-error-tag`, which reports `_tag` comparisons in the same handlers.\n"
-    filename: 2026-11-16-prefer-tagged-error-handling.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: minor\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n### New Alchemy Domain rules\n\n- `alchemy-domain-require-description` requires a `{ description }` on every Domain declaration, which `toMcp`, `toCli`\n  and the `toHttpApi` OpenAPI document show.\n- `alchemy-domain-api-explicit-members` requires a `Domain.Api` to list `commands`, `views`, `streams` and `queries`, so\n  it never serves what the model gains later by default.\n- `alchemy-domain-event-name` warns about events and commands named after a field change, such as `RosterChanged` or\n  `SetRoster`.\n- `alchemy-domain-stack-providers` requires `DomainCloudflare.providers()` next to `Cloudflare.providers()` in\n  `alchemy.run.ts`. `@2digits/oxlint-config` enables it through its new `alchemy` option, on by default when\n  `@alchemy.run/domain` is installed.\n\n### Alchemy Domain rules cover more\n\n- The rules know `Domain.Query` and `.query.ts` files.\n- `alchemy-domain-pure-imports` reports `@alchemy.run/domain` entrypoints other than the root and `/Story`, such as\n  `/Http` or `/Cloudflare`, in domain block files.\n- `alchemy-domain-pure-decide` and `alchemy-domain-total-handlers` follow helpers declared in the same file, whether a\n  section passes them as a handler (`evolve: { Opened: opened }`) or calls them.\n"
+    filename: 2026-11-20-d2f12d664987.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Compile Schema guards with the Effect JIT compiler\n\nThe plugin now enables `effect/schema/SchemaJITCompiler`, so the Schema guards and decoders in its rules compile to JavaScript on first use. If the runtime blocks `new Function`, they keep using the interpreter.\n"
-    filename: 2026-11-17-schema-jit-compiler.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: patch\n---\n\n### Count Foldkit and `@alchemy.run/domain` story checks as assertions\n\n`vitest/expect-expect` accepts Foldkit's `Scene.expect…`, `Lazy.expect…` and `Story.expect…` helpers and the checking steps of an `@alchemy.run/domain` story (`Story.then`, `Story.rejected`, `Story.view`, …), so a test that asserts only through them is no longer reported as having no assertions. Setup steps such as `Story.given` and `Story.when` still do not count.\n"
+    filename: 2026-11-20-e01521bf.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 6.0.4\n\nThe plugin now sends its events with `posthog-node` 6.0.4.\n"
-    filename: 2026-11-19-4765cb92.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect BigDecimal, Rational, Password and TextDiff\n\nFour new recommended rules for files that import Effect, and new checks in `no-manual-encoding`:\n\n- `require-big-decimal-money` reports schema fields named for money, such as `price`, `amountCents` or `service_fee`, that decode to `Schema.Number`, `Finite` or `Int`. Use `Schema.BigDecimal`, or `Schema.BigDecimalFromString` in place of `NumberFromString`.\n- `prefer-effect-exact-numbers` names the Effect module for arbitrary-precision libraries and numbers handled as text: `decimal.js`, `big.js` and `bignumber.js` become `BigDecimal`, `fraction.js` becomes `Rational`, `bn.js` and `jsbi` become native `bigint` with `effect/BigInt`, `parseFloat(x.toFixed(2))` becomes `Num.round`, a number's text split on `'.'` becomes `BigDecimal`, and a fraction split on `'/'` becomes `Rational.fromString`.\n- `prefer-effect-password` reports Argon2 and PBKDF2 libraries and `pbkdf2` from `node:crypto`. Use the `Password` service from `effect/crypto`, new in Effect 4.1.5.\n- `prefer-effect-text-diff` reports `diff` (jsdiff) exports that `TextDiff` replaces, such as `diffLines` and `structuredPatch`, and the `fast-diff` and `diff-sequences` packages.\n- `no-manual-encoding` now reports `=` stripped from `Base64.encode` output (use `Base64.encodeUnpadded`) and Base64 padded to a multiple of four by hand (use `Base64.decodeLenient`).\n"
+    filename: 2026-11-20-153a6169.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Login and gateway errors keep their underlying cause\n\n`OrbitAuthError` and `GatewayError` now carry the failure they replace as `cause`, so errors such as \"Could not read credentials\" or \"Could not connect OpenTunnel\" print the reason underneath them.\n"
-    filename: 2026-11-16-9b2d0e.md
+  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Update `effect` to 4.1.5\n\nThe package now builds on `effect` 4.1.5 and `@effect/platform-node` 4.1.5.\n"
+    filename: 2026-11-20-31a9eea6.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Update `@yielded/oauth` to 0.1.0-beta.49\n\nThe gateway now builds on `@yielded/oauth` 0.1.0-beta.49.\n"
-    filename: 2026-11-19-6d2fd33d.md
+  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Keep project prices and task rates exact\n\n`UpdateProject`'s `fixedPrice` and `UpdateProjectTask`'s `rate` are now decimal strings, such as `\"1250.50\"` and `\"95.50\"`, decoded as an exact `BigDecimal` instead of a floating-point number. Orbit still receives `BILLING_BUDGET` and `RATE` as JSON numbers. Callers that sent a number must send the amount as a string.\n"
+    filename: 2026-11-20-b59ec149.md
+    v: 0.0.0
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.73.2\n\nThe Effect config now expects `@effect/tsgo` 0.73.2 and enables its three new diagnostics as errors:\n\n- `flatMapMapToZipWith` suggests `Effect.zipWith` when `Effect.flatMap` only maps an independent effect with its parameter\n- `promiseAllInEffect` flags `Promise.all` and `Promise.allSettled` fanning out over an array inside Effect code, where `Effect.forEach` or `Effect.all` with a `concurrency` option belongs\n- `promiseRaceInEffect` flags `Promise.race` and `Promise.any` inside Effect code, which leave the losing promises running\n"
+    filename: 2026-11-20-ef665a0a.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-11-19-bc293af0.md
+      - 2026-11-20-e729bdb3.md
     id: npm:@2digits/config-monorepo
     updated: true
   - id: npm:@2digits/cli
@@ -36,36 +39,41 @@ core:packages:
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-11-19-ea78daff.md
+      - 2026-11-20-aee5466b.md
     id: npm:@2digits/eslint-config
     updated: true
   - id: npm:@2digits/eslint-plugin
     updated: false
+  - changelogIds:
+      - 2026-11-20-d7b57058.md
+    id: npm:@2digits/opencode-plugin
+    updated: true
   - id: npm:@2digits/oxfmt-config
     updated: false
-  - id: npm:@2digits/oxlint-config
+  - changelogIds:
+      - 2026-11-20-52273b9c.md
+      - 2026-11-20-d2f12d664987.md
+      - 2026-11-20-e01521bf.md
+    id: npm:@2digits/oxlint-config
+    updated: true
+  - changelogIds:
+      - 2026-11-20-153a6169.md
+      - 2026-11-20-31a9eea6.md
+      - 2026-11-20-d2f12d664987.md
+    id: npm:@2digits/oxlint-plugin
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
-  - changelogIds:
-      - 2026-11-16-c4e1a7.md
-      - 2026-11-16-no-manual-tagged-type.md
-      - 2026-11-16-prefer-tagged-error-handling.md
-      - 2026-11-17-schema-jit-compiler.md
-    id: npm:@2digits/oxlint-plugin
-    updated: true
-  - changelogIds:
-      - 2026-11-19-4765cb92.md
-    id: npm:@2digits/opencode-plugin
-    updated: true
   - id: npm:@2digits/renovate-config
     updated: false
-  - id: npm:@2digits/tsconfig
-    updated: false
   - changelogIds:
-      - 2026-11-16-9b2d0e.md
-      - 2026-11-19-6d2fd33d.md
+      - 2026-11-20-31a9eea6.md
+      - 2026-11-20-b59ec149.md
     id: npm:@2digits/tlo-mcp
+    updated: true
+  - changelogIds:
+      - 2026-11-20-ef665a0a.md
+    id: npm:@2digits/tsconfig
     updated: true
 npm:packages:
   - id: npm:@2digits/config-monorepo
@@ -73,11 +81,11 @@ npm:packages:
   - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
+  - id: npm:@2digits/opencode-plugin
   - id: npm:@2digits/oxfmt-config
   - id: npm:@2digits/oxlint-config
-  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/oxlint-plugin
-  - id: npm:@2digits/opencode-plugin
+  - id: npm:@2digits/prettier-config
   - id: npm:@2digits/renovate-config
-  - id: npm:@2digits/tsconfig
   - id: npm:@2digits/tlo-mcp
+  - id: npm:@2digits/tsconfig

@@ -1,3 +1,13 @@
+## @2digits/tlo-mcp@2.6.0
+
+### Update `effect` to 4.1.5
+
+The package now builds on `effect` 4.1.5 and `@effect/platform-node` 4.1.5.
+
+### Keep project prices and task rates exact
+
+`UpdateProject`'s `fixedPrice` and `UpdateProjectTask`'s `rate` are now decimal strings, such as `"1250.50"` and `"95.50"`, decoded as an exact `BigDecimal` instead of a floating-point number. Orbit still receives `BILLING_BUDGET` and `RATE` as JSON numbers. Callers that sent a number must send the amount as a string.
+
 ## @2digits/tlo-mcp@2.5.1
 
 ### Login and gateway errors keep their underlying cause
