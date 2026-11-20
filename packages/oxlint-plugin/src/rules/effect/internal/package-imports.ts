@@ -1,11 +1,11 @@
-import { Visitor, type ESTree, type RuleContext } from 'effect-oxlint';
+import { Visitor, type ESTree, type OxlintSourceCode, type RuleContext } from 'effect-oxlint';
 import * as Arr from 'effect/Array';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as P from 'effect/Predicate';
 import * as Str from 'effect/String';
 
-import { isStringLiteral } from '../../../internal/ast';
+import { isStringLiteral, parentOf, staticPropertyName } from '../../../internal/ast';
 
 /**
  * The npm package an import source names, such as `@scope/name` for `@scope/name/sub` and `name` for `name/sub`.
@@ -32,6 +32,32 @@ function isTypeOnly(declaration: ESTree.ImportDeclaration): boolean {
         declaration.specifiers,
         (specifier) => specifier.type === 'ImportSpecifier' && specifier.importKind === 'type',
       ))
+  );
+}
+
+/**
+ * The member accesses through a default or namespace import, with the name each one reads: `[YAML.parse, 'parse']` for
+ * `YAML.parse(text)` after `import YAML from 'yaml'`.
+ *
+ * @param sourceCode Source of the file.
+ * @param specifier Default or namespace import specifier.
+ */
+export function importMemberUses(
+  sourceCode: OxlintSourceCode,
+  specifier: ESTree.Node,
+): ReadonlyArray<readonly [ESTree.MemberExpression, string]> {
+  return Arr.flatMap(sourceCode.getDeclaredVariables(specifier), ({ references }) =>
+    Arr.getSomes(
+      Arr.map(references, ({ identifier }) =>
+        parentOf(identifier).pipe(
+          Opt.filter(
+            (parent): parent is ESTree.MemberExpression =>
+              parent.type === 'MemberExpression' && parent.object === identifier,
+          ),
+          Opt.flatMap((member) => Opt.map(staticPropertyName(member), (name) => [member, name] as const)),
+        ),
+      ),
+    ),
   );
 }
 

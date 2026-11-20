@@ -771,7 +771,7 @@ describe('updateProject', () => {
           purchaseOrder: 'PO-1',
           startDate: '2026-10-01',
           endDate: PROJECT_END,
-          fixedPrice: 0,
+          fixedPrice: '1250.10',
           ownerId: USER_ID,
           // eslint-disable-next-line unicorn/no-null -- the JSON input that unlinks
           dealId: null,
@@ -798,7 +798,7 @@ describe('updateProject', () => {
             PO: 'PO-1',
             START_DT: '2026-10-01',
             END_DT: PROJECT_END,
-            BILLING_BUDGET: 0,
+            BILLING_BUDGET: 1250.1,
             OWNERID: USER_ID,
             DEALID: '0',
           },
@@ -833,14 +833,15 @@ describe('updateProject', () => {
           { project: '2325', changes: { endDate: '2026-02-30' } },
           { project: '2325', changes: { ownerId: 'Niels Mentink' } },
           { project: '2325', changes: { name: ' ' } },
-          { project: '2325', changes: { fixedPrice: -1 } },
+          { project: '2325', changes: { fixedPrice: '-1' } },
+          { project: '2325', changes: { fixedPrice: 1250 } },
           { project: '23 25', changes: { name: 'Website' } },
         ],
         (input) => Effect.flip(call('UpdateProject', input)).pipe(Effect.map(({ message }) => message)),
         { concurrency: 1 },
       );
 
-      expect(invalid).toHaveLength(6);
+      expect(invalid).toHaveLength(7);
 
       expect(Arr.every(invalid, Str.startsWith("Invalid parameters for tool 'UpdateProject'"))).toBeTruthy();
 
@@ -859,7 +860,7 @@ describe('updateProjectTask', () => {
         changes: {
           workloadHours: 8,
           rateId: 'RTB3K18Q2XWAFHK',
-          rate: 95,
+          rate: '95.50',
           endDate: PROJECT_END,
           recurring: true,
           billingMode: 'HOURS',
@@ -888,7 +889,7 @@ describe('updateProjectTask', () => {
           {
             WORKLOAD: 8,
             RATEID: 'RTB3K18Q2XWAFHK',
-            RATE: 95,
+            RATE: 95.5,
             END_DT: PROJECT_END,
             RECURRING: 1,
             BILLING_MODE: 'HOURS',
@@ -912,7 +913,7 @@ describe('updateProjectTask', () => {
     Effect.gen(function* () {
       const { call, calls } = yield* setup({ UpdateProjectTask: 'Task updated.' });
 
-      const rateOnly = yield* call('UpdateProjectTask', { taskId: TASK_ID, changes: { rate: 95 } });
+      const rateOnly = yield* call('UpdateProjectTask', { taskId: TASK_ID, changes: { rate: '95' } });
 
       const reversed = yield* call('UpdateProjectTask', {
         taskId: TASK_ID,

@@ -4,10 +4,11 @@ import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
 import * as R from 'effect/Record';
 
-import { moduleExportName, parentOf, staticPropertyName } from '../../internal/ast';
+import { moduleExportName } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isTypeOnlyImport } from './internal/import-style';
+import { importMemberUses } from './internal/package-imports';
 
 interface FormatPackage {
   /**
@@ -88,27 +89,13 @@ export const preferEffectFormatParser = Rule.define({
 
     // `yaml.parse(...)` through a default or namespace import of a package whose serializers stay allowed.
     function reportMemberUses(specifier: ESTree.Node, format: FormatPackage, source: string) {
-      const uses = Arr.flatMap(ctx.sourceCode.getDeclaredVariables(specifier), ({ references }) =>
-        Arr.getSomes(
-          Arr.map(references, ({ identifier }) =>
-            parentOf(identifier).pipe(
-              Opt.filter(
-                (parent): parent is ESTree.MemberExpression =>
-                  parent.type === 'MemberExpression' && parent.object === identifier,
-              ),
-              Opt.flatMap((member) =>
-                staticPropertyName(member).pipe(
-                  Opt.filter((name) => replaces(format, name)),
-                  Opt.map((name) => [member, `${source} ${name}`] as const),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
+      const uses = Arr.filter(importMemberUses(ctx.sourceCode, specifier), ([, name]) => replaces(format, name));
 
       // oxlint-disable-next-line unicorn/no-array-for-each -- Effect.forEach is not Array#forEach.
-      return Effect.forEach(uses, ([member, api]) => report(member, format, api), { concurrency: 1, discard: true });
+      return Effect.forEach(uses, ([member, name]) => report(member, format, `${source} ${name}`), {
+        concurrency: 1,
+        discard: true,
+      });
     }
 
     function reportSpecifier(

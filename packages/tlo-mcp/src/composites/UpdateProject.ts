@@ -1,3 +1,4 @@
+import * as BigDecimal from 'effect/BigDecimal';
 import * as Effect from 'effect/Effect';
 import * as P from 'effect/Predicate';
 import * as Schema from 'effect/Schema';
@@ -34,10 +35,10 @@ export const UpdateProject = Tool.make('UpdateProject', {
       endDate: LocalDate.pipe(Schema.NullOr)
         .annotateKey({ description: 'End date as yyyy-MM-dd, not before startDate; null clears it' })
         .pipe(Schema.optionalKey),
-      fixedPrice: Schema.Finite.check(Schema.isGreaterThanOrEqualTo(0))
+      fixedPrice: Schema.BigDecimalFromString.check(Schema.isGreaterThanOrEqualToBigDecimal(BigDecimal.fromBigInt(0n)))
         .annotate({
           description:
-            'The agreed fixed price (billing budget). FIXED-price projects only: other billing modes calculate their budget from the project content',
+            'The agreed fixed price (billing budget) as a decimal string, such as "1250.50". FIXED-price projects only: other billing modes calculate their budget from the project content',
         })
         .pipe(Schema.optionalKey),
       ownerId: UserId.pipe(Schema.NullOr)

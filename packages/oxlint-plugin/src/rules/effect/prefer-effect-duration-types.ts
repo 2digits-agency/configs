@@ -7,80 +7,23 @@ import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
 import {
-  argumentAt,
   containsRange,
   enclosingFunction,
   findAncestor,
   propertyName,
-  staticPropertyName,
   unwrapExpression,
   type FunctionNode,
 } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { NumberUnionMember } from '../../schemas/ast';
-import { NumberMethod, NumberPreservingStepName, NumberSchemaName, SchemaWrapper } from '../../schemas/effect';
 import type { ImportBindings } from '../../schemas/imports';
 import { DeclarationFile } from '../../schemas/names';
 import { isForeignCallback } from './internal/callbacks';
 import { millisName } from './internal/duration';
-
-const isNumberSchemaName = Schema.is(NumberSchemaName);
-
-const isSchemaWrapper = Schema.is(SchemaWrapper);
-
-const isNumberPreservingStepName = Schema.is(NumberPreservingStepName);
-
-const isNumberMethod = Schema.is(NumberMethod);
+import { numberSchemaName } from './internal/number-schema';
 
 const isNumberUnionMember = Schema.is(NumberUnionMember);
-
-function schemaApiName(node: ESTree.Node, imports: ImportBindings): Opt.Option<string> {
-  return imports.member(node, 'Schema');
-}
-
-function isNumberPreservingStep(node: ESTree.Argument, imports: ImportBindings): boolean {
-  if (node.type === 'SpreadElement') {
-    return false;
-  }
-
-  const step = unwrapExpression(node);
-
-  return step.type === 'CallExpression'
-    ? Opt.exists(schemaApiName(step.callee, imports), isNumberPreservingStepName)
-    : Opt.exists(schemaApiName(step, imports), isSchemaWrapper);
-}
-
-/**
- * Whether a schema decodes to a plain number: `Schema.Number`, `Schema.Int`, and those wrapped in `optional`, `NullOr`
- * and similar, refined with `.check(...)`, or piped only through modifiers, checks, brands, annotations and defaults.
- *
- * @param node Field schema.
- * @param imports Import bindings of the file.
- */
-function isNumberSchema(node: ESTree.Expression, imports: ImportBindings): boolean {
-  const expression = unwrapExpression(node);
-
-  if (expression.type !== 'CallExpression') {
-    return Opt.exists(schemaApiName(expression, imports), isNumberSchemaName);
-  }
-
-  const callee = expression.callee;
-
-  if (Opt.exists(schemaApiName(callee, imports), isSchemaWrapper)) {
-    return Opt.exists(argumentAt(expression, 0), (first) => isNumberSchema(first, imports));
-  }
-
-  if (callee.type !== 'MemberExpression' || callee.object.type === 'Super' || !isNumberSchema(callee.object, imports)) {
-    return false;
-  }
-
-  return Opt.exists(staticPropertyName(callee), (method) =>
-    method === 'pipe'
-      ? Arr.every(expression.arguments, (step) => isNumberPreservingStep(step, imports))
-      : isNumberMethod(method),
-  );
-}
 
 /**
  * Whether an annotation is `number`, optionally in a union with `undefined` or `null`.
@@ -221,7 +164,10 @@ export const preferEffectDurationTypes = Rule.define({
       Visitor.on('Property', (node) =>
         node.parent.type === 'ObjectExpression'
           ? propertyName(node as ESTree.ObjectProperty).pipe(
-              Opt.filter((name) => isDurationName(name) && isNumberSchema(node.value as ESTree.Expression, imports)),
+              Opt.filter(
+                (name) =>
+                  isDurationName(name) && Opt.isSome(numberSchemaName(node.value as ESTree.Expression, imports)),
+              ),
               Opt.match({ onNone: () => Effect.void, onSome: (name) => report(node.key, name, 'durationSchema') }),
             )
           : Effect.void,

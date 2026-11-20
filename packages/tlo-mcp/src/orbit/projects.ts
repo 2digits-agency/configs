@@ -1,7 +1,7 @@
 import * as Schema from 'effect/Schema';
 import * as SchemaGetter from 'effect/SchemaGetter';
 
-import { CommaList, NullAs, ProjectTaskId } from './text.js';
+import { CommaList, NullAs, OrbitMoney, ProjectTaskId } from './text.js';
 
 export const CloseProjectTask = {
   name: 'CloseProjectTask',
@@ -26,7 +26,7 @@ const ProjectFields = Schema.Struct({
   purchaseOrder: Schema.String.pipe(Schema.optionalKey),
   startDate: Schema.String.pipe(Schema.optionalKey),
   endDate: NullAs('').pipe(Schema.optionalKey),
-  fixedPrice: Schema.Finite.pipe(Schema.optionalKey),
+  fixedPrice: OrbitMoney.pipe(Schema.optionalKey),
   ownerId: NullAs('').pipe(Schema.optionalKey),
   folderId: Schema.String.pipe(Schema.optionalKey),
   dealId: NullAs('0').pipe(Schema.optionalKey),
@@ -60,7 +60,7 @@ const ProjectTaskFields = Schema.Struct({
   description: Schema.String.pipe(Schema.optionalKey),
   workloadHours: Schema.Finite.pipe(Schema.optionalKey),
   rateId: Schema.String.pipe(Schema.optionalKey),
-  rate: Schema.Finite.pipe(Schema.optionalKey),
+  rate: OrbitMoney.pipe(Schema.optionalKey),
   startDate: Schema.String.pipe(Schema.optionalKey),
   endDate: NullAs('').pipe(Schema.optionalKey),
   recurring: Flag.pipe(Schema.optionalKey),

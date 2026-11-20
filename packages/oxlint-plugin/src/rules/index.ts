@@ -60,6 +60,7 @@ import { preferEffectDuration } from './effect/prefer-effect-duration';
 import { preferEffectDurationConstants } from './effect/prefer-effect-duration-constants';
 import { preferEffectDurationTypes } from './effect/prefer-effect-duration-types';
 import { preferEffectEncoding } from './effect/prefer-effect-encoding';
+import { preferEffectExactNumbers } from './effect/prefer-effect-exact-numbers';
 import { preferEffectFileSystem } from './effect/prefer-effect-filesystem';
 import { preferEffectFilter } from './effect/prefer-effect-filter';
 import { preferEffectFormatParser } from './effect/prefer-effect-format-parser';
@@ -72,9 +73,11 @@ import { preferEffectMatchStatus } from './effect/prefer-effect-match-status';
 import { preferEffectNdjson } from './effect/prefer-effect-ndjson';
 import { preferEffectNetAddress } from './effect/prefer-effect-net-address';
 import { preferEffectNumber } from './effect/prefer-effect-number';
+import { preferEffectPassword } from './effect/prefer-effect-password';
 import { preferEffectPath } from './effect/prefer-effect-path';
 import { preferEffectPredicate } from './effect/prefer-effect-predicate';
 import { preferEffectSse } from './effect/prefer-effect-sse';
+import { preferEffectTextDiff } from './effect/prefer-effect-text-diff';
 import { preferEffectUrl } from './effect/prefer-effect-url';
 import { preferEffectUrlParams } from './effect/prefer-effect-url-params';
 import { preferEffectUserDirectories } from './effect/prefer-effect-user-directories';
@@ -86,6 +89,7 @@ import { preferUninterruptible } from './effect/prefer-uninterruptible';
 import { preferWithSpan } from './effect/prefer-with-span';
 import { preferYieldNow } from './effect/prefer-yield-now';
 import { preserveCaughtError } from './effect/preserve-caught-error';
+import { requireBigDecimalMoney } from './effect/require-big-decimal-money';
 import { requireDualTypeArguments } from './effect/require-dual-type-arguments';
 import { requireSchemaClassBrand } from './effect/require-schema-class-brand';
 import { requireTryPromiseAbortSignal } from './effect/require-try-promise-abort-signal';
@@ -171,6 +175,7 @@ export const rules = {
   'prefer-effect-duration-constants': preferEffectDurationConstants,
   'prefer-effect-duration-types': preferEffectDurationTypes,
   'prefer-effect-encoding': preferEffectEncoding,
+  'prefer-effect-exact-numbers': preferEffectExactNumbers,
   'prefer-effect-filesystem': preferEffectFileSystem,
   'prefer-effect-filter': preferEffectFilter,
   'prefer-effect-format-parser': preferEffectFormatParser,
@@ -183,9 +188,11 @@ export const rules = {
   'prefer-effect-ndjson': preferEffectNdjson,
   'prefer-effect-net-address': preferEffectNetAddress,
   'prefer-effect-number': preferEffectNumber,
+  'prefer-effect-password': preferEffectPassword,
   'prefer-effect-path': preferEffectPath,
   'prefer-effect-predicate': preferEffectPredicate,
   'prefer-effect-sse': preferEffectSse,
+  'prefer-effect-text-diff': preferEffectTextDiff,
   'prefer-effect-url': preferEffectUrl,
   'prefer-effect-url-params': preferEffectUrlParams,
   'prefer-effect-user-directories': preferEffectUserDirectories,
@@ -197,6 +204,7 @@ export const rules = {
   'prefer-with-span': preferWithSpan,
   'prefer-yield-now': preferYieldNow,
   'preserve-caught-error': preserveCaughtError,
+  'require-big-decimal-money': requireBigDecimalMoney,
   'require-dual-type-arguments': requireDualTypeArguments,
   'require-schema-class-brand': requireSchemaClassBrand,
   'require-try-promise-abort-signal': requireTryPromiseAbortSignal,
