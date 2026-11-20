@@ -1,3 +1,33 @@
+## @2digits/oxlint-config@3.5.0
+
+### Count `@effect/vitest` property tests as test blocks
+
+`vitest/no-standalone-expect` and `vitest/expect-expect` accept `it.prop` and `it.effect.prop` from `@effect/vitest`, so an `expect` inside a property test is no longer reported as outside a test.
+
+### New Alchemy Domain rules
+
+- `alchemy-domain-require-description` requires a `{ description }` on every Domain declaration, which `toMcp`, `toCli`
+  and the `toHttpApi` OpenAPI document show.
+- `alchemy-domain-api-explicit-members` requires a `Domain.Api` to list `commands`, `views`, `streams` and `queries`, so
+  it never serves what the model gains later by default.
+- `alchemy-domain-event-name` warns about events and commands named after a field change, such as `RosterChanged` or
+  `SetRoster`.
+- `alchemy-domain-stack-providers` requires `DomainCloudflare.providers()` next to `Cloudflare.providers()` in
+  `alchemy.run.ts`. `@2digits/oxlint-config` enables it through its new `alchemy` option, on by default when
+  `@alchemy.run/domain` is installed.
+
+### Alchemy Domain rules cover more
+
+- The rules know `Domain.Query` and `.query.ts` files.
+- `alchemy-domain-pure-imports` reports `@alchemy.run/domain` entrypoints other than the root and `/Story`, such as
+  `/Http` or `/Cloudflare`, in domain block files.
+- `alchemy-domain-pure-decide` and `alchemy-domain-total-handlers` follow helpers declared in the same file, whether a
+  section passes them as a handler (`evolve: { Opened: opened }`) or calls them.
+
+### Count Foldkit and `@alchemy.run/domain` story checks as assertions
+
+`vitest/expect-expect` accepts Foldkit's `Scene.expect…`, `Lazy.expect…` and `Story.expect…` helpers and the checking steps of an `@alchemy.run/domain` story (`Story.then`, `Story.rejected`, `Story.view`, …), so a test that asserts only through them is no longer reported as having no assertions. Setup steps such as `Story.given` and `Story.when` still do not count.
+
 ## @2digits/oxlint-config@3.4.0
 
 ### Ban `Reflect.apply` and `Reflect.get`

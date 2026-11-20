@@ -1,3 +1,9 @@
+## @2digits/eslint-config@5.13.2
+
+### Update `eslint-plugin-storybook` to 10.6.8
+
+The Storybook rules now come from `eslint-plugin-storybook` 10.6.8.
+
 ## @2digits/eslint-config@5.13.1
 
 ### Update `@eslint/markdown` to 9.0.0 and other ESLint plugins
