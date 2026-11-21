@@ -1,3 +1,12 @@
+## @2digits/tsconfig@1.2.12
+
+### Allow named imports from Effect Atom packages
+
+`@effect/atom`, `@effect/atom-react`, `@effect/atom-solid` and `@effect/atom-vue` are no longer in the Effect language
+service's `namespaceImportPackages`, so `import { useAtomValue } from '@effect/atom-react'` no longer reports
+`preferNamespaceImport`. The `no-effect-alchemy-barrel-imports` and `prefer-effect-alchemy-namespace-imports` oxlint
+rules also leave imports from `@effect/atom*` alone, as they already did for `@effect-atom/*`.
+
 ## @2digits/tsconfig@1.2.11
 
 ### Update `@effect/tsgo` to 0.73.2
