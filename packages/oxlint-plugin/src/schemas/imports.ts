@@ -8,7 +8,13 @@ import { namespaceMember, staticPath } from '../internal/ast';
 
 export const EffectSource = Schema.String.check(Schema.isPattern(/^(?:effect(?:\/.*)?|@effect\/.*)$/u));
 
-export const EffectVitestSource = Schema.String.check(Schema.isPattern(/^@effect\/vitest(?:\/.*)?$/u));
+/**
+ * Scoped Effect packages whose named imports stay named: `@effect/vitest` and the Effect Atom packages such as
+ * `@effect/atom-react`, whose hooks read badly through a namespace.
+ */
+export const NamedImportEffectSource = Schema.String.check(
+  Schema.isPattern(/^@effect\/(?:vitest|atom(?:-[^/]+)?)(?:\/.*)?$/u),
+);
 
 /**
  * A scoped Effect package root such as `@effect/platform`, whose named imports are module namespaces.

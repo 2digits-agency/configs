@@ -44,7 +44,8 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Exact numbers, money and text diffs: `prefer-effect-exact-numbers`, `require-big-decimal-money`, and
   `prefer-effect-text-diff`. See [Exact numbers, money and text diffs](#exact-numbers-money-and-text-diffs).
 - Effect and Alchemy import policy: namespace imports from PascalCase submodule entrypoints, canonical Effect aliases,
-  and no root-barrel module imports. `@effect/vitest` and lowercase unstable barrels are intentionally exempt.
+  and no root-barrel module imports. `@effect/vitest`, the Effect Atom packages (`@effect/atom*`, `@effect-atom/*`) and lowercase unstable barrels
+  are intentionally exempt.
 - Alchemy v2 practices: every other `alchemy-*` rule.
 - Alchemy Domain modeling rules from the `@alchemy.run/domain` agent skill: the `alchemy-domain-*` rules. See
   [Alchemy Domain models](#alchemy-domain-models).

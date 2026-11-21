@@ -8,6 +8,8 @@ testRule('prefer-effect-alchemy-namespace-imports', preferEffectAlchemyNamespace
     import { Url, Headers } from 'effect/unstable/http'
     import { describe, expect } from '@effect/vitest'
     import { deepStrictEqual } from '@effect/vitest/utils'
+    import { useAtomValue } from '@effect/atom-react/Hooks'
+    import { make } from '@effect-atom/atom/Atom'
   `,
   invalid: `import { sort } from 'effect/Array'`,
   output: `import * as Arr from 'effect/Array';`,
