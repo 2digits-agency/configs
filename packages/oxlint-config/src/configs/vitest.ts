@@ -1,10 +1,14 @@
+import { isPackageExists } from 'local-pkg';
 import type { FlatConfigItem } from 'oxlint-flat-config';
 
 import { GLOB_TESTS } from '../globs';
 import type { OptionsWithVitest } from '../types';
 
 export function vitest(options: OptionsWithVitest = {}): Array<FlatConfigItem> {
-  const { files = [GLOB_TESTS], overrides = {}, typecheck = true } = options;
+  const { files = [GLOB_TESTS], moduleMocks = !isPackageExists('effect'), overrides = {}, typecheck = true } = options;
+
+  const moduleMockMessage =
+    'Replace module mocking with dependency injection through a real interface, service layer, or test implementation.';
 
   return [
     {
@@ -90,7 +94,9 @@ export function vitest(options: OptionsWithVitest = {}): Array<FlatConfigItem> {
         'vitest/no-large-snapshots': undefined,
         'vitest/no-mocks-import': 'error',
         'vitest/no-restricted-matchers': undefined,
-        'vitest/no-restricted-vi-methods': undefined,
+        'vitest/no-restricted-vi-methods': moduleMocks
+          ? undefined
+          : ['error', { mock: moduleMockMessage, doMock: moduleMockMessage }],
         'vitest/no-standalone-expect': [
           'error',
           { additionalTestBlockFunctions: ['it', 'it.effect', 'it.scoped', 'it.live', 'it.prop', 'it.effect.prop'] },

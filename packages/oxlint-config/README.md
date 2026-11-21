@@ -20,6 +20,12 @@ export default twoDigits(
 );
 ```
 
+## Module mocks in Effect projects
+
+When `effect` is installed, the Vitest config reports `vi.mock` and `vi.doMock` through
+`vitest/no-restricted-vi-methods`: replace a dependency through a layer or another real interface instead. Set
+`vitest: { moduleMocks: true }` to allow them, or `false` to report them in projects without Effect.
+
 ## React web checks
 
 Enable the web profile explicitly with `twoDigits({ react: { web: true } })`. These additional web checks stay off by
