@@ -6,6 +6,8 @@ testRule('no-effect-alchemy-barrel-imports', noEffectAlchemyBarrelImports, {
     import * as Arr from 'effect/Array'
     import { pipe, type Effect } from 'effect'
     import { describe, layer } from '@effect/vitest'
+    import { RegistryProvider, useAtomValue } from '@effect/atom-react'
+    import { Atom, Result } from '@effect-atom/atom'
     import * as Alchemy from 'alchemy'
   `,
   invalid: `import { Array as Arr } from 'effect'`,

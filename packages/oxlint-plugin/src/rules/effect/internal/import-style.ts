@@ -6,7 +6,7 @@ import * as R from 'effect/Record';
 import * as Schema from 'effect/Schema';
 import * as Str from 'effect/String';
 
-import { EffectPackageRoot, EffectPackageSubmodule, EffectVitestSource } from '../../../schemas/imports';
+import { EffectPackageRoot, EffectPackageSubmodule, NamedImportEffectSource } from '../../../schemas/imports';
 import { ModuleName } from '../../../schemas/names';
 
 const effectImportAliases: Readonly<Record<string, string>> = {
@@ -23,7 +23,7 @@ const effectImportAliases: Readonly<Record<string, string>> = {
 
 export const isModuleName = Schema.is(ModuleName);
 
-const isEffectVitestSource = Schema.is(EffectVitestSource);
+const isNamedImportEffectSource = Schema.is(NamedImportEffectSource);
 
 const isEffectPackageRoot = Schema.is(EffectPackageRoot);
 
@@ -47,7 +47,7 @@ export function barrelModuleSource(source: string, moduleName: string): Opt.Opti
   return Match.value(source).pipe(
     Match.when(Match.is('effect', 'alchemy'), () => Opt.some(`${source}/${moduleName}`)),
     Match.when(
-      (value) => isEffectPackageRoot(value) && !isEffectVitestSource(value),
+      (value) => isEffectPackageRoot(value) && !isNamedImportEffectSource(value),
       () => Opt.some(`${source}/${moduleName}`),
     ),
     Match.orElse(() => Opt.none()),
@@ -61,7 +61,7 @@ export function barrelModuleSource(source: string, moduleName: string): Opt.Opti
  */
 export function submoduleName(source: string): Opt.Option<string> {
   const isSubmodule =
-    !isEffectVitestSource(source) &&
+    !isNamedImportEffectSource(source) &&
     (Str.startsWith('effect/')(source) || Str.startsWith('alchemy/')(source) || isEffectPackageSubmodule(source));
 
   return isSubmodule ? Opt.liftPredicate(Arr.lastNonEmpty(Str.split(source, '/')), isModuleName) : Opt.none();
