@@ -46,6 +46,7 @@ import { noMultiShotEffectCallback } from './effect/no-multi-shot-effect-callbac
 import { noNonJsonSchemaAnnotation } from './effect/no-non-json-schema-annotation';
 import { noOptionOfService } from './effect/no-option-of-service';
 import { noOverwrittenDiscriminant } from './effect/no-overwritten-discriminant';
+import { noReprovideAmbientService } from './effect/no-reprovide-ambient-service';
 import { noServiceConstructorImports } from './effect/no-service-constructor-imports';
 import { noServiceOptionGetOrThrow } from './effect/no-service-option-get-or-throw';
 import { noThrowInEffectCallback } from './effect/no-throw-in-effect-callback';
@@ -92,6 +93,7 @@ import { preferTaggedErrorHandling } from './effect/prefer-tagged-error-handling
 import { preferUninterruptible } from './effect/prefer-uninterruptible';
 import { preferWithSpan } from './effect/prefer-with-span';
 import { preferYieldNow } from './effect/prefer-yield-now';
+import { preferYieldService } from './effect/prefer-yield-service';
 import { preserveCaughtError } from './effect/preserve-caught-error';
 import { requireBigDecimalMoney } from './effect/require-big-decimal-money';
 import { requireDualTypeArguments } from './effect/require-dual-type-arguments';
@@ -161,6 +163,7 @@ export const rules = {
   'no-non-json-schema-annotation': noNonJsonSchemaAnnotation,
   'no-option-of-service': noOptionOfService,
   'no-overwritten-discriminant': noOverwrittenDiscriminant,
+  'no-reprovide-ambient-service': noReprovideAmbientService,
   'no-service-option-get-or-throw': noServiceOptionGetOrThrow,
   'no-single-use-private-function': noSingleUsePrivateFunction,
   'no-service-constructor-imports': noServiceConstructorImports,
@@ -211,6 +214,7 @@ export const rules = {
   'prefer-uninterruptible': preferUninterruptible,
   'prefer-with-span': preferWithSpan,
   'prefer-yield-now': preferYieldNow,
+  'prefer-yield-service': preferYieldService,
   'preserve-caught-error': preserveCaughtError,
   'require-big-decimal-money': requireBigDecimalMoney,
   'require-dual-type-arguments': requireDualTypeArguments,
