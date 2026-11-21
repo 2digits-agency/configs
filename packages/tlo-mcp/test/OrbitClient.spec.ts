@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@effect/vitest';
 import * as Arr from 'effect/Array';
+import * as Context from 'effect/Context';
 import * as Effect from 'effect/Effect';
 import * as Fiber from 'effect/Fiber';
 import * as Layer from 'effect/Layer';
@@ -23,6 +24,8 @@ const Message = Schema.Struct({
   method: Schema.String,
   params: Schema.JsonObject.pipe(Schema.optionalKey),
 });
+
+const INITIALIZED = 'notifications/initialized';
 
 const decodeJson = Schema.decodeUnknownEffect(Message.pipe(Schema.fromJsonString));
 
@@ -63,11 +66,16 @@ interface Sent {
 }
 
 /**
- * Fake Orbit: completes the 2025-11-25 handshake and tool discovery; `onCall` answers tools/call.
+ * Fake Orbit: completes the 2025-11-25 handshake and tool discovery; `onCall` answers tools/call, and `limit` can
+ * answer any other message first, such as with a 429.
  *
  * @param onCall
+ * @param limit
  */
-function orbit(onCall: (id: number | undefined, init: RequestInit | undefined) => Effect.Effect<Response>) {
+function orbit(
+  onCall: (id: number | undefined, init: RequestInit | undefined) => Effect.Effect<Response>,
+  limit: (method: string) => Response | undefined = () => undefined,
+) {
   const sent: Array<Sent> = [];
 
   const fetch: typeof globalThis.fetch = (_input, init) =>
@@ -92,7 +100,13 @@ function orbit(onCall: (id: number | undefined, init: RequestInit | undefined) =
           return yield* onCall(message.id, init);
         }
 
-        if (message.method === 'notifications/initialized') {
+        const limited = limit(message.method);
+
+        if (P.isNotUndefined(limited)) {
+          return limited;
+        }
+
+        if (message.method === INITIALIZED) {
           return new Response(undefined, { status: 202 });
         }
 
@@ -156,7 +170,7 @@ describe('orbit MCP client', () => {
       expect(sent).toStrictEqual([
         { method: 'initialize', authorization: 'Bearer token-2', session: undefined, redirect: 'error' },
         {
-          method: 'notifications/initialized',
+          method: INITIALIZED,
           authorization: 'Bearer token-3',
           session: 'orbit-session',
           redirect: 'error',
@@ -191,6 +205,57 @@ describe('orbit MCP client', () => {
       expect(error.message).toBe('Orbit session expired. Run tlo-mcp login.');
 
       expect(sent).toStrictEqual([]);
+    }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetch), Effect.scoped);
+  });
+
+  it.effect('waits out Orbit rate limits on the startup handshake for as long as Retry-After asks', () => {
+    // Orbit allows one request per minute: two 429s on the handshake exceed the MCP client's default 60-second deadline.
+    // The TestClock starts at the epoch, so the tools/list date asks for a wait until 148 seconds.
+    const limits: Record<string, Array<string>> = {
+      [INITIALIZED]: ['59', '59'],
+      'tools/list': ['Thu, 01 Jan 1970 00:02:28 GMT'],
+    };
+
+    const { sent, fetch } = orbit(
+      () => Effect.die('Unexpected tool call'),
+      (method) => {
+        const retryAfter = limits[method]?.shift();
+
+        return P.isUndefined(retryAfter)
+          ? undefined
+          : new Response(undefined, { status: 429, headers: { 'retry-after': retryAfter } });
+      },
+    );
+
+    return Effect.gen(function* () {
+      const starting = yield* Layer.build(OrbitClientLive.pipe(Layer.provide(countingAuth()))).pipe(Effect.forkScoped);
+
+      yield* TestClock.adjust('117 seconds');
+
+      expect(Arr.map(sent, Struct.get('method'))).toStrictEqual(['initialize', INITIALIZED, INITIALIZED]);
+
+      // The handshake completes at 118 seconds; tools/list then waits until the date Orbit sent.
+      yield* TestClock.adjust('30 seconds');
+
+      expect(starting.pollUnsafe()).toBeUndefined();
+
+      yield* TestClock.adjust('1 second');
+
+      const context = yield* Fiber.join(starting);
+
+      expect(Arr.map(Context.get(context, OrbitClient).tools, Struct.get('name'))).toStrictEqual(['GetProject']);
+
+      expect(Arr.map(sent, Struct.get('method'))).toStrictEqual([
+        'initialize',
+        INITIALIZED,
+        INITIALIZED,
+        INITIALIZED,
+        'tools/list',
+        'tools/list',
+      ]);
+
+      // Each retry fetches its own token, so one that expired during the wait is refreshed.
+      expect(new Set(Arr.map(sent, Struct.get('authorization'))).size).toBe(sent.length);
     }).pipe(Effect.provideService(FetchHttpClient.Fetch, fetch), Effect.scoped);
   });
 
