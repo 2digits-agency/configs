@@ -1,3 +1,12 @@
+## @2digits/oxlint-plugin@0.13.1
+
+### Allow named imports from Effect Atom packages
+
+`@effect/atom`, `@effect/atom-react`, `@effect/atom-solid` and `@effect/atom-vue` are no longer in the Effect language
+service's `namespaceImportPackages`, so `import { useAtomValue } from '@effect/atom-react'` no longer reports
+`preferNamespaceImport`. The `no-effect-alchemy-barrel-imports` and `prefer-effect-alchemy-namespace-imports` oxlint
+rules also leave imports from `@effect/atom*` alone, as they already did for `@effect-atom/*`.
+
 ## @2digits/oxlint-plugin@0.13.0
 
 ### Prefer Effect BigDecimal, Rational, Password and TextDiff
