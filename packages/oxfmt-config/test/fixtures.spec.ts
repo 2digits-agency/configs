@@ -45,6 +45,16 @@ describe('formatted output snapshots', () => {
   });
 });
 
+it('sorts type imports before value imports from the same external module', async ({ expect }) => {
+  const valueImport = "import { parse } from 'yaml';";
+  const typeImport = "import type { Document } from 'yaml';";
+
+  await expect(formatOxfmt('input.ts', `${valueImport}\n${typeImport}\n`, twoDigits)).resolves.toMatchObject({
+    code: `${typeImport}\n${valueImport}\n`,
+    errors: [],
+  });
+});
+
 describe('idempotence', () => {
   it.for(fixtureCases)('$name', async (fixture, { expect }) => {
     const outputs = await formatFixture(await readFixture(fixture), fixture);
