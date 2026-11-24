@@ -54,6 +54,16 @@ The general React preset also rejects nested component definitions with `react/n
 `allowAsProps: true` preserves translation callbacks and render props; inline component props are deliberately not
 rejected by this rule. The existing React Compiler checks, including `react/static-components`, remain enabled.
 
+## Trial: unsafe class instance assignments
+
+With Oxlint 1.95 or later, try `typescript/no-unsafe-class-instance-assignment` in a separate lint run before enabling it
+in CI. It reports structurally compatible objects used where a class instance is expected, including test doubles that
+never ran the constructor. Instances created with `new` are still accepted.
+
+For the trial, set the rule to `warn` through `ts.overrides` and pass `{ options: { denyWarnings: false } }` as a second
+argument to `twoDigits`. The preset treats warnings as failures by default, so keep that override out of the regular CI
+config: it affects all warnings, not just this rule.
+
 ## Shared defaults
 
 The default preset enables `2digits/padding-line-between-statements`: statements require a blank line between them,

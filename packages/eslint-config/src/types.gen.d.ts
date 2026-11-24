@@ -6777,7 +6777,7 @@ Backward pagination arguments
    * Require that function overload signatures be consecutive
    * @see https://typescript-eslint.io/rules/adjacent-overload-signatures
    */
-  'ts/adjacent-overload-signatures'?: Linter.RuleEntry<[]>
+  'ts/adjacent-overload-signatures'?: Linter.RuleEntry<TsAdjacentOverloadSignatures>
   /**
    * Require consistently using either `T[]` or `Array<T>` for arrays
    * @see https://typescript-eslint.io/rules/array-type
@@ -16099,6 +16099,11 @@ type TomlSpacedComment = []|[("always" | "never")]|[("always" | "never"), {
 }]
 // ----- toml/table-bracket-spacing -----
 type TomlTableBracketSpacing = []|[("always" | "never")]
+// ----- ts/adjacent-overload-signatures -----
+type TsAdjacentOverloadSignatures = []|[{
+  
+  ignoreAccessors?: boolean
+}]
 // ----- ts/array-type -----
 type TsArrayType = []|[{
   

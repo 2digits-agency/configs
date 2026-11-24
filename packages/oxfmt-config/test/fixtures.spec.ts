@@ -38,10 +38,23 @@ async function readFixture(fixture: FixtureCase): Promise<string> {
 }
 
 describe('formatted output snapshots', () => {
-  it.for(fixtureCases)('$name', async (fixture, { expect }) => {
+  it.for(fixtureCases)('$name', { timeout: 30_000 }, async (fixture, { expect }) => {
     const outputs = await formatFixture(await readFixture(fixture), fixture);
 
     await expect(snapshotJson(outputs)).toMatchFileSnapshot(getSnapshotPath(testDir, fixture.name));
+  });
+});
+
+describe('import sorting', () => {
+  it('sorts type imports before value imports from the same external module', async ({ expect }) => {
+    const valueImport = "import { parse } from 'yaml';";
+
+    const typeImport = "import type { Document } from 'yaml';";
+
+    await expect(formatOxfmt('input.ts', `${valueImport}\n${typeImport}\n`, twoDigits)).resolves.toMatchObject({
+      code: `${typeImport}\n${valueImport}\n`,
+      errors: [],
+    });
   });
 });
 
