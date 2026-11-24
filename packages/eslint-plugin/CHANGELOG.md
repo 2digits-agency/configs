@@ -1,3 +1,10 @@
+## @2digits/eslint-plugin@4.1.3
+
+### Update the ESLint toolchain
+
+Updated typescript-eslint to 8.74.0, the TanStack Query plugin to 5.108.4, the JSDoc plugin to 65.5.4, and the GraphQL
+ESLint plugin to 5.0.0.
+
 ## @2digits/eslint-plugin@4.1.2
 
 ### Update `@typescript-eslint` packages to 8.73.0

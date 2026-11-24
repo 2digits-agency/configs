@@ -1,3 +1,14 @@
+## @2digits/eslint-config@5.13.3
+
+### Update ESLint React to 5.30.6
+
+The config now uses `@eslint-react/eslint-plugin` and `@eslint-react/kit` 5.30.6.
+
+### Update the ESLint toolchain
+
+Updated typescript-eslint to 8.74.0, the TanStack Query plugin to 5.108.4, the JSDoc plugin to 65.5.4, and the GraphQL
+ESLint plugin to 5.0.0.
+
 ## @2digits/eslint-config@5.13.2
 
 ### Update `eslint-plugin-storybook` to 10.6.8

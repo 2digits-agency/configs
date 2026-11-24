@@ -1,3 +1,9 @@
+## @2digits/oxfmt-config@0.3.36
+
+### Update Oxfmt and Oxlint
+
+Updated Oxfmt to 0.80.0, Oxlint and its plugin API to 1.95.0, and the type-aware linter to 7.0.2008.
+
 ## @2digits/oxfmt-config@0.3.35
 
 ### Update `oxfmt` to 0.79.0
