@@ -1,3 +1,9 @@
+## @2digits/renovate-config@1.2.116
+
+### Group ESLint React updates
+
+Renovate now groups updates to packages under `@eslint-react`. Major updates can still get a separate pull request.
+
 ## @2digits/renovate-config@1.2.115
 
 ### Type-check with tsrs

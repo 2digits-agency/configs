@@ -1,78 +1,69 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update knip, renovate and tsrs\n\n- Updated `knip` to `6.47.0`, `renovate` to `44.256.1` and `tsrs` to `7.1.0-beta.tsrs3`\n- Updated `@effect/vitest` to `4.1.5` and `baseline-browser-mapping` to `2.11.39`\n"
-    filename: 2026-11-20-e729bdb3.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update ESLint React to 5.30.6\n\nThe config now uses `@eslint-react/eslint-plugin` and `@eslint-react/kit` 5.30.6.\n"
+    filename: 2026-11-24-68e8261c.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update `eslint-plugin-storybook` to 10.6.8\n\nThe Storybook rules now come from `eslint-plugin-storybook` 10.6.8.\n"
-    filename: 2026-11-20-aee5466b.md
+  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n  \"@2digits/eslint-plugin\":\n    type: patch\n---\n\n### Update the ESLint toolchain\n\nUpdated typescript-eslint to 8.74.0, the TanStack Query plugin to 5.108.4, the JSDoc plugin to 65.5.4, and the GraphQL\nESLint plugin to 5.0.0.\n"
+    filename: 2026-11-24-c55d2117.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 6.0.5\n\nThe plugin now sends its events with `posthog-node` 6.0.5.\n"
-    filename: 2026-11-20-d7b57058.md
+  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update PostHog to 6.0.6\n\nThe telemetry integration now uses `posthog-node` 6.0.6.\n"
+    filename: 2026-11-24-1c818e44.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: patch\n---\n\n### Count `@effect/vitest` property tests as test blocks\n\n`vitest/no-standalone-expect` and `vitest/expect-expect` accept `it.prop` and `it.effect.prop` from `@effect/vitest`, so an `expect` inside a property test is no longer reported as outside a test.\n"
-    filename: 2026-11-20-52273b9c.md
+  - content: "---\npackages:\n  \"@2digits/oxfmt-config\":\n    type: patch\n  \"@2digits/oxlint-config\":\n    type: patch\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Update Oxfmt and Oxlint\n\nUpdated Oxfmt to 0.80.0, Oxlint and its plugin API to 1.95.0, and the type-aware linter to 7.0.2008.\n"
+    filename: 2026-11-24-e8df4252.md
     v: 0.0.0
-  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: minor\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n### New Alchemy Domain rules\n\n- `alchemy-domain-require-description` requires a `{ description }` on every Domain declaration, which `toMcp`, `toCli`\n  and the `toHttpApi` OpenAPI document show.\n- `alchemy-domain-api-explicit-members` requires a `Domain.Api` to list `commands`, `views`, `streams` and `queries`, so\n  it never serves what the model gains later by default.\n- `alchemy-domain-event-name` warns about events and commands named after a field change, such as `RosterChanged` or\n  `SetRoster`.\n- `alchemy-domain-stack-providers` requires `DomainCloudflare.providers()` next to `Cloudflare.providers()` in\n  `alchemy.run.ts`. `@2digits/oxlint-config` enables it through its new `alchemy` option, on by default when\n  `@alchemy.run/domain` is installed.\n\n### Alchemy Domain rules cover more\n\n- The rules know `Domain.Query` and `.query.ts` files.\n- `alchemy-domain-pure-imports` reports `@alchemy.run/domain` entrypoints other than the root and `/Story`, such as\n  `/Http` or `/Cloudflare`, in domain block files.\n- `alchemy-domain-pure-decide` and `alchemy-domain-total-handlers` follow helpers declared in the same file, whether a\n  section passes them as a handler (`evolve: { Opened: opened }`) or calls them.\n"
-    filename: 2026-11-20-d2f12d664987.md
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n  \"@2digits/oxlint-plugin\":\n    type: patch\n---\n\n### Allow named imports from Effect Atom packages\n\n`@effect/atom`, `@effect/atom-react`, `@effect/atom-solid` and `@effect/atom-vue` are no longer in the Effect language\nservice's `namespaceImportPackages`, so `import { useAtomValue } from '@effect/atom-react'` no longer reports\n`preferNamespaceImport`. The `no-effect-alchemy-barrel-imports` and `prefer-effect-alchemy-namespace-imports` oxlint\nrules also leave imports from `@effect/atom*` alone, as they already did for `@effect-atom/*`.\n"
+    filename: 2026-11-21-a7c3e91f0b42.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-config\":\n    type: patch\n---\n\n### Count Foldkit and `@alchemy.run/domain` story checks as assertions\n\n`vitest/expect-expect` accepts Foldkit's `Scene.expect…`, `Lazy.expect…` and `Story.expect…` helpers and the checking steps of an `@alchemy.run/domain` story (`Story.then`, `Story.rejected`, `Story.view`, …), so a test that asserts only through them is no longer reported as having no assertions. Setup steps such as `Story.given` and `Story.when` still do not count.\n"
-    filename: 2026-11-20-e01521bf.md
+  - content: "---\npackages:\n  \"@2digits/renovate-config\":\n    type: patch\n---\n\n### Group ESLint React updates\n\nRenovate now groups updates to packages under `@eslint-react`. Major updates can still get a separate pull request.\n"
+    filename: 2026-11-24-7e5fe3dc.md
     v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Prefer Effect BigDecimal, Rational, Password and TextDiff\n\nFour new recommended rules for files that import Effect, and new checks in `no-manual-encoding`:\n\n- `require-big-decimal-money` reports schema fields named for money, such as `price`, `amountCents` or `service_fee`, that decode to `Schema.Number`, `Finite` or `Int`. Use `Schema.BigDecimal`, or `Schema.BigDecimalFromString` in place of `NumberFromString`.\n- `prefer-effect-exact-numbers` names the Effect module for arbitrary-precision libraries and numbers handled as text: `decimal.js`, `big.js` and `bignumber.js` become `BigDecimal`, `fraction.js` becomes `Rational`, `bn.js` and `jsbi` become native `bigint` with `effect/BigInt`, `parseFloat(x.toFixed(2))` becomes `Num.round`, a number's text split on `'.'` becomes `BigDecimal`, and a fraction split on `'/'` becomes `Rational.fromString`.\n- `prefer-effect-password` reports Argon2 and PBKDF2 libraries and `pbkdf2` from `node:crypto`. Use the `Password` service from `effect/crypto`, new in Effect 4.1.5.\n- `prefer-effect-text-diff` reports `diff` (jsdiff) exports that `TextDiff` replaces, such as `diffLines` and `structuredPatch`, and the `fast-diff` and `diff-sequences` packages.\n- `no-manual-encoding` now reports `=` stripped from `Base64.encode` output (use `Base64.encodeUnpadded`) and Base64 padded to a multiple of four by hand (use `Base64.decodeLenient`).\n"
-    filename: 2026-11-20-153a6169.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Update `effect` to 4.1.5\n\nThe package now builds on `effect` 4.1.5 and `@effect/platform-node` 4.1.5.\n"
-    filename: 2026-11-20-31a9eea6.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Keep project prices and task rates exact\n\n`UpdateProject`'s `fixedPrice` and `UpdateProjectTask`'s `rate` are now decimal strings, such as `\"1250.50\"` and `\"95.50\"`, decoded as an exact `BigDecimal` instead of a floating-point number. Orbit still receives `BILLING_BUDGET` and `RATE` as JSON numbers. Callers that sent a number must send the amount as a string.\n"
-    filename: 2026-11-20-b59ec149.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.73.2\n\nThe Effect config now expects `@effect/tsgo` 0.73.2 and enables its three new diagnostics as errors:\n\n- `flatMapMapToZipWith` suggests `Effect.zipWith` when `Effect.flatMap` only maps an independent effect with its parameter\n- `promiseAllInEffect` flags `Promise.all` and `Promise.allSettled` fanning out over an array inside Effect code, where `Effect.forEach` or `Effect.all` with a `concurrency` option belongs\n- `promiseRaceInEffect` flags `Promise.race` and `Promise.any` inside Effect code, which leave the losing promises running\n"
-    filename: 2026-11-20-ef665a0a.md
+  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update Effect TypeScript tooling\n\nUpdated `@effect/tsgo` to 0.73.4.\n"
+    filename: 2026-11-24-acd456d0.md
     v: 0.0.0
 core:packages:
-  - changelogIds:
-      - 2026-11-20-e729bdb3.md
-    id: npm:@2digits/config-monorepo
-    updated: true
+  - id: npm:@2digits/config-monorepo
+    updated: false
   - id: npm:@2digits/cli
     updated: false
   - id: npm:@2digits/constants
     updated: false
   - changelogIds:
-      - 2026-11-20-aee5466b.md
+      - 2026-11-24-68e8261c.md
+      - 2026-11-24-c55d2117.md
     id: npm:@2digits/eslint-config
     updated: true
-  - id: npm:@2digits/eslint-plugin
-    updated: false
   - changelogIds:
-      - 2026-11-20-d7b57058.md
+      - 2026-11-24-c55d2117.md
+    id: npm:@2digits/eslint-plugin
+    updated: true
+  - changelogIds:
+      - 2026-11-24-1c818e44.md
     id: npm:@2digits/opencode-plugin
     updated: true
-  - id: npm:@2digits/oxfmt-config
-    updated: false
   - changelogIds:
-      - 2026-11-20-52273b9c.md
-      - 2026-11-20-d2f12d664987.md
-      - 2026-11-20-e01521bf.md
+      - 2026-11-24-e8df4252.md
+    id: npm:@2digits/oxfmt-config
+    updated: true
+  - changelogIds:
+      - 2026-11-24-e8df4252.md
     id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-11-20-153a6169.md
-      - 2026-11-20-31a9eea6.md
-      - 2026-11-20-d2f12d664987.md
+      - 2026-11-21-a7c3e91f0b42.md
+      - 2026-11-24-e8df4252.md
     id: npm:@2digits/oxlint-plugin
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
-  - id: npm:@2digits/renovate-config
+  - changelogIds:
+      - 2026-11-24-7e5fe3dc.md
+    id: npm:@2digits/renovate-config
+    updated: true
+  - id: npm:@2digits/tlo-mcp
     updated: false
   - changelogIds:
-      - 2026-11-20-31a9eea6.md
-      - 2026-11-20-b59ec149.md
-    id: npm:@2digits/tlo-mcp
-    updated: true
-  - changelogIds:
-      - 2026-11-20-ef665a0a.md
+      - 2026-11-21-a7c3e91f0b42.md
+      - 2026-11-24-acd456d0.md
     id: npm:@2digits/tsconfig
     updated: true
 npm:packages:

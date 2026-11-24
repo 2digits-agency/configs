@@ -1,3 +1,9 @@
+## @2digits/opencode-plugin@0.2.60
+
+### Update PostHog to 6.0.6
+
+The telemetry integration now uses `posthog-node` 6.0.6.
+
 ## @2digits/opencode-plugin@0.2.59
 
 ### Update `posthog-node` to 6.0.5
