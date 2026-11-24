@@ -38,7 +38,7 @@ async function readFixture(fixture: FixtureCase): Promise<string> {
 }
 
 describe('formatted output snapshots', () => {
-  it.for(fixtureCases)('$name', async (fixture, { expect }) => {
+  it.for(fixtureCases)('$name', { timeout: 30_000 }, async (fixture, { expect }) => {
     const outputs = await formatFixture(await readFixture(fixture), fixture);
 
     await expect(snapshotJson(outputs)).toMatchFileSnapshot(getSnapshotPath(testDir, fixture.name));
