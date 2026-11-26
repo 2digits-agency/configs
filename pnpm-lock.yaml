@@ -241,8 +241,8 @@ catalogs:
       specifier: 1.19.6
       version: 1.19.6
     '@opentunnel/client':
-      specifier: 0.6.2
-      version: 0.6.2
+      specifier: 0.7.0
+      version: 0.7.0
     '@oxc-node/cli':
       specifier: 1.0.2
       version: 1.0.2
@@ -1171,7 +1171,7 @@ importers:
         version: 4.1.5(effect@4.1.5)(redis@6.2.1(@opentelemetry/api@1.10.0))
       '@opentunnel/client':
         specifier: 'catalog:'
-        version: 0.6.2(effect@4.1.5)(undici@8.12.4)
+        version: 0.7.0(effect@4.1.5)(undici@8.12.4)
       '@yielded/oauth':
         specifier: 'catalog:'
         version: 0.1.0-beta.49(effect@4.1.5)
@@ -2535,8 +2535,8 @@ packages:
     resolution: {integrity: sha512-aOP45mbcOKbQVvFWfQmgoOPT8R2iwbbbgl83k4CujGV9BrJhFr3qG55MFpwFs4YLabpuW3HhzUY9eQxPlDqaZw==}
     engines: {node: '>=14'}
 
-  '@opentunnel/client@0.6.2':
-    resolution: {integrity: sha512-rcfq/Q8ViIEkSA7oCW3ntbM/W1BKUB2o+wDWgfAjuJ/MNhBIEG90sEyG8FGZ8zZekbxSrtKp3wPTaTN5ceZTbg==}
+  '@opentunnel/client@0.7.0':
+    resolution: {integrity: sha512-JAbqkXbmawcZAMjFYHcANtcYHleV7JvdoZVWj4kc2ne/TNGoID85x5Qe/+4e04yOaMWRETjAWqYlYDycSst4hw==}
     engines: {bun: '>=1.4.0', node: '>=22'}
     peerDependencies:
       effect: 4.1.5
@@ -2545,8 +2545,8 @@ packages:
       undici:
         optional: true
 
-  '@opentunnel/protocol@0.6.2':
-    resolution: {integrity: sha512-4XgCGOBufE1iNpOMIVH9/S+HjhIgma9qWDgf4G4tminjqG5M7XDN21TJNb7vKce2U5oXLANfVsX3JrDqWxsUTw==}
+  '@opentunnel/protocol@0.7.0':
+    resolution: {integrity: sha512-U/ohurqlQQO521DpKZkPMn8pgKs8ekE/8xz2uq7yUY8e1kWGWt2052COx/P52s08qFs9QJMEV9KO5VW5AFrJvg==}
     peerDependencies:
       effect: 4.1.5
 
@@ -9750,14 +9750,14 @@ snapshots:
 
   '@opentelemetry/semantic-conventions@1.45.0': {}
 
-  '@opentunnel/client@0.6.2(effect@4.1.5)(undici@8.12.4)':
+  '@opentunnel/client@0.7.0(effect@4.1.5)(undici@8.12.4)':
     dependencies:
-      '@opentunnel/protocol': 0.6.2(effect@4.1.5)
+      '@opentunnel/protocol': 0.7.0(effect@4.1.5)
       effect: 4.1.5
     optionalDependencies:
       undici: 8.12.4
 
-  '@opentunnel/protocol@0.6.2(effect@4.1.5)':
+  '@opentunnel/protocol@0.7.0(effect@4.1.5)':
     dependencies:
       effect: 4.1.5
 
