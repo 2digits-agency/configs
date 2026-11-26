@@ -1,3 +1,19 @@
+## @2digits/oxlint-plugin@0.14.0
+
+### Update `effect` to 4.1.6
+
+The package now builds on `effect` 4.1.6 and `@effect/platform-node` 4.1.6. TLO MCP also updates `@opentunnel/client`
+to 0.7.0.
+
+### Report hand-written Link headers and header appends
+
+`prefer-effect-headers` now also reports splitting, matching or searching text read from a Link header, building a
+Link value from data, and joining a header's current value with a new one by a comma in a data-first `Headers.set`,
+`HttpClientRequest.setHeader` or `HttpServerResponse.setHeader` that reads the header from its own destination.
+Pipeable setters, values copied from another response, and `Cookie` and `Set-Cookie` are not checked. It points to the
+helpers Effect 4.1.6 adds: `HttpClientResponse.links` and `link`, `Headers.parseLink`, `Schema.LinkHeaderFromString`,
+`Headers.formatLink`, `Headers.append` and the `appendHeader` setters.
+
 ## @2digits/oxlint-plugin@0.13.1
 
 ### Allow named imports from Effect Atom packages

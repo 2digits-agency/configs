@@ -1,3 +1,12 @@
+## @2digits/tsconfig@1.2.13
+
+### Update `@effect/tsgo` to 0.73.7
+
+The Effect config now expects `@effect/tsgo` 0.73.7 and changes two Effect language service options:
+
+- `deterministicKeys` now expects the tag of a `Schema.TaggedClass`, `Data.TaggedClass` or `Schema.TaggedRequest` to be the class name alone, instead of the package and file path followed by the class name
+- `@effect/atom-react`, `@effect/atom-solid` and `@effect/atom-vue` are barrel import packages, so `preferBarrelImport` asks for named imports from the package root instead of imports from their modules
+
 ## @2digits/tsconfig@1.2.12
 
 ### Allow named imports from Effect Atom packages

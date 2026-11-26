@@ -1,3 +1,10 @@
+## @2digits/eslint-config@5.13.4
+
+### Update the ESLint plugins
+
+Updated the JSDoc plugin to 65.5.6, `eslint-plugin-n` to 18.6.0, the SonarJS plugin to 4.2.3 and the Storybook plugin to
+10.6.9.
+
 ## @2digits/eslint-config@5.13.3
 
 ### Update ESLint React to 5.30.6
