@@ -13,6 +13,7 @@ import {
   calledMethod,
   headerTextSource,
   isStringLiteral,
+  staticPath,
   staticPropertyName,
   unwrapExpression,
   walkNodes,
@@ -21,16 +22,13 @@ import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
 import { isGlobalIdentifier } from '../../internal/scope';
 import type { ImportBindings } from '../../schemas/imports';
-import { InspectMethod, ParseMethod } from '../../schemas/platform';
+import { CookieHeader, InspectMethod, ParseMethod } from '../../schemas/platform';
 
 const isParseMethod = Schema.is(ParseMethod);
 
 const isInspectMethod = Schema.is(InspectMethod);
 
-/**
- * A pagination relation in a Link header, as in `rel="next"` or `rel=last`.
- */
-const paginationRelPattern = /rel="?(?:next|prev|previous|first|last)\b/iu;
+const isCookieHeader = Schema.is(CookieHeader);
 
 /**
  * The text that follows the target of a Link header value: `>; rel=…`.
@@ -96,27 +94,18 @@ function isLinkText(node: ESTree.Expression): boolean {
   return isLinkSource(headerTextSource(node));
 }
 
-function isPaginationRel(node: ESTree.Node): boolean {
-  return (
-    (isStringLiteral(node) && paginationRelPattern.test(node.value)) ||
-    (node.type === 'Literal' && 'regex' in node && paginationRelPattern.test(node.regex.pattern))
-  );
-}
-
 /**
- * Whether a call parses a Link header by hand: `linkHeader.split(',')`, `/<([^>]*)>/.exec(headers.get('link'))`, or a
- * search for a pagination relation such as `part.includes('rel="next"')`, `part.match(/rel="next"/)` or
- * `/rel="next"/.test(part)`.
+ * Whether a call parses or searches a Link header by hand: `linkHeader.split(',')`,
+ * `headers.get('link')?.includes('rel="next"')` or `/<([^>]*)>/.exec(headers.get('link'))`. Text that does not come
+ * from a Link header, such as an HTML body with `rel="next"` links, is left alone.
  *
  * @param node Call.
  */
 function isLinkParse(node: ESTree.CallExpression): boolean {
   return Opt.exists(calledMethod(node), (method) =>
-    isParseMethod(method)
-      ? Opt.exists(callReceiver(node), isLinkText) || Opt.exists(argumentAt(node, 0), isPaginationRel)
-      : method === 'exec' || method === 'test'
-        ? Opt.exists(argumentAt(node, 0), isLinkText) || Opt.exists(callReceiver(node), isPaginationRel)
-        : isInspectMethod(method) && Opt.exists(argumentAt(node, 0), isPaginationRel),
+    isParseMethod(method) || isInspectMethod(method)
+      ? Opt.exists(callReceiver(node), isLinkText)
+      : (method === 'exec' || method === 'test') && Opt.exists(argumentAt(node, 0), isLinkText),
   );
 }
 
@@ -133,8 +122,9 @@ function isLinkTemplate(node: ESTree.TemplateLiteral): boolean {
 }
 
 /**
- * The header name and value of an Effect header setter: `Headers.set(headers, name, value)`,
- * `HttpClientRequest.setHeader` and `HttpServerResponse.setHeader`, data-first or pipeable.
+ * The destination, header name and value of a data-first Effect header setter: `Headers.set(headers, name, value)`,
+ * `HttpClientRequest.setHeader(request, name, value)` or `HttpServerResponse.setHeader(response, name, value)`. A
+ * pipeable setter has no destination in its arguments, so it is none.
  *
  * @param node Call.
  * @param imports Effect imports of the file.
@@ -142,31 +132,78 @@ function isLinkTemplate(node: ESTree.TemplateLiteral): boolean {
 function setHeaderCall(
   node: ESTree.CallExpression,
   imports: ImportBindings,
-): Opt.Option<readonly [name: string, value: ESTree.Expression]> {
+): Opt.Option<readonly [destination: ESTree.Expression, name: string, value: ESTree.Expression]> {
   const isSetter =
-    imports.isApi(node.callee, 'Headers', 'set') ||
-    imports.isApi(node.callee, 'HttpClientRequest', 'setHeader') ||
-    imports.isApi(node.callee, 'HttpServerResponse', 'setHeader');
-
-  const offset = node.arguments.length === 3 ? 1 : 0;
+    node.arguments.length === 3 &&
+    (imports.isApi(node.callee, 'Headers', 'set') ||
+      imports.isApi(node.callee, 'HttpClientRequest', 'setHeader') ||
+      imports.isApi(node.callee, 'HttpServerResponse', 'setHeader'));
 
   return isSetter
-    ? Opt.zipWith(
-        Opt.filter(argumentAt(node, offset), isStringLiteral),
-        argumentAt(node, offset + 1),
-        (name, value) => [name.value, value] as const,
+    ? Opt.all([argumentAt(node, 0), Opt.filter(argumentAt(node, 1), isStringLiteral), argumentAt(node, 2)]).pipe(
+        Opt.map(([destination, name, value]) => [destination, name.value, value] as const),
       )
     : Opt.none();
 }
 
 /**
- * Whether a header value joins the current value of the same header with another one: a template, `+` or `join` that
- * reads `name`, as in `` `${headers.get('vary')}, Accept` ``.
+ * The object a read of the header `name` reads from: `headers` for `headers.get('vary')`, `Headers.get(headers,
+ * 'vary')` or `headers.vary`, and `response.headers` for `response.headers.vary`.
  *
- * @param value Header value.
- * @param name Header name.
+ * @param node Node.
+ * @param name Header name, compared case-insensitively.
  */
-function joinsCurrentValue(value: ESTree.Expression, name: string): boolean {
+function headerReadOwner(node: ESTree.Node, name: string): Opt.Option<ESTree.Node> {
+  if (node.type === 'CallExpression') {
+    return readsHeader(node, name)
+      ? node.arguments.length === 1
+        ? callReceiver(node)
+        : argumentAt(node, 0)
+      : Opt.none();
+  }
+
+  return node.type === 'MemberExpression' && readsHeaderMember(node, name) ? Opt.some(node.object) : Opt.none();
+}
+
+const pathEquivalence = Arr.makeEquivalence(Str.Equivalence);
+
+/**
+ * Whether `owner` is the setter's destination or its `headers`, as `response.headers` is for `response`.
+ *
+ * @param owner Object a header read reads from.
+ * @param destination Setter destination.
+ */
+function isDestination(owner: ESTree.Node, destination: ESTree.Expression): boolean {
+  return Opt.getOrElse(
+    Opt.zipWith(
+      staticPath(owner),
+      staticPath(destination),
+      (ownerPath, destinationPath) =>
+        pathEquivalence(ownerPath, destinationPath) ||
+        pathEquivalence(ownerPath, Arr.append(destinationPath, 'headers')),
+    ),
+    Fn.constFalse,
+  );
+}
+
+function hasComma(node: ESTree.Node): boolean {
+  return (
+    (isStringLiteral(node) && Str.includes(',')(node.value)) ||
+    (node.type === 'TemplateElement' && Str.includes(',')(node.value.cooked ?? node.value.raw))
+  );
+}
+
+/**
+ * Whether a header value joins the destination's current value of the same header with another one by a comma: a
+ * template, `+` or `join` that reads `name` from the destination, as in `` `${headers.get('vary')}, Accept` ``. Values
+ * read from another object are copies, and values joined by another separator, as the `Cookie` header's `;`, are not
+ * what `Headers.append` writes.
+ *
+ * @param destination Setter destination.
+ * @param name Header name.
+ * @param value Header value.
+ */
+function joinsCurrentValue(destination: ESTree.Expression, name: string, value: ESTree.Expression): boolean {
   const target = unwrapExpression(value);
 
   const isJoin =
@@ -176,12 +213,8 @@ function joinsCurrentValue(value: ESTree.Expression, name: string): boolean {
 
   return (
     isJoin &&
-    walkNodes(
-      target,
-      (node) =>
-        (node.type === 'CallExpression' && readsHeader(node, name)) ||
-        (node.type === 'MemberExpression' && readsHeaderMember(node, name)),
-    )
+    walkNodes(target, hasComma) &&
+    walkNodes(target, (node) => Opt.exists(headerReadOwner(node, name), (owner) => isDestination(owner, destination)))
   );
 }
 
@@ -223,7 +256,8 @@ export const preferEffectHeaders = Rule.define({
           ? report(node, 'parseLink')
           : Opt.exists(
                 setHeaderCall(node, imports),
-                ([name, value]) => Str.toLowerCase(name) !== 'set-cookie' && joinsCurrentValue(value, name),
+                ([destination, name, value]) =>
+                  !isCookieHeader(Str.toLowerCase(name)) && joinsCurrentValue(destination, name, value),
               )
             ? report(node, 'appendHeader')
             : Effect.void,

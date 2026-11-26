@@ -36,7 +36,7 @@ const OrbitTimesheets = Skill.make({
     1. List the exact calls first: entry api_id, task or ticket api_id, date and time, duration and description. Make them after the user approves. Every call is one Orbit write; the gateway never batches or replays them.
     2. Read the text of every result. Orbit reports a refusal as a normal result, not as an error, such as "Available time for this task is 0 minutes", "Cannot plan activity before start date of task" or "Insufficient time available".
     3. When a call fails and you cannot tell whether the write happened, such as after a 502, read the state with \`GetTimeEntry\` or \`ListTimeEntries\` first and try again at most once. Never repeat a write blindly.
-    4. A rate-limited call carries \`tlo-mcp/retryAfter\` in its \`_meta\`; wait that long before the next call.
+    4. A rate-limited call has \`tlo-mcp/httpStatus\` 429 in its \`_meta\`, and \`tlo-mcp/retryAfter\` when Orbit sent one. Wait that long, or about a minute without it, before the next call, and never replay the limited call right away.
     5. Afterwards, read each changed week with \`GetTimesheetWeek\` and compare it with the plan. Report what differs and whether the week is still OPEN.
     6. Call \`SubmitTimesheet\` only when the user asks for it separately: it makes the week FINAL.
 

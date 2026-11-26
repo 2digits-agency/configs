@@ -472,16 +472,18 @@ have no autofixes.
   Set-Cookie strings are fixtures or expected wire values and are allowed, as are header names in lists and sets and
   Set-Cookie values forwarded unchanged, which `Cookies` would normalize.
 - `prefer-effect-headers` reports native `new Headers(…)`, which `Headers.fromInput` replaces, and header logic that
-  Effect 4.1.6 ships helpers for: splitting or matching a Link header (`response.headers.get('link')?.split(',')`,
-  `/<([^>]+)>/.exec(linkHeader)`, `part.includes('rel="next"')`); building a Link value from data
-  (`` `<${url}>; rel="next"` `` or `'<' + url + '>; rel="next"'`); and joining a header's current value with a new
-  one in `Headers.set`, `HttpClientRequest.setHeader` or `HttpServerResponse.setHeader`
-  (``Headers.set(headers, 'vary', `${headers.vary}, Accept`)``). Use `HttpClientResponse.links` or `link`,
-  `Headers.parseLink` or `Schema.LinkHeaderFromString`, `Headers.formatLink`, and `Headers.append`,
-  `HttpClientRequest.appendHeader` or `HttpServerResponse.appendHeader`. Raw text counts as a Link header when it comes
-  from a `get('link')` read, a `link` member of a headers object or a binding named `linkHeader`; a relation in a
-  string or regex counts when it is a pagination relation (`next`, `prev`, `previous`, `first` or `last`). Joined Set-Cookie
-  values are skipped, because `Headers.append` must not join them either.
+  Effect 4.1.6 ships helpers for: splitting, matching or searching a Link header
+  (`response.headers.get('link')?.split(',')`, `/<([^>]+)>/.exec(linkHeader)`, `linkHeader.includes('rel="next"')`);
+  building a Link value from data (`` `<${url}>; rel="next"` `` or `'<' + url + '>; rel="next"'`); and joining a
+  header's current value with a new one by a comma in a data-first `Headers.set`, `HttpClientRequest.setHeader` or
+  `HttpServerResponse.setHeader` (``Headers.set(headers, 'vary', `${headers.vary}, Accept`)``). Use
+  `HttpClientResponse.links` or `link`, `Headers.parseLink` or `Schema.LinkHeaderFromString`, `Headers.formatLink`,
+  and `Headers.append`, `HttpClientRequest.appendHeader` or `HttpServerResponse.appendHeader`. Text counts as a Link
+  header only when it comes from a `get('link')` read, a `link` member of a headers object or a binding named
+  `linkHeader`, so HTML bodies with `rel="next"` links are left alone. An append counts only when the value reads the
+  header from the setter's own destination (`headers`, or `response.headers` for `response`): a value copied from
+  another response is a replacement. `Cookie` and `Set-Cookie` are skipped, because their values are not joined by
+  `, `.
 
 ## Effect binary encodings
 

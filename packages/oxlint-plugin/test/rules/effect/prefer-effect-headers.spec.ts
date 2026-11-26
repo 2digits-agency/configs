@@ -17,18 +17,24 @@ const valid = `
   const permalinks = permalink.split('/')
   const stylesheet = html.includes('rel="stylesheet"')
   const merged = HttpServerResponse.setHeader(response, 'vary', Arr.join(values, ', '))
+  const copied = HttpServerResponse.setHeader(response, 'vary', upstream.headers.vary + ', Accept')
+  const piped = Headers.set('vary', headers.get('vary') + ', Accept')
+  const cookie = Headers.set(headers, 'cookie', headers.cookie + '; theme=dark')
+  const semicolons = Headers.set(headers, 'x-tags', headers.get('x-tags') + '; beta')
+  const hasNext = html.includes('rel="next"')
+  const nextPage = /rel="next"/.test(body)
 `;
 
 for (const [invalid, messageId] of [
   ["const parts = response.headers.get('Link')?.split(',')", 'parseLink'],
   ["const parts = (linkHeader ?? '').split(', ')", 'parseLink'],
-  [String.raw`const next = /<([^>]+)>;\s*rel="next"/.exec(part)`, 'parseLink'],
+  [String.raw`const next = /<([^>]+)>;\s*rel="next"/.exec(linkHeader)`, 'parseLink'],
   ['const next = /<([^>]+)>/.exec(response.headers.link)', 'parseLink'],
-  [`const isNext = part.includes('rel="next"')`, 'parseLink'],
+  [`const isNext = response.headers.get('link')?.includes('rel="next"')`, 'parseLink'],
   [`const link = \`<\${url}>; rel="next"\``, 'formatLink'],
   [`const link = '<' + url + '>; rel="next"'`, 'formatLink'],
   [`const next = Headers.set(headers, 'vary', \`\${headers.vary}, Accept\`)`, 'appendHeader'],
-  ["const next = Headers.set('Vary', headers.get('vary') + ', Accept')", 'appendHeader'],
+  ["const next = Headers.set(headers, 'Vary', Headers.get(headers, 'vary') + ', Accept')", 'appendHeader'],
   [
     "const next = HttpServerResponse.setHeader(response, 'cache-control', [response.headers['cache-control'], 'no-store'].join(', '))",
     'appendHeader',
