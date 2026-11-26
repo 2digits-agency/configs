@@ -38,6 +38,10 @@ for (const [invalid, messageId] of [
   [`const next = Headers.set(headers, 'vary', \`\${headers.vary}, Accept\`)`, 'appendHeader'],
   ["const next = Headers.set(headers, 'Vary', Headers.get(headers, 'vary') + ', Accept')", 'appendHeader'],
   [
+    "const next = Headers.set(current, 'vary', Option.getOrElse(Headers.get(current, 'vary'), () => '') + ', Accept')",
+    'appendHeader',
+  ],
+  [
     "const next = HttpServerResponse.setHeader(response, 'cache-control', [response.headers['cache-control'], 'no-store'].join(', '))",
     'appendHeader',
   ],

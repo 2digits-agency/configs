@@ -49,8 +49,8 @@ const isHeadersObject = Match.type<ESTree.Node>().pipe(
 );
 
 /**
- * Whether a call reads the header `name` from a headers object by hand: `headers.get(name)` or `Headers.get(headers,
- * name)`. Other `get` calls, such as `url.searchParams.get('link')`, are not header reads.
+ * Whether a call reads the header `name` by hand: `headers.get(name)` on a headers object, or `Headers.get(owner,
+ * name)` on any owner. Other single-argument `get` calls, such as `url.searchParams.get('link')`, are not header reads.
  *
  * @param node Call.
  * @param name Header name, compared case-insensitively.
@@ -58,22 +58,12 @@ const isHeadersObject = Match.type<ESTree.Node>().pipe(
 function readsHeader(node: ESTree.CallExpression, name: string): boolean {
   return (
     Opt.contains(calledMethod(node), 'get') &&
-    Opt.exists(headerGetOwner(node), isHeadersObject) &&
+    (node.arguments.length !== 1 || Opt.exists(callReceiver(node), isHeadersObject)) &&
     Arr.some(
       node.arguments,
       (argument) => isStringLiteral(argument) && Str.toLowerCase(argument.value) === Str.toLowerCase(name),
     )
   );
-}
-
-/**
- * The object a `get` call reads from: the receiver of `headers.get(name)`, or the first argument of
- * `Headers.get(headers, name)`.
- *
- * @param node Call.
- */
-function headerGetOwner(node: ESTree.CallExpression): Opt.Option<ESTree.Expression> {
-  return node.arguments.length === 1 ? callReceiver(node) : argumentAt(node, 0);
 }
 
 /**
@@ -167,7 +157,11 @@ function setHeaderCall(
  */
 function headerReadOwner(node: ESTree.Node, name: string): Opt.Option<ESTree.Node> {
   if (node.type === 'CallExpression') {
-    return readsHeader(node, name) ? headerGetOwner(node) : Opt.none();
+    return readsHeader(node, name)
+      ? node.arguments.length === 1
+        ? callReceiver(node)
+        : argumentAt(node, 0)
+      : Opt.none();
   }
 
   return node.type === 'MemberExpression' && readsHeaderMember(node, name) ? Opt.some(node.object) : Opt.none();
