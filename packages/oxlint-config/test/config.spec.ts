@@ -590,6 +590,35 @@ describe('oxlint config', () => {
     expect(twoDigitsPluginRules['2digits/prefer-effect-http-status']).toBe('warn');
   });
 
+  it('warns about non-ASCII source only when enabled', () => {
+    for (const rules of ['{}', "{ '2digits/no-non-ascii': 'warn' }"]) {
+      withTemporaryProject(
+        {
+          'oxlint.config.mjs': `
+            import twoDigits from '${presetUrl}';
+            export default twoDigits({}, { rules: ${rules}, options: { denyWarnings: false } });
+          `,
+          'example.mjs': '// Wait…\nexport const ready = true;\n',
+        },
+        (directory) => {
+          const { status, output } = runOxlint(directory, 'example.mjs');
+
+          expect(status, output).toBe(0);
+
+          if (rules === '{}') {
+            expect(output).not.toContain('U+2026');
+          } else {
+            expect(output).toContain('Found 1 warning and 0 errors.');
+
+            expect(output).toContain('Unexpected non-ASCII character (U+2026).');
+
+            expect(output).toContain('use a real UI component instead');
+          }
+        },
+      );
+    }
+  });
+
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
     expect(JSON.stringify(twoDigits({ react: true, ts: true, vitest: true, zod: true }))).not.toContain('effecttsgo');
   });

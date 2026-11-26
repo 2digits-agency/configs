@@ -49,6 +49,10 @@ The package exports all rules as `rules`, their names as `RuleName`, and the def
 - Alchemy v2 practices: every other `alchemy-*` rule.
 - Alchemy Domain modeling rules from the `@alchemy.run/domain` agent skill: the `alchemy-domain-*` rules. See
   [Alchemy Domain models](#alchemy-domain-models).
+- UI components over text glyphs: opt in to `2digits/no-non-ascii` to flag literal non-ASCII characters anywhere in
+  the source, including comments, identifiers, strings, and JSX. Use an icon component for a decorative arrow or a
+  semantic control for an action, rather than encoding the same glyph as an escape or HTML entity. The rule reports
+  each character by code point and does not autofix.
 - Schema compiler hoisting from t3code: `no-inline-schema-compile` reports `Schema.decode*`, `Schema.encode*`,
   `Schema.is`, and `Schema.asserts` compilers that are built and invoked inside a function body when their schema
   could be hoisted to module scope.

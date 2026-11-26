@@ -102,6 +102,7 @@ import { noConstantThunk } from './functions/no-constant-thunk';
 import { noForwardingLambda } from './functions/no-forwarding-lambda';
 import { noSingleUsePrivateFunction } from './functions/no-single-use-private-function';
 import { noTrivialWrapper } from './functions/no-trivial-wrapper';
+import { noNonAscii } from './no-non-ascii';
 import { noUtcIsoSlicing } from './no-utc-iso-slicing';
 import { paddingLineBetweenStatements } from './padding-line-between-statements';
 import { noBrowserApiInRender } from './react/no-browser-api-in-render';
@@ -158,6 +159,7 @@ export const rules = {
   'no-manual-tagged-type': noManualTaggedType,
   'no-millis-arithmetic': noMillisArithmetic,
   'no-multi-shot-effect-callback': noMultiShotEffectCallback,
+  'no-non-ascii': noNonAscii,
   'no-non-json-schema-annotation': noNonJsonSchemaAnnotation,
   'no-option-of-service': noOptionOfService,
   'no-overwritten-discriminant': noOverwrittenDiscriminant,

@@ -18,9 +18,11 @@ export type RuleName = keyof typeof rules;
 /**
  * Rules a config turns on only where they apply: `alchemy-domain-stack-providers` cannot tell from a Stack alone
  * whether it hosts a Domain model, so `@2digits/oxlint-config` enables it when `@alchemy.run/domain` is installed.
+ * `no-non-ascii` also reports intentional Unicode, such as localized text, so projects enable it themselves.
  */
 const optInRules: ReadonlyArray<RuleName> = [
   'alchemy-domain-stack-providers',
+  'no-non-ascii',
   'prefer-effect-filesystem',
   'prefer-effect-path',
 ];

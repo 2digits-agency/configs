@@ -64,6 +64,20 @@ For the trial, set the rule to `warn` through `ts.overrides` and pass `{ options
 argument to `twoDigits`. The preset treats warnings as failures by default, so keep that override out of the regular CI
 config: it affects all warnings, not just this rule.
 
+## Opt-in: UI components over text glyphs
+
+Use `2digits/no-non-ascii` to catch glyphs used in place of icons, controls, or visual indicators. For example, use a
+button with an icon component instead of a bare arrow glyph for a navigation action. The rule flags literal non-ASCII
+characters even in comments and strings, so it stays off by default for projects with intentional Unicode text.
+
+```ts
+import { twoDigits } from '@2digits/oxlint-config';
+
+export default twoDigits({}, { rules: { '2digits/no-non-ascii': 'warn' }, options: { denyWarnings: false } });
+```
+
+`denyWarnings: false` keeps warnings from failing the lint run. This option applies to all warnings, not just this rule.
+
 ## Shared defaults
 
 The default preset enables `2digits/padding-line-between-statements`: statements require a blank line between them,
