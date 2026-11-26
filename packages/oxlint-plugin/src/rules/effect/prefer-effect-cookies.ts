@@ -9,11 +9,13 @@ import * as Str from 'effect/String';
 
 import {
   argumentAt,
+  callReceiver,
+  calledMethod,
   containsSame,
+  headerTextSource,
   isStringLiteral,
   parentOfType,
   staticPropertyName,
-  unwrapExpression,
 } from '../../internal/ast';
 import { importBindings } from '../../internal/imports';
 import { ruleMeta } from '../../internal/meta';
@@ -44,26 +46,6 @@ function isCookieName(name: string): boolean {
 }
 
 /**
- * The expression raw cookie text comes from, through `?.`, `??`, `||`, type assertions and `String(…)`.
- *
- * @param node Expression.
- */
-function cookieTextSource(node: ESTree.Expression): ESTree.Expression {
-  const target = unwrapExpression(node);
-
-  const inner: Opt.Option<ESTree.Expression> =
-    target.type === 'ChainExpression'
-      ? Opt.some(target.expression)
-      : target.type === 'LogicalExpression'
-        ? Opt.some(target.left)
-        : target.type === 'CallExpression' && target.callee.type === 'Identifier' && target.callee.name === 'String'
-          ? argumentAt(target, 0)
-          : Opt.none();
-
-  return Opt.match(inner, { onNone: () => target, onSome: cookieTextSource });
-}
-
-/**
  * Whether an expression holds raw cookie text: a binding or member named after cookies (`cookieHeader`,
  * `request.headers.cookie`, `document.cookie`) or a `get('cookie')` or `get('set-cookie')` header read.
  */
@@ -82,22 +64,7 @@ const isCookieSource = Match.type<ESTree.Expression>().pipe(
 );
 
 function isCookieText(node: ESTree.Expression): boolean {
-  return isCookieSource(cookieTextSource(node));
-}
-
-/**
- * The method a call invokes on a receiver, such as `split` for `header.split(';')`.
- *
- * @param node Call.
- */
-function calledMethod(node: ESTree.CallExpression): Opt.Option<string> {
-  return node.callee.type === 'MemberExpression' ? staticPropertyName(node.callee) : Opt.none();
-}
-
-function receiver(node: ESTree.CallExpression): Opt.Option<ESTree.Expression> {
-  return node.callee.type === 'MemberExpression' && node.callee.object.type !== 'Super'
-    ? Opt.some(node.callee.object)
-    : Opt.none();
+  return isCookieSource(headerTextSource(node));
 }
 
 /**
@@ -109,7 +76,7 @@ function receiver(node: ESTree.CallExpression): Opt.Option<ESTree.Expression> {
 function isCookieParse(node: ESTree.CallExpression): boolean {
   return Opt.exists(calledMethod(node), (method) =>
     isParseMethod(method)
-      ? Opt.exists(receiver(node), isCookieText)
+      ? Opt.exists(callReceiver(node), isCookieText)
       : method === 'exec' && Opt.exists(argumentAt(node, 0), isCookieText),
   );
 }

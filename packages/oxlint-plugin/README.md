@@ -471,6 +471,17 @@ have no autofixes.
   a `get('cookie')` or `get('set-cookie')` header read or a binding or member whose name contains `cookie`. Plain
   Set-Cookie strings are fixtures or expected wire values and are allowed, as are header names in lists and sets and
   Set-Cookie values forwarded unchanged, which `Cookies` would normalize.
+- `prefer-effect-headers` reports native `new Headers(…)`, which `Headers.fromInput` replaces, and header logic that
+  Effect 4.1.6 ships helpers for: splitting or matching a Link header (`response.headers.get('link')?.split(',')`,
+  `/<([^>]+)>/.exec(linkHeader)`, `part.includes('rel="next"')`); building a Link value from data
+  (`` `<${url}>; rel="next"` `` or `'<' + url + '>; rel="next"'`); and joining a header's current value with a new
+  one in `Headers.set`, `HttpClientRequest.setHeader` or `HttpServerResponse.setHeader`
+  (``Headers.set(headers, 'vary', `${headers.vary}, Accept`)``). Use `HttpClientResponse.links` or `link`,
+  `Headers.parseLink` or `Schema.LinkHeaderFromString`, `Headers.formatLink`, and `Headers.append`,
+  `HttpClientRequest.appendHeader` or `HttpServerResponse.appendHeader`. Raw text counts as a Link header when it comes
+  from a `get('link')` read, a `link` member of a headers object or a binding named `linkHeader`; a relation in a
+  string or regex counts when it is a pagination relation (`next`, `prev`, `previous`, `first` or `last`). Joined Set-Cookie
+  values are skipped, because `Headers.append` must not join them either.
 
 ## Effect binary encodings
 

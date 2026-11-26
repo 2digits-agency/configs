@@ -281,6 +281,46 @@ export function containsRange(outer: Ranged, inner: Ranged): boolean {
   return outer.range[0] <= inner.range[0] && inner.range[1] <= outer.range[1];
 }
 
+/**
+ * The method a call invokes on a receiver, such as `split` for `header.split(';')`.
+ *
+ * @param node Call.
+ */
+export function calledMethod(node: ESTree.CallExpression): Opt.Option<string> {
+  return node.callee.type === 'MemberExpression' ? staticPropertyName(node.callee) : Opt.none();
+}
+
+/**
+ * The receiver of a method call, such as `header` for `header.split(';')`.
+ *
+ * @param node Call.
+ */
+export function callReceiver(node: ESTree.CallExpression): Opt.Option<ESTree.Expression> {
+  return node.callee.type === 'MemberExpression' && node.callee.object.type !== 'Super'
+    ? Opt.some(node.callee.object)
+    : Opt.none();
+}
+
+/**
+ * The expression raw header text comes from, through `?.`, `??`, `||`, type assertions and `String(…)`.
+ *
+ * @param node Expression.
+ */
+export function headerTextSource(node: ESTree.Expression): ESTree.Expression {
+  const target = unwrapExpression(node);
+
+  const inner: Opt.Option<ESTree.Expression> =
+    target.type === 'ChainExpression'
+      ? Opt.some(target.expression)
+      : target.type === 'LogicalExpression'
+        ? Opt.some(target.left)
+        : target.type === 'CallExpression' && target.callee.type === 'Identifier' && target.callee.name === 'String'
+          ? argumentAt(target, 0)
+          : Opt.none();
+
+  return Opt.match(inner, { onNone: () => target, onSome: headerTextSource });
+}
+
 export function isStringLiteral(node: ESTree.Node): node is ESTree.StringLiteral {
   return node.type === 'Literal' && Str.isString(node.value);
 }
