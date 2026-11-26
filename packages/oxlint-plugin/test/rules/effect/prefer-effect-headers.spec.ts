@@ -23,6 +23,8 @@ const valid = `
   const semicolons = Headers.set(headers, 'x-tags', headers.get('x-tags') + '; beta')
   const hasNext = html.includes('rel="next"')
   const nextPage = /rel="next"/.test(body)
+  const isSecure = url.searchParams.get('link')?.startsWith('https')
+  const linkParts = params.get('link')?.split(',')
 `;
 
 for (const [invalid, messageId] of [
