@@ -1,3 +1,17 @@
+## @2digits/tlo-mcp@2.7.0
+
+### Update `effect` to 4.1.6
+
+The package now builds on `effect` 4.1.6 and `@effect/platform-node` 4.1.6. TLO MCP also updates `@opentunnel/client`
+to 0.7.0.
+
+### Serve an `orbit-timesheets` skill
+
+The gateway now serves an Agent Skill, `skill://tlo-mcp/orbit-timesheets/SKILL.md`, with the rules for reading and
+changing Orbit time: what to read first, which tasks and tickets to book on, and how to write entries without double
+writes. Clients with the MCP Skills extension list it with `skills/list`; others can read it as a resource, and the
+server instructions point to it.
+
 ## @2digits/tlo-mcp@2.6.0
 
 ### Update `effect` to 4.1.5
