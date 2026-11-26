@@ -47,6 +47,21 @@ function jsPluginOf(config: FlatConfigItem | undefined) {
   return typeof entry === 'string' ? { name: entry, specifier: entry } : entry;
 }
 
+/**
+ * A project whose only source file has one text glyph, linted with warnings allowed.
+ *
+ * @param rules Source of the `rules` object in the consumer config.
+ */
+function glyphProject(rules: string) {
+  return {
+    'oxlint.config.mjs': `
+      import twoDigits from '${presetUrl}';
+      export default twoDigits({}, { rules: ${rules}, options: { denyWarnings: false } });
+    `,
+    'example.mjs': '// Wait…\nexport const ready = true;\n',
+  };
+}
+
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
@@ -588,6 +603,30 @@ describe('oxlint config', () => {
 
   it('warns about status code numbers instead of erroring', () => {
     expect(twoDigitsPluginRules['2digits/prefer-effect-http-status']).toBe('warn');
+  });
+
+  it('leaves text glyphs alone by default', () => {
+    withTemporaryProject(glyphProject('{}'), (directory) => {
+      const { status, output } = runOxlint(directory, 'example.mjs');
+
+      expect(status, output).toBe(0);
+
+      expect(output).not.toContain('U+2026');
+    });
+  });
+
+  it('warns about text glyphs when the rule is enabled', () => {
+    withTemporaryProject(glyphProject("{ '2digits/no-non-ascii': 'warn' }"), (directory) => {
+      const { status, output } = runOxlint(directory, 'example.mjs');
+
+      expect(status, output).toBe(0);
+
+      expect(output).toContain('Found 1 warning and 0 errors.');
+
+      expect(output).toContain('Unexpected symbol or emoji (U+2026).');
+
+      expect(output).toContain('use a real UI component instead');
+    });
   });
 
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
