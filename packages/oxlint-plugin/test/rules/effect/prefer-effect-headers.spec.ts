@@ -25,6 +25,7 @@ const valid = `
   const nextPage = /rel="next"/.test(body)
   const isSecure = url.searchParams.get('link')?.startsWith('https')
   const linkParts = params.get('link')?.split(',')
+  const sites = Reflect.get(config, 'link').split(',')
 `;
 
 for (const [invalid, messageId] of [

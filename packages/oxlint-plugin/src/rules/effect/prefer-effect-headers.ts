@@ -49,24 +49,6 @@ const isHeadersObject = Match.type<ESTree.Node>().pipe(
 );
 
 /**
- * Whether a call reads the header `name` by hand: `headers.get(name)` on a headers object, or `Headers.get(owner,
- * name)` on any owner. Other single-argument `get` calls, such as `url.searchParams.get('link')`, are not header reads.
- *
- * @param node Call.
- * @param name Header name, compared case-insensitively.
- */
-function readsHeader(node: ESTree.CallExpression, name: string): boolean {
-  return (
-    Opt.contains(calledMethod(node), 'get') &&
-    (node.arguments.length !== 1 || Opt.exists(callReceiver(node), isHeadersObject)) &&
-    Arr.some(
-      node.arguments,
-      (argument) => isStringLiteral(argument) && Str.toLowerCase(argument.value) === Str.toLowerCase(name),
-    )
-  );
-}
-
-/**
  * Whether a member reads the header `name` from a headers object: `response.headers.link` or `headers['vary']`.
  *
  * @param node Member expression.
@@ -82,18 +64,16 @@ function readsHeaderMember(node: ESTree.MemberExpression, name: string): boolean
 /**
  * Whether an expression holds a raw Link header: a `get('link')` header read, `headers.link`, or a binding named
  * `linkHeader`.
+ *
+ * @param node Expression.
+ * @param imports Effect imports of the file.
  */
-const isLinkSource = Match.type<ESTree.Expression>().pipe(
-  Match.discriminators('type')({
-    Identifier: ({ name }) => /^link_?header$/iu.test(name),
-    MemberExpression: (member) => readsHeaderMember(member, 'link'),
-    CallExpression: (call) => readsHeader(call, 'link'),
-  }),
-  Match.orElse(Fn.constFalse),
-);
+function isLinkText(node: ESTree.Expression, imports: ImportBindings): boolean {
+  const source = headerTextSource(node);
 
-function isLinkText(node: ESTree.Expression): boolean {
-  return isLinkSource(headerTextSource(node));
+  return source.type === 'Identifier'
+    ? /^link_?header$/iu.test(source.name)
+    : Opt.isSome(headerReadOwner(source, 'link', imports));
 }
 
 /**
@@ -102,12 +82,17 @@ function isLinkText(node: ESTree.Expression): boolean {
  * from a Link header, such as an HTML body with `rel="next"` links, is left alone.
  *
  * @param node Call.
+ * @param imports Effect imports of the file.
  */
-function isLinkParse(node: ESTree.CallExpression): boolean {
+function isLinkParse(node: ESTree.CallExpression, imports: ImportBindings): boolean {
+  function isLink(text: ESTree.Expression) {
+    return isLinkText(text, imports);
+  }
+
   return Opt.exists(calledMethod(node), (method) =>
     isParseMethod(method) || isInspectMethod(method)
-      ? Opt.exists(callReceiver(node), isLinkText)
-      : (method === 'exec' || method === 'test') && Opt.exists(argumentAt(node, 0), isLinkText),
+      ? Opt.exists(callReceiver(node), isLink)
+      : (method === 'exec' || method === 'test') && Opt.exists(argumentAt(node, 0), isLink),
   );
 }
 
@@ -149,18 +134,31 @@ function setHeaderCall(
 }
 
 /**
- * The object a read of the header `name` reads from: `headers` for `headers.get('vary')`, `Headers.get(headers,
- * 'vary')` or `headers.vary`, and `response.headers` for `response.headers.vary`.
+ * The object a hand-written read of the header `name` reads from: `headers` for `headers.get('vary')` on a headers
+ * object, `Headers.get(headers, 'vary')` with Effect's `Headers`, or `headers.vary`, and `response.headers` for
+ * `response.headers.vary`. Other `get` calls, such as `url.searchParams.get('link')` or `Reflect.get(config, 'link')`,
+ * are not header reads.
  *
  * @param node Node.
  * @param name Header name, compared case-insensitively.
+ * @param imports Effect imports of the file.
  */
-function headerReadOwner(node: ESTree.Node, name: string): Opt.Option<ESTree.Node> {
+function headerReadOwner(node: ESTree.Node, name: string, imports: ImportBindings): Opt.Option<ESTree.Node> {
+  function isName(argument: ESTree.Node) {
+    return isStringLiteral(argument) && Str.toLowerCase(argument.value) === Str.toLowerCase(name);
+  }
+
   if (node.type === 'CallExpression') {
-    return readsHeader(node, name)
-      ? node.arguments.length === 1
-        ? callReceiver(node)
-        : argumentAt(node, 0)
+    if (node.arguments.length === 1) {
+      return Opt.contains(calledMethod(node), 'get') && Opt.exists(argumentAt(node, 0), isName)
+        ? Opt.filter(callReceiver(node), isHeadersObject)
+        : Opt.none();
+    }
+
+    return node.arguments.length === 2 &&
+      imports.isApi(node.callee, 'Headers', 'get') &&
+      Opt.exists(argumentAt(node, 1), isName)
+      ? argumentAt(node, 0)
       : Opt.none();
   }
 
@@ -204,8 +202,14 @@ function hasComma(node: ESTree.Node): boolean {
  * @param destination Setter destination.
  * @param name Header name.
  * @param value Header value.
+ * @param imports Effect imports of the file.
  */
-function joinsCurrentValue(destination: ESTree.Expression, name: string, value: ESTree.Expression): boolean {
+function joinsCurrentValue(
+  destination: ESTree.Expression,
+  name: string,
+  value: ESTree.Expression,
+  imports: ImportBindings,
+): boolean {
   const target = unwrapExpression(value);
 
   const isJoin =
@@ -216,7 +220,9 @@ function joinsCurrentValue(destination: ESTree.Expression, name: string, value: 
   return (
     isJoin &&
     walkNodes(target, hasComma) &&
-    walkNodes(target, (node) => Opt.exists(headerReadOwner(node, name), (owner) => isDestination(owner, destination)))
+    walkNodes(target, (node) =>
+      Opt.exists(headerReadOwner(node, name, imports), (owner) => isDestination(owner, destination)),
+    )
   );
 }
 
@@ -254,12 +260,12 @@ export const preferEffectHeaders = Rule.define({
         Effect.when(report(node, 'effectHeaders'), isGlobalIdentifier(node.callee, 'Headers')),
       ),
       Visitor.on('CallExpression', (node) =>
-        isLinkParse(node)
+        isLinkParse(node, imports)
           ? report(node, 'parseLink')
           : Opt.exists(
                 setHeaderCall(node, imports),
                 ([destination, name, value]) =>
-                  !isCookieHeader(Str.toLowerCase(name)) && joinsCurrentValue(destination, name, value),
+                  !isCookieHeader(Str.toLowerCase(name)) && joinsCurrentValue(destination, name, value, imports),
               )
             ? report(node, 'appendHeader')
             : Effect.void,
