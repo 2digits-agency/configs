@@ -17,22 +17,22 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'tsx' } } }).run('no-
     {
       code: "// Wait…\r\nconst café = '🚀→';",
       errors: [
-        { messageId: 'nonAscii', data: { codePoint: '2026' }, line: 1, column: 8, endColumn: 9 },
-        { messageId: 'nonAscii', data: { codePoint: '00E9' }, line: 2, column: 10, endColumn: 11 },
-        { messageId: 'nonAscii', data: { codePoint: '1F680' }, line: 2, column: 15, endColumn: 17 },
-        { messageId: 'nonAscii', data: { codePoint: '2192' }, line: 2, column: 17, endColumn: 18 },
+        { messageId: 'nonAscii', data: { codePoint: '2026' }, line: 1, column: 7, endColumn: 8 },
+        { messageId: 'nonAscii', data: { codePoint: '00E9' }, line: 2, column: 9, endColumn: 10 },
+        { messageId: 'nonAscii', data: { codePoint: '1F680' }, line: 2, column: 14, endColumn: 16 },
+        { messageId: 'nonAscii', data: { codePoint: '2192' }, line: 2, column: 16, endColumn: 17 },
       ],
       output: null,
     },
     {
       code: 'const\u00A0value = 1;',
-      errors: [{ messageId: 'nonAscii', data: { codePoint: '00A0' }, line: 1, column: 6, endColumn: 7 }],
+      errors: [{ messageId: 'nonAscii', data: { codePoint: '00A0' }, line: 1, column: 5, endColumn: 6 }],
     },
     {
       code: '<button aria-label="Café">Next →</button>;',
       errors: [
-        { messageId: 'nonAscii', data: { codePoint: '00E9' }, line: 1, column: 24, endColumn: 25 },
-        { messageId: 'nonAscii', data: { codePoint: '2192' }, line: 1, column: 32, endColumn: 33 },
+        { messageId: 'nonAscii', data: { codePoint: '00E9' }, line: 1, column: 23, endColumn: 24 },
+        { messageId: 'nonAscii', data: { codePoint: '2192' }, line: 1, column: 31, endColumn: 32 },
       ],
       output: null,
     },
