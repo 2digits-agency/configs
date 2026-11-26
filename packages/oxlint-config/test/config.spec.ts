@@ -48,11 +48,11 @@ function jsPluginOf(config: FlatConfigItem | undefined) {
 }
 
 /**
- * A project whose only source file has one non-ASCII character, linted with warnings allowed.
+ * A project whose only source file has one text glyph, linted with warnings allowed.
  *
  * @param rules Source of the `rules` object in the consumer config.
  */
-function nonAsciiProject(rules: string) {
+function glyphProject(rules: string) {
   return {
     'oxlint.config.mjs': `
       import twoDigits from '${presetUrl}';
@@ -605,8 +605,8 @@ describe('oxlint config', () => {
     expect(twoDigitsPluginRules['2digits/prefer-effect-http-status']).toBe('warn');
   });
 
-  it('leaves non-ASCII source alone by default', () => {
-    withTemporaryProject(nonAsciiProject('{}'), (directory) => {
+  it('leaves text glyphs alone by default', () => {
+    withTemporaryProject(glyphProject('{}'), (directory) => {
       const { status, output } = runOxlint(directory, 'example.mjs');
 
       expect(status, output).toBe(0);
@@ -615,15 +615,15 @@ describe('oxlint config', () => {
     });
   });
 
-  it('warns about non-ASCII source when the rule is enabled', () => {
-    withTemporaryProject(nonAsciiProject("{ '2digits/no-non-ascii': 'warn' }"), (directory) => {
+  it('warns about text glyphs when the rule is enabled', () => {
+    withTemporaryProject(glyphProject("{ '2digits/no-non-ascii': 'warn' }"), (directory) => {
       const { status, output } = runOxlint(directory, 'example.mjs');
 
       expect(status, output).toBe(0);
 
       expect(output).toContain('Found 1 warning and 0 errors.');
 
-      expect(output).toContain('Unexpected non-ASCII character (U+2026).');
+      expect(output).toContain('Unexpected symbol or emoji (U+2026).');
 
       expect(output).toContain('use a real UI component instead');
     });

@@ -67,8 +67,9 @@ config: it affects all warnings, not just this rule.
 ## Opt-in: UI components over text glyphs
 
 Use `2digits/no-non-ascii` to catch glyphs used in place of icons, controls, or visual indicators. For example, use a
-button with an icon component instead of a bare arrow glyph for a navigation action. The rule flags literal non-ASCII
-characters even in comments and strings, so it stays off by default for projects with intentional Unicode text.
+button with an icon component instead of a bare arrow glyph for a navigation action. The rule flags literal symbols
+and emoji, plus the bullets, middle dot and ellipsis, also in comments and strings. Letters with accents, currency
+signs and other punctuation are allowed. It stays off by default, because a symbol can also be intentional text.
 
 ```ts
 import { twoDigits } from '@2digits/oxlint-config';
