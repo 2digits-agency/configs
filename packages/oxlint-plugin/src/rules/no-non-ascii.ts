@@ -1,6 +1,7 @@
 import { Rule, RuleContext, Visitor } from 'effect-oxlint';
 import * as Effect from 'effect/Effect';
 import * as Opt from 'effect/Option';
+import * as P from 'effect/Predicate';
 import * as Str from 'effect/String';
 
 import { ruleMeta } from '../internal/meta';
@@ -29,7 +30,7 @@ export const noNonAscii = Rule.define({
         for (const { 0: character, index } of matchNonAscii(sourceCode.text)) {
           const codePoint = Str.codePointAt(character, 0);
 
-          if (index === undefined || Opt.isNone(codePoint)) {
+          if (P.isUndefined(index) || Opt.isNone(codePoint)) {
             continue;
           }
 

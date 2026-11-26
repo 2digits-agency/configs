@@ -47,6 +47,21 @@ function jsPluginOf(config: FlatConfigItem | undefined) {
   return typeof entry === 'string' ? { name: entry, specifier: entry } : entry;
 }
 
+/**
+ * A project whose only source file has one non-ASCII character, linted with warnings allowed.
+ *
+ * @param rules Source of the `rules` object in the consumer config.
+ */
+function nonAsciiProject(rules: string) {
+  return {
+    'oxlint.config.mjs': `
+      import twoDigits from '${presetUrl}';
+      export default twoDigits({}, { rules: ${rules}, options: { denyWarnings: false } });
+    `,
+    'example.mjs': '// Wait…\nexport const ready = true;\n',
+  };
+}
+
 const fixtureDirectory = fileURLToPath(new URL('fixtures/zod', import.meta.url));
 
 const twoDigitsFixtureDirectory = fileURLToPath(new URL('fixtures/2digits', import.meta.url));
@@ -590,33 +605,28 @@ describe('oxlint config', () => {
     expect(twoDigitsPluginRules['2digits/prefer-effect-http-status']).toBe('warn');
   });
 
-  it('warns about non-ASCII source only when enabled', () => {
-    for (const rules of ['{}', "{ '2digits/no-non-ascii': 'warn' }"]) {
-      withTemporaryProject(
-        {
-          'oxlint.config.mjs': `
-            import twoDigits from '${presetUrl}';
-            export default twoDigits({}, { rules: ${rules}, options: { denyWarnings: false } });
-          `,
-          'example.mjs': '// Wait…\nexport const ready = true;\n',
-        },
-        (directory) => {
-          const { status, output } = runOxlint(directory, 'example.mjs');
+  it('leaves non-ASCII source alone by default', () => {
+    withTemporaryProject(nonAsciiProject('{}'), (directory) => {
+      const { status, output } = runOxlint(directory, 'example.mjs');
 
-          expect(status, output).toBe(0);
+      expect(status, output).toBe(0);
 
-          if (rules === '{}') {
-            expect(output).not.toContain('U+2026');
-          } else {
-            expect(output).toContain('Found 1 warning and 0 errors.');
+      expect(output).not.toContain('U+2026');
+    });
+  });
 
-            expect(output).toContain('Unexpected non-ASCII character (U+2026).');
+  it('warns about non-ASCII source when the rule is enabled', () => {
+    withTemporaryProject(nonAsciiProject("{ '2digits/no-non-ascii': 'warn' }"), (directory) => {
+      const { status, output } = runOxlint(directory, 'example.mjs');
 
-            expect(output).toContain('use a real UI component instead');
-          }
-        },
-      );
-    }
+      expect(status, output).toBe(0);
+
+      expect(output).toContain('Found 1 warning and 0 errors.');
+
+      expect(output).toContain('Unexpected non-ASCII character (U+2026).');
+
+      expect(output).toContain('use a real UI component instead');
+    });
   });
 
   it('keeps binary-patched effecttsgo rules out of the default preset', () => {
