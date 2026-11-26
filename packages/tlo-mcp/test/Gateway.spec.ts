@@ -78,6 +78,56 @@ const makeHandler = Effect.fn('Gateway.test.handler')(function* () {
   return handler.handler;
 });
 
+/**
+ * One MCP session over the gateway's web handler: each call sends one JSON-RPC message and keeps the session id.
+ *
+ * @param handle
+ */
+function makeSession(handle: (request: Request) => Promise<Response>) {
+  let session: string | undefined;
+
+  return Effect.fn('Gateway.test.send')(function* (method: string, params: unknown, id?: number) {
+    const body = yield* encodeJson({
+      jsonrpc: '2.0',
+      method,
+      params,
+      ...(P.isUndefined(id) ? {} : { id }),
+    });
+
+    const response = yield* Effect.tryPromise({
+      try: (signal) =>
+        handle(
+          new Request('https://gateway/mcp', {
+            method: 'POST',
+            signal,
+            headers: {
+              authorization: `Bearer ${key}`,
+              'content-type': 'application/json',
+              accept: 'application/json, text/event-stream',
+              'mcp-protocol-version': '2025-06-18',
+              ...(P.isUndefined(session) ? {} : { 'mcp-session-id': session }),
+            },
+            body,
+          }),
+        ),
+
+      catch: (cause) => HttpRequestError.make({ cause }),
+    });
+
+    session = response.headers.get('mcp-session-id') ?? session;
+
+    expect(response.headers.get('cache-control')).toBe('no-store');
+
+    return {
+      response,
+      text: yield* Effect.tryPromise({
+        try: (_signal) => response.text(),
+        catch: (cause) => HttpRequestError.make({ cause }),
+      }),
+    };
+  });
+}
+
 describe('personal HTTP gateway', () => {
   it.effect('rejects missing, incorrect and query-string credentials before parsing any MCP request', () =>
     Effect.gen(function* () {
@@ -135,48 +185,7 @@ describe('personal HTTP gateway', () => {
 
       const handle = yield* makeHandler();
 
-      let session: string | undefined;
-
-      const send = Effect.fn('Gateway.test.send')(function* (method: string, params: unknown, id?: number) {
-        const body = yield* encodeJson({
-          jsonrpc: '2.0',
-          method,
-          params,
-          ...(P.isUndefined(id) ? {} : { id }),
-        });
-
-        const response = yield* Effect.tryPromise({
-          try: (signal) =>
-            handle(
-              new Request('https://gateway/mcp', {
-                method: 'POST',
-                signal,
-                headers: {
-                  authorization: `Bearer ${key}`,
-                  'content-type': 'application/json',
-                  accept: 'application/json, text/event-stream',
-                  'mcp-protocol-version': '2025-06-18',
-                  ...(P.isUndefined(session) ? {} : { 'mcp-session-id': session }),
-                },
-                body,
-              }),
-            ),
-
-          catch: (cause) => HttpRequestError.make({ cause }),
-        });
-
-        session = response.headers.get('mcp-session-id') ?? session;
-
-        expect(response.headers.get('cache-control')).toBe('no-store');
-
-        return {
-          response,
-          text: yield* Effect.tryPromise({
-            try: (_signal) => response.text(),
-            catch: (cause) => HttpRequestError.make({ cause }),
-          }),
-        };
-      });
+      const send = makeSession(handle);
 
       const initialization = yield* send(
         'initialize',
@@ -210,6 +219,36 @@ describe('personal HTTP gateway', () => {
         },
         calls: ['ReadProject', 'ListTickets'],
       });
+    }),
+  );
+
+  it.effect('serves the orbit-timesheets skill and points the instructions to it', () =>
+    Effect.gen(function* () {
+      const send = yield* makeHandler().pipe(Effect.map(makeSession));
+
+      const initialization = yield* send(
+        'initialize',
+        { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'test', version: '1' } },
+        1,
+      );
+
+      yield* send('notifications/initialized', {});
+
+      expect(initialization.text).toMatch(
+        /Official Orbit instructions.*skill:\/\/tlo-mcp\/orbit-timesheets\/SKILL\.md/s,
+      );
+
+      const skills = yield* send('skills/list', {}, 2).pipe(Effect.flatMap(({ text }) => decodeJson(text)));
+
+      expect(skills).toMatchObject({
+        result: {
+          skills: [{ uri: 'skill://tlo-mcp/orbit-timesheets/SKILL.md', frontmatter: { name: 'orbit-timesheets' } }],
+        },
+      });
+
+      const skill = yield* send('resources/read', { uri: 'skill://tlo-mcp/orbit-timesheets/SKILL.md' }, 3);
+
+      expect(skill.text).toMatch(/name.*orbit-timesheets.*Read before you write/s);
     }),
   );
 

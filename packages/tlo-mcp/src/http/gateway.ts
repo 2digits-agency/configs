@@ -20,7 +20,11 @@ import * as HttpStatus from 'effect/http/HttpStatus';
 
 import { OrbitClient } from '../mcp/OrbitClient.js';
 import { OrbitToolsLive } from '../mcp/proxy.js';
+import { ORBIT_TIMESHEETS_URI, OrbitSkillsLive } from '../mcp/skills.js';
 import { configDirectory } from '../platform.js';
+
+// Points clients that do not list skills to the skill's resource.
+const SKILL_INSTRUCTIONS = `Before changing time in Orbit, read the orbit-timesheets skill (resource ${ORBIT_TIMESHEETS_URI}).`;
 
 export const gatewayKeyFile = Effect.gen(function* () {
   const path = yield* Path.Path;
@@ -144,12 +148,14 @@ export function gatewayRoutes(key: Redacted.Redacted) {
     Effect.gen(function* () {
       const upstream = yield* OrbitClient;
 
-      return OrbitToolsLive.pipe(
+      return Layer.merge(OrbitToolsLive, OrbitSkillsLive).pipe(
         Layer.provide(
           McpServer.layerHttp({
             name: 'tlo-mcp',
             version: '1.0.0',
-            instructions: upstream.instructions,
+            instructions: P.isUndefined(upstream.instructions)
+              ? SKILL_INSTRUCTIONS
+              : `${upstream.instructions}\n\n${SKILL_INSTRUCTIONS}`,
             path: '/mcp',
             protocols: [McpProtocol.v2025_11_25, McpProtocol.v2025_06_18, McpProtocol.v2025_03_26],
           }),
