@@ -14,6 +14,7 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'tsx' } } }).run('no-
     'const\u{A0}value = 1;',
     String.raw`const label = '\u{1F680} \u2192';`,
     '<button aria-label="Volgende café">Next &rarr;</button>;',
+    "const range = '月曜〰金曜';",
   ],
   invalid: [
     {
@@ -34,6 +35,14 @@ new RuleTester({ languageOptions: { parserOptions: { lang: 'tsx' } } }).run('no-
       errors: [
         { messageId: 'glyph', data: { codePoint: '1F468' }, line: 1, column: 15, endColumn: 23 },
         { messageId: 'glyph', data: { codePoint: '00D7' }, line: 1, column: 24, endColumn: 25 },
+      ],
+    },
+    {
+      // A keycap starts with an ASCII digit; a variation selector turns the wavy dash into its emoji form.
+      code: "const step = '1\u{FE0F}\u{20E3}';\nconst wave = '〰\u{FE0F}';",
+      errors: [
+        { messageId: 'glyph', data: { codePoint: '0031' }, line: 1, column: 14, endColumn: 17 },
+        { messageId: 'glyph', data: { codePoint: '3030' }, line: 2, column: 14, endColumn: 16 },
       ],
     },
     {

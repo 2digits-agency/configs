@@ -7,12 +7,13 @@ import * as Str from 'effect/String';
 import { ruleMeta } from '../internal/meta';
 
 /**
- * A flag, or one non-ASCII symbol or emoji with the modifiers and joined emoji that render as one glyph. Letters,
- * currency signs and punctuation are text; the bullets, middle dot and ellipsis are punctuation in Unicode but are
- * added because they are drawn as separators and indicators.
+ * A keycap, a flag, or one non-ASCII symbol or emoji with the modifiers, tags and joined emoji that render as one
+ * glyph. Letters, currency signs and punctuation are text, unless a variation selector asks for their emoji form; the
+ * bullets, middle dot and ellipsis are punctuation in Unicode but are added because they are drawn as separators and
+ * indicators.
  */
 const matchGlyphs = Str.matchAll(
-  /\p{Regional_Indicator}{2}|(?![\p{ASCII}\p{Sc}©®™°])[\p{S}\p{Extended_Pictographic}·•‣‧⁃…](?:\u{FE0F}|\p{Emoji_Modifier}|\u{200D}\p{Extended_Pictographic})*/gu,
+  /[0-9#*]\u{FE0F}?\u{20E3}|\p{Regional_Indicator}{2}|(?:\p{Extended_Pictographic}\u{FE0F}|(?![\p{ASCII}\p{Sc}©®™°])[\p{S}·•‣‧⁃…])(?:[\u{FE0F}\p{Emoji_Modifier}\u{E0020}-\u{E007F}]|\u{200D}\p{Extended_Pictographic})*/gu,
 );
 
 export const noNonAscii = Rule.define({
