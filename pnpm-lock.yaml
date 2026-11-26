@@ -439,8 +439,8 @@ catalogs:
       specifier: 19.3.1
       version: 19.3.1
     renovate:
-      specifier: 44.263.5
-      version: 44.263.5
+      specifier: 44.264.1
+      version: 44.264.1
     tailwind-csstree:
       specifier: 0.4.2
       version: 0.4.2
@@ -1156,7 +1156,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 44.263.5(supports-color@7.2.0)(typanion@3.14.0)
+        version: 44.264.1(supports-color@7.2.0)(typanion@3.14.0)
       tsrs:
         specifier: 'catalog:'
         version: 7.1.0-beta.tsrs5
@@ -1171,7 +1171,7 @@ importers:
         version: 4.1.6(effect@4.1.6)(redis@6.2.1(@opentelemetry/api@1.10.0))
       '@opentunnel/client':
         specifier: 'catalog:'
-        version: 0.7.0(effect@4.1.6)(undici@8.12.4)
+        version: 0.7.0(effect@4.1.6)(undici@8.13.1)
       '@yielded/oauth':
         specifier: 'catalog:'
         version: 0.1.0-beta.49(effect@4.1.6)
@@ -3749,8 +3749,8 @@ packages:
     resolution: {integrity: sha512-+rfK4ob2hk0MxROqUA9NwRGC531nlLrhUWYnYOVWAAKcvHgXwRQ+PykuGPfBq1qIDlX5UYoiR780iScORwP8OA==}
     engines: {node: '>=24.11.0', pnpm: '>=10.0.0'}
 
-  '@renovatebot/pep440@6.0.0':
-    resolution: {integrity: sha512-L/HtOYInkZGLJCe9h/gpsm2Gig0JWzyvWajrEVK+pP6BGfRl1eFzg7jyVcis7tmht7hvpau/+pMzF60geiLq6w==}
+  '@renovatebot/pep440@6.0.1':
+    resolution: {integrity: sha512-+pt8ngwl68ZqsTp5nhNwx3XxgfD+BIL+0tsH9vkEEFzrF5X0B//O7Vd1VInhwmcCjwOMNptjaL9HBA84++ZPrw==}
     engines: {node: '>=24.10.0', pnpm: '>=10.0.0'}
 
   '@renovatebot/pgp@2.0.6':
@@ -7400,8 +7400,8 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@44.263.5:
-    resolution: {integrity: sha512-QGc4Q7/7Iu3E/FOQtjZ7euSYgECeIEyTwf3xVzOouat4akZLn55QwMIpvZoi53/ul+MdENFfBdy7+193VJaxig==}
+  renovate@44.264.1:
+    resolution: {integrity: sha512-7NX/VgFJqoN8s8Yau4zuyM50ORrbzL81AR2YHHKphF5HuvNMeBhSgBCK98V9n8y3l+ABKKr9NPv6Vjr1YnqJdg==}
     engines: {node: ^24.11.0 || ^26.13.0, pnpm: ^11.0.0}
     hasBin: true
 
@@ -7845,10 +7845,6 @@ packages:
 
   undici-types@8.9.0:
     resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
-
-  undici@8.12.4:
-    resolution: {integrity: sha512-8Mx+uNKKER2bA4AdtedkqRbwUCIJFr2nJckXRe5yrDqzePqwLP7VNcctN8/XdmDSbF7mS+jJKIszlL+vbam1VA==}
-    engines: {node: '>=22.19.0'}
 
   undici@8.13.1:
     resolution: {integrity: sha512-Kt7EaPjh0s93lJH/PmW3d5rhkcpUa6fS3jqZ7+YGxNd9L7Xy/i827xe4C2uhhq+pJebM4tQOl5AgHmW11G5Skg==}
@@ -9835,12 +9831,12 @@ snapshots:
 
   '@opentelemetry/semantic-conventions@1.45.0': {}
 
-  '@opentunnel/client@0.7.0(effect@4.1.6)(undici@8.12.4)':
+  '@opentunnel/client@0.7.0(effect@4.1.6)(undici@8.13.1)':
     dependencies:
       '@opentunnel/protocol': 0.7.0(effect@4.1.6)
       effect: 4.1.6
     optionalDependencies:
-      undici: 8.12.4
+      undici: 8.13.1
 
   '@opentunnel/protocol@0.7.0(effect@4.1.6)':
     dependencies:
@@ -10557,7 +10553,7 @@ snapshots:
       - supports-color
       - zod
 
-  '@renovatebot/pep440@6.0.0': {}
+  '@renovatebot/pep440@6.0.1': {}
 
   '@renovatebot/pgp@2.0.6': {}
 
@@ -13729,7 +13725,7 @@ snapshots:
       semver: 7.8.6
       tar: 7.5.23
       tinyglobby: 0.2.17
-      undici: 8.12.4
+      undici: 8.13.1
       which: 7.0.0
     optional: true
 
@@ -14439,7 +14435,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@44.263.5(supports-color@7.2.0)(typanion@3.14.0):
+  renovate@44.264.1(supports-color@7.2.0)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1139.0
       '@aws-sdk/client-ec2': 3.1139.0
@@ -14476,7 +14472,7 @@ snapshots:
       '@renovatebot/detect-tools': 5.0.0
       '@renovatebot/good-enough-parser': 4.0.3
       '@renovatebot/osv-offline': 4.5.11(supports-color@7.2.0)(zod@4.6.7)
-      '@renovatebot/pep440': 6.0.0
+      '@renovatebot/pep440': 6.0.1
       '@renovatebot/pgp': 2.0.6
       '@renovatebot/ruby-semver': 6.0.0
       '@sindresorhus/is': 8.1.0
@@ -14983,9 +14979,6 @@ snapshots:
   underscore@1.13.8: {}
 
   undici-types@8.9.0: {}
-
-  undici@8.12.4:
-    optional: true
 
   undici@8.13.1: {}
 
