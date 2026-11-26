@@ -26,6 +26,9 @@ export const GuardName = Schema.String.check(Schema.isPattern(/^is\p{Lu}/u));
 
 export const ServiceConstructorName = Schema.String.check(Schema.isPattern(/^make[A-Z]/u));
 
+// Static members of a `Context.Service` class that build the service: `make`, `layer` and variants such as `layerTest`.
+export const ServiceConstructionMemberName = Schema.String.check(Schema.isPattern(/^(?:make|layer(?:[A-Z0-9_].*)?)$/u));
+
 /**
  * Effect and Alchemy module namespaces are PascalCase; lowercase and SCREAMING_SNAKE exports such as `ALCHEMY_DEV` are
  * plain values.

@@ -626,6 +626,14 @@ Adapted from [`dmmulroy/anti-slop`](https://github.com/dmmulroy/anti-slop/tree/m
   elsewhere. The filter of `Extract` or `Exclude`, as in `Extract<Payment, { _tag: 'Refund' }>`, is also skipped: it
   selects members of an existing union, which no constructor replaces. A `_tag` type literal passed to any other
   generic, such as `Array<{ _tag: 'A' }>`, is still reported.
+- `no-ordie-in-service-construction`, from the [`K-Mistele/anti-slop`](https://github.com/K-Mistele/anti-slop/blob/main/src/effect/rules/no-ordie-in-service-construction.ts)
+  fork: reject `Effect.orDie` while a service is built and `Layer.orDie` anywhere, so construction failures stay in the
+  layer's error channel as tagged errors. A service is built by the `make` option or a static `make`/`layer*` member of
+  a `Context.Service` class, and by the arguments of `Layer.effect`, `Layer.effectContext`, `Layer.effectDiscard` and
+  `Layer.unwrap` or a pipeline into one (`load.pipe(Effect.orDie, Layer.effect(Store))`). Named imports such as
+  `import { orDie } from 'effect/Layer'` count too. Operations stay exempt: `Effect.fn` definitions, functions other than `Effect.gen` and
+  `Effect.suspend`/`Effect.sync` thunks, effects a generator defines without `yield*`, and returned object properties
+  that are not yielded. Test and spec files are exempt.
 - `no-service-constructor-imports`: reject relative named `make[A-Z]` imports outside `.test`/`.spec` files.
 - `prefer-effect-match`: also reports chained literal ternaries comparing the same source expression, while retaining
   the existing Effect-file switch diagnostic. In Effect files it also reports `else if` chains; see
