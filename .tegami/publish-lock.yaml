@@ -1,70 +1,42 @@
 core:changelogs:
-  - content: "---\npackages:\n  \"@2digits/config-monorepo\":\n    type: patch\n---\n\n### Update the workspace tooling\n\n- Updated `renovate` to `44.263.5`, `tsrs` to `7.1.0-beta.tsrs5` and `tinyexec` to `1.4.0`\n- Updated `@effect/vitest` to `4.1.6`, `@oxc-node/cli` to `1.0.3`, `@types/node` to `26.6.11` and `@types/react` to\n  `19.3.3`\n"
-    filename: 2026-11-26-815b4fd8.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/eslint-config\":\n    type: patch\n---\n\n### Update the ESLint plugins\n\nUpdated the JSDoc plugin to 65.5.6, `eslint-plugin-n` to 18.6.0, the SonarJS plugin to 4.2.3 and the Storybook plugin to\n10.6.9.\n"
-    filename: 2026-11-26-bcda8824.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/opencode-plugin\":\n    type: patch\n---\n\n### Update `posthog-node` to 6.1.1\n\nThe plugin now sends its events with `posthog-node` 6.1.1.\n"
-    filename: 2026-11-26-9320a041.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: patch\n  \"@2digits/tlo-mcp\":\n    type: patch\n---\n\n### Update `effect` to 4.1.6\n\nThe package now builds on `effect` 4.1.6 and `@effect/platform-node` 4.1.6. TLO MCP also updates `@opentunnel/client`\nto 0.7.0.\n"
-    filename: 2026-11-26-0f95e0de.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/oxlint-plugin\":\n    type: minor\n---\n\n### Report hand-written Link headers and header appends\n\n`prefer-effect-headers` now also reports splitting, matching or searching text read from a Link header, building a\nLink value from data, and joining a header's current value with a new one by a comma in a data-first `Headers.set`,\n`HttpClientRequest.setHeader` or `HttpServerResponse.setHeader` that reads the header from its own destination.\nPipeable setters, values copied from another response, and `Cookie` and `Set-Cookie` are not checked. It points to the\nhelpers Effect 4.1.6 adds: `HttpClientResponse.links` and `link`, `Headers.parseLink`, `Schema.LinkHeaderFromString`,\n`Headers.formatLink`, `Headers.append` and the `appendHeader` setters.\n"
-    filename: 2026-11-26-f54ba88a.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tlo-mcp\":\n    type: minor\n---\n\n### Serve an `orbit-timesheets` skill\n\nThe gateway now serves an Agent Skill, `skill://tlo-mcp/orbit-timesheets/SKILL.md`, with the rules for reading and\nchanging Orbit time: what to read first, which tasks and tickets to book on, and how to write entries without double\nwrites. Clients with the MCP Skills extension list it with `skills/list`; others can read it as a resource, and the\nserver instructions point to it.\n"
-    filename: 2026-11-26-2ca91433.md
-    v: 0.0.0
-  - content: "---\npackages:\n  \"@2digits/tsconfig\":\n    type: patch\n---\n\n### Update `@effect/tsgo` to 0.73.7\n\nThe Effect config now expects `@effect/tsgo` 0.73.7 and changes two Effect language service options:\n\n- `deterministicKeys` now expects the tag of a `Schema.TaggedClass`, `Data.TaggedClass` or `Schema.TaggedRequest` to be the class name alone, instead of the package and file path followed by the class name\n- `@effect/atom-react`, `@effect/atom-solid` and `@effect/atom-vue` are barrel import packages, so `preferBarrelImport` asks for named imports from the package root instead of imports from their modules\n"
-    filename: 2026-11-26-03f93ab6.md
+  - content: "---\npackages:\n  npm:@2digits/oxlint-plugin:\n    type: minor\n  npm:@2digits/oxlint-config:\n    type: minor\n---\n\n### Add the opt-in `no-non-ascii` rule\n\n- Enable `2digits/no-non-ascii` to report literal symbols and emoji in code, comments, strings, and JSX, including the middle dot, bullets and ellipsis. Its message steers towards real UI components instead of text glyphs for icons, controls, separators, and indicators.\n- Letters with accents, currency signs, and other punctuation are allowed.\n- The rule is off by default, so the default lint policy is unchanged.\n"
+    filename: 2026-11-25-0ebfa5.md
     v: 0.0.0
 core:packages:
-  - changelogIds:
-      - 2026-11-26-815b4fd8.md
-    id: npm:@2digits/config-monorepo
-    updated: true
-  - id: npm:@2digits/constants
+  - id: npm:@2digits/config-monorepo
     updated: false
   - id: npm:@2digits/cli
     updated: false
-  - changelogIds:
-      - 2026-11-26-bcda8824.md
-    id: npm:@2digits/eslint-config
-    updated: true
+  - id: npm:@2digits/constants
+    updated: false
+  - id: npm:@2digits/eslint-config
+    updated: false
   - id: npm:@2digits/eslint-plugin
     updated: false
-  - changelogIds:
-      - 2026-11-26-9320a041.md
-    id: npm:@2digits/opencode-plugin
-    updated: true
+  - id: npm:@2digits/opencode-plugin
+    updated: false
   - id: npm:@2digits/oxfmt-config
     updated: false
-  - id: npm:@2digits/oxlint-config
+  - changelogIds:
+      - 2026-11-25-0ebfa5.md
+    id: npm:@2digits/oxlint-config
     updated: true
   - changelogIds:
-      - 2026-11-26-0f95e0de.md
-      - 2026-11-26-f54ba88a.md
+      - 2026-11-25-0ebfa5.md
     id: npm:@2digits/oxlint-plugin
     updated: true
   - id: npm:@2digits/prettier-config
     updated: false
+  - id: npm:@2digits/tlo-mcp
+    updated: false
   - id: npm:@2digits/renovate-config
     updated: false
-  - changelogIds:
-      - 2026-11-26-0f95e0de.md
-      - 2026-11-26-2ca91433.md
-    id: npm:@2digits/tlo-mcp
-    updated: true
-  - changelogIds:
-      - 2026-11-26-03f93ab6.md
-    id: npm:@2digits/tsconfig
-    updated: true
+  - id: npm:@2digits/tsconfig
+    updated: false
 npm:packages:
   - id: npm:@2digits/config-monorepo
-  - id: npm:@2digits/constants
   - id: npm:@2digits/cli
+  - id: npm:@2digits/constants
   - id: npm:@2digits/eslint-config
   - id: npm:@2digits/eslint-plugin
   - id: npm:@2digits/opencode-plugin
@@ -72,6 +44,6 @@ npm:packages:
   - id: npm:@2digits/oxlint-config
   - id: npm:@2digits/oxlint-plugin
   - id: npm:@2digits/prettier-config
-  - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tlo-mcp
+  - id: npm:@2digits/renovate-config
   - id: npm:@2digits/tsconfig

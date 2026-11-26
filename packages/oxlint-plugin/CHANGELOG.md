@@ -1,3 +1,11 @@
+## @2digits/oxlint-plugin@0.15.0
+
+### Add the opt-in `no-non-ascii` rule
+
+- Enable `2digits/no-non-ascii` to report literal symbols and emoji in code, comments, strings, and JSX, including the middle dot, bullets and ellipsis. Its message steers towards real UI components instead of text glyphs for icons, controls, separators, and indicators.
+- Letters with accents, currency signs, and other punctuation are allowed.
+- The rule is off by default, so the default lint policy is unchanged.
+
 ## @2digits/oxlint-plugin@0.14.0
 
 ### Update `effect` to 4.1.6
