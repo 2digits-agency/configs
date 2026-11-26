@@ -30,7 +30,7 @@
         "inlays": true,
         "layerGraphFollowDepth": 0,
         "mermaidProvider": "mermaid.live",
-        "barrelImportPackages": ["@effect/vitest"],
+        "barrelImportPackages": ["@effect/vitest", "@effect/atom-react", "@effect/atom-solid", "@effect/atom-vue"],
         "namespaceImportPackages": [
           "@alchemy.run/acme",
           "@alchemy.run/aws",
@@ -281,7 +281,7 @@
           },
           {
             "target": "taggedClass",
-            "pattern": "default",
+            "pattern": "identifier",
             "skipLeadingPath": ["src/"]
           },
           {

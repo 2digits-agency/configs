@@ -101,7 +101,9 @@ handoff for the API key and verify one read-only tool after connecting.
   tasks, and read-only planning lookups) are forwarded; other Orbit tools are hidden and cannot be called. Startup warns when Orbit
   no longer offers an allowlisted tool. `AddProjectTask`, `CloseProjectTask`, `UpdateProject`, `UpdateProjectTask`, `CloseTicketSilently`, `SetTicketOwner` and
   `LinkTicketToProject` are the gateway's own tools with stricter schemas; each call
-  is still exactly one Orbit write. Only tools are forwarded; resources/prompts/reverse requests are not exposed. No tool call is automatically replayed.
+  is still exactly one Orbit write. Only tools are forwarded; Orbit's resources/prompts/reverse requests are not exposed. No tool call is automatically replayed.
+- The gateway serves one Agent Skill of its own, `orbit-timesheets` (`skill://tlo-mcp/orbit-timesheets/SKILL.md`), with the rules for
+  reading and writing Orbit time: it is listed by `skills/list` and readable as a resource, and the server instructions point to it.
 - To rotate the gateway key, stop the gateway, remove only `gateway.key`, restart, and update the Executor connection.
 
 ## Re-login and logout
