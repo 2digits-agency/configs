@@ -439,8 +439,8 @@ catalogs:
       specifier: 19.3.1
       version: 19.3.1
     renovate:
-      specifier: 44.263.5
-      version: 44.263.5
+      specifier: 45.3.2
+      version: 45.3.2
     tailwind-csstree:
       specifier: 0.4.2
       version: 0.4.2
@@ -1156,7 +1156,7 @@ importers:
         version: 1.0.44
       renovate:
         specifier: 'catalog:'
-        version: 44.263.5(supports-color@7.2.0)(typanion@3.14.0)
+        version: 45.3.2(supports-color@7.2.0)(typanion@3.14.0)
       tsrs:
         specifier: 'catalog:'
         version: 7.1.0-beta.tsrs5
@@ -1171,7 +1171,7 @@ importers:
         version: 4.1.6(effect@4.1.6)(redis@6.2.1(@opentelemetry/api@1.10.0))
       '@opentunnel/client':
         specifier: 'catalog:'
-        version: 0.7.0(effect@4.1.6)(undici@8.12.4)
+        version: 0.7.0(effect@4.1.6)(undici@8.13.1)
       '@yielded/oauth':
         specifier: 'catalog:'
         version: 0.1.0-beta.49(effect@4.1.6)
@@ -1547,15 +1547,6 @@ packages:
   '@clack/prompts@1.7.0':
     resolution: {integrity: sha512-y7/yvZ2TPAnR9+jnc00klvNNLkJiXFFrQA/hlLCcxA9a2A4zQIOimyFQ9XfwYKiGD1fb5GY8vbKIIgO8d5Tb2A==}
     engines: {node: '>= 20.12.0'}
-
-  '@containerbase/base@14.70.0':
-    resolution: {integrity: sha512-2jgXI/w0+GRGcpONzxuHgbL2knEnImgNEd5Zflc7QapQY0TvEhaC4DKVv+Y1HNttCTph8eJ+PbU97Gv66r+JYg==}
-    engines: {node: '>=24.10.0'}
-    peerDependencies:
-      zod: ^4.0.0
-    peerDependenciesMeta:
-      zod:
-        optional: true
 
   '@containerbase/base@15.0.1':
     resolution: {integrity: sha512-C30i7Jb/q5/TOSXyAp97vn7Obnrqe63cgSlaExZeYc77fpRSSphQOlMM4PgAujbqUeA4gRSlZy6uAEKScuySWg==}
@@ -3724,8 +3715,8 @@ packages:
     peerDependencies:
       '@redis/client': ^6.2.1
 
-  '@renovatebot/base-image@13.178.1':
-    resolution: {integrity: sha512-mHM41YPyvAOkifWk5dy0+5+ImlBAvkB+jkuil2wu0Os8Kmx/mBtvFumVZRTxZVPUZXXjveGRcgTYKVDz5oTGdA==}
+  '@renovatebot/base-image@14.1.1':
+    resolution: {integrity: sha512-p6wSxUUhSYrA2nE1AEszHqxbs8iXt41N4Z9XXKG3Bk4zRdlsq/364H2qIS9TrQz09rw6IjwQOZExo5GtvfPzlQ==}
     engines: {node: '>=24.10.0'}
     peerDependencies:
       zod: ^4.0.0
@@ -3749,8 +3740,8 @@ packages:
     resolution: {integrity: sha512-+rfK4ob2hk0MxROqUA9NwRGC531nlLrhUWYnYOVWAAKcvHgXwRQ+PykuGPfBq1qIDlX5UYoiR780iScORwP8OA==}
     engines: {node: '>=24.11.0', pnpm: '>=10.0.0'}
 
-  '@renovatebot/pep440@6.0.0':
-    resolution: {integrity: sha512-L/HtOYInkZGLJCe9h/gpsm2Gig0JWzyvWajrEVK+pP6BGfRl1eFzg7jyVcis7tmht7hvpau/+pMzF60geiLq6w==}
+  '@renovatebot/pep440@6.0.1':
+    resolution: {integrity: sha512-+pt8ngwl68ZqsTp5nhNwx3XxgfD+BIL+0tsH9vkEEFzrF5X0B//O7Vd1VInhwmcCjwOMNptjaL9HBA84++ZPrw==}
     engines: {node: '>=24.10.0', pnpm: '>=10.0.0'}
 
   '@renovatebot/pgp@2.0.6':
@@ -5181,6 +5172,9 @@ packages:
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
 
+  eckey-utils@0.7.14:
+    resolution: {integrity: sha512-s/mENS+mMnJjDSydy0muBQQHMTWJ1nPe8EiphANZrf+lv/1u35aP9WvWHTWqCBJ21blNIurGF7UoLjtaOpoCFw==}
+
   editorconfig@3.0.2:
     resolution: {integrity: sha512-T0ix8GhtxyKVfUFEcvdNDt3YGqlwkFHbD4/5bgFUDgFmxhI/cSRAeJ87/Sz//Cq8Eam6JX/e23RkoFO71P7aAA==}
     engines: {node: '>=20'}
@@ -5806,6 +5800,10 @@ packages:
 
   glob@13.0.6:
     resolution: {integrity: sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw==}
+    engines: {node: 18 || 20 || >=22}
+
+  glob@14.0.6:
+    resolution: {integrity: sha512-OwXjVP2svY5EyLY75Vek96C8qK43gqrt4xsZ+qSILdnaEiJPXkd62mcfUSNx/TQErQRdu5uM5kF67sfONragKw==}
     engines: {node: 18 || 20 || >=22}
 
   glob@6.0.4:
@@ -6877,8 +6875,8 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
-  openpgp@6.3.2:
-    resolution: {integrity: sha512-wcZTzHz41LV8Y48zH/JlD1JT8YdNmpWOuMAjQ/podvvCwsjBEU37K3znJh4UQcj3hksE5z9TzvhbUbwzsGvlLQ==}
+  openpgp@6.3.3:
+    resolution: {integrity: sha512-W0foQI+Zb7/TCy7Z50gqZejYe3oJkiZJ9OSV4ImuRT8MmoKOJhtAMvRm6w9STlyYluLiuezG7+0Qdqbcmmx7ig==}
     engines: {node: '>= 18.0.0', typescript: '>= 5.0.0'}
     peerDependencies:
       '@openpgp/web-stream-tools': ~0.3.0
@@ -7103,6 +7101,10 @@ packages:
 
   path-scurry@2.0.2:
     resolution: {integrity: sha512-3O/iVVsJAPsOnpwWIeD+d6z/7PmqApyQePUtCndjatj/9I5LylHvt5qluFaBT3I5h3r1ejfR056c+FCv+NnNXg==}
+    engines: {node: 18 || 20 || >=22}
+
+  path-scurry@3.0.0:
+    resolution: {integrity: sha512-1pTbQqH1wIwMi/eleQ5leFTTCkzFsPcgXNjwOA8YGGW/W4/kHT3dssE7Z6NH+zuqNLOzOB0uaD61yl7cAcVhgg==}
     engines: {node: 18 || 20 || >=22}
 
   path-type@4.0.0:
@@ -7400,9 +7402,9 @@ packages:
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
-  renovate@44.263.5:
-    resolution: {integrity: sha512-QGc4Q7/7Iu3E/FOQtjZ7euSYgECeIEyTwf3xVzOouat4akZLn55QwMIpvZoi53/ul+MdENFfBdy7+193VJaxig==}
-    engines: {node: ^24.11.0 || ^26.13.0, pnpm: ^11.0.0}
+  renovate@45.3.2:
+    resolution: {integrity: sha512-+aWuZdFhLhVq8aPR0K6qEQfwZlZzsiKjRynqvkFL9oYy4H9q7q67wNqREORs8ebYGMXPT8JGYhczNMxNp2evnw==}
+    engines: {node: ^24.22.3 || ^26.13.1, pnpm: ^11.0.0}
     hasBin: true
 
   require-directory@2.1.1:
@@ -7845,10 +7847,6 @@ packages:
 
   undici-types@8.9.0:
     resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
-
-  undici@8.12.4:
-    resolution: {integrity: sha512-8Mx+uNKKER2bA4AdtedkqRbwUCIJFr2nJckXRe5yrDqzePqwLP7VNcctN8/XdmDSbF7mS+jJKIszlL+vbam1VA==}
-    engines: {node: '>=22.19.0'}
 
   undici@8.13.1:
     resolution: {integrity: sha512-Kt7EaPjh0s93lJH/PmW3d5rhkcpUa6fS3jqZ7+YGxNd9L7Xy/i827xe4C2uhhq+pJebM4tQOl5AgHmW11G5Skg==}
@@ -8739,12 +8737,6 @@ snapshots:
       fast-string-width: 3.0.2
       fast-wrap-ansi: 0.2.2
       sisteransi: 1.0.5
-
-  '@containerbase/base@14.70.0(zod@4.6.7)':
-    dependencies:
-      semver: 7.8.6
-    optionalDependencies:
-      zod: 4.6.7
 
   '@containerbase/base@15.0.1(zod@4.6.7)':
     dependencies:
@@ -9835,12 +9827,12 @@ snapshots:
 
   '@opentelemetry/semantic-conventions@1.45.0': {}
 
-  '@opentunnel/client@0.7.0(effect@4.1.6)(undici@8.12.4)':
+  '@opentunnel/client@0.7.0(effect@4.1.6)(undici@8.13.1)':
     dependencies:
       '@opentunnel/protocol': 0.7.0(effect@4.1.6)
       effect: 4.1.6
     optionalDependencies:
-      undici: 8.12.4
+      undici: 8.13.1
 
   '@opentunnel/protocol@0.7.0(effect@4.1.6)':
     dependencies:
@@ -10517,9 +10509,9 @@ snapshots:
     dependencies:
       '@redis/client': 6.2.1(@opentelemetry/api@1.10.0)
 
-  '@renovatebot/base-image@13.178.1(zod@4.6.7)':
+  '@renovatebot/base-image@14.1.1(zod@4.6.7)':
     dependencies:
-      '@containerbase/base': 14.70.0(zod@4.6.7)
+      '@containerbase/base': 15.0.1(zod@4.6.7)
     optionalDependencies:
       zod: 4.6.7
 
@@ -10557,7 +10549,7 @@ snapshots:
       - supports-color
       - zod
 
-  '@renovatebot/pep440@6.0.0': {}
+  '@renovatebot/pep440@6.0.1': {}
 
   '@renovatebot/pgp@2.0.6': {}
 
@@ -11867,6 +11859,9 @@ snapshots:
     dependencies:
       safe-buffer: '@nolyfill/safe-buffer@1.0.44'
 
+  eckey-utils@0.7.14:
+    optional: true
+
   editorconfig@3.0.2:
     dependencies:
       '@one-ini/wasm': 0.2.1
@@ -12703,6 +12698,12 @@ snapshots:
       minimatch: 10.2.6
       minipass: 7.1.3
       path-scurry: 2.0.2
+
+  glob@14.0.6:
+    dependencies:
+      minimatch: 11.0.9
+      minipass: 7.1.3
+      path-scurry: 3.0.0
 
   glob@6.0.4:
     dependencies:
@@ -13729,7 +13730,7 @@ snapshots:
       semver: 7.8.6
       tar: 7.5.23
       tinyglobby: 0.2.17
-      undici: 8.12.4
+      undici: 8.13.1
       which: 7.0.0
     optional: true
 
@@ -13786,7 +13787,9 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  openpgp@6.3.2:
+  openpgp@6.3.3:
+    dependencies:
+      eckey-utils: 0.7.14
     optional: true
 
   optionator@0.9.4:
@@ -14171,6 +14174,11 @@ snapshots:
       lru-cache: 11.5.3
       minipass: 7.1.3
 
+  path-scurry@3.0.0:
+    dependencies:
+      lru-cache: 11.5.3
+      minipass: 7.1.3
+
   path-type@4.0.0: {}
 
   pathe@2.0.3: {}
@@ -14439,7 +14447,7 @@ snapshots:
 
   remove-trailing-separator@1.1.0: {}
 
-  renovate@44.263.5(supports-color@7.2.0)(typanion@3.14.0):
+  renovate@45.3.2(supports-color@7.2.0)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1139.0
       '@aws-sdk/client-ec2': 3.1139.0
@@ -14472,11 +14480,11 @@ snapshots:
       '@pnpm/parse-overrides': 1001.0.4
       '@qnighy/marshal': 0.1.3
       '@redis/client': 6.3.1(@opentelemetry/api@1.10.0)
-      '@renovatebot/base-image': 13.178.1(zod@4.6.7)
+      '@renovatebot/base-image': 14.1.1(zod@4.6.7)
       '@renovatebot/detect-tools': 5.0.0
       '@renovatebot/good-enough-parser': 4.0.3
       '@renovatebot/osv-offline': 4.5.11(supports-color@7.2.0)(zod@4.6.7)
-      '@renovatebot/pep440': 6.0.0
+      '@renovatebot/pep440': 6.0.1
       '@renovatebot/pgp': 2.0.6
       '@renovatebot/ruby-semver': 6.0.0
       '@sindresorhus/is': 8.1.0
@@ -14511,7 +14519,7 @@ snapshots:
       fs-extra: 11.4.1
       git-url-parse: 16.1.0
       github-url-from-git: 1.5.0
-      glob: 13.0.6
+      glob: 14.0.6
       global-agent: 3.0.0
       google-auth-library: 11.3.4(supports-color@7.2.0)
       got: 16.2.0
@@ -14528,7 +14536,7 @@ snapshots:
       luxon: 3.7.2
       markdown-it: 15.0.3
       markdown-table: 3.1.0
-      minimatch: 10.2.6
+      minimatch: 11.0.9
       moo: 0.5.3
       ms: 2.1.3
       neotraverse: 1.0.2
@@ -14564,7 +14572,7 @@ snapshots:
       yauzl: 3.4.0
       zod: 4.6.7
     optionalDependencies:
-      openpgp: 6.3.2
+      openpgp: 6.3.3
       re2: 1.27.2
     transitivePeerDependencies:
       - '@node-rs/xxhash'
@@ -14983,9 +14991,6 @@ snapshots:
   underscore@1.13.8: {}
 
   undici-types@8.9.0: {}
-
-  undici@8.12.4:
-    optional: true
 
   undici@8.13.1: {}
 
